@@ -1,0 +1,25 @@
+{
+  "name": "gs-tools",
+  "version": "1.0.0",
+  "description": "Common tools",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/garysoed/gs-tools.git"
+  },
+  "keywords": [
+    "tool"
+  ],
+  "author": "garysoed@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/garysoed/gs-tools/issues"
+  },
+  "homepage": "https://github.com/garysoed/gs-tools#readme",
+  "dependencies": {
+    "chance": "^1.0.0"
+  }
+}
