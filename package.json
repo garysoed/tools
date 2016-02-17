@@ -21,5 +21,21 @@
   "homepage": "https://github.com/garysoed/gs-tools#readme",
   "dependencies": {
     "chance": "^1.0.0"
+  },
+  "devDependencies": {
+    "gulp": "git://github.com/gulpjs/gulp.git#4.0",
+    "gulp-debug": "^2.1.2",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-tslint": "^4.3.2",
+    "gulp-typescript": "^2.11.0",
+    "gulp-webpack": "^1.5.0",
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.21",
+    "karma-chrome-launcher": "^0.2.2",
+    "karma-jasmine": "^0.3.7",
+    "karma-story-reporter": "^0.3.1",
+    "tslint": "^3.3.0",
+    "typescript": "^1.7.5",
+    "vinyl-named": "^1.1.0"
   }
 }

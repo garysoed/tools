@@ -1,0 +1,36 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "isolatedModules": false,
+        "jsx": "react",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "declaration": false,
+        "noImplicitAny": false,
+        "removeComments": true,
+        "noLib": false,
+        "preserveConstEnums": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "outDir": "out/",
+        "rootDir": "./"
+    },
+    "filesGlob": [
+        "**/*.ts",
+        "**/*.tsx",
+        "!node_modules/**"
+    ],
+    "compileOnSave": true,
+    "buildOnSave": false,
+    "files": [
+        "declarations/gs-tools.d.ts",
+        "declarations/jasmine/jasmine.d.ts",
+        "declarations/tsd.d.ts",
+        "src/jsons_test.ts",
+        "src/jsons.ts"
+    ],
+    "atom": {
+        "rewriteTsconfig": true
+    }
+}

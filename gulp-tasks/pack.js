@@ -9,13 +9,13 @@ var PackTasks = function(named, sourcemaps, webpack) {
 
 PackTasks.prototype.tests = function(gulp, namespace) {
   return function compileTest_() {
-    return gulp.src([path.join(config.DIR_OUT, namespace, config.JS_TEST_REGEX)])
+    var srcs = [path.join(config.DIR_OUT, namespace, config.JS_TEST_REGEX)];
+    return gulp.src(srcs)
         .pipe(this.named_(function(file) {
           var filepath = file.path;
           return path.join(
               path.dirname(filepath),
-              path.basename(filepath, path.extname(filepath)) + config.PACK_SUFFIX
-          );
+              path.basename(filepath, path.extname(filepath)) + config.PACK_SUFFIX);
         }))
         .pipe(this.sourcemaps_.init())
         .pipe(this.webpack_())

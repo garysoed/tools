@@ -5,6 +5,14 @@ var CHANCE = new Chance();
 var LOADED_PATHS = {};
 var TASK_SUFFIXES = {};
 
+function loadTasks_(package) {
+  var pathToLoad = package + '/gulpfile';
+  if (!LOADED_PATHS[pathToLoad]) {
+    require(pathToLoad);
+    LOADED_PATHS[pathToLoad] = true;
+  }
+}
+
 /**
  * Prefixes the task name.
  * @param {string} prefix The prefix to add.
@@ -36,11 +44,7 @@ function resolveTaskName_(name) {
     return null;
   }
 
-  var pathToLoad = package + '/gulpfile';
-  if (!LOADED_PATHS[pathToLoad]) {
-    require(pathToLoad);
-    LOADED_PATHS[pathToLoad] = true;
-  }
+  loadTasks_(fullpackage);
 
   var uniqueTaskName = prefixTaskName_(prefix, taskName);
   var suffix = TASK_SUFFIXES[uniqueTaskName];
@@ -99,6 +103,10 @@ gulpnode.prototype.exec = function(name, dependencies) {
   var uniqueName = prefixTaskName_(prefix, name);
   var task = this.gulp_.task(uniqueName, dependencies);
   return task;
+};
+
+gulpnode.prototype.load = function(name) {
+  loadTasks_(path.resolve(name));
 };
 
 /**
