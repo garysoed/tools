@@ -6,4 +6,10 @@ gn.task('compile-test', gn.parallel(
     'src/collection:compile-test'
 ));
 
+gn.task('lint', gn.parallel(
+    'src:lint',
+    'src/collection:lint'
+));
+
+gn.exec('lint', gn.series('.:lint'));
 gn.exec('test', gn.series('.:compile-test', karmaTasks.once(gn, '**')));
