@@ -27,6 +27,8 @@
         "declarations/gs-tools.d.ts",
         "declarations/jasmine/jasmine.d.ts",
         "declarations/tsd.d.ts",
+        "src/collection/records_test.ts",
+        "src/collection/records.ts",
         "src/jsons_test.ts",
         "src/jsons.ts"
     ],
