@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Provides utilities to manipulate records. These are JSON objects with string keys
+ * and values of the same type.
+ */
+
 export default {
   mapValue<V1, V2>(record: { [key: string]: V1 }, fn: (arg: V1) => V2): { [key: string]: V2 } {
     let out = <{[key: string]: V2}> {};

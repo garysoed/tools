@@ -1,4 +1,5 @@
 var Chance = require('chance');
+var glob = require('glob');
 var path = require('path');
 
 var CHANCE = new Chance();

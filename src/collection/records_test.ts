@@ -1,3 +1,6 @@
+import TestBase from '../../test-base';
+TestBase.setup();
+
 import Records from './records';
 
 describe('collection.Records', () => {
