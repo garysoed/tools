@@ -7,6 +7,20 @@ var PackTasks = function(named, sourcemaps, webpack) {
   this.webpack_ = webpack;
 };
 
+PackTasks.prototype.app = function(gulp, rootFile) {
+  return function app_() {
+    return gulp.src([path.join(config.DIR_OUT, config.DIR_SRC, rootFile)])
+        .pipe(this.sourcemaps_.init())
+        .pipe(this.webpack_({
+          output: {
+            filename: 'js.js'
+          }
+        }))
+        .pipe(this.sourcemaps_.write('./', { includeContent: true }))
+        .pipe(gulp.dest('out'));
+  }.bind(this);
+};
+
 PackTasks.prototype.tests = function(gulp, namespace) {
   return function compileTest_() {
     var srcs = [path.join(config.DIR_OUT, namespace, config.JS_TEST_REGEX)];
