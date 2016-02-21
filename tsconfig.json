@@ -19,7 +19,8 @@
     "filesGlob": [
         "**/*.ts",
         "**/*.tsx",
-        "!node_modules/**"
+        "!node_modules/**",
+        "node_modules/gulp-typescript/node_modules/typescript/lib/lib.es6.d.ts"
     ],
     "compileOnSave": true,
     "buildOnSave": false,
@@ -33,11 +34,15 @@
         "src/dispose/base-disposable.ts",
         "src/dispose/disposable-function_test.ts",
         "src/dispose/disposable-function.ts",
+        "src/event/listenable_test.ts",
+        "src/event/listenable.ts",
         "src/jsons_test.ts",
         "src/jsons.ts",
         "src/test-base.ts",
         "src/testing/disposable-test-setup.ts",
-        "src/testing/i-test-setup.ts"
+        "src/testing/i-test-setup.ts",
+        "src/testing/test-setup.ts",
+        "node_modules/gulp-typescript/node_modules/typescript/lib/lib.es6.d.ts"
     ],
     "atom": {
         "rewriteTsconfig": true

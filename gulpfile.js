@@ -10,13 +10,17 @@ gn.task('compile-test', gn.parallel(
 gn.task('lint', gn.parallel(
     'src:lint',
     'src/collection:lint',
-    'src/dispose:lint'
+    'src/dispose:lint',
+    'src/event:lint',
+    'src/mock:lint'
 ));
 
 gn.exec('lint', gn.series('.:lint'));
 gn.exec('test', gn.series('.:compile-test', karmaTasks.once(gn, '**')));
 gn.exec('karma', gn.series('.:compile-test', karmaTasks.watch(gn, '**')));
 
-gn.exec('watch-test', function() {
-  gn.watch(['src/**/*.ts'], gn.series('.:compile-test'));
-});
+gn.exec('watch-test', gn.series(
+    '.:compile-test',
+    function _watch() {
+      gn.watch(['src/**/*.ts'], gn.series('.:compile-test'));
+    }));
