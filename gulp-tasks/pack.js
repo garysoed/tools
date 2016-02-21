@@ -7,13 +7,13 @@ var PackTasks = function(named, sourcemaps, webpack) {
   this.webpack_ = webpack;
 };
 
-PackTasks.prototype.app = function(gulp, rootFile) {
+PackTasks.prototype.app = function(gulp, rootFile, outName) {
   return function app_() {
-    return gulp.src([path.join(config.DIR_OUT, config.DIR_SRC, rootFile)])
+    return gulp.src([path.join(config.DIR_OUT, rootFile)])
         .pipe(this.sourcemaps_.init())
         .pipe(this.webpack_({
           output: {
-            filename: 'js.js'
+            filename: outName
           }
         }))
         .pipe(this.sourcemaps_.write('./', { includeContent: true }))

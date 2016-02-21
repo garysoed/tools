@@ -1,5 +1,4 @@
 var config = require('./config');
-var debug = require('gulp-debug');
 var path = require('path');
 
 var TypescriptTasks = function(tslint, typescript) {
@@ -16,9 +15,9 @@ TypescriptTasks.prototype.compile = function(gulp) {
   }.bind(this);
 };
 
-TypescriptTasks.prototype.lint = function(gulp, namespace) {
+TypescriptTasks.prototype.lint = function(gulp, dir) {
   return function lint_() {
-    return gulp.src([path.join(config.DIR_SRC, namespace, '*.ts')])
+    return gulp.src([path.join(dir, '*.ts')])
         .pipe(this.tslint_())
         .pipe(this.tslint_.report('verbose'));
   }.bind(this);

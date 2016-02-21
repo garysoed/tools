@@ -8,9 +8,9 @@ var MythTasks = function(concat, myth) {
 
 MythTasks.prototype.compile = function(gulp, dir) {
   return function compileMyth_() {
-    return gulp.src([path.join(config.DIR_SRC, dir, '*.css')])
-        .pipe(this.myth_())
+    return gulp.src([path.join(dir, '*.css')])
         .pipe(this.concat_('css.css'))
+        .pipe(this.myth_())
         .pipe(gulp.dest('out'));
   }.bind(this);
 };
