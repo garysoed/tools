@@ -15,3 +15,8 @@ gn.task('lint', gn.parallel(
 
 gn.exec('lint', gn.series('.:lint'));
 gn.exec('test', gn.series('.:compile-test', karmaTasks.once(gn, '**')));
+gn.exec('karma', gn.series('.:compile-test', karmaTasks.watch(gn, '**')));
+
+gn.exec('watch-test', function() {
+  gn.watch(['src/**/*.ts'], gn.series('.:compile-test'));
+});

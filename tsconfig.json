@@ -33,10 +33,11 @@
         "src/dispose/base-disposable.ts",
         "src/dispose/disposable-function_test.ts",
         "src/dispose/disposable-function.ts",
-        "src/dispose/testing/test-base.ts",
         "src/jsons_test.ts",
         "src/jsons.ts",
-        "test-base.ts"
+        "src/test-base.ts",
+        "src/testing/disposable-test-setup.ts",
+        "src/testing/i-test-setup.ts"
     ],
     "atom": {
         "rewriteTsconfig": true
