@@ -40,6 +40,7 @@
         "src/event/listenable-element.ts",
         "src/jsons_test.ts",
         "src/jsons.ts",
+        "src/mock/mock-element.ts",
         "src/mock/mocks.ts",
         "src/test-base.ts",
         "src/testing/disposable-test-setup.ts",
