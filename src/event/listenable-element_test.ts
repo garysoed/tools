@@ -38,7 +38,7 @@ describe('event.ListenableElement', () => {
       let mockEvent = Mocks.object('Event');
       mockEvent.type = 'click';
 
-      EventTestSetup.spyOn(element, eventType);
+      EventTestSetup.spyOn(element);
 
       DisposableTestSetup.add(element.on(eventType, () => undefined));
 
@@ -55,7 +55,7 @@ describe('event.ListenableElement', () => {
       let mockEvent = Mocks.object('Event');
       mockEvent.type = 'click';
 
-      EventTestSetup.spyOn(element, eventType);
+      EventTestSetup.spyOn(element);
 
       DisposableTestSetup.add(
           element.on(eventType, () => undefined),
