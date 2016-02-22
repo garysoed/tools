@@ -10,5 +10,5 @@ export default {
       out[key] = fn(record[key]);
     }
     return out;
-  }
+  },
 };

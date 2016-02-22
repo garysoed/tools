@@ -2,15 +2,17 @@ import TestBase from '../test-base';
 TestBase.setup();
 
 import DisposableFunction from './disposable-function';
+import DisposableTestSetup from '../testing/disposable-test-setup';
 
-describe('util.DisposableFunction', () => {
+
+describe('dispose.DisposableFunction', () => {
   let mockFunction;
   let disposableFunction;
 
   beforeEach(() => {
     mockFunction = jasmine.createSpy('Function');
     disposableFunction = new DisposableFunction(mockFunction);
-    window['addDisposable'](disposableFunction);
+    DisposableTestSetup.add(disposableFunction);
   });
 
   describe('dispose', () => {

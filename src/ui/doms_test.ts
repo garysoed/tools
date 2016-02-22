@@ -40,7 +40,7 @@ describe('ui.Doms', () => {
       rootEl.appendChild(toEl);
 
       expect(() => {
-        Doms.relativeOffsetTop(fromEl, toEl)
+        Doms.relativeOffsetTop(fromEl, toEl);
       }).toThrowError(/offset ancestor/);
     });
 
@@ -51,7 +51,7 @@ describe('ui.Doms', () => {
       rootEl.appendChild(toEl);
 
       expect(() => {
-        Doms.relativeOffsetTop(fromEl, toEl)
+        Doms.relativeOffsetTop(fromEl, toEl);
       }).toThrowError(/offset ancestor/);
     });
   });
