@@ -71,7 +71,8 @@ describe('ui.OverflowWatcher', () => {
       let oldState = State.COVERED;
       let newState = State.PARTIAL;
 
-      let spyGetState_ = spyOn(watcher, 'getState_').and.returnValue(oldState);
+      let spyGetState_ = spyOn(watcher, 'getState_');
+      spyGetState_.and.returnValue(oldState);
       watcher.state;
 
       spyGetState_.and.returnValue(newState);
@@ -86,7 +87,8 @@ describe('ui.OverflowWatcher', () => {
       let oldState = State.COVERED;
       let newState = State.COVERED;
 
-      let spyGetState_ = spyOn(watcher, 'getState_').and.returnValue(oldState);
+      let spyGetState_ = spyOn(watcher, 'getState_');
+      spyGetState_.and.returnValue(oldState);
       watcher.state;
 
       spyGetState_.and.returnValue(newState);
