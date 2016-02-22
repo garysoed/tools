@@ -20,7 +20,7 @@
         "**/*.ts",
         "**/*.tsx",
         "!node_modules/**",
-        "node_modules/gulp-typescript/node_modules/typescript/lib/lib.es6.d.ts"
+        "node_modules/typescript/lib/lib.es6.d.ts"
     ],
     "compileOnSave": true,
     "buildOnSave": false,
