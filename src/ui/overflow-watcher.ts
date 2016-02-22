@@ -47,8 +47,8 @@ export default class OverflowWatcher extends BaseListenable<EventType> {
 
   private onScroll_(): void {
     let newState = this.getState_();
-    if (newState !== this.state) {
-      let oldState = this.state_;
+    let oldState = this.state_;
+    if (newState !== oldState) {
       this.state_ = newState;
       this.dispatch(EventType.CHANGED, oldState);
     }

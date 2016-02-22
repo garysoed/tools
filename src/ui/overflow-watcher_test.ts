@@ -111,7 +111,8 @@ describe('ui.OverflowWatcher', () => {
 
     it('should cache the output of getState_', () => {
       let state = State.COVERED;
-      let spyGetState_ = spyOn(watcher, 'getState_').and.returnValue(state);
+      let spyGetState_ = spyOn(watcher, 'getState_');
+      spyGetState_.and.returnValue(state);
       watcher.state;
 
       spyGetState_.calls.reset();
