@@ -2,8 +2,8 @@ import BaseDisposable from '../dispose/base-disposable';
 import DisposableFunction from '../dispose/disposable-function';
 
 
-export default class Listenable<T> extends BaseDisposable {
-  private callbacksMap_: Map<T, ((data: any) => void)[]>;
+export default class BaseListenable<T> extends BaseDisposable {
+  protected callbacksMap_: Map<T, ((data: any) => void)[]>;
 
   constructor() {
     super();

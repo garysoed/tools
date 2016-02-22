@@ -3,9 +3,10 @@ import BaseDisposable, { TRACKED_DISPOSABLES, Flags } from '../dispose/base-disp
 let DISPOSABLES = [];
 
 export default {
-  add(disposable: BaseDisposable): BaseDisposable {
-    DISPOSABLES.push(disposable);
-    return disposable;
+  add(...disposables: BaseDisposable[]): void {
+    disposables.forEach((disposable: BaseDisposable) => {
+      DISPOSABLES.push(disposable);
+    });
   },
 
   afterEach(): void {

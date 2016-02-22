@@ -18,9 +18,11 @@ tasks.allTests = function(gt, dir) {
   gt.exec('lint', typescriptTasks.lint(gt, dir));
   gt.exec('test', gt.series('_compile', '.:_compile-test', karmaTasks.once(gt, dir)));
   gt.exec('karma', gt.series('_compile', '.:_compile-test', karmaTasks.watch(gt, dir)));
-  gt.exec('watch-test', function() {
-    gt.watch(['src/**/*.ts'], gt.series('_compile', '.:compile-test'));
-  })
+  gt.exec('watch-test', gt.series(
+      '.:compile-test',
+      function() {
+        gt.watch(['src/**/*.ts'], gt.series('_compile', '.:compile-test'));
+      }))
 };
 
 gulp.task('_compile', typescriptTasks.compile(gulp));

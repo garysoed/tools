@@ -2,15 +2,15 @@ import TestBase from '../test-base';
 TestBase.setup();
 
 import DisposableTestSetup from '../testing/disposable-test-setup';
-import Listenable from './listenable';
+import BaseListenable from './base-listenable';
 import Mocks from '../mock/mocks';
 
 
-describe('util.Listenable', () => {
+describe('event.BaseListenable', () => {
   let listenable;
 
   beforeEach(() => {
-    listenable = new Listenable<string>();
+    listenable = new BaseListenable<string>();
     DisposableTestSetup.add(listenable);
   });
 
