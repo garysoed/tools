@@ -52,7 +52,7 @@
         "src/ui/doms.ts",
         "src/ui/overflow-watcher_test.ts",
         "src/ui/overflow-watcher.ts",
-        "node_modules/gulp-typescript/node_modules/typescript/lib/lib.es6.d.ts"
+        "node_modules/typescript/lib/lib.es6.d.ts"
     ],
     "atom": {
         "rewriteTsconfig": true
