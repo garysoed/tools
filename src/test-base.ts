@@ -1,11 +1,11 @@
-import DisposableTestSetup from './testing/disposable-test-setup';
-import EventTestSetup from './testing/event-test-setup';
+import TestDispose from './testing/test-dispose';
+import TestEvent from './testing/test-event';
 import TestSetup from './testing/test-setup';
 
 
 const TEST_SETUP = new TestSetup([
-  DisposableTestSetup,
-  EventTestSetup,
+  TestDispose,
+  TestEvent,
 ]);
 
 let initialized = false;

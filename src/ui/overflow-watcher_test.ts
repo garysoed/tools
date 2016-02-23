@@ -1,9 +1,9 @@
 import TestBase from '../test-base';
 TestBase.setup();
 
-import DisposableTestSetup from '../testing/disposable-test-setup';
+import TestDispose from '../testing/test-dispose';
 import Doms from '../ui/doms';
-import EventTestSetup from '../testing/event-test-setup';
+import TestEvent from '../testing/test-event';
 import Mocks from '../mock/mocks';
 import OverflowWatcher, { EventType, State } from './overflow-watcher';
 
@@ -19,7 +19,7 @@ describe('ui.OverflowWatcher', () => {
     mockElement.offsetParent = null;
 
     watcher = new OverflowWatcher(mockContainer, mockElement);
-    DisposableTestSetup.add(watcher);
+    TestDispose.add(watcher);
   });
 
   it('should initialize correctly', () => {
@@ -76,11 +76,11 @@ describe('ui.OverflowWatcher', () => {
       watcher.state;
 
       spyGetState_.and.returnValue(newState);
-      EventTestSetup.spyOn(watcher);
+      TestEvent.spyOn(watcher);
 
       watcher['onScroll_']();
 
-      expect(EventTestSetup.getPayloads(watcher, EventType.CHANGED)).toEqual([oldState]);
+      expect(TestEvent.getPayloads(watcher, EventType.CHANGED)).toEqual([oldState]);
     });
 
     it('should do nothing if the new state is the same as the old state', () => {
@@ -92,11 +92,11 @@ describe('ui.OverflowWatcher', () => {
       watcher.state;
 
       spyGetState_.and.returnValue(newState);
-      EventTestSetup.spyOn(watcher);
+      TestEvent.spyOn(watcher);
 
       watcher['onScroll_']();
 
-      expect(EventTestSetup.getPayloads(watcher, EventType.CHANGED)).toEqual([]);
+      expect(TestEvent.getPayloads(watcher, EventType.CHANGED)).toEqual([]);
     });
   });
 

@@ -1,8 +1,8 @@
 import TestBase from '../test-base';
 TestBase.setup();
 
-import DisposableTestSetup from '../testing/disposable-test-setup';
-import EventTestSetup from '../testing/event-test-setup';
+import TestDispose from '../testing/test-dispose';
+import TestEvent from '../testing/test-event';
 import ListenableElement, { EventType } from './listenable-element';
 import Mocks from '../mock/mocks';
 
@@ -14,14 +14,14 @@ describe('event.ListenableElement', () => {
   beforeEach(() => {
     mockElement = jasmine.createSpyObj('Element', ['addEventListener', 'removeEventListener']);
     element = new ListenableElement(mockElement);
-    DisposableTestSetup.add(element);
+    TestDispose.add(element);
   });
 
   describe('dispose', () => {
     it('should stop listening to events on disposal', () => {
       let eventType = EventType.CLICK;
 
-      DisposableTestSetup.add(element.on(eventType, () => undefined));
+      TestDispose.add(element.on(eventType, () => undefined));
 
       let listener = mockElement.addEventListener.calls.argsFor(0)[1];
 
@@ -38,16 +38,16 @@ describe('event.ListenableElement', () => {
       let mockEvent = Mocks.object('Event');
       mockEvent.type = 'click';
 
-      EventTestSetup.spyOn(element);
+      TestEvent.spyOn(element);
 
-      DisposableTestSetup.add(element.on(eventType, () => undefined));
+      TestDispose.add(element.on(eventType, () => undefined));
 
       expect(mockElement.addEventListener).toHaveBeenCalledWith('click', jasmine.any(Function));
       expect(mockElement.addEventListener).not.toHaveBeenCalledWith('other', jasmine.any(Function));
 
       // Trigger the DOM event.
       mockElement.addEventListener.calls.argsFor(0)[1](mockEvent);
-      expect(EventTestSetup.getPayloads(element, eventType)).toEqual([mockEvent]);
+      expect(TestEvent.getPayloads(element, eventType)).toEqual([mockEvent]);
     });
 
     it('should not forward listened events more than once', () => {
@@ -55,9 +55,9 @@ describe('event.ListenableElement', () => {
       let mockEvent = Mocks.object('Event');
       mockEvent.type = 'click';
 
-      EventTestSetup.spyOn(element);
+      TestEvent.spyOn(element);
 
-      DisposableTestSetup.add(
+      TestDispose.add(
           element.on(eventType, () => undefined),
           element.on(eventType, () => undefined));
 
@@ -65,7 +65,7 @@ describe('event.ListenableElement', () => {
 
       // Trigger the DOM event.
       mockElement.addEventListener.calls.argsFor(0)[1](mockEvent);
-      expect(EventTestSetup.getPayloads(element, eventType)).toEqual([mockEvent]);
+      expect(TestEvent.getPayloads(element, eventType)).toEqual([mockEvent]);
     });
   });
 });

@@ -1,7 +1,7 @@
 import TestBase from '../test-base';
 TestBase.setup();
 
-import DisposableTestSetup from '../testing/disposable-test-setup';
+import TestDispose from '../testing/test-dispose';
 import BaseListenable from './base-listenable';
 import Mocks from '../mock/mocks';
 
@@ -11,14 +11,14 @@ describe('event.BaseListenable', () => {
 
   beforeEach(() => {
     listenable = new BaseListenable<string>();
-    DisposableTestSetup.add(listenable);
+    TestDispose.add(listenable);
   });
 
   describe('dispose', () => {
     it('should clear the callback map', () => {
       let mockCallback = jasmine.createSpy('Callback');
       let event = 'event';
-      DisposableTestSetup.add(listenable.on(event, mockCallback));
+      TestDispose.add(listenable.on(event, mockCallback));
       listenable.dispose();
 
       listenable.dispatch(event);
@@ -32,7 +32,7 @@ describe('event.BaseListenable', () => {
       let mockCallback = jasmine.createSpy('Callback');
       let event = 'event';
       let payload = Mocks.object('payload');
-      DisposableTestSetup.add(listenable.on(event, mockCallback));
+      TestDispose.add(listenable.on(event, mockCallback));
 
       let setTimeoutSpy = spyOn(window, 'setTimeout');
 
