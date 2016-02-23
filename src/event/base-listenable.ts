@@ -1,3 +1,4 @@
+import Asyncs from '../async/asyncs';
 import BaseDisposable from '../dispose/base-disposable';
 import DisposableFunction from '../dispose/disposable-function';
 
@@ -21,9 +22,9 @@ export default class BaseListenable<T> extends BaseDisposable {
     let callbacks = this.callbacksMap_.get(eventType);
     if (!!callbacks) {
       callbacks.forEach((callback: (data: any) => void) => {
-        window.setTimeout(() => {
+        Asyncs.run(() => {
           callback(payload);
-        }, 0);
+        });
       });
     }
   }

@@ -18,7 +18,6 @@ export default {
     TRACKED_DISPOSABLES.splice(0, TRACKED_DISPOSABLES.length);
   },
 
-
   beforeEach(): void {
     DISPOSABLES = [];
     Flags.enableTracking = true;

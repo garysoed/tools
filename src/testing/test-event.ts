@@ -1,4 +1,5 @@
 import BaseListenable from '../event/base-listenable';
+import TestDispose from './test-dispose';
 
 const __calls = Symbol('calls');
 
@@ -11,17 +12,19 @@ export default {
     return target[__calls].get(eventType) || [];
   },
 
-  spyOn<E>(target: BaseListenable<E>): any {
+  spyOn<E>(target: BaseListenable<E>, eventTypes: E[]): any {
     if (!target[__calls]) {
       target[__calls] = new Map<E, any[]>();
     }
 
-    return spyOn(target, 'dispatch').and.callFake((eventType: E, payload: any) => {
-      if (!target[__calls].has(eventType)) {
-        target[__calls].set(eventType, []);
-      }
+    eventTypes.forEach((eventType: E) => {
+      TestDispose.add(target.on(eventType, (payload: any) => {
+        if (!target[__calls].has(eventType)) {
+          target[__calls].set(eventType, []);
+        }
 
-      target[__calls].get(eventType).push(payload);
+        target[__calls].get(eventType).push(payload);
+      }));
     });
   },
 

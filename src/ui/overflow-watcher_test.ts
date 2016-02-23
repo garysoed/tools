@@ -76,7 +76,7 @@ describe('ui.OverflowWatcher', () => {
       watcher.state;
 
       spyGetState_.and.returnValue(newState);
-      TestEvent.spyOn(watcher);
+      TestEvent.spyOn(watcher, [EventType.CHANGED]);
 
       watcher['onScroll_']();
 
@@ -92,7 +92,7 @@ describe('ui.OverflowWatcher', () => {
       watcher.state;
 
       spyGetState_.and.returnValue(newState);
-      TestEvent.spyOn(watcher);
+      TestEvent.spyOn(watcher, [EventType.CHANGED]);
 
       watcher['onScroll_']();
 
