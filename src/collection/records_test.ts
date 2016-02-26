@@ -10,7 +10,7 @@ describe('collection.Records', () => {
         a: 'a',
         b: 'b',
       };
-      let out = Records.mapValue(record, (value: string) => `${value}_`);
+      let out = Records.of(record).mapValue((value: string) => `${value}_`).data;
       expect(out).toEqual({ 'a': 'a_', 'b': 'b_' });
     });
   });

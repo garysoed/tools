@@ -3,12 +3,32 @@
  * and values of the same type.
  */
 
-export default {
-  mapValue<V1, V2>(record: { [key: string]: V1 }, fn: (arg: V1) => V2): { [key: string]: V2 } {
-    let out = <{[key: string]: V2}> {};
-    for (let key in record) {
-      out[key] = fn(record[key]);
+interface IRecord<T> {
+  [key: string]: T;
+}
+
+class FluentRecords<T> {
+  private data_: IRecord<T>;
+
+  constructor(data: IRecord<T>) {
+    this.data_ = data;
+  }
+
+  get data(): IRecord<T> {
+    return this.data_;
+  }
+
+  mapValue<V>(fn: (arg: T) => V): FluentRecords<V> {
+    let outData = <IRecord<V>> {};
+    for (let key in this.data) {
+      outData[key] = fn(this.data[key]);
     }
-    return out;
+    return new FluentRecords<V>(outData);
+  }
+}
+
+export default {
+  of<T>(data: IRecord<T>): FluentRecords<T> {
+    return new FluentRecords<T>(data);
   },
 };
