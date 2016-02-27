@@ -5,15 +5,15 @@ export default class MockElement {
     this.queries_ = queries;
   }
 
-  addEventListener() {
+  addEventListener(): void {
     // Noop
   }
 
-  removeEventListener() {
+  removeEventListener(): void {
     // Noop
   }
 
-  querySelector(query): any {
+  querySelector(query: string): any {
     return this.queries_[query];
   }
 }

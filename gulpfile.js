@@ -4,6 +4,7 @@ var karmaTasks = require('./gulp-tasks/karma')(require('karma').Server);
 gn.task('compile-test', gn.parallel(
     'src:compile-test',
     'src/collection:compile-test',
+    'src/data:compile-test',
     'src/dispose:compile-test',
     'src/typescript:lint',
     'src/ui:compile-test'
@@ -12,6 +13,7 @@ gn.task('compile-test', gn.parallel(
 gn.task('lint', gn.parallel(
     'src:lint',
     'src/collection:lint',
+    'src/data:lint',
     'src/dispose:lint',
     'src/event:lint',
     'src/mock:lint',

@@ -2,20 +2,18 @@
  * @fileoverview Provides utilities to manipulate records. These are JSON objects with string keys
  * and values of the same type.
  */
+import BaseFluent from './base-fluent';
+import Maps, { FluentMap } from './maps';
+
 
 interface IRecord<T> {
   [key: string]: T;
 }
 
-class FluentRecords<T> {
-  private data_: IRecord<T>;
+export class FluentRecords<T> extends BaseFluent<IRecord<T>> {
 
   constructor(data: IRecord<T>) {
-    this.data_ = data;
-  }
-
-  get data(): IRecord<T> {
-    return this.data_;
+    super(data);
   }
 
   mapValue<V>(fn: (arg: T) => V): FluentRecords<V> {
@@ -24,6 +22,15 @@ class FluentRecords<T> {
       outData[key] = fn(this.data[key]);
     }
     return new FluentRecords<V>(outData);
+  }
+
+  toMap(): FluentMap<string, T> {
+    let entries = [];
+    for (let key in this.data) {
+      entries.push([key, this.data[key]]);
+    }
+
+    return Maps.of(new Map<string, T>(entries));
   }
 }
 
