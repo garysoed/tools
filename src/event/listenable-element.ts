@@ -7,16 +7,17 @@ import Enums from '../typescript/enums';
  * Corresponds to DOM events. This must be the upper case version of the corresponding DOM events.
  */
 export enum EventType {
+  BEFOREUNLOAD,
   CLICK,
   SCROLL,
 }
 
 export default class ListenableElement extends BaseListenable<EventType> {
-  private element_: HTMLElement;
+  private element_: EventTarget;
   private forwardedEvents_: Set<EventType>;
   private listener_: EventListener;
 
-  constructor(element: HTMLElement) {
+  constructor(element: EventTarget) {
     super();
     this.element_ = element;
     this.forwardedEvents_ = new Set<EventType>();
@@ -38,7 +39,7 @@ export default class ListenableElement extends BaseListenable<EventType> {
     });
   }
 
-  get element(): HTMLElement {
+  get element(): EventTarget {
     return this.element_;
   }
 

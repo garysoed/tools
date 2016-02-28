@@ -6,6 +6,7 @@ gn.task('compile-test', gn.parallel(
     'src/collection:compile-test',
     'src/data:compile-test',
     'src/dispose:compile-test',
+    'src/ng:compile-test',
     'src/typescript:lint',
     'src/ui:compile-test'
 ));
@@ -17,6 +18,7 @@ gn.task('lint', gn.parallel(
     'src/dispose:lint',
     'src/event:lint',
     'src/mock:lint',
+    'src/ng:lint',
     'src/typescript:lint',
     'src/ui:lint'
 ));

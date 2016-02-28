@@ -14,26 +14,27 @@ export enum EventType {
 };
 
 export default class OverflowWatcher extends BaseListenable<EventType> {
-  private container_: ListenableElement;
+  private containerEl_: HTMLElement;
   private element_: HTMLElement;
   private state_: State;
 
   constructor(container: HTMLElement, element: HTMLElement) {
     super();
-    this.container_ = new ListenableElement(container);
+    this.containerEl_ = container;
     this.element_ = element;
     this.state_ = null;
 
+    let listenableContainer = new ListenableElement(container);
     this.addDisposable(
-        this.container_,
-        this.container_.on(DomEventType.SCROLL, this.onScroll_.bind(this)));
+        listenableContainer,
+        listenableContainer.on(DomEventType.SCROLL, this.onScroll_.bind(this)));
   }
 
   // TODO(gs): Memoize this.
   private getState_(): State {
     // TODO(gs): Support bottom / left / right
-    let scrollTop = this.container_.element.scrollTop;
-    let relativeOffsetTop = Doms.relativeOffsetTop(this.element_, this.container_.element);
+    let scrollTop = this.containerEl_.scrollTop;
+    let relativeOffsetTop = Doms.relativeOffsetTop(this.element_, this.containerEl_);
 
     if (scrollTop <= relativeOffsetTop) {
       return State.UNCOVERED;
