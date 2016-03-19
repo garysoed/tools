@@ -5,6 +5,10 @@ angular.component = function() {
   return angular;
 };
 
+angular.config = function() {
+  return angular;
+};
+
 angular.directive = function() {
   return angular;
 };
