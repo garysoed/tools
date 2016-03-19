@@ -9,6 +9,7 @@ import Enums from '../typescript/enums';
 export enum EventType {
   BEFOREUNLOAD,
   CLICK,
+  LOAD,
   SCROLL,
 }
 

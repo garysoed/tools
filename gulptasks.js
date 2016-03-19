@@ -16,8 +16,13 @@ tasks.allTests = function(gt, dir) {
 
   gt.exec('compile-test', gt.series('_compile', '.:_compile-test'));
   gt.exec('lint', typescriptTasks.lint(gt, dir));
-  gt.exec('test', gt.series('_compile', '.:_compile-test', karmaTasks.once(gt, dir)));
-  gt.exec('karma', gt.series('_compile', '.:_compile-test', karmaTasks.watch(gt, dir)));
+
+  var moreFiles = [{
+    pattern: 'node_modules/jasmine-ajax/lib/mock-ajax',
+    included: false
+  }];
+  gt.exec('test', gt.series('_compile', '.:_compile-test', karmaTasks.once(gt, dir, moreFiles)));
+  gt.exec('karma', gt.series('_compile', '.:_compile-test', karmaTasks.watch(gt, dir, moreFiles)));
   gt.exec('watch-test', gt.series(
       '.:compile-test',
       function() {

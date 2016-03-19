@@ -1,0 +1,3 @@
+interface JasmineAjaxRequest {
+  params: string;
+}

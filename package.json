@@ -33,6 +33,7 @@
     "karma": "^0.13.21",
     "karma-chrome-launcher": "^0.2.2",
     "karma-jasmine": "^0.3.7",
+    "karma-jasmine-ajax": "^0.1.13",
     "karma-story-reporter": "^0.3.1",
     "tslint": "^3.3.0",
     "typescript": "^1.7.5",

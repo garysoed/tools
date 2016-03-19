@@ -7,6 +7,9 @@
   "installed": {
     "jasmine/jasmine.d.ts": {
       "commit": "85af69c91599a6c904618545f0613970e1ff3f64"
+    },
+    "jasmine-ajax/jasmine-ajax.d.ts": {
+      "commit": "6766ed1d0faf02ede9e2edf2e66bbb2388c825ec"
     }
   }
 }
