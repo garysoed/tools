@@ -13,7 +13,7 @@ describe('net.Http', () => {
   });
 
   describe('post', () => {
-    it('should handle successful request correctly', (done) => {
+    it('should handle successful request correctly', (done: any) => {
       let path = 'path';
       let formData = {
         'a': '1',
@@ -43,7 +43,7 @@ describe('net.Http', () => {
       });
     });
 
-    it('should handle unsuccessful request correctly', (done) => {
+    it('should handle unsuccessful request correctly', (done: any) => {
       let status = 400;
       let error = 'error';
       Http.post('path')

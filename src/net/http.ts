@@ -1,5 +1,6 @@
 import BaseDisposable from '../dispose/base-disposable';
-import ListenableElement, {EventType as ListenableElementEventType} from '../event/listenable-element';
+import ListenableElement, {EventType as ListenableElementEventType} from
+    '../event/listenable-element';
 import Records from '../collection/records';
 
 abstract class HttpRequest extends BaseDisposable {
