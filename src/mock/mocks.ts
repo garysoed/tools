@@ -3,7 +3,17 @@ import MockElement from './mock-element';
 
 const __id = Symbol('id');
 
-export default {
+const Mocks = {
+  builder(name: string, methods: string[]): any {
+    let baseObj = Mocks.object(name);
+    methods.forEach((method: string) => {
+      baseObj[method] = () => {
+        return baseObj;
+      };
+    });
+    return baseObj;
+  },
+
   element(queries: { [query: string]: any}): any {
     return new MockElement(queries);
   },
@@ -12,3 +22,5 @@ export default {
     return { [__id]: name };
   },
 };
+
+export default Mocks;
