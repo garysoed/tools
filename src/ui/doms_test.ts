@@ -2,6 +2,7 @@ import TestBase from '../test-base';
 TestBase.setup();
 
 import Doms from './doms';
+import Iterables from '../collection/iterables';
 
 describe('ui.Doms', () => {
   let rootEl;
@@ -13,6 +14,27 @@ describe('ui.Doms', () => {
 
   afterEach(() => {
     rootEl.remove();
+  });
+
+  describe('offsetParentIterable', () => {
+    it('should create the correct iterable', () => {
+      let fromEl = document.createElement('div');
+      let parentEl = document.createElement('div');
+      parentEl.appendChild(fromEl);
+      parentEl.style.position = 'relative';
+      let ancestorEl = document.createElement('div');
+      ancestorEl.appendChild(parentEl);
+      ancestorEl.style.position = 'relative';
+
+      rootEl.appendChild(ancestorEl);
+
+      expect(Iterables.of(Doms.offsetParentIterable(fromEl)).toArray().data).toEqual([
+        fromEl,
+        parentEl,
+        ancestorEl,
+        document.body,
+      ]);
+    });
   });
 
   describe('relativeOffsetTop', () => {
