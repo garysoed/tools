@@ -26,8 +26,13 @@ gn.task('lint', gn.parallel(
 ));
 
 gn.exec('lint', gn.series('.:lint'));
-gn.exec('test', gn.series('.:compile-test', karmaTasks.once(gn, '**')));
-gn.exec('karma', gn.series('.:compile-test', karmaTasks.watch(gn, '**')));
+
+var mockAngular = {
+  pattern: 'src/testing/mock-angular.js',
+  included: true
+};
+gn.exec('test', gn.series('.:compile-test', karmaTasks.once(gn, '**', [mockAngular])));
+gn.exec('karma', gn.series('.:compile-test', karmaTasks.watch(gn, '**', [mockAngular])));
 
 gn.exec('watch-test', gn.series(
     '.:compile-test',

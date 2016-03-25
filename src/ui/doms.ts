@@ -1,7 +1,8 @@
 import Iterables from '../collection/iterables';
 
 const Doms = {
-  offsetParentIterable(start: HTMLElement): Iterable<HTMLElement> {
+  domIterable(start: HTMLElement, stepper: (fromEl: HTMLElement) => HTMLElement):
+      Iterable<HTMLElement> {
     return {
       [Symbol.iterator](): Iterator<HTMLElement> {
         let currentEl = start;
@@ -11,7 +12,7 @@ const Doms = {
             let nextValue = currentEl;
 
             if (currentEl !== null) {
-              currentEl = <HTMLElement> currentEl.offsetParent;
+              currentEl = stepper(currentEl);
             }
 
             return {
@@ -24,12 +25,24 @@ const Doms = {
     };
   },
 
-  relativeOffsetTop(from: HTMLElement, to: HTMLElement): number {
+  offsetParentIterable(start: HTMLElement): Iterable<HTMLElement> {
+    return Doms.domIterable(start, (fromEl: HTMLElement) => {
+      return <HTMLElement> fromEl.offsetParent;
+    });
+  },
+
+  parentIterable(start: HTMLElement): Iterable<HTMLElement> {
+    return Doms.domIterable(start, (fromEl: HTMLElement) => {
+      return fromEl.parentElement;
+    });
+  },
+
+  relativeOffsetTop(fromEl: HTMLElement, to: HTMLElement): number {
     let distance = 0;
     let foundDestination = false;
     let currentEl;
 
-    Iterables.of(Doms.offsetParentIterable(from))
+    Iterables.of(Doms.offsetParentIterable(fromEl))
         .forOf((value: HTMLElement, breakFn: () => void) => {
           currentEl = value;
           if (value === to) {
