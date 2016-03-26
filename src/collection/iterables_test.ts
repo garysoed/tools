@@ -31,11 +31,4 @@ describe('collection.Iterables', () => {
       expect(mockHandler).not.toHaveBeenCalledWith(4, jasmine.any(Function));
     });
   });
-
-  describe('toArray', () => {
-    it('should return the correct array', () => {
-      let array = [1, 2, 3, 4];
-      expect(Iterables.of(array).toArray().data).toEqual(array);
-    });
-  });
 });

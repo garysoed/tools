@@ -14,8 +14,19 @@ export class FluentMap<K, V> extends BaseFluent<Map<K, V>> {
   }
 }
 
-export default {
+const Maps = {
   of<K, V>(data: Map<K, V>): FluentMap<K, V> {
     return new FluentMap<K, V>(data);
   },
-}
+
+  fromRecord<V>(record: { [key: string]: V }): FluentMap<string, V> {
+    let entries = [];
+    for (let key in record) {
+      entries.push([key, record[key]]);
+    }
+
+    return Maps.of(new Map<string, V>(entries));
+  },
+};
+
+export default Maps;

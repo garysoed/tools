@@ -1,4 +1,3 @@
-import Arrays, { FluentArrays } from './arrays';
 import BaseFluent from './base-fluent';
 
 export class FluentIterables<T> extends BaseFluent<Iterable<T>> {
@@ -14,14 +13,6 @@ export class FluentIterables<T> extends BaseFluent<Iterable<T>> {
         shouldBreak = true;
       });
     }
-  }
-
-  toArray(): FluentArrays<T> {
-    let array = [];
-    this.forOf((value: T) => {
-      array.push(value);
-    });
-    return Arrays.of(array);
   }
 }
 

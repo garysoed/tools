@@ -4,6 +4,10 @@ export default {
       $apply(): void {
         return undefined;
       },
+
+      $watch(): void {
+        return undefined;
+      },
     };
   },
 };

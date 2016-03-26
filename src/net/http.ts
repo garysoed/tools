@@ -1,3 +1,4 @@
+import Arrays from '../collection/arrays';
 import BaseDisposable from '../dispose/base-disposable';
 import ListenableElement, {EventType as ListenableElementEventType} from
     '../event/listenable-element';
@@ -50,10 +51,13 @@ class HttpPostRequest extends HttpRequest {
 
   setFormData(data: gs.IJson): HttpPostRequest {
     // Clears all the existing form data
-    this.formData_ = Records.of(data)
-        .map((value: string, key: string) => {
-          return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
-        })
+    this.formData_ = Arrays
+        .fromRecordValues(
+            Records.of(data)
+                .mapValue((value: string, key: string) => {
+                  return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+                })
+                .data)
         .data
         .join('&')
         .replace(/%20/g, '+');
