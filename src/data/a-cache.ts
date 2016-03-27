@@ -80,8 +80,8 @@ ACache.clear = function(obj: any, key?: string): void {
   if (key === undefined) {
     if (obj[__cacheMap] !== undefined) {
       Maps
-          .of(obj[__cacheMap])
-          .forEach((key: string, value: Cache) => {
+          .of<string, Cache>(obj[__cacheMap])
+          .forEach((value: Cache, key: string) => {
             value.clearAll();
           });
     }
