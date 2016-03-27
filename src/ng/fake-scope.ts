@@ -7,6 +7,10 @@ export default {
         return undefined;
       },
 
+      $emit(): void {
+        return undefined;
+      },
+
       $on(): (() => void) {
         let disposableFunction = new DisposableFunction(() => undefined);
         return () => {
