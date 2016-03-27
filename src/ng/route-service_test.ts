@@ -87,7 +87,7 @@ describe('ng.RouteService', () => {
       expect(mock$location.path).toHaveBeenCalledWith(path);
       expect(mock$location.search).toHaveBeenCalledWith({
         'b': JSON.stringify(objectB),
-        'overridden': JSON.stringify(objectNewOverridden)
+        'overridden': JSON.stringify(objectNewOverridden),
       });
       expect(service['tempParams_']).toEqual({
         'a': objectA,

@@ -19,8 +19,8 @@ describe('collection.Records', () => {
 
       expect(Records.of(record).addAll(Maps.fromRecord(newRecord).data).data).toEqual({
         existing: 1,
-        overridden: 4,
         newValue: 3,
+        overridden: 4,
       });
     });
   });
