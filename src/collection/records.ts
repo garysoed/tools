@@ -3,7 +3,7 @@
  * and values of the same type.
  */
 import BaseFluent from './base-fluent';
-
+import Maps from './maps';
 
 interface IRecord<T> {
   [key: string]: T;
@@ -13,6 +13,19 @@ export class FluentRecords<T> extends BaseFluent<IRecord<T>> {
 
   constructor(data: IRecord<T>) {
     super(data);
+  }
+
+  /**
+   * Adds all values in the given map, overriding the values whenever there is conflict.
+   * @param map The map whose values should be added.
+   * @return The object with the added values for chaining.
+   */
+  addAll(map: Map<string, T>): FluentRecords<T> {
+    Maps.of(map)
+        .forEach((value: T, key: string) => {
+          this.data[key] = value;
+        });
+    return this;
   }
 
   filter(fn: (value: T, key: string) => boolean): FluentRecords<T> {

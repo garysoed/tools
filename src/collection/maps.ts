@@ -6,9 +6,9 @@ export class FluentMap<K, V> extends BaseFluent<Map<K, V>> {
     super(data);
   }
 
-  forEach(fn: (key: K, value: V) => any): FluentMap<K, V> {
+  forEach(fn: (value: V, key: K) => any): FluentMap<K, V> {
     this.data.forEach((value: V, key: K) => {
-      fn(key, value);
+      fn(value, key);
     });
     return this;
   }

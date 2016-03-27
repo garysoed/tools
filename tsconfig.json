@@ -70,6 +70,8 @@
         "src/ng/bem-class_test.ts",
         "src/ng/bem-class.ts",
         "src/ng/fake-scope.ts",
+        "src/ng/route-service_test.ts",
+        "src/ng/route-service.ts",
         "src/test-base.ts",
         "src/testing/i-test-setup.ts",
         "src/testing/test-async.ts",

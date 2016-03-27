@@ -1,9 +1,30 @@
 import TestBase from '../test-base';
 TestBase.setup();
 
+import Maps from './maps';
 import Records from './records';
 
 describe('collection.Records', () => {
+  describe('addAll', () => {
+    it('should add all the values in the given map and override exisitng ones', () => {
+      let record = <{ [key: string]: number }>  {
+        existing: 1,
+        overridden: 2,
+      };
+
+      let newRecord = <{ [key: string]: number }> {
+        newValue: 3,
+        overridden: 4,
+      };
+
+      expect(Records.of(record).addAll(Maps.fromRecord(newRecord).data).data).toEqual({
+        existing: 1,
+        overridden: 4,
+        newValue: 3,
+      });
+    });
+  });
+
   describe('filter', () => {
     it('should remove entries that are filtered out', () => {
       let record = <{ [key: string]: number }> {

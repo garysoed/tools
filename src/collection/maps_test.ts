@@ -8,13 +8,13 @@ describe('collection.Maps', () => {
   describe('forEach', () => {
     it('should call the function for every entry in the map', () => {
       let callback = jasmine.createSpy('callback');
-      let map = new Map<string, string>();
-      map.set('a', 'a');
-      map.set('b', 'b');
+      let map = new Map<string, number>();
+      map.set('a', 1);
+      map.set('b', 2);
       Maps.of(map).forEach(callback);
 
-      expect(callback).toHaveBeenCalledWith('a', 'a');
-      expect(callback).toHaveBeenCalledWith('b', 'b');
+      expect(callback).toHaveBeenCalledWith(1, 'a');
+      expect(callback).toHaveBeenCalledWith(2, 'b');
     });
   });
 
