@@ -4,6 +4,7 @@ TestBase.setup();
 import Attributes from '../ui/attributes';
 import { BemClassCtrl } from './bem-class';
 import FakeScope from '../ng/fake-scope';
+import TestDispose from '../testing/test-dispose';
 
 
 describe('ng.BemClassCtrl', () => {
@@ -11,6 +12,7 @@ describe('ng.BemClassCtrl', () => {
 
   beforeEach(() => {
     ctrl = new BemClassCtrl();
+    TestDispose.add(ctrl);
   });
 
   describe('onWatchValueChange_', () => {
@@ -112,7 +114,7 @@ describe('ng.BemClassCtrl', () => {
       parentEl.appendChild(el);
 
       spyOn(ctrl, 'onWatchValueChange_');
-      spyOn(mock$scope, '$watch');
+      spyOn(mock$scope, '$watch').and.callThrough();
 
       ctrl.onLink(mock$scope, attrValue, el);
 

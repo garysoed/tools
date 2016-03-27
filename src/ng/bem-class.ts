@@ -1,17 +1,20 @@
 import Arrays from '../collection/arrays';
+import BaseDisposable from '../dispose/base-disposable';
 import Checks from '../checks';
+import DisposableFunction from '../dispose/disposable-function';
 import Doms from '../ui/doms';
 import Iterables from '../collection/iterables';
 import Records from '../collection/records';
 
 const CSS_ROOT_ATTR = 'gs-bem-root';
 
-export class BemClassCtrl {
+export class BemClassCtrl extends BaseDisposable {
   private appliedClasses_: string[];
   private classPrefix_: string;
   private element_: HTMLElement;
 
   constructor() {
+    super();
     this.appliedClasses_ = [];
     this.classPrefix_ = null;
     this.element_ = null;
@@ -69,7 +72,8 @@ export class BemClassCtrl {
     this.classPrefix_ = rootEl.attributes.getNamedItem(CSS_ROOT_ATTR).value;
     this.element_ = element;
 
-    scope.$watch(attrValue, this.onWatchValueChange_.bind(this));
+    this.addDisposable(new DisposableFunction(
+        scope.$watch(attrValue, this.onWatchValueChange_.bind(this))));
   }
 }
 

@@ -1,3 +1,5 @@
+import DisposableFunction from '../dispose/disposable-function';
+
 export default {
   create(): any {
     return {
@@ -5,8 +7,18 @@ export default {
         return undefined;
       },
 
-      $watch(): void {
-        return undefined;
+      $on(): (() => void) {
+        let disposableFunction = new DisposableFunction(() => undefined);
+        return () => {
+          disposableFunction.dispose();
+        };
+      },
+
+      $watch(): (() => void) {
+        let disposableFunction = new DisposableFunction(() => undefined);
+        return () => {
+          disposableFunction.dispose();
+        };
       },
     };
   },
