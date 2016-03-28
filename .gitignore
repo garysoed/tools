@@ -1,5 +1,6 @@
 .DS_Store
 bin/
 bower_components/
+doc/
 node_modules/
 out/
