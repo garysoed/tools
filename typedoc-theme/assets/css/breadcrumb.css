@@ -1,0 +1,12 @@
+.gv-breadcrumb__icon {
+  color: #CFD8DC;
+}
+
+a.gv-breadcrumb__item {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+a.gv-breadcrumb__item:not(:hover) {
+  color: #CFD8DC;
+}

@@ -1,0 +1,33 @@
+a {
+  color: #607D8B;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #FFD600;
+}
+
+.gs-table {
+  border: 1px solid #607D8B;
+  margin: 2rem;
+}
+
+.gs-table > h3 {
+  padding: 1rem;
+  margin: 0;
+  border-bottom: 1px solid #607D8B;
+}
+
+.gs-table > section {
+  column-count: 3;
+  -webkit-column-count: 3;
+  column-gap: 1rem;
+  -webkit-column-gap: 1rem;
+  padding: 1rem;
+}
+
+.gs-table > section > div {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5rem;
+}

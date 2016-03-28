@@ -1,0 +1,35 @@
+a.gs-navigation__item {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 2rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 1rem 0 2rem;
+  white-space: nowrap;
+}
+
+.gs-navigation__root {
+  background-color: #607D8B;
+  border-right: 5px solid transparent;
+}
+
+.gs-navigation__root.gs-navigation__selected {
+  border-right-color: #FFD600;
+}
+
+.gs-navigation__root a:not(:hover) {
+  color: #CFD8DC;
+}
+
+a.gs-navigation__member {
+  padding-left: 4rem;
+}
+
+a.gs-navigation__globals {
+  font-size: 20px;
+  text-transform: uppercase;
+}
+
+a.gs-navigation__globals:not(:hover) {
+  color: white;
+}

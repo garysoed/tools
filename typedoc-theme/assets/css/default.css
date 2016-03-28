@@ -1,0 +1,37 @@
+.gs-default__header {
+  background-color: #607D8B;
+  color: #CFD8DC;
+  padding: 1em 2em;
+  z-index: 1;
+}
+
+.gs-default__navigation-bar {
+  background-color: #607D8B;
+  padding-bottom: 2rem;
+  width: 250px;
+}
+
+.gs-default__project-name {
+  margin: 5px 0;
+}
+
+.gs-default__project-name a:not(:hover) {
+  color: white;
+}
+
+.gs-default__content {
+  padding-bottom: 2rem;
+}
+
+.gs-default__content > section {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.gs-default__content > header > * {
+  background-color: #607D8B;
+  color: white;
+  text-transform: uppercase;
+  padding: 1rem 2rem;
+  margin: 0;
+}

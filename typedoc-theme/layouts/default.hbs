@@ -1,54 +1,63 @@
-<!doctype html>
-<html class="default no-js">
+<!DOCTYPE html>
+<html lang="en">
 <head>
+  <base href=".">
+
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>{{#ifCond model.name '==' project.name}}{{project.name}}{{else}}{{model.name}} | {{project.name}}{{/ifCond}}</title>
-  <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#607D8B">
 
-  <link rel="stylesheet" href="{{relativeURL "assets/css/main.css"}}">
-  <link rel="stylesheet" href="{{relativeURL "assets/css/custom.css"}}">
-  <link rel="stylesheet" href="{{relativeURL "assets/css/header.css"}}">
+  <title>{{name}}</title>
+
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <script src="{{relativeURL "assets/js/modernizr.js"}}"></script>
+
+  <!-- Angular -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-aria.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-messages.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.min.js"></script>
+
+  <!-- Angular Material -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.js"></script>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{relativeURL "assets/css/breadcrumb.css"}}">
+  <link rel="stylesheet" href="{{relativeURL "assets/css/default.css"}}">
+  <link rel="stylesheet" href="{{relativeURL "assets/css/main.css"}}">
+  <link rel="stylesheet" href="{{relativeURL "assets/css/navigation.css"}}">
 </head>
-<body>
+<body ng-app="DocApp" layout="column">
+  <section class="gs-default__header" layout="column">
+    <header>
+      <h1 class="gs-default__project-name">
+        <a href="{{relativeURL "index.html"}}">{{project.name}}</a>
+      </h1>
+    </header>
+    <div>{{#with model}}{{> breadcrumb}}{{/with}}</div>
+  </section>
 
-{{> header}}
-
-<div class="container container-main">
-  <div class="row">
-    <div class="col-8 col-content">
+  <section flex layout="row">
+    <md-content class="gs-default__navigation-bar">
+      <nav>
+        {{#each navigation.children}}
+          {{> navigation}}
+        {{/each}}
+      </nav>
+    </md-content>
+    <md-content class="gs-default__content" flex>
       {{{contents}}}
-    </div>
-    <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
-      <nav class="tsd-navigation primary">
-        <ul>
-          {{#each navigation.children}}
-            {{> navigation}}
-          {{/each}}
-        </ul>
-      </nav>
+    </md-content>
+  </section>
 
-      <nav class="tsd-navigation secondary menu-sticky">
-        <ul class="before-current">
-          {{#each toc.children}}
-            {{> toc.root}}
-          {{/each}}
-        </ul>
-      </nav>
-    </div>
-  </div>
-</div>
-
-{{> footer}}
-
-<div class="overlay"></div>
-<script src="{{relativeURL "assets/js/main.js"}}"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="{{relativeURL "assets/js/search.js"}}"><' + '/script>');</script>
-
-{{> analytics}}
-
+  <script type="text/javascript">
+    angular
+        .module('DocApp', ['ngMaterial'])
+        .config(function($mdIconProvider) {
+          $mdIconProvider
+              .defaultFontSet('material-icons');
+        });
+  </script>
 </body>
 </html>

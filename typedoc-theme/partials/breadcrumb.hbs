@@ -1,0 +1,13 @@
+{{#if parent}}
+  {{#with parent}}{{> breadcrumb}}{{/with}}
+  <md-icon class="gv-breadcrumb__icon">keyboard_arrow_right</md-icon>
+  {{#if url}}
+    <a class="gv-breadcrumb__item" href="{{relativeURL url}}">{{name}}</a>
+  {{else}}
+    <span>{{name}}</span>
+  {{/if}}
+{{else}}
+  {{#if url}}
+    <a class="gv-breadcrumb__item" href="{{relativeURL url}}">Globals</a>
+  {{/if}}
+{{/if}}

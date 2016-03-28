@@ -52,6 +52,33 @@ gn.exec('doc', function() {
         ignoreCompilerErrors: false,
         version: true,
       }));
+});
+
+
+gn.exec('doc-default', function() {
+  return gn.src(['**/*.ts', '!src/**/*_test.ts', '!node_modules/**', 'node_modules/typescript/lib/lib.es6.d.ts'])
+      .pipe(typedoc({
+        "target": "es5",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "isolatedModules": false,
+        "jsx": "react",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "noImplicitAny": false,
+        "noLib": false,
+        "preserveConstEnums": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "rootDir": "./",
+
+        out: "./doc-default",
+        json: "doc-default/doc.json",
+
+        // TypeDoc options (see typedoc docs)
+        name: "gs-tools",
+        ignoreCompilerErrors: false,
+        version: true,
+      }));
 })
 
 var mockAngular = {
