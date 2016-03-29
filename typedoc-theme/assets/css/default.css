@@ -28,10 +28,23 @@
   padding-right: 2rem;
 }
 
-.gs-default__content > header > * {
+.gs-default__content > header > h2 {
   background-color: #607D8B;
   color: white;
-  text-transform: uppercase;
+  text-transform: capitalize;
   padding: 1rem 2rem;
+  margin: 0;
+}
+
+.gs-default__content header.gs-sticky {
+  background-color: #CFD8DC;
+  height: 2rem;
+  line-height: 2rem;
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+}
+
+.gs-default__content header.gs-sticky > h3 {
   margin: 0;
 }

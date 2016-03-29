@@ -2,10 +2,11 @@
 
 /**
  * Collection of miscellaneous methods to do asynchronous operations.
- * @custom CUSTOM ANNOTATION
  */
 const Asyncs = {
   /**
+   * Runs the given function asynchronously.
+   *
    * @param <T> Return type of the given function.
    * @param fn The function to run.
    * @return Promise that will be resolved when the function has finished running.

@@ -1,27 +1,33 @@
-<section class="tsd-panel tsd-member {{cssClasses}}">
-  <a name="{{anchor}}" class="tsd-anchor"></a>
-  {{#if name}}
-    <h3>
-      {{#each flags}}
-        <span class="tsd-flag ts-flag{{this}}">{{this}}</span>
+<a name="{{anchor}}" class="tsd-anchor"></a>
+<header class="gs-sticky">
+  <h3>
+    {{#if name}}
+      {{#each flags}}{{this}}
       {{/each}}
-      {{{wbr name}}}
+      <span class="gs-member__signature">
+        {{> gs.signature}}
+      </span>
       {{#if sources}}
         {{#each sources}}
           {{> code.link}}
         {{/each}}
       {{/if}}
-    </h3>
-  {{/if}}
+    {{/if}}
+  </h3>
+</header>
 
+<md-divider></md-divider>
+<section class="gs-member__definition">
   {{#if signatures}}
-    {{> member.signatures}}
+  {{> member.signatures}}
   {{else}}{{#if hasGetterOrSetter}}
-    {{> member.getterSetter}}
+  {{> member.getterSetter}}
   {{else}}
-    {{> member.declaration}}
+  {{> member.declaration}}
   {{/if}}{{/if}}
-
+</section>
+<md-divider></md-divider>
+<section class="gs-member__children">
   {{#each groups}}
     {{#each children}}
       {{#unless hasOwnDocument}}
@@ -30,3 +36,4 @@
     {{/each}}
   {{/each}}
 </section>
+<md-divider></md-divider>

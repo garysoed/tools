@@ -1,0 +1,55 @@
+{{#each signatures}}
+  {{#unless hideSources}}
+    {{> member.sources}}
+  {{/unless}}
+
+  {{> comment}}
+
+  {{#if typeParameters}}
+    <h4 class="md-title">Type parameters</h4>
+    {{> typeParameters}}
+  {{/if}}
+
+  {{#if parameters}}
+    <h4 class="md-title">Parameters</h4>
+    <table class="gs-parameters md-body-1">
+      {{#each parameters}}
+        <tr>
+          <td class="gs-code">
+            {{#compact}}
+              {{#each flags}}
+                {{this}}&nbsp;
+              {{/each}}
+              {{#if flags.isRest}}...{{/if}}
+              {{name}}:&nbsp;
+              {{#with type}}{{>type}}{{/with}}
+              {{#if defaultValue}}
+                &nbsp;=&nbsp;
+                {{defaultValue}}
+              {{/if}}
+            {{/compact}}
+          </td>
+          <td>
+            {{> comment}}
+          </td>
+        </tr>
+      {{/each}}
+    </table>
+  {{/if}}
+
+  {{#if type}}
+    <h4 class="gs-code">returns {{#with type}}{{>type}}{{/with}}</h4>
+
+    {{#if comment.returns}}
+      <div class="md-body-1 gs-member-signatures__return">
+        {{#markdown}}{{{comment.returns}}}{{/markdown}}
+      </div>
+    {{/if}}
+
+    {{#if type.declaration}}
+      {{#with type.declaration}}
+        {{> parameter}}
+      {{/with}}
+    {{/if}}
+  {{/if}}
+{{/each}}

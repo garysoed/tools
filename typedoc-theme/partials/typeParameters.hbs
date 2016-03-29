@@ -1,0 +1,18 @@
+<table class="gs-parameters md-body-1">
+  {{#each typeParameters}}
+    <tr>
+      <td class="gs-code">
+        {{#compact}}
+          {{name}}
+          {{#if type}}
+            :&nbsp;
+            {{#with type}}{{> type}}{{/with}}
+          {{/if}}
+        {{/compact}}
+      </td>
+      <td>
+        {{> comment}}
+      </td>
+    </tr>
+  {{/each}}
+</table>

@@ -1,0 +1,8 @@
+<header>
+  <h2 class="md-display-1">{{title}}</h2>
+</header>
+{{#each children}}
+  {{#unless hasOwnDocument}}
+    {{> member}}
+  {{/unless}}
+{{/each}}

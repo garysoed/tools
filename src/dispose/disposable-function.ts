@@ -3,7 +3,6 @@
  */
 import BaseDisposable from './base-disposable';
 
-
 export default class DisposableFunction extends BaseDisposable {
   private fn_: Function;
 

@@ -1,7 +1,10 @@
   {{#if url}}
-    <a href="{{url}}" title="{{fileName}}:{{line}}">
-      <i class="material-icons gs-code-icon">code</i>
+    <a href="{{url}}">
+      <md-tooltip direction="bottom">
+        {{fileName}}:{{line}}
+      </md-tooltip>
+      <md-icon class="gs-code-link__icon">code</md-icon>
     </a>
   {{else}}
-    <i class="material-icons gs-code-icon" title="{{fileName}}:{{line}}">code</i>
+    <md-icon class="gs-code-link__icon" title="{{fileName}}:{{line}}">code</md-icon>
   {{/if}}

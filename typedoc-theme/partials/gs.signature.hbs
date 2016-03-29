@@ -1,0 +1,30 @@
+{{#if signatures}}
+  {{#each signatures}}
+    {{#compact}}
+      {{{wbr name}}}
+      {{#if typeParameters}}
+        &lt;
+        {{#each typeParameters}}
+          {{#if @index}},&nbsp;{{/if}}
+          {{name}}
+        {{/each}}
+        &gt;
+      {{/if}}
+      (
+      {{#each parameters}}
+        {{> gs.signature.parameter}}
+      {{/each}}
+      )
+      {{#if type}}
+        :&nbsp;
+        {{#with type}}{{>type}}{{/with}}
+      {{/if}}
+    {{/compact}}
+  {{/each}}
+{{else}}{{#if hasGetterOrSetter}}
+TODO(gs): Getter / Setter
+{{else}}
+  {{#compact}}
+    {{{wbr name}}}{{#if isOptional}}?{{/if}}:{{#with type}}{{>type}}{{/with}}
+  {{/compact}}
+{{/if}}{{/if}}

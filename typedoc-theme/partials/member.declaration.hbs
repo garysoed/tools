@@ -1,0 +1,14 @@
+{{> member.sources}}
+
+<div class="md-body-1">
+  {{> comment}}
+</div>
+
+{{#if type.declaration}}
+  <div class="tsd-type-declaration">
+    <h4>Type declaration</h4>
+    {{#with type.declaration}}
+      {{> parameter}}
+    {{/with}}
+  </div>
+{{/if}}

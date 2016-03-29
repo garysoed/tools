@@ -1,0 +1,18 @@
+{{#with comment}}
+  {{#if hasVisibleComponent}}
+    {{#if shortText}}
+      {{#if text}}
+        <div class="md-body-2">
+          {{#markdown}}{{{shortText}}}{{/markdown}}
+        </div>
+      {{else}}
+        <div class="md-body-1">
+          {{#markdown}}{{{shortText}}}{{/markdown}}
+        </div>
+      {{/if}}
+    {{/if}}
+    {{#if text}}
+      <div>{{#markdown}}{{{text}}}{{/markdown}}</div>
+    {{/if}}
+  {{/if}}
+{{/with}}
