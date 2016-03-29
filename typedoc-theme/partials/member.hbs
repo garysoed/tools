@@ -27,13 +27,15 @@
   {{/if}}{{/if}}
 </section>
 <md-divider></md-divider>
-<section class="gs-member__children">
-  {{#each groups}}
-    {{#each children}}
-      {{#unless hasOwnDocument}}
-        {{> member}}
-      {{/unless}}
+{{#if groups}}
+  <section class="gs-member__children">
+    {{#each groups}}
+      {{#each children}}
+        {{#unless hasOwnDocument}}
+          {{> member}}
+        {{/unless}}
+      {{/each}}
     {{/each}}
-  {{/each}}
-</section>
-<md-divider></md-divider>
+  </section>
+  <md-divider></md-divider>
+{{/if}}
