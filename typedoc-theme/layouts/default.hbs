@@ -7,7 +7,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#607D8B">
 
-  <title>{{name}}</title>
+  <title>
+    {{#ifCond model.name '==' project.name}}
+      {{project.name}}
+    {{else}}
+      {{project.name}} &bull; {{model.name}}
+    {{/ifCond}}
+  </title>
 
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -21,6 +27,11 @@
   <!-- Angular Material -->
   <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.js"></script>
   <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.css">
+
+  <!-- Highlight.js -->
+  <link rel="stylesheet" href="{{relativeURL "assets/css/monokai.css"}}">
+  <script src="{{relativeURL "assets/js/highlight.pack.js"}}"></script>
+  <script></script>
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="{{relativeURL "assets/css/breadcrumb.css"}}">
@@ -58,6 +69,7 @@
   </section>
 
   <script type="text/javascript">
+    hljs.initHighlightingOnLoad();
     angular
         .module('DocApp', ['ngMaterial'])
         .config(function($mdIconProvider) {

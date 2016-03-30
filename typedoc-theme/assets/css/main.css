@@ -31,7 +31,32 @@ table.gs-parameters td.gs-code {
   vertical-align: top;
 }
 
-.gs-code {
+code {
+  background-color: #CFD8DC;
+  border-radius: .2rem;
+  font-family: 'Ubuntu Mono', monospace;
+  padding: .1rem .2rem;
+  white-space: pre;
+}
+
+p {
+  margin: 2rem 0;
+  max-width: 40rem;
+}
+table.gs-parameters p {
+  margin: 1rem 0;
+}
+
+.gs-code,
+.hljs {
   font-family: 'Ubuntu Mono', monospace;
   font-weight: bold;
+}
+
+.gs-code {
+  white-space: nowrap;
+}
+
+.hljs {
+  padding: 2rem;
 }
