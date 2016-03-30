@@ -7,8 +7,12 @@
 
 .gs-default__navigation-bar {
   background-color: #607D8B;
-  padding-bottom: 2rem;
+  padding-botom: 2rem;
   width: 250px;
+}
+
+.gs-default__navigation-bar > nav {
+  margin: 2rem 0;
 }
 
 .gs-default__project-name {

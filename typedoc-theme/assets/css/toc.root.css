@@ -1,0 +1,8 @@
+.gs-toc-root__root a:not(:hover) {
+  color: white;
+}
+
+.gs-toc-root__entry {
+  border-right: 5px solid #FFD600;
+  padding: .5rem 1rem;
+}
