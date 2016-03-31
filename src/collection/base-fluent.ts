@@ -1,4 +1,4 @@
-export default class BaseFluent<T> {
+class BaseFluent<T> {
   private data_: T;
 
   constructor(data: T) {
@@ -9,3 +9,5 @@ export default class BaseFluent<T> {
     return this.data_;
   }
 }
+
+export default BaseFluent;

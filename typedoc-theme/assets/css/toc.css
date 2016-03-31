@@ -1,0 +1,12 @@
+.gs-toc__entry a:not(:hover) {
+  color: white;
+}
+
+.gs-toc__entry {
+  border-right: 5px solid #FFD600;
+  padding: .5rem 1rem;
+}
+
+.gs-toc__children {
+  padding-left: 2rem;
+}

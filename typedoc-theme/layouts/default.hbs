@@ -43,7 +43,7 @@
   <link rel="stylesheet" href="{{relativeURL "assets/css/member.declaration.css"}}">
   <link rel="stylesheet" href="{{relativeURL "assets/css/member.signatures.css"}}">
   <link rel="stylesheet" href="{{relativeURL "assets/css/navigation.css"}}">
-  <link rel="stylesheet" href="{{relativeURL "assets/css/toc.root.css"}}">
+  <link rel="stylesheet" href="{{relativeURL "assets/css/toc.css"}}">
   <link rel="stylesheet" href="{{relativeURL "assets/css/typeParameters.css"}}">
 </head>
 <body ng-app="DocApp" layout="column">
@@ -57,16 +57,19 @@
   </section>
 
   <section flex layout="row">
-    <md-content class="gs-default__navigation-bar">
+    <md-content class="gs-default__navigation-bar md-body-1">
       <nav>
         {{#each navigation.children}}
           {{> navigation}}
         {{/each}}
       </nav>
-      <nav>
-        {{#each toc.children}}
-          {{> toc.root }}
-        {{/each}}
+      <md-divider></md-divider>
+      <nav layout="column" layout-align="star end">
+        <div layout="column">
+          {{#each toc.children}}
+            {{> toc.root }}
+          {{/each}}
+        </div>
       </nav>
     </md-content>
     <md-content class="gs-default__content" flex>

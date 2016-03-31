@@ -15,6 +15,10 @@
   margin: 2rem 0;
 }
 
+.gs-default__navigation-bar md-divider {
+  border-top-color: #CFD8DC;
+}
+
 .gs-default__project-name {
   margin: 5px 0;
 }

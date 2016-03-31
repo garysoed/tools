@@ -1,0 +1,10 @@
+<div class="gs-toc__entry" layout="row">
+  <a href="{{relativeURL url}}">{{{wbr title}}}</a>
+</div>
+{{#if children}}
+  <div class="gs-toc__children">
+    {{#each children}}
+      {{> toc}}
+    {{/each}}
+  </div>
+{{/if}}
