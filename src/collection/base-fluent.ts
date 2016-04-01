@@ -5,6 +5,9 @@ class BaseFluent<T> {
     this.data_ = data;
   }
 
+  /**
+   * The underlying data object.
+   */
   get data(): T {
     return this.data_;
   }

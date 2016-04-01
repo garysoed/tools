@@ -1,0 +1,12 @@
+{{#if getSignature}}
+  <span class="gs-code">
+    {{#compact}}
+      <span class="gs-gettersetter__keyword">get</span> {{../name}}:&nbsp;
+      {{#with getSignature}}
+        {{#with type}}
+          {{> type}}
+        {{/with}}
+      {{/with}}
+    {{/compact}}
+  </span>
+{{/if}}

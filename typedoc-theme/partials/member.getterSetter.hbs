@@ -1,0 +1,10 @@
+{{#if getSignature}}
+  {{> member.signatures signatures=getSignature}}
+{{/if}}
+{{#if setSignature}}
+  {{#with setSignature}}
+    <li class="tsd-description">
+      {{> member.signature.body }}
+    </li>
+  {{/with}}
+{{/if}}

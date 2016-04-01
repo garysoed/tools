@@ -5,11 +5,25 @@ import Iterables from './iterables';
 import Records from './records';
 import Sets from './sets';
 
+/**
+ * Chainable object to manipulate an array.
+ *
+ * @param <T> The type of element in the array.
+ */
 export class FluentArrays<T> extends BaseFluent<T[]> {
+  /**
+   * @param data The underlying array to modify.
+   */
   constructor(data: T[]) {
     super(data);
   }
 
+  /**
+   * Removes element in the array that are also in the given array.
+   *
+   * @param toRemove Array containing elements to remove.
+   * @return [[FluentArrays]] instance for chaining.
+   */
   diff(toRemove: T[]): FluentArrays<T> {
     let toRemoveSet = Sets.fromArray(toRemove).data;
     let result = [];
@@ -23,6 +37,18 @@ export class FluentArrays<T> extends BaseFluent<T[]> {
     return new FluentArrays(result);
   }
 
+  /**
+   * Executes the given function on every element in the array.
+   *
+   * This is a polyfill of `for..of` function with ability to break out of the loop midway.
+   *
+   * @param fn The function to execute on every element of the array. This accepts two arguments:
+   *
+   * 1.  Element in the array.
+   * 1.  Function called to break out of the loop.
+   *
+   * @return [[FluentArrays]] instance for chaining.
+   */
   forOf(fn: (value: T, breakFn: () => void) => void): FluentArrays<T> {
     Iterables.of<T>(this.data).forOf(fn);
     return this;

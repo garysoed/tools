@@ -22,7 +22,7 @@
     {{/compact}}
   {{/each}}
 {{else}}{{#if hasGetterOrSetter}}
-TODO(gs): Getter / Setter
+  {{> gs.gettersetter}}
 {{else}}
   {{#compact}}
     {{{wbr name}}}{{#if isOptional}}?{{/if}}:{{#with type}}{{>type}}{{/with}}

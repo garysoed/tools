@@ -23,12 +23,13 @@ table.gs-parameters {
 table.gs-parameters td {
   padding-left: 2rem;
   padding-right: 2rem;
+  vertical-align: top;
 }
 
 table.gs-parameters td.gs-code {
+  font-weight: bold;
   padding-top: 1rem;
   padding-bottom: 1rem;
-  vertical-align: top;
 }
 
 code {
@@ -50,7 +51,6 @@ table.gs-parameters p {
 .gs-code,
 .hljs {
   font-family: 'Ubuntu Mono', monospace;
-  font-weight: bold;
 }
 
 .gs-code {
