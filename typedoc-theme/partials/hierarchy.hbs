@@ -3,13 +3,11 @@
     <div>
       <div>
         <md-icon>keyboard_arrow_right</md-icon>
-        <span>
-          {{#if ../isTarget}}
-            {{this}}
-          {{else}}
-            {{> type}}
-          {{/if}}
-        </span>
+        {{#if ../isTarget}}
+          <span class="gs-hierarchy__target">{{this}}</span>
+        {{else}}
+          <span>{{> type}}</span>
+        {{/if}}
       </div>
       <div class="gs-hierarchy__children">
         {{#if @last}}

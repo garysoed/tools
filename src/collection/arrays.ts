@@ -10,7 +10,7 @@ import Sets from './sets';
  *
  * @param <T> The type of element in the array.
  */
-export class FluentArrays<T> extends BaseFluent<T[]> {
+export class FluentArray<T> extends BaseFluent<T[]> {
   /**
    * @param data The underlying array to modify.
    */
@@ -22,9 +22,9 @@ export class FluentArrays<T> extends BaseFluent<T[]> {
    * Removes element in the array that are also in the given array.
    *
    * @param toRemove Array containing elements to remove.
-   * @return [[FluentArrays]] instance for chaining.
+   * @return [[FluentArray]] instance for chaining.
    */
-  diff(toRemove: T[]): FluentArrays<T> {
+  diff(toRemove: T[]): FluentArray<T> {
     let toRemoveSet = Sets.fromArray(toRemove).data;
     let result = [];
 
@@ -34,7 +34,7 @@ export class FluentArrays<T> extends BaseFluent<T[]> {
       }
     });
 
-    return new FluentArrays(result);
+    return new FluentArray(result);
   }
 
   /**
@@ -47,9 +47,9 @@ export class FluentArrays<T> extends BaseFluent<T[]> {
    * 1.  Element in the array.
    * 1.  Function called to break out of the loop.
    *
-   * @return [[FluentArrays]] instance for chaining.
+   * @return [[FluentArray]] instance for chaining.
    */
-  forOf(fn: (value: T, breakFn: () => void) => void): FluentArrays<T> {
+  forOf(fn: (value: T, breakFn: () => void) => void): FluentArray<T> {
     Iterables.of<T>(this.data).forOf(fn);
     return this;
   }
@@ -81,7 +81,7 @@ const Arrays = {
    * @param iterable Iterable object to start from.
    * @return Array wrapper object to do operations on.
    */
-  fromIterable<T>(iterable: Iterable<T>): FluentArrays<T> {
+  fromIterable<T>(iterable: Iterable<T>): FluentArray<T> {
     let array = [];
     Iterables.of(iterable).forOf((value: T) => {
       array.push(value);
@@ -98,7 +98,7 @@ const Arrays = {
    *    number of entries in the object.
    * @return Array wrapper object to do operations on.
    */
-  fromNumericalIndexed<T>(data: {[index: number]: T, length: number}): FluentArrays<T> {
+  fromNumericalIndexed<T>(data: {[index: number]: T, length: number}): FluentArray<T> {
     let array = [];
     for (let i = 0; i < data.length; i++) {
       array.push(data[i]);
@@ -113,7 +113,7 @@ const Arrays = {
    * @param record The record object whose keys will be used to create the array.
    * @return Array wrapper object to do operations on.
    */
-  fromRecordKeys(record: {[key: string]: any}): FluentArrays<string> {
+  fromRecordKeys(record: {[key: string]: any}): FluentArray<string> {
     let array = [];
     Records
         .of(record)
@@ -131,7 +131,7 @@ const Arrays = {
    * @param record The record object whose values will be used to create the array.
    * @return Array wrapper object to do operations on.
    */
-  fromRecordValues<T>(record: {[key: string]: T}): FluentArrays<T> {
+  fromRecordValues<T>(record: {[key: string]: T}): FluentArray<T> {
     let array = [];
     Records
         .of(record)
@@ -148,8 +148,8 @@ const Arrays = {
    * @param data The array object to start with.
    * @return Array wrapper object to do operations on.
    */
-  of<T>(data: T[]): FluentArrays<T> {
-    return new FluentArrays<T>(data);
+  of<T>(data: T[]): FluentArray<T> {
+    return new FluentArray<T>(data);
   },
 };
 

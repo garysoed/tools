@@ -39,7 +39,7 @@
         {{/compact}}
       {{else}}
         {{#compact}}
-          <span class="">
+          <span>
             {{#if name}}
               {{name}}
             {{else}}{{#if value}}
@@ -55,9 +55,24 @@
                   ) =&gt; {{#with type}}{{>type}}{{/with}}
                 {{/compact}}
               {{/each}}
+            {{else}}{{#if declaration.indexSignature}}
+              {{#compact}}
+                {
+                  {{#with declaration.indexSignature}}
+                    [
+                      {{#each parameters}}
+                        {{name}}:&nbsp;
+                        {{#with type}}{{> type}}{{/with}}
+                      {{/each}}
+                    ]:&nbsp;
+                    {{#with type}}{{> type}}{{/with}}
+                  {{/with}}
+                }
+              {{/compact}}
             {{else}}
+              [ELSE]
               {{this}}
-            {{/if}}{{/if}}{{/if}}
+            {{/if}}{{/if}}{{/if}}{{/if}}
           </span>
           {{#if typeArguments}}
             <span class="tsd-signature-symbol">&lt;</span>

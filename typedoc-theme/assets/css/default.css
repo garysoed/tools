@@ -1,5 +1,6 @@
 .gs-default__header {
   background-color: #607D8B;
+  border-bottom: 1px solid #CFD8DC;
   color: #CFD8DC;
   padding: 1em 2em;
   z-index: 1;

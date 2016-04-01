@@ -9,7 +9,7 @@ interface IRecord<T> {
   [key: string]: T;
 }
 
-export class FluentRecords<T> extends BaseFluent<IRecord<T>> {
+export class FluentRecord<T> extends BaseFluent<IRecord<T>> {
 
   constructor(data: IRecord<T>) {
     super(data);
@@ -20,7 +20,7 @@ export class FluentRecords<T> extends BaseFluent<IRecord<T>> {
    * @param map The map whose values should be added.
    * @return The object with the added values for chaining.
    */
-  addAll(map: Map<string, T>): FluentRecords<T> {
+  addAll(map: Map<string, T>): FluentRecord<T> {
     Maps.of(map)
         .forEach((value: T, key: string) => {
           this.data[key] = value;
@@ -28,7 +28,7 @@ export class FluentRecords<T> extends BaseFluent<IRecord<T>> {
     return this;
   }
 
-  filter(fn: (value: T, key: string) => boolean): FluentRecords<T> {
+  filter(fn: (value: T, key: string) => boolean): FluentRecord<T> {
     let newRecord: IRecord<T> = {};
     this.forEach((value: T, key: string) => {
       if (fn(value, key)) {
@@ -36,7 +36,7 @@ export class FluentRecords<T> extends BaseFluent<IRecord<T>> {
       }
     });
 
-    return new FluentRecords<T>(newRecord);
+    return new FluentRecord<T>(newRecord);
   }
 
   forEach(fn: (arg: T, key: string) => void): void {
@@ -45,17 +45,17 @@ export class FluentRecords<T> extends BaseFluent<IRecord<T>> {
     }
   }
 
-  mapValue<V>(fn: (arg: T, key: string) => V): FluentRecords<V> {
+  mapValue<V>(fn: (arg: T, key: string) => V): FluentRecord<V> {
     let outData = <IRecord<V>> {};
     for (let key in this.data) {
       outData[key] = fn(this.data[key], key);
     }
-    return new FluentRecords<V>(outData);
+    return new FluentRecord<V>(outData);
   }
 }
 
 export default {
-  of<T>(data: IRecord<T>): FluentRecords<T> {
-    return new FluentRecords<T>(data);
+  of<T>(data: IRecord<T>): FluentRecord<T> {
+    return new FluentRecord<T>(data);
   },
 };
