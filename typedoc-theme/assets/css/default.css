@@ -56,3 +56,7 @@
 .gs-default__content header.gs-sticky > h3 {
   margin: 0;
 }
+
+.tsd-is-private {
+  display: none;
+}

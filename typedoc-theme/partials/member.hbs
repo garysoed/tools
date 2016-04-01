@@ -1,5 +1,5 @@
 <a name="{{anchor}}" class="tsd-anchor"></a>
-<header class="gs-sticky">
+<header class="gs-sticky {{cssClasses}}">
   <h3>
     {{#if name}}
       {{#each flags}}{{this}}
@@ -16,8 +16,8 @@
   </h3>
 </header>
 
-<md-divider></md-divider>
-<section class="gs-member__definition">
+<md-divider class="{{cssClasses}}"></md-divider>
+<section class="gs-member__definition {{cssClasses}}">
   {{#if signatures}}
   {{> member.signatures}}
   {{else}}{{#if hasGetterOrSetter}}
@@ -26,9 +26,9 @@
   {{> member.declaration}}
   {{/if}}{{/if}}
 </section>
-<md-divider></md-divider>
+<md-divider class="{{cssClasses}}"></md-divider>
 {{#if groups}}
-  <section class="gs-member__children">
+  <section class="gs-member__children {{cssClasses}}">
     {{#each groups}}
       {{#each children}}
         {{#unless hasOwnDocument}}
@@ -37,5 +37,5 @@
       {{/each}}
     {{/each}}
   </section>
-  <md-divider></md-divider>
+  <md-divider class="{{cssClasses}}"></md-divider>
 {{/if}}

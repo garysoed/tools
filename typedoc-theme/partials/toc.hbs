@@ -1,8 +1,8 @@
-<div class="gs-toc__entry" layout="row">
+<div class="gs-toc__entry {{cssClasses}}" layout="row">
   <a href="{{relativeURL url}}">{{{wbr title}}}</a>
 </div>
 {{#if children}}
-  <div class="gs-toc__children">
+  <div class="gs-toc__children {{cssClasses}}">
     {{#each children}}
       {{> toc}}
     {{/each}}

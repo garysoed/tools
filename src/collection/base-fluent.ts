@@ -1,6 +1,16 @@
+/// @doc
+
+/**
+ * Base class for all fluent collection classes.
+ *
+ * @param <T> Type of the underlying collection data.
+ */
 class BaseFluent<T> {
   private data_: T;
 
+  /**
+   * @param data The underlying collection data.
+   */
   constructor(data: T) {
     this.data_ = data;
   }
