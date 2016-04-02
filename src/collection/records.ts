@@ -111,7 +111,7 @@ export class FluentRecord<T> extends BaseFluent<IRecord<T>> {
  *
  * Example:
  *
- * ```javascript
+ * ```typescript
  * Records
  *     .of({'a': 1, 'b': 2})
  *     .mapValue((value: number) => {

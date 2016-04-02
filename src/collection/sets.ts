@@ -24,7 +24,7 @@ export class FluentSet<T> extends BaseFluent<Set<T>> {
  *
  * Example:
  *
- * ```javascript
+ * ```typescript
  * Set
  *     .fromArray([1, 2, 3])
  *     .data;  // Set([1, 2, 3])

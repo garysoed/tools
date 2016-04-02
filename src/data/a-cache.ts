@@ -99,11 +99,11 @@ interface ICacheFunc {
  * Annotates getters and functions with zero arguments to cache its result.
  *
  * To use this, just annotate the method whose return value you'd like to cache. You can clear the
- * cache by calling the [[ACache#clear]] method.
+ * cache by calling the [[clear]] method.
  *
  * Example use case:
  *
- * ```javascript
+ * ```typescript
  * import Cache from './a-cache';
  *
  * let i = 0;
@@ -128,7 +128,7 @@ interface ICacheFunc {
  * You can also assign key identifiers to each cache call. This lets you to selectively clear a
  * group of cache values. For example:
  *
- * ```javascript
+ * ```typescript
  * import Cache from './a-cache';
  *
  * let i = 0;

@@ -48,7 +48,7 @@ export class FluentIterable<T> extends BaseFluent<Iterable<T>> {
  *
  * Example:
  *
- * ```javascript
+ * ```typescript
  * Iterables
  *     .of(['a', 'b', 'c'])
  *     .forOf((value: string, breakFn: () => void) => {

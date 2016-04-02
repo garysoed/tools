@@ -41,7 +41,7 @@ export class FluentMap<K, V> extends BaseFluent<Map<K, V>> {
  *
  * Example:
  *
- * ```javascript
+ * ```typescript
  * let map = new Map<number, number>([[1, 2], [3, 4]]);
  * Maps
  *     .of(map)

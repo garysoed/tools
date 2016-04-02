@@ -6,7 +6,7 @@
  * In addition to supporting dynamic type checks, this uses Typescript's type guards to cast the
  * values. For example:
  *
- * ```javascript
+ * ```typescript
  * if (Checks.isArrayOf<string>(input, String)) {
  *   // It's safe to treat input as string[] in this block.
  * }

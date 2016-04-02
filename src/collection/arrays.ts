@@ -64,7 +64,7 @@ export class FluentArray<T> extends BaseFluent<T[]> {
  *
  * Example:
  *
- * ```javascript
+ * ```typescript
  * Arrays
  *     .of(['a', 'b', 'c'])
  *     .diff(['b', 'c'])
