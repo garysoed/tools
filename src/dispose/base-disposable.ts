@@ -1,9 +1,24 @@
-export const TRACKED_DISPOSABLES = [];
+/// @doc
+
+/**
+ * Contains undisposed objects.
+ */
+export const TRACKED_DISPOSABLES: BaseDisposable[] = [];
+
+/**
+ * Flags to control the behavior of [[BaseDisposable]].
+ */
 export const Flags = {
-  enableTracking: false
+  /**
+   * Set to true to keep track of undisposed objects. This is used mainly for testing.
+   */
+  enableTracking: false,
 };
 
-export default class BaseDisposable {
+/**
+ * Base class of all disposable objects.
+ */
+class BaseDisposable {
   private disposables_: BaseDisposable[];
 
   constructor() {
@@ -13,14 +28,25 @@ export default class BaseDisposable {
     }
   }
 
+  /**
+   * Adds the given disposable so they are disposed when this object is disposed.
+   *
+   * @param disposables Disposable objects to be disposed when this object is disposed.
+   */
   addDisposable(...disposables: BaseDisposable[]): void {
     disposables.forEach((disposable: BaseDisposable) => {
       this.disposables_.push(disposable);
     });
   }
 
+  /**
+   * Override this method for custom logic that are ran during disposal.
+   */
   disposeInternal(): void { /* noop */ }
 
+  /**
+   * Dispose this object.
+   */
   dispose(): void {
     this.disposeInternal();
     this.disposables_.forEach((disposable: BaseDisposable) => disposable.dispose());
@@ -33,3 +59,5 @@ export default class BaseDisposable {
     }
   }
 };
+
+export default BaseDisposable;

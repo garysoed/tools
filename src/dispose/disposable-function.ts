@@ -1,12 +1,17 @@
-/**
- * #fileoverview Executes the given function when disposed.
- */
+/// @doc
+
 import BaseDisposable from './base-disposable';
 
-export default class DisposableFunction extends BaseDisposable {
+/**
+ * Wrapper around a function that executes the function when this object is disposed.
+ */
+class DisposableFunction extends BaseDisposable {
   private fn_: Function;
 
-  constructor(fn: Function) {
+  /**
+   * @param fn Function to execute when this object is disposed.
+   */
+  constructor(fn: () => void) {
     super();
     this.fn_ = fn;
   }
@@ -18,7 +23,12 @@ export default class DisposableFunction extends BaseDisposable {
     this.run();
   }
 
+  /**
+   * Runs the inner function.
+   */
   run(): void {
     this.fn_();
   }
 }
+
+export default DisposableFunction;
