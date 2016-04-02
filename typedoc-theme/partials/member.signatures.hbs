@@ -17,11 +17,9 @@
         <tr>
           <td class="gs-code">
             {{#compact}}
-              {{#each flags}}
-                {{this}}&nbsp;
-              {{/each}}
               {{#if flags.isRest}}...{{/if}}
               {{name}}
+              {{#if flags.isOptional}}?{{/if}}
             </td>
             <td class="gs-code">
               {{#with type}}{{>type}}{{/with}}

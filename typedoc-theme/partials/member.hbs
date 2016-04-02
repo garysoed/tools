@@ -2,8 +2,9 @@
 <header class="gs-sticky {{cssClasses}}">
   <h3>
     {{#if name}}
-      {{#each flags}}{{this}}
-      {{/each}}
+      <span class="gs-member__flags gs-code">
+        {{#each flags}}{{this}}{{/each}}
+      </span>
       <span class="gs-member__signature">
         {{> gs.signature}}
       </span>
