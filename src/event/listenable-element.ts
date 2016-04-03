@@ -1,3 +1,5 @@
+/// @doc
+
 import BaseListenable from './base-listenable';
 import DisposableFunction from '../dispose/disposable-function';
 import Enums from '../typescript/enums';
@@ -7,17 +9,38 @@ import Enums from '../typescript/enums';
  * Corresponds to DOM events. This must be the upper case version of the corresponding DOM events.
  */
 export enum EventType {
+  /**
+   * The `beforeunload` DOM event.
+   */
   BEFOREUNLOAD,
+
+  /**
+   * The `click` DOM event.
+   */
   CLICK,
+
+  /**
+   * The `load` DOM event.
+   */
   LOAD,
+
+  /**
+   * The `scroll` DOM event.
+   */
   SCROLL,
 }
 
-export default class ListenableElement extends BaseListenable<EventType> {
+/**
+ * Wraps an EventTarget to make it extends [[BaseListenable]].
+ */
+class ListenableElement extends BaseListenable<EventType> {
   private element_: EventTarget;
   private forwardedEvents_: Set<EventType>;
   private listener_: EventListener;
 
+  /**
+   * @param element The EventTarget to wrap.
+   */
   constructor(element: EventTarget) {
     super();
     this.element_ = element;
@@ -40,6 +63,9 @@ export default class ListenableElement extends BaseListenable<EventType> {
     });
   }
 
+  /**
+   * The wrapped EventTarget
+   */
   get element(): EventTarget {
     return this.element_;
   }
@@ -56,3 +82,5 @@ export default class ListenableElement extends BaseListenable<EventType> {
     return super.on(eventType, callback);
   }
 }
+
+export default ListenableElement;
