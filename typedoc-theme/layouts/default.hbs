@@ -50,32 +50,45 @@
   <link rel="stylesheet" href="{{relativeURL "assets/css/toc.css"}}">
   <link rel="stylesheet" href="{{relativeURL "assets/css/typeParameters.css"}}">
 </head>
-<body ng-app="DocApp" layout="column">
-  <section class="gs-default__header" layout="column">
-    <header>
-      <h1 class="gs-default__project-name">
-        <a href="{{relativeURL "index.html"}}">{{project.name}}</a>
-      </h1>
-    </header>
-    <div>{{#with model}}{{> breadcrumb}}{{/with}}</div>
+<body
+    layout="column"
+    ng-app="DocApp"
+    ng-class="{'gs-default__hide-inherited': hideInherited}"
+    ng-controller="RootCtrl">
+  <section class="gs-default__header" layout="row">
+    <div layout="column">
+      <header>
+        <h1 class="gs-default__project-name">
+          <a href="{{relativeURL "index.html"}}">{{project.name}}</a>
+        </h1>
+      </header>
+      <div>{{#with model}}{{> breadcrumb}}{{/with}}</div>
+    </div>
   </section>
 
   <section flex layout="row">
-    <md-content class="gs-default__navigation-bar md-body-1">
-      <nav>
-        {{#each navigation.children}}
-          {{> navigation}}
-        {{/each}}
-      </nav>
-      <md-divider></md-divider>
-      <nav layout="column" layout-align="star end">
-        <div layout="column">
-          {{#each toc.children}}
-            {{> toc.root }}
+    <section class="gs-default__navigation-bar md-body-1" layout="column">
+      <md-content flex>
+        <nav>
+          {{#each navigation.children}}
+            {{> navigation}}
           {{/each}}
-        </div>
-      </nav>
-    </md-content>
+        </nav>
+        <md-divider></md-divider>
+        <nav layout="column" layout-align="star end">
+          <div layout="column">
+            {{#each toc.children}}
+              {{> toc.root }}
+            {{/each}}
+          </div>
+        </nav>
+      </md-content>
+      <div class="gs-default__toggle">
+        <md-switch ng-model="hideInherited">
+          Hides inherited
+        </md-switch>
+      </div>
+    </section>
     <md-content class="gs-default__content" flex>
       {{{contents}}}
     </md-content>
@@ -85,9 +98,17 @@
     hljs.initHighlightingOnLoad();
     angular
         .module('DocApp', ['ngMaterial'])
-        .config(function($mdIconProvider) {
-          $mdIconProvider
-              .defaultFontSet('material-icons');
+        .config(function($mdIconProvider, $mdThemingProvider) {
+          $mdIconProvider.defaultFontSet('material-icons');
+          $mdThemingProvider
+              .theme('default')
+              .primaryPalette('blue-grey')
+              .accentPalette('yellow', {
+                'default': 'A700'
+              });
+        })
+        .controller('RootCtrl', function($scope) {
+          $scope['hideInherited'] = true;
         });
   </script>
 </body>

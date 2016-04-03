@@ -7,12 +7,16 @@
 }
 
 .gs-default__navigation-bar {
-  background-color: #607D8B;
   padding-botom: 2rem;
   width: 250px;
 }
 
-.gs-default__navigation-bar > nav {
+.gs-default__navigation-bar,
+.gs-default__navigation-bar > md-content {
+  background-color: #607D8B;
+}
+
+.gs-default__navigation-bar nav {
   margin: 2rem 0;
 }
 
@@ -56,6 +60,15 @@
 
 .gs-default__content header.gs-sticky > h3 {
   margin: 0;
+}
+
+.gs-default__hide-inherited .tsd-is-inherited {
+  display: none;
+}
+
+.gs-default__toggle {
+  padding: 0 2rem;
+  color: white;
 }
 
 .tsd-is-private {
