@@ -32,7 +32,7 @@ export class FluentSet<T> extends BaseFluent<Set<T>> {
  *
  * Note that every value in the set must be of the same type.
  */
-const Sets = {
+class Sets {
   /**
    * Starts by using an array object.
    *
@@ -40,9 +40,9 @@ const Sets = {
    * @param array Array object to start from.
    * @return Set wrapper object to do operations on.
    */
-  fromArray<T>(array: T[]): FluentSet<T> {
+  static fromArray<T>(array: T[]): FluentSet<T> {
     return Sets.of<T>(new Set<T>(array));
-  },
+  }
 
   /**
    * Starts by using a set.
@@ -51,9 +51,9 @@ const Sets = {
    * @param data The set object to start with.
    * @return Set wrapper object to do operations on.
    */
-  of<T>(set: Set<T>): FluentSet<T> {
+  static of<T>(set: Set<T>): FluentSet<T> {
     return new FluentSet(set);
-  },
+  }
 };
 
 export default Sets;

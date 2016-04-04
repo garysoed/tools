@@ -58,7 +58,7 @@ export class FluentIterable<T> extends BaseFluent<Iterable<T>> {
  *
  * Note that every element in the iterable must be of the same type.
  */
-export default {
+class Iterables {
   /**
    * Starts by using an iterable.
    *
@@ -66,7 +66,9 @@ export default {
    * @param data The iterable object to start with.
    * @return Iterable wrapper object to do operations on.
    */
-  of<T>(data: Iterable<T>): FluentIterable<T> {
+  static of<T>(data: Iterable<T>): FluentIterable<T> {
     return new FluentIterable<T>(data);
-  },
+  }
 }
+
+export default Iterables;

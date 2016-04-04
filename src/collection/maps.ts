@@ -52,19 +52,7 @@ export class FluentMap<K, V> extends BaseFluent<Map<K, V>> {
  *
  * Note that every key and value in the map must be of the same type.
  */
-const Maps = {
-  /**
-   * Starts by using a map.
-   *
-   * @param <K> Type of the map's key.
-   * @param <V> Type of the map's value.
-   * @param data The map object to start with.
-   * @return Map wrapper object to do operations on.
-   */
-  of<K, V>(data: Map<K, V>): FluentMap<K, V> {
-    return new FluentMap<K, V>(data);
-  },
-
+class Maps {
   /**
    * Starts by using any `Record` objects.
    *
@@ -73,14 +61,26 @@ const Maps = {
    * @param record Record object to start from.
    * @return Map wrapper object to do operations on.
    */
-  fromRecord<V>(record: { [key: string]: V }): FluentMap<string, V> {
+  static fromRecord<V>(record: { [key: string]: V }): FluentMap<string, V> {
     let entries = [];
     for (let key in record) {
       entries.push([key, record[key]]);
     }
 
     return Maps.of<string, V>(new Map<string, V>(entries));
-  },
+  }
+
+  /**
+   * Starts by using a map.
+   *
+   * @param <K> Type of the map's key.
+   * @param <V> Type of the map's value.
+   * @param data The map object to start with.
+   * @return Map wrapper object to do operations on.
+   */
+  static of<K, V>(data: Map<K, V>): FluentMap<K, V> {
+    return new FluentMap<K, V>(data);
+  }
 };
 
 export default Maps;

@@ -122,7 +122,7 @@ export class FluentRecord<T> extends BaseFluent<IRecord<T>> {
  *
  * Note that every value in the record must be of the same type.
  */
-const Records = {
+class Records {
   /**
    * Starts by using a record.
    *
@@ -130,9 +130,9 @@ const Records = {
    * @param data The record object to start with.
    * @return Record wrapper object to do operations on.
    */
-  of<T>(data: IRecord<T>): FluentRecord<T> {
+  static of<T>(data: IRecord<T>): FluentRecord<T> {
     return new FluentRecord<T>(data);
-  },
+  }
 };
 
 export default Records;
