@@ -90,7 +90,7 @@
   margin-left: 0;
   padding-left: 0;
 
-  transition: all .2s;
+  transition: all .1s;
 }
 
 .gs-default__search--active,
@@ -98,14 +98,18 @@
   margin-left: -52px;
   padding-left: 52px;
 
-  transition: all .2s;
+  transition: all .1s;
 }
 
 .gs-default__search-button.md-button.md-icon-button {
-  max-width: 40px;
+  max-width: 75vw;
   min-width: 40px;
   width: 40px;
   z-index: 2;
+}
+
+.gs-default__search-button:not(.gs-default__search-button--active) md-icon {
+  color: #CFD8DC;
 }
 
 .gs-default__toggle {

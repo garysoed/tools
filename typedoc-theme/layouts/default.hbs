@@ -72,17 +72,19 @@
     <div class="gs-default__search-container" flex layout="row" layout-align="end center">
       <md-button
           class="md-icon-button gs-default__search-button"
+          ng-class="{'gs-default__search-button--active': isSearchActive}"
           ng-click="onSearchClick()">
         <md-icon>search</md-icon>
       </md-button>
       <md-autocomplete
+          class="gs-default__search"
           md-selected-item="selectedItem"
           md-search-text="searchText"
           md-items="item in querySearch(searchText)"
           md-item-text="item.name"
           md-min-length="0"
           md-selected-item-change="onSelectedItemChange(item)"
-          ng-class="{'gs-default__search--active': isSearchActive, 'gs-default__search': true}"
+          ng-class="{'gs-default__search--active': isSearchActive}"
           placeholder="Search ...">
         <md-item-template>
           <div md-highlight-text="searchText" md-highlight-flags="i">
