@@ -1,4 +1,16 @@
 {{#with comment}}
+  {{#each tags}}
+    {{#ifCond tagName "==" "deprecated"}}
+      <aside class="gs-comment__deprecated md-body-1" layout="row">
+        <md-icon>warning</md-icon>
+        <span class="gs-comment__deprecated-text">deprecated:&nbsp;</span>
+        <div flex>
+          {{#markdown}}{{{text}}}{{/markdown}}
+        </div>
+      </aside>
+    {{/ifCond}}
+  {{/each}}
+
   {{#if hasVisibleComponent}}
     {{#if shortText}}
       {{#if text}}
