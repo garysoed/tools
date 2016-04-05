@@ -28,7 +28,7 @@ gn.task('lint', gn.parallel(
 
 gn.exec('lint', gn.series('.:lint'));
 gn.exec('doc', function() {
-  return gn.src(['**/*.ts', '!src/**/*_test.ts', '!node_modules/**', 'node_modules/typescript/lib/lib.es6.d.ts'])
+  return gn.src(['**/*.ts', '!src/**/*_test.ts', '!src/test-base.ts', '!node_modules/**', 'node_modules/typescript/lib/lib.es6.d.ts'])
       .pipe(typedoc({
         "target": "es5",
         "module": "commonjs",

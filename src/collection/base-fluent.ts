@@ -1,5 +1,3 @@
-/// @doc
-
 /**
  * Base class for all fluent collection classes.
  *

@@ -1,4 +1,3 @@
-/// @doc
 import MockElement from './mock-element';
 
 

@@ -3,7 +3,14 @@ import TestDispose from './test-dispose';
 
 const __calls = Symbol('calls');
 
-export default {
+
+/**
+ * @deprecated Use spyOn dispatchEvent.
+ */
+const TestSetup = {
+  /**
+   * @deprecated Use spyOn dispatchEvent.
+   */
   getPayloads<E>(target: BaseListenable<E>, eventType: E): any[] {
     if (!target[__calls]) {
       throw Error(`Target ${target} has not been spied on`);
@@ -12,6 +19,9 @@ export default {
     return target[__calls].get(eventType) || [];
   },
 
+  /**
+   * @deprecated Use spyOn dispatchEvent.
+   */
   spyOn<E>(target: BaseListenable<E>, eventTypes: E[]): any {
     if (!target[__calls]) {
       target[__calls] = new Map<E, any[]>();
@@ -28,11 +38,19 @@ export default {
     });
   },
 
+  /**
+   * Runs the code in jasmine's `afterEach` logic.
+   */
   afterEach(): void {
     // Noop
   },
 
+  /**
+   * Runs the code in jasmine's `beforeEach` logic.
+   */
   beforeEach(): void {
     // Noop
   },
 }
+
+export default TestSetup;

@@ -1,4 +1,3 @@
-/// @doc
 import BaseFluent from './base-fluent';
 import Maps from './maps';
 

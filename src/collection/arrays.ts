@@ -1,5 +1,3 @@
-/// @doc
-
 import BaseFluent from './base-fluent';
 import Iterables from './iterables';
 import Records from './records';

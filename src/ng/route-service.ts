@@ -4,10 +4,18 @@ import DisposableFunction from '../dispose/disposable-function';
 import Maps from '../collection/maps';
 import Records from '../collection/records';
 
+
+/**
+ * The wrapper for Angular's `ngRoute` service.
+ */
 export class RouteService extends BaseDisposable {
   private $location_: angular.ILocationService;
   private tempParams_: gs.IJson;
 
+  /**
+   * @param $location Angular's location service.
+   * @param $rootScope The root scope.
+   */
   constructor($location: angular.ILocationService, $rootScope: angular.IScope) {
     super();
     this.$location_ = $location;
@@ -22,6 +30,9 @@ export class RouteService extends BaseDisposable {
     Cache.clear(this);
   }
 
+  /**
+   * Routing parameters, both in memory only and URL search parameters.
+   */
   @Cache()
   get params(): gs.IJson {
     let searchParams = Records.of(this.$location_.search())
@@ -34,6 +45,9 @@ export class RouteService extends BaseDisposable {
         .data;
   }
 
+  /**
+   * Current routing path.
+   */
   get path(): string {
     return this.$location_.path();
   }
@@ -61,6 +75,27 @@ export class RouteService extends BaseDisposable {
   }
 }
 
-export default angular
+/**
+ * An enhanced version of Angular's `ngRoute` service.
+ *
+ * This adds an in memory parameter. When navigating, you can set parameters that affect the URL
+ * search parameters, or just the in memory parameter.
+ *
+ * For example:
+ *
+ * ```typescript
+ * import RouteService from './ng/route-service';
+ *
+ * // Navigates to "/path?param1=value"
+ * RouteService.to('/path', {'param1': 'value'}, {'param2': 'value'});
+ *
+ * expect(RouteService.params).toEqual({
+ *   'param1': 'value',
+ *   'param2': 'value',  // You can still get this even though it is not in the URL
+ * });
+ * ```
+ */
+const NgModule = angular
     .module('gsTools.ng.RouteService', ['ngRoute'])
     .service('gsRouteService', RouteService);
+export default NgModule;

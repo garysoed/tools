@@ -1,5 +1,3 @@
-/// @doc
-
 import Maps from '../collection/maps';
 
 

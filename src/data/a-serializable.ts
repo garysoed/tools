@@ -1,5 +1,3 @@
-/// @doc
-
 /**
  * Provides a convenient way to serialize / deserialize objects to / from JSON.
  *

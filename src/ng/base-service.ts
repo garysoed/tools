@@ -2,7 +2,18 @@ import BaseListenable from '../event/base-listenable';
 import ListenableElement, { EventType } from '../event/listenable-element';
 
 
-export default class BaseService<EventType> extends BaseListenable<EventType> {
+/**
+ * Base class for all Angular services.
+ *
+ * This sets the service as a [[BaseListenable]]. This class also listens for
+ * `beforeunload` events to dispose itself.
+ *
+ * @param <E> The event type enum that this service can dispatch.
+ */
+class BaseService<E> extends BaseListenable<E> {
+  /**
+   * @param window Reference to the window object.
+   */
   constructor(window: Window) {
     super();
 
@@ -17,3 +28,5 @@ export default class BaseService<EventType> extends BaseListenable<EventType> {
     this.dispose();
   }
 }
+
+export default BaseService;

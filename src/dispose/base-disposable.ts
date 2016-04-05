@@ -1,5 +1,3 @@
-/// @doc
-
 /**
  * Contains undisposed objects.
  */

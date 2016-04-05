@@ -1,5 +1,3 @@
-/// @doc
-
 /**
  * Fake implementation of an HTMLElement.
  */

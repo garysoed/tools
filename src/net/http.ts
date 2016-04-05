@@ -1,5 +1,3 @@
-/// @doc
-
 import Arrays from '../collection/arrays';
 import BaseDisposable from '../dispose/base-disposable';
 import ListenableElement, {EventType as ListenableElementEventType} from

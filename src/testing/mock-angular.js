@@ -1,5 +1,3 @@
-//TODO(gs): Move to testing directory.
-
 var angular = {};
 angular.component = function() {
   return angular;

@@ -1,5 +1,3 @@
-/// @doc
-
 import BaseDisposable from './base-disposable';
 
 /**

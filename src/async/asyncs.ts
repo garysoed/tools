@@ -1,5 +1,3 @@
-/// @doc
-
 /**
  * Collection of miscellaneous methods to do asynchronous operations.
  */

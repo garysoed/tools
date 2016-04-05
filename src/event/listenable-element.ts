@@ -1,5 +1,3 @@
-/// @doc
-
 import BaseListenable from './base-listenable';
 import DisposableFunction from '../dispose/disposable-function';
 import Enums from '../typescript/enums';

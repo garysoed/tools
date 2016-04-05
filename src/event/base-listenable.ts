@@ -1,4 +1,3 @@
-/// @doc
 import Asyncs from '../async/asyncs';
 import BaseDisposable from '../dispose/base-disposable';
 import DisposableFunction from '../dispose/disposable-function';
