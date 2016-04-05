@@ -25,6 +25,10 @@
   {{> gs.gettersetter}}
 {{else}}
   {{#compact}}
-    {{{wbr name}}}{{#if isOptional}}?{{/if}}:{{#with type}}{{>type}}{{/with}}
+    {{{wbr name}}}
+    {{#if isOptional}}?{{/if}}
+    {{#if type}}
+      :{{#with type}}{{>type}}{{/with}}
+    {{/if}}
   {{/compact}}
 {{/if}}{{/if}}

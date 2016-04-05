@@ -1,14 +1,40 @@
-export default {
-  fromNumberString<E>(stringValue: string, enumSet: gs.IEnum): E {
+/**
+ * Utility methods to work with typescript's enums.
+ */
+class Enums {
+  /**
+   * Converts enum number (as string) to the corresponding enum value.
+   *
+   * @param stringValue The number to convert to enum value.
+   * @param enumSet The set of enum values.
+   * @return The enum value corresponding to the enum number.
+   */
+  static fromNumberString<E>(stringValue: string, enumSet: gs.IEnum): E {
     let nameString: string = enumSet[stringValue];
     return enumSet[nameString];
-  },
+  }
 
-  fromLowerCaseString<E>(stringValue: string, enumSet: gs.IEnum): E {
+  /**
+   * Converts enum name (as lower case string) to the corresponding enum value.
+   *
+   * @param stringValue The string value to convert to enum value.
+   * @param enumSet The set of enum values.
+   * @return The enum value corresponding to the enum name.
+   */
+  static fromLowerCaseString<E>(stringValue: string, enumSet: gs.IEnum): E {
     return enumSet[stringValue.toUpperCase()];
-  },
+  }
 
-  toLowerCaseString(enumValue: number, enumSet: gs.IEnum): string {
+  /**
+   * Converts the given enum value to lower case version of its name.
+   *
+   * @param enumValue The enum value to convert.
+   * @param enumSet The set of enum values.
+   * @return The lower case version of the enum name that corresponds to the enum value.
+   */
+  static toLowerCaseString(enumValue: number, enumSet: gs.IEnum): string {
     return enumSet[enumValue].toLowerCase();
-  },
+  }
 };
+
+export default Enums;

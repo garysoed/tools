@@ -53,9 +53,11 @@
   background-color: #CFD8DC;
   height: 2rem;
   line-height: 2rem;
+  overflow-x: auto;
   padding: 1rem 2rem;
   position: sticky;
   top: 0;
+  white-space: nowrap;
 }
 
 .gs-default__content header.gs-sticky > h3 {

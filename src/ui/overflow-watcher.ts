@@ -2,22 +2,52 @@ import BaseListenable from '../event/base-listenable';
 import Doms from './doms';
 import ListenableElement, { EventType as DomEventType } from '../event/listenable-element';
 
-
+/**
+ * State of the element being watched.
+ */
 export enum State {
+  /**
+   * The element is completely covered.
+   */
   COVERED,
+
+  /**
+   * The element is partially covered.
+   */
   PARTIAL,
+
+  /**
+   * The element is completely uncovered.
+   */
   UNCOVERED,
 }
 
+/**
+ * Events dispatched by the watcher.
+ */
 export enum EventType {
-  CHANGED
+  /**
+   * The state of the element has changed.
+   */
+  CHANGED,
 };
 
-export default class OverflowWatcher extends BaseListenable<EventType> {
+/**
+ * Watches an element in the given container to see if the element is scrolled off the container.
+ *
+ * To use this, give it the container element and the element to be watched. Listen to the
+ * [[CHANGED]] event for when the element's state ([[COVERED]], [[PARTIAL]], [[UNCOVERED]]) has
+ * changed.
+ */
+class OverflowWatcher extends BaseListenable<EventType> {
   private containerEl_: HTMLElement;
   private element_: HTMLElement;
   private state_: State;
 
+  /**
+   * @param container The container element.
+   * @param element The element to watch.
+   */
   constructor(container: HTMLElement, element: HTMLElement) {
     super();
     this.containerEl_ = container;
@@ -55,6 +85,9 @@ export default class OverflowWatcher extends BaseListenable<EventType> {
     }
   }
 
+  /**
+   * [[State]] of the element being watched.
+   */
   get state(): State {
     if (this.state_ === null) {
       this.state_ = this.getState_();
@@ -62,3 +95,5 @@ export default class OverflowWatcher extends BaseListenable<EventType> {
     return this.state_;
   }
 };
+
+export default OverflowWatcher;
