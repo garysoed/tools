@@ -1,6 +1,6 @@
 var gn = require('./gulp/gulp-node')(__dirname, require('gulp'));
 var karmaTasks = require('./gulp-tasks/karma')(require('karma').Server);
-var typedoc = require('gulp-typedoc');
+var typedocTasks = require('./gulp-tasks/typedoc')(require('gulp-typedoc'));
 
 gn.task('compile-test', gn.parallel(
     'src:compile-test',
@@ -27,59 +27,9 @@ gn.task('lint', gn.parallel(
 ));
 
 gn.exec('lint', gn.series('.:lint'));
-gn.exec('doc', function() {
-  return gn.src(['**/*.ts', '!src/**/*_test.ts', '!src/test-base.ts', '!node_modules/**', 'node_modules/typescript/lib/lib.es6.d.ts'])
-      .pipe(typedoc({
-        "target": "es5",
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "isolatedModules": false,
-        "jsx": "react",
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
-        "noImplicitAny": false,
-        "noLib": false,
-        "preserveConstEnums": true,
-        "suppressImplicitAnyIndexErrors": true,
-        "rootDir": "./",
-
-        out: "./doc",
-        json: "doc/doc.json",
-
-        // TypeDoc options (see typedoc docs)
-        name: "gs-tools",
-        theme: 'typedoc-theme',
-        ignoreCompilerErrors: false,
-        version: true,
-      }));
-});
-
-
-gn.exec('doc-default', function() {
-  return gn.src(['**/*.ts', '!src/**/*_test.ts', '!node_modules/**', 'node_modules/typescript/lib/lib.es6.d.ts'])
-      .pipe(typedoc({
-        "target": "es5",
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "isolatedModules": false,
-        "jsx": "react",
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
-        "noImplicitAny": false,
-        "noLib": false,
-        "preserveConstEnums": true,
-        "suppressImplicitAnyIndexErrors": true,
-        "rootDir": "./",
-
-        out: "./doc-default",
-        json: "doc-default/doc.json",
-
-        // TypeDoc options (see typedoc docs)
-        name: "gs-tools",
-        ignoreCompilerErrors: false,
-        version: true,
-      }));
-})
+gn.exec(
+    'doc',
+    typedocTasks.compile(gn, ['!src/test-base.ts', 'node_modules/typescript/lib/lib.es6.d.ts']));
 
 var mockAngular = {
   pattern: 'src/testing/mock-angular.js',
