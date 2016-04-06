@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<base href=".">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#607D8B">
+	<title>
+		Arrays &bull; gs-tools
+	</title>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!-- Angular -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-aria.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-messages.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.min.js"></script>
+	<!-- Angular Material -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.js"></script>
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.css">
+	<!-- Fuse.js -->
+	<script src="../assets/js/fuse.js"></script>
+	<!-- Highlight.js -->
+	<link rel="stylesheet" href="../assets/css/monokai.css">
+	<script src="../assets/js/highlight.pack.js"></script>
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="../assets/css/breadcrumb.css">
+	<link rel="stylesheet" href="../assets/css/code.link.css">
+	<link rel="stylesheet" href="../assets/css/comment.css">
+	<link rel="stylesheet" href="../assets/css/default.css">
+	<link rel="stylesheet" href="../assets/css/gettersetter.css">
+	<link rel="stylesheet" href="../assets/css/hierarchy.css">
+	<link rel="stylesheet" href="../assets/css/index.css">
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<link rel="stylesheet" href="../assets/css/member.css">
+	<link rel="stylesheet" href="../assets/css/member.declaration.css">
+	<link rel="stylesheet" href="../assets/css/member.signatures.css">
+	<link rel="stylesheet" href="../assets/css/member.sources.css">
+	<link rel="stylesheet" href="../assets/css/navigation.css">
+	<link rel="stylesheet" href="../assets/css/reflection.css">
+	<link rel="stylesheet" href="../assets/css/toc.css">
+	<link rel="stylesheet" href="../assets/css/typeParameters.css">
+	<!-- Custom js -->
+	<script src="../assets/js/search.js"></script>
+</head>
+<body
+layout="column"
+ng-app="DocApp"
+ng-class="{'gs-default__hide-inherited': hideInherited}"
+ng-controller="RootCtrl">
+<section class="gs-default__header" layout="row" layout-align="space-between center">
+	<div layout="column">
+		<header>
+			<h1 class="gs-default__project-name">
+				<a href="../index.html">gs-tools</a>
+			</h1>
+		</header>
+		<div>        <a class="gv-breadcrumb__item" href="../globals.html">Globals</a>
+			<md-icon class="gv-breadcrumb__icon">keyboard_arrow_right</md-icon>
+			<a class="gv-breadcrumb__item" href="../modules/_collection_arrays_.html">&quot;collection/arrays&quot;</a>
+			<md-icon class="gv-breadcrumb__icon">keyboard_arrow_right</md-icon>
+			<a class="gv-breadcrumb__item" href="_collection_arrays_.arrays.html">Arrays</a>
+		</div>
+	</div>
+	<div class="gs-default__search-container" flex layout="row" layout-align="end center">
+		<md-button
+		class="md-icon-button gs-default__search-button"
+		ng-class="{'gs-default__search-button--active': isSearchActive}"
+		ng-click="onSearchClick()">
+		<md-icon>search</md-icon>
+		</md-button>
+		<md-autocomplete
+		class="gs-default__search"
+		md-selected-item="selectedItem"
+		md-search-text="searchText"
+		md-items="item in querySearch(searchText)"
+		md-item-text="item.name"
+		md-min-length="0"
+		md-selected-item-change="onSelectedItemChange(item)"
+		ng-class="{'gs-default__search--active': isSearchActive}"
+		placeholder="Search ...">
+		<md-item-template>
+			<div md-highlight-text="searchText" md-highlight-flags="i">
+				{{item.parent}}.{{item.name}}
+			</div>
+		</md-item-template>
+		</md-autocomplete>
+	</div>
+</section>
+<section flex layout="row">
+	<section class="gs-default__navigation-bar md-body-1" layout="column">
+		<md-content flex>
+			<nav>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__globals"
+					href="../globals.html">
+					Globals
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="../modules/_collection_arrays_.html">
+						&quot;collection/arrays&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+			</nav>
+			<md-divider></md-divider>
+			<nav layout="column" layout-align="star end">
+				<div layout="column">
+					<div class="gs-toc-root__root" layout="column">
+						<div class="gs-toc__entry tsd-kind-class tsd-parent-kind-external-module tsd-is-not-exported" layout="row">
+							<a href="_collection_arrays_.arrays.html">Arrays</a>
+						</div>
+						<div class="gs-toc__children tsd-kind-class tsd-parent-kind-external-module tsd-is-not-exported">
+							<div class="gs-toc__entry tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-not-exported" layout="row">
+								<a href="_collection_arrays_.arrays.html#fromiterable">from<wbr>Iterable</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-not-exported" layout="row">
+								<a href="_collection_arrays_.arrays.html#fromnumericalindexed">from<wbr>Numerical<wbr>Indexed</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-method tsd-parent-kind-class tsd-is-static tsd-is-not-exported" layout="row">
+								<a href="_collection_arrays_.arrays.html#fromrecordkeys">from<wbr>Record<wbr>Keys</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-not-exported" layout="row">
+								<a href="_collection_arrays_.arrays.html#fromrecordvalues">from<wbr>Record<wbr>Values</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-not-exported" layout="row">
+								<a href="_collection_arrays_.arrays.html#of">of</a>
+							</div>
+						</div>
+					</div>
+					<div class="gs-toc-root__root" layout="column">
+						<div class="gs-toc__entry tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter" layout="row">
+							<a href="_collection_arrays_.fluentarray.html">Fluent<wbr>Array</a>
+						</div>
+					</div>
+				</div>
+			</nav>
+		</md-content>
+		<div class="gs-default__toggle">
+			<md-switch ng-model="hideInherited">
+				Hides inherited
+			</md-switch>
+		</div>
+	</section>
+	<md-content class="gs-default__content" flex>
+		<section class="tsd-panel tsd-comment">
+			<div class="md-body-2">
+				<p>Collection of methods to help manipulate arrays.</p>
+			</div>
+			<div class="md-body-1"><p>The general flow is to input an array, do a bunch of transformations, and output the transformed
+					array at the end. Note that the input array should never be used again. This class does not make
+				any guarantee that it will / will not modify the input array.</p>
+				<p>Example:</p>
+				<pre><code class="lang-typescript">Arrays
+    .of([<span class="hljs-string">'a'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-string">'c'</span>])
+    .diff([<span class="hljs-string">'b'</span>, <span class="hljs-string">'c'</span>])
+    .data;  <span class="hljs-comment">// ['a']</span>
+</code></pre>
+				<p>Note that every element in the array must be of the same type.</p>
+			</div>
+		</section>
+		<section class="gs-reflection__section">
+			<h3>Hierarchy</h3>
+			<div class="gs-code">
+				<div>
+					<div>
+						<md-icon>keyboard_arrow_right</md-icon>
+						<span class="gs-hierarchy__target">Arrays</span>
+					</div>
+					<div class="gs-hierarchy__children">
+					</div>
+				</div>
+			</div>
+		</section>
+		<header class="tsd-is-not-exported">
+			<h2 class="md-display-1">Methods</h2>
+		</header>
+		<a name="fromiterable" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-not-exported">
+			<h3>
+				<span class="gs-member__flags gs-code">
+					Static
+				</span>
+				<span class="gs-member__signature">
+					from<wbr>Iterable&lt;T&gt;(iterable: <span>Iterable</span><span class="tsd-signature-symbol">&lt;</span><span>T</span><span class="tsd-signature-symbol">&gt;</span>): <a href="_collection_arrays_.fluentarray.html" class="tsd-signature-type">FluentArray</a><span class="tsd-signature-symbol">&lt;</span><span>T</span><span class="tsd-signature-symbol">&gt;</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/gh-pages/src/collection/arrays.ts#L82">
+					<md-tooltip direction="bottom">
+						collection/arrays.ts:82
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-not-exported"></md-divider>
+		<section class="gs-member__definition tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-not-exported">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-1">
+				<p>Starts by using any <code>Iterable</code> objects.</p>
+			</div>
+			<h4 class="md-title">Type parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					T      </td>
+					<td>
+						<div class="md-body-1"><p>Type of the array element.</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<h4 class="md-title">Parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					iterable</td><td class="gs-code"><span>Iterable</span><span class="tsd-signature-symbol">&lt;</span><span>T</span><span class="tsd-signature-symbol">&gt;</span>          </td>
+					<td>
+						<div class="md-body-1"><p>Iterable object to start from.</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<h4 class="gs-code">returns <a href="_collection_arrays_.fluentarray.html" class="tsd-signature-type">FluentArray</a><span class="tsd-signature-symbol">&lt;</span><span>T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+			<div class="md-body-1 gs-member-signatures__return">
+				<p>Array wrapper object to do operations on.</p>
+			</div>
+		</section>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-not-exported"></md-divider>
+		<a name="fromnumericalindexed" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-not-exported">
+			<h3>
+				<span class="gs-member__flags gs-code">
+					Static
+				</span>
+				<span class="gs-member__signature">
+					from<wbr>Numerical<wbr>Indexed&lt;T&gt;(data: <span>{[index: <span>number</span>]: <span>T</span>}</span>): <a href="_collection_arrays_.fluentarray.html" class="tsd-signature-type">FluentArray</a><span class="tsd-signature-symbol">&lt;</span><span>T</span><span class="tsd-signature-symbol">&gt;</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/gh-pages/src/collection/arrays.ts#L99">
+					<md-tooltip direction="bottom">
+						collection/arrays.ts:99
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-not-exported"></md-divider>
+		<section class="gs-member__definition tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-not-exported">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-1">
+				<p>Starts by using any <code>Object</code>s with numerical index, and a property called <code>length</code> that returns
+				the number of entries in the object.</p>
+			</div>
+			<h4 class="md-title">Type parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					T      </td>
+					<td>
+						<div class="md-body-1"><p>Type of the array element.</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<h4 class="md-title">Parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					data</td><td class="gs-code"><span>{[index: <span>number</span>]: <span>T</span>}</span>          </td>
+					<td>
+						<div class="md-body-1"><p>The object with numerical index and a property called <code>length</code> that returns the
+							number of entries in the object.</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<h4 class="gs-code">returns <a href="_collection_arrays_.fluentarray.html" class="tsd-signature-type">FluentArray</a><span class="tsd-signature-symbol">&lt;</span><span>T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+			<div class="md-body-1 gs-member-signatures__return">
+				<p>Array wrapper object to do operations on.</p>
+			</div>
+		</section>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-not-exported"></md-divider>
+		<a name="fromrecordkeys" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-method tsd-parent-kind-class tsd-is-static tsd-is-not-exported">
+			<h3>
+				<span class="gs-member__flags gs-code">
+					Static
+				</span>
+				<span class="gs-member__signature">
+					from<wbr>Record<wbr>Keys(record: <span>{[key: <span>string</span>]: <span>any</span>}</span>): <a href="_collection_arrays_.fluentarray.html" class="tsd-signature-type">FluentArray</a><span class="tsd-signature-symbol">&lt;</span><span>string</span><span class="tsd-signature-symbol">&gt;</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/gh-pages/src/collection/arrays.ts#L114">
+					<md-tooltip direction="bottom">
+						collection/arrays.ts:114
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-is-static tsd-is-not-exported"></md-divider>
+		<section class="gs-member__definition tsd-kind-method tsd-parent-kind-class tsd-is-static tsd-is-not-exported">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-1">
+				<p>Starts by using the keys of a record. Records are objects with <code>string</code> indexing.</p>
+			</div>
+			<h4 class="md-title">Parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					record</td><td class="gs-code"><span>{[key: <span>string</span>]: <span>any</span>}</span>          </td>
+					<td>
+						<div class="md-body-1"><p>The record object whose keys will be used to create the array.</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<h4 class="gs-code">returns <a href="_collection_arrays_.fluentarray.html" class="tsd-signature-type">FluentArray</a><span class="tsd-signature-symbol">&lt;</span><span>string</span><span class="tsd-signature-symbol">&gt;</span></h4>
+			<div class="md-body-1 gs-member-signatures__return">
+				<p>Array wrapper object to do operations on.</p>
+			</div>
+		</section>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-is-static tsd-is-not-exported"></md-divider>
+		<a name="fromrecordvalues" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-not-exported">
+			<h3>
+				<span class="gs-member__flags gs-code">
+					Static
+				</span>
+				<span class="gs-member__signature">
+					from<wbr>Record<wbr>Values&lt;T&gt;(record: <span>{[key: <span>string</span>]: <span>T</span>}</span>): <a href="_collection_arrays_.fluentarray.html" class="tsd-signature-type">FluentArray</a><span class="tsd-signature-symbol">&lt;</span><span>T</span><span class="tsd-signature-symbol">&gt;</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/gh-pages/src/collection/arrays.ts#L132">
+					<md-tooltip direction="bottom">
+						collection/arrays.ts:132
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-not-exported"></md-divider>
+		<section class="gs-member__definition tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-not-exported">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-1">
+				<p>Starts by using the values of a record. Records are objects with <code>string</code> indexing. The values
+				of the record must be of the same type.</p>
+			</div>
+			<h4 class="md-title">Type parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					T      </td>
+					<td>
+						<div class="md-body-1"><p>Type of the array element.</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<h4 class="md-title">Parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					record</td><td class="gs-code"><span>{[key: <span>string</span>]: <span>T</span>}</span>          </td>
+					<td>
+						<div class="md-body-1"><p>The record object whose values will be used to create the array.</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<h4 class="gs-code">returns <a href="_collection_arrays_.fluentarray.html" class="tsd-signature-type">FluentArray</a><span class="tsd-signature-symbol">&lt;</span><span>T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+			<div class="md-body-1 gs-member-signatures__return">
+				<p>Array wrapper object to do operations on.</p>
+			</div>
+		</section>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-not-exported"></md-divider>
+		<a name="of" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-not-exported">
+			<h3>
+				<span class="gs-member__flags gs-code">
+					Static
+				</span>
+				<span class="gs-member__signature">
+					of&lt;T&gt;(data: <span>T</span><span class="tsd-signature-symbol">[]</span>): <a href="_collection_arrays_.fluentarray.html" class="tsd-signature-type">FluentArray</a><span class="tsd-signature-symbol">&lt;</span><span>T</span><span class="tsd-signature-symbol">&gt;</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/gh-pages/src/collection/arrays.ts#L149">
+					<md-tooltip direction="bottom">
+						collection/arrays.ts:149
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-not-exported"></md-divider>
+		<section class="gs-member__definition tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-not-exported">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-1">
+				<p>Starts by using an array.</p>
+			</div>
+			<h4 class="md-title">Type parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					T      </td>
+					<td>
+						<div class="md-body-1"><p>Type of the array element.</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<h4 class="md-title">Parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					data</td><td class="gs-code"><span>T</span><span class="tsd-signature-symbol">[]</span>          </td>
+					<td>
+						<div class="md-body-1"><p>The array object to start with.</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<h4 class="gs-code">returns <a href="_collection_arrays_.fluentarray.html" class="tsd-signature-type">FluentArray</a><span class="tsd-signature-symbol">&lt;</span><span>T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+			<div class="md-body-1 gs-member-signatures__return">
+				<p>Array wrapper object to do operations on.</p>
+			</div>
+		</section>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-not-exported"></md-divider>
+	</md-content>
+</section>
+<script type="text/javascript">
+    var BASE_URL = '..';
+    hljs.initHighlightingOnLoad();
+    angular
+        .module('DocApp', ['ngMaterial'])
+        .config(function($mdIconProvider, $mdThemingProvider) {
+          $mdIconProvider.defaultFontSet('material-icons');
+          $mdThemingProvider
+              .theme('default')
+              .primaryPalette('blue-grey')
+              .accentPalette('yellow', {
+                'default': 'A700'
+              });
+        })
+        .controller('RootCtrl', function($scope) {
+          var isInit = false;
+          var rows = typedoc.search.data.rows;
+          var fuse = new Fuse(rows, {
+            'keys': ['name']
+          });
+
+          $scope['hideInherited'] = true;
+          $scope['isSearchActive'] = false;
+          $scope['onSearchClick'] = function() {
+            $scope['isSearchActive'] = !$scope['isSearchActive'];
+
+            if ($scope['isSearchActive']) {
+              var inputEl = document.querySelector('.gs-default__search input');
+              inputEl.focus();
+              if (!isInit) {
+                inputEl.addEventListener('blur', function() {
+                  $scope['isSearchActive'] = false;
+                  $scope.$apply(function() {});
+                });
+                isInit = true;
+              }
+            }
+          };
+          $scope['onSelectedItemChange'] = function(item) {
+            window.location = BASE_URL + '/' + item.url;
+          };
+          $scope['querySearch'] = function(query) {
+            return fuse.search(query);
+          };
+        });
+  </script>
+</body>
+</html>

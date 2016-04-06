@@ -1,0 +1,62 @@
+@import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Roboto:400,700);
+
+a {
+  color: #607D8B;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #FFD600;
+}
+
+md-divider {
+  border-top-color: #607D8B;
+}
+
+table.gs-parameters {
+  border-spacing: 0;
+  border-collapse: collapse;
+  border-left: 5px solid #607D8B;
+  margin-bottom: 4rem;
+}
+
+table.gs-parameters td {
+  padding-left: 2rem;
+  padding-right: 2rem;
+  vertical-align: top;
+}
+
+table.gs-parameters td.gs-code {
+  font-weight: bold;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+code {
+  background-color: #CFD8DC;
+  border-radius: .2rem;
+  font-family: 'Ubuntu Mono', monospace;
+  padding: .1rem .2rem;
+  white-space: pre;
+}
+
+p {
+  margin: 2rem 0;
+  max-width: 40rem;
+}
+table.gs-parameters p {
+  margin: 1rem 0;
+}
+
+.gs-code,
+.hljs {
+  font-family: 'Ubuntu Mono', monospace;
+}
+
+.gs-code {
+  white-space: nowrap;
+}
+
+.hljs {
+  padding: 2rem;
+}

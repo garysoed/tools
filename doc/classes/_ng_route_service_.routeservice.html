@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<base href=".">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#607D8B">
+	<title>
+		RouteService &bull; gs-tools
+	</title>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!-- Angular -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-aria.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-messages.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.min.js"></script>
+	<!-- Angular Material -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.js"></script>
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.css">
+	<!-- Fuse.js -->
+	<script src="../assets/js/fuse.js"></script>
+	<!-- Highlight.js -->
+	<link rel="stylesheet" href="../assets/css/monokai.css">
+	<script src="../assets/js/highlight.pack.js"></script>
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="../assets/css/breadcrumb.css">
+	<link rel="stylesheet" href="../assets/css/code.link.css">
+	<link rel="stylesheet" href="../assets/css/comment.css">
+	<link rel="stylesheet" href="../assets/css/default.css">
+	<link rel="stylesheet" href="../assets/css/gettersetter.css">
+	<link rel="stylesheet" href="../assets/css/hierarchy.css">
+	<link rel="stylesheet" href="../assets/css/index.css">
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<link rel="stylesheet" href="../assets/css/member.css">
+	<link rel="stylesheet" href="../assets/css/member.declaration.css">
+	<link rel="stylesheet" href="../assets/css/member.signatures.css">
+	<link rel="stylesheet" href="../assets/css/member.sources.css">
+	<link rel="stylesheet" href="../assets/css/navigation.css">
+	<link rel="stylesheet" href="../assets/css/reflection.css">
+	<link rel="stylesheet" href="../assets/css/toc.css">
+	<link rel="stylesheet" href="../assets/css/typeParameters.css">
+	<!-- Custom js -->
+	<script src="../assets/js/search.js"></script>
+</head>
+<body
+layout="column"
+ng-app="DocApp"
+ng-class="{'gs-default__hide-inherited': hideInherited}"
+ng-controller="RootCtrl">
+<section class="gs-default__header" layout="row" layout-align="space-between center">
+	<div layout="column">
+		<header>
+			<h1 class="gs-default__project-name">
+				<a href="../index.html">gs-tools</a>
+			</h1>
+		</header>
+		<div>        <a class="gv-breadcrumb__item" href="../globals.html">Globals</a>
+			<md-icon class="gv-breadcrumb__icon">keyboard_arrow_right</md-icon>
+			<a class="gv-breadcrumb__item" href="../modules/_ng_route_service_.html">&quot;ng/route-service&quot;</a>
+			<md-icon class="gv-breadcrumb__icon">keyboard_arrow_right</md-icon>
+			<a class="gv-breadcrumb__item" href="_ng_route_service_.routeservice.html">RouteService</a>
+		</div>
+	</div>
+	<div class="gs-default__search-container" flex layout="row" layout-align="end center">
+		<md-button
+		class="md-icon-button gs-default__search-button"
+		ng-class="{'gs-default__search-button--active': isSearchActive}"
+		ng-click="onSearchClick()">
+		<md-icon>search</md-icon>
+		</md-button>
+		<md-autocomplete
+		class="gs-default__search"
+		md-selected-item="selectedItem"
+		md-search-text="searchText"
+		md-items="item in querySearch(searchText)"
+		md-item-text="item.name"
+		md-min-length="0"
+		md-selected-item-change="onSelectedItemChange(item)"
+		ng-class="{'gs-default__search--active': isSearchActive}"
+		placeholder="Search ...">
+		<md-item-template>
+			<div md-highlight-text="searchText" md-highlight-flags="i">
+				{{item.parent}}.{{item.name}}
+			</div>
+		</md-item-template>
+		</md-autocomplete>
+	</div>
+</section>
+<section flex layout="row">
+	<section class="gs-default__navigation-bar md-body-1" layout="column">
+		<md-content flex>
+			<nav>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__globals"
+					href="../globals.html">
+					Globals
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="../modules/_ng_route_service_.html">
+						&quot;ng/route-service&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+			</nav>
+			<md-divider></md-divider>
+			<nav layout="column" layout-align="star end">
+				<div layout="column">
+					<div class="gs-toc-root__root" layout="column">
+						<div class="gs-toc__entry tsd-kind-class tsd-parent-kind-external-module" layout="row">
+							<a href="_ng_route_service_.routeservice.html">Route<wbr>Service</a>
+						</div>
+						<div class="gs-toc__children tsd-kind-class tsd-parent-kind-external-module">
+							<div class="gs-toc__entry tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite" layout="row">
+								<a href="_ng_route_service_.routeservice.html#constructor">constructor</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-property tsd-parent-kind-class tsd-is-private" layout="row">
+								<a href="_ng_route_service_.routeservice.html#_location_">$location_</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-property tsd-parent-kind-class tsd-is-private" layout="row">
+								<a href="_ng_route_service_.routeservice.html#tempparams_">temp<wbr>Params_</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-get-signature tsd-parent-kind-class" layout="row">
+								<a href="_ng_route_service_.routeservice.html#params">params</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-get-signature tsd-parent-kind-class" layout="row">
+								<a href="_ng_route_service_.routeservice.html#path">path</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-method tsd-parent-kind-class tsd-is-inherited" layout="row">
+								<a href="_ng_route_service_.routeservice.html#adddisposable">add<wbr>Disposable</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-method tsd-parent-kind-class tsd-is-inherited" layout="row">
+								<a href="_ng_route_service_.routeservice.html#dispose">dispose</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-method tsd-parent-kind-class tsd-is-inherited" layout="row">
+								<a href="_ng_route_service_.routeservice.html#disposeinternal">dispose<wbr>Internal</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-method tsd-parent-kind-class tsd-is-private" layout="row">
+								<a href="_ng_route_service_.routeservice.html#onroutechangesuccess_">on<wbr>Route<wbr>Change<wbr>Success_</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-method tsd-parent-kind-class" layout="row">
+								<a href="_ng_route_service_.routeservice.html#to">to</a>
+							</div>
+						</div>
+					</div>
+					<div class="gs-toc-root__root" layout="column">
+						<div class="gs-toc__entry tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported" layout="row">
+							<a href="../modules/_ng_route_service_.html#ngmodule">Ng<wbr>Module</a>
+						</div>
+					</div>
+				</div>
+			</nav>
+		</md-content>
+		<div class="gs-default__toggle">
+			<md-switch ng-model="hideInherited">
+				Hides inherited
+			</md-switch>
+		</div>
+	</section>
+	<md-content class="gs-default__content" flex>
+		<section class="tsd-panel tsd-comment">
+			<div class="md-body-1">
+				<p>The wrapper for Angular&#39;s <code>ngRoute</code> service.</p>
+			</div>
+		</section>
+		<section class="gs-reflection__section">
+			<h3>Hierarchy</h3>
+			<div class="gs-code">
+				<div>
+					<div>
+						<md-icon>keyboard_arrow_right</md-icon>
+						<span><a href="_dispose_base_disposable_.basedisposable.html" class="tsd-signature-type">BaseDisposable</a></span>
+					</div>
+					<div class="gs-hierarchy__children">
+						<div class="gs-code">
+							<div>
+								<div>
+									<md-icon>keyboard_arrow_right</md-icon>
+									<span class="gs-hierarchy__target">RouteService</span>
+								</div>
+								<div class="gs-hierarchy__children">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<header class="">
+			<h2 class="md-display-1">Constructors</h2>
+		</header>
+		<a name="constructor" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+			<h3>
+				<span class="gs-member__flags gs-code">
+				</span>
+				<span class="gs-member__signature">
+					new <wbr>Route<wbr>Service($location: <span>ILocationService</span>, $rootScope: <span>IScope</span>): <a href="_ng_route_service_.routeservice.html" class="tsd-signature-type">RouteService</a>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/gh-pages/src/ng/route-service.ts#L13">
+					<md-tooltip direction="bottom">
+						ng/route-service.ts:13
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"></md-divider>
+		<section class="gs-member__definition tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+			<aside class="gs-member-sources__root md-caption">
+				<p>Overwrites <span class="gs-code"><a href="_dispose_base_disposable_.basedisposable.html">BaseDisposable</a>.<a href="_dispose_base_disposable_.basedisposable.html#constructor">constructor</a></span></p>
+			</aside>
+			<h4 class="md-title">Parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					$location</td><td class="gs-code"><span>ILocationService</span>          </td>
+					<td>
+						<div class="md-body-1">
+							<p>Angular&#39;s location service.</p>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="gs-code">
+					$rootScope</td><td class="gs-code"><span>IScope</span>          </td>
+					<td>
+						<div class="md-body-1">
+							<p>The root scope.</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<h4 class="gs-code">returns <a href="_ng_route_service_.routeservice.html" class="tsd-signature-type">RouteService</a></h4>
+		</section>
+		<md-divider class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"></md-divider>
+		<header class="tsd-is-private tsd-is-private-protected">
+			<h2 class="md-display-1">Properties</h2>
+		</header>
+		<a name="_location_" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-property tsd-parent-kind-class tsd-is-private">
+			<h3>
+				<span class="gs-member__flags gs-code">
+					Private
+				</span>
+				<span class="gs-member__signature">
+					$location_:<span>ILocationService</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/gh-pages/src/ng/route-service.ts#L12">
+					<md-tooltip direction="bottom">
+						ng/route-service.ts:12
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-property tsd-parent-kind-class tsd-is-private"></md-divider>
+		<section class="gs-member__definition tsd-kind-property tsd-parent-kind-class tsd-is-private">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-1">
+			</div>
+		</section>
+		<md-divider class="tsd-kind-property tsd-parent-kind-class tsd-is-private"></md-divider>
+		<a name="tempparams_" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-property tsd-parent-kind-class tsd-is-private">
+			<h3>
+				<span class="gs-member__flags gs-code">
+					Private
+				</span>
+				<span class="gs-member__signature">
+					temp<wbr>Params_:<span>IJson</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/gh-pages/src/ng/route-service.ts#L13">
+					<md-tooltip direction="bottom">
+						ng/route-service.ts:13
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-property tsd-parent-kind-class tsd-is-private"></md-divider>
+		<section class="gs-member__definition tsd-kind-property tsd-parent-kind-class tsd-is-private">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-1">
+			</div>
+		</section>
+		<md-divider class="tsd-kind-property tsd-parent-kind-class tsd-is-private"></md-divider>
+		<header class="">
+			<h2 class="md-display-1">Accessors</h2>
+		</header>
+		<a name="params" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-get-signature tsd-parent-kind-class">
+			<h3>
+				<span class="gs-member__flags gs-code">
+				</span>
+				<span class="gs-member__signature">
+					<span class="gs-code">
+					<span class="gs-gettersetter__keyword">get</span> params: <span>IJson</span>  </span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/gh-pages/src/ng/route-service.ts#L37">
+					<md-tooltip direction="bottom">
+						ng/route-service.ts:37
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-get-signature tsd-parent-kind-class"></md-divider>
+		<section class="gs-member__definition tsd-kind-get-signature tsd-parent-kind-class">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-1">
+				<p>Routing parameters, both in memory only and URL search parameters.</p>
+			</div>
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+		</section>
+		<md-divider class="tsd-kind-get-signature tsd-parent-kind-class"></md-divider>
+		<a name="path" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-get-signature tsd-parent-kind-class">
+			<h3>
+				<span class="gs-member__flags gs-code">
+				</span>
+				<span class="gs-member__signature">
+					<span class="gs-code">
+					<span class="gs-gettersetter__keyword">get</span> path: <span>string</span>  </span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/gh-pages/src/ng/route-service.ts#L51">
+					<md-tooltip direction="bottom">
+						ng/route-service.ts:51
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-get-signature tsd-parent-kind-class"></md-divider>
+		<section class="gs-member__definition tsd-kind-get-signature tsd-parent-kind-class">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-1">
+				<p>Current routing path.</p>
+			</div>
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+		</section>
+		<md-divider class="tsd-kind-get-signature tsd-parent-kind-class"></md-divider>
+		<header class="">
+			<h2 class="md-display-1">Methods</h2>
+		</header>
+		<a name="adddisposable" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+			<h3>
+				<span class="gs-member__flags gs-code">
+				</span>
+				<span class="gs-member__signature">
+					add<wbr>Disposable(...disposables: <a href="_dispose_base_disposable_.basedisposable.html" class="tsd-signature-type">BaseDisposable</a><span class="tsd-signature-symbol">[]</span>): <span>void</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/gh-pages/src/dispose/base-disposable.ts#L34">
+					<md-tooltip direction="bottom">
+						dispose/base-disposable.ts:34
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"></md-divider>
+		<section class="gs-member__definition tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+			<aside class="gs-member-sources__root md-caption">
+				<p>Inherited from <span class="gs-code"><a href="_dispose_base_disposable_.basedisposable.html">BaseDisposable</a>.<a href="_dispose_base_disposable_.basedisposable.html#adddisposable">addDisposable</a></span></p>
+			</aside>
+			<div class="md-body-1">
+				<p>Adds the given disposable so they are disposed when this object is disposed.</p>
+			</div>
+			<h4 class="md-title">Parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					...disposables</td><td class="gs-code"><a href="_dispose_base_disposable_.basedisposable.html" class="tsd-signature-type">BaseDisposable</a><span class="tsd-signature-symbol">[]</span>          </td>
+					<td>
+						<div class="md-body-1"><p>Disposable objects to be disposed when this object is disposed.</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<h4 class="gs-code">returns <span>void</span></h4>
+		</section>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"></md-divider>
+		<a name="dispose" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+			<h3>
+				<span class="gs-member__flags gs-code">
+				</span>
+				<span class="gs-member__signature">
+					dispose(): <span>void</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/gh-pages/src/dispose/base-disposable.ts#L48">
+					<md-tooltip direction="bottom">
+						dispose/base-disposable.ts:48
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"></md-divider>
+		<section class="gs-member__definition tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+			<aside class="gs-member-sources__root md-caption">
+				<p>Inherited from <span class="gs-code"><a href="_dispose_base_disposable_.basedisposable.html">BaseDisposable</a>.<a href="_dispose_base_disposable_.basedisposable.html#dispose">dispose</a></span></p>
+			</aside>
+			<div class="md-body-1">
+				<p>Dispose this object.</p>
+			</div>
+			<h4 class="gs-code">returns <span>void</span></h4>
+		</section>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"></md-divider>
+		<a name="disposeinternal" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+			<h3>
+				<span class="gs-member__flags gs-code">
+				</span>
+				<span class="gs-member__signature">
+					dispose<wbr>Internal(): <span>void</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/gh-pages/src/dispose/base-disposable.ts#L43">
+					<md-tooltip direction="bottom">
+						dispose/base-disposable.ts:43
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"></md-divider>
+		<section class="gs-member__definition tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+			<aside class="gs-member-sources__root md-caption">
+				<p>Inherited from <span class="gs-code"><a href="_dispose_base_disposable_.basedisposable.html">BaseDisposable</a>.<a href="_dispose_base_disposable_.basedisposable.html#disposeinternal">disposeInternal</a></span></p>
+			</aside>
+			<div class="md-body-1">
+				<p>Override this method for custom logic that are ran during disposal.</p>
+			</div>
+			<h4 class="gs-code">returns <span>void</span></h4>
+		</section>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"></md-divider>
+		<a name="onroutechangesuccess_" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-method tsd-parent-kind-class tsd-is-private">
+			<h3>
+				<span class="gs-member__flags gs-code">
+					Private
+				</span>
+				<span class="gs-member__signature">
+					on<wbr>Route<wbr>Change<wbr>Success_(): <span>void</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/gh-pages/src/ng/route-service.ts#L29">
+					<md-tooltip direction="bottom">
+						ng/route-service.ts:29
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-is-private"></md-divider>
+		<section class="gs-member__definition tsd-kind-method tsd-parent-kind-class tsd-is-private">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<h4 class="gs-code">returns <span>void</span></h4>
+		</section>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-is-private"></md-divider>
+		<a name="to" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-method tsd-parent-kind-class">
+			<h3>
+				<span class="gs-member__flags gs-code">
+				</span>
+				<span class="gs-member__signature">
+					to(path: <span>string</span>, searchParams?: <span>IJson</span>, tempParams?: <span>IJson</span>): <span>void</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/gh-pages/src/ng/route-service.ts#L62">
+					<md-tooltip direction="bottom">
+						ng/route-service.ts:62
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class"></md-divider>
+		<section class="gs-member__definition tsd-kind-method tsd-parent-kind-class">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-1">
+				<p>Navigates to the given path.</p>
+			</div>
+			<h4 class="md-title">Parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					path</td><td class="gs-code"><span>string</span>          </td>
+					<td>
+						<div class="md-body-1"><p>The path to navigate to.</p>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="gs-code">
+					searchParams</td><td class="gs-code"><span>IJson</span> =&nbsp;{}          </td>
+					<td>
+						<div class="md-body-1"><p>Parameters and their values that will be displayed in the URL bar as search
+							params. The values will be JSON stringified.</p>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="gs-code">
+					tempParams</td><td class="gs-code"><span>IJson</span> =&nbsp;{}          </td>
+					<td>
+						<div class="md-body-1"><p>Other parameters and their values to set.</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<h4 class="gs-code">returns <span>void</span></h4>
+		</section>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class"></md-divider>
+	</md-content>
+</section>
+<script type="text/javascript">
+    var BASE_URL = '..';
+    hljs.initHighlightingOnLoad();
+    angular
+        .module('DocApp', ['ngMaterial'])
+        .config(function($mdIconProvider, $mdThemingProvider) {
+          $mdIconProvider.defaultFontSet('material-icons');
+          $mdThemingProvider
+              .theme('default')
+              .primaryPalette('blue-grey')
+              .accentPalette('yellow', {
+                'default': 'A700'
+              });
+        })
+        .controller('RootCtrl', function($scope) {
+          var isInit = false;
+          var rows = typedoc.search.data.rows;
+          var fuse = new Fuse(rows, {
+            'keys': ['name']
+          });
+
+          $scope['hideInherited'] = true;
+          $scope['isSearchActive'] = false;
+          $scope['onSearchClick'] = function() {
+            $scope['isSearchActive'] = !$scope['isSearchActive'];
+
+            if ($scope['isSearchActive']) {
+              var inputEl = document.querySelector('.gs-default__search input');
+              inputEl.focus();
+              if (!isInit) {
+                inputEl.addEventListener('blur', function() {
+                  $scope['isSearchActive'] = false;
+                  $scope.$apply(function() {});
+                });
+                isInit = true;
+              }
+            }
+          };
+          $scope['onSelectedItemChange'] = function(item) {
+            window.location = BASE_URL + '/' + item.url;
+          };
+          $scope['querySearch'] = function(query) {
+            return fuse.search(query);
+          };
+        });
+  </script>
+</body>
+</html>

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<base href=".">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#607D8B">
+	<title>
+		&quot;data/a-serializable&quot; &bull; gs-tools
+	</title>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!-- Angular -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-aria.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-messages.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.min.js"></script>
+	<!-- Angular Material -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.js"></script>
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.css">
+	<!-- Fuse.js -->
+	<script src="../assets/js/fuse.js"></script>
+	<!-- Highlight.js -->
+	<link rel="stylesheet" href="../assets/css/monokai.css">
+	<script src="../assets/js/highlight.pack.js"></script>
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="../assets/css/breadcrumb.css">
+	<link rel="stylesheet" href="../assets/css/code.link.css">
+	<link rel="stylesheet" href="../assets/css/comment.css">
+	<link rel="stylesheet" href="../assets/css/default.css">
+	<link rel="stylesheet" href="../assets/css/gettersetter.css">
+	<link rel="stylesheet" href="../assets/css/hierarchy.css">
+	<link rel="stylesheet" href="../assets/css/index.css">
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<link rel="stylesheet" href="../assets/css/member.css">
+	<link rel="stylesheet" href="../assets/css/member.declaration.css">
+	<link rel="stylesheet" href="../assets/css/member.signatures.css">
+	<link rel="stylesheet" href="../assets/css/member.sources.css">
+	<link rel="stylesheet" href="../assets/css/navigation.css">
+	<link rel="stylesheet" href="../assets/css/reflection.css">
+	<link rel="stylesheet" href="../assets/css/toc.css">
+	<link rel="stylesheet" href="../assets/css/typeParameters.css">
+	<!-- Custom js -->
+	<script src="../assets/js/search.js"></script>
+</head>
+<body
+layout="column"
+ng-app="DocApp"
+ng-class="{'gs-default__hide-inherited': hideInherited}"
+ng-controller="RootCtrl">
+<section class="gs-default__header" layout="row" layout-align="space-between center">
+	<div layout="column">
+		<header>
+			<h1 class="gs-default__project-name">
+				<a href="../index.html">gs-tools</a>
+			</h1>
+		</header>
+		<div>      <a class="gv-breadcrumb__item" href="../globals.html">Globals</a>
+			<md-icon class="gv-breadcrumb__icon">keyboard_arrow_right</md-icon>
+			<a class="gv-breadcrumb__item" href="_data_a_serializable_.html">&quot;data/a-serializable&quot;</a>
+		</div>
+	</div>
+	<div class="gs-default__search-container" flex layout="row" layout-align="end center">
+		<md-button
+		class="md-icon-button gs-default__search-button"
+		ng-class="{'gs-default__search-button--active': isSearchActive}"
+		ng-click="onSearchClick()">
+		<md-icon>search</md-icon>
+		</md-button>
+		<md-autocomplete
+		class="gs-default__search"
+		md-selected-item="selectedItem"
+		md-search-text="searchText"
+		md-items="item in querySearch(searchText)"
+		md-item-text="item.name"
+		md-min-length="0"
+		md-selected-item-change="onSelectedItemChange(item)"
+		ng-class="{'gs-default__search--active': isSearchActive}"
+		placeholder="Search ...">
+		<md-item-template>
+			<div md-highlight-text="searchText" md-highlight-flags="i">
+				{{item.parent}}.{{item.name}}
+			</div>
+		</md-item-template>
+		</md-autocomplete>
+	</div>
+</section>
+<section flex layout="row">
+	<section class="gs-default__navigation-bar md-body-1" layout="column">
+		<md-content flex>
+			<nav>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__globals"
+					href="../globals.html">
+					Globals
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="_data_a_serializable_.html">
+						&quot;data/a-serializable&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+			</nav>
+			<md-divider></md-divider>
+			<nav layout="column" layout-align="star end">
+				<div layout="column">
+					<div class="gs-toc-root__root" layout="column">
+						<div class="gs-toc__entry tsd-kind-class tsd-parent-kind-external-module tsd-is-not-exported" layout="row">
+							<a href="../classes/_data_a_serializable_.serializer.html">Serializer</a>
+						</div>
+					</div>
+					<div class="gs-toc-root__root" layout="column">
+						<div class="gs-toc__entry tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported" layout="row">
+							<a href="_data_a_serializable_.html#ctors">CTORS</a>
+						</div>
+					</div>
+					<div class="gs-toc-root__root" layout="column">
+						<div class="gs-toc__entry tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported" layout="row">
+							<a href="_data_a_serializable_.html#type_field">TYPE_<wbr>FIELD</a>
+						</div>
+					</div>
+					<div class="gs-toc-root__root" layout="column">
+						<div class="gs-toc__entry tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported" layout="row">
+							<a href="_data_a_serializable_.html#___fields">___fields</a>
+						</div>
+					</div>
+					<div class="gs-toc-root__root" layout="column">
+						<div class="gs-toc__entry tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported" layout="row">
+							<a href="_data_a_serializable_.html#___name">___name</a>
+						</div>
+					</div>
+					<div class="gs-toc-root__root" layout="column">
+						<div class="gs-toc__entry tsd-kind-function tsd-parent-kind-external-module" layout="row">
+							<a href="_data_a_serializable_.html#field">Field</a>
+						</div>
+					</div>
+					<div class="gs-toc-root__root" layout="column">
+						<div class="gs-toc__entry tsd-kind-function tsd-parent-kind-external-module" layout="row">
+							<a href="_data_a_serializable_.html#serializable">Serializable</a>
+						</div>
+					</div>
+					<div class="gs-toc-root__root" layout="column">
+						<div class="gs-toc__entry tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported" layout="row">
+							<a href="_data_a_serializable_.html#initfield_">init<wbr>Field_</a>
+						</div>
+					</div>
+				</div>
+			</nav>
+		</md-content>
+		<div class="gs-default__toggle">
+			<md-switch ng-model="hideInherited">
+				Hides inherited
+			</md-switch>
+		</div>
+	</section>
+	<md-content class="gs-default__content" flex>
+		<section class="tsd-panel tsd-comment">
+			<div class="md-body-2">
+				<p>Provides a convenient way to serialize / deserialize objects to / from JSON.</p>
+			</div>
+			<div class="md-body-1"><p>This uses three different parts:</p>
+				<ol>
+					<li><a href="_data_a_serializable_.html#serializable">Serializable</a>: This annotates the class to be serializable. You will need to give the
+					class a unique ID for serialization.</li>
+					<li><a href="_data_a_serializable_.html#field">Field</a>: This annotates fields in the class as serializable. Like <a href="_data_a_serializable_.html#serializable">Serializable</a>, each
+						field also needs an ID that uniquely identifies the field in the class. Note that the field
+					has to be JSON serializable, or is annotated with <a href="_data_a_serializable_.html#serializable">Serializable</a>.</li>
+					<li><a href="../classes/_data_a_serializable_.serializer.html">Serializer</a>: This class actually does the conversion from / to JSON.</li>
+				</ol>
+				<p>Example class:</p>
+				<pre><code class="lang-typescript"><span class="hljs-comment">// Ignore the \, there is something wrong with the doc parser.</span>
+\@Field(<span class="hljs-string">'example'</span>)
+<span class="hljs-keyword">class</span> Example {
+  @Field(<span class="hljs-string">'fieldA'</span>) <span class="hljs-keyword">private</span> fieldA_: <span class="hljs-built_in">number</span>;
+  @Field(<span class="hljs-string">'fieldB'</span>) <span class="hljs-keyword">private</span> fieldB_: <span class="hljs-built_in">string</span>;
+
+  <span class="hljs-constructor"><span class="hljs-keyword">constructor</span>(a?: number, b?: string) </span>{
+    <span class="hljs-keyword">this</span>.fieldA_ = a;
+    <span class="hljs-keyword">this</span>.fieldB_ = b;
+  }
+}
+
+<span class="hljs-keyword">let</span> example = <span class="hljs-keyword">new</span> Example(<span class="hljs-number">1</span>, <span class="hljs-string">'b'</span>);
+<span class="hljs-keyword">let</span> json = Serializer.toJSON(example); <span class="hljs-comment">// {_type: 'example', fieldA: 1, fieldB: 'b'}</span>
+Serializer.fromJSON(json); <span class="hljs-comment">// This is the same as new Example(1, 'b');</span>
+</code></pre>
+				<p>Note that the class&#39; constructor must be able to be called without any arguments.</p>
+			</div>
+		</section>
+		<header class="tsd-is-not-exported">
+			<h2 class="md-display-1">Variables</h2>
+		</header>
+		<a name="ctors" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+			<h3>
+				<span class="gs-member__flags gs-code">
+				</span>
+				<span class="gs-member__signature">
+					CTORS:<span>Map</span><span class="tsd-signature-symbol">&lt;</span><span>string</span><span class="tsd-signature-symbol">, </span><span>any</span><span class="tsd-signature-symbol">&gt;</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/gh-pages/src/data/a-serializable.ts#L42">
+					<md-tooltip direction="bottom">
+						data/a-serializable.ts:42
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"></md-divider>
+		<section class="gs-member__definition tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-1">
+			</div>
+		</section>
+		<md-divider class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"></md-divider>
+		<a name="type_field" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+			<h3>
+				<span class="gs-member__flags gs-code">
+				</span>
+				<span class="gs-member__signature">
+					TYPE_<wbr>FIELD:<span>string</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/gh-pages/src/data/a-serializable.ts#L41">
+					<md-tooltip direction="bottom">
+						data/a-serializable.ts:41
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"></md-divider>
+		<section class="gs-member__definition tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-1">
+			</div>
+		</section>
+		<md-divider class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"></md-divider>
+		<a name="___fields" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+			<h3>
+				<span class="gs-member__flags gs-code">
+				</span>
+				<span class="gs-member__signature">
+					___fields:<span>symbol</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/gh-pages/src/data/a-serializable.ts#L38">
+					<md-tooltip direction="bottom">
+						data/a-serializable.ts:38
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"></md-divider>
+		<section class="gs-member__definition tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-1">
+			</div>
+		</section>
+		<md-divider class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"></md-divider>
+		<a name="___name" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+			<h3>
+				<span class="gs-member__flags gs-code">
+				</span>
+				<span class="gs-member__signature">
+					___name:<span>symbol</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/gh-pages/src/data/a-serializable.ts#L39">
+					<md-tooltip direction="bottom">
+						data/a-serializable.ts:39
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"></md-divider>
+		<section class="gs-member__definition tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-1">
+			</div>
+		</section>
+		<md-divider class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"></md-divider>
+		<header class="">
+			<h2 class="md-display-1">Functions</h2>
+		</header>
+		<a name="field" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-function tsd-parent-kind-external-module">
+			<h3>
+				<span class="gs-member__flags gs-code">
+				</span>
+				<span class="gs-member__signature">
+					Field(name: <span>string</span>): <span>PropertyDecorator</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/gh-pages/src/data/a-serializable.ts#L143">
+					<md-tooltip direction="bottom">
+						data/a-serializable.ts:143
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-function tsd-parent-kind-external-module"></md-divider>
+		<section class="gs-member__definition tsd-kind-function tsd-parent-kind-external-module">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-1">
+				<p>Annotates a property in a <a href="_data_a_serializable_.html#serializable">Serializable</a> class and marks it to be exported when converted to
+				JSON object.</p>
+			</div>
+			<h4 class="md-title">Parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					name</td><td class="gs-code"><span>string</span>          </td>
+					<td>
+						<div class="md-body-1"><p>Name of the field. This name must be unique within the class and must not start with
+							<code>_</code>.</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<h4 class="gs-code">returns <span>PropertyDecorator</span></h4>
+		</section>
+		<md-divider class="tsd-kind-function tsd-parent-kind-external-module"></md-divider>
+		<a name="serializable" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-function tsd-parent-kind-external-module">
+			<h3>
+				<span class="gs-member__flags gs-code">
+				</span>
+				<span class="gs-member__signature">
+					Serializable(name: <span>string</span>): <span>ClassDecorator</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/gh-pages/src/data/a-serializable.ts#L127">
+					<md-tooltip direction="bottom">
+						data/a-serializable.ts:127
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-function tsd-parent-kind-external-module"></md-divider>
+		<section class="gs-member__definition tsd-kind-function tsd-parent-kind-external-module">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-1">
+				<p>Annotates a class and marks it as serializable.</p>
+			</div>
+			<h4 class="md-title">Parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					name</td><td class="gs-code"><span>string</span>          </td>
+					<td>
+						<div class="md-body-1"><p>Name of the class. This name should be unique within the binary.</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<h4 class="gs-code">returns <span>ClassDecorator</span></h4>
+		</section>
+		<md-divider class="tsd-kind-function tsd-parent-kind-external-module"></md-divider>
+		<a name="initfield_" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+			<h3>
+				<span class="gs-member__flags gs-code">
+				</span>
+				<span class="gs-member__signature">
+					init<wbr>Field_(obj: <span>Object</span>): <span>void</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/gh-pages/src/data/a-serializable.ts#L44">
+					<md-tooltip direction="bottom">
+						data/a-serializable.ts:44
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"></md-divider>
+		<section class="gs-member__definition tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<h4 class="md-title">Parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					obj</td><td class="gs-code"><span>Object</span>          </td>
+					<td>
+					</td>
+				</tr>
+			</table>
+			<h4 class="gs-code">returns <span>void</span></h4>
+		</section>
+		<md-divider class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"></md-divider>
+	</md-content>
+</section>
+<script type="text/javascript">
+    var BASE_URL = '..';
+    hljs.initHighlightingOnLoad();
+    angular
+        .module('DocApp', ['ngMaterial'])
+        .config(function($mdIconProvider, $mdThemingProvider) {
+          $mdIconProvider.defaultFontSet('material-icons');
+          $mdThemingProvider
+              .theme('default')
+              .primaryPalette('blue-grey')
+              .accentPalette('yellow', {
+                'default': 'A700'
+              });
+        })
+        .controller('RootCtrl', function($scope) {
+          var isInit = false;
+          var rows = typedoc.search.data.rows;
+          var fuse = new Fuse(rows, {
+            'keys': ['name']
+          });
+
+          $scope['hideInherited'] = true;
+          $scope['isSearchActive'] = false;
+          $scope['onSearchClick'] = function() {
+            $scope['isSearchActive'] = !$scope['isSearchActive'];
+
+            if ($scope['isSearchActive']) {
+              var inputEl = document.querySelector('.gs-default__search input');
+              inputEl.focus();
+              if (!isInit) {
+                inputEl.addEventListener('blur', function() {
+                  $scope['isSearchActive'] = false;
+                  $scope.$apply(function() {});
+                });
+                isInit = true;
+              }
+            }
+          };
+          $scope['onSelectedItemChange'] = function(item) {
+            window.location = BASE_URL + '/' + item.url;
+          };
+          $scope['querySearch'] = function(query) {
+            return fuse.search(query);
+          };
+        });
+  </script>
+</body>
+</html>

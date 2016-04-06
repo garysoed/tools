@@ -6,9 +6,7 @@ var TypedocTasks = function(typedoc) {
 
 TypedocTasks.prototype.compile = function(gn, extraSrcs) {
   var srcs = ['**/*.ts', '!src/**/*_test.ts', '!src/test-base.ts', '!node_modules/**'];
-  console.log(__filename);
   var themePath = path.resolve(path.dirname(__filename), '../typedoc-theme');
-  console.log(themePath);
 
   return function compileTypedoc_() {
     return gn.src(srcs.concat(extraSrcs))
