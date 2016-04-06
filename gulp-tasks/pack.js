@@ -1,3 +1,4 @@
+var chalk = require('chalk');
 var config = require('./config');
 var path = require('path');
 
@@ -7,9 +8,18 @@ var PackTasks = function(named, sourcemaps, webpack) {
   this.webpack_ = webpack;
 };
 
-PackTasks.prototype.app = function(gulp, rootFile, outName) {
+PackTasks.prototype.app = function(gulp, files, outName) {
+  if (!(files instanceof Array)) {
+    console.warn(chalk.red('[gulp-tasks/pack]') + ' `files` is not an array. Expected an array');
+    files = [files];
+  }
+
+  var normalizedFiles = files.map(function(file) {
+    return path.join(config.DIR_OUT, file);
+  });
+
   return function app_() {
-    return gulp.src([path.join(config.DIR_OUT, rootFile)])
+    return gulp.src(normalizedFiles)
         .pipe(this.sourcemaps_.init())
         .pipe(this.webpack_({
           output: {
