@@ -1,3 +1,4 @@
+import DisposableFunction from '../dispose/disposable-function';
 import MockElement from './mock-element';
 
 
@@ -34,6 +35,21 @@ class Mocks {
    */
   static element(queries: { [query: string]: any}): any {
     return new MockElement(queries);
+  }
+
+  /**
+   * Creates a mock listenable.
+   *
+   * @param name Name to identify the mock object.
+   * @return The mock listenable object.
+   */
+  static listenable(name: string): any {
+    let mock = Mocks.object(name);
+    mock.on = () => {
+      return new DisposableFunction(() => undefined);
+    };
+    mock.dispatch = () => undefined;
+    return mock;
   }
 
   /**
