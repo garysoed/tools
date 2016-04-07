@@ -1,3 +1,4 @@
+var chalk = require('chalk');
 var config = require('./config');
 var path = require('path');
 
@@ -7,9 +8,12 @@ var PackTasks = function(named, sourcemaps, webpack) {
   this.webpack_ = webpack;
 };
 
-PackTasks.prototype.app = function(gulp, rootFile, outName) {
+PackTasks.prototype.app = function(gulp, srcFiles, outName) {
   return function app_() {
-    return gulp.src([path.join(config.DIR_OUT, rootFile)])
+    var srcs = srcFiles.map(function(srcFile) {
+      return path.join(config.DIR_OUT, srcFile);
+    });
+    return gulp.src(srcs)
         .pipe(this.sourcemaps_.init())
         .pipe(this.webpack_({
           output: {
