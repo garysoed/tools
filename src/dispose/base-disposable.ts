@@ -10,7 +10,7 @@ export const Flags = {
   /**
    * Set to true to keep track of undisposed objects. This is used mainly for testing.
    */
-  enableTracking: false,
+  enableTracking: false
 };
 
 /**

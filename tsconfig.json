@@ -65,6 +65,8 @@
         "src/mock/mocks.ts",
         "src/net/http_test.ts",
         "src/net/http.ts",
+        "src/ng/base-component_test.ts",
+        "src/ng/base-component.ts",
         "src/ng/base-service_test.ts",
         "src/ng/base-service.ts",
         "src/ng/bem-class_test.ts",

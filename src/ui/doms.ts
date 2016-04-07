@@ -30,9 +30,9 @@ class Doms {
               done: done,
               value: nextValue,
             };
-          }
+          },
         };
-      }
+      },
     };
   }
 
@@ -65,7 +65,7 @@ class Doms {
    *
    * @param fromEl The element to do measurements from.
    * @param toEl The element to do measurements to.
-   * @return The relative offset top between the two given elements. 
+   * @return The relative offset top between the two given elements.
    */
   static relativeOffsetTop(fromEl: HTMLElement, toEl: HTMLElement): number {
     let distance = 0;
