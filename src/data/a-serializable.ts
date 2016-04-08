@@ -14,7 +14,7 @@
  *
  * ```typescript
  * // Ignore the \, there is something wrong with the doc parser.
- * \@Field('example')
+ * \@Serializable('example')
  * class Example {
  *   @Field('fieldA') private fieldA_: number;
  *   @Field('fieldB') private fieldB_: string;
