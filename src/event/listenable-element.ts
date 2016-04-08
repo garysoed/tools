@@ -23,6 +23,11 @@ export enum EventType {
   LOAD,
 
   /**
+   * The `message` DOM event.
+   */
+  MESSAGE,
+
+  /**
    * The `scroll` DOM event.
    */
   SCROLL,
@@ -30,16 +35,18 @@ export enum EventType {
 
 /**
  * Wraps an EventTarget to make it extends [[BaseListenable]].
+ *
+ * @param <T> Type of the wrapped element.
  */
-class ListenableElement extends BaseListenable<EventType> {
-  private element_: EventTarget;
+class ListenableElement<T extends EventTarget> extends BaseListenable<EventType> {
+  private element_: T;
   private forwardedEvents_: Set<EventType>;
   private listener_: EventListener;
 
   /**
    * @param element The EventTarget to wrap.
    */
-  constructor(element: EventTarget) {
+  constructor(element: T) {
     super();
     this.element_ = element;
     this.forwardedEvents_ = new Set<EventType>();
@@ -64,7 +71,7 @@ class ListenableElement extends BaseListenable<EventType> {
   /**
    * The wrapped EventTarget
    */
-  get element(): EventTarget {
+  get element(): T {
     return this.element_;
   }
 

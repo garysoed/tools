@@ -11,7 +11,7 @@ abstract class HttpRequest extends BaseDisposable {
   /**
    * The XMLHttpRequest object wrapped as a [[ListenableElement]]
    */
-  protected listenableRequest: ListenableElement;
+  protected listenableRequest: ListenableElement<XMLHttpRequest>;
 
   /**
    * The XMLHttpRequest object.

@@ -7,6 +7,7 @@ gn.task('compile-test', gn.parallel(
     'src/collection:compile-test',
     'src/data:compile-test',
     'src/dispose:compile-test',
+    'src/event:compile-test',
     'src/net:compile-test',
     'src/ng:compile-test',
     'src/typescript:lint',

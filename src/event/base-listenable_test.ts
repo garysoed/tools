@@ -1,9 +1,10 @@
 import TestBase from '../test-base';
 TestBase.setup();
 
-import TestDispose from '../testing/test-dispose';
+import Asyncs from '../async/asyncs';
 import BaseListenable from './base-listenable';
 import Mocks from '../mock/mocks';
+import TestDispose from '../testing/test-dispose';
 
 
 describe('event.BaseListenable', () => {
@@ -34,13 +35,9 @@ describe('event.BaseListenable', () => {
       let payload = Mocks.object('payload');
       TestDispose.add(listenable.on(event, mockCallback));
 
-      let setTimeoutSpy = spyOn(window, 'setTimeout');
-
       listenable.dispatch(event, payload);
 
-      expect(window.setTimeout).toHaveBeenCalledWith(jasmine.any(Function), 0);
-      setTimeoutSpy.calls.argsFor(0)[0]();
-
+      expect(Asyncs.run).toHaveBeenCalledWith(jasmine.any(Function));
       expect(mockCallback).toHaveBeenCalledWith(payload);
     });
 

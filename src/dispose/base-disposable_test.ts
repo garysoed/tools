@@ -30,4 +30,15 @@ describe('dispose.BaseDisposable', () => {
       expect(mockDisposable.dispose).toHaveBeenCalledWith();
     });
   });
+
+  it('should be noop if already disposed', () => {
+    let callback = jasmine.createSpy('callback');
+    let disposable = new DisposableClass(callback);
+
+    disposable.dispose();
+    callback.calls.reset();
+
+    disposable.dispose();
+    expect(callback).not.toHaveBeenCalled();
+  });
 });
