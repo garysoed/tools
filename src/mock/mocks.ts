@@ -1,3 +1,4 @@
+import BaseDisposable from '../dispose/base-disposable';
 import DisposableFunction from '../dispose/disposable-function';
 import MockElement from './mock-element';
 
@@ -24,6 +25,15 @@ class Mocks {
       };
     });
     return baseObj;
+  }
+
+  /**
+   * Creates a mock disposable object.
+   *
+   * @return The mock disposable object.
+   */
+  static disposable(): any {
+    return new BaseDisposable();
   }
 
   /**
