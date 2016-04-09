@@ -1,17 +1,29 @@
+import AssertResolution from './assert-resolution';
+
+
 /**
  * String related assertions.
  */
 class StringAsserts {
+  private reversed_: boolean;
+  private value_: string;
+
   /**
-   * Assert that the given string is not empty.
-   *
-   * @param value The string to check.
-   * @param message Error message to throw when empty. Defaults to `<value> should not be empty`.
+   * @param value The string value to check.
+   * @param reversed True iff the check logic should be reversed.
    */
-  static isNotEmpty(value: string, message: string = `${value} should not be empty`): void {
-    if (value.length === 0) {
-      throw Error(message);
-    }
+  constructor(value: string, reversed: boolean = false) {
+    this.value_ = value;
+    this.reversed_ = reversed;
+  }
+
+  /**
+   * Checks that the string is empty.
+   *
+   * @return The resolution object.
+   */
+  empty(): AssertResolution {
+    return new AssertResolution(this.reversed_ === this.value_.length > 0);
   }
 }
 

@@ -1,22 +1,37 @@
 import TestBase from '../test-base';
 TestBase.setup();
 
-import StringAsserts from './string-asserts';
+import Asserts from './asserts';
 
 
 describe('assert.StringAsserts', () => {
-  describe('isNotEmpty', () => {
-    it('should throw error if empty', () => {
-      let message = 'message';
+  describe('is.empty', () => {
+    it('should not throw error if the string is empty', () => {
       expect(() => {
-        StringAsserts.isNotEmpty('', message);
-      }).toThrowError(message);
+        Asserts.string('').is.empty().orThrows(Error());
+      }).not.toThrow();
     });
 
-    it('should not throw error if not empty', () => {
+    it('should throw error if the string is not empty', () => {
+      let error = Error('error');
       expect(() => {
-        StringAsserts.isNotEmpty('notEmpty');
+        Asserts.string('not empty').is.empty().orThrows(error);
+      }).toThrow(error);
+    });
+  });
+
+  describe('isNot.empty', () => {
+    it('should not throw error if the string is not empty', () => {
+      expect(() => {
+        Asserts.string('not empty').isNot.empty().orThrows(Error());
       }).not.toThrow();
+    });
+
+    it('should throw error if the string is empty', () => {
+      let error = Error('error');
+      expect(() => {
+        Asserts.string('').isNot.empty().orThrows(error);
+      }).toThrow(error);
     });
   });
 });
