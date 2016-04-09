@@ -1,3 +1,5 @@
+import Asserts from './assert/asserts';
+
 /**
  * Various utility methods to work with JSONs.
  *
@@ -12,6 +14,39 @@ class Jsons {
    */
   static deepClone(original: gs.IJson): gs.IJson {
     return JSON.parse(JSON.stringify(original));
+  }
+
+  /**
+   * Sets the value of the given object at the given path.
+   *
+   * For example:
+   *
+   * ```typescript
+   * import Jsons from './jsons';
+   *
+   * Jsons.setValue(window, 'a.b.c', 123);
+   * expect(window.a.b.c).toEqual(123);
+   * ```
+   *
+   * @param json The object to set the value of.
+   * @param path `.` separated path to the location of the value to set.
+   * @param value The value to set.
+   */
+  static setValue(json: gs.IJson, path: string, value: any): void {
+    Asserts.string.isNotEmpty(path);
+
+    let object = json;
+    let parts = path.split('.');
+    let propertyName = parts.pop();
+
+    parts.forEach((part: string) => {
+      if (object[part] === undefined) {
+        object[part] = {};
+      }
+      object = object[part];
+    });
+
+    object[propertyName] = value;
   }
 
   /**

@@ -14,6 +14,8 @@
  *
  * Use this library whenever you want to narrow down a type, either due to union types or due to
  * type inheritance.
+ *
+ * Unlike [[Asserts]], this does not throw any errors on failure.
  */
 const Checks = {
   /**

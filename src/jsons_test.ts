@@ -43,4 +43,26 @@ describe('Jsons', () => {
       expect(dest.a).toEqual(2);
     });
   });
+
+  describe('setValue', () => {
+    it('should set the value at the correct location', () => {
+      let innerObj = { };
+      let obj = { 'a': innerObj };
+      Jsons.setValue(obj, 'a.b.c', 123);
+      expect(obj).toEqual({ 'a': innerObj });
+      expect(innerObj).toEqual({ 'b': { 'c': 123 } });
+    });
+
+    it('should handle a single value', () => {
+      let obj = { };
+      Jsons.setValue(obj, 'abc', 123);
+      expect(obj).toEqual({ 'abc': 123 });
+    });
+
+    it('should throw error when the path is empty', () => {
+      expect(() => {
+        Jsons.setValue({ }, '', 123);
+      }).toThrowError();
+    });
+  });
 });

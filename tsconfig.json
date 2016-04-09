@@ -22,7 +22,7 @@
         "!node_modules/**",
         "node_modules/typescript/lib/lib.es6.d.ts"
     ],
-    "compileOnSave": true,
+    "compileOnSave": false,
     "buildOnSave": false,
     "files": [
         "declarations/angularjs/angular.d.ts",
@@ -33,6 +33,9 @@
         "declarations/jasmine/jasmine.d.ts",
         "declarations/jquery/jquery.d.ts",
         "declarations/tsd.d.ts",
+        "src/assert/asserts.ts",
+        "src/assert/string-asserts_test.ts",
+        "src/assert/string-asserts.ts",
         "src/async/asyncs.ts",
         "src/checks_test.ts",
         "src/checks.ts",
