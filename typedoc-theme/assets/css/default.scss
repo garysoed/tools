@@ -1,7 +1,9 @@
+@import 'theme';
+
 .gs-default__header {
-  background-color: #607D8B;
-  border-bottom: 1px solid #CFD8DC;
-  color: #CFD8DC;
+  background-color: $color-primary;
+  border-bottom: 1px solid $color-secondary;
+  color: $color-secondary;
   padding: 1em 2em;
   z-index: 1;
 }
@@ -13,7 +15,7 @@
 
 .gs-default__navigation-bar,
 .gs-default__navigation-bar > md-content {
-  background-color: #607D8B;
+  background-color: $color-primary;
 }
 
 .gs-default__navigation-bar nav {
@@ -21,7 +23,7 @@
 }
 
 .gs-default__navigation-bar md-divider {
-  border-top-color: #CFD8DC;
+  border-top-color: $color-secondary;
 }
 
 .gs-default__project-name {
@@ -42,7 +44,7 @@
 }
 
 .gs-default__content > header > h2 {
-  background-color: #607D8B;
+  background-color: $color-primary;
   color: white;
   text-transform: capitalize;
   padding: 1rem 2rem;
@@ -50,7 +52,7 @@
 }
 
 .gs-default__content header.gs-sticky {
-  background-color: #CFD8DC;
+  background-color: $color-secondary;
   height: 2rem;
   line-height: 2rem;
   overflow-x: auto;
@@ -111,7 +113,7 @@
 }
 
 .gs-default__search-button:not(.gs-default__search-button--active) md-icon {
-  color: #CFD8DC;
+  color: $color-secondary;
 }
 
 .gs-default__toggle {
@@ -120,7 +122,7 @@
 }
 
 .md-autocomplete-suggestions-container li .highlight {
-  color: #FFD600;
+  color: $color-accent;
   font-weight: bold;
 }
 

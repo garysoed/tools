@@ -1,6 +1,10 @@
 var gn = require('./gulp/gulp-node')(__dirname, require('gulp'));
 var karmaTasks = require('./gulp-tasks/karma')(require('karma').Server);
-var typedocTasks = require('./gulp-tasks/typedoc')(require('gulp-typedoc'));
+var sassTasks = require('./gulp-tasks/sass')(require('gulp-concat'), require('gulp-sass'))
+var typedocTasks = require('./gulp-tasks/typedoc')(
+    require('gulp-concat'),
+    require('gulp-sass'),
+    require('gulp-typedoc'));
 
 gn.task('compile-test', gn.parallel(
     'src:compile-test',
@@ -36,7 +40,11 @@ gn.task('lint', gn.parallel(
 gn.exec('lint', gn.series('.:lint'));
 gn.exec(
     'doc',
-    typedocTasks.compile(gn, ['!src/test-base.ts', 'node_modules/typescript/lib/lib.es6.d.ts']));
+    typedocTasks.compile(
+        gn,
+        ['!src/test-base.ts', 'node_modules/typescript/lib/lib.es6.d.ts'],
+        'gs-tools',
+        'cloudy-sky'));
 
 var mockAngular = {
   pattern: 'src/testing/mock-angular.js',

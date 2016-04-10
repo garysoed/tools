@@ -1,6 +1,8 @@
+@import 'theme';
+
 .gs-toolbar {
-  background-color: #607D8B;
-  color: #CFD8DC;
+  background-color: $color-primary;
+  color: $color-secondary;
 }
 
 a.gs-project-title {

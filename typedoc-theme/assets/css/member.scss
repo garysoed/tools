@@ -1,16 +1,18 @@
+@import 'theme';
+
 .gs-member__definition {
   background-color: white;
   padding: 1rem 2rem;
 }
 
 .gs-member__children {
-  background-color: #CFD8DC;
+  background-color: $color-secondary;
   padding-bottom: 2rem;
 }
 
 .gs-member__children .gs-member__definition {
-  border-left: 1px solid #607D8B;
-  border-right: 1px solid #607D8B;
+  border-left: 1px solid $color-primary;
+  border-right: 1px solid $color-primary;
 }
 
 .gs-member__flags {

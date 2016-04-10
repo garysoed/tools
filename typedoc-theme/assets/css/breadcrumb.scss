@@ -1,5 +1,7 @@
+@import 'theme';
+
 .gv-breadcrumb__icon {
-  color: #CFD8DC;
+  color: $color-secondary;
 }
 
 a.gv-breadcrumb__item {
@@ -8,5 +10,5 @@ a.gv-breadcrumb__item {
 }
 
 a.gv-breadcrumb__item:not(:hover) {
-  color: #CFD8DC;
+  color: $color-secondary;
 }

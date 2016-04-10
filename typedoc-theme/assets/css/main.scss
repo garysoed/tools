@@ -1,22 +1,22 @@
-@import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Roboto:400,700);
+@import 'theme';
 
 a {
-  color: #607D8B;
+  color: $color-primary;
   text-decoration: none;
 }
 
 a:hover {
-  color: #FFD600;
+  color: $color-accent;
 }
 
 md-divider {
-  border-top-color: #607D8B;
+  border-top-color: $color-primary;
 }
 
 table.gs-parameters {
   border-spacing: 0;
   border-collapse: collapse;
-  border-left: 5px solid #607D8B;
+  border-left: 5px solid $color-primary;
   margin-bottom: 4rem;
 }
 
@@ -33,7 +33,7 @@ table.gs-parameters td.gs-code {
 }
 
 code {
-  background-color: #CFD8DC;
+  background-color: $color-secondary;
   border-radius: .2rem;
   font-family: 'Ubuntu Mono', monospace;
   padding: .1rem .2rem;
@@ -59,4 +59,17 @@ table.gs-parameters p {
 
 .hljs {
   padding: 2rem;
+}
+
+/* Apply the themes to Angular Material components */
+md-switch.md-default-theme.md-checked .md-bar, md-switch.md-checked .md-bar {
+  background-color: rgba(red($color-accent), green($color-accent), blue($color-accent), .5);
+}
+
+md-switch.md-default-theme.md-checked .md-thumb, md-switch.md-checked .md-thumb {
+  background-color: $color-accent;
+}
+
+md-switch.md-default-theme.md-checked .md-ink-ripple, md-switch.md-checked .md-ink-ripple {
+  color: $color-accent;
 }

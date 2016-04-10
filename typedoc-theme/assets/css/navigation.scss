@@ -1,3 +1,5 @@
+@import 'theme';
+
 a.gs-navigation__item {
   font-size: 14px;
   font-weight: 500;
@@ -9,16 +11,16 @@ a.gs-navigation__item {
 }
 
 .gs-navigation__root {
-  background-color: #607D8B;
+  background-color: $color-primary;
   border-right: 5px solid transparent;
 }
 
 .gs-navigation__root.gs-navigation__selected {
-  border-right-color: #FFD600;
+  border-right-color: $color-accent;
 }
 
 .gs-navigation__root a:not(:hover) {
-  color: #CFD8DC;
+  color: $color-secondary;
 }
 
 a.gs-navigation__member {

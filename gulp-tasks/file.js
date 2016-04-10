@@ -12,10 +12,11 @@ FileTasks.prototype.concat = function(gulp, srcs, dest) {
   }.bind(this);
 };
 
-FileTasks.prototype.copy = function(gulp, srcs) {
+FileTasks.prototype.copy = function(gulp, srcs, outdir) {
+  var outdir = outdir || config.DIR_OUT
   return function copyFiles_() {
     return gulp.src(srcs, { 'base': '.' })
-        .pipe(gulp.dest(config.DIR_OUT));
+        .pipe(gulp.dest(outdir));
   }.bind(this);
 };
 

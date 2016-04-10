@@ -1,11 +1,13 @@
+@import 'theme';
+
 .gs-comment__deprecated {
   padding: 1rem;
-  border: 1px solid #F44336;
+  border: 1px solid $color-warning;
 }
 
 .gs-comment__deprecated,
 .gs-comment__deprecated md-icon {
-  color: #F44336;
+  color: $color-warning;
 }
 
 .gs-comment__deprecated md-icon {

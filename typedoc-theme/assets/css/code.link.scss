@@ -1,9 +1,11 @@
+@import 'theme';
+
 .gs-code-link__icon {
-  color: #607D8B;
+  color: $color-primary;
   font-size: 14px;
   line-height: 1rem;
 }
 
 .gs-code-link__icon:hover {
-  color: #FFD600;
+  color: $color-accent;
 }
