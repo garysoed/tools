@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<base href=".">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#607D8B">
+	<title>
+		TestSetup &bull; gs-tools
+	</title>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!-- Angular -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-aria.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-messages.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.min.js"></script>
+	<!-- Angular Material -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.js"></script>
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.css">
+	<!-- Fuse.js -->
+	<script src="../assets/js/fuse.js"></script>
+	<!-- Highlight.js -->
+	<link rel="stylesheet" href="../assets/css/monokai.css">
+	<script src="../assets/js/highlight.pack.js"></script>
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="../assets/css/breadcrumb.css">
+	<link rel="stylesheet" href="../assets/css/code.link.css">
+	<link rel="stylesheet" href="../assets/css/comment.css">
+	<link rel="stylesheet" href="../assets/css/default.css">
+	<link rel="stylesheet" href="../assets/css/gettersetter.css">
+	<link rel="stylesheet" href="../assets/css/hierarchy.css">
+	<link rel="stylesheet" href="../assets/css/index.css">
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<link rel="stylesheet" href="../assets/css/member.css">
+	<link rel="stylesheet" href="../assets/css/member.declaration.css">
+	<link rel="stylesheet" href="../assets/css/member.signatures.css">
+	<link rel="stylesheet" href="../assets/css/member.sources.css">
+	<link rel="stylesheet" href="../assets/css/navigation.css">
+	<link rel="stylesheet" href="../assets/css/reflection.css">
+	<link rel="stylesheet" href="../assets/css/toc.css">
+	<link rel="stylesheet" href="../assets/css/typeParameters.css">
+	<!-- Custom js -->
+	<script src="../assets/js/search.js"></script>
+</head>
+<body
+layout="column"
+ng-app="DocApp"
+ng-class="{'gs-default__hide-inherited': hideInherited}"
+ng-controller="RootCtrl">
+<section class="gs-default__header" layout="row" layout-align="space-between center">
+	<div layout="column">
+		<header>
+			<h1 class="gs-default__project-name">
+				<a href="../index.html">gs-tools</a>
+			</h1>
+		</header>
+		<div>        <a class="gv-breadcrumb__item" href="../globals.html">Globals</a>
+			<md-icon class="gv-breadcrumb__icon">keyboard_arrow_right</md-icon>
+			<a class="gv-breadcrumb__item" href="../modules/_testing_test_setup_.html">&quot;testing/test-setup&quot;</a>
+			<md-icon class="gv-breadcrumb__icon">keyboard_arrow_right</md-icon>
+			<a class="gv-breadcrumb__item" href="_testing_test_setup_.testsetup.html">TestSetup</a>
+		</div>
+	</div>
+	<div class="gs-default__search-container" flex layout="row" layout-align="end center">
+		<md-button
+		class="md-icon-button gs-default__search-button"
+		ng-class="{'gs-default__search-button--active': isSearchActive}"
+		ng-click="onSearchClick()">
+		<md-icon>search</md-icon>
+		</md-button>
+		<md-autocomplete
+		class="gs-default__search"
+		md-selected-item="selectedItem"
+		md-search-text="searchText"
+		md-items="item in querySearch(searchText)"
+		md-item-text="item.name"
+		md-min-length="0"
+		md-selected-item-change="onSelectedItemChange(item)"
+		ng-class="{'gs-default__search--active': isSearchActive}"
+		placeholder="Search ...">
+		<md-item-template>
+			<div md-highlight-text="searchText" md-highlight-flags="i">
+				{{item.parent}}.{{item.name}}
+			</div>
+		</md-item-template>
+		</md-autocomplete>
+	</div>
+</section>
+<section flex layout="row">
+	<section class="gs-default__navigation-bar md-body-1" layout="column">
+		<md-content flex>
+			<nav>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__globals"
+					href="../globals.html">
+					Globals
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="../modules/_testing_test_setup_.html">
+						&quot;testing/test-setup&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+			</nav>
+			<md-divider></md-divider>
+			<nav layout="column" layout-align="star end">
+				<div layout="column">
+					<div class="gs-toc-root__root" layout="column">
+						<div class="gs-toc__entry tsd-kind-class tsd-parent-kind-external-module tsd-is-not-exported" layout="row">
+							<a href="_testing_test_setup_.testsetup.html">Test<wbr>Setup</a>
+						</div>
+						<div class="gs-toc__children tsd-kind-class tsd-parent-kind-external-module tsd-is-not-exported">
+							<div class="gs-toc__entry tsd-kind-constructor tsd-parent-kind-class tsd-is-not-exported" layout="row">
+								<a href="_testing_test_setup_.testsetup.html#constructor">constructor</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-not-exported" layout="row">
+								<a href="_testing_test_setup_.testsetup.html#setups_">setups_</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-method tsd-parent-kind-class tsd-is-not-exported" layout="row">
+								<a href="_testing_test_setup_.testsetup.html#setup">setup</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</nav>
+		</md-content>
+		<div class="gs-default__toggle">
+			<md-switch ng-model="hideInherited">
+				Hides inherited
+			</md-switch>
+		</div>
+	</section>
+	<md-content class="gs-default__content" flex>
+		<section class="tsd-panel tsd-comment">
+			<div class="md-body-2">
+				<p>Sets up testing logic for your project.</p>
+			</div>
+			<div class="md-body-1"><p>Each directory in <code>gs-tools</code> may contain special testing logic. Whenever you use them in your
+				project, you want to install the corresponding test setup file for tests in your project.</p>
+				<p>A recommended way to use this is to create a <code>test-base.ts</code> file in your project to set up the
+					<code>TestSetup</code> and include the <code>test-base</code> in every test. This <code>test-base</code> class should install the
+				test setup plugins to use, and call <a href="_testing_test_setup_.testsetup.html#setup">setup</a> once during the test.</p>
+				<p>Example <code>test-base</code> file:</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> TestDispose from <span class="hljs-string">'./testing/test-dispose'</span>;
+<span class="hljs-keyword">import</span> TestSetup from <span class="hljs-string">'./testing/test-setup'</span>;
+
+<span class="hljs-keyword">const</span> testSetup = <span class="hljs-keyword">new</span> TestSetup([TestDispose]);
+<span class="hljs-keyword">let</span> initialized = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> = {
+  setup() {
+    <span class="hljs-keyword">if</span> (!initialized) {
+      testSetup.setup();
+      initialized = <span class="hljs-literal">true</span>;
+    }
+  }
+};
+</code></pre>
+				<p>In your test:</p>
+				<pre><code><span class="hljs-keyword">import</span> TestBase <span class="hljs-keyword">from</span> <span class="hljs-string">'./test-base'</span>;
+TestBase.setup();
+
+<span class="hljs-keyword">import</span> DisposableClass <span class="hljs-keyword">from</span> <span class="hljs-string">'./disposable-class'</span>;
+<span class="hljs-keyword">import</span> TestDispose <span class="hljs-keyword">from</span> <span class="hljs-string">'./testing/test-dispose'</span>;
+
+describe(<span class="hljs-string">'Some disposable class'</span>, () =&gt; {
+  it(<span class="hljs-string">'should do something'</span>, () =&gt; {
+    <span class="hljs-keyword">let</span> disposableClass = <span class="hljs-keyword">new</span> DisposableClass();
+
+    <span class="hljs-comment">// Without this, TestDispose will complain that disposableClass does not get disposed at the</span>
+    <span class="hljs-comment">// end of the test.</span>
+    TestDispose.add(disposableClass);
+  });
+});
+</code></pre></div>
+		</section>
+		<section class="gs-reflection__section">
+			<h3>Hierarchy</h3>
+			<div class="gs-code">
+				<div>
+					<div>
+						<md-icon>keyboard_arrow_right</md-icon>
+						<span class="gs-hierarchy__target">TestSetup</span>
+					</div>
+					<div class="gs-hierarchy__children">
+					</div>
+				</div>
+			</div>
+		</section>
+		<header class="tsd-is-not-exported">
+			<h2 class="md-display-1">Constructors</h2>
+		</header>
+		<a name="constructor" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-constructor tsd-parent-kind-class tsd-is-not-exported">
+			<h3>
+				<span class="gs-member__flags gs-code">
+				</span>
+				<span class="gs-member__signature">
+					new <wbr>Test<wbr>Setup(setups: <a href="../interfaces/_testing_i_test_setup_.itestsetup.html" class="tsd-signature-type">ITestSetup</a><span class="tsd-signature-symbol">[]</span>): <a href="_testing_test_setup_.testsetup.html" class="tsd-signature-type">TestSetup</a>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/master/src/testing/test-setup.ts#L52">
+					<md-tooltip direction="bottom">
+						testing/test-setup.ts:52
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-constructor tsd-parent-kind-class tsd-is-not-exported"></md-divider>
+		<section class="gs-member__definition tsd-kind-constructor tsd-parent-kind-class tsd-is-not-exported">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<h4 class="md-title">Parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					setups</td><td class="gs-code"><a href="../interfaces/_testing_i_test_setup_.itestsetup.html" class="tsd-signature-type">ITestSetup</a><span class="tsd-signature-symbol">[]</span>          </td>
+					<td>
+					</td>
+				</tr>
+			</table>
+			<h4 class="gs-code">returns <a href="_testing_test_setup_.testsetup.html" class="tsd-signature-type">TestSetup</a></h4>
+		</section>
+		<md-divider class="tsd-kind-constructor tsd-parent-kind-class tsd-is-not-exported"></md-divider>
+		<header class="tsd-is-private tsd-is-private-protected tsd-is-not-exported">
+			<h2 class="md-display-1">Properties</h2>
+		</header>
+		<a name="setups_" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+			<h3>
+				<span class="gs-member__flags gs-code">
+					Private
+				</span>
+				<span class="gs-member__signature">
+					setups_:<a href="../interfaces/_testing_i_test_setup_.itestsetup.html" class="tsd-signature-type">ITestSetup</a><span class="tsd-signature-symbol">[]</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/master/src/testing/test-setup.ts#L52">
+					<md-tooltip direction="bottom">
+						testing/test-setup.ts:52
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-not-exported"></md-divider>
+		<section class="gs-member__definition tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-1">
+			</div>
+		</section>
+		<md-divider class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-not-exported"></md-divider>
+		<header class="tsd-is-not-exported">
+			<h2 class="md-display-1">Methods</h2>
+		</header>
+		<a name="setup" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+			<h3>
+				<span class="gs-member__flags gs-code">
+				</span>
+				<span class="gs-member__signature">
+					setup(): <span>void</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/master/src/testing/test-setup.ts#L58">
+					<md-tooltip direction="bottom">
+						testing/test-setup.ts:58
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"></md-divider>
+		<section class="gs-member__definition tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<h4 class="gs-code">returns <span>void</span></h4>
+		</section>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"></md-divider>
+	</md-content>
+</section>
+<script type="text/javascript">
+    var BASE_URL = '..';
+    hljs.initHighlightingOnLoad();
+    angular
+        .module('DocApp', ['ngMaterial'])
+        .config(function($mdIconProvider, $mdThemingProvider) {
+          $mdIconProvider.defaultFontSet('material-icons');
+          $mdThemingProvider
+              .theme('default')
+              .primaryPalette('blue-grey')
+              .accentPalette('yellow', {
+                'default': 'A700'
+              });
+        })
+        .controller('RootCtrl', function($scope) {
+          var isInit = false;
+          var rows = typedoc.search.data.rows;
+          var fuse = new Fuse(rows, {
+            'keys': ['name']
+          });
+
+          $scope['hideInherited'] = true;
+          $scope['isSearchActive'] = false;
+          $scope['onSearchClick'] = function() {
+            $scope['isSearchActive'] = !$scope['isSearchActive'];
+
+            if ($scope['isSearchActive']) {
+              var inputEl = document.querySelector('.gs-default__search input');
+              inputEl.focus();
+              if (!isInit) {
+                inputEl.addEventListener('blur', function() {
+                  $scope['isSearchActive'] = false;
+                  $scope.$apply(function() {});
+                });
+                isInit = true;
+              }
+            }
+          };
+          $scope['onSelectedItemChange'] = function(item) {
+            window.location = BASE_URL + '/' + item.url;
+          };
+          $scope['querySearch'] = function(query) {
+            return fuse.search(query);
+          };
+        });
+  </script>
+</body>
+</html>

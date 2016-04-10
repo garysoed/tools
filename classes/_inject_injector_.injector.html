@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<base href=".">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#607D8B">
+	<title>
+		Injector &bull; gs-tools
+	</title>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!-- Angular -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-aria.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-messages.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.min.js"></script>
+	<!-- Angular Material -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.js"></script>
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.css">
+	<!-- Fuse.js -->
+	<script src="../assets/js/fuse.js"></script>
+	<!-- Highlight.js -->
+	<link rel="stylesheet" href="../assets/css/monokai.css">
+	<script src="../assets/js/highlight.pack.js"></script>
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="../assets/css/breadcrumb.css">
+	<link rel="stylesheet" href="../assets/css/code.link.css">
+	<link rel="stylesheet" href="../assets/css/comment.css">
+	<link rel="stylesheet" href="../assets/css/default.css">
+	<link rel="stylesheet" href="../assets/css/gettersetter.css">
+	<link rel="stylesheet" href="../assets/css/hierarchy.css">
+	<link rel="stylesheet" href="../assets/css/index.css">
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<link rel="stylesheet" href="../assets/css/member.css">
+	<link rel="stylesheet" href="../assets/css/member.declaration.css">
+	<link rel="stylesheet" href="../assets/css/member.signatures.css">
+	<link rel="stylesheet" href="../assets/css/member.sources.css">
+	<link rel="stylesheet" href="../assets/css/navigation.css">
+	<link rel="stylesheet" href="../assets/css/reflection.css">
+	<link rel="stylesheet" href="../assets/css/toc.css">
+	<link rel="stylesheet" href="../assets/css/typeParameters.css">
+	<!-- Custom js -->
+	<script src="../assets/js/search.js"></script>
+</head>
+<body
+layout="column"
+ng-app="DocApp"
+ng-class="{'gs-default__hide-inherited': hideInherited}"
+ng-controller="RootCtrl">
+<section class="gs-default__header" layout="row" layout-align="space-between center">
+	<div layout="column">
+		<header>
+			<h1 class="gs-default__project-name">
+				<a href="../index.html">gs-tools</a>
+			</h1>
+		</header>
+		<div>        <a class="gv-breadcrumb__item" href="../globals.html">Globals</a>
+			<md-icon class="gv-breadcrumb__icon">keyboard_arrow_right</md-icon>
+			<a class="gv-breadcrumb__item" href="../modules/_inject_injector_.html">&quot;inject/injector&quot;</a>
+			<md-icon class="gv-breadcrumb__icon">keyboard_arrow_right</md-icon>
+			<a class="gv-breadcrumb__item" href="_inject_injector_.injector.html">Injector</a>
+		</div>
+	</div>
+	<div class="gs-default__search-container" flex layout="row" layout-align="end center">
+		<md-button
+		class="md-icon-button gs-default__search-button"
+		ng-class="{'gs-default__search-button--active': isSearchActive}"
+		ng-click="onSearchClick()">
+		<md-icon>search</md-icon>
+		</md-button>
+		<md-autocomplete
+		class="gs-default__search"
+		md-selected-item="selectedItem"
+		md-search-text="searchText"
+		md-items="item in querySearch(searchText)"
+		md-item-text="item.name"
+		md-min-length="0"
+		md-selected-item-change="onSelectedItemChange(item)"
+		ng-class="{'gs-default__search--active': isSearchActive}"
+		placeholder="Search ...">
+		<md-item-template>
+			<div md-highlight-text="searchText" md-highlight-flags="i">
+				{{item.parent}}.{{item.name}}
+			</div>
+		</md-item-template>
+		</md-autocomplete>
+	</div>
+</section>
+<section flex layout="row">
+	<section class="gs-default__navigation-bar md-body-1" layout="column">
+		<md-content flex>
+			<nav>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__globals"
+					href="../globals.html">
+					Globals
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="../modules/_inject_injector_.html">
+						&quot;inject/injector&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+				<div class="gs-navigation__root" layout="column">
+				</div>
+			</nav>
+			<md-divider></md-divider>
+			<nav layout="column" layout-align="star end">
+				<div layout="column">
+					<div class="gs-toc-root__root" layout="column">
+						<div class="gs-toc__entry tsd-kind-class tsd-parent-kind-external-module tsd-is-not-exported" layout="row">
+							<a href="_inject_injector_.injector.html">Injector</a>
+						</div>
+						<div class="gs-toc__children tsd-kind-class tsd-parent-kind-external-module tsd-is-not-exported">
+							<div class="gs-toc__entry tsd-kind-constructor tsd-parent-kind-class tsd-is-not-exported" layout="row">
+								<a href="_inject_injector_.injector.html#constructor">constructor</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-not-exported" layout="row">
+								<a href="_inject_injector_.injector.html#instances_">instances_</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static tsd-is-not-exported" layout="row">
+								<a href="_inject_injector_.injector.html#bindings_">BINDINGS_</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static tsd-is-not-exported" layout="row">
+								<a href="_inject_injector_.injector.html#___metadata">___metadata</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported" layout="row">
+								<a href="_inject_injector_.injector.html#getboundvalue_">get<wbr>Bound<wbr>Value_</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-not-exported" layout="row">
+								<a href="_inject_injector_.injector.html#instantiate">instantiate</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-method tsd-parent-kind-class tsd-is-static tsd-is-not-exported" layout="row">
+								<a href="_inject_injector_.injector.html#bind">bind</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-not-exported" layout="row">
+								<a href="_inject_injector_.injector.html#instantiate_">instantiate_</a>
+							</div>
+							<div class="gs-toc__entry tsd-kind-method tsd-parent-kind-class tsd-is-static tsd-is-not-exported" layout="row">
+								<a href="_inject_injector_.injector.html#registerinject">register<wbr>Inject</a>
+							</div>
+						</div>
+					</div>
+					<div class="gs-toc-root__root" layout="column">
+						<div class="gs-toc__entry tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported" layout="row">
+							<a href="../modules/_inject_injector_.html#bindkey">Bind<wbr>Key</a>
+						</div>
+					</div>
+					<div class="gs-toc-root__root" layout="column">
+						<div class="gs-toc__entry tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported" layout="row">
+							<a href="../modules/_inject_injector_.html#injector_bind_key_">INJECTOR_<wbr>BIND_<wbr>KEY_</a>
+						</div>
+					</div>
+				</div>
+			</nav>
+		</md-content>
+		<div class="gs-default__toggle">
+			<md-switch ng-model="hideInherited">
+				Hides inherited
+			</md-switch>
+		</div>
+	</section>
+	<md-content class="gs-default__content" flex>
+		<section class="tsd-panel tsd-comment">
+			<div class="md-body-2">
+				<p>Light dependency injection library.</p>
+			</div>
+			<div class="md-body-1"><p>Using this consists of 3 parts:</p>
+				<ol>
+					<li>First, you will need to bind the class that can be injected. Apply the <code>@Bind</code> annotation on
+					the class.</li>
+					<li>Next, on constructor parameters you want to do injection on, apply the <code>@Inject</code> annotation
+					on the parameter.</li>
+					<li>To instantiate a class, use the <a href="_inject_injector_.injector.html#instantiate">instantiate</a> method. This will inject any parameters
+						marked by the <code>@Inject</code> annotation with the bound value. Note that any classes injected this
+					way must have all of its constructor parameters be <code>@Inject</code>d.</li>
+				</ol>
+				<p>For example:</p>
+				<p>```typescript
+					import Bind from &#39;./inject/a-bind&#39;;
+					import Inject from &#39;./inject/a-inject&#39;;
+				import Injector from &#39;./inject/injector&#39;;</p>
+			</div>
+		</section>
+		<section class="gs-reflection__section">
+			<h3>Hierarchy</h3>
+			<div class="gs-code">
+				<div>
+					<div>
+						<md-icon>keyboard_arrow_right</md-icon>
+						<span class="gs-hierarchy__target">Injector</span>
+					</div>
+					<div class="gs-hierarchy__children">
+					</div>
+				</div>
+			</div>
+		</section>
+		<header class="tsd-is-not-exported">
+			<h2 class="md-display-1">Constructors</h2>
+		</header>
+		<a name="constructor" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-constructor tsd-parent-kind-class tsd-is-not-exported">
+			<h3>
+				<span class="gs-member__flags gs-code">
+				</span>
+				<span class="gs-member__signature">
+					new <wbr>Injector(): <a href="_inject_injector_.injector.html" class="tsd-signature-type">Injector</a>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L58">
+					<md-tooltip direction="bottom">
+						inject/injector.ts:58
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-constructor tsd-parent-kind-class tsd-is-not-exported"></md-divider>
+		<section class="gs-member__definition tsd-kind-constructor tsd-parent-kind-class tsd-is-not-exported">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<h4 class="gs-code">returns <a href="_inject_injector_.injector.html" class="tsd-signature-type">Injector</a></h4>
+		</section>
+		<md-divider class="tsd-kind-constructor tsd-parent-kind-class tsd-is-not-exported"></md-divider>
+		<header class="tsd-is-private tsd-is-private-protected tsd-is-not-exported">
+			<h2 class="md-display-1">Properties</h2>
+		</header>
+		<a name="instances_" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+			<h3>
+				<span class="gs-member__flags gs-code">
+					Private
+				</span>
+				<span class="gs-member__signature">
+					instances_:<span>Map</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_inject_injector_.html#bindkey" class="tsd-signature-type">BindKey</a><span class="tsd-signature-symbol">, </span><span>any</span><span class="tsd-signature-symbol">&gt;</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L58">
+					<md-tooltip direction="bottom">
+						inject/injector.ts:58
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-not-exported"></md-divider>
+		<section class="gs-member__definition tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-1">
+			</div>
+		</section>
+		<md-divider class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-not-exported"></md-divider>
+		<a name="bindings_" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static tsd-is-not-exported">
+			<h3>
+				<span class="gs-member__flags gs-code">
+					StaticPrivate
+				</span>
+				<span class="gs-member__signature">
+					BINDINGS_:<span>Map</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_inject_injector_.html#bindkey" class="tsd-signature-type">BindKey</a><span class="tsd-signature-symbol">, </span><span>ICtor</span><span class="tsd-signature-symbol">&lt;</span><span>any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L55">
+					<md-tooltip direction="bottom">
+						inject/injector.ts:55
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static tsd-is-not-exported"></md-divider>
+		<section class="gs-member__definition tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static tsd-is-not-exported">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-1">
+			</div>
+		</section>
+		<md-divider class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static tsd-is-not-exported"></md-divider>
+		<a name="___metadata" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static tsd-is-not-exported">
+			<h3>
+				<span class="gs-member__flags gs-code">
+					StaticPrivate
+				</span>
+				<span class="gs-member__signature">
+					___metadata:<span>symbol</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L56">
+					<md-tooltip direction="bottom">
+						inject/injector.ts:56
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static tsd-is-not-exported"></md-divider>
+		<section class="gs-member__definition tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static tsd-is-not-exported">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-1">
+			</div>
+		</section>
+		<md-divider class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static tsd-is-not-exported"></md-divider>
+		<header class="tsd-is-not-exported">
+			<h2 class="md-display-1">Methods</h2>
+		</header>
+		<a name="getboundvalue_" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+			<h3>
+				<span class="gs-member__flags gs-code">
+					Private
+				</span>
+				<span class="gs-member__signature">
+					get<wbr>Bound<wbr>Value_(bindKey: <a href="../modules/_inject_injector_.html#bindkey" class="tsd-signature-type">BindKey</a>): <span>any</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L65">
+					<md-tooltip direction="bottom">
+						inject/injector.ts:65
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported"></md-divider>
+		<section class="gs-member__definition tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<h4 class="md-title">Parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					bindKey</td><td class="gs-code"><a href="../modules/_inject_injector_.html#bindkey" class="tsd-signature-type">BindKey</a>          </td>
+					<td>
+					</td>
+				</tr>
+			</table>
+			<h4 class="gs-code">returns <span>any</span></h4>
+		</section>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported"></md-divider>
+		<a name="instantiate" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-not-exported">
+			<h3>
+				<span class="gs-member__flags gs-code">
+				</span>
+				<span class="gs-member__signature">
+					instantiate&lt;T&gt;(ctor: <span>ICtor</span><span class="tsd-signature-symbol">&lt;</span><span>T</span><span class="tsd-signature-symbol">&gt;</span>, extraArguments?: <span>{[index: <span>number</span>]: <span>any</span>}</span>): <span>T</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L109">
+					<md-tooltip direction="bottom">
+						inject/injector.ts:109
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-not-exported"></md-divider>
+		<section class="gs-member__definition tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-not-exported">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-2">
+				<p>Instantiates the given constructor.</p>
+			</div>
+			<div class="md-body-1"><p>This will check for any <code>@Inject</code> annotations on the parameter and use the <code>@Bind</code> values. If
+					there are any parameters without <code>@Inject</code>, you have to specify the values in the
+				extraArguments object.</p>
+				<p>The extraArguments object can also be used to override parameters that are <code>@Inject</code> annotated.</p>
+			</div>
+			<h4 class="md-title">Type parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					T      </td>
+					<td>
+					</td>
+				</tr>
+			</table>
+			<h4 class="md-title">Parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					ctor</td><td class="gs-code"><span>ICtor</span><span class="tsd-signature-symbol">&lt;</span><span>T</span><span class="tsd-signature-symbol">&gt;</span>          </td>
+					<td>
+						<div class="md-body-1"><p>The constructor to use to instantiates the object.</p>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="gs-code">
+					extraArguments</td><td class="gs-code"><span>{[index: <span>number</span>]: <span>any</span>}</span> =&nbsp;{}          </td>
+					<td>
+						<div class="md-body-1"><p>An object used to set the value of the constructor parameters. The index
+							is the parameter index and the value is the value to set for the corresponding parameter.</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<h4 class="gs-code">returns <span>T</span></h4>
+			<div class="md-body-1 gs-member-signatures__return">
+				<p>The newly instantiated object.</p>
+			</div>
+		</section>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-not-exported"></md-divider>
+		<a name="bind" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-method tsd-parent-kind-class tsd-is-static tsd-is-not-exported">
+			<h3>
+				<span class="gs-member__flags gs-code">
+					Static
+				</span>
+				<span class="gs-member__signature">
+					bind(ctor: <span>ICtor</span><span class="tsd-signature-symbol">&lt;</span><span>any</span><span class="tsd-signature-symbol">&gt;</span>, bindKey: <a href="../modules/_inject_injector_.html#bindkey" class="tsd-signature-type">BindKey</a>): <span>void</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L135">
+					<md-tooltip direction="bottom">
+						inject/injector.ts:135
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-is-static tsd-is-not-exported"></md-divider>
+		<section class="gs-member__definition tsd-kind-method tsd-parent-kind-class tsd-is-static tsd-is-not-exported">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-1">
+				<p>Binds the given constructor to the given bind key.</p>
+			</div>
+			<h4 class="md-title">Parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					ctor</td><td class="gs-code"><span>ICtor</span><span class="tsd-signature-symbol">&lt;</span><span>any</span><span class="tsd-signature-symbol">&gt;</span>          </td>
+					<td>
+						<div class="md-body-1"><p>The constructor to bind.</p>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="gs-code">
+					bindKey</td><td class="gs-code"><a href="../modules/_inject_injector_.html#bindkey" class="tsd-signature-type">BindKey</a>          </td>
+					<td>
+						<div class="md-body-1"><p>The key to bind the constructor to.</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<h4 class="gs-code">returns <span>void</span></h4>
+		</section>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-is-static tsd-is-not-exported"></md-divider>
+		<a name="instantiate_" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-not-exported">
+			<h3>
+				<span class="gs-member__flags gs-code">
+					StaticPrivate
+				</span>
+				<span class="gs-member__signature">
+					instantiate_&lt;T&gt;(ctor: <span>ICtor</span><span class="tsd-signature-symbol">&lt;</span><span>T</span><span class="tsd-signature-symbol">&gt;</span>, args: <span>any</span><span class="tsd-signature-symbol">[]</span>): <span>T</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L89">
+					<md-tooltip direction="bottom">
+						inject/injector.ts:89
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-not-exported"></md-divider>
+		<section class="gs-member__definition tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-not-exported">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<h4 class="md-title">Type parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					T      </td>
+					<td>
+					</td>
+				</tr>
+			</table>
+			<h4 class="md-title">Parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					ctor</td><td class="gs-code"><span>ICtor</span><span class="tsd-signature-symbol">&lt;</span><span>T</span><span class="tsd-signature-symbol">&gt;</span>          </td>
+					<td>
+					</td>
+				</tr>
+				<tr>
+					<td class="gs-code">
+					args</td><td class="gs-code"><span>any</span><span class="tsd-signature-symbol">[]</span>          </td>
+					<td>
+					</td>
+				</tr>
+			</table>
+			<h4 class="gs-code">returns <span>T</span></h4>
+		</section>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-not-exported"></md-divider>
+		<a name="registerinject" class="tsd-anchor"></a>
+		<header class="gs-sticky tsd-kind-method tsd-parent-kind-class tsd-is-static tsd-is-not-exported">
+			<h3>
+				<span class="gs-member__flags gs-code">
+					Static
+				</span>
+				<span class="gs-member__signature">
+					register<wbr>Inject(bindKey: <a href="../modules/_inject_injector_.html#bindkey" class="tsd-signature-type">BindKey</a>, ctor: <span>ICtor</span><span class="tsd-signature-symbol">&lt;</span><span>any</span><span class="tsd-signature-symbol">&gt;</span>, index: <span>number</span>): <span>void</span>
+				</span>
+				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L150">
+					<md-tooltip direction="bottom">
+						inject/injector.ts:150
+					</md-tooltip>
+					<md-icon class="gs-code-link__icon">code</md-icon>
+				</a>
+			</h3>
+		</header>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-is-static tsd-is-not-exported"></md-divider>
+		<section class="gs-member__definition tsd-kind-method tsd-parent-kind-class tsd-is-static tsd-is-not-exported">
+			<aside class="gs-member-sources__root md-caption">
+			</aside>
+			<div class="md-body-1">
+				<p>Registers the injection point.</p>
+			</div>
+			<h4 class="md-title">Parameters</h4>
+			<table class="gs-parameters md-body-1">
+				<tr>
+					<td class="gs-code">
+					bindKey</td><td class="gs-code"><a href="../modules/_inject_injector_.html#bindkey" class="tsd-signature-type">BindKey</a>          </td>
+					<td>
+						<div class="md-body-1"><p>The binding key to use to inject for the constructor.</p>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="gs-code">
+					ctor</td><td class="gs-code"><span>ICtor</span><span class="tsd-signature-symbol">&lt;</span><span>any</span><span class="tsd-signature-symbol">&gt;</span>          </td>
+					<td>
+						<div class="md-body-1"><p>The constructor to register the injection point for.</p>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="gs-code">
+					index</td><td class="gs-code"><span>number</span>          </td>
+					<td>
+						<div class="md-body-1"><p>The index of the parameter to inject the value into.</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<h4 class="gs-code">returns <span>void</span></h4>
+		</section>
+		<md-divider class="tsd-kind-method tsd-parent-kind-class tsd-is-static tsd-is-not-exported"></md-divider>
+	</md-content>
+</section>
+<script type="text/javascript">
+    var BASE_URL = '..';
+    hljs.initHighlightingOnLoad();
+    angular
+        .module('DocApp', ['ngMaterial'])
+        .config(function($mdIconProvider, $mdThemingProvider) {
+          $mdIconProvider.defaultFontSet('material-icons');
+          $mdThemingProvider
+              .theme('default')
+              .primaryPalette('blue-grey')
+              .accentPalette('yellow', {
+                'default': 'A700'
+              });
+        })
+        .controller('RootCtrl', function($scope) {
+          var isInit = false;
+          var rows = typedoc.search.data.rows;
+          var fuse = new Fuse(rows, {
+            'keys': ['name']
+          });
+
+          $scope['hideInherited'] = true;
+          $scope['isSearchActive'] = false;
+          $scope['onSearchClick'] = function() {
+            $scope['isSearchActive'] = !$scope['isSearchActive'];
+
+            if ($scope['isSearchActive']) {
+              var inputEl = document.querySelector('.gs-default__search input');
+              inputEl.focus();
+              if (!isInit) {
+                inputEl.addEventListener('blur', function() {
+                  $scope['isSearchActive'] = false;
+                  $scope.$apply(function() {});
+                });
+                isInit = true;
+              }
+            }
+          };
+          $scope['onSelectedItemChange'] = function(item) {
+            window.location = BASE_URL + '/' + item.url;
+          };
+          $scope['querySearch'] = function(query) {
+            return fuse.search(query);
+          };
+        });
+  </script>
+</body>
+</html>

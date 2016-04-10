@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<base href=".">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#607D8B">
+	<title>
+		gs-tools
+	</title>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!-- Angular -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-aria.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-messages.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.min.js"></script>
+	<!-- Angular Material -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.js"></script>
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.css">
+	<!-- Fuse.js -->
+	<script src="assets/js/fuse.js"></script>
+	<!-- Highlight.js -->
+	<link rel="stylesheet" href="assets/css/monokai.css">
+	<script src="assets/js/highlight.pack.js"></script>
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="assets/css/breadcrumb.css">
+	<link rel="stylesheet" href="assets/css/code.link.css">
+	<link rel="stylesheet" href="assets/css/comment.css">
+	<link rel="stylesheet" href="assets/css/default.css">
+	<link rel="stylesheet" href="assets/css/gettersetter.css">
+	<link rel="stylesheet" href="assets/css/hierarchy.css">
+	<link rel="stylesheet" href="assets/css/index.css">
+	<link rel="stylesheet" href="assets/css/main.css">
+	<link rel="stylesheet" href="assets/css/member.css">
+	<link rel="stylesheet" href="assets/css/member.declaration.css">
+	<link rel="stylesheet" href="assets/css/member.signatures.css">
+	<link rel="stylesheet" href="assets/css/member.sources.css">
+	<link rel="stylesheet" href="assets/css/navigation.css">
+	<link rel="stylesheet" href="assets/css/reflection.css">
+	<link rel="stylesheet" href="assets/css/toc.css">
+	<link rel="stylesheet" href="assets/css/typeParameters.css">
+	<!-- Custom js -->
+	<script src="assets/js/search.js"></script>
+</head>
+<body
+layout="column"
+ng-app="DocApp"
+ng-class="{'gs-default__hide-inherited': hideInherited}"
+ng-controller="RootCtrl">
+<section class="gs-default__header" layout="row" layout-align="space-between center">
+	<div layout="column">
+		<header>
+			<h1 class="gs-default__project-name">
+				<a href="index.html">gs-tools</a>
+			</h1>
+		</header>
+		<div>    <a class="gv-breadcrumb__item" href="globals.html">Globals</a>
+		</div>
+	</div>
+	<div class="gs-default__search-container" flex layout="row" layout-align="end center">
+		<md-button
+		class="md-icon-button gs-default__search-button"
+		ng-class="{'gs-default__search-button--active': isSearchActive}"
+		ng-click="onSearchClick()">
+		<md-icon>search</md-icon>
+		</md-button>
+		<md-autocomplete
+		class="gs-default__search"
+		md-selected-item="selectedItem"
+		md-search-text="searchText"
+		md-items="item in querySearch(searchText)"
+		md-item-text="item.name"
+		md-min-length="0"
+		md-selected-item-change="onSelectedItemChange(item)"
+		ng-class="{'gs-default__search--active': isSearchActive}"
+		placeholder="Search ...">
+		<md-item-template>
+			<div md-highlight-text="searchText" md-highlight-flags="i">
+				{{item.parent}}.{{item.name}}
+			</div>
+		</md-item-template>
+		</md-autocomplete>
+	</div>
+</section>
+<section flex layout="row">
+	<section class="gs-default__navigation-bar md-body-1" layout="column">
+		<md-content flex>
+			<nav>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__globals"
+					href="globals.html">
+					Globals
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_assert_any_asserts_.html">
+						&quot;assert/any-asserts&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_assert_array_asserts_.html">
+						&quot;assert/array-asserts&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_assert_assert_resolution_.html">
+						&quot;assert/assert-resolution&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_assert_asserts_.html">
+						&quot;assert/asserts&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_assert_asserts_factory_.html">
+						&quot;assert/asserts-factory&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_assert_base_asserts_.html">
+						&quot;assert/base-asserts&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_assert_map_asserts_.html">
+						&quot;assert/map-asserts&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_assert_string_asserts_.html">
+						&quot;assert/string-asserts&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_async_asyncs_.html">
+						&quot;async/asyncs&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_checks_.html">
+						&quot;checks&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_collection_arrays_.html">
+						&quot;collection/arrays&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_collection_base_fluent_.html">
+						&quot;collection/base-fluent&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_collection_iterables_.html">
+						&quot;collection/iterables&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_collection_maps_.html">
+						&quot;collection/maps&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_collection_records_.html">
+						&quot;collection/records&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_collection_sets_.html">
+						&quot;collection/sets&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_data_a_cache_.html">
+						&quot;data/a-cache&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_data_a_serializable_.html">
+						&quot;data/a-serializable&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_dispose_base_disposable_.html">
+						&quot;dispose/base-disposable&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_dispose_disposable_function_.html">
+						&quot;dispose/disposable-function&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_event_base_listenable_.html">
+						&quot;event/base-listenable&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_event_listenable_element_.html">
+						&quot;event/listenable-element&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_inject_a_bind_.html">
+						&quot;inject/a-bind&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_inject_a_inject_.html">
+						&quot;inject/a-inject&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_inject_injector_.html">
+						&quot;inject/injector&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_jsons_.html">
+						&quot;jsons&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_log_log_.html">
+						&quot;log/log&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_mock_mock_element_.html">
+						&quot;mock/mock-element&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_mock_mocks_.html">
+						&quot;mock/mocks&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_net_http_.html">
+						&quot;net/http&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_ng_base_component_.html">
+						&quot;ng/base-component&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_ng_base_service_.html">
+						&quot;ng/base-service&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_ng_bem_class_.html">
+						&quot;ng/bem-class&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_ng_fake_scope_.html">
+						&quot;ng/fake-scope&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_ng_route_service_.html">
+						&quot;ng/route-service&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_testing_i_test_setup_.html">
+						&quot;testing/i-test-setup&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_testing_test_async_.html">
+						&quot;testing/test-async&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_testing_test_dispose_.html">
+						&quot;testing/test-dispose&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_testing_test_event_.html">
+						&quot;testing/test-event&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_testing_test_setup_.html">
+						&quot;testing/test-setup&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_typescript_enums_.html">
+						&quot;typescript/enums&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_ui_attributes_.html">
+						&quot;ui/attributes&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_ui_doms_.html">
+						&quot;ui/doms&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_ui_overflow_watcher_.html">
+						&quot;ui/overflow-watcher&quot;
+					</a>
+				</div>
+				<div class="gs-navigation__root" layout="column">
+					<a class="gs-navigation__item gs-navigation__member" href="modules/_ui_post_message_channel_.html">
+						&quot;ui/post-message-channel&quot;
+					</a>
+				</div>
+			</nav>
+			<md-divider></md-divider>
+			<nav layout="column" layout-align="star end">
+				<div layout="column">
+				</div>
+			</nav>
+		</md-content>
+		<div class="gs-default__toggle">
+			<md-switch ng-model="hideInherited">
+				Hides inherited
+			</md-switch>
+		</div>
+	</section>
+	<md-content class="gs-default__content" flex>
+		<header>
+			<h2 class="md-display-1">Index</h2>
+		</header>
+		<section>
+			<section class="gs-index__table">
+				<h3 class="md-headline">External modules</h3>
+				<section>
+					<div>
+						<a href="modules/_assert_any_asserts_.html">
+							"assert/any-<wbr>asserts"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_assert_array_asserts_.html">
+							"assert/array-<wbr>asserts"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_assert_assert_resolution_.html">
+							"assert/assert-<wbr>resolution"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_assert_asserts_.html">
+							"assert/asserts"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_assert_asserts_factory_.html">
+							"assert/asserts-<wbr>factory"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_assert_base_asserts_.html">
+							"assert/base-<wbr>asserts"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_assert_map_asserts_.html">
+							"assert/map-<wbr>asserts"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_assert_string_asserts_.html">
+							"assert/string-<wbr>asserts"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_async_asyncs_.html">
+							"async/asyncs"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_checks_.html">
+							"checks"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_collection_arrays_.html">
+							"collection/arrays"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_collection_base_fluent_.html">
+							"collection/base-<wbr>fluent"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_collection_iterables_.html">
+							"collection/iterables"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_collection_maps_.html">
+							"collection/maps"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_collection_records_.html">
+							"collection/records"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_collection_sets_.html">
+							"collection/sets"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_data_a_cache_.html">
+							"data/a-<wbr>cache"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_data_a_serializable_.html">
+							"data/a-<wbr>serializable"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_dispose_base_disposable_.html">
+							"dispose/base-<wbr>disposable"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_dispose_disposable_function_.html">
+							"dispose/disposable-<wbr>function"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_event_base_listenable_.html">
+							"event/base-<wbr>listenable"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_event_listenable_element_.html">
+							"event/listenable-<wbr>element"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_inject_a_bind_.html">
+							"inject/a-<wbr>bind"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_inject_a_inject_.html">
+							"inject/a-<wbr>inject"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_inject_injector_.html">
+							"inject/injector"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_jsons_.html">
+							"jsons"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_log_log_.html">
+							"log/log"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_mock_mock_element_.html">
+							"mock/mock-<wbr>element"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_mock_mocks_.html">
+							"mock/mocks"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_net_http_.html">
+							"net/http"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_ng_base_component_.html">
+							"ng/base-<wbr>component"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_ng_base_service_.html">
+							"ng/base-<wbr>service"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_ng_bem_class_.html">
+							"ng/bem-<wbr>class"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_ng_fake_scope_.html">
+							"ng/fake-<wbr>scope"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_ng_route_service_.html">
+							"ng/route-<wbr>service"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_testing_i_test_setup_.html">
+							"testing/i-<wbr>test-<wbr>setup"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_testing_test_async_.html">
+							"testing/test-<wbr>async"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_testing_test_dispose_.html">
+							"testing/test-<wbr>dispose"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_testing_test_event_.html">
+							"testing/test-<wbr>event"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_testing_test_setup_.html">
+							"testing/test-<wbr>setup"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_typescript_enums_.html">
+							"typescript/enums"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_ui_attributes_.html">
+							"ui/attributes"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_ui_doms_.html">
+							"ui/doms"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_ui_overflow_watcher_.html">
+							"ui/overflow-<wbr>watcher"
+						</a>
+					</div>
+					<div>
+						<a href="modules/_ui_post_message_channel_.html">
+							"ui/post-<wbr>message-<wbr>channel"
+						</a>
+					</div>
+				</section>
+			</section>
+		</section>
+	</md-content>
+</section>
+<script type="text/javascript">
+    var BASE_URL = '.';
+    hljs.initHighlightingOnLoad();
+    angular
+        .module('DocApp', ['ngMaterial'])
+        .config(function($mdIconProvider, $mdThemingProvider) {
+          $mdIconProvider.defaultFontSet('material-icons');
+          $mdThemingProvider
+              .theme('default')
+              .primaryPalette('blue-grey')
+              .accentPalette('yellow', {
+                'default': 'A700'
+              });
+        })
+        .controller('RootCtrl', function($scope) {
+          var isInit = false;
+          var rows = typedoc.search.data.rows;
+          var fuse = new Fuse(rows, {
+            'keys': ['name']
+          });
+
+          $scope['hideInherited'] = true;
+          $scope['isSearchActive'] = false;
+          $scope['onSearchClick'] = function() {
+            $scope['isSearchActive'] = !$scope['isSearchActive'];
+
+            if ($scope['isSearchActive']) {
+              var inputEl = document.querySelector('.gs-default__search input');
+              inputEl.focus();
+              if (!isInit) {
+                inputEl.addEventListener('blur', function() {
+                  $scope['isSearchActive'] = false;
+                  $scope.$apply(function() {});
+                });
+                isInit = true;
+              }
+            }
+          };
+          $scope['onSelectedItemChange'] = function(item) {
+            window.location = BASE_URL + '/' + item.url;
+          };
+          $scope['querySearch'] = function(query) {
+            return fuse.search(query);
+          };
+        });
+  </script>
+</body>
+</html>

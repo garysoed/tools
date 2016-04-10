@@ -1,0 +1,26 @@
+.gs-comment__deprecated {
+  padding: 1rem;
+  border: 1px solid #F44336;
+}
+
+.gs-comment__deprecated,
+.gs-comment__deprecated md-icon {
+  color: #F44336;
+}
+
+.gs-comment__deprecated md-icon {
+  margin-right: 1rem;
+}
+
+.gs-comment__deprecated p {
+  margin: 0;
+}
+
+.gs-comment__deprecated p,
+.gs-comment__deprecated-text {
+  line-height: 24px;
+}
+
+.gs-comment__deprecated-text {
+  text-transform: uppercase;
+}
