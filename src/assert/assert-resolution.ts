@@ -3,12 +3,14 @@
  */
 class AssertResolution {
   private passes_: boolean;
+  private reversed_: boolean;
 
   /**
    * @param passes True iff the result of the assertion passes.
    */
-  constructor(passes: boolean) {
+  constructor(passes: boolean, reversed: boolean) {
     this.passes_ = passes;
+    this.reversed_ = reversed;
   }
 
   /**
@@ -17,7 +19,7 @@ class AssertResolution {
    * @param error The error object to be thrown.
    */
   orThrows(error: Error): void {
-    if (!this.passes_) {
+    if (this.passes_ === this.reversed_) {
       throw error;
     }
   }

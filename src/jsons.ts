@@ -33,7 +33,7 @@ class Jsons {
    * @param value The value to set.
    */
   static setValue(json: gs.IJson, path: string, value: any): void {
-    Asserts.string.isNotEmpty(path);
+    Asserts.string(path).toNot.beEmpty().orThrowsMessage(`Expected ${path} to not be empty`);
 
     let object = json;
     let parts = path.split('.');

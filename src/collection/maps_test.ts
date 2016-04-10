@@ -18,6 +18,15 @@ describe('collection.Maps', () => {
     });
   });
 
+  describe('fromArray', () => {
+    it('should create the map correctly', () => {
+      let map = Maps.fromArray(['1', undefined, 'a']).data;
+      expect(map.size).toEqual(2);
+      expect(map.get(0)).toEqual('1');
+      expect(map.get(2)).toEqual('a');
+    });
+  });
+
   describe('fromRecord', () => {
     it('should return the correct map', () => {
       let map = Maps.fromRecord({ a: 1, b: 2 }).data;

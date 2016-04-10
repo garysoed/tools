@@ -1,4 +1,7 @@
+import AnyAsserts from './any-asserts';
+import ArrayAsserts from './array-asserts';
 import AssertsFactory from './asserts-factory';
+import MapAsserts from './map-asserts';
 import StringAsserts from './string-asserts';
 
 
@@ -18,6 +21,19 @@ import StringAsserts from './string-asserts';
  * ```
  */
 class Asserts {
+
+  static any(value: any): AssertsFactory<AnyAsserts> {
+    return new AssertsFactory<AnyAsserts>(AnyAsserts.bind(null, value));
+  }
+
+  static array(value: any[]): AssertsFactory<ArrayAsserts> {
+    return new AssertsFactory<ArrayAsserts>(ArrayAsserts.bind(null, value));
+  }
+
+  static map(value: Map<any, any>): AssertsFactory<MapAsserts> {
+    return new AssertsFactory<MapAsserts>(MapAsserts.bind(null, value));
+  }
+
   /**
    * Starts string related assertions
    *

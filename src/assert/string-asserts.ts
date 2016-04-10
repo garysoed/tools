@@ -1,20 +1,17 @@
 import AssertResolution from './assert-resolution';
+import BaseAsserts from './base-asserts';
 
 
 /**
  * String related assertions.
  */
-class StringAsserts {
-  private reversed_: boolean;
-  private value_: string;
-
+class StringAsserts extends BaseAsserts<string> {
   /**
    * @param value The string value to check.
    * @param reversed True iff the check logic should be reversed.
    */
-  constructor(value: string, reversed: boolean = false) {
-    this.value_ = value;
-    this.reversed_ = reversed;
+  constructor(value: string, reversed: boolean) {
+    super(value, reversed);
   }
 
   /**
@@ -22,8 +19,8 @@ class StringAsserts {
    *
    * @return The resolution object.
    */
-  empty(): AssertResolution {
-    return new AssertResolution(this.reversed_ === this.value_.length > 0);
+  beEmpty(): AssertResolution {
+    return this.resolve(this.value.length === 0);
   }
 }
 

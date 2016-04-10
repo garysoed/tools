@@ -19,7 +19,7 @@ class AssertsFactory<A> {
    *
    * @return The newly created asserts.
    */
-  get is(): A {
+  get to(): A {
     return new this.ctor_(false);
   }
 
@@ -28,7 +28,7 @@ class AssertsFactory<A> {
    *
    * @return The newly created asserts.
    */
-  get isNot(): A {
+  get toNot(): A {
     return new this.ctor_(true);
   }
 }

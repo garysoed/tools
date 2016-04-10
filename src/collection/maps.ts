@@ -52,6 +52,18 @@ export class FluentMap<K, V> extends BaseFluent<Map<K, V>> {
  * Note that every key and value in the map must be of the same type.
  */
 class Maps {
+  static fromArray<V>(array: V[]): FluentMap<number, V> {
+    let entries = [];
+    for (let i = 0; i < array.length; i++) {
+      let element = array[i];
+      if (element !== undefined) {
+        entries.push([i, element]);
+      }
+    }
+
+    return Maps.of<number, V>(new Map<number, V>(entries));
+  }
+
   /**
    * Starts by using any `Record` objects.
    *

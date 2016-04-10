@@ -5,32 +5,32 @@ import Asserts from './asserts';
 
 
 describe('assert.StringAsserts', () => {
-  describe('is.empty', () => {
+  describe('to.beEmpty', () => {
     it('should not throw error if the string is empty', () => {
       expect(() => {
-        Asserts.string('').is.empty().orThrows(Error());
+        Asserts.string('').to.beEmpty().orThrows(Error());
       }).not.toThrow();
     });
 
     it('should throw error if the string is not empty', () => {
       let error = Error('error');
       expect(() => {
-        Asserts.string('not empty').is.empty().orThrows(error);
+        Asserts.string('not empty').to.beEmpty().orThrows(error);
       }).toThrow(error);
     });
   });
 
-  describe('isNot.empty', () => {
+  describe('toNot.beEmpty', () => {
     it('should not throw error if the string is not empty', () => {
       expect(() => {
-        Asserts.string('not empty').isNot.empty().orThrows(Error());
+        Asserts.string('not empty').toNot.beEmpty().orThrows(Error());
       }).not.toThrow();
     });
 
     it('should throw error if the string is empty', () => {
       let error = Error('error');
       expect(() => {
-        Asserts.string('').isNot.empty().orThrows(error);
+        Asserts.string('').toNot.beEmpty().orThrows(error);
       }).toThrow(error);
     });
   });

@@ -23,15 +23,15 @@ describe('assert.AssertsFactory', () => {
     factory = new AssertsFactory(FakeAsserts);
   });
 
-  describe('is', () => {
+  describe('to', () => {
     it('should generate a new assert with normal assertion logic', () => {
-      expect(factory.is.reversed).toEqual(false);
+      expect(factory.to.reversed).toEqual(false);
     });
   });
 
-  describe('isNot', () => {
+  describe('toNot', () => {
     it('should generate a new assert with reversed assertion logic', () => {
-      expect(factory.isNot.reversed).toEqual(true);
+      expect(factory.toNot.reversed).toEqual(true);
     });
   });
 });

@@ -18,6 +18,18 @@ describe('Checks', () => {
     });
   });
 
+  describe('isCtor', () => {
+    class TestClass { }
+
+    it('should return true if the object is a constructor', () => {
+      expect(Checks.isCtor(TestClass)).toEqual(true);
+    });
+
+    it('should return false if the object is not a function', () => {
+      expect(Checks.isCtor(1)).toEqual(false);
+    });
+  });
+
   describe('isInstanceOf', () => {
     class TestClass {}
 

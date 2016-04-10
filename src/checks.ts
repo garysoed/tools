@@ -32,6 +32,16 @@ const Checks = {
   },
 
   /**
+   * Checks if the given value is a constructor.
+   *
+   * @param value The value to be checked.
+   * @return `True` iff the value is a constructor.
+   */
+  isCtor(value: any): value is gs.ICtor<any> {
+    return Checks.isInstanceOf<Function>(value, Function);
+  },
+
+  /**
    * Checks if the given value is an instance of the given type.
    *
    * This handles primitives like `string`, `number`, `boolean` by treating them as their non
