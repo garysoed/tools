@@ -82,6 +82,7 @@
         "src/inject/injector.ts",
         "src/jsons_test.ts",
         "src/jsons.ts",
+        "src/log/log.ts",
         "src/mock/mock-element.ts",
         "src/mock/mocks.ts",
         "src/net/http_test.ts",

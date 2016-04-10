@@ -36,7 +36,7 @@ const INJECTOR_BIND_KEY_ = '$gsInjector';
  *
  *   constructor(@Inject() Service) {
  *     this.service_ = Service;
-*    }
+ *   }
  * }
  *
  * let injector = new Injector();
@@ -52,6 +52,9 @@ const INJECTOR_BIND_KEY_ = '$gsInjector';
  * Any classes with `@Bind` are treated as singleton per instance of [[Injector]].
  */
 class Injector {
+  private static BINDINGS_: Map<BindKey, gs.ICtor<any>> = new Map<BindKey, gs.ICtor<any>>();
+  private static __metadata: symbol = Symbol('injectMetadata');
+
   private instances_: Map<BindKey, any>;
 
   constructor() {
@@ -82,6 +85,12 @@ class Injector {
 
     return instance;
   }
+
+  private static instantiate_<T>(ctor: gs.ICtor<T>, args: any[]): T {
+    let bindArgs = [null].concat(args);
+    return new (ctor.bind.apply(ctor, bindArgs));
+  }
+
 
   /**
    * Instantiates the given constructor.
@@ -115,14 +124,6 @@ class Injector {
     }
 
     return Injector.instantiate_<T>(ctor, args);
-  }
-
-  private static BINDINGS_ = new Map<BindKey, gs.ICtor<any>>();
-  private static __metadata = Symbol('injectMetadata');
-
-  private static instantiate_<T>(ctor: gs.ICtor<T>, args: any[]): T {
-    let bindArgs = [null].concat(args);
-    return new (ctor.bind.apply(ctor, bindArgs));
   }
 
   /**

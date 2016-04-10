@@ -19,7 +19,7 @@ describe('ui.PostMessageChannel', () => {
     mockSrcWindow = Mocks.element({});
     channel = new PostMessageChannel(mockSrcWindow, mockDestWindow);
     TestDispose.add(channel);
-  })
+  });
 
   describe('post_', () => {
     it('should post the message asynchronously', () => {
@@ -77,10 +77,10 @@ describe('ui.PostMessageChannel', () => {
 
           channel['srcWindow_'].dispatch(
               ElementEventType.MESSAGE,
-              { origin: origin, data: json1 });
+              { data: json1, origin: origin });
           channel['srcWindow_'].dispatch(
               ElementEventType.MESSAGE,
-              { origin: origin, data: json2 });
+              { data: json2, origin: origin });
         });
 
     it('should ignore messages with non matching origin',
@@ -114,10 +114,10 @@ describe('ui.PostMessageChannel', () => {
 
           channel['srcWindow_'].dispatch(
               ElementEventType.MESSAGE,
-              { origin: 'otherOrigin', data: json1 });
+              { data: json1, origin: 'otherOrigin' });
           channel['srcWindow_'].dispatch(
               ElementEventType.MESSAGE,
-              { origin: origin, data: json2 });
+              { data: json2, origin: origin });
     });
   });
 
@@ -307,7 +307,7 @@ describe('ui.PostMessageChannel', () => {
         data: Serializer.toJSON(new Message_(MessageType_.PING, { 'id': id })),
         origin: expectedOrigin,
         source: mockDestWindow,
-        type: 'message'
+        type: 'message',
       });
     });
 
@@ -329,7 +329,7 @@ describe('ui.PostMessageChannel', () => {
         },
         origin: 'otherOrigin',
         source: mockDestWindow,
-        type: 'message'
+        type: 'message',
       });
     });
 
@@ -351,7 +351,7 @@ describe('ui.PostMessageChannel', () => {
         },
         origin: expectedOrigin,
         source: mockDestWindow,
-        type: 'message'
+        type: 'message',
       });
     });
   });

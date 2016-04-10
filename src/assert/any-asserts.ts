@@ -1,3 +1,4 @@
+import AssertResolution from './assert-resolution';
 import BaseAsserts from './base-asserts';
 
 
@@ -18,7 +19,7 @@ class AnyAsserts extends BaseAsserts<any> {
    *
    * @return The resolution object.
    */
-  beDefined() {
+  beDefined(): AssertResolution {
     return this.resolve(this.value !== undefined);
   }
 
@@ -28,7 +29,7 @@ class AnyAsserts extends BaseAsserts<any> {
    * @param other The other value to compare against.
    * @return The resolution object.
    */
-  beEqual(other: any) {
+  beEqual(other: any): AssertResolution {
     return this.resolve(this.value === other);
   }
 }

@@ -4,21 +4,20 @@ import ListenableElement, { EventType as ElementEventType } from '../event/liste
 import Serializer, { Serializable, Field } from '../data/a-serializable';
 
 
-const INTERVAL_MS_ = 1000;
 const TIMEOUT_MS_ = 3000;
 
-export enum MessageType_ {
+export enum MessageType {
   ACK,
   DATA,
   PING
 }
 
 @Serializable('message')
-export class Message_ {
-  @Field('type') private type_: MessageType_;
+export class Message {
+  @Field('type') private type_: MessageType;
   @Field('payload') private payload_: gs.IJson;
 
-  constructor(type: MessageType_, payload: gs.IJson) {
+  constructor(type: MessageType, payload: gs.IJson) {
     this.payload_ = payload;
     this.type_ = type;
   }
@@ -27,7 +26,7 @@ export class Message_ {
     return this.payload_;
   }
 
-  get type(): MessageType_ {
+  get type(): MessageType {
     return this.type_;
   }
 }
@@ -90,7 +89,7 @@ class PostMessageChannel extends BaseDisposable {
     this.addDisposable(this.destWindow_, this.srcWindow_);
   }
 
-  private post_(message: Message_): Promise<void> {
+  private post_(message: Message): Promise<void> {
     return Asyncs.run(() => {
       this.destWindow_.element.postMessage(
           Serializer.toJSON(message),
@@ -98,7 +97,7 @@ class PostMessageChannel extends BaseDisposable {
     });
   }
 
-  private waitForMessage_(testFn: (message: Message_) => boolean): Promise<Message_> {
+  private waitForMessage(testFn: (message: Message) => boolean): Promise<Message> {
     let destWindowOrigin = PostMessageChannel.getOrigin(this.destWindow_.element);
     return new Promise((resolve: Function) => {
       let unlistenFn = this.srcWindow_.on(
@@ -125,7 +124,7 @@ class PostMessageChannel extends BaseDisposable {
    *     window.
    */
   post(message: gs.IJson): Promise<void> {
-    return this.post_(new Message_(MessageType_.DATA, message));
+    return this.post_(new Message(MessageType.DATA, message));
   }
 
   /**
@@ -140,10 +139,10 @@ class PostMessageChannel extends BaseDisposable {
    * @return Promise that will be resolved with the message object after it is found.
    */
   waitForMessage(testFn: (message: gs.IJson) => boolean): Promise<gs.IJson> {
-    return this.waitForMessage_((message: Message_) => {
-      return (message.type === MessageType_.DATA) && testFn(message.payload);
+    return this.waitForMessage((message: Message) => {
+      return (message.type === MessageType.DATA) && testFn(message.payload);
     })
-    .then((message: Message_) => {
+    .then((message: Message) => {
       return message.payload;
     });
   }
@@ -175,12 +174,12 @@ class PostMessageChannel extends BaseDisposable {
     let channel = PostMessageChannel.newInstance_(srcWindow, destWindow);
 
     let intervalId = window.setInterval(() => {
-      channel.post_(new Message_(MessageType_.PING, { id: id }));
+      channel.post_(new Message(MessageType.PING, { id: id }));
     }, 1000);
 
     return channel
-        .waitForMessage_((message: Message_) => {
-          return message.payload['id'] === id && message.type === MessageType_.ACK;
+        .waitForMessage((message: Message) => {
+          return message.payload['id'] === id && message.type === MessageType.ACK;
         })
         .then(() => {
           window.clearInterval(intervalId);
@@ -200,13 +199,14 @@ class PostMessageChannel extends BaseDisposable {
   static listen(srcWindow: Window, expectedOrigin: string): Promise<PostMessageChannel> {
     let srcWindowListenable = new ListenableElement<Window>(srcWindow);
     return new Promise((resolve: Function, reject: Function) => {
+      let unlistenFn = null;
       let timeoutId = window.setTimeout(() => {
         srcWindowListenable.dispose();
         unlistenFn.dispose();
         reject('Timed out listening for channel initiation message');
       }, TIMEOUT_MS_);
 
-      let unlistenFn = srcWindowListenable.on(
+      unlistenFn = srcWindowListenable.on(
         ElementEventType.MESSAGE,
         (event: any) => {
           if (event.origin !== expectedOrigin) {
@@ -215,16 +215,16 @@ class PostMessageChannel extends BaseDisposable {
 
           let message = Serializer.fromJSON(event.data);
 
-          if (message.type === MessageType_.PING) {
+          if (message.type === MessageType.PING) {
             let channel = PostMessageChannel.newInstance_(srcWindow, event.source);
-            channel.post_(new Message_(MessageType_.ACK, message.payload));
+            channel.post_(new Message(MessageType.ACK, message.payload));
             srcWindowListenable.dispose();
             unlistenFn.dispose();
             window.clearTimeout(timeoutId);
             resolve(channel);
           }
         });
-    })
+    });
   }
 }
 

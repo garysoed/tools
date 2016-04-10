@@ -34,7 +34,7 @@ describe('inject.Injector', () => {
 
       let originalGetBoundValue = injector['getBoundValue_'];
 
-      spyOn(injector, 'getBoundValue_').and.callFake((bindKey) => {
+      spyOn(injector, 'getBoundValue_').and.callFake((bindKey: string) => {
         return bindKey;
       });
 
@@ -62,7 +62,7 @@ describe('inject.Injector', () => {
 
     it('should throw error if an injection index is not recognized', () => {
       class TestClass {
-        constructor(a: string) {}
+        constructor(a: string) { }
       }
 
       let bindKey = 'bindKey';
@@ -92,7 +92,7 @@ describe('inject.Injector', () => {
       let ctorC = Mocks.object('ctorC');
       TestClass[Injector['__metadata']] = Maps.fromArray([ctorA, undefined, ctorC]).data;
 
-      spyOn(injector, 'getBoundValue_').and.callFake((bindKey) => {
+      spyOn(injector, 'getBoundValue_').and.callFake((bindKey: string) => {
         return bindKey;
       });
 
@@ -117,7 +117,7 @@ describe('inject.Injector', () => {
       let ctorA = Mocks.object('ctorA');
       TestClass[Injector['__metadata']] = Maps.fromArray([ctorA]).data;
 
-      spyOn(injector, 'getBoundValue_').and.callFake((bindKey) => {
+      spyOn(injector, 'getBoundValue_').and.callFake((bindKey: string) => {
         return bindKey;
       });
 

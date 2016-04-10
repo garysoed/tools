@@ -11,7 +11,7 @@ class FakeAsserts {
     this.reversed_ = reversed;
   }
 
-  get reversed() {
+  get reversed(): boolean {
     return this.reversed_;
   }
 }
