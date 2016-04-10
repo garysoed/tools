@@ -263,10 +263,32 @@ ng-controller="RootCtrl">
 					way must have all of its constructor parameters be <code>@Inject</code>d.</li>
 				</ol>
 				<p>For example:</p>
-				<p>```typescript
-					import Bind from &#39;./inject/a-bind&#39;;
-					import Inject from &#39;./inject/a-inject&#39;;
-				import Injector from &#39;./inject/injector&#39;;</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> Bind from <span class="hljs-string">'./inject/a-bind'</span>;
+<span class="hljs-keyword">import</span> Inject from <span class="hljs-string">'./inject/a-inject'</span>;
+<span class="hljs-keyword">import</span> Injector from <span class="hljs-string">'./inject/injector'</span>;
+
+<span class="hljs-comment">// Ignore the \. This is a bug with the typedoc parser.</span>
+\@Bind()
+<span class="hljs-keyword">class</span> Service {
+  <span class="hljs-constructor"><span class="hljs-keyword">constructor</span>() </span>{}
+}
+
+<span class="hljs-keyword">class</span> App {
+  <span class="hljs-keyword">private</span> service_: Service;
+
+  <span class="hljs-constructor"><span class="hljs-keyword">constructor</span>(@Inject() Service) </span>{
+    <span class="hljs-keyword">this</span>.service_ = Service;
+  }
+}
+
+<span class="hljs-keyword">let</span> injector = <span class="hljs-keyword">new</span> Injector();
+<span class="hljs-keyword">let</span> app = injector.instantiate(App);
+</code></pre>
+				<p>By default, both <code>@Bind</code> and <code>@Inject</code> uses the class name and parameter name to determine the
+				binding key. However, you can override this behavior by specifying the names.</p>
+				<p>You can always inject the injector by using the <code>$gsInjector</code> binding key. This means either
+				using <code>@Inject()</code> on a parameter called <code>$gsInjector</code> or by using <code>@Inject(&#39;$gsInjector&#39;)</code>.</p>
+				<p>Any classes with <code>@Bind</code> are treated as singleton per instance of <a href="_inject_injector_.injector.html">Injector</a>.</p>
 			</div>
 		</section>
 		<section class="gs-reflection__section">
@@ -293,9 +315,9 @@ ng-controller="RootCtrl">
 				<span class="gs-member__signature">
 					new <wbr>Injector(): <a href="_inject_injector_.injector.html" class="tsd-signature-type">Injector</a>
 				</span>
-				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L58">
+				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L64">
 					<md-tooltip direction="bottom">
-						inject/injector.ts:58
+						inject/injector.ts:64
 					</md-tooltip>
 					<md-icon class="gs-code-link__icon">code</md-icon>
 				</a>
@@ -320,9 +342,9 @@ ng-controller="RootCtrl">
 				<span class="gs-member__signature">
 					instances_:<span>Map</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_inject_injector_.html#bindkey" class="tsd-signature-type">BindKey</a><span class="tsd-signature-symbol">, </span><span>any</span><span class="tsd-signature-symbol">&gt;</span>
 				</span>
-				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L58">
+				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L64">
 					<md-tooltip direction="bottom">
-						inject/injector.ts:58
+						inject/injector.ts:64
 					</md-tooltip>
 					<md-icon class="gs-code-link__icon">code</md-icon>
 				</a>
@@ -345,9 +367,9 @@ ng-controller="RootCtrl">
 				<span class="gs-member__signature">
 					BINDINGS_:<span>Map</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_inject_injector_.html#bindkey" class="tsd-signature-type">BindKey</a><span class="tsd-signature-symbol">, </span><span>ICtor</span><span class="tsd-signature-symbol">&lt;</span><span>any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span>
 				</span>
-				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L55">
+				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L61">
 					<md-tooltip direction="bottom">
-						inject/injector.ts:55
+						inject/injector.ts:61
 					</md-tooltip>
 					<md-icon class="gs-code-link__icon">code</md-icon>
 				</a>
@@ -370,9 +392,9 @@ ng-controller="RootCtrl">
 				<span class="gs-member__signature">
 					___metadata:<span>symbol</span>
 				</span>
-				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L56">
+				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L62">
 					<md-tooltip direction="bottom">
-						inject/injector.ts:56
+						inject/injector.ts:62
 					</md-tooltip>
 					<md-icon class="gs-code-link__icon">code</md-icon>
 				</a>
@@ -398,9 +420,9 @@ ng-controller="RootCtrl">
 				<span class="gs-member__signature">
 					get<wbr>Bound<wbr>Value_(bindKey: <a href="../modules/_inject_injector_.html#bindkey" class="tsd-signature-type">BindKey</a>): <span>any</span>
 				</span>
-				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L65">
+				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L71">
 					<md-tooltip direction="bottom">
-						inject/injector.ts:65
+						inject/injector.ts:71
 					</md-tooltip>
 					<md-icon class="gs-code-link__icon">code</md-icon>
 				</a>
@@ -430,9 +452,9 @@ ng-controller="RootCtrl">
 				<span class="gs-member__signature">
 					instantiate&lt;T&gt;(ctor: <span>ICtor</span><span class="tsd-signature-symbol">&lt;</span><span>T</span><span class="tsd-signature-symbol">&gt;</span>, extraArguments?: <span>{[index: <span>number</span>]: <span>any</span>}</span>): <span>T</span>
 				</span>
-				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L109">
+				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L115">
 					<md-tooltip direction="bottom">
-						inject/injector.ts:109
+						inject/injector.ts:115
 					</md-tooltip>
 					<md-icon class="gs-code-link__icon">code</md-icon>
 				</a>
@@ -494,9 +516,9 @@ ng-controller="RootCtrl">
 				<span class="gs-member__signature">
 					bind(ctor: <span>ICtor</span><span class="tsd-signature-symbol">&lt;</span><span>any</span><span class="tsd-signature-symbol">&gt;</span>, bindKey: <a href="../modules/_inject_injector_.html#bindkey" class="tsd-signature-type">BindKey</a>): <span>void</span>
 				</span>
-				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L135">
+				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L141">
 					<md-tooltip direction="bottom">
-						inject/injector.ts:135
+						inject/injector.ts:141
 					</md-tooltip>
 					<md-icon class="gs-code-link__icon">code</md-icon>
 				</a>
@@ -540,9 +562,9 @@ ng-controller="RootCtrl">
 				<span class="gs-member__signature">
 					instantiate_&lt;T&gt;(ctor: <span>ICtor</span><span class="tsd-signature-symbol">&lt;</span><span>T</span><span class="tsd-signature-symbol">&gt;</span>, args: <span>any</span><span class="tsd-signature-symbol">[]</span>): <span>T</span>
 				</span>
-				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L89">
+				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L95">
 					<md-tooltip direction="bottom">
-						inject/injector.ts:89
+						inject/injector.ts:95
 					</md-tooltip>
 					<md-icon class="gs-code-link__icon">code</md-icon>
 				</a>
@@ -588,9 +610,9 @@ ng-controller="RootCtrl">
 				<span class="gs-member__signature">
 					register<wbr>Inject(bindKey: <a href="../modules/_inject_injector_.html#bindkey" class="tsd-signature-type">BindKey</a>, ctor: <span>ICtor</span><span class="tsd-signature-symbol">&lt;</span><span>any</span><span class="tsd-signature-symbol">&gt;</span>, index: <span>number</span>): <span>void</span>
 				</span>
-				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L150">
+				<a href="https://github.com/garysoed/gs-tools/blob/master/src/inject/injector.ts#L156">
 					<md-tooltip direction="bottom">
-						inject/injector.ts:150
+						inject/injector.ts:156
 					</md-tooltip>
 					<md-icon class="gs-code-link__icon">code</md-icon>
 				</a>

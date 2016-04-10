@@ -8130,13 +8130,7 @@
 					"flags": {},
 					"comment": {
 						"shortText": "Light dependency injection library.",
-						"text": "Using this consists of 3 parts:\n\n1.  First, you will need to bind the class that can be injected. Apply the `@Bind` annotation on\n    the class.\n1.  Next, on constructor parameters you want to do injection on, apply the `@Inject` annotation\n    on the parameter.\n1.  To instantiate a class, use the [[instantiate]] method. This will inject any parameters\n    marked by the `@Inject` annotation with the bound value. Note that any classes injected this\n    way must have all of its constructor parameters be `@Inject`d.\n\nFor example:\n\n```typescript\nimport Bind from './inject/a-bind';\nimport Inject from './inject/a-inject';\nimport Injector from './inject/injector';\n",
-						"tags": [
-							{
-								"tag": "bind",
-								"text": "()\nclass Service {\n  constructor() {}\n}\n\nclass App {\n  private service_: Service;\n\n  constructor(@Inject() Service) {\n    this.service_ = Service;\n  }\n}\n\nlet injector = new Injector();\nlet app = injector.instantiate(App);\n```\n\nBy default, both `@Bind` and `@Inject` uses the class name and parameter name to determine the\nbinding key. However, you can override this behavior by specifying the names.\n\nYou can always inject the injector by using the `$gsInjector` binding key. This means either\nusing `@Inject()` on a parameter called `$gsInjector` or by using `@Inject('$gsInjector')`.\n\nAny classes with `@Bind` are treated as singleton per instance of [[Injector]].\n"
-							}
-						]
+						"text": "Using this consists of 3 parts:\n\n1.  First, you will need to bind the class that can be injected. Apply the `@Bind` annotation on\n    the class.\n1.  Next, on constructor parameters you want to do injection on, apply the `@Inject` annotation\n    on the parameter.\n1.  To instantiate a class, use the [[instantiate]] method. This will inject any parameters\n    marked by the `@Inject` annotation with the bound value. Note that any classes injected this\n    way must have all of its constructor parameters be `@Inject`d.\n\nFor example:\n\n```typescript\nimport Bind from './inject/a-bind';\nimport Inject from './inject/a-inject';\nimport Injector from './inject/injector';\n\n// Ignore the \\. This is a bug with the typedoc parser.\n\\@Bind()\nclass Service {\n  constructor() {}\n}\n\nclass App {\n  private service_: Service;\n\n  constructor(@Inject() Service) {\n    this.service_ = Service;\n  }\n}\n\nlet injector = new Injector();\nlet app = injector.instantiate(App);\n```\n\nBy default, both `@Bind` and `@Inject` uses the class name and parameter name to determine the\nbinding key. However, you can override this behavior by specifying the names.\n\nYou can always inject the injector by using the `$gsInjector` binding key. This means either\nusing `@Inject()` on a parameter called `$gsInjector` or by using `@Inject('$gsInjector')`.\n\nAny classes with `@Bind` are treated as singleton per instance of [[Injector]].\n"
 					},
 					"children": [
 						{
@@ -8608,6 +8602,10 @@
 					"kind": 4194304,
 					"kindString": "Type alias",
 					"flags": {},
+					"comment": {
+						"shortText": "Key for binding a value.",
+						"text": "You should be using `string`. This is done only for compatibility with the class decorator.\n"
+					},
 					"type": {
 						"type": "union",
 						"types": [
