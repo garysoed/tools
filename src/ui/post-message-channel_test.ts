@@ -4,7 +4,7 @@ TestBase.setup();
 import Asyncs from '../async/asyncs';
 import { EventType as ElementEventType } from '../event/listenable-element';
 import Mocks from '../mock/mocks';
-import PostMessageChannel, { Message_, MessageType_ } from './post-message-channel';
+import PostMessageChannel, { Message, MessageType } from './post-message-channel';
 import Serializer from '../data/a-serializable';
 import TestDispose from '../testing/test-dispose';
 
@@ -24,7 +24,7 @@ describe('ui.PostMessageChannel', () => {
   describe('post_', () => {
     it('should post the message asynchronously', () => {
       let origin = 'origin';
-      let message = new Message_(MessageType_.PING, { 'id': 123 });
+      let message = new Message(MessageType.PING, { 'id': 123 });
       let json = Mocks.object('json');
 
       mockDestWindow.postMessage = jasmine.createSpy('postMessage');
@@ -66,7 +66,7 @@ describe('ui.PostMessageChannel', () => {
           });
 
           channel['waitForMessage_'](testFn)
-              .then((message: Message_) => {
+              .then((message: Message) => {
                 expect(message).toEqual(message2);
                 expect(testFn).toHaveBeenCalledWith(message1);
                 expect(testFn).toHaveBeenCalledWith(message2);
@@ -129,10 +129,10 @@ describe('ui.PostMessageChannel', () => {
 
       channel.post(message);
 
-      expect(channel['post_']).toHaveBeenCalledWith(jasmine.any(Message_));
+      expect(channel['post_']).toHaveBeenCalledWith(jasmine.any(Message));
 
       let systemMessage = channel['post_'].calls.argsFor(0)[0];
-      expect(systemMessage.type).toEqual(MessageType_.DATA);
+      expect(systemMessage.type).toEqual(MessageType.DATA);
       expect(systemMessage.payload).toEqual(message);
     });
   });
@@ -141,7 +141,7 @@ describe('ui.PostMessageChannel', () => {
     it('should return the payload returned by waitForMessage_', (done: any) => {
       let testFn = jasmine.createSpy('testFn');
       let returnedJson = Mocks.object('returnedJson');
-      let message = new Message_(MessageType_.DATA, returnedJson);
+      let message = new Message(MessageType.DATA, returnedJson);
 
       spyOn(channel, 'waitForMessage_').and.returnValue(Promise.resolve(message));
 
@@ -155,7 +155,7 @@ describe('ui.PostMessageChannel', () => {
     it('should call the testFn for testing', (done: any) => {
       let testFn = jasmine.createSpy('testFn').and.returnValue(true);
       let testPayload = Mocks.object('payload');
-      let testMessage = new Message_(MessageType_.DATA, testPayload);
+      let testMessage = new Message(MessageType.DATA, testPayload);
 
       spyOn(channel, 'waitForMessage_').and.returnValue(Promise.resolve(testMessage));
 
@@ -170,7 +170,7 @@ describe('ui.PostMessageChannel', () => {
     it('should ignore message with message type other than DATA', (done: any) => {
       let testFn = jasmine.createSpy('testFn').and.returnValue(true);
       let testPayload = Mocks.object('payload');
-      let testMessage = new Message_(MessageType_.PING, testPayload);
+      let testMessage = new Message(MessageType.PING, testPayload);
 
       spyOn(channel, 'waitForMessage_').and.returnValue(Promise.resolve(testMessage));
 
@@ -214,17 +214,17 @@ describe('ui.PostMessageChannel', () => {
             expect(PostMessageChannel['newInstance_'])
                 .toHaveBeenCalledWith(mockSrcWindow, mockDestWindow);
 
-            let message = new Message_(MessageType_.ACK, { 'id': id });
+            let message = new Message(MessageType.ACK, { 'id': id });
             expect(mockChannel['waitForMessage_'].calls.argsFor(0)[0](message)).toEqual(true);
 
             expect(window.setInterval)
                 .toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Number));
 
             setIntervalSpy.calls.argsFor(0)[0]();
-            expect(mockChannel.post_).toHaveBeenCalledWith(jasmine.any(Message_));
+            expect(mockChannel.post_).toHaveBeenCalledWith(jasmine.any(Message));
 
             let postMessage = mockChannel.post_.calls.argsFor(0)[0];
-            expect(postMessage.type).toEqual(MessageType_.PING);
+            expect(postMessage.type).toEqual(MessageType.PING);
             expect(postMessage.payload).toEqual({ 'id': id });
 
             // Check that the interval is cleared.
@@ -245,7 +245,7 @@ describe('ui.PostMessageChannel', () => {
       PostMessageChannel
           .open(mockSrcWindow, mockDestWindow)
           .then((channel: PostMessageChannel) => {
-            let message = new Message_(MessageType_.ACK, { 'id': 456 });
+            let message = new Message(MessageType.ACK, { 'id': 456 });
             expect(mockChannel['waitForMessage_'].calls.argsFor(0)[0](message)).toEqual(false);
             done();
           }, done.fail);
@@ -263,7 +263,7 @@ describe('ui.PostMessageChannel', () => {
       PostMessageChannel
           .open(mockSrcWindow, mockDestWindow)
           .then((channel: PostMessageChannel) => {
-            let message = new Message_(MessageType_.PING, { 'id': id });
+            let message = new Message(MessageType.PING, { 'id': id });
             expect(mockChannel['waitForMessage_'].calls.argsFor(0)[0](message))
                 .toEqual(false);
             done();
@@ -288,9 +288,9 @@ describe('ui.PostMessageChannel', () => {
           .then((channel: PostMessageChannel) => {
             expect(channel).toEqual(mockChannel);
 
-            expect(mockChannel.post_).toHaveBeenCalledWith(jasmine.any(Message_));
+            expect(mockChannel.post_).toHaveBeenCalledWith(jasmine.any(Message));
             let postMessage = mockChannel.post_.calls.argsFor(0)[0];
-            expect(postMessage.type).toEqual(MessageType_.ACK);
+            expect(postMessage.type).toEqual(MessageType.ACK);
             expect(postMessage.payload).toEqual({ 'id': id });
 
             expect(PostMessageChannel['newInstance_'])
@@ -304,7 +304,7 @@ describe('ui.PostMessageChannel', () => {
 
       expect(mockSrcWindow.addEventListener).toHaveBeenCalledWith('message', jasmine.any(Function));
       mockSrcWindow.addEventListener.calls.argsFor(0)[1]({
-        data: Serializer.toJSON(new Message_(MessageType_.PING, { 'id': id })),
+        data: Serializer.toJSON(new Message(MessageType.PING, { 'id': id })),
         origin: expectedOrigin,
         source: mockDestWindow,
         type: 'message',

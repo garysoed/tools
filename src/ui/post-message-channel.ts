@@ -97,7 +97,7 @@ class PostMessageChannel extends BaseDisposable {
     });
   }
 
-  private waitForMessage(testFn: (message: Message) => boolean): Promise<Message> {
+  private waitForMessage_(testFn: (message: Message) => boolean): Promise<Message> {
     let destWindowOrigin = PostMessageChannel.getOrigin(this.destWindow_.element);
     return new Promise((resolve: Function) => {
       let unlistenFn = this.srcWindow_.on(
@@ -139,7 +139,7 @@ class PostMessageChannel extends BaseDisposable {
    * @return Promise that will be resolved with the message object after it is found.
    */
   waitForMessage(testFn: (message: gs.IJson) => boolean): Promise<gs.IJson> {
-    return this.waitForMessage((message: Message) => {
+    return this.waitForMessage_((message: Message) => {
       return (message.type === MessageType.DATA) && testFn(message.payload);
     })
     .then((message: Message) => {
@@ -178,7 +178,7 @@ class PostMessageChannel extends BaseDisposable {
     }, 1000);
 
     return channel
-        .waitForMessage((message: Message) => {
+        .waitForMessage_((message: Message) => {
           return message.payload['id'] === id && message.type === MessageType.ACK;
         })
         .then(() => {
