@@ -10,7 +10,7 @@ class AssertsFactory<A> {
    * @param ctor Constructor of the assert instance. This should accept one argument, which is set
    *    to true iff the assertion logic should be reversed.
    */
-  constructor(ctor: new (reversed: boolean) => A) {
+  constructor(ctor: (new (reversed: boolean) => A)) {
     this.ctor_ = ctor;
   }
 

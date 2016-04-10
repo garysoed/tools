@@ -55,6 +55,7 @@
                   ) =&gt; {{#with type}}{{>type}}{{/with}}
                 {{/compact}}
               {{/each}}
+            {{!-- Handle indexed object --}}
             {{else}}{{#if declaration.indexSignature}}
               {{#compact}}
                 {
@@ -70,7 +71,6 @@
                 }
               {{/compact}}
             {{else}}
-              [ELSE]
               {{this}}
             {{/if}}{{/if}}{{/if}}{{/if}}
           </span>

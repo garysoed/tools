@@ -1,6 +1,11 @@
 import Asserts from '../assert/asserts';
 
 
+/**
+ * Key for binding a value.
+ *
+ * You should be using `string`. This is done only for compatibility with the class decorator.
+ */
 type BindKey = string | symbol;
 
 const INJECTOR_BIND_KEY_ = '$gsInjector';
@@ -26,7 +31,8 @@ const INJECTOR_BIND_KEY_ = '$gsInjector';
  * import Inject from './inject/a-inject';
  * import Injector from './inject/injector';
  *
- * @Bind()
+ * // Ignore the \. This is a bug with the typedoc parser.
+ * \@Bind()
  * class Service {
  *   constructor() {}
  * }
