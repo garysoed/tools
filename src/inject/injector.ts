@@ -68,7 +68,12 @@ class Injector {
     this.instances_.set(INJECTOR_BIND_KEY_, this);
   }
 
-  private getBoundValue_(bindKey: BindKey): any {
+  private static instantiate_<T>(ctor: gs.ICtor<T>, args: any[]): T {
+    let bindArgs = [null].concat(args);
+    return new (ctor.bind.apply(ctor, bindArgs));
+  }
+
+  getBoundValue(bindKey: BindKey): any {
     if (this.instances_.has(bindKey)) {
       return this.instances_.get(bindKey);
     }
@@ -83,18 +88,13 @@ class Injector {
     for (let i = 0; i < ctor.length; i++) {
       Asserts.map(metadata).to.containKey(i).orThrowsMessage(
           `Cannot find injection candidate for index ${i} for ${ctor}`);
-      args.push(this.getBoundValue_(metadata.get(i)));
+      args.push(this.getBoundValue(metadata.get(i)));
     }
 
     let instance = Injector.instantiate_<any>(ctor, args);
     this.instances_.set(bindKey, instance);
 
     return instance;
-  }
-
-  private static instantiate_<T>(ctor: gs.ICtor<T>, args: any[]): T {
-    let bindArgs = [null].concat(args);
-    return new (ctor.bind.apply(ctor, bindArgs));
   }
 
 
@@ -124,7 +124,7 @@ class Injector {
       } else {
         Asserts.map(metadata).to.containKey(i)
             .orThrowsMessage(`Cannot find injection candidate for index ${i} for ${ctor}`);
-        arg = this.getBoundValue_(metadata.get(i));
+        arg = this.getBoundValue(metadata.get(i));
       }
       args.push(arg);
     }

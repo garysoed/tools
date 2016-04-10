@@ -60,6 +60,12 @@ abstract class HttpRequest extends BaseDisposable {
   }
 }
 
+class HttpGetRequest extends HttpRequest {
+  constructor(path: string) {
+    super('GET', path);
+  }
+}
+
 /**
  * Represents an HTTP POST request.
  */
@@ -127,10 +133,20 @@ class HttpPostRequest extends HttpRequest {
  */
 class Http {
   /**
-   * Start to send an HTTP POST request.
+   * Starts to send an HTTP GET request.
    *
    * @param path The path to send the request to.
-   * @return HTTP POST request object for setting up and sending.
+   * @return HTTP GET request object for setting up and sending the request.
+   */
+  static get(path: string): HttpGetRequest {
+    return new HttpGetRequest(path);
+  }
+
+  /**
+   * Starts to send an HTTP POST request.
+   *
+   * @param path The path to send the request to.
+   * @return HTTP POST request object for setting up and sending the request.
    */
   static post(path: string): HttpPostRequest {
     return new HttpPostRequest(path);

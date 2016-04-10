@@ -14,7 +14,7 @@ describe('inject.Injector', () => {
     Injector['BINDINGS_'] = new Map<string | symbol, gs.ICtor<any>>();
   });
 
-  describe('getBoundValue_', () => {
+  describe('getBoundValue', () => {
     it('should instantiate the constructor correctly', () => {
       class TestClass {
         a: string;
@@ -32,9 +32,9 @@ describe('inject.Injector', () => {
       Injector['BINDINGS_'].set(bindKey, TestClass);
       TestClass[Injector['__metadata']] = Maps.fromArray(['a', 'b', 'c']).data;
 
-      let originalGetBoundValue = injector['getBoundValue_'];
+      let originalGetBoundValue = injector.getBoundValue;
 
-      spyOn(injector, 'getBoundValue_').and.callFake((bindKey: string) => {
+      spyOn(injector, 'getBoundValue').and.callFake((bindKey: string) => {
         return bindKey;
       });
 
@@ -51,12 +51,12 @@ describe('inject.Injector', () => {
       let bindKey = 'bindKey';
       injector['instances_'].set(bindKey, cachedInstance);
 
-      expect(injector['getBoundValue_'](bindKey)).toBe(cachedInstance);
+      expect(injector.getBoundValue(bindKey)).toBe(cachedInstance);
     });
 
     it('should throw error if the bind key does not exist', () => {
       expect(() => {
-        injector['getBoundValue_']('bindKey');
+        injector.getBoundValue('bindKey');
       }).toThrowError(/No value bound to key/);
     });
 
@@ -69,7 +69,7 @@ describe('inject.Injector', () => {
       Injector['BINDINGS_'].set(bindKey, TestClass);
 
       expect(() => {
-        injector['getBoundValue_']('bindKey');
+        injector.getBoundValue('bindKey');
       }).toThrowError(/Cannot find injection candidate/);
     });
   });
@@ -92,7 +92,7 @@ describe('inject.Injector', () => {
       let ctorC = Mocks.object('ctorC');
       TestClass[Injector['__metadata']] = Maps.fromArray([ctorA, undefined, ctorC]).data;
 
-      spyOn(injector, 'getBoundValue_').and.callFake((bindKey: string) => {
+      spyOn(injector, 'getBoundValue').and.callFake((bindKey: string) => {
         return bindKey;
       });
 
@@ -101,8 +101,8 @@ describe('inject.Injector', () => {
       expect(instance.b).toEqual('b');
       expect(instance.c).toEqual(ctorC);
 
-      expect(injector['getBoundValue_']).toHaveBeenCalledWith(ctorA);
-      expect(injector['getBoundValue_']).toHaveBeenCalledWith(ctorC);
+      expect(injector.getBoundValue).toHaveBeenCalledWith(ctorA);
+      expect(injector.getBoundValue).toHaveBeenCalledWith(ctorC);
     });
 
     it('should override the @Inject parameters with the extra argument', () => {
@@ -117,7 +117,7 @@ describe('inject.Injector', () => {
       let ctorA = Mocks.object('ctorA');
       TestClass[Injector['__metadata']] = Maps.fromArray([ctorA]).data;
 
-      spyOn(injector, 'getBoundValue_').and.callFake((bindKey: string) => {
+      spyOn(injector, 'getBoundValue').and.callFake((bindKey: string) => {
         return bindKey;
       });
 
