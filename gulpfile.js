@@ -44,7 +44,7 @@ gn.exec(
         gn,
         ['!src/test-base.ts', 'node_modules/typescript/lib/lib.es6.d.ts'],
         'gs-tools',
-        'cloudy-sky'));
+        'strawberry'));
 
 var mockAngular = {
   pattern: 'src/testing/mock-angular.js',
