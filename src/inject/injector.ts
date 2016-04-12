@@ -68,11 +68,26 @@ class Injector {
     this.instances_.set(INJECTOR_BIND_KEY_, this);
   }
 
-  private static instantiate_<T>(ctor: gs.ICtor<T>, args: any[]): T {
-    let bindArgs = [null].concat(args);
-    return new (ctor.bind.apply(ctor, bindArgs));
-  }
-
+  /**
+   * Instantiates and returns the value bound to the given binding key.
+   *
+   * This is different from [[instantiate]] in that this only handles bound values and the instance
+   * created will be cached.
+   *
+   * For example:
+   *
+   * ```typescript
+   * \@Bind('example-class')
+   * class ExampleClass {}
+   *
+   * let injector = new Injector();
+   * injector.getBoundValue('example-class');  // This will be cached.
+   * injector.instantiate(ExampleClass); // This is a different instance from the previous one.
+   * ```
+   *
+   * @param bindKey The key whose value should be returned.
+   * @return The instance bound to the given key.
+   */
   getBoundValue(bindKey: BindKey): any {
     if (this.instances_.has(bindKey)) {
       return this.instances_.get(bindKey);
@@ -91,7 +106,7 @@ class Injector {
       args.push(this.getBoundValue(metadata.get(i)));
     }
 
-    let instance = Injector.instantiate_<any>(ctor, args);
+    let instance = Reflect.construct(ctor, args);
     this.instances_.set(bindKey, instance);
 
     return instance;
@@ -129,7 +144,7 @@ class Injector {
       args.push(arg);
     }
 
-    return Injector.instantiate_<T>(ctor, args);
+    return Reflect.construct(ctor, args);
   }
 
   /**

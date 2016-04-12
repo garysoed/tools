@@ -8,7 +8,29 @@
   <div class="tsd-type-declaration">
     <h4>Type declaration</h4>
     {{#with type.declaration}}
-      {{> parameter}}
+      <table class="gs-parameters md-body-1">
+        {{#each children}}
+          <tr>
+            <td class="gs-code">
+              {{#compact}}
+                {{#if flags.isRest}}...{{/if}}
+                {{name}}
+                {{#if flags.isOptional}}?{{/if}}
+              </td>
+              <td class="gs-code">
+                {{#with type}}{{>type}}{{/with}}
+                {{#if defaultValue}}
+                  &nbsp;=&nbsp;
+                  {{defaultValue}}
+                {{/if}}
+              {{/compact}}
+            </td>
+            <td>
+              {{> comment}}
+            </td>
+          </tr>
+        {{/each}}
+      </table>
     {{/with}}
   </div>
 {{/if}}

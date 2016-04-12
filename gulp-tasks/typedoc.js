@@ -8,11 +8,13 @@ var TypedocTasks = function(concat, sass, typedoc) {
   this.typedoc_ = typedoc;
 };
 
-TypedocTasks.prototype.compile = function(gn, extraSrcs, projectName, themeName) {
+TypedocTasks.prototype.compile = function(gn, extraSrcs, projectName, themeName, exclude) {
   var srcs = ['**/*.ts', '!src/**/*_test.ts', '!src/test-base.ts', '!node_modules/**'];
   var themePath = path.resolve(path.dirname(__filename), '../typedoc-theme');
   var sassTasks = SassTasks(this.concat_, this.sass_);
+  var excludePattern = exclude || '';
 
+  console.log(excludePattern);
   return gn.series(
     function compileTypedoc_() {
         return gn.src(srcs.concat(extraSrcs))
@@ -29,6 +31,8 @@ TypedocTasks.prototype.compile = function(gn, extraSrcs, projectName, themeName)
               preserveConstEnums: true,
               suppressImplicitAnyIndexErrors: true,
               rootDir: __dirname,
+              externalPattern: excludePattern,
+              excludeExternals: true,
 
               out: './doc',
               json: 'doc/doc.json',

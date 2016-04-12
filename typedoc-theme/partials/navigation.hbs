@@ -1,9 +1,6 @@
 <div class="gs-navigation__root" layout="column">
   {{#if isVisible}}
     {{#if isLabel}}
-      <li class="label {{cssClasses}}">
-        <span>{{title}}</span>
-      </li>
     {{else}}{{#if isGlobals}}
         <a class="gs-navigation__item gs-navigation__globals"
             href="{{relativeURL url}}">
@@ -11,7 +8,7 @@
         </a>
     {{else}}
       {{#if isInPath}}
-        <a class="gs-navigation__item gs-navigation__member" href="{{relativeURL url}}">
+        <a class="gs-navigation__item gs-navigation__member {{cssClaasses}}" href="{{relativeURL url}}">
           {{title}}
         </a>
         {{#if children}}
@@ -20,7 +17,7 @@
           {{/each}}
         {{/if}}
       {{else}}
-        <a class="gs-navigation__item gs-navigation__member" href="{{relativeURL url}}">
+        <a class="gs-navigation__item gs-navigation__member {{cssClaasses}}" href="{{relativeURL url}}">
           {{title}}
         </a>
       {{/if}}

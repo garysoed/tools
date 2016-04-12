@@ -8,7 +8,7 @@ import BaseAsserts from './base-asserts';
 class ArrayAsserts extends BaseAsserts<any[]> {
 
   /**
-   * @param value The string value to check.
+   * @param value The array to check.
    * @param reversed True iff the check logic should be reversed.
    */
   constructor(value: any[], reversed: boolean) {

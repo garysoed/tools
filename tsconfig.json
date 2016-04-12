@@ -44,6 +44,8 @@
         "src/assert/asserts.ts",
         "src/assert/base-asserts_test.ts",
         "src/assert/base-asserts.ts",
+        "src/assert/ctor-asserts_test.ts",
+        "src/assert/ctor-asserts.ts",
         "src/assert/map-asserts_test.ts",
         "src/assert/map-asserts.ts",
         "src/assert/string-asserts_test.ts",
