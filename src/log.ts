@@ -3,6 +3,16 @@
  *
  * This adds namespace to the start of every log. You can also enable / disable logging using the
  * [[setEnabled]] method.
+ *
+ * Example usage:
+ *
+ * ```typescript
+ * import Log from './log';
+ *
+ * const LOG = new Log('namespace');
+ *
+ * Log.error(LOG, 'Error message');
+ * ```
  */
 class Log {
   private static ENABLED_: boolean = true;
@@ -23,12 +33,23 @@ class Log {
   }
 
   /**
-   * Logs info message.
+   * Logs error message
    *
+   * @param log The log object.
    * @param message The message to log.
    */
-  info(message: string): void {
-    this.callIfEnabled_(console.info.bind(console), message);
+  static error(log: Log, message: string): void {
+    log.callIfEnabled_(console.error.bind(console), message);
+  }
+
+  /**
+   * Logs info message.
+   *
+   * @param log The log object.
+   * @param message The message to log.
+   */
+  static info(log: Log, message: string): void {
+    log.callIfEnabled_(console.info.bind(console), message);
   }
 
   /**

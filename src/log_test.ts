@@ -5,6 +5,8 @@ import Log from './log';
 
 
 describe('Log', () => {
+  let log;
+
   beforeEach(() => {
     Log.setEnabled(true);
   });
@@ -33,6 +35,24 @@ describe('Log', () => {
     });
   });
 
+  describe('error', () => {
+    it('should call console.error', () => {
+      let message = 'message';
+
+      spyOn(console, 'error');
+
+      let log = new Log('namespace');
+      let spy = spyOn(log, 'callIfEnabled_');
+
+      Log.error(log, message);
+
+      expect(log['callIfEnabled_']).toHaveBeenCalledWith(jasmine.any(Function), message);
+
+      spy.calls.argsFor(0)[0](message);
+      expect(console.error).toHaveBeenCalledWith(message);
+    });
+  });
+
   describe('info', () => {
     it('should call console.info', () => {
       let message = 'message';
@@ -42,7 +62,7 @@ describe('Log', () => {
       let log = new Log('namespace');
       let spy = spyOn(log, 'callIfEnabled_');
 
-      log.info(message);
+      Log.info(log, message);
 
       expect(log['callIfEnabled_']).toHaveBeenCalledWith(jasmine.any(Function), message);
 
