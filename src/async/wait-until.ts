@@ -16,9 +16,9 @@ class WaitUntil extends BaseDisposable {
   /**
    * @param checkFn The function that returns true to tell the waiter to stop waiting and resolve
    *    the promise.
-   * @param interval The time, in millis, between each call to the checkFn. Defaults to 100ms.
+   * @param interval The time, in millis, between each call to the checkFn.
    */
-  constructor(checkFn: () => boolean, interval: number = 100) {
+  constructor(checkFn: () => boolean, interval: number) {
     super();
     this.checkFn_ = checkFn;
     this.interval_ = interval;
@@ -46,6 +46,17 @@ class WaitUntil extends BaseDisposable {
    */
   get promise(): Promise<void> {
     return this.promise_;
+  }
+
+  /**
+   * Creates a new instance of WaitUntil.
+   *
+   * @param checkFn The function that returns true to tell the waiter to stop waiting and resolve
+   *    the promise.
+   * @param interval The time, in millis, between each call to the checkFn. Defaults to 100ms.
+   */
+  static newInstance(checkFn: () => boolean, interval: number = 100): WaitUntil {
+    return new WaitUntil(checkFn, interval);
   }
 }
 
