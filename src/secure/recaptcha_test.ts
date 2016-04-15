@@ -2,17 +2,38 @@ import TestBase from '../test-base';
 TestBase.setup();
 
 import Mocks from '../mock/mocks';
-import Recaptcha from './recaptcha';
+import Recaptcha, { EventType } from './recaptcha';
+import TestDispose from '../testing/test-dispose';
 
 
 describe('secure.Recaptcha', () => {
-  const WIDGET_ID = 1234;
+  const SITEKEY = 'sitekey';
+  const WIDGET_ID = 'widgetId';
   let recaptcha;
+  let mockElement;
   let mockGrecaptcha;
 
   beforeEach(() => {
+    mockElement = Mocks.object('Element');
     mockGrecaptcha = jasmine.createSpyObj('Grecaptcha', ['getResponse', 'render', 'reset']);
-    recaptcha = new Recaptcha(mockGrecaptcha, WIDGET_ID);
+    mockGrecaptcha.render.and.returnValue(WIDGET_ID);
+
+    recaptcha = Recaptcha.newInstance(mockGrecaptcha, mockElement, SITEKEY);
+    TestDispose.add(recaptcha);
+  });
+
+  it('should call render correctly', () => {
+    let callback = jasmine.createSpy('Callback');
+
+    expect(mockGrecaptcha.render).toHaveBeenCalledWith(mockElement, {
+      sitekey: SITEKEY,
+      callback: jasmine.any(Function)
+    });
+
+    TestDispose.add(recaptcha.on(EventType.NEW_RESPONSE, callback));
+
+    mockGrecaptcha.render.calls.argsFor(0)[1].callback();
+    expect(callback).toHaveBeenCalledWith(null);
   });
 
   describe('reset', () => {
@@ -28,19 +49,6 @@ describe('secure.Recaptcha', () => {
       mockGrecaptcha.getResponse.and.returnValue(response);
       expect(recaptcha.response).toEqual(response);
       expect(mockGrecaptcha.getResponse).toHaveBeenCalledWith(WIDGET_ID);
-    });
-  });
-
-  describe('newInstance', () => {
-    it('should create a new instance of the recaptcha', () => {
-      let mockElement = Mocks.object('Element');
-      let mockParams = Mocks.object('Params');
-      let widgetId = 'widgetId';
-
-      mockGrecaptcha.render.and.returnValue(widgetId);
-
-      let recaptcha = Recaptcha.newInstance(mockGrecaptcha, mockElement, mockParams);
-      expect(recaptcha['widgetId_']).toEqual(widgetId);
     });
   });
 });
