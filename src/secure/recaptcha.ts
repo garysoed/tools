@@ -20,8 +20,8 @@ class Recaptcha extends BaseListenable<EventType> {
     super();
     this.grecaptcha_ = grecaptcha;
     this.widgetId_ = grecaptcha.render(element, {
+      callback: this.onCallback_.bind(this),
       sitekey: sitekey,
-      callback: this.onCallback_.bind(this)
     });
   }
 

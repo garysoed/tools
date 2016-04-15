@@ -26,8 +26,8 @@ describe('secure.Recaptcha', () => {
     let callback = jasmine.createSpy('Callback');
 
     expect(mockGrecaptcha.render).toHaveBeenCalledWith(mockElement, {
+      callback: jasmine.any(Function),
       sitekey: SITEKEY,
-      callback: jasmine.any(Function)
     });
 
     TestDispose.add(recaptcha.on(EventType.NEW_RESPONSE, callback));
