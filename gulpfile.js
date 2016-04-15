@@ -9,6 +9,7 @@ var typedocTasks = require('./gulp-tasks/typedoc')(
 gn.task('compile-test', gn.parallel(
     'src:compile-test',
     'src/assert:compile-test',
+    'src/async:compile-test',
     'src/collection:compile-test',
     'src/data:compile-test',
     'src/dispose:compile-test',
@@ -16,6 +17,7 @@ gn.task('compile-test', gn.parallel(
     'src/inject:compile-test',
     'src/net:compile-test',
     'src/ng:compile-test',
+    'src/secure:lint',
     'src/typescript:lint',
     'src/ui:compile-test'
 ));
@@ -32,6 +34,7 @@ gn.task('lint', gn.parallel(
     'src/mock:lint',
     'src/net:lint',
     'src/ng:lint',
+    'src/secure:lint',
     'src/testing:lint',
     'src/typescript:lint',
     'src/ui:lint'

@@ -28,6 +28,7 @@ describe('dispose.BaseDisposable', () => {
 
       expect(callback).toHaveBeenCalledWith();
       expect(mockDisposable.dispose).toHaveBeenCalledWith();
+      expect(disposable.isDisposed).toEqual(true);
     });
   });
 

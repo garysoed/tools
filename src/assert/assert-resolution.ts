@@ -29,6 +29,7 @@ class AssertResolution {
    *
    * @param message The message for the error to be thrown.
    */
+  // TODO: Replace with orThrows.
   orThrowsMessage(message: string): void {
     this.orThrows(Error(message));
   }

@@ -21,9 +21,11 @@ export const Flags = {
  */
 class BaseDisposable {
   private disposables_: BaseDisposable[];
+  private isDisposed_: boolean;
 
   constructor() {
     this.disposables_ = [];
+    this.isDisposed_ = false;
     if (Flags.enableTracking) {
       TRACKED_DISPOSABLES.push(this);
     }
@@ -59,6 +61,15 @@ class BaseDisposable {
         TRACKED_DISPOSABLES.splice(index, 1);
       }
     }
+
+    this.isDisposed_ = true;
+  }
+
+  /**
+   * True iff the object has been disposed.
+   */
+  get isDisposed(): boolean {
+    return this.isDisposed_;
   }
 };
 
