@@ -14,24 +14,14 @@ class AssertResolution {
   }
 
   /**
-   * Throws the given error if the assertion did not pass.
-   *
-   * @param error The error object to be thrown.
-   */
-  orThrows(error: Error): void {
-    if (this.passes_ === this.reversed_) {
-      throw error;
-    }
-  }
-
-  /**
    * Throws the error message with the given message if the assertion did not pass.
    *
    * @param message The message for the error to be thrown.
    */
-  // TODO: Replace with orThrows.
-  orThrowsMessage(message: string): void {
-    this.orThrows(Error(message));
+  orThrows(message: string): void {
+    if (this.passes_ === this.reversed_) {
+      throw Error(message);
+    }
   }
 }
 

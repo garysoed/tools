@@ -8,42 +8,39 @@ describe('assert.AnyAsserts', () => {
   describe('to.beDefined', () => {
     it('should not throw error if the value is defined', () => {
       expect(() => {
-        Asserts.any('defined').to.beDefined().orThrows(Error('error'));
+        Asserts.any('defined').to.beDefined().orThrows('error');
       }).not.toThrow();
     });
 
     it('should not throw error if the value is null', () => {
       expect(() => {
-        Asserts.any(null).to.beDefined().orThrows(Error('error'));
+        Asserts.any(null).to.beDefined().orThrows('error');
       }).not.toThrow();
     });
 
     it('should throw error if the value is undefined', () => {
-      let error = Error('error');
       expect(() => {
-        Asserts.any(undefined).to.beDefined().orThrows(error);
-      }).toThrow(error);
+        Asserts.any(undefined).to.beDefined().orThrows('error');
+      }).toThrowError(/error/);
     });
   });
 
   describe('toNot.beDefined', () => {
     it('should throw error if the value is defined', () => {
-      let error = Error('error');
       expect(() => {
-        Asserts.any('defined').toNot.beDefined().orThrows(error);
-      }).toThrow(error);
+        Asserts.any('defined').toNot.beDefined().orThrows('error');
+      }).toThrowError(/error/);
     });
 
     it('should throw error if the value is null', () => {
-      let error = Error('error');
       expect(() => {
-        Asserts.any(null).toNot.beDefined().orThrows(error);
-      }).toThrow(error);
+        Asserts.any(null).toNot.beDefined().orThrows('error');
+      }).toThrowError(/error/);
     });
 
     it('should not throw error if the value is undefined', () => {
       expect(() => {
-        Asserts.any(undefined).toNot.beDefined().orThrows(Error('error'));
+        Asserts.any(undefined).toNot.beDefined().orThrows('error');
       }).not.toThrow();
     });
   });
@@ -51,30 +48,28 @@ describe('assert.AnyAsserts', () => {
   describe('to.beEqual', () => {
     it('should not throw error if the value is equal to the reference value', () => {
       expect(() => {
-        Asserts.any(1).to.beEqual(1).orThrows(Error('error'));
+        Asserts.any(1).to.beEqual(1).orThrows('error');
       }).not.toThrow();
     });
 
     it('should throw error if the value is not equal to the reference value', () => {
-      let error = Error('error');
       expect(() => {
-        Asserts.any(1).to.beEqual(2).orThrows(error);
-      }).toThrow(error);
+        Asserts.any(1).to.beEqual(2).orThrows('error');
+      }).toThrowError(/error/);
     });
   });
 
   describe('toNot.beEqual', () => {
     it('should not throw error if the value is not equal to the reference value', () => {
       expect(() => {
-        Asserts.any(1).toNot.beEqual(2).orThrows(Error('error'));
+        Asserts.any(1).toNot.beEqual(2).orThrows('error');
       }).not.toThrow();
     });
 
     it('should throw error if the value is equal to the reference value', () => {
-      let error = Error('error');
       expect(() => {
-        Asserts.any(1).toNot.beEqual(1).orThrows(error);
-      }).toThrow(error);
+        Asserts.any(1).toNot.beEqual(1).orThrows('error');
+      }).toThrowError(/error/);
     });
   });
 });

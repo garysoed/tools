@@ -114,7 +114,7 @@ class Injector {
     }
 
     Asserts.map(Injector.BINDINGS_).to.containKey(bindKey)
-        .orThrowsMessage(`No value bound to key ${bindKey}`);
+        .orThrows(`No value bound to key ${bindKey}`);
     let bindInfo = Injector.BINDINGS_.get(bindKey);
     let ctor = bindInfo.ctor;
     let extraArgs = bindInfo.boundArgs;
@@ -126,7 +126,7 @@ class Injector {
       if (extraArgs.has(i)) {
         args.push(extraArgs.get(i));
       } else {
-        Asserts.map(metadata).to.containKey(i).orThrowsMessage(
+        Asserts.map(metadata).to.containKey(i).orThrows(
           `Cannot find injection candidate for index ${i} for ${ctor} when getting ${bindKey}`);
           args.push(this.getBoundValue(metadata.get(i)));
       }
@@ -163,7 +163,7 @@ class Injector {
       if (extraArguments[i] !== undefined) {
         arg = extraArguments[i];
       } else {
-        Asserts.map(metadata).to.containKey(i).orThrowsMessage(
+        Asserts.map(metadata).to.containKey(i).orThrows(
             `Cannot find injection candidate for index ${i} for ${ctor} when instantiating`);
         arg = this.getBoundValue(metadata.get(i));
       }
@@ -187,9 +187,9 @@ class Injector {
       bindKey: BindKey,
       extraArguments: { [index: number]: any } = {}): void {
     Asserts.map(Injector.BINDINGS_).toNot.containKey(bindKey)
-        .orThrowsMessage(`Binding ${bindKey} is already bound`);
+        .orThrows(`Binding ${bindKey} is already bound`);
     Asserts.any(bindKey).toNot.beEqual(INJECTOR_BIND_KEY_)
-        .orThrowsMessage(`${INJECTOR_BIND_KEY_} is a reserved key`);
+        .orThrows(`${INJECTOR_BIND_KEY_} is a reserved key`);
 
     Injector.BINDINGS_.set(
         bindKey,
@@ -209,7 +209,7 @@ class Injector {
     }
 
     Asserts.map(ctor[Injector.__metadata]).toNot.containKey(index)
-        .orThrowsMessage(`Injection for index ${index} for object ${ctor} already exists`);
+        .orThrows(`Injection for index ${index} for object ${ctor} already exists`);
     ctor[Injector.__metadata].set(index, bindKey);
   }
 }
