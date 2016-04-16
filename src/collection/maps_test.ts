@@ -27,6 +27,20 @@ describe('collection.Maps', () => {
     });
   });
 
+  describe('fromNumericalIndexed', () => {
+    it('should create the map correctly', () => {
+      let index = <{ [index: number]: string }> {};
+      index[2] = 'b';
+      index[3] = 'c';
+      index[25] = 'z';
+      let map = Maps.fromNumericalIndexed<string>(index).data;
+      expect(map.size).toEqual(3);
+      expect(map.get(2)).toEqual('b');
+      expect(map.get(3)).toEqual('c');
+      expect(map.get(25)).toEqual('z');
+    });
+  });
+
   describe('fromRecord', () => {
     it('should return the correct map', () => {
       let map = Maps.fromRecord({ a: 1, b: 2 }).data;

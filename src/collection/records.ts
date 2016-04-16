@@ -132,6 +132,22 @@ class Records {
   static of<T>(data: IRecord<T>): FluentRecord<T> {
     return new FluentRecord<T>(data);
   }
+
+  /**
+   * Starts by using an array of keys.
+   *
+   * @param <T> The type of the record values.
+   * @param keys The keys to start with.
+   * @param fn Function to generate the value from the given keys.
+   * @return Record wrapper object to do operations on.
+   */
+  static fromKeys<T>(keys: string[], fn: (key: string) => T): FluentRecord<T> {
+    let record = <IRecord<T>> {};
+    keys.forEach((key: string) => {
+      record[key] = fn(key);
+    });
+    return new FluentRecord<T>(record);
+  }
 };
 
 export default Records;

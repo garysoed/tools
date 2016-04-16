@@ -50,6 +50,14 @@ describe('collection.Records', () => {
     });
   });
 
+  describe('fromKeys', () => {
+    it('should create the records correctly', () => {
+      let keys = ['a', 'b', 'c'];
+      let record = Records.fromKeys(keys, (key: string) => key + 'V').data;
+      expect(record).toEqual({ 'a': 'aV', 'b': 'bV', 'c': 'cV' });
+    });
+  });
+
   describe('mapValue', () => {
     it('should map the values of the given array', () => {
       let record = <{ [key: string]: string }> {

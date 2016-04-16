@@ -1,4 +1,5 @@
 import Asserts from '../assert/asserts';
+import Maps from '../collection/maps';
 import Reflect from '../reflect';
 
 
@@ -10,6 +11,24 @@ import Reflect from '../reflect';
 type BindKey = string | symbol;
 
 const INJECTOR_BIND_KEY_ = '$gsInjector';
+
+class BindInfo_ {
+  private boundArgs_: Map<number, any>;
+  private ctor_: gs.ICtor<any>;
+
+  constructor(ctor: gs.ICtor<any>, boundArgs: Map<number, any>) {
+    this.ctor_ = ctor;
+    this.boundArgs_ = boundArgs;
+  }
+
+  get boundArgs(): Map<number, any> {
+    return this.boundArgs_;
+  }
+
+  get ctor(): gs.ICtor<any> {
+    return this.ctor_;
+  }
+}
 
 
 /**
@@ -59,7 +78,7 @@ const INJECTOR_BIND_KEY_ = '$gsInjector';
  * Any classes with `@Bind` are treated as singleton per instance of [[Injector]].
  */
 class Injector {
-  private static BINDINGS_: Map<BindKey, gs.ICtor<any>> = new Map<BindKey, gs.ICtor<any>>();
+  private static BINDINGS_: Map<BindKey, BindInfo_> = new Map<BindKey, BindInfo_>();
   private static __metadata: symbol = Symbol('injectMetadata');
 
   private instances_: Map<BindKey, any>;
@@ -96,15 +115,21 @@ class Injector {
 
     Asserts.map(Injector.BINDINGS_).to.containKey(bindKey)
         .orThrowsMessage(`No value bound to key ${bindKey}`);
-    let ctor = Injector.BINDINGS_.get(bindKey);
+    let bindInfo = Injector.BINDINGS_.get(bindKey);
+    let ctor = bindInfo.ctor;
+    let extraArgs = bindInfo.boundArgs;
     let metadata = ctor[Injector.__metadata] || new Map<number, BindKey>();
 
     // Collects the arguments.
     let args = [];
     for (let i = 0; i < ctor.length; i++) {
-      Asserts.map(metadata).to.containKey(i).orThrowsMessage(
-          `Cannot find injection candidate for index ${i} for ${ctor}`);
-      args.push(this.getBoundValue(metadata.get(i)));
+      if (extraArgs.has(i)) {
+        args.push(extraArgs.get(i));
+      } else {
+        Asserts.map(metadata).to.containKey(i).orThrowsMessage(
+          `Cannot find injection candidate for index ${i} for ${ctor} when getting ${bindKey}`);
+          args.push(this.getBoundValue(metadata.get(i)));
+      }
     }
 
     let instance = Reflect.construct(ctor, args);
@@ -128,7 +153,7 @@ class Injector {
    *     is the parameter index and the value is the value to set for the corresponding parameter.
    * @return The newly instantiated object.
    */
-  instantiate<T>(ctor: gs.ICtor<T>, extraArguments: { [index: number]: any} = {}): T {
+  instantiate<T>(ctor: gs.ICtor<T>, extraArguments: { [index: number]: any } = {}): T {
     let metadata = ctor[Injector.__metadata] || new Map<number, BindKey>();
 
     // Collects the arguments.
@@ -138,8 +163,8 @@ class Injector {
       if (extraArguments[i] !== undefined) {
         arg = extraArguments[i];
       } else {
-        Asserts.map(metadata).to.containKey(i)
-            .orThrowsMessage(`Cannot find injection candidate for index ${i} for ${ctor}`);
+        Asserts.map(metadata).to.containKey(i).orThrowsMessage(
+            `Cannot find injection candidate for index ${i} for ${ctor} when instantiating`);
         arg = this.getBoundValue(metadata.get(i));
       }
       args.push(arg);
@@ -153,13 +178,22 @@ class Injector {
    *
    * @param ctor The constructor to bind.
    * @param bindKey The key to bind the constructor to.
+   * @param extraArguments Additional bindings to be added to the constructor. This is the same
+   *    as calling `bind` on the ctor, except that due to how `@Inject` is implemented, `bind` does
+   *    not work.
    */
-  static bind(ctor: gs.ICtor<any>, bindKey: BindKey): void {
+  static bind(
+      ctor: gs.ICtor<any>,
+      bindKey: BindKey,
+      extraArguments: { [index: number]: any } = {}): void {
     Asserts.map(Injector.BINDINGS_).toNot.containKey(bindKey)
         .orThrowsMessage(`Binding ${bindKey} is already bound`);
     Asserts.any(bindKey).toNot.beEqual(INJECTOR_BIND_KEY_)
         .orThrowsMessage(`${INJECTOR_BIND_KEY_} is a reserved key`);
-    Injector.BINDINGS_.set(bindKey, ctor);
+
+    Injector.BINDINGS_.set(
+        bindKey,
+        new BindInfo_(ctor, Maps.fromNumericalIndexed<any>(extraArguments).data));
   }
 
   /**

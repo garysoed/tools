@@ -7,11 +7,13 @@ import Mocks from '../mock/mocks';
 
 
 describe('inject.Injector', () => {
+  let mockBindings;
   let injector;
 
   beforeEach(() => {
     injector = new Injector();
-    Injector['BINDINGS_'] = new Map<string | symbol, gs.ICtor<any>>();
+    mockBindings = new Map<string | symbol, any>();
+    Injector['BINDINGS_'] = mockBindings;;
   });
 
   describe('getBoundValue', () => {
@@ -29,8 +31,10 @@ describe('inject.Injector', () => {
       }
 
       let bindKey = 'bindKey';
-      Injector['BINDINGS_'].set(bindKey, TestClass);
-      TestClass[Injector['__metadata']] = Maps.fromArray(['a', 'b', 'c']).data;
+      let boundArgs = new Map<number, any>();
+      boundArgs.set(1, 'b');
+      mockBindings.set(bindKey, { ctor: TestClass, boundArgs: boundArgs });
+      TestClass[Injector['__metadata']] = Maps.fromArray(['a', undefined, 'c']).data;
 
       let originalGetBoundValue = injector.getBoundValue;
 
@@ -66,7 +70,7 @@ describe('inject.Injector', () => {
       }
 
       let bindKey = 'bindKey';
-      Injector['BINDINGS_'].set(bindKey, TestClass);
+      mockBindings.set(bindKey, { ctor: TestClass, boundArgs: new Map<number, any>() });
 
       expect(() => {
         injector.getBoundValue('bindKey');
@@ -141,10 +145,15 @@ describe('inject.Injector', () => {
 
     it('should set the BINDINGS_ map correctly', () => {
       let bindKey = 'bindKey';
-      Injector.bind(TestClass, bindKey);
+      Injector.bind(TestClass, bindKey, { 0: 'a', 1: 'b' });
 
       expect(Injector['BINDINGS_'].size).toEqual(1);
-      expect(Injector['BINDINGS_'].get(bindKey)).toEqual(TestClass);
+      expect(Injector['BINDINGS_'].get(bindKey).ctor).toEqual(TestClass);
+
+      let extraArgs = Injector['BINDINGS_'].get(bindKey).boundArgs;
+      expect(extraArgs.size).toEqual(2);
+      expect(extraArgs.get(0)).toEqual('a');
+      expect(extraArgs.get(1)).toEqual('b');
     });
 
     it('should throw error if the binding key is already bound', () => {

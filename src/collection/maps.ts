@@ -65,6 +65,22 @@ class Maps {
   }
 
   /**
+   * Starts by using any `Object`s with numerical indexes.
+   *
+   * @param <V> Type of the map values.
+   * @param struct `Object` with numerical indexes.
+   * @return Map wrapper object to do operations on.
+   */
+  static fromNumericalIndexed<V>(struct: { [index: number]: V }): FluentMap<number, V> {
+    let entries = [];
+    for (let key in struct) {
+      entries.push([Number(key), struct[key]]);
+    }
+
+    return Maps.of<number, V>(new Map<number, V>(entries));
+  }
+
+  /**
    * Starts by using any `Record` objects.
    *
    * @param <K> Type of the map's key.
