@@ -30,8 +30,10 @@ const TestSetup = {
   beforeEach(): void {
     jasmine['CallTracker'].prototype.firstArgsMatching = function() {
       let matchingArgs = arguments;
-      return this.allArgs().find((args: any[]) => {
+      let allArgs = this.allArgs();
+      for (let j = 0; j < allArgs.length; j++) {
         let matches = true;
+        let args = allArgs[j];
         for (let i = 0; i < args.length; i++) {
           let matchingArg = matchingArgs[i];
           let isEqual = matchingArg === args[i];
@@ -39,8 +41,11 @@ const TestSetup = {
               && matchingArg.asymmetricMatch(args[i]);
           matches = matches && (isEqual || isMatch);
         }
-        return matches;
-      });
+
+        if (matches) {
+          return args;
+        }
+      }
     };
   },
 };
