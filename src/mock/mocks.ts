@@ -32,8 +32,10 @@ class Mocks {
    *
    * @return The mock disposable object.
    */
-  static disposable(): any {
-    return new BaseDisposable();
+  static disposable(name: string): any {
+    let mock = new BaseDisposable();
+    mock[__id] = name;
+    return mock;
   }
 
   /**
@@ -54,7 +56,7 @@ class Mocks {
    * @return The mock listenable object.
    */
   static listenable(name: string): any {
-    let mock = Mocks.object(name);
+    let mock = Mocks.disposable(name);
     mock.on = () => {
       return new DisposableFunction(() => undefined);
     };

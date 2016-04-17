@@ -12,10 +12,14 @@ export enum EventType {
    */
   BEFOREUNLOAD,
 
+  BLUR,
+
   /**
    * The `click` DOM event.
    */
   CLICK,
+
+  FOCUS,
 
   /**
    * The `load` DOM event.
@@ -95,6 +99,16 @@ class ListenableElement<T extends EventTarget> extends BaseListenable<EventType>
     }
 
     return super.on(eventType, callback);
+  }
+
+  /**
+   * Creates an instance of [[ListenableElement]].
+   *
+   * @param <T> Type of the wrapped element.
+   * @param element The EventTarget to wrap.
+   */
+  static of<T extends EventTarget>(element: T): ListenableElement<T> {
+    return new ListenableElement<T>(element);
   }
 }
 

@@ -1,0 +1,48 @@
+import BaseDisposable, { TRACKED_DISPOSABLES, Flags } from '../dispose/base-disposable';
+
+let DISPOSABLES = [];
+
+
+/**
+ * Test setup object for using jasmine.
+ *
+ * This introduces new utility methods for jasmine, such as:
+ *
+ * -   `calls.firstArgsMatching`: The input parameters are exactly the same as
+ *     `toHaveBeenCalledWith`. This returns the first arguments that matches the input parameters.
+ */
+const TestSetup = {
+  /**
+   * Runs the code in jasmine's `afterEach` logic.
+   */
+  afterEach(): void {
+    DISPOSABLES.forEach((disposable: BaseDisposable) => disposable.dispose());
+    Flags.enableTracking = false;
+
+    expect(TRACKED_DISPOSABLES).toEqual([]);
+
+    TRACKED_DISPOSABLES.splice(0, TRACKED_DISPOSABLES.length);
+  },
+
+  /**
+   * Runs the code in jasmine's `beforeEach` logic.
+   */
+  beforeEach(): void {
+    jasmine['CallTracker'].prototype.firstArgsMatching = function() {
+      let matchingArgs = arguments;
+      return this.allArgs().find((args: any[]) => {
+        let matches = true;
+        for (let i = 0; i < args.length; i++) {
+          let matchingArg = matchingArgs[i];
+          let isEqual = matchingArg === args[i];
+          let isMatch = matchingArg.asymmetricMatch instanceof Function
+              && matchingArg.asymmetricMatch(args[i]);
+          matches = matches && (isEqual || isMatch);
+        }
+        return matches;
+      });
+    };
+  },
+};
+
+export default TestSetup;

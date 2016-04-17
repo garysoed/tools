@@ -113,6 +113,7 @@
         "src/testing/test-async.ts",
         "src/testing/test-dispose.ts",
         "src/testing/test-event.ts",
+        "src/testing/test-jasmine.ts",
         "src/testing/test-setup.ts",
         "src/typescript/enums_test.ts",
         "src/typescript/enums.ts",
