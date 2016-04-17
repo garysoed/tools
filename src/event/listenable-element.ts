@@ -28,6 +28,16 @@ export enum EventType {
   MESSAGE,
 
   /**
+   * The `mouseenter` DOM event.
+   */
+  MOUSEENTER,
+
+  /**
+   * The `mouseleave` DOM event.
+   */
+  MOUSELEAVE,
+
+  /**
    * The `scroll` DOM event.
    */
   SCROLL,

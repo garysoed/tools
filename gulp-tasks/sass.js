@@ -6,14 +6,16 @@ var SassTasks = function(concat, sass, outdir) {
   this.sass_ = sass;
 };
 
-SassTasks.prototype.compile = function(gulp, dir, outdir) {
+SassTasks.prototype.compile = function(gulp, dir, outdir, opt_unconcat) {
   var outdir = outdir || config.DIR_OUT;
   return function compileSass_() {
     console.log(path.join(dir, '*.scss'));
-    return gulp.src([path.join(dir, '*.scss')])
-        .pipe(this.sass_())
-        .pipe(this.concat_('css.css'))
-        .pipe(gulp.dest(outdir));
+    var pipe = gulp.src([path.join(dir, '*.scss')], { 'base': '.' })
+        .pipe(this.sass_());
+    if (!opt_unconcat) {
+      pipe = pipe.pipe(this.concat_('css.css'));
+    }
+    return pipe.pipe(gulp.dest(outdir));
   }.bind(this);
 };
 
