@@ -17,8 +17,8 @@ gn.task('compile-test', gn.parallel(
     'src/inject:compile-test',
     'src/net:compile-test',
     'src/ng:compile-test',
-    'src/secure:lint',
-    'src/typescript:lint',
+    'src/secure:compile-test',
+    'src/typescript:compile-test',
     'src/ui:compile-test'
 ));
 
