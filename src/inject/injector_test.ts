@@ -13,7 +13,34 @@ describe('inject.Injector', () => {
   beforeEach(() => {
     injector = new Injector();
     mockBindings = new Map<string | symbol, any>();
-    Injector['BINDINGS_'] = mockBindings;;
+    Injector['BINDINGS_'] = mockBindings;
+  });
+
+  describe('bindValue', () => {
+    it('should bind the given value', () => {
+      let bindKey = 'bindKey';
+      let mockBindValue = Mocks.object('BindValue');
+
+      injector.bindValue(bindKey, mockBindValue);
+
+      expect(injector.getBoundValue(bindKey)).toEqual(mockBindValue);
+    });
+
+    it('should throw error if the given bind key is already bound', () => {
+      let bindKey = 'bindKey';
+      injector['instances_'].set(bindKey, Mocks.object('BindValue'));
+      expect(() => {
+        injector.bindValue(bindKey, Mocks.object('BindValue2'));
+      }).toThrowError(/is already bound/);
+    });
+
+    it('should throw error if the given bind key is already bound globally', () => {
+      let bindKey = 'bindKey';
+      mockBindings.set(bindKey, Mocks.object('BindValue'));
+      expect(() => {
+        injector.bindValue(bindKey, Mocks.object('BindValue2'));
+      }).toThrowError(/is already bound to a ctor/);
+    });
   });
 
   describe('getBoundValue', () => {
@@ -33,7 +60,7 @@ describe('inject.Injector', () => {
       let bindKey = 'bindKey';
       let boundArgs = new Map<number, any>();
       boundArgs.set(1, 'b');
-      mockBindings.set(bindKey, { ctor: TestClass, boundArgs: boundArgs });
+      mockBindings.set(bindKey, { boundArgs: boundArgs, ctor: TestClass });
       TestClass[Injector['__metadata']] = Maps.fromArray(['a', undefined, 'c']).data;
 
       let originalGetBoundValue = injector.getBoundValue;
@@ -70,7 +97,7 @@ describe('inject.Injector', () => {
       }
 
       let bindKey = 'bindKey';
-      mockBindings.set(bindKey, { ctor: TestClass, boundArgs: new Map<number, any>() });
+      mockBindings.set(bindKey, { boundArgs: new Map<number, any>(), ctor: TestClass });
 
       expect(() => {
         injector.getBoundValue('bindKey');

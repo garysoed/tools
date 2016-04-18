@@ -12,6 +12,9 @@ export enum EventType {
    */
   BEFOREUNLOAD,
 
+  /**
+   * The `blur` DOM event.
+   */
   BLUR,
 
   /**
@@ -19,7 +22,15 @@ export enum EventType {
    */
   CLICK,
 
+  /**
+   * The `focus` DOM event.
+   */
   FOCUS,
+
+  /**
+   * The `keypress` DOM event.
+   */
+  KEYPRESS,
 
   /**
    * The `load` DOM event.

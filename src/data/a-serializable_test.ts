@@ -51,7 +51,7 @@ describe('model.Serializer', () => {
       expect(serialized).toEqual(jasmine.objectContaining({
         'fieldA': compositeValue,
         'basic': jasmine.objectContaining({
-          'fieldA': basicValue
+          'fieldA': basicValue,
         }),
       }));
 
@@ -91,7 +91,7 @@ describe('model.Serializer', () => {
 
       let serialized = Serializer.toJSON(composite);
       expect(serialized).toEqual(jasmine.objectContaining({
-        'fieldA': [0, jasmine.objectContaining({ 'fieldA': value })]
+        'fieldA': [0, jasmine.objectContaining({ 'fieldA': value })],
       }));
 
       let deserialized = Serializer.fromJSON(serialized);
@@ -110,7 +110,7 @@ describe('model.Serializer', () => {
       expect(serialized).toEqual(jasmine.objectContaining({
         'fieldA': {
           'basic': jasmine.objectContaining({
-            'fieldA': value
+            'fieldA': value,
           }),
         },
       }));

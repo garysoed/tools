@@ -73,7 +73,7 @@ describe('net.Http', () => {
       expect(request.method).toEqual('POST');
       expect(request.params).toEqual('a=1&b=2');
       expect(request.requestHeaders).toEqual(jasmine.objectContaining({
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded',
       }));
 
       request.respondWith({

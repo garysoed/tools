@@ -9,8 +9,9 @@ import Injector from './injector';
  * suggested to always explicitly specify the name.
  *
  * @param name Name to bind the class to.
+ * @param dependencies Dependencies of constructors to load.
  */
-function Bind(name: string = null): ClassDecorator {
+function Bind(name: string = null, dependencies: any[] = []): ClassDecorator {
   return function<C extends gs.ICtor<any>>(ctor: C): void {
     let ctorName = name || ctor['name'];
     Injector.bind(ctor, ctorName);

@@ -5,8 +5,6 @@ import Log from './log';
 
 
 describe('Log', () => {
-  let log;
-
   beforeEach(() => {
     Log.setEnabled(true);
   });

@@ -22,8 +22,8 @@ class Reflect {
    * @param propertyName Name of the getter property to be overridden.
    * @param newValue The new value returned by the getter.
    */
-  static overrideGetter(object: any, propertyName: string, newValue: any) {
-    Object.defineProperty(object, propertyName, { get: () => newValue });
+  static overrideGetter(object: any, propertyName: string, newValue: any): void {
+    Object.defineProperty(object, propertyName, { get: (): any => newValue });
   }
 }
 

@@ -44,7 +44,7 @@ describe('async.WaitUntil', () => {
           done();
         });
 
-    waitUntil.dispose()
+    waitUntil.dispose();
     mockInterval.on.calls.argsFor(0)[1]();
   });
 });

@@ -12,7 +12,7 @@ type BindKey = string | symbol;
 
 const INJECTOR_BIND_KEY_ = '$gsInjector';
 
-class BindInfo_ {
+class BindInfo {
   private boundArgs_: Map<number, any>;
   private ctor_: gs.ICtor<any>;
 
@@ -78,7 +78,7 @@ class BindInfo_ {
  * Any classes with `@Bind` are treated as singleton per instance of [[Injector]].
  */
 class Injector {
-  private static BINDINGS_: Map<BindKey, BindInfo_> = new Map<BindKey, BindInfo_>();
+  private static BINDINGS_: Map<BindKey, BindInfo> = new Map<BindKey, BindInfo>();
   private static __metadata: symbol = Symbol('injectMetadata');
 
   private instances_: Map<BindKey, any>;
@@ -86,6 +86,20 @@ class Injector {
   constructor() {
     this.instances_ = new Map<BindKey, any>();
     this.instances_.set(INJECTOR_BIND_KEY_, this);
+  }
+
+  /**
+   * Binds the given value to the given key.
+   *
+   * @param bindKey The key to bound the value to.
+   * @param value The value to bind.
+   */
+  bindValue(bindKey: BindKey, value: any): void {
+    Asserts.map(this.instances_).toNot.containKey(bindKey)
+        .orThrows(`Key ${bindKey} is already bound`);
+    Asserts.map(Injector.BINDINGS_).toNot.containKey(bindKey)
+        .orThrows(`Key ${bindKey} is already bound to a ctor`);
+    this.instances_.set(bindKey, value);
   }
 
   /**
@@ -193,7 +207,7 @@ class Injector {
 
     Injector.BINDINGS_.set(
         bindKey,
-        new BindInfo_(ctor, Maps.fromNumericalIndexed<any>(extraArguments).data));
+        new BindInfo(ctor, Maps.fromNumericalIndexed<any>(extraArguments).data));
   }
 
   /**

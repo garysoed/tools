@@ -7,7 +7,7 @@ describe('Jsons', () => {
   describe('deepClone', () => {
     it('should clone the given object', () => {
       let original = {
-        a: { b: 2 }
+        a: { b: 2 },
       };
       let clone = Jsons.deepClone(original);
       expect(clone).toEqual(original);
