@@ -18,6 +18,12 @@ export enum EventType {
   BLUR,
 
   /**
+   * The `change` DOM event.
+   * @type {[type]}
+   */
+  CHANGE,
+
+  /**
    * The `click` DOM event.
    */
   CLICK,
