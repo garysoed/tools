@@ -41,7 +41,7 @@ const TestSetup = {
    * Runs the code in jasmine's `beforeEach` logic.
    */
   beforeEach(): void {
-    DISPOSABLES = [];
+    DISPOSABLES.splice(0, DISPOSABLES.length);
     Flags.enableTracking = true;
   },
 };
