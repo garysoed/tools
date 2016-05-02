@@ -45,7 +45,7 @@ gn.exec(
     'doc',
     typedocTasks.compile(
         gn,
-        ['!src/test-base.ts', 'node_modules/typescript/lib/lib.es6.d.ts'],
+        ['!src/test-base.ts', 'node_modules/typescript/lib/lib.es6.d.ts', 'declarations/gs-tools.d.ts'],
         'gs-tools',
         'cloudy-sky'));
 

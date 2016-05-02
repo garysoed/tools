@@ -6,6 +6,9 @@ import Doms from '../ui/doms';
 import Iterables from '../collection/iterables';
 import Records from '../collection/records';
 
+/**
+ * @hidden
+ */
 const CSS_ROOT_ATTR_ = 'gs-bem-root';
 
 /**

@@ -10,6 +10,9 @@ import Reflect from '../reflect';
  */
 type BindKey = string | symbol;
 
+/**
+ * @hidden
+ */
 const INJECTOR_BIND_KEY_ = '$gsInjector';
 
 class BindInfo {

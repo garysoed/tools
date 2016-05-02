@@ -1,6 +1,9 @@
 import BaseDisposable, { TRACKED_DISPOSABLES, Flags } from '../dispose/base-disposable';
 
-let DISPOSABLES = [];
+/**
+ * @hidden
+ */
+const DISPOSABLES = [];
 
 
 /**

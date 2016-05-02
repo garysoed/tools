@@ -13,14 +13,14 @@ export enum EventType {
 
 
 /**
- * Wrapper around window.setInterval.
+ * Wrapper around `window.setInterval`.
  *
  * To use this:
  *
  * 1.  Create a new instance using the [[newInstance]] method.
  * 1.  Listen to the `TICK` [[EventType]].
  * 1.  Call [[start]] to start the interval.
- * 1/  You can stop the interval using the [[stop]] method or just [[dispose]] it.
+ * 1.  You can stop the interval using the [[stop]] method or just [[dispose]] it.
  */
 class Interval extends BaseListenable<EventType> {
   private interval_: number;

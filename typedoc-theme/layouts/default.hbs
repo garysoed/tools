@@ -75,7 +75,7 @@
           md-selected-item-change="onSelectedItemChange(item)"
           ng-class="{'gs-default__search--active': isSearchActive}"
           placeholder="Search ...">
-        <md-item-template>
+        <md-item-template ng-cloak>
           <div md-highlight-text="searchText" md-highlight-flags="i">
             \{{item.parent}}.\{{item.name}}
           </div>

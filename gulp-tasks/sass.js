@@ -9,7 +9,6 @@ var SassTasks = function(concat, sass, outdir) {
 SassTasks.prototype.compile = function(gulp, dir, outdir, opt_unconcat) {
   var outdir = outdir || config.DIR_OUT;
   return function compileSass_() {
-    console.log(path.join(dir, '*.scss'));
     var pipe = gulp.src([path.join(dir, '*.scss')], { 'base': '.' })
         .pipe(this.sass_());
     if (!opt_unconcat) {

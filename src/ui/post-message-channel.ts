@@ -4,6 +4,9 @@ import ListenableElement, { EventType as ElementEventType } from '../event/liste
 import Serializer, { Serializable, Field } from '../data/a-serializable';
 
 
+/**
+ * @hidden
+ */
 const TIMEOUT_MS_ = 3000;
 
 export enum MessageType {

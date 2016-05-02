@@ -1,7 +1,14 @@
 import Maps from '../collection/maps';
 
 
+/**
+ * @hidden
+ */
 const __cache = Symbol('cache');
+
+/**
+ * @hidden
+ */
 const __cacheMap = Symbol('cacheMap');
 
 /**

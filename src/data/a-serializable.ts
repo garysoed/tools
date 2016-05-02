@@ -34,13 +34,28 @@
  */
 
 /**
+ * @hidden
  */
 const __fields = Symbol('fields');
+
+/**
+ * @hidden
+ */
 const __name = Symbol('name');
 
+/**
+ * @hidden
+ */
 const TYPE_FIELD = '_type';
+
+/**
+ * @hidden
+ */
 const CTORS = new Map<string, any>();
 
+/**
+ * @hidden
+ */
 function initField_(obj: Object): void {
   if (!obj[__fields]) {
     obj[__fields] = new Map<string | symbol, string>();

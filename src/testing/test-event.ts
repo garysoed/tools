@@ -1,6 +1,9 @@
 import BaseListenable from '../event/base-listenable';
 import TestDispose from './test-dispose';
 
+/**
+ * @hidden
+ */
 const __calls = Symbol('calls');
 
 

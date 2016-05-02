@@ -3,6 +3,9 @@ import DisposableFunction from '../dispose/disposable-function';
 import MockElement from './mock-element';
 
 
+/**
+ * @hidden
+ */
 const __id = Symbol('id');
 
 /**

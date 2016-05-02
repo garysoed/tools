@@ -14,7 +14,6 @@ TypedocTasks.prototype.compile = function(gn, extraSrcs, projectName, themeName,
   var sassTasks = SassTasks(this.concat_, this.sass_);
   var excludePattern = exclude || '';
 
-  console.log(excludePattern);
   return gn.series(
     function compileTypedoc_() {
         return gn.src(srcs.concat(extraSrcs))
@@ -42,6 +41,7 @@ TypedocTasks.prototype.compile = function(gn, extraSrcs, projectName, themeName,
               theme: themePath,
               ignoreCompilerErrors: false,
               version: true,
+              mode: 'modules'
             }));
       }.bind(this),
       function copyTheme_() {
