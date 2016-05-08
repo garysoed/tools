@@ -51,19 +51,19 @@
   margin: 0;
 }
 
-.gs-default__content header.gs-sticky {
+.gs-default__content .md-subheader-inner {
   background-color: $color-secondary;
+  color: black;
   height: 2rem;
   line-height: 2rem;
   overflow-x: auto;
   padding: 1rem 2rem;
-  position: sticky;
   top: 0;
   white-space: nowrap;
-}
 
-.gs-default__content header.gs-sticky > h3 {
-  margin: 0;
+  h3 {
+    margin: 0;
+  }
 }
 
 .gs-default__hide-inherited .tsd-is-inherited {
