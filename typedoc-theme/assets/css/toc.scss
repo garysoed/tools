@@ -1,11 +1,11 @@
 @import 'theme';
 
 .gs-toc__entry a:not(:hover) {
-  color: white;
+  color: $color-reverse-foreground;
 }
 
 .gs-toc__entry {
-  border-right: 5px solid $color-accent;
+  border-right: 5px solid $color-reverse-foreground;
   padding: .5rem 1rem;
 }
 

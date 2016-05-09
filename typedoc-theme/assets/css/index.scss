@@ -1,14 +1,14 @@
 @import 'theme';
 
 .gs-index__table {
-  border: 1px solid $color-primary;
+  border: 1px solid $color-action;
   margin: 2rem;
 }
 
 .gs-index__table > h3 {
   padding: 1rem;
   margin: 0;
-  border-bottom: 1px solid $color-primary;
+  border-bottom: 1px solid $color-action;
 }
 
 .gs-index__table > section {

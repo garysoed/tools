@@ -11,7 +11,7 @@ a.gs-navigation__item {
 }
 
 .gs-navigation__root {
-  background-color: $color-primary;
+  background-color: $color-reverse-background;
   border-right: 5px solid transparent;
 }
 
@@ -20,7 +20,7 @@ a.gs-navigation__item {
 }
 
 .gs-navigation__root a:not(:hover) {
-  color: $color-secondary;
+  color: $color-reverse-foreground;
 }
 
 a.gs-navigation__member {
@@ -33,5 +33,5 @@ a.gs-navigation__globals {
 }
 
 a.gs-navigation__globals:not(:hover) {
-  color: white;
+  color: $color-reverse-foreground;
 }

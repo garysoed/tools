@@ -1,18 +1,18 @@
 @import 'theme';
 
 .gs-member__definition {
-  background-color: white;
+  background-color: $color-background;
   padding: 1rem 2rem;
 }
 
 .gs-member__children {
-  background-color: $color-secondary;
+  background-color: $color-half-background;
   padding-bottom: 2rem;
 }
 
 .gs-member__children .gs-member__definition {
-  border-left: 1px solid $color-primary;
-  border-right: 1px solid $color-primary;
+  border-left: 1px solid $color-action;
+  border-right: 1px solid $color-action;
 }
 
 .gs-member__flags {
@@ -22,4 +22,16 @@
 .gs-member__signature {
   font-family: 'Ubuntu Mono', monospace;
   font-weight: bold;
+
+  a:hover {
+    color: $color-half-accent;
+  }
+
+  a:not(:hover) {
+    color: $color-half-action;
+  }
+}
+
+.gs-member__source md-icon {
+  color: $color-half-action;
 }

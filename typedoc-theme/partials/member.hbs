@@ -8,11 +8,13 @@
       <span class="gs-member__signature">
         {{> gs.signature}}
       </span>
-      {{#if sources}}
-        {{#each sources}}
-          {{> code.link}}
-        {{/each}}
-      {{/if}}
+      <span class="gs-member__source">
+        {{#if sources}}
+          {{#each sources}}
+            {{> code.link}}
+          {{/each}}
+        {{/if}}
+      </span>
     {{/if}}
   </h3>
 </md-subheader>

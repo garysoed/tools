@@ -3,3 +3,7 @@
 .gs-reflection__section:not(:last-child) {
   margin-bottom: 4rem;
 }
+
+.gs-reflection__section md-icon {
+  color: $color-secondary;
+}

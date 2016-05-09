@@ -1,8 +1,8 @@
 @import 'theme';
 
 .gs-default__header {
-  background-color: $color-primary;
-  border-bottom: 1px solid $color-secondary;
+  background-color: $color-reverse-background;
+  border-bottom: 1px solid $color-reverse-action;
   color: $color-secondary;
   padding: 1em 2em;
   z-index: 1;
@@ -15,7 +15,7 @@
 
 .gs-default__navigation-bar,
 .gs-default__navigation-bar > md-content {
-  background-color: $color-primary;
+  background-color: $color-reverse-background;
 }
 
 .gs-default__navigation-bar nav {
@@ -23,7 +23,7 @@
 }
 
 .gs-default__navigation-bar md-divider {
-  border-top-color: $color-secondary;
+  border-top-color: $color-reverse-action;
 }
 
 .gs-default__project-name {
@@ -31,10 +31,12 @@
 }
 
 .gs-default__project-name a:not(:hover) {
-  color: white;
+  color: $color-reverse-foreground;
 }
 
 .gs-default__content {
+  background-color: $color-background;
+  color: $color-foreground;
   padding-bottom: 2rem;
 }
 
@@ -44,16 +46,16 @@
 }
 
 .gs-default__content > header > h2 {
-  background-color: $color-primary;
-  color: white;
+  background-color: $color-reverse-background;
+  color: $color-reverse-foreground;
   text-transform: capitalize;
   padding: 1rem 2rem;
   margin: 0;
 }
 
 .gs-default__content .md-subheader-inner {
-  background-color: $color-secondary;
-  color: black;
+  background-color: $color-half-background;
+  color: $color-half-foreground;
   height: 2rem;
   line-height: 2rem;
   overflow-x: auto;
@@ -113,12 +115,12 @@
 }
 
 .gs-default__search-button:not(.gs-default__search-button--active) md-icon {
-  color: $color-secondary;
+  color: $color-reverse-action;
 }
 
 .gs-default__toggle {
   padding: 0 2rem;
-  color: white;
+  color: $color-reverse-foreground;
 }
 
 .md-autocomplete-suggestions-container li .highlight {

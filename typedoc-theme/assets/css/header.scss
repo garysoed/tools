@@ -1,8 +1,8 @@
 @import 'theme';
 
 .gs-toolbar {
-  background-color: $color-primary;
-  color: $color-secondary;
+  background-color: $color-reverse-background;
+  color: $color-reverse-foreground;
 }
 
 a.gs-project-title {
