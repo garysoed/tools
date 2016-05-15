@@ -33,8 +33,9 @@ table.gs-parameters td.gs-code {
 }
 
 code {
-  background-color: $color-secondary;
+  background-color: $color-half-background;
   border-radius: .2rem;
+  color: $color-half-foreground;
   font-family: 'Ubuntu Mono', monospace;
   padding: .1rem .2rem;
   white-space: pre;

@@ -148,6 +148,22 @@ class Records {
     });
     return new FluentRecord<T>(record);
   }
+
+  /**
+   * Starts by using a map whose key is a string or a number.
+   *
+   * @param <T> The value type of the map and the record.
+   * @param map The map to convert from. The key of the map must be a string or a number.
+   * @return Record wrapper object to do operations on.
+   */
+  static fromMap<T>(map: Map<string | number, T>): FluentRecord<T> {
+    let record = <IRecord<T>> {};
+    Maps.of(map)
+        .forEach((value: T, key: (string | number)) => {
+          record[key] = value;
+        });
+    return new FluentRecord<T>(record);
+  }
 };
 
 export default Records;

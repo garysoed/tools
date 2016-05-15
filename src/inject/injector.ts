@@ -1,5 +1,5 @@
 import Asserts from '../assert/asserts';
-import Maps from '../collection/maps';
+import Inject from './a-inject';
 import Reflect from '../reflect';
 
 
@@ -11,27 +11,14 @@ import Reflect from '../reflect';
 type BindKey = string | symbol;
 
 /**
+ * Function that accepts an Injector as an argument and returns a value to be bound.
+ */
+type Provider<T> = (injector: Injector) => T;
+
+/**
  * @hidden
  */
 const INJECTOR_BIND_KEY_ = '$gsInjector';
-
-class BindInfo {
-  private boundArgs_: Map<number, any>;
-  private ctor_: gs.ICtor<any>;
-
-  constructor(ctor: gs.ICtor<any>, boundArgs: Map<number, any>) {
-    this.ctor_ = ctor;
-    this.boundArgs_ = boundArgs;
-  }
-
-  get boundArgs(): Map<number, any> {
-    return this.boundArgs_;
-  }
-
-  get ctor(): gs.ICtor<any> {
-    return this.ctor_;
-  }
-}
 
 
 /**
@@ -81,28 +68,13 @@ class BindInfo {
  * Any classes with `@Bind` are treated as singleton per instance of [[Injector]].
  */
 class Injector {
-  private static BINDINGS_: Map<BindKey, BindInfo> = new Map<BindKey, BindInfo>();
-  private static __metadata: symbol = Symbol('injectMetadata');
+  private static BINDINGS_: Map<BindKey, Provider<any>> = new Map<BindKey, Provider<any>>();
 
   private instances_: Map<BindKey, any>;
 
   constructor() {
     this.instances_ = new Map<BindKey, any>();
     this.instances_.set(INJECTOR_BIND_KEY_, this);
-  }
-
-  /**
-   * Binds the given value to the given key.
-   *
-   * @param bindKey The key to bound the value to.
-   * @param value The value to bind.
-   */
-  bindValue(bindKey: BindKey, value: any): void {
-    Asserts.map(this.instances_).toNot.containKey(bindKey)
-        .orThrows(`Key ${bindKey} is already bound`);
-    Asserts.map(Injector.BINDINGS_).toNot.containKey(bindKey)
-        .orThrows(`Key ${bindKey} is already bound to a ctor`);
-    this.instances_.set(bindKey, value);
   }
 
   /**
@@ -132,27 +104,36 @@ class Injector {
 
     Asserts.map(Injector.BINDINGS_).to.containKey(bindKey)
         .orThrows(`No value bound to key ${bindKey}`);
-    let bindInfo = Injector.BINDINGS_.get(bindKey);
-    let ctor = bindInfo.ctor;
-    let extraArgs = bindInfo.boundArgs;
-    let metadata = ctor[Injector.__metadata] || new Map<number, BindKey>();
+    let provider = Injector.BINDINGS_.get(bindKey);
+    let instance = provider(this);
+    this.instances_.set(bindKey, instance);
+
+    return instance;
+  }
+
+  /**
+   * Gets the resolved parameters of the given constructor.
+   *
+   * @param ctor The constructor whose parameters should be resolved.
+   * @param extraArguments Arguments to apply to the constructor parameter. The key should be the
+   *    parameter index, and the value is the value to assign to that index.
+   * @return Array of resolved parameters of the given constructor.
+   */
+  getParameters(ctor: gs.ICtor<any>, extraArguments: {[index: number]: any} = {}): any[] {
+    let metadata = Inject.getMetadata(ctor);
 
     // Collects the arguments.
     let args = [];
     for (let i = 0; i < ctor.length; i++) {
-      if (extraArgs.has(i)) {
-        args.push(extraArgs.get(i));
+      if (extraArguments[i] !== undefined) {
+        args.push(extraArguments[i]);
       } else {
         Asserts.map(metadata).to.containKey(i).orThrows(
-          `Cannot find injection candidate for index ${i} for ${ctor} when getting ${bindKey}`);
-          args.push(this.getBoundValue(metadata.get(i)));
+            `Cannot find injection candidate for index ${i} for ${ctor} when instantiating`);
+        args.push(this.getBoundValue(metadata.get(i)));
       }
     }
-
-    let instance = Reflect.construct(ctor, args);
-    this.instances_.set(bindKey, instance);
-
-    return instance;
+    return args;
   }
 
 
@@ -170,24 +151,8 @@ class Injector {
    *     is the parameter index and the value is the value to set for the corresponding parameter.
    * @return The newly instantiated object.
    */
-  instantiate<T>(ctor: gs.ICtor<T>, extraArguments: { [index: number]: any } = {}): T {
-    let metadata = ctor[Injector.__metadata] || new Map<number, BindKey>();
-
-    // Collects the arguments.
-    let args = [];
-    for (let i = 0; i < ctor.length; i++) {
-      let arg = undefined;
-      if (extraArguments[i] !== undefined) {
-        arg = extraArguments[i];
-      } else {
-        Asserts.map(metadata).to.containKey(i).orThrows(
-            `Cannot find injection candidate for index ${i} for ${ctor} when instantiating`);
-        arg = this.getBoundValue(metadata.get(i));
-      }
-      args.push(arg);
-    }
-
-    return Reflect.construct(ctor, args);
+  instantiate<T>(ctor: gs.ICtor<T>, extraArguments: {[index: number]: any} = {}): T {
+    return Reflect.construct(ctor, this.getParameters(ctor, extraArguments));
   }
 
   /**
@@ -195,39 +160,29 @@ class Injector {
    *
    * @param ctor The constructor to bind.
    * @param bindKey The key to bind the constructor to.
-   * @param extraArguments Additional bindings to be added to the constructor. This is the same
-   *    as calling `bind` on the ctor, except that due to how `@Inject` is implemented, `bind` does
-   *    not work.
    */
-  static bind(
-      ctor: gs.ICtor<any>,
-      bindKey: BindKey,
-      extraArguments: { [index: number]: any } = {}): void {
+  static bind(ctor: gs.ICtor<any>, bindKey: BindKey): void {
+    Injector.bindProvider(
+        function(injector: Injector): any {
+          return injector.instantiate(ctor);
+        },
+        bindKey);
+  }
+
+  /**
+   * Binds the given provider to the given binding key.
+   *
+   * @param provider The provider to bind.
+   * @param bindKey The key to bind the provider to.
+   */
+  static bindProvider(
+      provider: Provider<any>,
+      bindKey: BindKey): void {
     Asserts.map(Injector.BINDINGS_).toNot.containKey(bindKey)
         .orThrows(`Binding ${bindKey} is already bound`);
     Asserts.any(bindKey).toNot.beEqual(INJECTOR_BIND_KEY_)
         .orThrows(`${INJECTOR_BIND_KEY_} is a reserved key`);
-
-    Injector.BINDINGS_.set(
-        bindKey,
-        new BindInfo(ctor, Maps.fromNumericalIndexed<any>(extraArguments).data));
-  }
-
-  /**
-   * Registers the injection point.
-   *
-   * @param bindKey The binding key to use to inject for the constructor.
-   * @param ctor The constructor to register the injection point for.
-   * @param index The index of the parameter to inject the value into.
-   */
-  static registerInject(bindKey: BindKey, ctor: gs.ICtor<any>, index: number): void {
-    if (ctor[Injector.__metadata] === undefined) {
-      ctor[Injector.__metadata] = new Map<number, BindKey>();
-    }
-
-    Asserts.map(ctor[Injector.__metadata]).toNot.containKey(index)
-        .orThrows(`Injection for index ${index} for object ${ctor} already exists`);
-    ctor[Injector.__metadata].set(index, bindKey);
+    Injector.BINDINGS_.set(bindKey, provider);
   }
 }
 

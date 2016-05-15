@@ -50,14 +50,6 @@ describe('collection.Records', () => {
     });
   });
 
-  describe('fromKeys', () => {
-    it('should create the records correctly', () => {
-      let keys = ['a', 'b', 'c'];
-      let record = Records.fromKeys(keys, (key: string) => key + 'V').data;
-      expect(record).toEqual({ 'a': 'aV', 'b': 'bV', 'c': 'cV' });
-    });
-  });
-
   describe('mapValue', () => {
     it('should map the values of the given array', () => {
       let record = <{ [key: string]: string }> {
@@ -66,6 +58,28 @@ describe('collection.Records', () => {
       };
       let out = Records.of(record).mapValue((value: string) => `${value}_`).data;
       expect(out).toEqual({ 'a': 'a_', 'b': 'b_' });
+    });
+  });
+
+  describe('fromKeys', () => {
+    it('should create the records correctly', () => {
+      let keys = ['a', 'b', 'c'];
+      let record = Records.fromKeys(keys, (key: string) => key + 'V').data;
+      expect(record).toEqual({ 'a': 'aV', 'b': 'bV', 'c': 'cV' });
+    });
+  });
+
+  describe('fromMap', () => {
+    it('should return the correct record', () => {
+      let key = 'key';
+      let value1 = 'value1';
+      let value2 = 'value2';
+
+      let map = new Map<string | number, string>();
+      map.set(key, value1);
+      map.set(1, value2);
+
+      expect(Records.fromMap(map).data).toEqual({[key]: value1, '1': value2});
     });
   });
 });

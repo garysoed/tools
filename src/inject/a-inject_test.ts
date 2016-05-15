@@ -2,8 +2,8 @@ import TestBase from '../test-base';
 TestBase.setup();
 
 import Inject from './a-inject';
-import Injector from './injector';
 import Mocks from '../mock/mocks';
+import Records from '../collection/records';
 
 class TestClass {}
 
@@ -11,25 +11,26 @@ class TestClass {}
 describe('inject.Inject', () => {
   it('should register the parameter correctly', () => {
     let name = 'name';
-    let propertyName = 'propertyName';
     let index = 12;
+    let fakeMetadata = new Map<number, string>();
 
-    spyOn(Injector, 'registerInject');
+    spyOn(Inject, 'getMetadata').and.returnValue(fakeMetadata);
 
-    Inject(name)(TestClass, propertyName, index);
+    Inject(name)(TestClass, 'propertyName', index);
 
-    expect(Injector.registerInject).toHaveBeenCalledWith(name, TestClass, index);
+    expect(Records.fromMap(fakeMetadata).data).toEqual({[index]: name});
   });
 
   it('should use the parameter name if not specified', () => {
     let propertyName = 'propertyName';
     let index = 12;
+    let fakeMetadata = new Map<number, string>();
 
-    spyOn(Injector, 'registerInject');
+    spyOn(Inject, 'getMetadata').and.returnValue(fakeMetadata);
 
     Inject()(TestClass, propertyName, index);
 
-    expect(Injector.registerInject).toHaveBeenCalledWith(propertyName, TestClass, index);
+    expect(Records.fromMap(fakeMetadata).data).toEqual({[index]: propertyName});
   });
 
   it('should throw error if the target is not a constructor', () => {
