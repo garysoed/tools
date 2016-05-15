@@ -3,6 +3,7 @@ import ArrayAsserts from './array-asserts';
 import AssertsFactory from './asserts-factory';
 import CtorAsserts from './ctor-asserts';
 import MapAsserts from './map-asserts';
+import {SetAsserts} from './set-asserts';
 import StringAsserts from './string-asserts';
 
 
@@ -60,6 +61,16 @@ class Asserts {
    */
   static map(value: Map<any, any>): AssertsFactory<MapAsserts> {
     return new AssertsFactory<MapAsserts>(MapAsserts.bind(null, value));
+  }
+
+  /**
+   * Starts set related assertions.
+   *
+   * @param value The set to check.
+   * @return Factory object to continue the assertion chain.
+   */
+  static set(value: Set<any>): AssertsFactory<SetAsserts> {
+    return new AssertsFactory<SetAsserts>(SetAsserts.bind(null, value));
   }
 
   /**

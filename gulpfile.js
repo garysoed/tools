@@ -19,7 +19,8 @@ gn.task('compile-test', gn.parallel(
     'src/ng:compile-test',
     'src/secure:compile-test',
     'src/typescript:compile-test',
-    'src/ui:compile-test'
+    'src/ui:compile-test',
+    'src/webc:compile-test'
 ));
 
 gn.task('lint', gn.parallel(
@@ -37,7 +38,8 @@ gn.task('lint', gn.parallel(
     'src/secure:lint',
     'src/testing:lint',
     'src/typescript:lint',
-    'src/ui:lint'
+    'src/ui:lint',
+    'src/webc:lint'
 ));
 
 gn.exec('lint', gn.series('.:lint'));

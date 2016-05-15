@@ -35,6 +35,7 @@
         "declarations/jasmine/jasmine.d.ts",
         "declarations/jquery/jquery.d.ts",
         "declarations/tsd.d.ts",
+        "declarations/x-tag.d.ts",
         "src/assert/any-asserts_test.ts",
         "src/assert/any-asserts.ts",
         "src/assert/array-asserts_test.ts",
@@ -50,6 +51,8 @@
         "src/assert/ctor-asserts.ts",
         "src/assert/map-asserts_test.ts",
         "src/assert/map-asserts.ts",
+        "src/assert/set-asserts_test.ts",
+        "src/assert/set-asserts.ts",
         "src/assert/string-asserts_test.ts",
         "src/assert/string-asserts.ts",
         "src/async/asyncs.ts",
@@ -130,6 +133,10 @@
         "src/ui/overflow-watcher.ts",
         "src/ui/post-message-channel_test.ts",
         "src/ui/post-message-channel.ts",
+        "src/webc/base-element.ts",
+        "src/webc/element-config.ts",
+        "src/webc/element-registrar_test.ts",
+        "src/webc/element-registrar.ts",
         "node_modules/typescript/lib/lib.es6.d.ts"
     ],
     "atom": {
