@@ -1,3 +1,4 @@
+import Asserts from '../assert/asserts';
 import BaseDisposable from '../dispose/base-disposable';
 import {BaseElement} from './base-element';
 import Checks from '../checks';
@@ -5,6 +6,9 @@ import {ElementConfig} from './element-config';
 import Http from '../net/http';
 import Log from '../log';
 
+/**
+ * @hidden
+ */
 const LOG = new Log('pb.component.ComponentConfig');
 
 
@@ -17,6 +21,9 @@ export class ElementRegistrar extends BaseDisposable {
   private registeredConfigs_: Set<ElementConfig>;
   private xtag_: xtag.IInstance;
 
+  /**
+   * @hidden
+   */
   constructor(xtag: xtag.IInstance) {
     super();
     this.registeredConfigs_ = new Set<ElementConfig>();
@@ -110,5 +117,13 @@ export class ElementRegistrar extends BaseDisposable {
     } else {
       throw Error(`Cannot find valid instance on element ${el.nodeName}`);
     }
+  }
+
+  /**
+   * @return A new instance of the registrar.
+   */
+  static newInstance(): ElementRegistrar {
+    Asserts.any(window['xtag']).to.beDefined().orThrows(`Required x-tag library not found`);
+    return new ElementRegistrar(window['xtag']);
   }
 }

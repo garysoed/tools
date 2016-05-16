@@ -19,6 +19,10 @@
   text-transform: lowercase;
 }
 
+.gs-member__header {
+  white-space: nowrap;
+}
+
 .gs-member__signature {
   font-family: 'Ubuntu Mono', monospace;
   font-weight: bold;

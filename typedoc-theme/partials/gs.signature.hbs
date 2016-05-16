@@ -1,7 +1,7 @@
 {{#if signatures}}
   {{#each signatures}}
     {{#compact}}
-      {{{wbr name}}}
+      {{name}}
       {{#if typeParameters}}
         &lt;
         {{#each typeParameters}}
@@ -25,7 +25,7 @@
   {{> gs.gettersetter}}
 {{else}}
   {{#compact}}
-    {{{wbr name}}}
+    {{name}}
     {{#if isOptional}}?{{/if}}
     {{#if type}}
       :{{#with type}}{{>type}}{{/with}}

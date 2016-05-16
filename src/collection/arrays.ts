@@ -51,6 +51,10 @@ export class FluentArray<T> extends BaseFluent<T[]> {
     Iterables.of<T>(this.data).forOf(fn);
     return this;
   }
+
+  map<V>(fn: (value: T) => V): FluentArray<V> {
+    return Arrays.of(this.data.map(fn));
+  }
 }
 
 /**

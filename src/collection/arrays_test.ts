@@ -27,6 +27,12 @@ describe('collection.Arrays', () => {
     });
   });
 
+  describe('map', () => {
+    it('should produce the correct array', () => {
+      expect(Arrays.of([1, 2, 3]).map((value: number) => value + 1).data).toEqual([2, 3, 4]);
+    });
+  });
+
   describe('fromIterable', () => {
     it('should return the correct array', () => {
       let array = [1, 2, 3, 4];

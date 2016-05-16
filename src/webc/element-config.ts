@@ -13,13 +13,7 @@ export class ElementConfig {
   private templateUrl_: string;
 
   /**
-   * @param provider Function that returns a new instance of the custom element.
-   * @param name Name of the custom element. This is used as the tag name.
-   * @param templateUrl URL to load the HTML shadow DOM content of the custom element.
-   * @param dependencies Array of dependant element configurations. These dependencies will be
-   *    registered before this configuration is registered.
-   * @param cssUrl URL to load the CSS file from. This will be added as a `<style>` tag in the
-   *    shadow DOM.
+   * @hidden
    */
   constructor(
       provider: () => BaseElement,
@@ -68,5 +62,29 @@ export class ElementConfig {
    */
   get templateUrl(): string {
     return this.templateUrl_;
+  }
+
+  /**
+   * @param provider Function that returns a new instance of the custom element.
+   * @param name Name of the custom element. This is used as the tag name.
+   * @param templateUrl URL to load the HTML shadow DOM content of the custom element.
+   * @param dependencies Array of dependant element configurations. These dependencies will be
+   *    registered before this configuration is registered.
+   * @param cssUrl URL to load the CSS file from. This will be added as a `<style>` tag in the
+   *    shadow DOM.
+   * @return A new instance of ElementConfig.
+   */
+  public static newInstance(
+      provider: () => BaseElement,
+      name: string,
+      templateUrl: string,
+      dependencies: ElementConfig[] = [],
+      cssUrl: string = null): ElementConfig {
+    return new ElementConfig(
+        provider,
+        name,
+        templateUrl,
+        dependencies,
+        cssUrl);
   }
 }
