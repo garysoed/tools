@@ -72,6 +72,9 @@ class Injector {
 
   private instances_: Map<BindKey, any>;
 
+  /**
+   * @hidden
+   */
   constructor() {
     this.instances_ = new Map<BindKey, any>();
     this.instances_.set(INJECTOR_BIND_KEY_, this);
@@ -183,6 +186,13 @@ class Injector {
     Asserts.any(bindKey).toNot.beEqual(INJECTOR_BIND_KEY_)
         .orThrows(`${INJECTOR_BIND_KEY_} is a reserved key`);
     Injector.BINDINGS_.set(bindKey, provider);
+  }
+
+  /**
+   * @return A new Injector instane.
+   */
+  static newInstance(): Injector {
+    return new Injector();
   }
 }
 
