@@ -1,15 +1,28 @@
 import TestBase from '../test-base';
 TestBase.setup();
 
-import Sets from './sets';
+import {NonIndexables} from './non-indexables';
+import {Sets} from './sets';
+
 
 describe('collection.Sets', () => {
   describe('fromArray', () => {
-    it('should return the correct set', () => {
-      let set = Sets.fromArray([1, 1, 1, 2, 2]).data;
-      expect(set.size).toEqual(2);
-      expect(set.has(1)).toEqual(true);
-      expect(set.has(2)).toEqual(true);
+    it('should return the correct FluentNonIndexable', () => {
+      let data = [1, 1, 2, 2, 3];
+      spyOn(NonIndexables, 'fromIterable').and.callThrough();
+
+      expect(Sets.fromArray(data).asArray()).toEqual([1, 2, 3]);
+      expect(NonIndexables.fromIterable).toHaveBeenCalledWith(new Set(data));
+    });
+  });
+
+  describe('of', () => {
+    it('should return the correct FluentNonIndexable', () => {
+      let data = new Set([1, 2, 3]);
+      spyOn(NonIndexables, 'fromIterable').and.callThrough();
+
+      expect(Sets.of(data).asArray()).toEqual([1, 2, 3]);
+      expect(NonIndexables.fromIterable).toHaveBeenCalledWith(data);
     });
   });
 });

@@ -1,11 +1,21 @@
-import BaseFluent from './base-fluent';
+import {ArrayIterable} from './array-iterable';
+import {BaseFluent} from './base-fluent';
+import {ChainIterable} from './chain-iterable';
+import {FilteredIterable} from './filtered-iterable';
+import {IFluentIterable} from './interfaces';
+import {MappedIterable} from './mapped-iterable';
+
 
 /**
  * Chainable object to manipulate an iterable.
  *
+ * Iterables are collections with possibly infinite elements.
+ *
  * @param <T> The type of element in the iterable.
  */
-export class FluentIterable<T> extends BaseFluent<Iterable<T>> {
+export class FluentIterable<T>
+    extends BaseFluent<Iterable<T>>
+    implements IFluentIterable<T> {
 
   /**
    * @param data The underlying iterable object to modify.
@@ -14,27 +24,39 @@ export class FluentIterable<T> extends BaseFluent<Iterable<T>> {
     super(data);
   }
 
-  /**
-   * Executes the given function on every element in the iterable.
-   *
-   * This is a polyfill of `for..of` function with ability to break out of the loop midway.
-   *
-   * @param fn The function to execute on every element of the iterable. This accepts two arguments:
-   *
-   * 1.  Element in the iterable.
-   * 1.  Function called to break out of the loop.
-   *
-   * @return [[FluentIterable]] instance for chaining.
-   */
-  forOf(fn: (value: T, breakFn: () => void) => void): FluentIterable<T> {
+  addAll(other: Iterable<T>): FluentIterable<T> {
+    return Iterables.of<T>(ChainIterable.newInstance<T>(this.data, other));
+  }
+
+  addAllArray(array: T[]): FluentIterable<T> {
+    return this.addAll(ArrayIterable.newInstance<T>(array));
+  }
+
+  asIterable(): Iterable<T> {
+    return this.data;
+  }
+
+  asIterator(): Iterator<T> {
+    return this.data[Symbol.iterator]();
+  }
+
+  filter(fn: (value: T) => boolean): IFluentIterable<T> {
+    return Iterables.of<T>(FilteredIterable.newInstance<T>(this.data, fn));
+  }
+
+  iterate(fn: (value: T, breakFn: () => void) => void): FluentIterable<T> {
     let iterator = this.data[Symbol.iterator]();
     let shouldBreak = false;
-    for (let result = iterator.next(); !result.done && !shouldBreak; result = iterator.next()) {
-      fn(result.value, () => {
+    for (let entry = iterator.next(); !entry.done && !shouldBreak; entry = iterator.next()) {
+      fn(entry.value, () => {
         shouldBreak = true;
       });
     }
     return this;
+  }
+
+  map<T2>(fn: (value: T) => T2): IFluentIterable<T2> {
+    return Iterables.of(MappedIterable.newInstance<T, T2>(this.data, fn));
   }
 }
 
@@ -57,7 +79,7 @@ export class FluentIterable<T> extends BaseFluent<Iterable<T>> {
  *
  * Note that every element in the iterable must be of the same type.
  */
-class Iterables {
+export class Iterables {
   /**
    * Starts by using an iterable.
    *
@@ -69,5 +91,3 @@ class Iterables {
     return new FluentIterable<T>(data);
   }
 }
-
-export default Iterables;

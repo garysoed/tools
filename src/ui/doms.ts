@@ -1,4 +1,4 @@
-import Iterables from '../collection/iterables';
+import {Iterables} from '../collection/iterables';
 
 /**
  * Methods to manipulate DOM objects.
@@ -73,7 +73,7 @@ class Doms {
     let currentEl;
 
     Iterables.of(Doms.offsetParentIterable(fromEl))
-        .forOf((value: HTMLElement, breakFn: () => void) => {
+        .iterate((value: HTMLElement, breakFn: () => void) => {
           currentEl = value;
           if (value === toEl) {
             foundDestination = true;

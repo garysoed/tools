@@ -2,8 +2,8 @@ import TestBase from '../test-base';
 TestBase.setup();
 
 import Inject from './a-inject';
+import {Maps} from '../collection/maps';
 import Mocks from '../mock/mocks';
-import Records from '../collection/records';
 
 class TestClass {}
 
@@ -18,7 +18,7 @@ describe('inject.Inject', () => {
 
     Inject(name)(TestClass, 'propertyName', index);
 
-    expect(Records.fromMap(fakeMetadata).data).toEqual({[index]: name});
+    expect(Maps.of(fakeMetadata).asRecord()).toEqual({[index]: name});
   });
 
   it('should use the parameter name if not specified', () => {
@@ -30,7 +30,7 @@ describe('inject.Inject', () => {
 
     Inject()(TestClass, propertyName, index);
 
-    expect(Records.fromMap(fakeMetadata).data).toEqual({[index]: propertyName});
+    expect(Maps.of(fakeMetadata).asRecord()).toEqual({[index]: propertyName});
   });
 
   it('should throw error if the target is not a constructor', () => {

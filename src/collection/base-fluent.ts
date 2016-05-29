@@ -3,7 +3,7 @@
  *
  * @param <T> Type of the underlying collection data.
  */
-class BaseFluent<T> {
+export class BaseFluent<T> {
   private data_: T;
 
   /**
@@ -16,9 +16,7 @@ class BaseFluent<T> {
   /**
    * The underlying data object.
    */
-  get data(): T {
+  protected get data(): T {
     return this.data_;
   }
 }
-
-export default BaseFluent;

@@ -1,102 +1,9 @@
-import BaseFluent from './base-fluent';
-import Maps from './maps';
+import {FluentIndexable} from './indexables';
+import {FluentMappable, Mappables} from './mappables';
+import {Indexable} from './indexable';
+import {Iterables} from './iterables';
 
-/**
- * Represents a record.
- *
- * @param <T> The type of the record value.
- */
-interface IRecord<T> {
-  [key: string]: T;
-}
-
-/**
- * Chainable object to manipulate a record.
- *
- * @param <T> Type of the record's value.
- */
-export class FluentRecord<T> extends BaseFluent<IRecord<T>> {
-
-  /**
-   * @param data The underlying record object to modify.
-   */
-  constructor(data: IRecord<T>) {
-    super(data);
-  }
-
-  /**
-   * Adds all values in the given map, overriding the values whenever there is conflict.
-   *
-   * @param map The map whose values should be added.
-   * @return [[FluentRecord]] object for chaining.
-   */
-  addAll(map: Map<string, T>): FluentRecord<T> {
-    Maps.of(map)
-        .forEach((value: T, key: string) => {
-          this.data[key] = value;
-        });
-    return this;
-  }
-
-  /**
-   * Filters entries of the record based on the given filter function.
-   *
-   * @param fn Function used to filter the record. This function accepts two arguments:
-   *
-   * 1.  The value of the record entry.
-   * 1.  The key of the record entry.
-   *
-   * And should return true iff the entry should be kept in the record.
-   * @return [[FluentRecord]] object for chaining.
-   */
-  filter(fn: (value: T, key: string) => boolean): FluentRecord<T> {
-    let newRecord: IRecord<T> = {};
-    this.forEach((value: T, key: string) => {
-      if (fn(value, key)) {
-        newRecord[key] = value;
-      }
-    });
-
-    return new FluentRecord<T>(newRecord);
-  }
-
-  /**
-   * Calls the given function for every entry in the record.
-   *
-   * @param fn The function to call. This accepts two arguments:
-   *
-   * 1.  Value of the entry.
-   * 1.  Key of the entry.
-   * @return [[FluentRecord]] object for chaining.
-   */
-  forEach(fn: (arg: T, key: string) => void): FluentRecord<T> {
-    for (let key in this.data) {
-      fn(this.data[key], key);
-    }
-
-    return this;
-  }
-
-  /**
-   * Maps the values of the record using the input function.
-   *
-   * @param <V> The type of the new value.
-   * @param fn The mapping function. This accepts two arguments:
-   *
-   * 1.  Value of the entry.
-   * 1.  Key of the entry.
-   *
-   * And should return the new value for the entry.
-   * @return [[FluentRecord]] object for chaining.
-   */
-  mapValue<V>(fn: (arg: T, key: string) => V): FluentRecord<V> {
-    let outData = <IRecord<V>> {};
-    for (let key in this.data) {
-      outData[key] = fn(this.data[key], key);
-    }
-    return new FluentRecord<V>(outData);
-  }
-}
+type Record = {[key: string]: any};
 
 /**
  * Collection of methods to help manipulate records.
@@ -121,7 +28,7 @@ export class FluentRecord<T> extends BaseFluent<IRecord<T>> {
  *
  * Note that every value in the record must be of the same type.
  */
-class Records {
+export class Records {
   /**
    * Starts by using a record.
    *
@@ -129,8 +36,12 @@ class Records {
    * @param data The record object to start with.
    * @return Record wrapper object to do operations on.
    */
-  static of<T>(data: IRecord<T>): FluentRecord<T> {
-    return new FluentRecord<T>(data);
+  static of(data: Record): FluentMappable<string, any> {
+    let map = new Map<string, any>();
+    for (let key in data) {
+      map.set(key, data[key]);
+    }
+    return Mappables.of(map);
   }
 
   /**
@@ -141,29 +52,11 @@ class Records {
    * @param fn Function to generate the value from the given keys.
    * @return Record wrapper object to do operations on.
    */
-  static fromKeys<T>(keys: string[], fn: (key: string) => T): FluentRecord<T> {
-    let record = <IRecord<T>> {};
+  static fromKeys(keys: string[], fn: (key: string) => any): FluentMappable<string, any> {
+    let map = new Map<string, any>();
     keys.forEach((key: string) => {
-      record[key] = fn(key);
+      map.set(key, fn(key));
     });
-    return new FluentRecord<T>(record);
-  }
-
-  /**
-   * Starts by using a map whose key is a string or a number.
-   *
-   * @param <T> The value type of the map and the record.
-   * @param map The map to convert from. The key of the map must be a string or a number.
-   * @return Record wrapper object to do operations on.
-   */
-  static fromMap<T>(map: Map<string | number, T>): FluentRecord<T> {
-    let record = <IRecord<T>> {};
-    Maps.of(map)
-        .forEach((value: T, key: (string | number)) => {
-          record[key] = value;
-        });
-    return new FluentRecord<T>(record);
+    return Mappables.of(map);
   }
 };
-
-export default Records;

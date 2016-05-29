@@ -1,18 +1,6 @@
-import BaseFluent from './base-fluent';
+import {FluentNonIndexable, NonIndexables} from './non-indexables';
+import {Iterables} from './iterables';
 
-/**
- * Chainable object to manipulate a set.
- *
- * @param <T> The type of element in the set.
- */
-export class FluentSet<T> extends BaseFluent<Set<T>> {
-  /**
-   * @param data The underlying set to modify.
-   */
-  constructor(data: Set<T>) {
-    super(data);
-  }
-};
 
 /**
  * Collection of methods to help manipulate sets.
@@ -31,7 +19,7 @@ export class FluentSet<T> extends BaseFluent<Set<T>> {
  *
  * Note that every value in the set must be of the same type.
  */
-class Sets {
+export class Sets {
   /**
    * Starts by using an array object.
    *
@@ -39,8 +27,8 @@ class Sets {
    * @param array Array object to start from.
    * @return Set wrapper object to do operations on.
    */
-  static fromArray<T>(array: T[]): FluentSet<T> {
-    return Sets.of<T>(new Set<T>(array));
+  static fromArray<T>(array: T[]): FluentNonIndexable<T> {
+    return NonIndexables.fromIterable<T>(new Set<T>(array));
   }
 
   /**
@@ -50,9 +38,7 @@ class Sets {
    * @param data The set object to start with.
    * @return Set wrapper object to do operations on.
    */
-  static of<T>(set: Set<T>): FluentSet<T> {
-    return new FluentSet(set);
+  static of<T>(set: Set<T>): FluentNonIndexable<T> {
+    return NonIndexables.fromIterable<T>(set);
   }
 };
-
-export default Sets;

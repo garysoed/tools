@@ -1,8 +1,8 @@
 import BaseDisposable from '../dispose/base-disposable';
 import Cache from '../data/a-cache';
 import DisposableFunction from '../dispose/disposable-function';
-import Maps from '../collection/maps';
-import Records from '../collection/records';
+import {Maps} from '../collection/maps';
+import {Records} from '../collection/records';
 
 
 /**
@@ -39,10 +39,10 @@ export class RouteService extends BaseDisposable {
         .mapValue((value: string) => {
           return JSON.parse(value);
         })
-        .data;
+        .asMap();
     return Records.of(this.tempParams_)
-        .addAll(Maps.fromRecord(searchParams).data)
-        .data;
+        .addAllMap(searchParams)
+        .asRecord();
   }
 
   /**
@@ -61,15 +61,15 @@ export class RouteService extends BaseDisposable {
    */
   to(path: string, searchParams: gs.IJson = {}, tempParams: gs.IJson = {}): void {
     this.tempParams_ = Records.of({})
-        .addAll(Maps.fromRecord(tempParams).data)
-        .addAll(Maps.fromRecord(searchParams).data)
-        .data;
+        .addAllMap(Maps.fromRecord(tempParams).asMap())
+        .addAllMap(Maps.fromRecord(searchParams).asMap())
+        .asRecord();
 
     let normalizedSearchParams = Records.of(searchParams)
         .mapValue((value: gs.IJson) => {
           return JSON.stringify(value);
         })
-        .data;
+        .asRecord();
     this.$location_.path(path);
     this.$location_.search(normalizedSearchParams);
   }

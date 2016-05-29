@@ -1,10 +1,10 @@
-import Arrays from '../collection/arrays';
+import {Arrays} from '../collection/arrays';
 import BaseDisposable from '../dispose/base-disposable';
 import Checks from '../checks';
 import DisposableFunction from '../dispose/disposable-function';
 import Doms from '../ui/doms';
-import Iterables from '../collection/iterables';
-import Records from '../collection/records';
+import {Iterables} from '../collection/iterables';
+import {Records} from '../collection/records';
 
 /**
  * @hidden
@@ -33,12 +33,10 @@ export class BemClassCtrl extends BaseDisposable {
     } else if (Checks.isArrayOf(newValue, String)) {
       classesToAdd = newValue;
     } else if (Checks.isRecordOf(newValue, Boolean)) {
-      classesToAdd = Arrays
-          .fromRecordKeys(
-              Records.of(newValue)
-                  .filter((value: boolean) => value)
-                  .data)
-          .data;
+      classesToAdd = Records.of(newValue)
+          .filterEntry((value: boolean) => value)
+          .keys()
+          .asArray();
     } else {
       throw Error(`Unhandled value ${newValue}`);
     }
@@ -46,7 +44,7 @@ export class BemClassCtrl extends BaseDisposable {
     // Remove classes that are missing.
     Arrays
         .of(this.appliedClasses_)
-        .diff(classesToAdd)
+        .removeAll(new Set<string>(classesToAdd))
         .forOf((classToRemove: string) => {
           this.element_.classList.remove(classToRemove);
         });
@@ -71,7 +69,7 @@ export class BemClassCtrl extends BaseDisposable {
     let rootEl = null;
     Iterables
         .of(Doms.parentIterable(element))
-        .forOf((currentEl: HTMLElement, breakFn: () => void) => {
+        .iterate((currentEl: HTMLElement, breakFn: () => void) => {
           if (!!currentEl.attributes.getNamedItem(CSS_ROOT_ATTR_)) {
             rootEl = currentEl;
             breakFn();

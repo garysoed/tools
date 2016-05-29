@@ -1,7 +1,7 @@
 import TestBase from '../test-base';
 TestBase.setup();
 
-import Arrays from './arrays';
+import {Arrays} from './arrays';
 import SortedSet from './sorted-set';
 
 
@@ -17,7 +17,7 @@ describe('collection.SortedSet', () => {
       sortedSet.push(1);
       sortedSet.push(2);
 
-      expect(Arrays.fromIterable(sortedSet).data).toEqual([1, 2]);
+      expect(Arrays.fromIterable(sortedSet).asArray()).toEqual([1, 2]);
     });
   });
 
@@ -35,14 +35,14 @@ describe('collection.SortedSet', () => {
       sortedSet.push(1);
       sortedSet.push(2);
       sortedSet.insertAt(3, 1);
-      expect(Arrays.fromIterable(sortedSet).data).toEqual([1, 3, 2]);
+      expect(Arrays.fromIterable(sortedSet).asArray()).toEqual([1, 3, 2]);
     });
 
     it('should remove the old element and moves it to the new position', () => {
       sortedSet.push(1);
       sortedSet.push(2);
       sortedSet.insertAt(1, 2);
-      expect(Arrays.fromIterable(sortedSet).data).toEqual([2, 1]);
+      expect(Arrays.fromIterable(sortedSet).asArray()).toEqual([2, 1]);
     });
   });
 
@@ -51,7 +51,7 @@ describe('collection.SortedSet', () => {
       sortedSet.push(1);
       sortedSet.push(2);
 
-      expect(Arrays.fromIterable(sortedSet).data).toEqual([1, 2]);
+      expect(Arrays.fromIterable(sortedSet).asArray()).toEqual([1, 2]);
     });
   });
 
@@ -61,7 +61,7 @@ describe('collection.SortedSet', () => {
       sortedSet.push(2);
       sortedSet.push(3);
       sortedSet.remove(2);
-      expect(Arrays.fromIterable(sortedSet).data).toEqual([1, 3]);
+      expect(Arrays.fromIterable(sortedSet).asArray()).toEqual([1, 3]);
     });
 
     it('should do nothing if the element does not exist', () => {
@@ -69,7 +69,7 @@ describe('collection.SortedSet', () => {
       sortedSet.push(2);
       sortedSet.push(3);
       sortedSet.remove(4);
-      expect(Arrays.fromIterable(sortedSet).data).toEqual([1, 2, 3]);
+      expect(Arrays.fromIterable(sortedSet).asArray()).toEqual([1, 2, 3]);
     });
   });
 

@@ -1,7 +1,7 @@
 import TestBase from '../test-base';
 TestBase.setup();
 
-import Arrays from '../collection/arrays';
+import {Arrays} from '../collection/arrays';
 import Doms from './doms';
 
 describe('ui.Doms', () => {
@@ -36,7 +36,7 @@ describe('ui.Doms', () => {
             }
           });
 
-      expect(Arrays.fromIterable(Doms.domIterable(element1, mockCallback)).data).toEqual([
+      expect(Arrays.fromIterable(Doms.domIterable(element1, mockCallback)).asArray()).toEqual([
         element1,
         element2,
         element3,
@@ -56,7 +56,7 @@ describe('ui.Doms', () => {
 
       rootEl.appendChild(ancestorEl);
 
-      expect(Arrays.fromIterable(Doms.offsetParentIterable(fromEl)).data).toEqual([
+      expect(Arrays.fromIterable(Doms.offsetParentIterable(fromEl)).asArray()).toEqual([
         fromEl,
         parentEl,
         ancestorEl,
@@ -75,7 +75,7 @@ describe('ui.Doms', () => {
 
       rootEl.appendChild(ancestorEl);
 
-      expect(Arrays.fromIterable(Doms.parentIterable(fromEl)).data).toEqual([
+      expect(Arrays.fromIterable(Doms.parentIterable(fromEl)).asArray()).toEqual([
         fromEl,
         parentEl,
         ancestorEl,

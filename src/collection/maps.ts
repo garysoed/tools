@@ -1,35 +1,7 @@
-import BaseFluent from './base-fluent';
+import {Indexable} from './indexable';
+import {Iterables} from './iterables';
+import {FluentMappable, Mappables} from './mappables';
 
-/**
- * Chainable object to manipulate a map.
- *
- * @param <K> Type of the map's key.
- * @param <V> Type of the map's value.
- */
-export class FluentMap<K, V> extends BaseFluent<Map<K, V>> {
-  /**
-   * @param data The underlying map object to modify.
-   */
-  constructor(data: Map<K, V>) {
-    super(data);
-  }
-
-  /**
-   * Calls the given function for every entry in the map.
-   *
-   * @param fn The function to call. This accepts two arguments:
-   *
-   * 1.  Value of the entry.
-   * 1.  Key of the entry.
-   * @return [[FluentMap]] object for chaining.
-   */
-  forEach(fn: (value: V, key: K) => any): FluentMap<K, V> {
-    this.data.forEach((value: V, key: K) => {
-      fn(value, key);
-    });
-    return this;
-  }
-}
 
 /**
  * Collection of methods to help manipulate maps.
@@ -51,8 +23,15 @@ export class FluentMap<K, V> extends BaseFluent<Map<K, V>> {
  *
  * Note that every key and value in the map must be of the same type.
  */
-class Maps {
-  static fromArray<V>(array: V[]): FluentMap<number, V> {
+export class Maps {
+  /**
+   * Starts by using an array by using the indexes as the key.
+   *
+   * `undefined` entries will be skipped.
+   *
+   * @param array Array whose elements should be used as the map's values.
+   */
+  static fromArray<V>(array: V[]): FluentMappable<number, V> {
     let entries = [];
     for (let i = 0; i < array.length; i++) {
       let element = array[i];
@@ -71,7 +50,7 @@ class Maps {
    * @param struct `Object` with numerical indexes.
    * @return Map wrapper object to do operations on.
    */
-  static fromNumericalIndexed<V>(struct: { [index: number]: V }): FluentMap<number, V> {
+  static fromNumericalIndexed<V>(struct: { [index: number]: V }): FluentMappable<number, V> {
     let entries = [];
     for (let key in struct) {
       entries.push([Number(key), struct[key]]);
@@ -88,7 +67,7 @@ class Maps {
    * @param record Record object to start from.
    * @return Map wrapper object to do operations on.
    */
-  static fromRecord<V>(record: { [key: string]: V }): FluentMap<string, V> {
+  static fromRecord<V>(record: { [key: string]: V }): FluentMappable<string, V> {
     let entries = [];
     for (let key in record) {
       entries.push([key, record[key]]);
@@ -105,9 +84,7 @@ class Maps {
    * @param data The map object to start with.
    * @return Map wrapper object to do operations on.
    */
-  static of<K, V>(data: Map<K, V>): FluentMap<K, V> {
-    return new FluentMap<K, V>(data);
+  static of<K, V>(data: Map<K, V>): FluentMappable<K, V> {
+    return Mappables.of<K, V>(data);
   }
 };
-
-export default Maps;
