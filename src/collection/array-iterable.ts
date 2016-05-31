@@ -12,8 +12,8 @@ export class ArrayIterator<T> implements Iterator<T> {
     let done = this.array_.length <= this.index_;
     this.index_++;
     return {
+      done: done,
       value: value,
-      done: done
     };
   }
 }

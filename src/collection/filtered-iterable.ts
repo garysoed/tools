@@ -16,14 +16,14 @@ export class FilteredIterable<T> implements Iterable<T> {
     let iterator = this.iterable_[Symbol.iterator]();
     let filter = this.filter_;
     return {
-      next() {
+      next(): IteratorResult<T> {
         let result = iterator.next();
         while (!result.done && !filter(result.value)) {
           result = iterator.next();
         }
 
         return result.done ? {done: true} : {done: false, value: result.value};
-      }
+      },
     };
   }
 

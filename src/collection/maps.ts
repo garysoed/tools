@@ -1,5 +1,3 @@
-import {Indexable} from './indexable';
-import {Iterables} from './iterables';
 import {FluentMappable, Mappables} from './mappables';
 
 

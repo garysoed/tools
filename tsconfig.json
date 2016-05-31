@@ -74,7 +74,6 @@
         "src/collection/generator-iterable_test.ts",
         "src/collection/generator-iterable.ts",
         "src/collection/index.ts",
-        "src/collection/indexable.ts",
         "src/collection/indexables_test.ts",
         "src/collection/indexables.ts",
         "src/collection/interfaces.ts",

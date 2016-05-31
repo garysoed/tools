@@ -2,7 +2,6 @@ import {ArrayIterable} from './array-iterable';
 import {BaseFluent} from './base-fluent';
 import {FluentIterable, Iterables} from './iterables';
 import {IFluentIndexable} from './interfaces';
-import {Indexable} from './indexable';
 
 
 export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexable<T> {

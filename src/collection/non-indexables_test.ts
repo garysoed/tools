@@ -10,7 +10,7 @@ import {NonIndexables} from './non-indexables';
 describe('collection.NonIndexables', () => {
   describe('addAll', () => {
     it('should add all the given elements', () => {
-      let resultArray = []
+      let resultArray = [];
       NonIndexables.of([1, 2, 3])
           .addAll(ArrayIterable.newInstance([4, 5, 6]))
           .iterate((value: number) => {

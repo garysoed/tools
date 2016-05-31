@@ -17,12 +17,12 @@ export class MappedIterable<T, T2> implements Iterable<T2> {
     let iterator = this.iterable_[Symbol.iterator]();
     let mapFn = this.mapFn_;
     return {
-      next() {
+      next(): IteratorResult<T2> {
         let result = iterator.next();
         return result.done
             ? {done: true}
             : {done: false, value: mapFn(result.value)};
-      }
+      },
     };
   }
 

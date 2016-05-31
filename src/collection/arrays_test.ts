@@ -3,7 +3,6 @@ TestBase.setup();
 
 import {ArrayIterable} from './array-iterable';
 import {Arrays} from './arrays';
-import {Indexables} from './indexables';
 import {Mocks} from '../mock/mocks';
 
 

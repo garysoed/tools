@@ -14,7 +14,7 @@ export interface IFluentIterable<T> {
    * @return The chainable iterable object with the given iterable added to the end of the current
    *    iterable
    */
-  addAll(other: Iterable<T>): IFluentIterable<T>
+  addAll(other: Iterable<T>): IFluentIterable<T>;
 
   /**
    * Adds all eleents in the given array to the end of the current iterable.
@@ -23,17 +23,17 @@ export interface IFluentIterable<T> {
    * @return The chainable iterable object with the given array added to the end of the current
    *    iterable.
    */
-  addAllArray(array: T[]): IFluentIterable<T>
+  addAllArray(array: T[]): IFluentIterable<T>;
 
   /**
    * @return The fluent iterable as an iterable object.
    */
-  asIterable(): Iterable<T>
+  asIterable(): Iterable<T>;
 
   /**
    * @return A new iterator instance of the iterable.
    */
-  asIterator(): Iterator<T>
+  asIterator(): Iterator<T>;
 
   /**
    * Applies the given filter to the iterable.
@@ -42,7 +42,7 @@ export interface IFluentIterable<T> {
    *    be kept in the iterable.
    * @return Fluent iterable object with the filter function applied.
    */
-  filter(fn: (value: T) => boolean): IFluentIterable<T>
+  filter(fn: (value: T) => boolean): IFluentIterable<T>;
 
   /**
    * Iterates through all the elements in the iterable.
@@ -52,7 +52,7 @@ export interface IFluentIterable<T> {
    *    called, the iteration will stop immediately.
    * @return This fluent iterable for chaining.
    */
-  iterate(fn: (value: T, breakFn: () => void) => void): IFluentIterable<T>
+  iterate(fn: (value: T, breakFn: () => void) => void): IFluentIterable<T>;
 
   /**
    * Maps the member of this iterable using the given mapping function
@@ -62,7 +62,7 @@ export interface IFluentIterable<T> {
    * @param <T2> The type of the transformed element.
    * @return This fluent iterable with the mapping function applied to the elements.
    */
-  map<T2>(fn: (value: T) => T2): IFluentIterable<T2>
+  map<T2>(fn: (value: T) => T2): IFluentIterable<T2>;
 }
 
 /**
@@ -79,14 +79,14 @@ export interface IFluentNonIndexable<T> extends IFluentIterable<T> {
    *
    * @return The array containing elements in the non indexable.
    */
-  asArray(): T[]
+  asArray(): T[];
 
   /**
    * Returns the non indexable as a set.
    *
    * @return The set containing elements in the non indexable.
    */
-  asSet(): Set<T>
+  asSet(): Set<T>;
 
   /**
    * Finds an element matching the given match function.
@@ -94,7 +94,7 @@ export interface IFluentNonIndexable<T> extends IFluentIterable<T> {
    *    true iff it the element is the searched element.
    * @return The searched element, or null if not found.
    */
-  find(fn: (value: T) => boolean): T
+  find(fn: (value: T) => boolean): T;
 
   /**
    * Calls the given function for every element in the non indexable.
@@ -103,7 +103,7 @@ export interface IFluentNonIndexable<T> extends IFluentIterable<T> {
    *    element of the non indexable.
    * @return This object for chaining.
    */
-  forEach(fn: (value: T) => void): IFluentNonIndexable<T>
+  forEach(fn: (value: T) => void): IFluentNonIndexable<T>;
 
   /**
    * Calls the given function for all the elements in the non indexable.
@@ -113,7 +113,7 @@ export interface IFluentNonIndexable<T> extends IFluentIterable<T> {
    *    is called, the no more elements will be called.
    * @return This object for chaining.
    */
-  forOf(fn: (value: T, breakFn: () => void) => void): IFluentNonIndexable<T>
+  forOf(fn: (value: T, breakFn: () => void) => void): IFluentNonIndexable<T>;
 
   /**
    * Removes all elements in the given set from this non indexable.
@@ -121,7 +121,7 @@ export interface IFluentNonIndexable<T> extends IFluentIterable<T> {
    * @param toRemove Set of elements to be removed from this non indexable.
    * @return Non indexable with the specified elements removed.
    */
-  removeAll(toRemove: Set<T>): IFluentNonIndexable<T>
+  removeAll(toRemove: Set<T>): IFluentNonIndexable<T>;
 }
 
 /**
@@ -141,14 +141,14 @@ export interface IFluentMappable<K, V> extends IFluentIterable<[K, V]> {
    * @param map The map whose entries should be added to the current mappable.
    * @return This mappable with the map entries added.
    */
-  addAllMap(map: Map<K, V>): IFluentMappable<K, V>
+  addAllMap(map: Map<K, V>): IFluentMappable<K, V>;
 
   /**
    * Returns the collection as a map.
    *
    * @return The collection as a map.
    */
-  asMap(): Map<K, V>
+  asMap(): Map<K, V>;
 
   /**
    * Returns the collection has a record.
@@ -157,7 +157,7 @@ export interface IFluentMappable<K, V> extends IFluentIterable<[K, V]> {
    *    the string that corresponds to the key. Defaults to function that just passes back the key.
    * @return The collection as a record.
    */
-  asRecord(toString?: (key: K) => string): {[key: string]: V}
+  asRecord(toString?: (key: K) => string): {[key: string]: V};
 
   /**
    * Filters the mappable by the filter function.
@@ -166,7 +166,7 @@ export interface IFluentMappable<K, V> extends IFluentIterable<[K, V]> {
    *    the entry should be in the resulting map.
    * @return The filtered map.
    */
-  filterEntry(filterFn: (value: V, key: K) => boolean): IFluentMappable<K, V>
+  filterEntry(filterFn: (value: V, key: K) => boolean): IFluentMappable<K, V>;
 
   /**
    * Finds entry that matches the given find function and returns it.
@@ -175,7 +175,7 @@ export interface IFluentMappable<K, V> extends IFluentIterable<[K, V]> {
    *    entry should be returned.
    * @return The first entry that matches the find function, or null if it is not found.
    */
-  findEntry(fn: (value: V, key: K) => boolean): [K, V]
+  findEntry(fn: (value: V, key: K) => boolean): [K, V];
 
   /**
    * Finds entry that matches the given find function and returns the corresponding key.
@@ -184,7 +184,7 @@ export interface IFluentMappable<K, V> extends IFluentIterable<[K, V]> {
    *    entry should be returned.
    * @return Key of the first entry that matches the find function, or null if it is not found.
    */
-  findKey(fn: (value: V, key: K) => boolean): K
+  findKey(fn: (value: V, key: K) => boolean): K;
 
   /**
    * Finds entry that matches the given find function and returns the corresponding value.
@@ -193,7 +193,7 @@ export interface IFluentMappable<K, V> extends IFluentIterable<[K, V]> {
    *    entry should be returned.
    * @return Value of the first entry that matches the find function, or null if it is not found.
    */
-  findValue(fn: (value: V, key: K) => boolean): V
+  findValue(fn: (value: V, key: K) => boolean): V;
 
   /**
    * Calls the given function for every entry in the mappable.
@@ -202,7 +202,7 @@ export interface IFluentMappable<K, V> extends IFluentIterable<[K, V]> {
    *    and its corresponding key for every entry in the mappable.
    * @return This object for chaining.
    */
-  forEach(fn: (value: V, key: K) => void): IFluentMappable<K, V>
+  forEach(fn: (value: V, key: K) => void): IFluentMappable<K, V>;
 
   /**
    * Calls the given function for all the entry in the mappable.
@@ -212,14 +212,14 @@ export interface IFluentMappable<K, V> extends IFluentIterable<[K, V]> {
    *    the break function is called, the no more elements will be called.
    * @return This object for chaining.
    */
-  forOf(fn: (value: V, key: K, breakFn: () => void) => void): IFluentMappable<K, V>
+  forOf(fn: (value: V, key: K, breakFn: () => void) => void): IFluentMappable<K, V>;
 
   /**
    * Returns all the keys in the mappable.
    *
    * @return All keys in the mappable.
    */
-  keys(): IFluentNonIndexable<K>
+  keys(): IFluentNonIndexable<K>;
 
   /**
    * Maps the keys of this mappable using the given mapping function
@@ -229,7 +229,7 @@ export interface IFluentMappable<K, V> extends IFluentIterable<[K, V]> {
    * @param <K2> The type of the transformed key.
    * @return This fluent mappable with the mapping function applied to the keys.
    */
-  mapKey<K2>(fn: (value: V, key: K) => K2): IFluentMappable<K2, V>
+  mapKey<K2>(fn: (value: V, key: K) => K2): IFluentMappable<K2, V>;
 
   /**
    * Maps the values of this mappable using the given mapping function
@@ -239,7 +239,7 @@ export interface IFluentMappable<K, V> extends IFluentIterable<[K, V]> {
    * @param <V2> The type of the transformed value.
    * @return This fluent mappable with the mapping function applied to the values.
    */
-  mapValue<V2>(fn: (value: V, key: K) => V2): IFluentMappable<K, V2>
+  mapValue<V2>(fn: (value: V, key: K) => V2): IFluentMappable<K, V2>;
 
   /**
    * Removes all entries that matches the key in the given set.
@@ -247,14 +247,14 @@ export interface IFluentMappable<K, V> extends IFluentIterable<[K, V]> {
    * @param toRemove Set of keys to remove from the map.
    * @return This map with the specified keys removed.
    */
-  removeAllKeys(toRemove: Set<K>): IFluentMappable<K, V>
+  removeAllKeys(toRemove: Set<K>): IFluentMappable<K, V>;
 
   /**
    * Returns all the values in the mappable.
    *
    * @return All values in the mappable.
    */
-  values(): IFluentNonIndexable<V>
+  values(): IFluentNonIndexable<V>;
 }
 
 /**
@@ -271,7 +271,7 @@ export interface IFluentIndexable<T> extends IFluentIterable<T> {
    *
    * @return The indexable as an array.
    */
-  asArray(): Array<T>
+  asArray(): Array<T>;
 
   /**
    * Returns true iff every element in the indexable fulfills the given check function.
@@ -280,7 +280,7 @@ export interface IFluentIndexable<T> extends IFluentIterable<T> {
    *    value of the element and its index and should return true iff the element passes the check.
    * @return True iff all element in the indexable passes the check.
    */
-  every(checkFn: (value: T, index: number) => boolean): boolean
+  every(checkFn: (value: T, index: number) => boolean): boolean;
 
   /**
    * Filters the indexable by the given filter function.
@@ -289,7 +289,7 @@ export interface IFluentIndexable<T> extends IFluentIterable<T> {
    *    index. Itshould return true iff the element should be in the resulting indexable.
    * @return The filtered indexable.
    */
-  filterElement(fn: (value: T, index: number) => boolean): IFluentIndexable<T>
+  filterElement(fn: (value: T, index: number) => boolean): IFluentIndexable<T>;
 
   /**
    * Finds element that matches the given find function and returns it.
@@ -298,7 +298,7 @@ export interface IFluentIndexable<T> extends IFluentIterable<T> {
    *    returned.
    * @return The first element that matches the find function, or null if it is not found.
    */
-  find(fn: (value: T, index: number) => boolean): T
+  find(fn: (value: T, index: number) => boolean): T;
 
   /**
    * Finds element that matches the given find function and returns its index.
@@ -308,7 +308,7 @@ export interface IFluentIndexable<T> extends IFluentIterable<T> {
    * @return The index of the first element that matches the find function, or null if it is not
    *    found.
    */
-  findIndex(fn: (value: T, index: number) => boolean): number
+  findIndex(fn: (value: T, index: number) => boolean): number;
 
   /**
    * Calls the given function for every element in the indexable.
@@ -317,7 +317,7 @@ export interface IFluentIndexable<T> extends IFluentIterable<T> {
    *    and its index for every element in the indexable.
    * @return This object for chaining.
    */
-  forEach(fn: (value: T, index: number) => void): IFluentIndexable<T>
+  forEach(fn: (value: T, index: number) => void): IFluentIndexable<T>;
 
   /**
    * Calls the given function for all the elements in the indexable.
@@ -327,7 +327,7 @@ export interface IFluentIndexable<T> extends IFluentIterable<T> {
    *    function. If the break function is called, the no more elements will be called.
    * @return This object for chaining.
    */
-  forOf(fn: (value: T, index: number, breakFn: () => void) => void): IFluentIndexable<T>
+  forOf(fn: (value: T, index: number, breakFn: () => void) => void): IFluentIndexable<T>;
 
   /**
    * Maps the elements in the indexable.
@@ -336,7 +336,7 @@ export interface IFluentIndexable<T> extends IFluentIterable<T> {
    *    returns the transformed element.
    * @param <T2> The type of the transformed element.
    */
-  mapElement<T2>(fn: (value: T, index: number) => T2): IFluentIndexable<T2>
+  mapElement<T2>(fn: (value: T, index: number) => T2): IFluentIndexable<T2>;
 
   /**
    * Removes all elements in the given set.
@@ -344,5 +344,5 @@ export interface IFluentIndexable<T> extends IFluentIterable<T> {
    * @param toRemove Set of elements to remove from the indexable.
    * @return This indexable with the specified keys removed.
    */
-  removeAll(toRemove: Set<T>): IFluentIndexable<T>
+  removeAll(toRemove: Set<T>): IFluentIndexable<T>;
 }

@@ -17,7 +17,7 @@ export class ChainIterable<T> implements Iterable<T> {
     let secondIterator = this.second_[Symbol.iterator]();
     let firstIteratorDone = false;
     return {
-      next() {
+      next(): IteratorResult<T> {
         let result;
         if (!firstIteratorDone) {
           result = firstIterator.next();
@@ -28,7 +28,7 @@ export class ChainIterable<T> implements Iterable<T> {
           result = secondIterator.next();
         }
         return result;
-      }
+      },
     };
   }
 

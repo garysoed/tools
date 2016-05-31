@@ -1,6 +1,3 @@
-import {Arrays} from './collection/arrays';
-
-
 /**
  * Utility to do various dynamic time type checks.
  *

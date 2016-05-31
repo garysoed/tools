@@ -1,7 +1,5 @@
-import {FluentIndexable} from './indexables';
 import {FluentMappable, Mappables} from './mappables';
-import {Indexable} from './indexable';
-import {Iterables} from './iterables';
+
 
 type Record = {[key: string]: any};
 

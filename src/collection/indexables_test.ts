@@ -10,7 +10,7 @@ import {Iterables} from './iterables';
 describe('collection.Indexables', () => {
   describe('addAll', () => {
     it('should add all the given elements', () => {
-      let resultArray = []
+      let resultArray = [];
       Indexables.of([1, 2, 3])
           .addAll(ArrayIterable.newInstance([4, 5, 6]))
           .iterate((value: number) => {

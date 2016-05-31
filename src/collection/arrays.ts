@@ -1,5 +1,4 @@
-import {BaseFluent} from './base-fluent';
-import {FluentIterable, Iterables} from './iterables';
+import {Iterables} from './iterables';
 import {FluentIndexable} from './indexables';
 
 /**
