@@ -34,6 +34,12 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
     return this.asIterable()[Symbol.iterator]();
   }
 
+  every(fn: (value: T, index: number) => boolean): boolean {
+    return this.data.every((value: T, index: number) => {
+      return fn(value, index);
+    });
+  }
+
   filter(fn: (value: T) => boolean): FluentIndexable<T> {
     return this.filterElement((value: T) => {
       return fn(value);

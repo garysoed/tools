@@ -1,7 +1,7 @@
 /**
  * Methods to manipulate DOM attributes.
  */
-class Attributes {
+export class Attributes {
   /**
    * Adds a new attribute to the given element.
    *
@@ -17,6 +17,14 @@ class Attributes {
     element.setAttributeNode(attr);
     return attr;
   }
-};
 
-export default Attributes;
+  static get(element: HTMLElement): {[key: string]: string} {
+    let attributesRecord: {[key: string]: string} = {};
+    let attributes = element.attributes;
+    for (let i = 0; i < attributes.length; i++) {
+      let item = attributes.item(i);
+      attributesRecord[item.name] = item.value;
+    }
+    return attributesRecord;
+  }
+};

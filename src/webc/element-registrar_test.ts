@@ -6,7 +6,7 @@ import {ElementConfig} from './element-config';
 import {ElementRegistrar} from './element-registrar';
 import Http from '../net/http';
 import Log from '../log';
-import Mocks from '../mock/mocks';
+import {Mocks} from '../mock/mocks';
 import TestDispose from '../testing/test-dispose';
 
 

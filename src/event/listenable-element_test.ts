@@ -1,10 +1,10 @@
 import TestBase from '../test-base';
 TestBase.setup();
 
+import ListenableElement, { EventType } from './listenable-element';
+import {Mocks} from '../mock/mocks';
 import TestDispose from '../testing/test-dispose';
 import TestEvent from '../testing/test-event';
-import ListenableElement, { EventType } from './listenable-element';
-import Mocks from '../mock/mocks';
 
 
 describe('event.ListenableElement', () => {

@@ -37,6 +37,20 @@ class Doms {
   }
 
   /**
+   * Returns the shadow host of the current element.
+   *
+   * The element must be the root element in the shadow DOM.
+   *
+   * @param element The element to returns its shadow host of.
+   * @return The shadow host, or null if not found, or if the element's parent node is not the
+   *    shadow root.
+   */
+  static getShadowHost(element: HTMLElement): HTMLElement {
+    let shadowRoot = element.parentNode;
+    return shadowRoot.nodeType === 11 ? shadowRoot['host'] : null;
+  }
+
+  /**
    * Returns an iterable that navigates up the DOM hierarchy using the `offsetParent` property.
    *
    * @param start The DOM element to start with.
@@ -54,9 +68,10 @@ class Doms {
    * @param start The DOM element to start with.
    * @return The iterable that navigates up the parent chain.
    */
-  static parentIterable(start: HTMLElement): Iterable<HTMLElement> {
+  static parentIterable(start: HTMLElement, bustShadow: boolean = false): Iterable<HTMLElement> {
     return Doms.domIterable(start, (fromEl: HTMLElement) => {
-      return fromEl.parentElement;
+      let parent = fromEl.parentElement;
+      return (parent === null && bustShadow) ? Doms.getShadowHost(fromEl) : parent;
     });
   }
 

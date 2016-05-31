@@ -1,7 +1,7 @@
 import TestBase from './test-base';
 TestBase.setup();
 
-import Checks from './checks';
+import {Checks} from './checks';
 
 describe('Checks', () => {
   describe('isArrayOf', () => {

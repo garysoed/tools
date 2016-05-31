@@ -146,6 +146,14 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
 }
 
 export class Mappables {
+  /**
+   * Starts by using a map.
+   *
+   * @param <K> Type of the map key.
+   * @param <V> Type of the map value.
+   * @param map The map object to start with.
+   * @return Map wrapper object to do operations on.
+   */
   static of<K, V>(map: Map<K, V>): FluentMappable<K, V> {
     return new FluentMappable<K, V>(map);
   }

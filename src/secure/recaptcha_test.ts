@@ -1,8 +1,8 @@
 import TestBase from '../test-base';
 TestBase.setup();
 
-import Mocks from '../mock/mocks';
-import Recaptcha, { EventType } from './recaptcha';
+import {Mocks} from '../mock/mocks';
+import Recaptcha, {EventType} from './recaptcha';
 import TestDispose from '../testing/test-dispose';
 
 

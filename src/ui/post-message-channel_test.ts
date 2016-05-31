@@ -2,9 +2,9 @@ import TestBase from '../test-base';
 TestBase.setup();
 
 import Asyncs from '../async/asyncs';
-import { EventType as ElementEventType } from '../event/listenable-element';
-import Mocks from '../mock/mocks';
-import PostMessageChannel, { Message, MessageType } from './post-message-channel';
+import {EventType as ElementEventType} from '../event/listenable-element';
+import {Mocks} from '../mock/mocks';
+import PostMessageChannel, {Message, MessageType} from './post-message-channel';
 import Serializer from '../data/a-serializable';
 import TestDispose from '../testing/test-dispose';
 

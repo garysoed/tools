@@ -4,8 +4,8 @@ TestBase.setup();
 import TestDispose from '../testing/test-dispose';
 import Doms from '../ui/doms';
 import TestEvent from '../testing/test-event';
-import Mocks from '../mock/mocks';
-import OverflowWatcher, { EventType, State } from './overflow-watcher';
+import {Mocks} from '../mock/mocks';
+import OverflowWatcher, {EventType, State} from './overflow-watcher';
 
 
 describe('ui.OverflowWatcher', () => {

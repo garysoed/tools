@@ -59,6 +59,27 @@ describe('collection.Indexables', () => {
     });
   });
 
+  describe('every', () => {
+    it('should return true if the filter function returns true for every element', () => {
+      let filterFn = jasmine.createSpy('FilterFn').and.returnValue(true);
+      let result = Indexables.of([1, 2, 3]).every(filterFn);
+
+      expect(result).toEqual(true);
+      expect(filterFn).toHaveBeenCalledWith(1, 0);
+      expect(filterFn).toHaveBeenCalledWith(2, 1);
+      expect(filterFn).toHaveBeenCalledWith(3, 2);
+    });
+
+    it('should return false if the filter function returns a false for one element', () => {
+      let result = Indexables.of([1, 2, 3])
+          .every((value: number) => {
+            return value !== 2;
+          });
+
+      expect(result).toEqual(false);
+    });
+  });
+
   describe('filter', () => {
     it('should filter the indexable using the given filter function', () => {
       let result = Indexables.of([1, 2, 3])

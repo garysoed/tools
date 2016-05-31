@@ -274,6 +274,15 @@ export interface IFluentIndexable<T> extends IFluentIterable<T> {
   asArray(): Array<T>
 
   /**
+   * Returns true iff every element in the indexable fulfills the given check function.
+   *
+   * @param checkFn The function to check the element in the indexable. This function takes in the
+   *    value of the element and its index and should return true iff the element passes the check.
+   * @return True iff all element in the indexable passes the check.
+   */
+  every(checkFn: (value: T, index: number) => boolean): boolean
+
+  /**
    * Filters the indexable by the given filter function.
    *
    * @param fn The filter function. This function accepts the element in the indexable and its

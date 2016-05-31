@@ -1,4 +1,5 @@
-/// @doc
+import {Arrays} from './collection/arrays';
+
 
 /**
  * Utility to do various dynamic time type checks.
@@ -17,7 +18,7 @@
  *
  * Unlike [[Asserts]], this does not throw any errors on failure.
  */
-const Checks = {
+export class Checks {
   /**
    * Checks if the given value is an array of a single type.
    *
@@ -26,10 +27,10 @@ const Checks = {
    * @param checkedType Constructor of the type that the array element should be.
    * @return `True` iff the value is an array whose elements are instances of the given constructor.
    */
-  isArrayOf<T>(value: any, checkedType: gs.ICtor<T>): value is T[] {
+  static isArrayOf<T>(value: any, checkedType: gs.ICtor<T>): value is T[] {
     return Checks.isInstanceOf(value, Array)
         && value.every((member: any) => Checks.isInstanceOf(member, checkedType));
-  },
+  }
 
   /**
    * Checks if the given value is a constructor.
@@ -37,9 +38,9 @@ const Checks = {
    * @param value The value to be checked.
    * @return `True` iff the value is a constructor.
    */
-  isCtor(value: any): value is gs.ICtor<any> {
+  static isCtor(value: any): value is gs.ICtor<any> {
     return Checks.isInstanceOf<Function>(value, Function);
-  },
+  }
 
   /**
    * Checks if the given value is an instance of the given type.
@@ -53,7 +54,7 @@ const Checks = {
    *    `number`, pass in the object version, `Number`.
    * @return `True` iff the value is an instance of the given constructor.
    */
-  isInstanceOf<T>(value: any, checkedType: gs.ICtor<T>): value is T {
+  static isInstanceOf<T>(value: any, checkedType: gs.ICtor<T>): value is T {
     if (checkedType === (<any> String) && typeof value === 'string') {
       return true;
     }
@@ -61,7 +62,7 @@ const Checks = {
       return true;
     }
     return value instanceof checkedType;
-  },
+  }
 
   /**
    * Checks if the given value is a record.
@@ -74,7 +75,7 @@ const Checks = {
    * @param checkedType Constructor of the type that the record values should be.
    * @return `True` iff the value is a record whos values are instances of the given constructor.
    */
-  isRecordOf<T>(value: any, checkedType: gs.ICtor<T>): value is {[key: string]: T} {
+  static isRecordOf<T>(value: any, checkedType: gs.ICtor<T>): value is {[key: string]: T} {
     if (!Checks.isInstanceOf(value, Object)) {
       return false;
     }
@@ -86,7 +87,5 @@ const Checks = {
     }
 
     return true;
-  },
+  }
 };
-
-export default Checks;

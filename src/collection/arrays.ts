@@ -22,17 +22,6 @@ import {FluentIndexable} from './indexables';
  */
 export class Arrays {
   /**
-   * Starts by using an array.
-   *
-   * @param <T> Type of the array element.
-   * @param data The array object to start with.
-   * @return Array wrapper object to do operations on.
-   */
-  static of<T>(data: T[]): FluentIndexable<T> {
-    return new FluentIndexable<T>(data);
-  }
-
-  /**
    * Starts by using a (finite) iterable.
    *
    * @param <T> Type of the array element.
@@ -45,5 +34,30 @@ export class Arrays {
       array.push(value);
     });
     return Arrays.of(array);
+  }
+
+  /**
+   * Starts by using a NodeList
+   *
+   * @param The nodelist to start from.
+   * @return Array wrapper object to do operations on.
+   */
+  static fromNodeList(nodeList: NodeList): FluentIndexable<Node> {
+    let array = [];
+    for (let i = 0; i < nodeList.length; i++) {
+      array.push(nodeList.item(i));
+    }
+    return Arrays.of(array);
+  }
+
+  /**
+   * Starts by using an array.
+   *
+   * @param <T> Type of the array element.
+   * @param data The array object to start with.
+   * @return Array wrapper object to do operations on.
+   */
+  static of<T>(data: T[]): FluentIndexable<T> {
+    return new FluentIndexable<T>(data);
   }
 };

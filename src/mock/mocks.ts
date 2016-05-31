@@ -11,7 +11,7 @@ const __id = Symbol('id');
 /**
  * Contains various utility methods to create mocks for testing.
  */
-class Mocks {
+export class Mocks {
   /**
    * Creates a mock builder.
    *
@@ -77,5 +77,3 @@ class Mocks {
     return { [__id]: name };
   }
 };
-
-export default Mocks;

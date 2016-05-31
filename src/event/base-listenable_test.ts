@@ -3,7 +3,7 @@ TestBase.setup();
 
 import Asyncs from '../async/asyncs';
 import BaseListenable from './base-listenable';
-import Mocks from '../mock/mocks';
+import {Mocks} from '../mock/mocks';
 import TestDispose from '../testing/test-dispose';
 
 

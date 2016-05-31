@@ -3,7 +3,7 @@ TestBase.setup();
 
 import Inject from './a-inject';
 import {Maps} from '../collection/maps';
-import Mocks from '../mock/mocks';
+import {Mocks} from '../mock/mocks';
 
 class TestClass {}
 

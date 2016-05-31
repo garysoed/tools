@@ -44,6 +44,23 @@ describe('ui.Doms', () => {
     });
   });
 
+  describe('getShadowHost', () => {
+    it('should return the shadow host', () => {
+      let host = document.createElement('div');
+      let fromEl = document.createElement('div');
+      let shadowRoot = host['createShadowRoot']();
+      shadowRoot.appendChild(fromEl);
+      expect(Doms.getShadowHost(fromEl)).toEqual(host);
+    });
+
+    it('should return null if the parent node is not a shadow root', () => {
+      let host = document.createElement('div');
+      let fromEl = document.createElement('div');
+      host.appendChild(fromEl);
+      expect(Doms.getShadowHost(fromEl)).toEqual(null);
+    });
+  });
+
   describe('offsetParentIterable', () => {
     it('should create the correct iterable', () => {
       let fromEl = document.createElement('div');
@@ -79,6 +96,25 @@ describe('ui.Doms', () => {
         fromEl,
         parentEl,
         ancestorEl,
+        rootEl,
+        document.body,
+        document.documentElement,
+      ]);
+    });
+
+    it('should iterate through shadow root', () => {
+      let host = document.createElement('div');
+      let parentEl = document.createElement('div');
+      let fromEl = document.createElement('div');
+      let shadowRoot = host['createShadowRoot']();
+      shadowRoot.appendChild(parentEl);
+      parentEl.appendChild(fromEl);
+      rootEl.appendChild(host);
+
+      expect(Arrays.fromIterable(Doms.parentIterable(fromEl, true)).asArray()).toEqual([
+        fromEl,
+        parentEl,
+        host,
         rootEl,
         document.body,
         document.documentElement,
