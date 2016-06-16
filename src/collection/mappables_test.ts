@@ -66,6 +66,44 @@ describe('collection.Mappables', () => {
     });
   });
 
+  describe('all', () => {
+     it('should return true if all the entries passes the check function', () => {
+       let checkFn = jasmine.createSpy('CheckFn');
+       checkFn.and.returnValue(true);
+
+       let map = new Map<string, number>(<[string, number][]> [
+         ['a', 1],
+         ['b', 2],
+         ['c', 3],
+       ]);
+
+       expect(Mappables.of(map).all(checkFn)).toEqual(true);
+       expect(checkFn).toHaveBeenCalledWith(1, 'a');
+       expect(checkFn).toHaveBeenCalledWith(2, 'b');
+       expect(checkFn).toHaveBeenCalledWith(3, 'c');
+     });
+
+     it('should return false if one of the entries does not pass the check function', () => {
+       let checkFn = jasmine.createSpy('CheckFn');
+       checkFn.and.callFake((value: number) => {
+         return value <= 2;
+       });
+
+       let map = new Map<string, number>(<[string, number][]> [
+         ['a', 1],
+         ['b', 2],
+         ['c', 3],
+         ['d', 4],
+       ]);
+
+       expect(Mappables.of(map).all(checkFn)).toEqual(false);
+       expect(checkFn).toHaveBeenCalledWith(1, 'a');
+       expect(checkFn).toHaveBeenCalledWith(2, 'b');
+       expect(checkFn).toHaveBeenCalledWith(3, 'c');
+       expect(checkFn).not.toHaveBeenCalledWith(4, 'd');
+     });
+  });
+
   describe('asIterable', () => {
     it('should return iterable that iterates the content', () => {
       let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2]]);
@@ -314,6 +352,44 @@ describe('collection.Mappables', () => {
           .removeAllKeys(new Set<string>(['a', 'c']))
           .asRecord();
       expect(result).toEqual({'b': 2});
+    });
+  });
+
+  describe('some', () => {
+    it('should return true if one of the entries passes the check function', () => {
+       let checkFn = jasmine.createSpy('CheckFn');
+       checkFn.and.callFake((value: number) => {
+         return value >= 3;
+       });
+
+       let map = new Map<string, number>(<[string, number][]> [
+         ['a', 1],
+         ['b', 2],
+         ['c', 3],
+         ['d', 4],
+       ]);
+
+       expect(Mappables.of(map).some(checkFn)).toEqual(true);
+       expect(checkFn).toHaveBeenCalledWith(1, 'a');
+       expect(checkFn).toHaveBeenCalledWith(2, 'b');
+       expect(checkFn).toHaveBeenCalledWith(3, 'c');
+       expect(checkFn).not.toHaveBeenCalledWith(4, 'd');
+      });
+
+    it('should return false if none of the entries passes the check function', () => {
+       let checkFn = jasmine.createSpy('CheckFn');
+       checkFn.and.returnValue(false);
+
+       let map = new Map<string, number>(<[string, number][]> [
+         ['a', 1],
+         ['b', 2],
+         ['c', 3],
+       ]);
+
+       expect(Mappables.of(map).some(checkFn)).toEqual(false);
+       expect(checkFn).toHaveBeenCalledWith(1, 'a');
+       expect(checkFn).toHaveBeenCalledWith(2, 'b');
+       expect(checkFn).toHaveBeenCalledWith(3, 'c');
     });
   });
 

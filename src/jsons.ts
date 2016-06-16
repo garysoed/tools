@@ -1,4 +1,4 @@
-import Asserts from './assert/asserts';
+import {Validate} from './valid/validate';
 
 /**
  * Various utility methods to work with JSONs.
@@ -33,7 +33,10 @@ class Jsons {
    * @param value The value to set.
    */
   static setValue(json: gs.IJson, path: string, value: any): void {
-    Asserts.string(path).toNot.beEmpty().orThrows(`Expected ${path} to not be empty`);
+    Validate.string(path)
+        .toNot.beEmpty()
+        .orThrows(`Expected ${path} to not be empty`)
+        .assertValid();
 
     let object = json;
     let parts = path.split('.');

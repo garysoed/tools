@@ -1,5 +1,5 @@
-import Asserts from '../assert/asserts';
 import BaseListenable from '../event/base-listenable';
+import {Validate} from '../valid/validate';
 
 /**
  * Events dispatched by [[Interval]].
@@ -49,8 +49,10 @@ class Interval extends BaseListenable<EventType> {
    * Starts the interval.
    */
   start(): void {
-    Asserts.any(this.intervalId_).to.beEqual(null)
-        .orThrows('Interval is already running, cannot start again');
+    Validate.any(this.intervalId_)
+        .to.beEqualTo(null)
+        .orThrows('Interval is already running, cannot start again')
+        .assertValid();
     this.intervalId_ = window.setInterval(() => {
       this.dispatch(EventType.TICK);
     }, this.interval_);

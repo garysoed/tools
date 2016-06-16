@@ -1,17 +1,20 @@
-import AssertResolution from './assert-resolution';
-import BaseAsserts from './base-asserts';
+import {AnyValidations} from './any-validations';
+import {ValidationResult} from './validation-result';
 
 
 /**
  * String related assertions.
  */
-class StringAsserts extends BaseAsserts<string> {
+export class StringValidations extends AnyValidations<string> {
+  private stringValue_: string;
+
   /**
    * @param value The string value to check.
    * @param reversed True iff the check logic should be reversed.
    */
   constructor(value: string, reversed: boolean) {
     super(value, reversed);
+    this.stringValue_ = value;
   }
 
   /**
@@ -19,9 +22,7 @@ class StringAsserts extends BaseAsserts<string> {
    *
    * @return The resolution object.
    */
-  beEmpty(): AssertResolution {
-    return this.resolve(this.value.length === 0);
+  beEmpty(): ValidationResult<string> {
+    return this.resolve(this.stringValue_.length === 0, 'be empty');
   }
 }
-
-export default StringAsserts;

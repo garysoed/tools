@@ -144,6 +144,15 @@ export interface IFluentMappable<K, V> extends IFluentIterable<[K, V]> {
   addAllMap(map: Map<K, V>): IFluentMappable<K, V>;
 
   /**
+   * Checks if all the entries in the map passes the check function.
+   * 
+   * @param checkFn Function that takes in the value and its corresponding key and returns true iff
+   *    the entry should pass the check.
+   * @return True iff all the entries passes the check function.
+   */
+  all(checkFn: (value: V, key: K) => boolean): boolean;
+
+  /**
    * Returns the collection as a map.
    *
    * @return The collection as a map.
@@ -158,6 +167,13 @@ export interface IFluentMappable<K, V> extends IFluentIterable<[K, V]> {
    * @return The collection as a record.
    */
   asRecord(toString?: (key: K) => string): {[key: string]: V};
+
+  /**
+   * Returns all the entries in the mappable.
+   *
+   * @return All entries in the mappable.
+   */
+  entries(): IFluentNonIndexable<[K, V]>;
 
   /**
    * Filters the mappable by the filter function.
@@ -248,6 +264,15 @@ export interface IFluentMappable<K, V> extends IFluentIterable<[K, V]> {
    * @return This map with the specified keys removed.
    */
   removeAllKeys(toRemove: Set<K>): IFluentMappable<K, V>;
+
+  /**
+   * Checks if some the entries in the map passes the check function.
+   * 
+   * @param checkFn Function that takes in the value and its corresponding key and returns true iff
+   *    the entry should pass the check.
+   * @return True iff some of the entries passes the check function.
+   */
+  some(checkFn: (value: V, key: K) => boolean): boolean;
 
   /**
    * Returns all the values in the mappable.

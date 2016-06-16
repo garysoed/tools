@@ -1,5 +1,5 @@
-import Asserts from '../assert/asserts';
 import Cache from '../data/a-cache';
+import {Validate} from '../valid/validate';
 
 
 /**
@@ -16,7 +16,10 @@ class KeyboardEventPolyfill {
   @Cache()
   static polyfill(): void {
     let KeyboardEvent = window['KeyboardEvent'];
-    Asserts.any(KeyboardEvent).to.beDefined().orThrows('KeyboardEvent not defined');
+    Validate.any(KeyboardEvent)
+        .to.beDefined()
+        .orThrows('KeyboardEvent not defined')
+        .assertValid();
 
     if (!KeyboardEvent.prototype.key) {
       Object.defineProperty(KeyboardEvent.prototype, 'key', {

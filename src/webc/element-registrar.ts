@@ -1,10 +1,10 @@
-import Asserts from '../assert/asserts';
 import BaseDisposable from '../dispose/base-disposable';
 import {BaseElement} from './base-element';
 import {Checks} from '../checks';
 import {ElementConfig} from './element-config';
 import Http from '../net/http';
 import Log from '../log';
+import {Validate} from '../valid/validate';
 
 /**
  * @hidden
@@ -123,7 +123,10 @@ export class ElementRegistrar extends BaseDisposable {
    * @return A new instance of the registrar.
    */
   static newInstance(): ElementRegistrar {
-    Asserts.any(window['xtag']).to.beDefined().orThrows(`Required x-tag library not found`);
+    Validate.any(window['xtag'])
+        .to.beDefined()
+        .orThrows(`Required x-tag library not found`)
+        .assertValid();
     return new ElementRegistrar(window['xtag']);
   }
 }

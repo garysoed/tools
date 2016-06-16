@@ -1,6 +1,6 @@
-import Asserts from '../assert/asserts';
 import Inject from './a-inject';
 import Reflect from '../reflect';
+import {Validate} from '../valid/validate';
 
 
 /**
@@ -105,8 +105,10 @@ class Injector {
       return this.instances_.get(bindKey);
     }
 
-    Asserts.map(Injector.BINDINGS_).to.containKey(bindKey)
-        .orThrows(`No value bound to key ${bindKey}`);
+    Validate.map(Injector.BINDINGS_)
+        .to.containKey(bindKey)
+        .orThrows(`No value bound to key ${bindKey}`)
+        .assertValid();
     let provider = Injector.BINDINGS_.get(bindKey);
     let instance = provider(this);
     this.instances_.set(bindKey, instance);
@@ -131,8 +133,11 @@ class Injector {
       if (extraArguments[i] !== undefined) {
         args.push(extraArguments[i]);
       } else {
-        Asserts.map(metadata).to.containKey(i).orThrows(
-            `Cannot find injection candidate for index ${i} for ${ctor} when instantiating`);
+        Validate.map(metadata)
+            .to.containKey(i)
+            .orThrows(
+                `Cannot find injection candidate for index ${i} for ${ctor} when instantiating`)
+            .assertValid();
         args.push(this.getBoundValue(metadata.get(i)));
       }
     }
@@ -181,10 +186,17 @@ class Injector {
   static bindProvider(
       provider: Provider<any>,
       bindKey: BindKey): void {
-    Asserts.map(Injector.BINDINGS_).toNot.containKey(bindKey)
-        .orThrows(`Binding ${bindKey} is already bound`);
-    Asserts.any(bindKey).toNot.beEqual(INJECTOR_BIND_KEY_)
-        .orThrows(`${INJECTOR_BIND_KEY_} is a reserved key`);
+    Validate
+        .batch({
+          'boundKey': Validate.map(Injector.BINDINGS_)
+              .toNot.containKey(bindKey)
+              .orThrows(`Binding ${bindKey} is already bound`),
+          'reservedKey': Validate.any(bindKey)
+              .toNot.beEqualTo(INJECTOR_BIND_KEY_)
+              .orThrows(`${INJECTOR_BIND_KEY_} is a reserved key`),
+        })
+        .to.allBeValid()
+        .assertValid();
     Injector.BINDINGS_.set(bindKey, provider);
   }
 

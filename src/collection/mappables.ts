@@ -1,7 +1,7 @@
 import {BaseFluent} from './base-fluent';
 import {FluentIterable, Iterables} from './iterables';
-import {IFluentMappable, IFluentNonIndexable} from './interfaces';
-import {NonIndexables} from './non-indexables';
+import {IFluentMappable} from './interfaces';
+import {FluentNonIndexable, NonIndexables} from './non-indexables';
 
 
 export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFluentMappable<K, V> {
@@ -25,6 +25,17 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
     return this;
   }
 
+  all(checkFn: (value: V, key: K) => boolean): boolean {
+    let result = true;
+    this.forOf((value: V, key: K, breakFn: () => void) => {
+      result = result && checkFn(value, key);
+      if (!result) {
+        breakFn();
+      }
+    });
+    return result;
+  }
+
   asIterable(): Iterable<[K, V]> {
     return this.data;
   }
@@ -43,6 +54,14 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
       record[toString(key)] = value;
     });
     return record;
+  }
+
+  entries(): FluentNonIndexable<[K, V]> {
+    let entries = [];
+    this.forEach((value: V, key: K) => {
+      entries.push([key, value]);
+    });
+    return NonIndexables.of(entries);
   }
 
   filter(fn: (value: [K, V]) => boolean): FluentMappable<K, V> {
@@ -100,7 +119,7 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
     return this;
   }
 
-  keys(): IFluentNonIndexable<K> {
+  keys(): FluentNonIndexable<K> {
     let keys = [];
     this.forEach((value: V, key: K) => {
       keys.push(key);
@@ -136,7 +155,18 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
     return this;
   }
 
-  values(): IFluentNonIndexable<V> {
+  some(checkFn: (value: V, key: K) => boolean): boolean {
+    let result = false;
+    this.forOf((value: V, key: K, breakFn: () => void) => {
+      result = result || checkFn(value, key);
+      if (result) {
+        breakFn();
+      }
+    });
+    return result;
+  }
+
+  values(): FluentNonIndexable<V> {
     let values = [];
     this.forEach((value: V, key: K) => {
       values.push(value);
