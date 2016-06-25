@@ -8,6 +8,7 @@ package_group(
 test_suite(
     name = "test",
     tests = [
-      "//src/async:test"
+      "//src/async:test",
+      "//src/collection:test"
     ]
 )

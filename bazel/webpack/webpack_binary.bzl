@@ -3,12 +3,11 @@ def _webpack_binary_impl(ctx):
   tardir = ctx.file.package.basename[:-4]
 
   ctx.action(
-      command = "tar xf %s; %s %s %s && rm -rf %s" % (
+      command = "tar xf %s && %s %s %s --hide-modules" % (
         tarfile,
         ctx.executable._webpack_bin.path,
         tardir + '/' + ctx.attr.entry,
-        ctx.outputs.out.path,
-        tardir),
+        ctx.outputs.out.path),
       execution_requirements = {
         "exclusive": "True"
       },

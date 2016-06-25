@@ -1,9 +1,9 @@
 .DS_Store
-bazel-bin/
-bazel-genfiles/
-bazel-gs-tools/
-bazel-out/
-bazel-testlogs/
+bazel-bin
+bazel-genfiles
+bazel-gs-tools
+bazel-out
+bazel-testlogs
 bin/
 bower_components/
 doc/

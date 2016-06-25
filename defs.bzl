@@ -52,21 +52,23 @@ def gs_tools():
       deps = [':' + lib_name],
   )
 
-  ts_binary(
-      name = testbin_name,
-      deps = [':' + testlib_name]
-  )
-
   # Generates a pack, karma run, and karma test file for every test.
   test_src_pack_labels = []
   test_targets = []
   for test_src in test_srcs:
     test_src_name = test_src[:-3]
+    test_src_bin_name = '%s_bin' % test_src_name
     test_src_pack_name = '%s_pack' % test_src_name
     test_src_pack_label = ':' + test_src_pack_name
+
+    ts_binary(
+        name = test_src_bin_name,
+        deps = [':' + testlib_name]
+    )
+
     webpack_binary(
         name = test_src_pack_name,
-        package = ':' + testbin_name,
+        package = ':' + test_src_bin_name,
         entry = '%s/%s.js' % (PACKAGE_NAME, test_src[:-3]),
     )
 
