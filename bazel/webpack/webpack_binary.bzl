@@ -3,7 +3,7 @@ def _webpack_binary_impl(ctx):
   tardir = ctx.file.package.basename[:-4]
 
   ctx.action(
-      command = "tar xf %s || %s %s %s && rm -rf %s" % (
+      command = "tar xf %s; %s %s %s && rm -rf %s" % (
         tarfile,
         ctx.executable._webpack_bin.path,
         tardir + '/' + ctx.attr.entry,
