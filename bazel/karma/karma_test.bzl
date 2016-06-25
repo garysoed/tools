@@ -4,7 +4,8 @@ def _karma_test_impl(ctx):
   exec_output = ctx.outputs.executable
   karma_bin = ctx.executable._karma_bin
 
-  config_file = ctx.new_file('karma.config.js')
+  target_name = str(ctx).split(':')[-1]
+  config_file = ctx.new_file('%s_karma.config.js' % target_name)
 
   ctx.template_action(
       output = config_file,

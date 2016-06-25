@@ -3,13 +3,18 @@ def _webpack_binary_impl(ctx):
   tardir = ctx.file.package.basename[:-4]
 
   ctx.action(
-      command = "tar xf %s && %s %s %s" % (
+      command = "tar xf %s || %s %s %s && rm -rf %s" % (
         tarfile,
         ctx.executable._webpack_bin.path,
         tardir + '/' + ctx.attr.entry,
-        ctx.outputs.out.path),
+        ctx.outputs.out.path,
+        tardir),
+      execution_requirements = {
+        "exclusive": "True"
+      },
       inputs = [ctx.file.package],
       outputs = [ctx.outputs.out],
+      progress_message = 'Extracting srcs and running webpack with %s' % (ctx.outputs.out.path),
       use_default_shell_env = True)
 
 webpack_binary = rule(
