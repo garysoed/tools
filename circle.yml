@@ -5,9 +5,9 @@ machine:
 dependencies:
   pre:
     - sudo apt-get update
-      - wget https://github.com/bazelbuild/bazel/releases/download/0.1.2/bazel-0.1.2-installer-linux-x86_64.sh
-      - chmod +x bazel-0.1.2-installer-linux-x86_64.sh
-      - ./bazel-0.1.2-installer-linux-x86_64.sh --user
+    - wget https://github.com/bazelbuild/bazel/releases/download/0.3.0/bazel-0.3.0-installer-linux-x86_64.sh
+    - chmod +x bazel-0.3.0-installer-linux-x86_64.sh
+    - ./bazel-0.3.0-installer-linux-x86_64.sh
     - sudo apt-get install google-chrome-stable
     - sudo apt-get install bazel
 
