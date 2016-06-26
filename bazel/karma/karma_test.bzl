@@ -1,38 +1,42 @@
 def _karma_test_impl(ctx):
-  config_template = ctx.file._config_template
-  deps = ctx.files.deps
-  exec_output = ctx.outputs.executable
-  karma_bin = ctx.executable._karma_bin
-
   target_name = str(ctx).split(':')[-1]
   config_file = ctx.new_file('%s_karma.config.js' % target_name)
+
+  path_to_root = '/'.join(['..' for part in ctx.build_file_path.split('/')[:-1]])
+
+  file_configs = []
+  # deps must all come before the srcs
+  for f in ctx.files.deps + ctx.files.srcs:
+    file_configs.append('{pattern: "%s", included: true}' % (path_to_root + '/' + f.short_path))
 
   ctx.template_action(
       output = config_file,
       substitutions = {
-        '$files$': '{pattern: "*.js", included: true}',
+        '$files$': ',\n'.join(file_configs),
         '$single_run$': 'true',
       },
-      template = config_template,
+      template = ctx.file._config_template,
   )
 
   ctx.file_action(
       output = ctx.outputs.executable,
-      content = '%s start %s' % (karma_bin.path, config_file.short_path)
+      content = '%s start %s' % (ctx.executable._karma_bin.path, config_file.short_path)
   )
 
   runfiles = ctx.runfiles(
-      files = [karma_bin, config_file] + deps
+      files = [ctx.executable._karma_bin, config_file] + ctx.files.srcs + ctx.files.deps
   )
   return struct(runfiles = runfiles)
 
 
 karma_test = rule(
     attrs = {
-      "deps": attr.label_list(
+      "srcs": attr.label_list(
           allow_files = FileType([".js"]),
           mandatory = True,
           non_empty = True),
+      "deps": attr.label_list(
+          allow_files = FileType([".js"])),
       "_config_template": attr.label(
           default = Label("//bazel/karma:config_template"),
           single_file = True),

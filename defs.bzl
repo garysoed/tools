@@ -2,7 +2,7 @@ load("//bazel/karma:defs.bzl", "karma_run", "karma_test")
 load("//bazel/ts:defs.bzl", "ts_binary", "ts_library")
 load("//bazel/webpack:defs.bzl", "webpack_binary")
 
-def gs_tools():
+def gs_tools(test_deps = []):
   """Generic bazel target for all packages in gs-tools.
 
   Generates some default targets for gs-tools.
@@ -74,13 +74,15 @@ def gs_tools():
 
     karma_test(
         name = test_src_name,
-        deps = [test_src_pack_label],
+        srcs = [test_src_pack_label],
+        deps = test_deps,
         size = 'small',
     )
 
     karma_run(
         name = '%s_run' % test_src_name,
-        deps = [test_src_pack_label]
+        srcs = [test_src_pack_label],
+        deps = test_deps,
     )
 
     test_src_pack_labels.append(test_src_pack_label)
@@ -88,7 +90,8 @@ def gs_tools():
 
   karma_run(
       name = 'test_run',
-      deps = test_src_pack_labels,
+      srcs = test_src_pack_labels,
+      deps = test_deps,
   )
 
   native.test_suite(

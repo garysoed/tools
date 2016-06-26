@@ -5,11 +5,11 @@ load("//bazel/ts:defs.bzl", "ts_library")
 
 ts_library(
     name = "declarations",
-    srcs = [
+    srcs = glob(['*.d.ts']) + [
       "@typescript//:es6",
-      "gs-tools.d.ts"
     ],
     deps = [
-      "//declarations/jasmine"
+      "//declarations/grecaptcha",
+      "//declarations/jasmine",
     ]
 )
