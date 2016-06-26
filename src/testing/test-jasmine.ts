@@ -31,7 +31,7 @@ const TestSetup = {
    * Runs the code in jasmine's `beforeEach` logic.
    */
   beforeEach(): void {
-    jasmine['CallTracker'].prototype.firstArgsMatching = function() {
+    jasmine['CallTracker'].prototype.firstArgsMatching = function(): any {
       let matchingArgs = arguments;
       let allArgs = this.allArgs();
       for (let j = 0; j < allArgs.length; j++) {

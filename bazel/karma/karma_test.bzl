@@ -1,26 +1,26 @@
 def _karma_test_impl(ctx):
-  target_name = str(ctx).split(':')[-1]
-  config_file = ctx.new_file('%s_karma.config.js' % target_name)
+  target_name = str(ctx).split(":")[-1]
+  config_file = ctx.new_file("%s_karma.config.js" % target_name)
 
-  path_to_root = '/'.join(['..' for part in ctx.build_file_path.split('/')[:-1]])
+  path_to_root = "/".join([".." for part in ctx.build_file_path.split("/")[:-1]])
 
   file_configs = []
   # deps must all come before the srcs
   for f in ctx.files.deps + ctx.files.srcs:
-    file_configs.append('{pattern: "%s", included: true}' % (path_to_root + '/' + f.short_path))
+    file_configs.append("{pattern: '%s', included: true}" % (path_to_root + "/" + f.short_path))
 
   ctx.template_action(
       output = config_file,
       substitutions = {
-        '$files$': ',\n'.join(file_configs),
-        '$single_run$': 'true',
+        "$files$": ",\n".join(file_configs),
+        "$single_run$": "true",
       },
       template = ctx.file._config_template,
   )
 
   ctx.file_action(
       output = ctx.outputs.executable,
-      content = '%s start %s' % (ctx.executable._karma_bin.path, config_file.short_path)
+      content = "%s start %s" % (ctx.executable._karma_bin.path, config_file.short_path)
   )
 
   runfiles = ctx.runfiles(

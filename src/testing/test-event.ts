@@ -54,6 +54,6 @@ const TestSetup = {
   beforeEach(): void {
     // Noop
   },
-}
+};
 
 export default TestSetup;

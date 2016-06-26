@@ -26,3 +26,8 @@ test_suite(
 
     ]
 )
+
+filegroup(
+    name = "tslint_config",
+    srcs = ["tslint.json"]
+)
