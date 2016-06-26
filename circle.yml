@@ -1,9 +1,10 @@
 dependencies:
   pre:
-    - sudo add-apt-repository ppa:webupd8team/java
+    - sudo update-alternatives --set java /usr/lib/jvm/jdk1.8.0/bin/java
+    - sudo update-alternatives --set javac /usr/lib/jvm/java-8-openjdk-amd64/bin/javac
+    - echo 'export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64' >> ~/.circlerc
     - sudo apt-get update
     - sudo apt-get install google-chrome-stable
-    - sudo apt-get install oracle-java8-installer
     - echo "deb http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
     - curl https://storage.googleapis.com/bazel-apt/doc/apt-key.pub.gpg | sudo apt-key add -
     - sudo apt-get update && sudo apt-get install bazel
