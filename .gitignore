@@ -4,6 +4,7 @@ bazel-genfiles
 bazel-gs-tools
 bazel-out
 bazel-testlogs
+npm-debug.log
 bin/
 bower_components/
 doc/
