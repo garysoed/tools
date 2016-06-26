@@ -9,7 +9,6 @@ dependencies:
     - chmod +x bazel-0.3.0-installer-linux-x86_64.sh
     - ./bazel-0.3.0-installer-linux-x86_64.sh --user
     - sudo apt-get install google-chrome-stable
-    - sudo apt-get install bazel
 
 test:
   override:
