@@ -1,3 +1,5 @@
+workspace(name = "gs_tools")
+
 new_local_repository(
     name = "karma",
     path = "./node_modules/karma",
