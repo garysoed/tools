@@ -1,5 +1,14 @@
 package(default_visibility = ["//:internal"])
 
+load("//bazel/webc:defs.bzl", "webc_gen_template")
+
+webc_gen_template(
+    name = "template",
+    css = "css.css",
+    template = "html.html",
+    key = "key",
+)
+
 package_group(
     name = "internal",
     packages = ["//..."]

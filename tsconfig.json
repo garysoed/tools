@@ -155,6 +155,7 @@
         "src/valid/validations-factory_test.ts",
         "src/valid/validations-factory.ts",
         "src/webc/base-element.ts",
+        "src/webc/custom-element_test.ts",
         "src/webc/custom-element.ts",
         "src/webc/element-config.ts",
         "src/webc/element-registrar_test.ts",
