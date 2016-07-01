@@ -5,7 +5,7 @@ import {Validate} from './valid/validate';
  *
  * @TODO Turn this into Fluent
  */
-class Jsons {
+export class Jsons {
   /**
    * Recursively clones the given JSON.
    *
@@ -76,5 +76,3 @@ class Jsons {
     }
   }
 };
-
-export default Jsons;

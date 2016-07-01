@@ -160,6 +160,8 @@
         "src/webc/element-config.ts",
         "src/webc/element-registrar_test.ts",
         "src/webc/element-registrar.ts",
+        "src/webc/templates_test.ts",
+        "src/webc/templates.ts",
         "node_modules/typescript/lib/lib.es6.d.ts"
     ],
     "atom": {

@@ -1,7 +1,7 @@
 import TestBase from './test-base';
 TestBase.setup();
 
-import Jsons from './jsons';
+import {Jsons} from './jsons';
 
 describe('Jsons', () => {
   describe('deepClone', () => {

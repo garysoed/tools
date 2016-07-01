@@ -90,19 +90,30 @@ def gs_tools(test_deps = []):
     test_src_pack_labels.append(test_src_pack_label)
     test_targets.append(test_src_name);
 
-  karma_run(
-      name = "test_run",
-      srcs = test_src_pack_labels,
-      deps = test_deps,
-  )
-
   tslint_test(
       name = "lint",
       srcs = native.glob(["*.ts"]),
       config = "//:tslint_config"
   )
 
+  tests = [":lint"]
+  if len(test_src_pack_labels) > 0:
+    karma_run(
+        name = "test_run",
+        srcs = test_src_pack_labels,
+        deps = test_deps,
+    )
+
+    karma_test(
+        name = "all_test",
+        srcs = test_src_pack_labels,
+        deps = test_deps,
+        size = "small"
+    )
+
+    tests.append(":all_test")
+
   native.test_suite(
       name = "test",
-      tests = test_targets + [":lint"]
+      tests = tests
   )
