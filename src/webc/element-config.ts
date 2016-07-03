@@ -6,11 +6,10 @@ import {BaseElement} from './base-element';
  * to the DOM.
  */
 export class ElementConfig {
-  private cssUrl_: string;
   private provider_: () => BaseElement;
   private dependencies_: ElementConfig[];
   private name_: string;
-  private templateUrl_: string;
+  private templateKey_: string;
 
   /**
    * @hidden
@@ -18,21 +17,12 @@ export class ElementConfig {
   constructor(
       provider: () => BaseElement,
       name: string,
-      templateUrl: string,
-      dependencies: ElementConfig[] = [],
-      cssUrl: string = null) {
+      templateKey: string,
+      dependencies: ElementConfig[] = []) {
     this.provider_ = provider;
     this.name_ = name;
-    this.templateUrl_ = templateUrl;
+    this.templateKey_ = templateKey;
     this.dependencies_ = dependencies;
-    this.cssUrl_ = cssUrl;
-  }
-
-  /**
-   * URL to load the CSS file from. This will be added as a `<style>` tag in the shadow DOM.
-   */
-  get cssUrl(): string {
-    return this.cssUrl_;
   }
 
   /**
@@ -58,16 +48,16 @@ export class ElementConfig {
   }
 
   /**
-   * URL to load the HTML shadow DOM content of the custom element.
+   * Key to load the template from [Templates]
    */
-  get templateUrl(): string {
-    return this.templateUrl_;
+  get templateKey(): string {
+    return this.templateKey_;
   }
 
   /**
    * @param provider Function that returns a new instance of the custom element.
    * @param name Name of the custom element. This is used as the tag name.
-   * @param templateUrl URL to load the HTML shadow DOM content of the custom element.
+   * @param templateKey Key to load the template from [Templates].
    * @param dependencies Array of dependant element configurations. These dependencies will be
    *    registered before this configuration is registered.
    * @param cssUrl URL to load the CSS file from. This will be added as a `<style>` tag in the
@@ -77,14 +67,12 @@ export class ElementConfig {
   public static newInstance(
       provider: () => BaseElement,
       name: string,
-      templateUrl: string,
-      dependencies: ElementConfig[] = [],
-      cssUrl: string = null): ElementConfig {
+      templateKey: string,
+      dependencies: ElementConfig[] = []): ElementConfig {
     return new ElementConfig(
         provider,
         name,
-        templateUrl,
-        dependencies,
-        cssUrl);
+        templateKey,
+        dependencies);
   }
 }

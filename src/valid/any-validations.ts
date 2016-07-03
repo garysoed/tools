@@ -35,4 +35,13 @@ export class AnyValidations<V> extends BaseValidations<V> {
   beEqualTo(other: any): ValidationResult<any> {
     return this.resolve(this.anyValue_ === other, `be equal to ${other}`);
   }
+
+  /**
+   * Checks that the value is equal to null.
+   * 
+   * @return The validation result.
+   */
+  beNull(): ValidationResult<any> {
+    return this.resolve(this.anyValue_ === null, `be null`);
+  }
 }

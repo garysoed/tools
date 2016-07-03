@@ -32,7 +32,6 @@ test_suite(
       "//src/ui:test",
       "//src/valid:test",
       "//src/webc:test",
-
     ]
 )
 

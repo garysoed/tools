@@ -2,9 +2,9 @@ import BaseDisposable from '../dispose/base-disposable';
 import {BaseElement} from './base-element';
 import {Checks} from '../checks';
 import {ElementConfig} from './element-config';
-import Http from '../net/http';
 import Log from '../log';
 import {Validate} from '../valid/validate';
+import {Templates} from './templates';
 
 /**
  * @hidden
@@ -76,32 +76,21 @@ export class ElementRegistrar extends BaseDisposable {
           return this.register(dependency);
         }))
         .then(() => {
-          let promises = [Http.get(config.templateUrl).send()];
-          if (config.cssUrl) {
-            promises.push(Http.get(config.cssUrl).send());
-          }
-          return Promise.all(promises);
-        })
-        .then(
-            (results: any[]) => {
-              let [content, css] = results;
+          let template = Templates.getTemplate(config.templateKey);
+          Validate.any(template).toNot.beNull()
+              .orThrows(`No templates found for key ${config.templateKey}`)
+              .assertValid();
 
-              if (css !== undefined) {
-                content = `<style>${css}</style>\n${content}`;
-              }
+          this.xtag_.register(
+              config.name,
+              {lifecycle: this.getLifecycleConfig_(config, template)});
 
-              this.xtag_.register(
-                  config.name,
-                  {
-                    lifecycle: this.getLifecycleConfig_(config, content),
-                  });
-
-              this.registeredConfigs_.add(config);
-              Log.info(LOG, `Registered: ${config.name}`);
-            },
-            (error: string) => {
-              Log.error(LOG, `Failed to register ${config.name}. Error: ${error}`);
-            });
+          this.registeredConfigs_.add(config);
+          Log.info(LOG, `Registered: ${config.name}`);
+        },
+        (error: string) => {
+          Log.error(LOG, `Failed to register ${config.name}. Error: ${error}`);
+        });
   }
 
   /**

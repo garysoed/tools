@@ -9,13 +9,6 @@ const __CONFIG = Symbol('config');
  */
 type IElementConfig = {
   /**
-   * URL of the CSS file, if any.
-   *
-   * The content of the CSS file will be appended to the template in a `<style>` element.
-   */
-  cssUrl?: string,
-
-  /**
    * Element constructor of the dependencies.
    */
   dependencies?: gs.ICtor<any>[],
@@ -26,9 +19,9 @@ type IElementConfig = {
   tag: string,
 
   /**
-   * URL to load the element template.
+   * Key of template to load from [Templates].
    */
-  templateUrl: string,
+  templateKey: string,
 };
 
 
@@ -104,9 +97,9 @@ export const CustomElement: IElement = <any> function(config: IElementConfig): C
           'hasTagName': Validate.string(config.tag)
               .toNot.beEmpty()
               .orThrows(`Configuration for ${ctor.name} should have a non empty tag name`),
-          'hasTemplateUrl': Validate.string(config.templateUrl)
+          'hasTemplateKey': Validate.string(config.templateKey)
               .toNot.beEmpty()
-              .orThrows(`Configuration for ${ctor.name} should have a non empty template URL`),
+              .orThrows(`Configuration for ${ctor.name} should have a non empty template key`),
         })
         .to.allBeValid()
         .assertValid();

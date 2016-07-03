@@ -4,9 +4,9 @@ TestBase.setup();
 import {BaseElement} from './base-element';
 import {ElementConfig} from './element-config';
 import {ElementRegistrar} from './element-registrar';
-import Http from '../net/http';
 import Log from '../log';
 import {Mocks} from '../mock/mocks';
+import {Templates} from './templates';
 import TestDispose from '../testing/test-dispose';
 
 
@@ -99,9 +99,8 @@ describe('webc.ElementRegistrar', () => {
   describe('register', () => {
     it('should return promise that registers the element correctly', (done: any) => {
       let mockDependency = Mocks.object('Dependency');
-      let cssUrl = 'cssUrl';
       let name = 'name';
-      let templateUrl = 'templateUrl';
+      let templateKey = 'templateKey';
 
       let originalRegister = registrar.register.bind(registrar);
       spyOn(registrar, 'register').and.callFake((config: ElementConfig) => {
@@ -114,30 +113,13 @@ describe('webc.ElementRegistrar', () => {
       });
 
       let mockConfig = {
-        cssUrl: cssUrl,
         dependencies: [mockDependency],
         name: name,
-        templateUrl: templateUrl,
+        templateKey: templateKey,
       };
 
       let templateContent = 'templateContent';
-      let mockTemplateRequest = jasmine.createSpyObj('TemplateRequest', ['send']);
-      mockTemplateRequest.send.and.returnValue(Promise.resolve(templateContent));
-
-      let cssContent = 'cssContent';
-      let mockCssRequest = jasmine.createSpyObj('CssRequest', ['send']);
-      mockCssRequest.send.and.returnValue(Promise.resolve(cssContent));
-
-      spyOn(Http, 'get').and.callFake((url: string) => {
-        switch (url) {
-          case templateUrl:
-            return mockTemplateRequest;
-          case cssUrl:
-            return mockCssRequest;
-          default:
-            return null;
-        }
-      });
+      spyOn(Templates, 'getTemplate').and.returnValue(templateContent);
 
       let mockLifecycleConfig = Mocks.object('LifecycleConfig');
       spyOn(registrar, 'getLifecycleConfig_').and.returnValue(mockLifecycleConfig);
@@ -149,74 +131,35 @@ describe('webc.ElementRegistrar', () => {
                 {
                   lifecycle: mockLifecycleConfig,
                 });
-            expect(registrar['getLifecycleConfig_']).toHaveBeenCalledWith(
-                mockConfig,
-                `<style>${cssContent}</style>\n${templateContent}`);
+            expect(registrar['getLifecycleConfig_'])
+                .toHaveBeenCalledWith(mockConfig, templateContent);
 
             expect(registrar['registeredConfigs_'].has(mockConfig)).toBe(true);
             expect(registrar.register).toHaveBeenCalledWith(mockDependency);
+
+            expect(Templates.getTemplate).toHaveBeenCalledWith(templateKey);
             done();
           }, done.fail);
     });
 
-    it('should log error if the template URL failed to load', (done: any) => {
-      let error = 'error';
-
-      let mockTemplateRequest = jasmine.createSpyObj('TemplateRequest', ['send']);
-      mockTemplateRequest.send.and.returnValue(Promise.resolve('templateContent'));
-
-      spyOn(Http, 'get').and.returnValue(mockTemplateRequest);
-      mockTemplateRequest.send.and.returnValue(Promise.reject(error));
-
+    it('should log error if the template key does not exist', (done: any) => {
       spyOn(Log, 'error');
+      spyOn(Templates, 'getTemplate').and.returnValue(null);
 
-      let mockConfig = {
-        dependencies: [],
-        templateUrl: 'templateUrl',
-      };
-
-      registrar.register(mockConfig)
-          .then(() => {
-            expect(Log.error).toHaveBeenCalledWith(
-                jasmine.any(Log),
-                jasmine.stringMatching(/Failed to register/));
+      registrar.register({dependencies: [], name: 'name', templateKey: 'templateKey'})
+          .then(done.fail, (error: Error) => {
+            expect(error.message)
+                .toEqual(jasmine.stringMatching(/No templates found for key/));
             done();
-          }, done.fail);
-    });
-
-    it('should handle the case with no CSS URLs', (done: any) => {
-      let templateContent = 'templateContent';
-      let mockTemplateRequest = jasmine.createSpyObj('TemplateRequest', ['send']);
-      mockTemplateRequest.send.and.returnValue(Promise.resolve(templateContent));
-
-      spyOn(Http, 'get').and.returnValue(mockTemplateRequest);
-
-      let mockLifecycleConfig = Mocks.object('LifecycleConfig');
-      spyOn(registrar, 'getLifecycleConfig_').and.returnValue(mockLifecycleConfig);
-
-      let mockConfig = {
-        dependencies: [],
-        name: 'name',
-        templateUrl: 'templateUrl',
-      };
-
-      registrar.register(mockConfig)
-          .then(() => {
-            expect(registrar['getLifecycleConfig_'])
-                .toHaveBeenCalledWith(mockConfig, templateContent);
-            done();
-          }, done.fail);
+          });
     });
 
     it('should be noop if the config has been registered', (done: any) => {
       let mockConfig = {};
       registrar['registeredConfigs_'].add(mockConfig);
 
-      spyOn(Http, 'get');
-
       registrar.register(mockConfig)
           .then(() => {
-            expect(Http.get).not.toHaveBeenCalled();
             expect(mockXtag.register).not.toHaveBeenCalled();
             done();
           }, done.fail);

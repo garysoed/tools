@@ -17,7 +17,7 @@ describe('webc.CustomElement', () => {
   it('should bind the constructor correctly', () => {
     class TestElement extends BaseElement { }
 
-    let config = {tag: 'tag', templateUrl: 'templateUrl'};
+    let config = {tag: 'tag', templateKey: 'templateKey'};
 
     CustomElement(config)(TestElement);
     expect(CustomElement.getConfig(TestElement)).toEqual(config);
@@ -27,7 +27,7 @@ describe('webc.CustomElement', () => {
     class TestElement { }
 
     expect(() => {
-      CustomElement({tag: 'tag', templateUrl: 'templateUrl'})(TestElement);
+      CustomElement({tag: 'tag', templateKey: 'templateKey'})(TestElement);
     }).toThrowError(/extend BaseElement/);
   });
 
@@ -35,7 +35,7 @@ describe('webc.CustomElement', () => {
     class TestElement extends BaseElement { }
 
     expect(() => {
-      CustomElement({tag: '', templateUrl: 'templateUrl'})(TestElement);
+      CustomElement({tag: '', templateKey: 'templateKey'})(TestElement);
     }).toThrowError(/non empty tag name/);
   });
 
@@ -43,7 +43,7 @@ describe('webc.CustomElement', () => {
     class TestElement extends BaseElement { }
 
     expect(() => {
-      CustomElement({tag: 'tag', templateUrl: ''})(TestElement);
-    }).toThrowError(/non empty template URL/);
+      CustomElement({tag: 'tag', templateKey: ''})(TestElement);
+    }).toThrowError(/non empty template key/);
   });
 });
