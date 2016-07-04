@@ -2,7 +2,7 @@ import TestBase from '../test-base';
 TestBase.setup();
 
 import Inject from './a-inject';
-import Injector from './injector';
+import {Injector} from './injector';
 import {Mocks} from '../mock/mocks';
 import Reflect from '../reflect';
 

@@ -67,7 +67,7 @@ const INJECTOR_BIND_KEY_ = '$gsInjector';
  *
  * Any classes with `@Bind` are treated as singleton per instance of [[Injector]].
  */
-class Injector {
+export class Injector {
   private static BINDINGS_: Map<BindKey, Provider<any>> = new Map<BindKey, Provider<any>>();
 
   private instances_: Map<BindKey, any>;
@@ -207,5 +207,3 @@ class Injector {
     return new Injector();
   }
 }
-
-export default Injector;

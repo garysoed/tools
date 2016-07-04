@@ -59,6 +59,20 @@ describe('collection.Indexables', () => {
     });
   });
 
+  describe('equalsTo', () => {
+    it('should return true if the indexable has the same content as the array', () => {
+      expect(Indexables.of([1, 2, 3]).equalsTo([1, 2, 3])).toEqual(true);
+    });
+
+    it('should return false if the indexable has different content from the array', () => {
+      expect(Indexables.of([1, 2, 3]).equalsTo([2, 3, 1])).toEqual(false);
+    });
+
+    it('should return false if the indexable has less content than the array', () => {
+      expect(Indexables.of([]).equalsTo([1])).toEqual(false);
+    });
+  });
+
   describe('every', () => {
     it('should return true if the filter function returns true for every element', () => {
       let filterFn = jasmine.createSpy('FilterFn').and.returnValue(true);

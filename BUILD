@@ -26,6 +26,7 @@ test_suite(
       "//src/mock:test",
       "//src/net:test",
       "//src/ng:test",
+      "//src/pipeline:test",
       "//src/secure:test",
       "//src/testing:test",
       "//src/typescript:test",

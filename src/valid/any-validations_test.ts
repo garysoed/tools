@@ -67,4 +67,38 @@ describe('valid.AnyValidations', () => {
       expect(result.errorMessage).toEqual(jasmine.stringMatching(/to not be equal to 1/));
     });
   });
+
+  describe('to.exist', () => {
+    it('should pass if the value is not null or undefined', () => {
+      let result = Validate.any(1).to.exist();
+      expect(result.passes).toEqual(true);
+    });
+
+    it('should not pass if the value is null', () => {
+      let result = Validate.any(null).to.exist();
+      expect(result.passes).toEqual(false);
+    });
+
+    it('should not pass if the value is undefined', () => {
+      let result = Validate.any(undefined).to.exist();
+      expect(result.passes).toEqual(false);
+    });
+  });
+
+  describe('toNot.exist', () => {
+    it('should not pass if the value is not null or undefined', () => {
+      let result = Validate.any(1).toNot.exist();
+      expect(result.passes).toEqual(false);
+    });
+
+    it('should pass if the value is null', () => {
+      let result = Validate.any(null).toNot.exist();
+      expect(result.passes).toEqual(true);
+    });
+
+    it('should pass if the value is undefined', () => {
+      let result = Validate.any(undefined).toNot.exist();
+      expect(result.passes).toEqual(true);
+    });
+  });
 });

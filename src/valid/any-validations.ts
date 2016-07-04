@@ -19,7 +19,7 @@ export class AnyValidations<V> extends BaseValidations<V> {
 
   /**
    * Checks that the value is not undefined.
-   * 
+   *
    * @return The validation result.
    */
   beDefined(): ValidationResult<any> {
@@ -38,10 +38,19 @@ export class AnyValidations<V> extends BaseValidations<V> {
 
   /**
    * Checks that the value is equal to null.
-   * 
+   *
    * @return The validation result.
    */
   beNull(): ValidationResult<any> {
     return this.resolve(this.anyValue_ === null, `be null`);
+  }
+
+  /**
+   * Checks that the value is non null and not undefined.
+   *
+   * @return The validation result.
+   */
+  exist(): ValidationResult<any> {
+    return this.resolve(this.anyValue_ !== null && this.anyValue_ !== undefined, 'exist');
   }
 }

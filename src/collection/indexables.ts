@@ -33,6 +33,16 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
     return this.asIterable()[Symbol.iterator]();
   }
 
+  equalsTo(other: T[]): boolean {
+    if (this.data.length !== other.length) {
+      return false;
+    }
+
+    return this.every((value: T, index: number) => {
+      return value === other[index];
+    });
+  }
+
   every(fn: (value: T, index: number) => boolean): boolean {
     return this.data.every((value: T, index: number) => {
       return fn(value, index);

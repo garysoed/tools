@@ -1,12 +1,9 @@
 def _webc_gen_template(ctx):
   css_file = None
   for f in ctx.files.css:
-    print(f.path)
     if f.path[-4:] == ".css":
       css_file = f
 
-  print(css_file)
-  print(ctx.files._compile_template_bin)
   ctx.action(
       outputs = [ctx.outputs.js],
       command = "python %s %s %s %s %s" % (

@@ -145,7 +145,7 @@ export interface IFluentMappable<K, V> extends IFluentIterable<[K, V]> {
 
   /**
    * Checks if all the entries in the map passes the check function.
-   * 
+   *
    * @param checkFn Function that takes in the value and its corresponding key and returns true iff
    *    the entry should pass the check.
    * @return True iff all the entries passes the check function.
@@ -267,7 +267,7 @@ export interface IFluentMappable<K, V> extends IFluentIterable<[K, V]> {
 
   /**
    * Checks if some the entries in the map passes the check function.
-   * 
+   *
    * @param checkFn Function that takes in the value and its corresponding key and returns true iff
    *    the entry should pass the check.
    * @return True iff some of the entries passes the check function.
@@ -297,6 +297,14 @@ export interface IFluentIndexable<T> extends IFluentIterable<T> {
    * @return The indexable as an array.
    */
   asArray(): Array<T>;
+
+  /**
+   * Returns true if all elements in this indexable is `===` to the elements in the given array.
+   *
+   * @param other The array to compare the indexable to.
+   * @return True iff all elements in the indexable is `===` to the elements in the given array.
+   */
+  equalsTo(other: T[]): boolean;
 
   /**
    * Returns true iff every element in the indexable fulfills the given check function.
