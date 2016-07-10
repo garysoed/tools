@@ -43,7 +43,7 @@ export class ValidationResult<V> {
    * @param errorMessage The overriding error message.
    */
   orThrows(errorMessage: string): ValidationResult<V> {
-    let subbedErrorMessage = errorMessage.replace(/\${value}/g, this.value_);
+    let subbedErrorMessage = errorMessage.replace(/\${value}/g, JSON.stringify(this.value_));
     return new ValidationResult<V>(this.passes_, subbedErrorMessage, this.value_);
   }
 

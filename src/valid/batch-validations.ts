@@ -17,6 +17,9 @@ export class BatchValidations extends BaseValidations<{[key: string]: Validation
 
   private getMessage_(): string {
     let content = Records.of(this.batchValue_)
+        .filterEntry((result: ValidationResult<any>, key: string) => {
+          return !result.passes;
+        })
         .mapValue((value: ValidationResult<any>, key: string) => {
           return value.errorMessage;
         })

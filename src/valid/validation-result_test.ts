@@ -50,7 +50,7 @@ describe('valid.ValidationResult', () => {
       let result = new ValidationResult(false, 'oldErrorMessage', 'value');
       let newResult = result.orThrows('value: ${value}');
 
-      expect(newResult.errorMessage).toEqual('value: value');
+      expect(newResult.errorMessage).toEqual('value: "value"');
       expect(newResult.passes).toEqual(false);
       expect(newResult.value).toEqual('value');
     });
