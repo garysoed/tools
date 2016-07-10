@@ -1,0 +1,155 @@
+import {Arrays} from '../collection/arrays';
+import {IColor} from './interface';
+import {Internal} from '../pipeline/internal';
+import {Graph} from '../pipeline/graph';
+import {Pipe} from '../pipeline/pipe';
+import {Validate} from '../valid/validate';
+
+
+export class HslColor implements IColor {
+  private hue_: number;
+  private saturation_: number;
+  private lightness_: number;
+
+  constructor(hue: number, saturation: number, lightness: number) {
+    this.hue_ = hue;
+    this.saturation_ = saturation;
+    this.lightness_ = lightness;
+  }
+
+  @Pipe()
+  private pipeChroma_(
+      @Internal('lightness') lightness: number,
+      @Internal('saturation') saturation: number): number {
+    return (1 - Math.abs(2 * lightness - 1)) * saturation;
+  }
+
+  @Pipe()
+  private pipeLuminance_(
+      @Internal('red') red: number,
+      @Internal('green') green: number,
+      @Internal('blue') blue: number): number {
+    let [computedRed, computedGreen, computedBlue] = Arrays.of([red, green, blue])
+        .map((value: number) => {
+          let normalized = value / 255;
+          return normalized <= 0.03928
+              ? normalized / 12.92
+              : Math.pow((normalized + 0.055) / 1.055, 2.4);
+        })
+        .asArray();
+    return 0.2126 * computedRed + 0.7152 * computedGreen + 0.0722 * computedBlue;
+  }
+
+  @Pipe()
+  private pipeRgb_(
+      @Internal('chroma') chroma: number,
+      @Internal('hue') hue: number,
+      @Internal('lightness') lightness: number): [number, number, number] {
+    let h1 = hue / 60;
+    let x = chroma * (1 - Math.abs((h1 % 2) - 1));
+    let r1;
+    let g1;
+    let b1;
+
+    if (h1 < 1) {
+      [r1, g1, b1] = [chroma, x, 0];
+    } else if (h1 < 2) {
+      [r1, g1, b1] = [x, chroma, 0];
+    } else if (h1 < 3) {
+      [r1, g1, b1] = [0, chroma, x];
+    } else if (h1 < 4) {
+      [r1, g1, b1] = [0, x, chroma];
+    } else if (h1 < 5) {
+      [r1, g1, b1] = [x, 0, chroma];
+    } else {
+      [r1, g1, b1] = [chroma, 0, x];
+    }
+
+    let min = lightness - chroma / 2;
+    let [r, g, b] = Arrays.of([r1, g1, b1])
+        .map((value: number) => {
+          return Math.round((value + min) * 255);
+        })
+        .asArray();
+    return [r, g, b];
+  }
+
+  /**
+   * @override
+   */
+  @Pipe()
+  get blue(): number {
+    return Graph.run(this, 'pipeRgb_')[2];
+  }
+
+  /**
+   * @override
+   */
+  @Pipe()
+  get chroma(): number {
+    return Graph.run<number>(this, 'pipeChroma_');
+  }
+
+  /**
+   * @override
+   */
+  @Pipe()
+  get green(): number {
+    return Graph.run(this, 'pipeRgb_')[1];
+  }
+
+  /**
+   * @override
+   */
+  @Pipe()
+  get hue(): number {
+    return this.hue_;
+  }
+
+  /**
+   * @override
+   */
+  @Pipe()
+  get lightness(): number {
+    return this.lightness_;
+  }
+
+  /**
+   * @override
+   */
+  get luminance(): number {
+    return Graph.run<number>(this, 'pipeLuminance_');
+  }
+
+  /**
+   * @override
+   */
+  @Pipe()
+  get red(): number {
+    return Graph.run(this, 'pipeRgb_')[0];
+  }
+
+  /**
+   * @override
+   */
+  @Pipe()
+  get saturation(): number {
+    return this.saturation_;
+  }
+
+  /**
+   * Creates an instance of the class.
+   * @param hue The hue component of the color.
+   * @param saturation The saturation component of the color.
+   * @param lightness The lightness component of the color.
+   */
+  static newInstance(hue: number, saturation: number, lightness: number): HslColor {
+    Validate.batch({
+      'SATURATION_MAX': Validate.number(saturation).toNot.beGreaterThan(1),
+      'SATURATION_MIN': Validate.number(saturation).to.beGreaterThanOrEqualTo(0),
+      'LIGHTNESS_MAX': Validate.number(lightness).toNot.beGreaterThan(1),
+      'LIGHTNESS_MIN': Validate.number(lightness).to.beGreaterThanOrEqualTo(0),
+    }).to.allBeValid().assertValid();
+    return new HslColor(hue % 360, saturation, lightness);
+  }
+}

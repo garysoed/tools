@@ -3,10 +3,14 @@ load("//bazel/ts:defs.bzl", "ts_binary", "ts_library")
 load("//bazel/tslint:defs.bzl", "tslint_test")
 load("//bazel/webpack:defs.bzl", "webpack_binary")
 
-def gs_tools(test_deps = []):
+def gs_tools(deps = [], test_deps = []):
   """Generic bazel target for all packages in gs-tools.
 
   Generates some default targets for gs-tools.
+
+  Args:
+    deps: Array of `ts_library` targets that the source files in this package depend on.
+    test_deps: Array of `ts_library` targets that the tests in this package depend on.
 
   Generated targets:
     test: A `test_suite` containing all the tests in this directory.
@@ -38,7 +42,7 @@ def gs_tools(test_deps = []):
   ts_library(
       name = lib_name,
       srcs = native.glob(["*.ts"]),
-      deps = ["//declarations"]
+      deps = ["//declarations"] + deps
   )
 
   ts_binary(

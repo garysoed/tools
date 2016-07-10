@@ -2,31 +2,31 @@ import TestBase from '../test-base';
 TestBase.setup();
 
 import {BaseElement} from './base-element';
-import {ElementConfig} from './element-config';
+import {CustomElement} from './custom-element';
 import {ElementRegistrar} from './element-registrar';
-import Log from '../log';
+import {Log} from '../util/log';
 import {Mocks} from '../mock/mocks';
 import {Templates} from './templates';
 import TestDispose from '../testing/test-dispose';
 
 
 describe('webc.ElementRegistrar', () => {
+  let mockInjector;
   let mockXtag;
   let registrar;
 
   beforeEach(() => {
+    mockInjector = jasmine.createSpyObj('Injector', ['instantiate']);
     mockXtag = jasmine.createSpyObj('Xtag', ['register']);
-    registrar = new ElementRegistrar(mockXtag);
+    registrar = new ElementRegistrar(mockInjector, mockXtag);
     TestDispose.add(registrar);
   });
 
   describe('getLifecycleConfig_', () => {
     let mockProvider;
-    let mockConfig;
 
     beforeEach(() => {
       mockProvider = jasmine.createSpy('provider');
-      mockConfig = {provider: mockProvider};
     });
 
     it('should return config with correct attributeChanged handler', () => {
@@ -38,7 +38,7 @@ describe('webc.ElementRegistrar', () => {
 
       let runOnInstanceSpy = spyOn(ElementRegistrar, 'runOnInstance_');
 
-      registrar['getLifecycleConfig_'](mockConfig, 'content')
+      registrar['getLifecycleConfig_'](mockProvider, 'content')
           .attributeChanged.call(mockHTMLElement, attrName, oldValue, newValue);
 
       expect(ElementRegistrar['runOnInstance_'])
@@ -58,7 +58,7 @@ describe('webc.ElementRegistrar', () => {
 
       mockHTMLElement.createShadowRoot.and.returnValue(mockShadowRoot);
 
-      registrar['getLifecycleConfig_'](mockConfig, content).created.call(mockHTMLElement);
+      registrar['getLifecycleConfig_'](mockProvider, content).created.call(mockHTMLElement);
 
       expect(mockHTMLElement[ElementRegistrar['__instance']]).toEqual(mockElement);
       expect(mockElement.onCreated).toHaveBeenCalledWith(mockHTMLElement);
@@ -71,7 +71,7 @@ describe('webc.ElementRegistrar', () => {
 
       let runOnInstanceSpy = spyOn(ElementRegistrar, 'runOnInstance_');
 
-      registrar['getLifecycleConfig_'](mockConfig, 'content').inserted.call(mockHTMLElement);
+      registrar['getLifecycleConfig_'](mockProvider, 'content').inserted.call(mockHTMLElement);
 
       expect(ElementRegistrar['runOnInstance_'])
           .toHaveBeenCalledWith(mockHTMLElement, jasmine.any(Function));
@@ -86,7 +86,7 @@ describe('webc.ElementRegistrar', () => {
 
       let runOnInstanceSpy = spyOn(ElementRegistrar, 'runOnInstance_');
 
-      registrar['getLifecycleConfig_']('content').removed.call(mockHTMLElement);
+      registrar['getLifecycleConfig_'](mockProvider, 'content').removed.call(mockHTMLElement);
 
       expect(ElementRegistrar['runOnInstance_'])
           .toHaveBeenCalledWith(mockHTMLElement, jasmine.any(Function));
@@ -97,32 +97,42 @@ describe('webc.ElementRegistrar', () => {
   });
 
   describe('register', () => {
+    let ctor;
+
+    beforeEach(() => {
+      ctor = Mocks.object('ctor');
+    });
+
     it('should return promise that registers the element correctly', (done: any) => {
       let mockDependency = Mocks.object('Dependency');
       let name = 'name';
       let templateKey = 'templateKey';
 
       let originalRegister = registrar.register.bind(registrar);
-      spyOn(registrar, 'register').and.callFake((config: ElementConfig) => {
-        switch (config) {
+      spyOn(registrar, 'register').and.callFake((inputCtor: any) => {
+        switch (inputCtor) {
           case mockDependency:
             return Promise.resolve();
           default:
-            return originalRegister(config);
+            return originalRegister(ctor);
         }
       });
 
       let mockConfig = {
         dependencies: [mockDependency],
-        name: name,
+        tag: name,
         templateKey: templateKey,
       };
+      spyOn(CustomElement, 'getConfig').and.returnValue(mockConfig);
 
       let templateContent = 'templateContent';
       spyOn(Templates, 'getTemplate').and.returnValue(templateContent);
 
       let mockLifecycleConfig = Mocks.object('LifecycleConfig');
       spyOn(registrar, 'getLifecycleConfig_').and.returnValue(mockLifecycleConfig);
+
+      let instance = Mocks.object('instance');
+      mockInjector.instantiate.and.returnValue(instance);
 
       registrar.register(mockConfig)
           .then(() => {
@@ -131,10 +141,13 @@ describe('webc.ElementRegistrar', () => {
                 {
                   lifecycle: mockLifecycleConfig,
                 });
-            expect(registrar['getLifecycleConfig_'])
-                .toHaveBeenCalledWith(mockConfig, templateContent);
 
-            expect(registrar['registeredConfigs_'].has(mockConfig)).toBe(true);
+            expect(registrar['getLifecycleConfig_'])
+                .toHaveBeenCalledWith(jasmine.any(Function), templateContent);
+            expect(registrar['getLifecycleConfig_'].calls.argsFor(0)[0]()).toEqual(instance);
+            expect(mockInjector.instantiate).toHaveBeenCalledWith(ctor);
+
+            expect(registrar['registeredCtors_'].has(ctor)).toBe(true);
             expect(registrar.register).toHaveBeenCalledWith(mockDependency);
 
             expect(Templates.getTemplate).toHaveBeenCalledWith(templateKey);
@@ -146,7 +159,13 @@ describe('webc.ElementRegistrar', () => {
       spyOn(Log, 'error');
       spyOn(Templates, 'getTemplate').and.returnValue(null);
 
-      registrar.register({dependencies: [], name: 'name', templateKey: 'templateKey'})
+      spyOn(CustomElement, 'getConfig').and.returnValue({
+        dependencies: [],
+        tag: 'name',
+        templateKey: 'templateKey',
+      });
+
+      registrar.register(ctor)
           .then(done.fail, (error: Error) => {
             expect(error.message)
                 .toEqual(jasmine.stringMatching(/No templates found for key/));
@@ -155,10 +174,9 @@ describe('webc.ElementRegistrar', () => {
     });
 
     it('should be noop if the config has been registered', (done: any) => {
-      let mockConfig = {};
-      registrar['registeredConfigs_'].add(mockConfig);
+      registrar['registeredCtors_'].add(ctor);
 
-      registrar.register(mockConfig)
+      registrar.register(ctor)
           .then(() => {
             expect(mockXtag.register).not.toHaveBeenCalled();
             done();

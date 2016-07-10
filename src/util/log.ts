@@ -14,7 +14,7 @@
  * Log.error(LOG, 'Error message');
  * ```
  */
-class Log {
+export class Log {
   private static ENABLED_: boolean = true;
 
   private namespace_: string;
@@ -53,6 +53,16 @@ class Log {
   }
 
   /**
+   * Logs warning message.
+   *
+   * @param log The log object.
+   * @param message The message to log.
+   */
+  static warn(log: Log, message: string): void {
+    log.callIfEnabled_(console.warn.bind(console), message);
+  }
+
+  /**
    * Enables / disables logging.
    *
    * @param enabled True iff logging should be enabled.
@@ -61,5 +71,3 @@ class Log {
     Log.ENABLED_ = enabled;
   }
 }
-
-export default Log;

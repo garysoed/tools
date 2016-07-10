@@ -36,11 +36,15 @@ export class ValidationResult<V> {
 
   /**
    * Overrides the default error message with the given one.
-   * 
+   *
+   * The given error message may refer to the value being tested by using '${value}'. For example,
+   * `Validate.string('blah').toNot.beEmpty().orThrows('a ${value}')` will throw 'a blah'.
+   *
    * @param errorMessage The overriding error message.
    */
   orThrows(errorMessage: string): ValidationResult<V> {
-    return new ValidationResult<V>(this.passes_, errorMessage, this.value_);
+    let subbedErrorMessage = errorMessage.replace(/\${value}/g, this.value_);
+    return new ValidationResult<V>(this.passes_, subbedErrorMessage, this.value_);
   }
 
   /**

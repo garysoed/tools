@@ -1,8 +1,9 @@
 import BaseDisposable from '../dispose/base-disposable';
 import {BaseElement} from './base-element';
 import {Checks} from '../checks';
-import {ElementConfig} from './element-config';
-import Log from '../log';
+import {CustomElement} from './custom-element';
+import {Injector} from '../inject/injector';
+import {Log} from '../util/log';
 import {Validate} from '../valid/validate';
 import {Templates} from './templates';
 
@@ -18,19 +19,23 @@ const LOG = new Log('pb.component.ComponentConfig');
 export class ElementRegistrar extends BaseDisposable {
   private static __instance: symbol = Symbol('instance');
 
-  private registeredConfigs_: Set<ElementConfig>;
+  private injector_: Injector;
+  private registeredCtors_: Set<gs.ICtor<BaseElement>>;
   private xtag_: xtag.IInstance;
 
   /**
    * @hidden
    */
-  constructor(xtag: xtag.IInstance) {
+  constructor(injector: Injector, xtag: xtag.IInstance) {
     super();
-    this.registeredConfigs_ = new Set<ElementConfig>();
+    this.injector_ = injector;
+    this.registeredCtors_ = new Set<gs.ICtor<BaseElement>>();
     this.xtag_ = xtag;
   }
 
-  private getLifecycleConfig_(config: ElementConfig, content: string): xtag.ILifecycleConfig {
+  private getLifecycleConfig_(
+      elementProvider: () => BaseElement,
+      content: string): xtag.ILifecycleConfig {
     let addDisposable = this.addDisposable.bind(this);
     return {
       attributeChanged: function(attrName: string, oldValue: string, newValue: string): void {
@@ -39,7 +44,7 @@ export class ElementRegistrar extends BaseDisposable {
         });
       },
       created: function(): void {
-        let instance = config.provider();
+        let instance = elementProvider();
         addDisposable(instance);
 
         this[ElementRegistrar.__instance] = instance;
@@ -66,13 +71,16 @@ export class ElementRegistrar extends BaseDisposable {
    * @param config The configuration object to register.
    * @return Promise that will be resolved when the registration process is done.
    */
-  register(config: ElementConfig): Promise<void> {
-    if (this.registeredConfigs_.has(config)) {
+  register(ctor: gs.ICtor<BaseElement>): Promise<void> {
+    if (this.registeredCtors_.has(ctor)) {
       return Promise.resolve();
     }
 
+    let config = CustomElement.getConfig(ctor);
+    let dependencies = config.dependencies || [];
+
     return Promise
-        .all(config.dependencies.map((dependency: ElementConfig) => {
+        .all(dependencies.map((dependency: gs.ICtor<BaseElement>) => {
           return this.register(dependency);
         }))
         .then(() => {
@@ -81,15 +89,18 @@ export class ElementRegistrar extends BaseDisposable {
               .orThrows(`No templates found for key ${config.templateKey}`)
               .assertValid();
 
+          let provider = () => {
+            return this.injector_.instantiate(ctor);
+          };
           this.xtag_.register(
-              config.name,
-              {lifecycle: this.getLifecycleConfig_(config, template)});
+              config.tag,
+              {lifecycle: this.getLifecycleConfig_(provider, template)});
 
-          this.registeredConfigs_.add(config);
-          Log.info(LOG, `Registered: ${config.name}`);
+          this.registeredCtors_.add(ctor);
+          Log.info(LOG, `Registered: ${config.tag}`);
         },
         (error: string) => {
-          Log.error(LOG, `Failed to register ${config.name}. Error: ${error}`);
+          Log.error(LOG, `Failed to register ${config.tag}. Error: ${error}`);
         });
   }
 
@@ -111,11 +122,11 @@ export class ElementRegistrar extends BaseDisposable {
   /**
    * @return A new instance of the registrar.
    */
-  static newInstance(): ElementRegistrar {
+  static newInstance(injector: Injector): ElementRegistrar {
     Validate.any(window['xtag'])
         .to.beDefined()
         .orThrows(`Required x-tag library not found`)
         .assertValid();
-    return new ElementRegistrar(window['xtag']);
+    return new ElementRegistrar(injector, window['xtag']);
   }
 }

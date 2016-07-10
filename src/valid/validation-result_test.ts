@@ -45,5 +45,14 @@ describe('valid.ValidationResult', () => {
       expect(newResult.passes).toEqual(false);
       expect(newResult.value).toEqual('value');
     });
+
+    it('should substitute "${value}" with the value being tested', () => {
+      let result = new ValidationResult(false, 'oldErrorMessage', 'value');
+      let newResult = result.orThrows('value: ${value}');
+
+      expect(newResult.errorMessage).toEqual('value: value');
+      expect(newResult.passes).toEqual(false);
+      expect(newResult.value).toEqual('value');
+    });
   });
 });

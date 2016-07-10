@@ -31,7 +31,7 @@ export class BatchValidations extends BaseValidations<{[key: string]: Validation
 
   /**
    * Checks that all of the results in the batch are valid.
-   * 
+   *
    * @return The validation result.
    */
   allBeValid(): ValidationResult<{[key: string]: ValidationResult<any>}> {
@@ -44,8 +44,8 @@ export class BatchValidations extends BaseValidations<{[key: string]: Validation
 
   /**
    * Checks that some of the results in the batch is valid.
-   * 
-   * @return The validation result. 
+   *
+   * @return The validation result.
    */
   someBeValid(): ValidationResult<{[key: string]: ValidationResult<any>}> {
     return this.resolve(
@@ -53,5 +53,12 @@ export class BatchValidations extends BaseValidations<{[key: string]: Validation
           return result.passes;
         }),
         `some be valid: ${this.getMessage_()}`);
+  }
+
+  /**
+   * @override
+   */
+  get valueAsString(): string {
+    return 'Batch Validation';
   }
 }

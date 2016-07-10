@@ -12,7 +12,7 @@ const TEST_SETUP = new TestSetup([
 
 let initialized = false;
 
-export default {
+export const TestBase = {
   setup(): void {
     if (!initialized) {
       TEST_SETUP.setup();
@@ -20,3 +20,5 @@ export default {
     }
   },
 };
+
+export default TestBase;

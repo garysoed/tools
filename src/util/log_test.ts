@@ -1,10 +1,10 @@
-import TestBase from './test-base';
+import TestBase from '../test-base';
 TestBase.setup();
 
-import Log from './log';
+import {Log} from './log';
 
 
-describe('Log', () => {
+describe('util.Log', () => {
   beforeEach(() => {
     Log.setEnabled(true);
   });
@@ -66,6 +66,24 @@ describe('Log', () => {
 
       spy.calls.argsFor(0)[0](message);
       expect(console.info).toHaveBeenCalledWith(message);
+    });
+  });
+
+  describe('warn', () => {
+    it('should call console.warn', () => {
+      let message = 'message';
+
+      spyOn(console, 'warn');
+
+      let log = new Log('namespace');
+      let spy = spyOn(log, 'callIfEnabled_');
+
+      Log.warn(log, message);
+
+      expect(log['callIfEnabled_']).toHaveBeenCalledWith(jasmine.any(Function), message);
+
+      spy.calls.argsFor(0)[0](message);
+      expect(console.warn).toHaveBeenCalledWith(message);
     });
   });
 });
