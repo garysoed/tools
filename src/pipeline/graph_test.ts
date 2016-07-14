@@ -1,7 +1,7 @@
 import TestBase from '../test-base';
 TestBase.setup();
 
-import {Graph} from '/graph';
+import {Graph} from './graph';
 import {Mocks} from '../mock/mocks';
 import {PipeUtil} from './pipe-util';
 
