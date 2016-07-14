@@ -9,7 +9,10 @@ ts_library(
       "@typescript//:es6",
     ],
     deps = [
+      "//declarations/angularjs",
       "//declarations/grecaptcha",
       "//declarations/jasmine",
+      "//declarations/jasmine-ajax:jasmine_ajax",
+      "//declarations/jquery",
     ]
 )

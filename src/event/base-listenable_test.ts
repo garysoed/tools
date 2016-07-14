@@ -1,7 +1,6 @@
-import TestBase from '../test-base';
+import {TestBase} from '../test-base';
 TestBase.setup();
 
-import Asyncs from '../async/asyncs';
 import BaseListenable from './base-listenable';
 import {Mocks} from '../mock/mocks';
 import {TestDispose} from '../testing/test-dispose';
@@ -37,7 +36,6 @@ describe('event.BaseListenable', () => {
 
       listenable.dispatch(event, payload);
 
-      expect(Asyncs.run).toHaveBeenCalledWith(jasmine.any(Function));
       expect(mockCallback).toHaveBeenCalledWith(payload);
     });
 

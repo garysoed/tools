@@ -15,6 +15,7 @@ def _ts_binary_impl(ctx):
     '--module', 'commonjs',
     '--outDir', ctx.label.name,
     '--rootDir', '.',
+    '--noResolve',
     '--target', ctx.attr.ts_target,
     paths
   ])

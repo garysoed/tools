@@ -20,5 +20,3 @@ export const TestBase = {
     }
   },
 };
-
-export default TestBase;

@@ -1,6 +1,6 @@
 import {Arrays} from '../collection/arrays';
 import BaseDisposable from '../dispose/base-disposable';
-import {Checks} from '../checks';
+import {Checks} from '../util/checks';
 import DisposableFunction from '../dispose/disposable-function';
 import Doms from '../ui/doms';
 import {Iterables} from '../collection/iterables';

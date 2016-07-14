@@ -1,4 +1,4 @@
-import TestBase from '../test-base';
+import {TestBase} from '../test-base';
 TestBase.setup();
 
 import {Mocks} from '../mock/mocks';

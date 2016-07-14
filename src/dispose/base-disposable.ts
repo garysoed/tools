@@ -1,6 +1,3 @@
-import Cache from '../data/a-cache';
-
-
 /**
  * Contains undisposed objects.
  */
@@ -50,8 +47,11 @@ class BaseDisposable {
   /**
    * Dispose this object.
    */
-  @Cache()
   dispose(): void {
+    if (this.isDisposed_) {
+      return;
+    }
+
     this.disposeInternal();
     this.disposables_.forEach((disposable: BaseDisposable) => disposable.dispose());
 

@@ -1,4 +1,4 @@
-import {Checks} from '../checks';
+import {Checks} from '../util/checks';
 
 
 /**

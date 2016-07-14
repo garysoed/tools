@@ -1,4 +1,4 @@
-import TestBase from '../test-base';
+import {TestBase} from '../test-base';
 TestBase.setup();
 
 import BaseService from './base-service';

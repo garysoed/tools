@@ -1,6 +1,6 @@
 import BaseDisposable from '../dispose/base-disposable';
 import {BaseElement} from './base-element';
-import {Checks} from '../checks';
+import {Checks} from '../util/checks';
 import {CustomElement} from './custom-element';
 import {Injector} from '../inject/injector';
 import {Log} from '../util/log';
