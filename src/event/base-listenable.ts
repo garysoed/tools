@@ -2,6 +2,7 @@ import Asyncs from '../async/asyncs';
 import BaseDisposable from '../dispose/base-disposable';
 import DisposableFunction from '../dispose/disposable-function';
 
+
 /**
  * Base class for classes that can dispatch events.
  *
@@ -53,7 +54,7 @@ class BaseListenable<T> extends BaseDisposable {
     if (!this.callbacksMap_.has(eventType)) {
       this.callbacksMap_.set(eventType, []);
     }
-    let callbacks = this.callbacksMap_.get(eventType);
+    const callbacks = this.callbacksMap_.get(eventType);
     let index = callbacks.length;
     callbacks.push(callback);
     return new DisposableFunction(() => {

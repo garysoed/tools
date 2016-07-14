@@ -2,7 +2,7 @@ import TestBase from '../test-base';
 TestBase.setup();
 
 import DisposableFunction from './disposable-function';
-import TestDispose from '../testing/test-dispose';
+import {TestDispose} from '../testing/test-dispose';
 
 
 describe('dispose.DisposableFunction', () => {

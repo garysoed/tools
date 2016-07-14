@@ -7,7 +7,7 @@ import {ElementRegistrar} from './element-registrar';
 import {Log} from '../util/log';
 import {Mocks} from '../mock/mocks';
 import {Templates} from './templates';
-import TestDispose from '../testing/test-dispose';
+import {TestDispose} from '../testing/test-dispose';
 
 
 describe('webc.ElementRegistrar', () => {

@@ -31,7 +31,7 @@ export class Solve {
     let bestIndex = null;
     while (startIndex <= endIndex) {
       let guessIndex = Math.floor((startIndex + endIndex) / 2);
-      let result = fn(guessIndex) ;
+      let result = fn(values[guessIndex]) ;
 
       if (result) {
         if (bestIndex === null) {

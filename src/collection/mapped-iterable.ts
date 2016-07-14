@@ -19,9 +19,7 @@ export class MappedIterable<T, T2> implements Iterable<T2> {
     return {
       next(): IteratorResult<T2> {
         let result = iterator.next();
-        return result.done
-            ? {done: true}
-            : {done: false, value: mapFn(result.value)};
+        return {done: result.done, value: mapFn(result.value)};
       },
     };
   }

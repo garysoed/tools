@@ -22,7 +22,7 @@ export class FilteredIterable<T> implements Iterable<T> {
           result = iterator.next();
         }
 
-        return result.done ? {done: true} : {done: false, value: result.value};
+        return {done: result.done, value: result.value};
       },
     };
   }

@@ -57,7 +57,7 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
   }
 
   entries(): FluentNonIndexable<[K, V]> {
-    let entries = [];
+    let entries: [K, V][] = [];
     this.forEach((value: V, key: K) => {
       entries.push([key, value]);
     });
@@ -120,7 +120,7 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
   }
 
   keys(): FluentNonIndexable<K> {
-    let keys = [];
+    let keys: K[] = [];
     this.forEach((value: V, key: K) => {
       keys.push(key);
     });
@@ -167,7 +167,7 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
   }
 
   values(): FluentNonIndexable<V> {
-    let values = [];
+    let values: V[] = [];
     this.forEach((value: V, key: K) => {
       values.push(value);
     });

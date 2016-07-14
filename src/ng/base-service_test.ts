@@ -2,7 +2,7 @@ import TestBase from '../test-base';
 TestBase.setup();
 
 import BaseService from './base-service';
-import TestDispose from '../testing/test-dispose';
+import {TestDispose} from '../testing/test-dispose';
 
 
 describe('ng.BaseService', () => {

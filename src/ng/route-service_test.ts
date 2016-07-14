@@ -5,7 +5,7 @@ import Cache from '../data/a-cache';
 import FakeScope from './fake-scope';
 import {Mocks} from '../mock/mocks';
 import {RouteService} from './route-service';
-import TestDispose from '../testing/test-dispose';
+import {TestDispose} from '../testing/test-dispose';
 
 describe('ng.RouteService', () => {
   let mock$location;

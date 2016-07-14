@@ -6,7 +6,7 @@ import {EventType as ElementEventType} from '../event/listenable-element';
 import {Mocks} from '../mock/mocks';
 import PostMessageChannel, {Message, MessageType} from './post-message-channel';
 import Serializer from '../data/a-serializable';
-import TestDispose from '../testing/test-dispose';
+import {TestDispose} from '../testing/test-dispose';
 
 
 describe('ui.PostMessageChannel', () => {

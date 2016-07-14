@@ -3,7 +3,7 @@ TestBase.setup();
 
 import BaseComponent from './base-component';
 import FakeScope from './fake-scope';
-import TestDispose from '../testing/test-dispose';
+import {TestDispose} from '../testing/test-dispose';
 
 
 describe('ng.BaseComponent', () => {

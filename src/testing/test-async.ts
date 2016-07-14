@@ -6,7 +6,7 @@ import Asyncs from '../async/asyncs';
  *
  * This replaces `Asyncs.run` to run synchronously to make testing easier.
  */
-const TestSetup = {
+export const TestAsync = {
   /**
    * Runs the code in jasmine's `afterEach` logic.
    */
@@ -23,5 +23,3 @@ const TestSetup = {
     });
   },
 };
-
-export default TestSetup;

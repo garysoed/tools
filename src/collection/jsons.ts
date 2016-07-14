@@ -1,4 +1,4 @@
-import {Validate} from './valid/validate';
+import {Validate} from '../valid/validate';
 
 /**
  * Various utility methods to work with JSONs.

@@ -2,7 +2,7 @@ import TestBase from '../test-base';
 TestBase.setup();
 
 import Interval, { EventType as IntervalEventType } from './interval';
-import TestDispose from '../testing/test-dispose';
+import {TestDispose} from '../testing/test-dispose';
 
 
 describe('async.Interval', () => {

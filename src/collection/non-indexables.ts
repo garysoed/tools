@@ -38,7 +38,7 @@ export class FluentNonIndexable<T> extends BaseFluent<T[]> implements IFluentNon
   }
 
   filter(filterFn: (value: T) => boolean): FluentNonIndexable<T> {
-    let filteredData = [];
+    let filteredData: T[] = [];
     this.forEach((value: T) => {
       if (filterFn(value)) {
         filteredData.push(value);
@@ -75,7 +75,7 @@ export class FluentNonIndexable<T> extends BaseFluent<T[]> implements IFluentNon
   }
 
   map<T2>(fn: (value: T) => T2): FluentNonIndexable<T2> {
-    let newArray = [];
+    let newArray: T2[] = [];
     this.forEach((value: T) => {
       newArray.push(fn(value));
     });
@@ -83,7 +83,7 @@ export class FluentNonIndexable<T> extends BaseFluent<T[]> implements IFluentNon
   }
 
   removeAll(toRemove: Set<T>): FluentNonIndexable<T> {
-    let newData = [];
+    let newData: T[] = [];
     this.forEach((value: T) => {
       if (!toRemove.has(value)) {
         newData.push(value);
@@ -99,7 +99,7 @@ export class NonIndexables {
   }
 
   static fromIterable<T>(iterable: Iterable<T>): FluentNonIndexable<T> {
-    let data = [];
+    let data: T[] = [];
     Iterables.of(iterable)
         .iterate((value: T) => {
           data.push(value);

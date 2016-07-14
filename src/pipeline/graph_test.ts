@@ -1,8 +1,7 @@
 import TestBase from '../test-base';
 TestBase.setup();
 
-import {Graph} from './graph';
-import {Jsons} from '../jsons';
+import {Graph} from '/graph';
 import {Mocks} from '../mock/mocks';
 import {PipeUtil} from './pipe-util';
 
@@ -71,8 +70,7 @@ describe('pipeline.Graph', () => {
       let key = 'key';
       let externalArgs = Mocks.object('externalArgs');
       let prototype = Mocks.object('prototype');
-      let context = Mocks.object('context');
-      Jsons.setValue(context, 'constructor.prototype', prototype);
+      let context = {'constructor': {'prototype': prototype}};
 
       let argData = Mocks.object('argData');
       let runResult = Mocks.object('runResult');
@@ -91,9 +89,7 @@ describe('pipeline.Graph', () => {
     });
 
     it('should throw error if the node cannot be found', () => {
-      let context = Mocks.object('context');
-      Jsons.setValue(context, 'constructor.prototype', Mocks.object('prototype'));
-
+      let context = {'constructor': {'prototype': Mocks.object('prototype')}};
       spyOn(PipeUtil, 'getNode').and.returnValue(null);
 
       expect(() => {

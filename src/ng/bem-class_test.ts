@@ -4,7 +4,7 @@ TestBase.setup();
 import {Attributes} from '../ui/attributes';
 import {BemClassCtrl} from './bem-class';
 import FakeScope from '../ng/fake-scope';
-import TestDispose from '../testing/test-dispose';
+import {TestDispose} from '../testing/test-dispose';
 
 
 describe('ng.BemClassCtrl', () => {

@@ -4,7 +4,7 @@ import BaseDisposable, { TRACKED_DISPOSABLES, Flags } from '../dispose/base-disp
 /**
  * @hidden
  */
-const DISPOSABLES = [];
+const DISPOSABLES: BaseDisposable[] = [];
 
 
 /**
@@ -14,7 +14,7 @@ const DISPOSABLES = [];
  * need to be disposed manually (because they should be disposed through some flow not covered by
  * the test) can be disposed by using the [[add]] method.
  */
-const TestSetup = {
+export const TestDispose = {
   /**
    * Adds the given disposables to be disposed at the end of the test.
    * @param ...disposables Disposables to be disposed at the end of the test.
@@ -46,4 +46,3 @@ const TestSetup = {
   },
 };
 
-export default TestSetup;

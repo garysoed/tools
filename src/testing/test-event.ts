@@ -1,5 +1,5 @@
 import BaseListenable from '../event/base-listenable';
-import TestDispose from './test-dispose';
+import {TestDispose} from './test-dispose';
 
 /**
  * @hidden
@@ -10,7 +10,7 @@ const __calls = Symbol('calls');
 /**
  * @deprecated Use spyOn dispatchEvent.
  */
-const TestSetup = {
+export const TestEvent = {
   /**
    * @deprecated Use spyOn dispatchEvent.
    */
@@ -55,5 +55,3 @@ const TestSetup = {
     // Noop
   },
 };
-
-export default TestSetup;

@@ -1,10 +1,9 @@
-import {Jsons} from '../jsons';
 import {Validate} from '../valid/validate';
 
 
 /**
  * Registers templates.
- * 
+ *
  * Use this for making web components.
  */
 export class Templates {
@@ -32,5 +31,3 @@ export class Templates {
     Templates.templates_.set(key, templateStr);
   }
 }
-
-Jsons.setValue(window, 'gs.Templates', Templates);

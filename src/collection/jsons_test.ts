@@ -1,9 +1,9 @@
-import TestBase from './test-base';
+import TestBase from '../test-base';
 TestBase.setup();
 
 import {Jsons} from './jsons';
 
-describe('Jsons', () => {
+describe('collection.Jsons', () => {
   describe('deepClone', () => {
     it('should clone the given object', () => {
       let original = {

@@ -4,6 +4,7 @@ import {ValidationResult} from './validation-result';
 
 
 export class BatchValidations extends BaseValidations<{[key: string]: ValidationResult<any>}> {
+  private batchReversed_: boolean;
   private batchValue_: {[key: string]: ValidationResult<any>};
 
   /**
@@ -12,6 +13,7 @@ export class BatchValidations extends BaseValidations<{[key: string]: Validation
    */
   constructor(batchValue: {[key: string]: ValidationResult<any>}, reversed: boolean) {
     super(batchValue, reversed);
+    this.batchReversed_ = reversed;
     this.batchValue_ = batchValue;
   }
 
@@ -43,6 +45,22 @@ export class BatchValidations extends BaseValidations<{[key: string]: Validation
           return result.passes;
         }),
         `all be valid: ${this.getMessage_()}`);
+  }
+
+  /**
+   * @override
+   */
+  resolve(result: boolean, method: string): ValidationResult<any> {
+    let validationResult = super.resolve(result, method);
+    let newValue = Records.of(this.batchValue_)
+        .filterEntry((value: ValidationResult<any>, key: string) => {
+          return value.passes === this.batchReversed_;
+        })
+        .asRecord();
+    return new ValidationResult<any>(
+        validationResult.passes,
+        validationResult.errorMessage,
+        newValue);
   }
 
   /**

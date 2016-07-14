@@ -30,7 +30,7 @@ export class Maps {
    * @param array Array whose elements should be used as the map's values.
    */
   static fromArray<V>(array: V[]): FluentMappable<number, V> {
-    let entries = [];
+    let entries: [number, V][] = [];
     for (let i = 0; i < array.length; i++) {
       let element = array[i];
       if (element !== undefined) {
@@ -49,7 +49,7 @@ export class Maps {
    * @return Map wrapper object to do operations on.
    */
   static fromNumericalIndexed<V>(struct: { [index: number]: V }): FluentMappable<number, V> {
-    let entries = [];
+    let entries: [number, V][] = [];
     for (let key in struct) {
       entries.push([Number(key), struct[key]]);
     }
@@ -66,7 +66,7 @@ export class Maps {
    * @return Map wrapper object to do operations on.
    */
   static fromRecord<V>(record: { [key: string]: V }): FluentMappable<string, V> {
-    let entries = [];
+    let entries: [string, V][] = [];
     for (let key in record) {
       entries.push([key, record[key]]);
     }

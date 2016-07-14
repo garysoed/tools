@@ -1,7 +1,7 @@
-import TestAsync from './testing/test-async';
-import TestDispose from './testing/test-dispose';
-import TestEvent from './testing/test-event';
-import TestSetup from './testing/test-setup';
+import {TestAsync} from './testing/test-async';
+import {TestDispose} from './testing/test-dispose';
+import {TestEvent} from './testing/test-event';
+import {TestSetup} from './testing/test-setup';
 
 
 const TEST_SETUP = new TestSetup([

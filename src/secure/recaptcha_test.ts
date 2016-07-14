@@ -3,7 +3,7 @@ TestBase.setup();
 
 import {Mocks} from '../mock/mocks';
 import Recaptcha, {EventType} from './recaptcha';
-import TestDispose from '../testing/test-dispose';
+import {TestDispose} from '../testing/test-dispose';
 
 
 describe('secure.Recaptcha', () => {

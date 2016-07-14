@@ -48,7 +48,7 @@ import ITestSetup from './i-test-setup';
  * });
  * ```
  */
-class TestSetup {
+export class TestSetup {
   private setups_: ITestSetup[];
 
   constructor(setups: ITestSetup[]) {
@@ -69,5 +69,3 @@ class TestSetup {
     });
   }
 };
-
-export default TestSetup;

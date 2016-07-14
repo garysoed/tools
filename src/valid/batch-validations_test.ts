@@ -9,7 +9,7 @@ import {Validate} from './validate';
 describe('valid.BatchValidations', () => {
   /**
    * Creates a mock validation result.
-   * 
+   *
    * @param passes True iff the result passes.
    * @return The mock validation result.
    */
@@ -20,7 +20,7 @@ describe('valid.BatchValidations', () => {
   }
 
   describe('getMessage_', () => {
-    it('should returnthe correct message', () => {
+    it('should return the correct message', () => {
       let message1 = 'message1';
       let message2 = 'message2';
       let result1 = createMockValidationResult(false);
@@ -43,6 +43,7 @@ describe('valid.BatchValidations', () => {
           })
           .to.allBeValid();
       expect(result.passes).toEqual(true);
+      expect(result.value).toEqual({});
     });
 
     it('should not pass if one of the results in the batch fails', () => {
@@ -58,6 +59,7 @@ describe('valid.BatchValidations', () => {
       expect(result.passes).toEqual(false);
       expect(result.errorMessage)
           .toEqual(jasmine.stringMatching(new RegExp(`all be valid: ${errorMessage}`)));
+      expect(result.value).toEqual({'b': jasmine.any(Object)});
     });
   });
 
@@ -75,6 +77,10 @@ describe('valid.BatchValidations', () => {
       expect(result.passes).toEqual(false);
       expect(result.errorMessage)
           .toEqual(jasmine.stringMatching(new RegExp(`not all be valid: ${errorMessage}`)));
+      expect(result.value).toEqual({
+        'a': jasmine.any(Object),
+        'b': jasmine.any(Object),
+      });
     });
 
     it('should pass if one of the results fails', () => {
@@ -85,6 +91,7 @@ describe('valid.BatchValidations', () => {
           })
           .toNot.allBeValid();
       expect(result.passes).toEqual(true);
+      expect(result.value).toEqual({'a': jasmine.any(Object)});
     });
   });
 
@@ -97,6 +104,7 @@ describe('valid.BatchValidations', () => {
           })
           .to.someBeValid();
       expect(result.passes).toEqual(true);
+      expect(result.value).toEqual({'b': jasmine.any(Object)});
     });
 
     it('should not pass if all of the results fails', () => {
@@ -112,6 +120,10 @@ describe('valid.BatchValidations', () => {
       expect(result.passes).toEqual(false);
       expect(result.errorMessage)
           .toEqual(jasmine.stringMatching(new RegExp(`some be valid: ${errorMessage}`)));
+      expect(result.value).toEqual({
+        'a': jasmine.any(Object),
+        'b': jasmine.any(Object),
+      });
     });
   });
 
@@ -129,6 +141,9 @@ describe('valid.BatchValidations', () => {
       expect(result.passes).toEqual(false);
       expect(result.errorMessage)
           .toEqual(jasmine.stringMatching(new RegExp(`not some be valid: ${errorMessage}`)));
+      expect(result.value).toEqual({
+        'a': jasmine.any(Object),
+      });
     });
 
     it('should pass if all of the results fails', () => {
@@ -139,6 +154,7 @@ describe('valid.BatchValidations', () => {
           })
           .toNot.someBeValid();
       expect(result.passes).toEqual(true);
+      expect(result.value).toEqual({});
     });
   });
 });
