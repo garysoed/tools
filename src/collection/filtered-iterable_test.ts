@@ -12,7 +12,7 @@ describe('collection.FilteredIterable', () => {
       return value % 2 === 0;
     };
     let iterable = FilteredIterable.newInstance(ArrayIterable.newInstance([1, 2, 3, 4]), filterFn);
-    let result = [];
+    let result: number[] = [];
     Iterables.of(iterable).iterate((value: number) => {
       result.push(value);
     });

@@ -24,11 +24,11 @@ export class Solve {
   static findThreshold(
       spec: Spec,
       fn: (value: number) => boolean,
-      trueAtLowerValues: boolean): number {
+      trueAtLowerValues: boolean): (number|null) {
     let values = spec.generateValues();
     let startIndex = 0;
     let endIndex = values.length - 1;
-    let bestIndex = null;
+    let bestIndex: (number|null) = null;
     while (startIndex <= endIndex) {
       let guessIndex = Math.floor((startIndex + endIndex) / 2);
       let result = fn(values[guessIndex]) ;

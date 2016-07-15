@@ -14,8 +14,8 @@ export class Templates {
    * @param key The key of the registered template to retrieve.
    * @return The registered template, or null if there are none.
    */
-  static getTemplate(key: string): string {
-    return Templates.templates_.get(key);
+  static getTemplate(key: string): (string|null) {
+    return Templates.templates_.get(key) || null;
   }
 
   /**

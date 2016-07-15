@@ -56,7 +56,7 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
   }
 
   filterElement(fn: (value: T, index: number) => boolean): FluentIndexable<T> {
-    let newArray = [];
+    let newArray: T[] = [];
     this.forEach((value: T, index: number) => {
       if (fn(value, index)) {
         newArray.push(value);
@@ -65,12 +65,12 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
     return new FluentIndexable<T>(newArray);
   }
 
-  find(fn: (value: T, index: number) => boolean): T {
+  find(fn: (value: T, index: number) => boolean): (T|null) {
     let index = this.findIndex(fn);
     return index !== null ? this.data[index] : null;
   }
 
-  findIndex(fn: (value: T, index: number) => boolean): number {
+  findIndex(fn: (value: T, index: number) => boolean): (number|null) {
     for (let i = 0; i < this.data.length; i++) {
       if (fn(this.data[i], i)) {
         return i;
@@ -107,7 +107,7 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
   }
 
   mapElement<T2>(fn: (value: T, index: number) => T2): FluentIndexable<T2> {
-    let newArray = [];
+    let newArray: T2[] = [];
     this.forEach((value: T, index: number) => {
       newArray.push(fn(value, index));
     });
@@ -115,7 +115,7 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
   }
 
   removeAll(toRemove: Set<T>): IFluentIndexable<T> {
-    let newArray = [];
+    let newArray: T[] = [];
     this.forEach((value: T) => {
       if (!toRemove.has(value)) {
         newArray.push(value);

@@ -40,7 +40,7 @@ export class Jsons {
 
     let object = json;
     let parts = path.split('.');
-    let propertyName = parts.pop();
+    let propertyName: string = parts.pop()!;
 
     parts.forEach((part: string) => {
       if (object[part] === undefined) {

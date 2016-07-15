@@ -28,7 +28,7 @@ export class Arrays {
    * @return Array wrapper object to do operations on.
    */
   static fromIterable<T>(iterable: Iterable<T>): FluentIndexable<T> {
-    let array = [];
+    let array: T[] = [];
     Iterables.of(iterable).iterate((value: T) => {
       array.push(value);
     });
@@ -42,7 +42,7 @@ export class Arrays {
    * @return Array wrapper object to do operations on.
    */
   static fromNodeList(nodeList: NodeList): FluentIndexable<Node> {
-    let array = [];
+    let array: Node[] = [];
     for (let i = 0; i < nodeList.length; i++) {
       array.push(nodeList.item(i));
     }

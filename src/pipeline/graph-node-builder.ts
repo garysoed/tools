@@ -1,5 +1,6 @@
 import {ArgMetaData} from './arg-meta-data';
 import {GraphNode} from './graph-node';
+import {Validate} from '../valid/validate';
 
 
 /**
@@ -7,7 +8,7 @@ import {GraphNode} from './graph-node';
  */
 export class GraphNodeBuilder<T> {
   argMetaData: ArgMetaData[];
-  fn: (...args: any[]) => T;
+  fn: (((...args: any[]) => T)|null);
 
   constructor() {
     this.argMetaData = [];
@@ -20,6 +21,7 @@ export class GraphNodeBuilder<T> {
    * @return The graph node.
    */
   build(): GraphNode<T> {
-    return GraphNode.newInstance(this.fn, this.argMetaData);
+    Validate.any(this.fn).to.exist().assertValid();
+    return GraphNode.newInstance(this.fn!, this.argMetaData);
   }
 }

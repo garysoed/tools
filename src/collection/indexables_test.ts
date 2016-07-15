@@ -10,7 +10,7 @@ import {Iterables} from './iterables';
 describe('collection.Indexables', () => {
   describe('addAll', () => {
     it('should add all the given elements', () => {
-      let resultArray = [];
+      let resultArray: number[] = [];
       Indexables.of([1, 2, 3])
           .addAll(ArrayIterable.newInstance([4, 5, 6]))
           .iterate((value: number) => {
@@ -23,7 +23,7 @@ describe('collection.Indexables', () => {
       let infiniteIterable = GeneratorIterable.newInstance(() => {
         return {done: false, value: 0};
       });
-      Indexables.of([]).addAll(infiniteIterable);
+      Indexables.of<number>([]).addAll(infiniteIterable);
     });
   });
 
@@ -39,7 +39,7 @@ describe('collection.Indexables', () => {
   describe('asIterable', () => {
     it('should return iterable that iterates the content', () => {
       let iterable = Indexables.of([1, 2, 3]).asIterable();
-      let array = [];
+      let array: number[] = [];
       Iterables.of(iterable)
           .iterate((value: number) => {
             array.push(value);
@@ -51,7 +51,7 @@ describe('collection.Indexables', () => {
   describe('asIterator', () => {
     it('should return iterator instance that iterates the iterable', () => {
       let iterator = Indexables.of([1, 2, 3]).asIterator();
-      let array = [];
+      let array: number[] = [];
       for (let result = iterator.next(); !result.done; result = iterator.next()) {
         array.push(result.value);
       }
@@ -69,7 +69,7 @@ describe('collection.Indexables', () => {
     });
 
     it('should return false if the indexable has less content than the array', () => {
-      expect(Indexables.of([]).equalsTo([1])).toEqual(false);
+      expect(Indexables.of<number>([]).equalsTo([1])).toEqual(false);
     });
   });
 

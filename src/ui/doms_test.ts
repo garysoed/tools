@@ -23,7 +23,7 @@ describe('ui.Doms', () => {
       let element3 = document.createElement('div');
 
       let mockCallback = jasmine.createSpy('Callback').and.callFake(
-          (fromEl: HTMLElement): HTMLElement => {
+          (fromEl: HTMLElement): any => {
             switch (fromEl) {
               case element1:
                 return element2;

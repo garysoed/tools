@@ -1,7 +1,7 @@
 import {TestBase} from '../test-base';
 TestBase.setup();
 
-import Inject from './a-inject';
+import {InjectUtil} from './inject-util';
 import {Injector} from './injector';
 import {Mocks} from '../mock/mocks';
 import Reflect from '../util/reflect';
@@ -58,7 +58,7 @@ describe('inject.Injector', () => {
       let metadata = new Map<number, string>();
       metadata.set(0, key1);
       metadata.set(1, key2);
-      spyOn(Inject, 'getMetadata').and.returnValue(metadata);
+      spyOn(InjectUtil, 'getMetadata').and.returnValue(metadata);
 
       spyOn(injector, 'getBoundValue').and.callFake((name: string) => {
         switch (name) {
@@ -74,21 +74,21 @@ describe('inject.Injector', () => {
       expect(injector.getParameters(TestClass)).toEqual([mockValue1, mockValue2]);
       expect(injector.getBoundValue).toHaveBeenCalledWith(key1);
       expect(injector.getBoundValue).toHaveBeenCalledWith(key2);
-      expect(Inject.getMetadata).toHaveBeenCalledWith(TestClass);
+      expect(InjectUtil.getMetadata).toHaveBeenCalledWith(TestClass);
     });
 
     it('should use the extra arguments to override the parameters', () => {
       let mockValue1 = Mocks.object('Value1');
       let mockValue2 = Mocks.object('Value2');
-      spyOn(Inject, 'getMetadata').and.returnValue(new Map<number, string>());
+      spyOn(InjectUtil, 'getMetadata').and.returnValue(new Map<number, string>());
 
       let parameters = injector.getParameters(TestClass, {0: mockValue1, 1: mockValue2});
       expect(parameters).toEqual([mockValue1, mockValue2]);
-      expect(Inject.getMetadata).toHaveBeenCalledWith(TestClass);
+      expect(InjectUtil.getMetadata).toHaveBeenCalledWith(TestClass);
     });
 
     it('should throw error if an index is not in the metadata', () => {
-      spyOn(Inject, 'getMetadata').and.returnValue(new Map<number, string>());
+      spyOn(InjectUtil, 'getMetadata').and.returnValue(new Map<number, string>());
 
       expect(() => {
         injector.getParameters(TestClass);

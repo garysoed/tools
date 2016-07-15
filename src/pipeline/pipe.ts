@@ -34,8 +34,8 @@ export function Pipe(): MethodDecorator {
 
     let graphNode = builder.build();
 
-    if (!!descriptor.set) {
-      descriptor.set = PipeUtil.createSetter(descriptor, graphNode);
+    if (descriptor.set) {
+      descriptor.set = PipeUtil.createSetter(descriptor.set, graphNode);
     }
     map.set(propertyKey, graphNode);
     return descriptor;

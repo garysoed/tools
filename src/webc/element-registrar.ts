@@ -94,7 +94,7 @@ export class ElementRegistrar extends BaseDisposable {
           };
           this.xtag_.register(
               config.tag,
-              {lifecycle: this.getLifecycleConfig_(provider, template)});
+              {lifecycle: this.getLifecycleConfig_(provider, template!)});
 
           this.registeredCtors_.add(ctor);
           Log.info(LOG, `Registered: ${config.tag}`);

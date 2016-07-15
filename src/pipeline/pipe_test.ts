@@ -51,7 +51,7 @@ describe('pipeline.Pipe', () => {
 
     expect(Pipe()(target, propertyKey, descriptor)).toEqual(descriptor);
     expect(descriptor.set).toEqual(newSetter);
-    expect(PipeUtil.createSetter).toHaveBeenCalledWith(descriptor, graphNode);
+    expect(PipeUtil.createSetter).toHaveBeenCalledWith(setter, graphNode);
     expect(Maps.of(map).asRecord()).toEqual({[propertyKey]: graphNode});
     expect(PipeUtil.initializeNodeBuilder).toHaveBeenCalledWith(target, propertyKey);
     expect(mockNodeBuilder.fn).toEqual(getter);

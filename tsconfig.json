@@ -13,7 +13,8 @@
         "noLib": false,
         "preserveConstEnums": true,
         "suppressImplicitAnyIndexErrors": true,
-        "rootDir": "./"
+        "rootDir": "./",
+        "strictNullChecks": true
     },
     "filesGlob": [
         "**/*.ts",

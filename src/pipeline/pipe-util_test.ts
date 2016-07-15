@@ -30,14 +30,12 @@ describe('pipeline.PipeUtil', () => {
   describe('createSetter', () => {
     it('should create the setter correctly', () => {
       let mockSetter = jasmine.createSpy('Setter');
-      let descriptor = Mocks.object('descriptor');
-      descriptor.set = mockSetter;
 
       let mockGraphNode = jasmine.createSpyObj('GraphNode', ['clearCache']);
       let value = 'value';
       let context = Mocks.object('context');
 
-      let newSetter = PipeUtil.createSetter(descriptor, mockGraphNode);
+      let newSetter = PipeUtil.createSetter(mockSetter, mockGraphNode);
       newSetter.call(context, value);
 
       expect(mockGraphNode.clearCache).toHaveBeenCalledWith(context, []);

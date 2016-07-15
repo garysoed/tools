@@ -1,7 +1,8 @@
 import {TestBase} from '../test-base';
 TestBase.setup();
 
-import Inject from './a-inject';
+import {Inject} from './a-inject';
+import {InjectUtil} from './inject-util';
 import {Maps} from '../collection/maps';
 import {Mocks} from '../mock/mocks';
 
@@ -14,7 +15,7 @@ describe('inject.Inject', () => {
     let index = 12;
     let fakeMetadata = new Map<number, string>();
 
-    spyOn(Inject, 'getMetadata').and.returnValue(fakeMetadata);
+    spyOn(InjectUtil, 'getMetadata').and.returnValue(fakeMetadata);
 
     Inject(name)(TestClass, 'propertyName', index);
 
@@ -26,7 +27,7 @@ describe('inject.Inject', () => {
     let index = 12;
     let fakeMetadata = new Map<number, string>();
 
-    spyOn(Inject, 'getMetadata').and.returnValue(fakeMetadata);
+    spyOn(InjectUtil, 'getMetadata').and.returnValue(fakeMetadata);
 
     Inject()(TestClass, propertyName, index);
 

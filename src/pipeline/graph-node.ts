@@ -55,7 +55,9 @@ export class GraphNode<T> {
         .findKey((value: T, key: any[]) => {
           return Arrays.of(key).equalsTo(args);
         });
-    cache.delete(cacheKey);
+    if (!!cacheKey) {
+      cache.delete(cacheKey);
+    }
   }
 
   /**
@@ -64,6 +66,7 @@ export class GraphNode<T> {
    * @param context The context to run the node in.
    * @param args The arguments for running the node.
    * @param opt_forceCacheClear Set to true iff the cache should be cleared. Defaults to false.
+   * @return Result of running the node.
    */
   run(context: any, args: any[], opt_forceCacheClear: boolean = false): T {
     // Checks if the cache should be cleared.
@@ -87,7 +90,7 @@ export class GraphNode<T> {
     if (!cache.has(cacheKey)) {
       cache.set(cacheKey, this.fn_.apply(context, args));
     }
-    return cache.get(cacheKey);
+    return cache.get(cacheKey)!;
   }
 
   /**

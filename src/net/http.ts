@@ -32,9 +32,9 @@ abstract class HttpRequest extends BaseDisposable {
   }
 
   /**
-   * @return The data to be sent.
+   * @return The data to be sent or null if there are no data to be sent.
    */
-  protected get sentData(): string {
+  protected get sentData(): (string|null) {
     return null;
   }
 

@@ -42,7 +42,7 @@ export enum EventType {
 class OverflowWatcher extends BaseListenable<EventType> {
   private containerEl_: HTMLElement;
   private element_: HTMLElement;
-  private state_: State;
+  private state_: (State|null);
 
   /**
    * @param container The container element.

@@ -15,7 +15,7 @@ describe('collection.GeneratorIterable', () => {
     };
     let generatorIterable = GeneratorIterable.newInstance(generator);
 
-    let result = [];
+    let result: number[] = [];
     Iterables.of(generatorIterable)
         .iterate((value: number) => {
           result.push(value);

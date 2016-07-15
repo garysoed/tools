@@ -8,7 +8,7 @@ import {Iterables} from './iterables';
 
 describe('collection.Iterables', () => {
   function toArray<T>(iterable: Iterable<T>): T[] {
-    let array = [];
+    let array: T[] = [];
     Iterables.of(iterable)
         .iterate((value: T) => {
           array.push(value);
@@ -28,7 +28,7 @@ describe('collection.Iterables', () => {
       let infiniteIterable = GeneratorIterable.newInstance(() => {
         return {done: false, value: 0};
       });
-      Iterables.of(ArrayIterable.newInstance([])).addAll(infiniteIterable);
+      Iterables.of<number>(ArrayIterable.newInstance([])).addAll(infiniteIterable);
     });
   });
 
@@ -53,7 +53,7 @@ describe('collection.Iterables', () => {
     it('should return iterator instance that iterates the iterable', () => {
       let array = [1, 2, 3];
       let iterator = Iterables.of(ArrayIterable.newInstance(array)).asIterator();
-      let resultArray = [];
+      let resultArray: number[] = [];
 
       for (let result = iterator.next(); !result.done; result = iterator.next()) {
         resultArray.push(result.value);

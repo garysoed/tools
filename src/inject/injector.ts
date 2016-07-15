@@ -1,4 +1,4 @@
-import Inject from './a-inject';
+import {InjectUtil} from './inject-util';
 import Reflect from '../util/reflect';
 import {Validate} from '../valid/validate';
 
@@ -110,7 +110,7 @@ export class Injector {
         .orThrows(`No value bound to key ${bindKey}`)
         .assertValid();
     let provider = Injector.BINDINGS_.get(bindKey);
-    let instance = provider(this);
+    let instance = provider!(this);
     this.instances_.set(bindKey, instance);
 
     return instance;
@@ -125,10 +125,10 @@ export class Injector {
    * @return Array of resolved parameters of the given constructor.
    */
   getParameters(ctor: gs.ICtor<any>, extraArguments: {[index: number]: any} = {}): any[] {
-    let metadata = Inject.getMetadata(ctor);
+    let metadata = InjectUtil.getMetadata(ctor);
 
     // Collects the arguments.
-    let args = [];
+    let args: any[] = [];
     for (let i = 0; i < ctor.length; i++) {
       if (extraArguments[i] !== undefined) {
         args.push(extraArguments[i]);
@@ -138,7 +138,7 @@ export class Injector {
             .orThrows(
                 `Cannot find injection candidate for index ${i} for ${ctor} when instantiating`)
             .assertValid();
-        args.push(this.getBoundValue(metadata.get(i)));
+        args.push(this.getBoundValue(metadata.get(i)!));
       }
     }
     return args;

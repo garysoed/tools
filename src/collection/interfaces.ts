@@ -94,7 +94,7 @@ export interface IFluentNonIndexable<T> extends IFluentIterable<T> {
    *    true iff it the element is the searched element.
    * @return The searched element, or null if not found.
    */
-  find(fn: (value: T) => boolean): T;
+  find(fn: (value: T) => boolean): (T|null);
 
   /**
    * Calls the given function for every element in the non indexable.
@@ -191,7 +191,7 @@ export interface IFluentMappable<K, V> extends IFluentIterable<[K, V]> {
    *    entry should be returned.
    * @return The first entry that matches the find function, or null if it is not found.
    */
-  findEntry(fn: (value: V, key: K) => boolean): [K, V];
+  findEntry(fn: (value: V, key: K) => boolean): ([K, V]|null);
 
   /**
    * Finds entry that matches the given find function and returns the corresponding key.
@@ -200,7 +200,7 @@ export interface IFluentMappable<K, V> extends IFluentIterable<[K, V]> {
    *    entry should be returned.
    * @return Key of the first entry that matches the find function, or null if it is not found.
    */
-  findKey(fn: (value: V, key: K) => boolean): K;
+  findKey(fn: (value: V, key: K) => boolean): (K|null);
 
   /**
    * Finds entry that matches the given find function and returns the corresponding value.
@@ -209,7 +209,7 @@ export interface IFluentMappable<K, V> extends IFluentIterable<[K, V]> {
    *    entry should be returned.
    * @return Value of the first entry that matches the find function, or null if it is not found.
    */
-  findValue(fn: (value: V, key: K) => boolean): V;
+  findValue(fn: (value: V, key: K) => boolean): (V|null);
 
   /**
    * Calls the given function for every entry in the mappable.
@@ -331,7 +331,7 @@ export interface IFluentIndexable<T> extends IFluentIterable<T> {
    *    returned.
    * @return The first element that matches the find function, or null if it is not found.
    */
-  find(fn: (value: T, index: number) => boolean): T;
+  find(fn: (value: T, index: number) => boolean): (T|null);
 
   /**
    * Finds element that matches the given find function and returns its index.
@@ -341,7 +341,7 @@ export interface IFluentIndexable<T> extends IFluentIterable<T> {
    * @return The index of the first element that matches the find function, or null if it is not
    *    found.
    */
-  findIndex(fn: (value: T, index: number) => boolean): number;
+  findIndex(fn: (value: T, index: number) => boolean): (number|null);
 
   /**
    * Calls the given function for every element in the indexable.

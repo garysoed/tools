@@ -47,7 +47,7 @@ export class FluentNonIndexable<T> extends BaseFluent<T[]> implements IFluentNon
     return new FluentNonIndexable<T>(filteredData);
   }
 
-  find(fn: (value: T) => boolean): T {
+  find(fn: (value: T) => boolean): (T|null) {
     for (let i = 0; i < this.data.length; i++) {
       if (fn(this.data[i])) {
         return this.data[i];

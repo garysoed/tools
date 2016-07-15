@@ -202,10 +202,10 @@ class PostMessageChannel extends BaseDisposable {
   static listen(srcWindow: Window, expectedOrigin: string): Promise<PostMessageChannel> {
     let srcWindowListenable = new ListenableElement<Window>(srcWindow);
     return new Promise((resolve: Function, reject: Function) => {
-      let unlistenFn = null;
+      let unlistenFn: (BaseDisposable|null) = null;
       let timeoutId = window.setTimeout(() => {
         srcWindowListenable.dispose();
-        unlistenFn.dispose();
+        unlistenFn!.dispose();
         reject('Timed out listening for channel initiation message');
       }, TIMEOUT_MS_);
 
@@ -222,7 +222,7 @@ class PostMessageChannel extends BaseDisposable {
             let channel = PostMessageChannel.newInstance_(srcWindow, event.source);
             channel.post_(new Message(MessageType.ACK, message.payload));
             srcWindowListenable.dispose();
-            unlistenFn.dispose();
+            unlistenFn!.dispose();
             window.clearTimeout(timeoutId);
             resolve(channel);
           }

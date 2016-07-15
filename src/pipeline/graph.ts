@@ -56,13 +56,13 @@ export class Graph {
         .orThrows(`No nodes found for key "${key}" at object ${context}`)
         .assertValid();
 
-    let args = Arrays.of(graphNode.args)
+    let args = Arrays.of(graphNode!.args)
         .map((argData: ArgMetaData) => {
           return Graph.resolveArgument_(argData, context, opt_externalArgs);
         })
         .asArray();
 
-    return graphNode.run(context, args);
+    return graphNode!.run(context, args);
   }
 }
 

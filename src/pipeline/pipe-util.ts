@@ -34,9 +34,8 @@ export const PipeUtil = {
    * @param graphNode The graph node corresponding to the setter.
    */
   createSetter<T>(
-      descriptor: PropertyDescriptor,
+      setter: (v: any) => void,
       graphNode: GraphNode<T>): (value: T) => void {
-    let setter = descriptor.set;
     return function(value: T): void {
       graphNode.clearCache(this, []);
       setter.call(this, value);
@@ -50,7 +49,7 @@ export const PipeUtil = {
    * @param key The property name corresponding to the node to be returned.
    * @return The node corresponding to the given property, or null if none exists.
    */
-  getNode<T>(context: any, key: string | symbol): GraphNode<T> {
+  getNode<T>(context: any, key: string | symbol): (GraphNode<T>|null) {
     let nodeMap: Map<string | symbol, GraphNode<any>> = context[__NODE_DATA_MAP];
 
     return nodeMap ?
@@ -77,6 +76,6 @@ export const PipeUtil = {
     if (!builderMap.has(key)) {
       builderMap.set(key, new GraphNodeBuilder<any>());
     }
-    return builderMap.get(key);
+    return builderMap.get(key)!;
   },
 };

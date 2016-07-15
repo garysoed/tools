@@ -10,7 +10,7 @@ import {NonIndexables} from './non-indexables';
 describe('collection.NonIndexables', () => {
   describe('addAll', () => {
     it('should add all the given elements', () => {
-      let resultArray = [];
+      let resultArray: number[] = [];
       NonIndexables.of([1, 2, 3])
           .addAll(ArrayIterable.newInstance([4, 5, 6]))
           .iterate((value: number) => {
@@ -23,7 +23,7 @@ describe('collection.NonIndexables', () => {
       let infiniteIterable = GeneratorIterable.newInstance(() => {
         return {done: false, value: 0};
       });
-      NonIndexables.of([]).addAll(infiniteIterable);
+      NonIndexables.of<number>([]).addAll(infiniteIterable);
     });
   });
 
@@ -39,7 +39,7 @@ describe('collection.NonIndexables', () => {
   describe('asIterable', () => {
     it('should return iterable that iterates the content', () => {
       let iterable = NonIndexables.of([1, 2, 3]).asIterable();
-      let array = [];
+      let array: number[] = [];
       Iterables.of(iterable)
           .iterate((value: number) => {
             array.push(value);
@@ -51,7 +51,7 @@ describe('collection.NonIndexables', () => {
   describe('asIterator', () => {
     it('should return iterator instance that iterates the iterable', () => {
       let iterator = NonIndexables.of([1, 2, 3]).asIterator();
-      let array = [];
+      let array: number[] = [];
       for (let result = iterator.next(); !result.done; result = iterator.next()) {
         array.push(result.value);
       }

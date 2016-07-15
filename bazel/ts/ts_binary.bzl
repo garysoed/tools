@@ -16,6 +16,9 @@ def _ts_binary_impl(ctx):
     '--outDir', ctx.label.name,
     '--rootDir', '.',
     '--noResolve',
+    '--pretty',
+    '--moduleResolution', 'classic',
+    '--strictNullChecks',
     '--target', ctx.attr.ts_target,
     paths
   ])

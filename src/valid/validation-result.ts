@@ -4,7 +4,7 @@
  */
 export class ValidationResult<V> {
   private value_: any;
-  private errorMessage_: string;
+  private errorMessage_: (string|null);
   private passes_: boolean;
 
   /**
@@ -12,7 +12,7 @@ export class ValidationResult<V> {
    * @param errorMessage The error message to display if the validation fails.
    * @param value The value being validated.
    */
-  constructor(passes: boolean, errorMessage: string, value: V) {
+  constructor(passes: boolean, errorMessage: (string|null), value: V) {
     this.errorMessage_ = errorMessage;
     this.passes_ = passes;
     this.value_ = value;
@@ -23,14 +23,14 @@ export class ValidationResult<V> {
    */
   assertValid(): void {
     if (!this.passes_) {
-      throw new Error(this.errorMessage_);
+      throw new Error(this.errorMessage_ || '');
     }
   }
 
   /**
    * The error message. Null if the validation passes.
    */
-  get errorMessage(): string {
+  get errorMessage(): (string|null) {
     return this.passes_ ? null : this.errorMessage_;
   }
 

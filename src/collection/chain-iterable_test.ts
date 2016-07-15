@@ -12,7 +12,7 @@ describe('collection.ChainIterable', () => {
     let second = new ArrayIterable<number>([4, 5, 6]);
     let chained = new ChainIterable<number>(first, second);
 
-    let array = [];
+    let array: number[] = [];
     Iterables.of(chained).iterate((value: number) => {
       array.push(value);
     });

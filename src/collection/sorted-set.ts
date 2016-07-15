@@ -59,7 +59,7 @@ class SortedSet<T> implements Iterable<T> {
    */
   remove(value: T): void {
     if (this.positions_.has(value)) {
-      this.array_.splice(this.positions_.get(value), 1);
+      this.array_.splice(this.positions_.get(value)!, 1);
       this.positions_.delete(value);
     }
   }

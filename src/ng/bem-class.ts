@@ -16,8 +16,8 @@ const CSS_ROOT_ATTR_ = 'gs-bem-root';
  */
 export class BemClassCtrl extends BaseDisposable {
   private appliedClasses_: string[];
-  private classPrefix_: string;
-  private element_: HTMLElement;
+  private classPrefix_: (string|null);
+  private element_: (HTMLElement|null);
 
   constructor() {
     super();
@@ -46,14 +46,14 @@ export class BemClassCtrl extends BaseDisposable {
         .of(this.appliedClasses_)
         .removeAll(new Set<string>(classesToAdd))
         .forOf((classToRemove: string) => {
-          this.element_.classList.remove(classToRemove);
+          this.element_!.classList.remove(classToRemove);
         });
 
     // Add the new classes.
     this.appliedClasses_ = [];
     classesToAdd.forEach((classToAdd: string) => {
       let fullClassName = `${this.classPrefix_}__${classToAdd}`;
-      this.element_.classList.add(fullClassName);
+      this.element_!.classList.add(fullClassName);
       this.appliedClasses_.push(fullClassName);
     });
   }
@@ -66,7 +66,7 @@ export class BemClassCtrl extends BaseDisposable {
    * @param element The element that the directive is attached to.
    */
   onLink(scope: angular.IScope, attrValue: string, element: HTMLElement): void {
-    let rootEl = null;
+    let rootEl: (HTMLElement|null) = null;
     Iterables
         .of(Doms.parentIterable(element))
         .iterate((currentEl: HTMLElement, breakFn: () => void) => {
@@ -80,7 +80,7 @@ export class BemClassCtrl extends BaseDisposable {
       throw Error(`Cannot find ancestor element with attribute ${CSS_ROOT_ATTR_}`);
     }
 
-    this.classPrefix_ = rootEl.attributes.getNamedItem(CSS_ROOT_ATTR_).value;
+    this.classPrefix_ = rootEl!.attributes.getNamedItem(CSS_ROOT_ATTR_).value;
     this.element_ = element;
 
     this.addDisposable(new DisposableFunction(

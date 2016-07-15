@@ -80,7 +80,7 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
     });
   }
 
-  findEntry(fn: (value: V, key: K) => boolean): [K, V] {
+  findEntry(fn: (value: V, key: K) => boolean): ([K, V]|null) {
     let iterator = this.asIterator();
     for (let entry = iterator.next(); !entry.done; entry = iterator.next()) {
       if (fn(entry.value[1], entry.value[0])) {
@@ -90,12 +90,12 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
     return null;
   }
 
-  findKey(fn: (value: V, key: K) => boolean): K {
+  findKey(fn: (value: V, key: K) => boolean): (K|null) {
     let entry = this.findEntry(fn);
     return entry === null ? null : entry[0];
   }
 
-  findValue(fn: (value: V, key: K) => boolean): V {
+  findValue(fn: (value: V, key: K) => boolean): (V|null) {
     let entry = this.findEntry(fn);
     return entry === null ? null : entry[1];
   }

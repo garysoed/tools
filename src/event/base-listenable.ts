@@ -52,10 +52,10 @@ class BaseListenable<T> extends BaseDisposable {
       this.callbacksMap_.set(eventType, []);
     }
     const callbacks = this.callbacksMap_.get(eventType);
-    let index = callbacks.length;
-    callbacks.push(callback);
+    let index = callbacks!.length;
+    callbacks!.push(callback);
     return new DisposableFunction(() => {
-      callbacks.splice(index, 1);
+      callbacks!.splice(index, 1);
     });
   }
 }

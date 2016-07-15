@@ -13,7 +13,7 @@ describe('collection.MappedIterable', () => {
         (value: number) => {
           return value + 1;
         });
-    let result = [];
+    let result: number[] = [];
 
     Iterables.of(iterable).iterate((value: number) => {
       result.push(value);

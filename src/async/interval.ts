@@ -24,7 +24,7 @@ export enum EventType {
  */
 class Interval extends BaseListenable<EventType> {
   private interval_: number;
-  private intervalId_: number;
+  private intervalId_: (number|null);
 
   /**
    * Use [[newInstance]] for better testability.
