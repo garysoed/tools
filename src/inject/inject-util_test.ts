@@ -8,7 +8,7 @@ describe('inject.InjectUtil', () => {
   describe('getMetadata', () => {
     it('should return the same cache mapping', () => {
       class TestClass {}
-      expect(InjectUtil.getMetadata(TestClass)).toBe(InjectUtil.getMetadata(TestClass));
+      expect(InjectUtil.getMetadataMap(TestClass)).toBe(InjectUtil.getMetadataMap(TestClass));
     });
   });
 });

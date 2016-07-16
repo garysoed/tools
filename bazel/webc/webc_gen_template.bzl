@@ -4,16 +4,24 @@ def _webc_gen_template(ctx):
     if f.path[-4:] == ".css":
       css_file = f
 
+  inputs = ctx.files._compile_template_bin + [ctx.file.template]
+
+  if css_file != None:
+    css_filepath = css_file.path
+    inputs.append(css_file)
+  else:
+    css_filepath = ""
+
   ctx.action(
       outputs = [ctx.outputs.js],
       command = "python %s %s %s %s %s" % (
           ctx.files._compile_template_bin[0].path,
           ctx.file.template.path,
-          css_file.path,
           ctx.attr.key,
           ctx.outputs.js.path,
+          css_filepath,
       ),
-      inputs = ctx.files._compile_template_bin + [css_file, ctx.file.template],
+      inputs = inputs,
       use_default_shell_env = True,
   )
 

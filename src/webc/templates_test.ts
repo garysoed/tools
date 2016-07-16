@@ -15,7 +15,9 @@ describe('webc.Templates', () => {
       let templateString = 'templateString';
 
       Templates.register(key, templateString);
-      expect(Templates.getTemplate(key)).toEqual(templateString);
+
+      let templates = Templates.newInstance();
+      expect(templates.getTemplate(key)).toEqual(templateString);
     });
 
     it('should throw error if the key has already been registered', () => {

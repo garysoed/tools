@@ -41,7 +41,7 @@ def gs_tools(deps = [], test_deps = []):
   # Prod files.
   ts_library(
       name = lib_name,
-      srcs = native.glob(["*.ts"]),
+      srcs = native.glob(["*.ts"], exclude = ["*_test.ts"]),
       deps = ["//declarations"] + deps
   )
 

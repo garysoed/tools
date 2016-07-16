@@ -19,18 +19,16 @@ const LOG = new Log('pb.component.ComponentConfig');
 export class ElementRegistrar extends BaseDisposable {
   private static __instance: symbol = Symbol('instance');
 
-  private injector_: Injector;
-  private registeredCtors_: Set<gs.ICtor<BaseElement>>;
-  private xtag_: xtag.IInstance;
+  private registeredCtors_: Set<gs.ICtor<BaseElement>> = new Set();
 
   /**
    * @hidden
    */
-  constructor(injector: Injector, xtag: xtag.IInstance) {
+  constructor(
+      private injector_: Injector,
+      private templates_: Templates,
+      private xtag_: xtag.IInstance) {
     super();
-    this.injector_ = injector;
-    this.registeredCtors_ = new Set<gs.ICtor<BaseElement>>();
-    this.xtag_ = xtag;
   }
 
   private getLifecycleConfig_(
@@ -84,7 +82,7 @@ export class ElementRegistrar extends BaseDisposable {
           return this.register(dependency);
         }))
         .then(() => {
-          let template = Templates.getTemplate(config.templateKey);
+          let template = this.templates_.getTemplate(config.templateKey);
           Validate.any(template).toNot.beNull()
               .orThrows(`No templates found for key ${config.templateKey}`)
               .assertValid();
@@ -122,11 +120,11 @@ export class ElementRegistrar extends BaseDisposable {
   /**
    * @return A new instance of the registrar.
    */
-  static newInstance(injector: Injector): ElementRegistrar {
+  static newInstance(injector: Injector, templates: Templates): ElementRegistrar {
     Validate.any(window['xtag'])
         .to.beDefined()
         .orThrows(`Required x-tag library not found`)
         .assertValid();
-    return new ElementRegistrar(injector, window['xtag']);
+    return new ElementRegistrar(injector, templates, window['xtag']);
   }
 }

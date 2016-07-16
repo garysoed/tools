@@ -100,16 +100,19 @@ export class Injector {
    * @param bindKey The key whose value should be returned.
    * @return The instance bound to the given key.
    */
-  getBoundValue(bindKey: BindKey): any {
+  getBoundValue(bindKey: BindKey, isOptional: boolean = false): any {
     if (this.instances_.has(bindKey)) {
       return this.instances_.get(bindKey);
     }
 
-    Validate.map(Injector.BINDINGS_)
-        .to.containKey(bindKey)
-        .orThrows(`No value bound to key ${bindKey}`)
-        .assertValid();
-    let provider = Injector.BINDINGS_.get(bindKey);
+    if (!isOptional) {
+      Validate.map(Injector.BINDINGS_)
+          .to.containKey(bindKey)
+          .orThrows(`No value bound to key ${bindKey}`)
+          .assertValid();
+    }
+    let provider = Injector.BINDINGS_.has(bindKey)
+        ? Injector.BINDINGS_.get(bindKey) : () => undefined;
     let instance = provider!(this);
     this.instances_.set(bindKey, instance);
 
@@ -125,7 +128,7 @@ export class Injector {
    * @return Array of resolved parameters of the given constructor.
    */
   getParameters(ctor: gs.ICtor<any>, extraArguments: {[index: number]: any} = {}): any[] {
-    let metadata = InjectUtil.getMetadata(ctor);
+    let metadataMap = InjectUtil.getMetadataMap(ctor);
 
     // Collects the arguments.
     let args: any[] = [];
@@ -133,12 +136,13 @@ export class Injector {
       if (extraArguments[i] !== undefined) {
         args.push(extraArguments[i]);
       } else {
-        Validate.map(metadata)
+        Validate.map(metadataMap)
             .to.containKey(i)
             .orThrows(
                 `Cannot find injection candidate for index ${i} for ${ctor} when instantiating`)
             .assertValid();
-        args.push(this.getBoundValue(metadata.get(i)!));
+        let metadata = metadataMap.get(i);
+        args.push(this.getBoundValue(metadata!.keyName, metadata!.isOptional));
       }
     }
     return args;

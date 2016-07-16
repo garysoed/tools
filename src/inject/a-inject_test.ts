@@ -2,6 +2,7 @@ import {TestBase} from '../test-base';
 TestBase.setup();
 
 import {Inject} from './a-inject';
+import {InjectMetadata} from './inject-metadata';
 import {InjectUtil} from './inject-util';
 import {Maps} from '../collection/maps';
 import {Mocks} from '../mock/mocks';
@@ -14,24 +15,31 @@ describe('inject.Inject', () => {
     let name = 'name';
     let index = 12;
     let fakeMetadata = new Map<number, string>();
+    let injectMetadata = Mocks.object('injectMetadata');
+    let defaultValue = Mocks.object('defaultValue');
 
-    spyOn(InjectUtil, 'getMetadata').and.returnValue(fakeMetadata);
+    spyOn(InjectUtil, 'getMetadataMap').and.returnValue(fakeMetadata);
+    spyOn(InjectMetadata, 'newInstance').and.returnValue(injectMetadata);
 
-    Inject(name)(TestClass, 'propertyName', index);
+    Inject(name, defaultValue)(TestClass, 'propertyName', index);
 
-    expect(Maps.of(fakeMetadata).asRecord()).toEqual({[index]: name});
+    expect(Maps.of(fakeMetadata).asRecord()).toEqual({[index]: injectMetadata});
+    expect(InjectMetadata.newInstance).toHaveBeenCalledWith(name, defaultValue);
   });
 
   it('should use the parameter name if not specified', () => {
     let propertyName = 'propertyName';
     let index = 12;
     let fakeMetadata = new Map<number, string>();
+    let injectMetadata = Mocks.object('injectMetadata');
 
-    spyOn(InjectUtil, 'getMetadata').and.returnValue(fakeMetadata);
+    spyOn(InjectUtil, 'getMetadataMap').and.returnValue(fakeMetadata);
+    spyOn(InjectMetadata, 'newInstance').and.returnValue(injectMetadata);
 
     Inject()(TestClass, propertyName, index);
 
-    expect(Maps.of(fakeMetadata).asRecord()).toEqual({[index]: propertyName});
+    expect(Maps.of(fakeMetadata).asRecord()).toEqual({[index]: injectMetadata});
+    expect(InjectMetadata.newInstance).toHaveBeenCalledWith(propertyName, undefined);
   });
 
   it('should throw error if the target is not a constructor', () => {

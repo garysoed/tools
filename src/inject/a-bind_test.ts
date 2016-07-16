@@ -1,7 +1,7 @@
 import {TestBase} from '../test-base';
 TestBase.setup();
 
-import Bind from './a-bind';
+import {Bind} from './a-bind';
 import {Injector} from './injector';
 
 

@@ -1,3 +1,6 @@
+import {InjectMetadata} from './inject-metadata';
+
+
 /**
  * @hidden
  */
@@ -12,9 +15,9 @@ export class InjectUtil {
    * @return Map of binding metadata for the given constructor. The key is the parameter index. The
    *    value is the binding key for that parameter index.
    */
-  static getMetadata(ctor: gs.ICtor<any>): Map<number, string | symbol> {
+  static getMetadataMap(ctor: gs.ICtor<any>): Map<number, InjectMetadata> {
     if (ctor[__METADATA] === undefined) {
-      ctor[__METADATA] = new Map<number, string | symbol>();
+      ctor[__METADATA] = new Map<number, InjectMetadata>();
     }
     return ctor[__METADATA];
   }

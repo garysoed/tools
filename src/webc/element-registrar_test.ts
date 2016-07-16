@@ -6,19 +6,20 @@ import {CustomElement} from './custom-element';
 import {ElementRegistrar} from './element-registrar';
 import {Log} from '../util/log';
 import {Mocks} from '../mock/mocks';
-import {Templates} from './templates';
 import {TestDispose} from '../testing/test-dispose';
 
 
 describe('webc.ElementRegistrar', () => {
   let mockInjector;
+  let mockTemplates;
   let mockXtag;
   let registrar;
 
   beforeEach(() => {
     mockInjector = jasmine.createSpyObj('Injector', ['instantiate']);
+    mockTemplates = jasmine.createSpyObj('Templates', ['getTemplate']);
     mockXtag = jasmine.createSpyObj('Xtag', ['register']);
-    registrar = new ElementRegistrar(mockInjector, mockXtag);
+    registrar = new ElementRegistrar(mockInjector, mockTemplates, mockXtag);
     TestDispose.add(registrar);
   });
 
@@ -126,7 +127,7 @@ describe('webc.ElementRegistrar', () => {
       spyOn(CustomElement, 'getConfig').and.returnValue(mockConfig);
 
       let templateContent = 'templateContent';
-      spyOn(Templates, 'getTemplate').and.returnValue(templateContent);
+      mockTemplates.getTemplate.and.returnValue(templateContent);
 
       let mockLifecycleConfig = Mocks.object('LifecycleConfig');
       spyOn(registrar, 'getLifecycleConfig_').and.returnValue(mockLifecycleConfig);
@@ -150,14 +151,14 @@ describe('webc.ElementRegistrar', () => {
             expect(registrar['registeredCtors_'].has(ctor)).toBe(true);
             expect(registrar.register).toHaveBeenCalledWith(mockDependency);
 
-            expect(Templates.getTemplate).toHaveBeenCalledWith(templateKey);
+            expect(mockTemplates.getTemplate).toHaveBeenCalledWith(templateKey);
             done();
           }, done.fail);
     });
 
     it('should log error if the template key does not exist', (done: any) => {
       spyOn(Log, 'error');
-      spyOn(Templates, 'getTemplate').and.returnValue(null);
+      mockTemplates.getTemplate.and.returnValue(null);
 
       spyOn(CustomElement, 'getConfig').and.returnValue({
         dependencies: [],
