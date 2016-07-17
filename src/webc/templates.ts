@@ -16,7 +16,7 @@ export class Templates {
   constructor(private replacementMap_: Map<RegExp, string>) {  }
 
   @Pipe()
-  private pipeTemplate(@External('key') key: string): string | null {
+  private pipeTemplate_(@External('key') key: string): string | null {
     if (!Templates.templates_.has(key)) {
       return null;
     }
@@ -34,7 +34,7 @@ export class Templates {
    * @return The registered template, or null if there are none.
    */
   getTemplate(key: string): string | null {
-    return Graph.run<string | null>(this, 'pipeTemplate', {'key': key});
+    return Graph.run<string | null>(this, 'pipeTemplate_', {'key': key});
   }
 
   /**

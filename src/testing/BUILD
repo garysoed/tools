@@ -7,6 +7,7 @@ gs_tools(
       "//src/async",
       "//src/dispose",
       "//src/event",
+      "//src/inject",
     ])
 
 filegroup(
