@@ -12,7 +12,7 @@ import DisposableFunction from '../dispose/disposable-function';
  *
  * @param <T> Type of event that this class dispatches.
  */
-class BaseListenable<T> extends BaseDisposable {
+export class BaseListenable<T> extends BaseDisposable {
   private callbacksMap_: Map<T, ((data: any) => void)[]>;
 
   constructor() {
@@ -59,5 +59,3 @@ class BaseListenable<T> extends BaseDisposable {
     });
   }
 }
-
-export default BaseListenable;

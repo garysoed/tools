@@ -1,5 +1,5 @@
-import BaseListenable from '../event/base-listenable';
-import ListenableElement, { EventType } from '../event/listenable-element';
+import {BaseListenable} from '../event/base-listenable';
+import {EventType, ListenableElement} from '../event/listenable-element';
 
 
 /**

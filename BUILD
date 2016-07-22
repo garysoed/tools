@@ -28,6 +28,7 @@ test_suite(
       "//src/ng:test",
       "//src/pipeline:test",
       "//src/secure:test",
+      "//src/string:test",
       "//src/testing:test",
       "//src/typescript:test",
       "//src/ui:test",

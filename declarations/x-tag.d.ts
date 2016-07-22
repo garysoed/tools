@@ -1,8 +1,21 @@
 declare module xtag {
+  interface IAttributeConfig {
+    boolean?: boolean
+    property?: string
+    validate?: (value: any) => boolean
+  }
+
+  interface IAccessorConfig {
+    attribute?: IAttributeConfig
+    get?: () => any
+    set?: (value) => void
+  }
+
   interface IConfig {
-    content?: string,
-    events?: IEventConfig,
-    lifecycle?: ILifecycleConfig,
+    accessors?: {[name: string]: IAttributeConfig}
+    content?: string
+    events?: IEventConfig
+    lifecycle?: ILifecycleConfig
   }
 
   interface IEventConfig {
@@ -10,10 +23,10 @@ declare module xtag {
   }
 
   interface ILifecycleConfig {
-    created?: () => void;
-    inserted?: () => void;
-    removed?: () => void;
-    attributeChanged?: (attrName: string, oldValue: string, newValue: string) => void;
+    created?: () => void
+    inserted?: () => void
+    removed?: () => void
+    attributeChanged?: (attrName: string, oldValue: string, newValue: string) => void
   }
 
   interface IInstance {

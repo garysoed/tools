@@ -1,7 +1,9 @@
 import BaseDisposable from '../dispose/base-disposable';
 import {BaseElement} from './base-element';
+import {Cases} from '../string/cases';
 import {Checks} from '../util/checks';
-import {CustomElement} from './custom-element';
+import {CustomElementUtil} from './custom-element-util';
+import {IAttributeParser} from './interfaces';
 import {Injector} from '../inject/injector';
 import {Log} from '../util/log';
 import {Validate} from '../valid/validate';
@@ -32,11 +34,16 @@ export class ElementRegistrar extends BaseDisposable {
   }
 
   private getLifecycleConfig_(
+      attributes: {[name: string]: IAttributeParser<any>},
       elementProvider: () => BaseElement,
       content: string): xtag.ILifecycleConfig {
     let addDisposable = this.addDisposable.bind(this);
     return {
       attributeChanged: function(attrName: string, oldValue: string, newValue: string): void {
+        let propertyName = Cases.of(attrName).toCamelCase();
+        if (attributes[propertyName]) {
+          this[propertyName] = attributes[propertyName].parse(newValue);
+        }
         ElementRegistrar.runOnInstance_(this, (element: BaseElement) => {
           element.onAttributeChanged(attrName, oldValue, newValue);
         });
@@ -48,6 +55,9 @@ export class ElementRegistrar extends BaseDisposable {
         this[ElementRegistrar.__instance] = instance;
         let shadow = this.createShadowRoot();
         shadow.innerHTML = content;
+
+        CustomElementUtil.addAttributes(this, attributes);
+        CustomElementUtil.setElement(instance, this);
 
         instance.onCreated(this);
       },
@@ -74,7 +84,7 @@ export class ElementRegistrar extends BaseDisposable {
       return Promise.resolve();
     }
 
-    let config = CustomElement.getConfig(ctor);
+    let config = CustomElementUtil.getConfig(ctor);
     let dependencies = config.dependencies || [];
 
     return Promise
@@ -87,12 +97,16 @@ export class ElementRegistrar extends BaseDisposable {
               .orThrows(`No templates found for key ${config.templateKey}`)
               .assertValid();
 
-          let provider = () => {
-            return this.injector_.instantiate(ctor);
-          };
           this.xtag_.register(
               config.tag,
-              {lifecycle: this.getLifecycleConfig_(provider, template!)});
+              {
+                lifecycle: this.getLifecycleConfig_(
+                    config.attributes || {},
+                    () => {
+                      return this.injector_.instantiate(ctor);
+                    },
+                    template!),
+              });
 
           this.registeredCtors_.add(ctor);
           Log.info(LOG, `Registered: ${config.tag}`);
@@ -108,10 +122,10 @@ export class ElementRegistrar extends BaseDisposable {
    * @param el The element containing the instance to run the function on.
    * @param callback The function to run on the instance.
    */
-  private static runOnInstance_(el: any, callback: (component: BaseElement) => void): void {
+  private static runOnInstance_(el: any, callback: (component: BaseElement) => void): any {
     let instance = el[ElementRegistrar.__instance];
     if (Checks.isInstanceOf(instance, BaseElement)) {
-      callback(instance);
+      return callback(instance);
     } else {
       throw Error(`Cannot find valid instance on element ${el.nodeName}`);
     }

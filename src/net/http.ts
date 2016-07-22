@@ -1,5 +1,5 @@
 import BaseDisposable from '../dispose/base-disposable';
-import ListenableElement, {EventType as ListenableElementEventType} from
+import {EventType as ListenableElementEventType, ListenableElement} from
     '../event/listenable-element';
 import {Records} from '../collection/records';
 

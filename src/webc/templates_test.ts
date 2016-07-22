@@ -16,7 +16,7 @@ describe('webc.Templates', () => {
   });
 
   describe('getTemplate', () => {
-    fit('should use the replacement map to replace the strings in the template', () => {
+    it('should use the replacement map to replace the strings in the template', () => {
       let key = 'key';
       Templates.register(key, '123234');
       replacementMap.set(/2/g, 'two');
@@ -25,7 +25,7 @@ describe('webc.Templates', () => {
       expect(templates.getTemplate(key)).toEqual('1twothreetwo34');
     });
 
-    fit('should return null if the templates map does not have the requested key', () => {
+    it('should return null if the templates map does not have the requested key', () => {
       expect(templates.getTemplate('key')).toEqual(null);
     });
   });

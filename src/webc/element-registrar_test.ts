@@ -2,7 +2,7 @@ import {TestBase} from '../test-base';
 TestBase.setup();
 
 import {BaseElement} from './base-element';
-import {CustomElement} from './custom-element';
+import {CustomElementUtil} from './custom-element-util';
 import {ElementRegistrar} from './element-registrar';
 import {Log} from '../util/log';
 import {Mocks} from '../mock/mocks';
@@ -37,16 +37,23 @@ describe('webc.ElementRegistrar', () => {
       let mockHTMLElement = Mocks.object('HTMLElement');
       let mockElement = jasmine.createSpyObj('Element', ['onAttributeChanged']);
 
+      let parsedValue = Mocks.object('parsedValue');
+      let mockAttributeParser = jasmine.createSpyObj('AttributeParser', ['parse']);
+      mockAttributeParser.parse.and.returnValue(parsedValue);
+
       let runOnInstanceSpy = spyOn(ElementRegistrar, 'runOnInstance_');
 
-      registrar['getLifecycleConfig_'](mockProvider, 'content')
-          .attributeChanged.call(mockHTMLElement, attrName, oldValue, newValue);
+      registrar['getLifecycleConfig_']({[attrName]: mockAttributeParser}, mockProvider, 'content')
+          .attributeChanged.call(mockHTMLElement, 'attr-name', oldValue, newValue);
+
+      mockHTMLElement[attrName] = parsedValue;
+      expect(mockAttributeParser.parse).toHaveBeenCalledWith(newValue);
 
       expect(ElementRegistrar['runOnInstance_'])
           .toHaveBeenCalledWith(mockHTMLElement, jasmine.any(Function));
 
       runOnInstanceSpy.calls.argsFor(0)[1](mockElement);
-      expect(mockElement.onAttributeChanged).toHaveBeenCalledWith(attrName, oldValue, newValue);
+      expect(mockElement.onAttributeChanged).toHaveBeenCalledWith('attr-name', oldValue, newValue);
     });
 
     it('should return config with correct created handler', () => {
@@ -57,13 +64,21 @@ describe('webc.ElementRegistrar', () => {
       mockElement.onCreated = jasmine.createSpy('onCreated');
       mockProvider.and.returnValue(mockElement);
 
+      let attributes = Mocks.object('attributes');
+
       mockHTMLElement.createShadowRoot.and.returnValue(mockShadowRoot);
 
-      registrar['getLifecycleConfig_'](mockProvider, content).created.call(mockHTMLElement);
+      spyOn(CustomElementUtil, 'addAttributes');
+      spyOn(CustomElementUtil, 'setElement');
+
+      registrar['getLifecycleConfig_'](attributes, mockProvider, content).created
+          .call(mockHTMLElement);
 
       expect(mockHTMLElement[ElementRegistrar['__instance']]).toEqual(mockElement);
       expect(mockElement.onCreated).toHaveBeenCalledWith(mockHTMLElement);
       expect(mockShadowRoot.innerHTML).toEqual(content);
+      expect(CustomElementUtil.addAttributes).toHaveBeenCalledWith(mockHTMLElement, attributes);
+      expect(CustomElementUtil.setElement).toHaveBeenCalledWith(mockElement, mockHTMLElement);
     });
 
     it('should return config with correct inserted handler', () => {
@@ -72,7 +87,7 @@ describe('webc.ElementRegistrar', () => {
 
       let runOnInstanceSpy = spyOn(ElementRegistrar, 'runOnInstance_');
 
-      registrar['getLifecycleConfig_'](mockProvider, 'content').inserted.call(mockHTMLElement);
+      registrar['getLifecycleConfig_']({}, mockProvider, 'content').inserted.call(mockHTMLElement);
 
       expect(ElementRegistrar['runOnInstance_'])
           .toHaveBeenCalledWith(mockHTMLElement, jasmine.any(Function));
@@ -87,7 +102,7 @@ describe('webc.ElementRegistrar', () => {
 
       let runOnInstanceSpy = spyOn(ElementRegistrar, 'runOnInstance_');
 
-      registrar['getLifecycleConfig_'](mockProvider, 'content').removed.call(mockHTMLElement);
+      registrar['getLifecycleConfig_']({}, mockProvider, 'content').removed.call(mockHTMLElement);
 
       expect(ElementRegistrar['runOnInstance_'])
           .toHaveBeenCalledWith(mockHTMLElement, jasmine.any(Function));
@@ -108,6 +123,7 @@ describe('webc.ElementRegistrar', () => {
       let mockDependency = Mocks.object('Dependency');
       let name = 'name';
       let templateKey = 'templateKey';
+      let attributes = Mocks.object('attributes');
 
       let originalRegister = registrar.register.bind(registrar);
       spyOn(registrar, 'register').and.callFake((inputCtor: any) => {
@@ -120,11 +136,12 @@ describe('webc.ElementRegistrar', () => {
       });
 
       let mockConfig = {
+        attributes: attributes,
         dependencies: [mockDependency],
         tag: name,
         templateKey: templateKey,
       };
-      spyOn(CustomElement, 'getConfig').and.returnValue(mockConfig);
+      spyOn(CustomElementUtil, 'getConfig').and.returnValue(mockConfig);
 
       let templateContent = 'templateContent';
       mockTemplates.getTemplate.and.returnValue(templateContent);
@@ -144,8 +161,8 @@ describe('webc.ElementRegistrar', () => {
                 });
 
             expect(registrar['getLifecycleConfig_'])
-                .toHaveBeenCalledWith(jasmine.any(Function), templateContent);
-            expect(registrar['getLifecycleConfig_'].calls.argsFor(0)[0]()).toEqual(instance);
+                .toHaveBeenCalledWith(attributes, jasmine.any(Function), templateContent);
+            expect(registrar['getLifecycleConfig_'].calls.argsFor(0)[1]()).toEqual(instance);
             expect(mockInjector.instantiate).toHaveBeenCalledWith(ctor);
 
             expect(registrar['registeredCtors_'].has(ctor)).toBe(true);
@@ -160,7 +177,7 @@ describe('webc.ElementRegistrar', () => {
       spyOn(Log, 'error');
       mockTemplates.getTemplate.and.returnValue(null);
 
-      spyOn(CustomElement, 'getConfig').and.returnValue({
+      spyOn(CustomElementUtil, 'getConfig').and.returnValue({
         dependencies: [],
         tag: 'name',
         templateKey: 'templateKey',

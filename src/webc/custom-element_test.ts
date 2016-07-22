@@ -3,6 +3,7 @@ TestBase.setup();
 
 import {BaseElement} from './base-element';
 import {CustomElement} from './custom-element';
+import {CustomElementUtil} from './custom-element-util';
 import {Mocks} from '../mock/mocks';
 
 
@@ -18,9 +19,10 @@ describe('webc.CustomElement', () => {
     class TestElement extends BaseElement { }
 
     let config = {tag: 'tag', templateKey: 'templateKey'};
+    spyOn(CustomElementUtil, 'setConfig');
 
     CustomElement(config)(TestElement);
-    expect(CustomElement.getConfig(TestElement)).toEqual(config);
+    expect(CustomElementUtil.setConfig).toHaveBeenCalledWith(TestElement, config);
   });
 
   it('should throw exception if the constructor does not extend BaseElement', () => {

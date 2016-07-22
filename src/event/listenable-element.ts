@@ -1,6 +1,6 @@
-import BaseListenable from './base-listenable';
+import {BaseListenable} from './base-listenable';
 import DisposableFunction from '../dispose/disposable-function';
-import Enums from '../typescript/enums';
+import {Enums} from '../typescript/enums';
 
 
 /**
@@ -69,7 +69,7 @@ export enum EventType {
  *
  * @param <T> Type of the wrapped element.
  */
-class ListenableElement<T extends EventTarget> extends BaseListenable<EventType> {
+export class ListenableElement<T extends EventTarget> extends BaseListenable<EventType> {
   private element_: T;
   private forwardedEvents_: Set<EventType>;
   private listener_: EventListener;
@@ -128,5 +128,3 @@ class ListenableElement<T extends EventTarget> extends BaseListenable<EventType>
     return new ListenableElement<T>(element);
   }
 }
-
-export default ListenableElement;

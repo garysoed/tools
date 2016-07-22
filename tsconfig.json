@@ -16,6 +16,14 @@
         "rootDir": "./",
         "strictNullChecks": true
     },
+    "exclude": [
+    ],
+    "include": [
+        "declarations/**/*.ts",
+        "src/**/*.ts",
+        "node_modules/typescript/lib/lib.dom.d.ts",
+        "node_modules/typescript/lib/lib.es2015.d.ts"
+    ],
     "filesGlob": [
         "**/*.ts",
         "**/*.tsx",

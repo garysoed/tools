@@ -4,7 +4,13 @@ load("//:defs.bzl", "gs_tools")
 
 gs_tools(
     deps = [
+      "//src/async",
+      "//src/dispose",
+      "//src/event",
       "//src/inject",
-      "//src/string",
-      "//src/util",
     ])
+
+filegroup(
+    name = "mock_angular",
+    srcs = ["mock-angular.js"]
+)

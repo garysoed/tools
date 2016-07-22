@@ -1,6 +1,6 @@
 import Asyncs from '../async/asyncs';
 import BaseDisposable from '../dispose/base-disposable';
-import ListenableElement, { EventType as ElementEventType } from '../event/listenable-element';
+import {EventType as ElementEventType, ListenableElement} from '../event/listenable-element';
 import Serializer, { Serializable, Field } from '../data/a-serializable';
 
 

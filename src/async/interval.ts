@@ -1,4 +1,4 @@
-import BaseListenable from '../event/base-listenable';
+import {BaseListenable} from '../event/base-listenable';
 import {Validate} from '../valid/validate';
 
 /**

@@ -1,50 +1,8 @@
 import {BaseElement} from '../webc/base-element';
+import {CustomElementUtil} from './custom-element-util';
+import {IElementConfig} from './interfaces';
 import {Validate} from '../valid/validate';
 
-
-const __CONFIG = Symbol('config');
-
-/**
- * Configures a element.
- */
-type IElementConfig = {
-  /**
-   * Element constructor of the dependencies.
-   */
-  dependencies?: gs.ICtor<any>[],
-
-  /**
-   * Tag name of the element.
-   */
-  tag: string,
-
-  /**
-   * Key of template to load from [Templates].
-   */
-  templateKey: string,
-};
-
-
-/**
- * Interface for the annotation.
- *
- * See [[Element]] for more documentation.
- */
-interface IElement {
-  /**
-   * Annotates the class to indicate that it is a element class.
-   *
-   * @param config The element configuration object.
-   */
-  (config: IElementConfig): ClassDecorator;
-
-  /**
-   * Getss the configuration of the given element.
-   *
-   * @param ctor Constructor of the element class whose configuration should be returned.
-   */
-  getConfig(ctor: gs.ICtor<BaseElement>): IElementConfig;
-}
 
 /**
  * Annotates a class as a custom element.
@@ -89,7 +47,7 @@ interface IElement {
  *
  * @param config The configuration object.
  */
-export const CustomElement: IElement = <any> function(config: IElementConfig): ClassDecorator {
+export function CustomElement(config: IElementConfig): ClassDecorator {
   return function<C extends gs.ICtor<any>>(ctor: C): void {
     Validate
         .batch({
@@ -103,10 +61,6 @@ export const CustomElement: IElement = <any> function(config: IElementConfig): C
         })
         .to.allBeValid()
         .assertValid();
-    ctor[__CONFIG] = config;
+    CustomElementUtil.setConfig(ctor, config);
   };
-};
-
-CustomElement.getConfig = function(ctor: gs.ICtor<BaseElement>): IElementConfig {
-  return ctor[__CONFIG];
 };

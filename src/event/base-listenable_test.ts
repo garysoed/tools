@@ -1,7 +1,7 @@
 import {TestBase} from '../test-base';
 TestBase.setup();
 
-import BaseListenable from './base-listenable';
+import {BaseListenable} from './base-listenable';
 import {Mocks} from '../mock/mocks';
 import {TestDispose} from '../testing/test-dispose';
 

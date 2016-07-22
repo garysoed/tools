@@ -1,6 +1,6 @@
-import BaseListenable from '../event/base-listenable';
+import {BaseListenable} from '../event/base-listenable';
 import Doms from './doms';
-import ListenableElement, { EventType as DomEventType } from '../event/listenable-element';
+import {EventType as DomEventType, ListenableElement} from '../event/listenable-element';
 
 /**
  * State of the element being watched.

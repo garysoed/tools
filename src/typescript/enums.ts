@@ -1,7 +1,7 @@
 /**
  * Utility methods to work with typescript's enums.
  */
-class Enums {
+export class Enums {
   /**
    * Converts enum number (as string) to the corresponding enum value.
    *
@@ -36,5 +36,3 @@ class Enums {
     return enumSet[enumValue].toLowerCase();
   }
 };
-
-export default Enums;

@@ -3,3 +3,7 @@ interface FormData extends Array<any> {
   delete(name: string): void;
   set(name: string, value: string, filename?: string): void;
 }
+
+interface HTMLElement {
+  shadowRoot: HTMLElement;
+}
