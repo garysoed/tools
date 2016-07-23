@@ -1,6 +1,7 @@
 import Asyncs from '../async/asyncs';
 import BaseDisposable from '../dispose/base-disposable';
-import {EventType as ElementEventType, ListenableElement} from '../event/listenable-element';
+import {DomEvent} from '../event/dom-event';
+import {ListenableDom} from '../event/listenable-dom';
 import Serializer, { Serializable, Field } from '../data/a-serializable';
 
 
@@ -77,8 +78,8 @@ export class Message {
  * ```
  */
 class PostMessageChannel extends BaseDisposable {
-  private destWindow_: ListenableElement<Window>;
-  private srcWindow_: ListenableElement<Window>;
+  private destWindow_: ListenableDom<Window>;
+  private srcWindow_: ListenableDom<Window>;
 
   /**
    * @param srcWindow The source window for the postMessage channel.
@@ -86,8 +87,8 @@ class PostMessageChannel extends BaseDisposable {
    */
   constructor(srcWindow: Window, destWindow: Window) {
     super();
-    this.destWindow_ = new ListenableElement<Window>(destWindow);
-    this.srcWindow_ = new ListenableElement<Window>(srcWindow);
+    this.destWindow_ = new ListenableDom<Window>(destWindow);
+    this.srcWindow_ = new ListenableDom<Window>(srcWindow);
 
     this.addDisposable(this.destWindow_, this.srcWindow_);
   }
@@ -104,7 +105,7 @@ class PostMessageChannel extends BaseDisposable {
     let destWindowOrigin = PostMessageChannel.getOrigin(this.destWindow_.element);
     return new Promise((resolve: Function) => {
       let unlistenFn = this.srcWindow_.on(
-          ElementEventType.MESSAGE,
+          DomEvent.MESSAGE,
           (event: any) => {
             if (event.origin !== destWindowOrigin) {
               return;
@@ -200,7 +201,7 @@ class PostMessageChannel extends BaseDisposable {
    *     established.
    */
   static listen(srcWindow: Window, expectedOrigin: string): Promise<PostMessageChannel> {
-    let srcWindowListenable = new ListenableElement<Window>(srcWindow);
+    let srcWindowListenable = new ListenableDom<Window>(srcWindow);
     return new Promise((resolve: Function, reject: Function) => {
       let unlistenFn: (BaseDisposable|null) = null;
       let timeoutId = window.setTimeout(() => {
@@ -210,7 +211,7 @@ class PostMessageChannel extends BaseDisposable {
       }, TIMEOUT_MS_);
 
       unlistenFn = srcWindowListenable.on(
-        ElementEventType.MESSAGE,
+        DomEvent.MESSAGE,
         (event: any) => {
           if (event.origin !== expectedOrigin) {
             return;

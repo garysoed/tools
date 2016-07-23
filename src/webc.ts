@@ -1,3 +1,5 @@
+export {Animation} from './webc/animation';
+export {AnimationEasing} from './webc/animation-easing';
 export {BaseElement} from './webc/base-element';
 export {CustomElement} from './webc/custom-element';
 export {ElementRegistrar} from './webc/element-registrar';

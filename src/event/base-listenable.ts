@@ -52,10 +52,27 @@ export class BaseListenable<T> extends BaseDisposable {
       this.callbacksMap_.set(eventType, []);
     }
     const callbacks = this.callbacksMap_.get(eventType);
-    let index = callbacks!.length;
     callbacks!.push(callback);
     return new DisposableFunction(() => {
-      callbacks!.splice(index, 1);
+      let index = callbacks!.indexOf(callback);
+      if (index >= 0) {
+        callbacks!.splice(index, 1);
+      }
     });
+  }
+
+  /**
+   * Listens to an event dispatched by this object once.
+   *
+   * @param eventType Type of event to listen to.
+   * @param callback The callback to be called when the specified event is dispatched.
+   * @return [[DisposableFunction]] that should be disposed to stop listening to the event.
+   */
+  once(eventType: T, callback: (payload: any) => void): DisposableFunction {
+    let disposableFunction = this.on(eventType, (payload: any) => {
+      callback(payload);
+      disposableFunction.dispose();
+    });
+    return disposableFunction;
   }
 }

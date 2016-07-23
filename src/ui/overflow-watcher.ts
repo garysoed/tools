@@ -1,6 +1,7 @@
 import {BaseListenable} from '../event/base-listenable';
 import Doms from './doms';
-import {EventType as DomEventType, ListenableElement} from '../event/listenable-element';
+import {DomEvent} from '../event/dom-event';
+import {ListenableDom} from '../event/listenable-dom';
 
 /**
  * State of the element being watched.
@@ -54,10 +55,10 @@ class OverflowWatcher extends BaseListenable<EventType> {
     this.element_ = element;
     this.state_ = null;
 
-    let listenableContainer = new ListenableElement(container);
+    let listenableContainer = new ListenableDom(container);
     this.addDisposable(
         listenableContainer,
-        listenableContainer.on(DomEventType.SCROLL, this.onScroll_.bind(this)));
+        listenableContainer.on(DomEvent.SCROLL, this.onScroll_.bind(this)));
   }
 
   // TODO(gs): Memoize this.

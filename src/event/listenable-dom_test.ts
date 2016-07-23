@@ -1,25 +1,26 @@
 import {TestBase} from '../test-base';
 TestBase.setup();
 
-import {ListenableElement, EventType} from './listenable-element';
+import {DomEvent} from './dom-event';
+import {ListenableDom} from './listenable-dom';
 import {Mocks} from '../mock/mocks';
 import {TestDispose} from '../testing/test-dispose';
 import {TestEvent} from '../testing/test-event';
 
 
-describe('event.ListenableElement', () => {
+describe('event.ListenableDom', () => {
   let mockElement;
   let element;
 
   beforeEach(() => {
     mockElement = jasmine.createSpyObj('Element', ['addEventListener', 'removeEventListener']);
-    element = new ListenableElement(mockElement);
+    element = new ListenableDom(mockElement);
     TestDispose.add(element);
   });
 
   describe('dispose', () => {
     it('should stop listening to events on disposal', () => {
-      let eventType = EventType.CLICK;
+      let eventType = DomEvent.CLICK;
 
       TestDispose.add(element.on(eventType, () => undefined));
 
@@ -34,7 +35,7 @@ describe('event.ListenableElement', () => {
 
   describe('on', () => {
     it('should forward listened events', () => {
-      let eventType = EventType.CLICK;
+      let eventType = DomEvent.CLICK;
       let mockEvent = Mocks.object('Event');
       mockEvent.type = 'click';
 
@@ -51,7 +52,7 @@ describe('event.ListenableElement', () => {
     });
 
     it('should not forward listened events more than once', () => {
-      let eventType = EventType.CLICK;
+      let eventType = DomEvent.CLICK;
       let mockEvent = Mocks.object('Event');
       mockEvent.type = 'click';
 

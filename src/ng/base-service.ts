@@ -1,5 +1,6 @@
 import {BaseListenable} from '../event/base-listenable';
-import {EventType, ListenableElement} from '../event/listenable-element';
+import {DomEvent} from '../event/dom-event';
+import {ListenableDom} from '../event/listenable-dom';
 
 
 /**
@@ -17,11 +18,11 @@ class BaseService<E> extends BaseListenable<E> {
   constructor(window: Window) {
     super();
 
-    let listenableWindow = new ListenableElement(window);
+    let listenableWindow = new ListenableDom(window);
     this.addDisposable(listenableWindow);
 
     this.addDisposable(
-        listenableWindow.on(EventType.BEFOREUNLOAD, this.onBeforeUnload_.bind(this)));
+        listenableWindow.on(DomEvent.BEFOREUNLOAD, this.onBeforeUnload_.bind(this)));
   }
 
   private onBeforeUnload_(): void {

@@ -1,2 +1,3 @@
 export {BaseListenable} from './event/base-listenable';
-export {EventType as DomEvent, ListenableElement} from './event/listenable-element';
+export {DomEvent} from './event/dom-event';
+export {ListenableDom} from './event/listenable-dom';

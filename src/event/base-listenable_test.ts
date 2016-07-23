@@ -59,4 +59,34 @@ describe('event.BaseListenable', () => {
       expect(mockCallback).not.toHaveBeenCalled();
     });
   });
+
+  describe('once', () => {
+    it('should listen to the event once', () => {
+      let mockCallback = jasmine.createSpy('Callback');
+      let event = 'event';
+
+      let disposableFunction = listenable.once(event, mockCallback);
+      listenable.dispatch(event);
+
+      expect(mockCallback).toHaveBeenCalledWith(null);
+
+      // Dispatch the event again.
+      mockCallback.calls.reset();
+      listenable.dispatch(event);
+      expect(mockCallback).not.toHaveBeenCalled();
+      expect(disposableFunction.isDisposed).toEqual(true);
+    });
+
+    it('should return disposable function that stops listening to the event', () => {
+      let mockCallback = jasmine.createSpy('Callback');
+      let event = 'event';
+
+      let disposableFunction = listenable.once(event, mockCallback);
+      disposableFunction.dispose();
+
+      listenable.dispatch(event);
+
+      expect(mockCallback).not.toHaveBeenCalled();
+    });
+  });
 });

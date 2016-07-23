@@ -2,7 +2,7 @@ import {TestBase} from '../test-base';
 TestBase.setup();
 
 import Asyncs from '../async/asyncs';
-import {EventType as ElementEventType} from '../event/listenable-element';
+import {DomEvent} from '../event/dom-event';
 import {Mocks} from '../mock/mocks';
 import PostMessageChannel, {Message, MessageType} from './post-message-channel';
 import Serializer from '../data/a-serializable';
@@ -76,10 +76,10 @@ describe('ui.PostMessageChannel', () => {
               }, done.fail);
 
           channel['srcWindow_'].dispatch(
-              ElementEventType.MESSAGE,
+              DomEvent.MESSAGE,
               { data: json1, origin: origin });
           channel['srcWindow_'].dispatch(
-              ElementEventType.MESSAGE,
+              DomEvent.MESSAGE,
               { data: json2, origin: origin });
         });
 
@@ -113,10 +113,10 @@ describe('ui.PostMessageChannel', () => {
               }, done.fail);
 
           channel['srcWindow_'].dispatch(
-              ElementEventType.MESSAGE,
+              DomEvent.MESSAGE,
               { data: json1, origin: 'otherOrigin' });
           channel['srcWindow_'].dispatch(
-              ElementEventType.MESSAGE,
+              DomEvent.MESSAGE,
               { data: json2, origin: origin });
     });
   });

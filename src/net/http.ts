@@ -1,6 +1,6 @@
 import BaseDisposable from '../dispose/base-disposable';
-import {EventType as ListenableElementEventType, ListenableElement} from
-    '../event/listenable-element';
+import {DomEvent} from '../event/dom-event';
+import {ListenableDom} from '../event/listenable-dom';
 import {Records} from '../collection/records';
 
 /**
@@ -8,9 +8,9 @@ import {Records} from '../collection/records';
  */
 abstract class HttpRequest extends BaseDisposable {
   /**
-   * The XMLHttpRequest object wrapped as a [[ListenableElement]]
+   * The XMLHttpRequest object wrapped as a [[ListenableDom]]
    */
-  protected listenableRequest: ListenableElement<XMLHttpRequest>;
+  protected listenableRequest: ListenableDom<XMLHttpRequest>;
 
   /**
    * The XMLHttpRequest object.
@@ -24,7 +24,7 @@ abstract class HttpRequest extends BaseDisposable {
   constructor(method: string, path: string) {
     super();
     this.request = new XMLHttpRequest();
-    this.listenableRequest = new ListenableElement(this.request);
+    this.listenableRequest = new ListenableDom(this.request);
 
     this.request.open(method, path);
 
@@ -46,7 +46,7 @@ abstract class HttpRequest extends BaseDisposable {
    */
   send(): Promise<string> {
     return new Promise<string>((resolve: (param: any) => void, reject: (error: any) => void) => {
-      this.addDisposable(this.listenableRequest.on(ListenableElementEventType.LOAD, () => {
+      this.addDisposable(this.listenableRequest.on(DomEvent.LOAD, () => {
         if (this.request.status === 200) {
           resolve(this.request.responseText);
         } else {
