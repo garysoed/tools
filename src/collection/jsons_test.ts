@@ -15,6 +15,18 @@ describe('collection.Jsons', () => {
     });
   });
 
+  describe('getValue', () => {
+    it('should retrieve the value correctly', () => {
+      let json = {a: {b: {c: 123}}};
+      expect(Jsons.getValue(json, 'a.b')).toEqual({c: 123});
+    });
+
+    it('should return undefined if the path does not exist', () => {
+      let json = {a: {b: {c: 123}}};
+      expect(Jsons.getValue(json, 'a.b.d')).toEqual(undefined);
+    });
+  });
+
   describe('mixin', () => {
     it('should copy the source keys to the destination object', () => {
       let dest = { a: 1 };
@@ -41,6 +53,22 @@ describe('collection.Jsons', () => {
       let source = { a: 1 };
       Jsons.mixin(source, dest);
       expect(dest.a).toEqual(2);
+    });
+  });
+
+  describe('setTemporaryValue', () => {
+    it('should run the callback with the values set temporarily', () => {
+      let json = {a: 1};
+      let callback = jasmine.createSpy('callback');
+      Jsons.setTemporaryValue(
+          json,
+          {a: 'one', b: 'two'},
+          () => {
+            callback(json['a'], json['b']);
+          });
+
+      expect(json).toEqual({a: 1, b: undefined});
+      expect(callback).toHaveBeenCalledWith('one', 'two');
     });
   });
 
