@@ -1,4 +1,4 @@
-import BaseDisposable from '../dispose/base-disposable';
+import {BaseDisposable} from '../dispose/base-disposable';
 import {DomEvent} from '../event/dom-event';
 import {ListenableDom} from '../event/listenable-dom';
 import {Records} from '../collection/records';

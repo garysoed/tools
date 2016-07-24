@@ -1,5 +1,5 @@
 import {BaseListenable} from '../event/base-listenable';
-import Doms from './doms';
+import {Doms} from './doms';
 import {DomEvent} from '../event/dom-event';
 import {ListenableDom} from '../event/listenable-dom';
 

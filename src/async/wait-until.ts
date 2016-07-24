@@ -1,5 +1,5 @@
-import BaseDisposable from '../dispose/base-disposable';
-import Interval, { EventType as IntervalEventType } from '../async/interval';
+import {BaseDisposable} from '../dispose/base-disposable';
+import {Interval} from '../async/interval';
 
 
 /**
@@ -28,7 +28,7 @@ class WaitUntil extends BaseDisposable {
   private promiseHandler_(resolve: () => void, reject: (error: any) => void): void {
     let interval = Interval.newInstance(this.interval_);
     this.addDisposable(interval);
-    interval.on(IntervalEventType.TICK, () => {
+    interval.on(Interval.TICK_EVENT, () => {
       if (this.isDisposed) {
         reject('Check function has not returned true when waiter is disposed');
       }

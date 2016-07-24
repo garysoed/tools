@@ -1,7 +1,7 @@
 import {TestBase} from '../test-base';
 TestBase.setup();
 
-import Interval, { EventType as IntervalEventType } from './interval';
+import {Interval} from './interval';
 import {TestDispose} from '../testing/test-dispose';
 
 
@@ -29,7 +29,7 @@ describe('async.Interval', () => {
       let intervalId = 'intervalId';
       let spy = spyOn(window, 'setInterval').and.returnValue(intervalId);
 
-      TestDispose.add(interval.on(IntervalEventType.TICK, callback));
+      TestDispose.add(interval.on(Interval.TICK_EVENT, callback));
       interval.start();
 
       expect(interval['intervalId_']).toEqual(intervalId);

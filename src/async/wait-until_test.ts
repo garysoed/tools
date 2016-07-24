@@ -1,7 +1,7 @@
 import {TestBase} from '../test-base';
 TestBase.setup();
 
-import Interval, { EventType as IntervalEventType } from '../async/interval';
+import {Interval} from '../async/interval';
 import {TestDispose} from '../testing/test-dispose';
 import WaitUntil from './wait-until';
 
@@ -31,7 +31,7 @@ describe('async.WaitUntil', () => {
         }, done.fail);
 
     expect(mockInterval.start).toHaveBeenCalledWith();
-    expect(mockInterval.on).toHaveBeenCalledWith(IntervalEventType.TICK, jasmine.any(Function));
+    expect(mockInterval.on).toHaveBeenCalledWith(Interval.TICK_EVENT, jasmine.any(Function));
     mockCheckFn.and.returnValue(true);
 
     mockInterval.on.calls.argsFor(0)[1]();

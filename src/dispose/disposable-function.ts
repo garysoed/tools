@@ -1,4 +1,4 @@
-import BaseDisposable from './base-disposable';
+import {BaseDisposable} from './base-disposable';
 
 /**
  * Wrapper around a function that executes the function when this object is disposed.

@@ -4,7 +4,7 @@ import {Validate} from '../valid/validate';
 /**
  * Events dispatched by [[Interval]].
  */
-export enum EventType {
+enum EventType {
   /**
    * Called at every interval.
    */
@@ -22,7 +22,9 @@ export enum EventType {
  * 1.  Call [[start]] to start the interval.
  * 1.  You can stop the interval using the [[stop]] method or just [[dispose]] it.
  */
-class Interval extends BaseListenable<EventType> {
+export class Interval extends BaseListenable<EventType> {
+  static TICK_EVENT: EventType = EventType.TICK;
+
   private interval_: number;
   private intervalId_: (number|null);
 
@@ -54,7 +56,7 @@ class Interval extends BaseListenable<EventType> {
         .orThrows('Interval is already running, cannot start again')
         .assertValid();
     this.intervalId_ = window.setInterval(() => {
-      this.dispatch(EventType.TICK, () => {});
+      this.dispatch(Interval.TICK_EVENT, () => {});
     }, this.interval_);
   }
 
@@ -77,5 +79,3 @@ class Interval extends BaseListenable<EventType> {
     return new Interval(interval);
   }
 }
-
-export default Interval;

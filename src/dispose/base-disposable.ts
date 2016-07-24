@@ -16,7 +16,7 @@ export const Flags = {
 /**
  * Base class of all disposable objects.
  */
-class BaseDisposable {
+export class BaseDisposable {
   private disposables_: BaseDisposable[];
   private isDisposed_: boolean;
 
@@ -72,5 +72,3 @@ class BaseDisposable {
     return this.isDisposed_;
   }
 };
-
-export default BaseDisposable;

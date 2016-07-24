@@ -2,7 +2,7 @@ import {TestBase} from '../test-base';
 TestBase.setup();
 
 import {Arrays} from '../collection/arrays';
-import Doms from './doms';
+import {Doms} from './doms';
 
 describe('ui.Doms', () => {
   let rootEl;

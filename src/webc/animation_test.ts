@@ -17,7 +17,7 @@ describe('webc.Animation', () => {
   });
 
   describe('appendKeyframe', () => {
-    fit('should add additional keyframe to the animation', () => {
+    it('should add additional keyframe to the animation', () => {
       let keyframe = Mocks.object('keyframe');
       let newAnimation = Mocks.object('newAnimation');
       spyOn(Animation, 'newInstance').and.returnValue(newAnimation);
@@ -28,7 +28,7 @@ describe('webc.Animation', () => {
   });
 
   describe('applyTo', () => {
-    fit('should apply the animation to the given element', () => {
+    it('should apply the animation to the given element', () => {
       let domAnimate = Mocks.object('domAnimate');
       let mockElement = jasmine.createSpyObj('Element', ['animate']);
       mockElement.animate.and.returnValue(domAnimate);

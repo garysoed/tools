@@ -1,4 +1,4 @@
-import BaseDisposable from '../dispose/base-disposable';
+import {BaseDisposable} from '../dispose/base-disposable';
 import {BaseElement} from './base-element';
 import {Cases} from '../string/cases';
 import {Checks} from '../util/checks';
@@ -85,6 +85,10 @@ export class ElementRegistrar extends BaseDisposable {
     }
 
     let config = CustomElementUtil.getConfig(ctor);
+    if (!config) {
+      return Promise.resolve();
+    }
+
     let dependencies = config.dependencies || [];
 
     return Promise

@@ -200,6 +200,15 @@ describe('webc.ElementRegistrar', () => {
             done();
           }, done.fail);
     });
+
+    it('should be noop if the ctor has no configs', (done: any) => {
+      spyOn(CustomElementUtil, 'getConfig').and.returnValue(null);
+      registrar.register(ctor)
+          .then(() => {
+            expect(mockXtag.register).not.toHaveBeenCalled();
+            done();
+          }, done.fail);
+    });
   });
 
   describe('runOnInstance_', () => {

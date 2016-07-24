@@ -3,7 +3,7 @@ import {Iterables} from '../collection/iterables';
 /**
  * Methods to manipulate DOM objects.
  */
-class Doms {
+export class Doms {
   /**
    * Returns an iterable that uses a seed value and continuously transforms it.
    *
@@ -104,5 +104,3 @@ class Doms {
     return distance;
   }
 };
-
-export default Doms;

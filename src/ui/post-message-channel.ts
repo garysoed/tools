@@ -1,5 +1,5 @@
 import Asyncs from '../async/asyncs';
-import BaseDisposable from '../dispose/base-disposable';
+import {BaseDisposable} from '../dispose/base-disposable';
 import {DomEvent} from '../event/dom-event';
 import {ListenableDom} from '../event/listenable-dom';
 import Serializer, { Serializable, Field } from '../data/a-serializable';
