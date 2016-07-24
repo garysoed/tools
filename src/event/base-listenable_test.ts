@@ -21,7 +21,7 @@ describe('event.BaseListenable', () => {
       TestDispose.add(listenable.on(event, mockCallback));
       listenable.dispose();
 
-      listenable.dispatch(event);
+      listenable.dispatch(event, () => {});
 
       expect(mockCallback).not.toHaveBeenCalled();
     });
@@ -29,19 +29,40 @@ describe('event.BaseListenable', () => {
 
   describe('dispatch', () => {
     it('should call all the registered callbacks', () => {
-      let mockCallback = jasmine.createSpy('Callback');
       let event = 'event';
+      let i = 0;
+      let mockBubbleHandler = jasmine.createSpy('BubbleHandler');
+      TestDispose.add(listenable.on(
+          event,
+          (payload: any) => {
+            mockBubbleHandler(i, payload);
+          },
+          false));
+
+      let mockCaptureHandler = jasmine.createSpy('CaptureHandler');
+      TestDispose.add(listenable.on(
+          event,
+          (payload: any) => {
+            mockCaptureHandler(i, payload);
+          },
+          true));
+
       let payload = Mocks.object('payload');
-      TestDispose.add(listenable.on(event, mockCallback));
 
-      listenable.dispatch(event, payload);
+      listenable.dispatch(
+          event,
+          () => {
+            i = i + 1;
+          },
+          payload);
 
-      expect(mockCallback).toHaveBeenCalledWith(payload);
+      expect(mockCaptureHandler).toHaveBeenCalledWith(0, payload);
+      expect(mockBubbleHandler).toHaveBeenCalledWith(1, payload);
     });
 
     it('should handle case when no callbacks are registered', () => {
       expect(() => {
-        listenable.dispatch('event', 'payload');
+        listenable.dispatch('event', () => {}, 'payload');
       }).not.toThrow();
     });
   });
@@ -54,7 +75,7 @@ describe('event.BaseListenable', () => {
       let disposableFunction = listenable.on(event, mockCallback);
       disposableFunction.dispose();
 
-      listenable.dispatch(event);
+      listenable.dispatch(event, () => {});
 
       expect(mockCallback).not.toHaveBeenCalled();
     });
@@ -66,13 +87,13 @@ describe('event.BaseListenable', () => {
       let event = 'event';
 
       let disposableFunction = listenable.once(event, mockCallback);
-      listenable.dispatch(event);
+      listenable.dispatch(event, () => {});
 
       expect(mockCallback).toHaveBeenCalledWith(null);
 
       // Dispatch the event again.
       mockCallback.calls.reset();
-      listenable.dispatch(event);
+      listenable.dispatch(event, () => {});
       expect(mockCallback).not.toHaveBeenCalled();
       expect(disposableFunction.isDisposed).toEqual(true);
     });
@@ -84,7 +105,7 @@ describe('event.BaseListenable', () => {
       let disposableFunction = listenable.once(event, mockCallback);
       disposableFunction.dispose();
 
-      listenable.dispatch(event);
+      listenable.dispatch(event, () => {});
 
       expect(mockCallback).not.toHaveBeenCalled();
     });

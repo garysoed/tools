@@ -29,7 +29,7 @@ class Recaptcha extends BaseListenable<EventType> {
    * Callback called when the recaptcha has obtained a response.
    */
   private onCallback_(): void {
-    this.dispatch(EventType.NEW_RESPONSE);
+    this.dispatch(EventType.NEW_RESPONSE, () => {});
   }
 
   /**

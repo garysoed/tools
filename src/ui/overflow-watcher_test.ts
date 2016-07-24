@@ -23,7 +23,8 @@ describe('ui.OverflowWatcher', () => {
   });
 
   it('should initialize correctly', () => {
-    expect(mockContainer.addEventListener).toHaveBeenCalledWith('scroll', jasmine.any(Function));
+    expect(mockContainer.addEventListener)
+        .toHaveBeenCalledWith('scroll', jasmine.any(Function), false);
   });
 
   describe('getState_', () => {

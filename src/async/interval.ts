@@ -54,7 +54,7 @@ class Interval extends BaseListenable<EventType> {
         .orThrows('Interval is already running, cannot start again')
         .assertValid();
     this.intervalId_ = window.setInterval(() => {
-      this.dispatch(EventType.TICK);
+      this.dispatch(EventType.TICK, () => {});
     }, this.interval_);
   }
 

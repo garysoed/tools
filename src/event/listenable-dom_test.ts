@@ -1,72 +1,58 @@
 import {TestBase} from '../test-base';
 TestBase.setup();
 
-import {DomEvent} from './dom-event';
 import {ListenableDom} from './listenable-dom';
 import {Mocks} from '../mock/mocks';
 import {TestDispose} from '../testing/test-dispose';
-import {TestEvent} from '../testing/test-event';
 
 
 describe('event.ListenableDom', () => {
-  let mockElement;
-  let element;
+  let mockEventTarget;
+  let listenable;
 
   beforeEach(() => {
-    mockElement = jasmine.createSpyObj('Element', ['addEventListener', 'removeEventListener']);
-    element = new ListenableDom(mockElement);
-    TestDispose.add(element);
+    mockEventTarget = jasmine.createSpyObj(
+        'EventTarget',
+        ['addEventListener', 'dispatchEvent', 'removeEventListener']);
+    listenable = new ListenableDom(mockEventTarget);
+    TestDispose.add(listenable);
   });
 
-  describe('dispose', () => {
-    it('should stop listening to events on disposal', () => {
-      let eventType = DomEvent.CLICK;
+  describe('dispatch', () => {
+    it('should use the event target for dispatching events', () => {
+      let mockCallback = jasmine.createSpy('Callback');
+      let eventType = 'eventType';
+      let payload = Mocks.object('payload');
 
-      TestDispose.add(element.on(eventType, () => undefined));
+      listenable.dispatch(eventType, mockCallback, payload);
 
-      let listener = mockElement.addEventListener.calls.argsFor(0)[1];
+      expect(mockEventTarget.dispatchEvent).toHaveBeenCalledTimes(2);
+      let captureEvent = mockEventTarget.dispatchEvent.calls.argsFor(0)[0];
+      expect(captureEvent['payload']).toEqual(payload);
+      expect(captureEvent.bubbles).toEqual(false);
 
-      element.dispose();
-      expect(mockElement.removeEventListener).toHaveBeenCalledWith('click', listener);
-      expect(mockElement.removeEventListener).not
-          .toHaveBeenCalledWith('other', jasmine.any(Function));
+      let bubbleEvent = mockEventTarget.dispatchEvent.calls.argsFor(1)[0];
+      expect(bubbleEvent['payload']).toEqual(payload);
+      expect(bubbleEvent.bubbles).toEqual(true);
+
+      expect(mockCallback).toHaveBeenCalledWith();
     });
   });
 
   describe('on', () => {
-    it('should forward listened events', () => {
-      let eventType = DomEvent.CLICK;
-      let mockEvent = Mocks.object('Event');
-      mockEvent.type = 'click';
+    it('should listen to the event target correctly', () => {
+      let eventType = 'eventType';
+      let callback = Mocks.object('callback');
+      let useCapture = true;
 
-      TestEvent.spyOn(element, [eventType]);
+      let disposableFunction = listenable.on(eventType, callback, useCapture);
 
-      TestDispose.add(element.on(eventType, () => undefined));
+      expect(mockEventTarget.addEventListener)
+          .toHaveBeenCalledWith(eventType, callback, useCapture);
 
-      expect(mockElement.addEventListener).toHaveBeenCalledWith('click', jasmine.any(Function));
-      expect(mockElement.addEventListener).not.toHaveBeenCalledWith('other', jasmine.any(Function));
-
-      // Trigger the DOM event.
-      mockElement.addEventListener.calls.argsFor(0)[1](mockEvent);
-      expect(TestEvent.getPayloads(element, eventType)).toEqual([mockEvent]);
-    });
-
-    it('should not forward listened events more than once', () => {
-      let eventType = DomEvent.CLICK;
-      let mockEvent = Mocks.object('Event');
-      mockEvent.type = 'click';
-
-      TestEvent.spyOn(element, [eventType]);
-
-      TestDispose.add(
-          element.on(eventType, () => undefined),
-          element.on(eventType, () => undefined));
-
-      expect(mockElement.addEventListener).toHaveBeenCalledWith('click', jasmine.any(Function));
-
-      // Trigger the DOM event.
-      mockElement.addEventListener.calls.argsFor(0)[1](mockEvent);
-      expect(TestEvent.getPayloads(element, eventType)).toEqual([mockEvent]);
+      disposableFunction.dispose();
+      expect(mockEventTarget.removeEventListener)
+          .toHaveBeenCalledWith(eventType, callback, useCapture);
     });
   });
 });

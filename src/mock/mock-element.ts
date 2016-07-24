@@ -19,6 +19,10 @@ class MockElement {
     // Noop
   }
 
+  dispatchEvent(): void {
+    // Noop
+  }
+
   /**
    * Stub implementation.
    */

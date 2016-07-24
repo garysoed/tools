@@ -1,7 +1,5 @@
 import {BaseListenable} from './base-listenable';
 import DisposableFunction from '../dispose/disposable-function';
-import {DomEvent} from './dom-event';
-import {Enums} from '../typescript/enums';
 
 
 /**
@@ -9,53 +7,47 @@ import {Enums} from '../typescript/enums';
  *
  * @param <T> Type of the wrapped element.
  */
-export class ListenableDom<T extends EventTarget> extends BaseListenable<DomEvent> {
-  private element_: T;
-  private forwardedEvents_: Set<DomEvent>;
-  private listener_: EventListener;
-
+export class ListenableDom<T extends EventTarget> extends BaseListenable<string> {
   /**
    * @param element The EventTarget to wrap.
    */
-  constructor(element: T) {
+  constructor(private eventTarget_: T) {
     super();
-    this.element_ = element;
-    this.forwardedEvents_ = new Set<DomEvent>();
-    this.listener_ = this.onEvent_.bind(this);
-  }
-
-  private onEvent_(event: Event): void {
-    let eventType = Enums.fromLowerCaseString<DomEvent>(event.type, DomEvent);
-    this.dispatch(eventType, event);
   }
 
   /**
-   * @override BaseDisposable
+   * @override
    */
-  disposeInternal(): void {
-    this.forwardedEvents_.forEach((eventType: DomEvent) => {
-      this.element_
-          .removeEventListener(Enums.toLowerCaseString(eventType, DomEvent), this.listener_);
-    });
+  dispatch(eventType: string, callback: () => void, payload: any = null): void {
+    let captureEvent = new Event(eventType, {'bubbles': false});
+    captureEvent['payload'] = payload;
+    this.eventTarget_.dispatchEvent(captureEvent);
+
+    callback();
+
+    let bubbleEvent = new Event(eventType, {'bubbles': true});
+    bubbleEvent['payload'] = payload;
+    this.eventTarget_.dispatchEvent(bubbleEvent);
   }
 
   /**
    * The wrapped EventTarget
    */
-  get element(): T {
-    return this.element_;
+  get eventTarget(): T {
+    return this.eventTarget_;
   }
 
   /**
    * @override BaseListenable
    */
-  on(eventType: DomEvent, callback: (data: any) => void): DisposableFunction {
-    if (!this.forwardedEvents_.has(eventType)) {
-      this.element_.addEventListener(Enums.toLowerCaseString(eventType, DomEvent), this.listener_);
-      this.forwardedEvents_.add(eventType);
-    }
-
-    return super.on(eventType, callback);
+  on(
+      eventType: string,
+      callback: (data: any) => void,
+      useCapture: boolean = false): DisposableFunction {
+    this.eventTarget_.addEventListener(eventType, callback, useCapture);
+    return new DisposableFunction(() => {
+      this.eventTarget_.removeEventListener(eventType, callback, useCapture);
+    });
   }
 
   /**

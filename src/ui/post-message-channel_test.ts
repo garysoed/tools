@@ -65,6 +65,9 @@ describe('ui.PostMessageChannel', () => {
             }
           });
 
+          let mockDisposableFunction = jasmine.createSpyObj('DisposableFunction', ['dispose']);
+          spyOn(channel['srcWindow_'], 'on').and.returnValue(mockDisposableFunction);
+
           channel['waitForMessage_'](testFn)
               .then((message: Message) => {
                 expect(message).toEqual(message2);
@@ -72,15 +75,15 @@ describe('ui.PostMessageChannel', () => {
                 expect(testFn).toHaveBeenCalledWith(message2);
 
                 expect(PostMessageChannel.getOrigin).toHaveBeenCalledWith(mockDestWindow);
+                expect(mockDisposableFunction.dispose).toHaveBeenCalledWith();
                 done();
               }, done.fail);
 
-          channel['srcWindow_'].dispatch(
-              DomEvent.MESSAGE,
-              { data: json1, origin: origin });
-          channel['srcWindow_'].dispatch(
-              DomEvent.MESSAGE,
-              { data: json2, origin: origin });
+          expect(channel['srcWindow_'].on)
+              .toHaveBeenCalledWith(DomEvent.MESSAGE, jasmine.any(Function));
+
+          channel['srcWindow_'].on.calls.argsFor(0)[1]({data: json1, origin: origin});
+          channel['srcWindow_'].on.calls.argsFor(0)[1]({data: json2, origin: origin});
         });
 
     it('should ignore messages with non matching origin',
@@ -106,18 +109,20 @@ describe('ui.PostMessageChannel', () => {
             }
           });
 
+          let mockDisposableFunction = jasmine.createSpyObj('DisposableFunction', ['dispose']);
+          spyOn(channel['srcWindow_'], 'on').and.returnValue(mockDisposableFunction);
+
           channel['waitForMessage_'](testFn)
               .then(() => {
                 expect(testFn).not.toHaveBeenCalledWith(message1);
                 done();
               }, done.fail);
 
-          channel['srcWindow_'].dispatch(
-              DomEvent.MESSAGE,
-              { data: json1, origin: 'otherOrigin' });
-          channel['srcWindow_'].dispatch(
-              DomEvent.MESSAGE,
-              { data: json2, origin: origin });
+          expect(channel['srcWindow_'].on)
+              .toHaveBeenCalledWith(DomEvent.MESSAGE, jasmine.any(Function));
+
+          channel['srcWindow_'].on.calls.argsFor(0)[1]({data: json1, origin: 'otherOrigin'});
+          channel['srcWindow_'].on.calls.argsFor(0)[1]({data: json2, origin: origin});
     });
   });
 
@@ -302,7 +307,8 @@ describe('ui.PostMessageChannel', () => {
             done();
           }, done.fail);
 
-      expect(mockSrcWindow.addEventListener).toHaveBeenCalledWith('message', jasmine.any(Function));
+      expect(mockSrcWindow.addEventListener)
+          .toHaveBeenCalledWith('message', jasmine.any(Function), false);
       mockSrcWindow.addEventListener.calls.argsFor(0)[1]({
         data: Serializer.toJSON(new Message(MessageType.PING, { 'id': id })),
         origin: expectedOrigin,

@@ -20,7 +20,7 @@ describe('ng.BaseService', () => {
       spyOn(service, 'dispose').and.callThrough();
 
       expect(mockWindow.addEventListener)
-          .toHaveBeenCalledWith('beforeunload', jasmine.any(Function));
+          .toHaveBeenCalledWith('beforeunload', jasmine.any(Function), false);
 
       mockWindow.addEventListener.calls.argsFor(0)[1]({ type: 'beforeunload' });
 

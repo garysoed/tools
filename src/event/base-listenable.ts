@@ -13,29 +13,44 @@ import DisposableFunction from '../dispose/disposable-function';
  * @param <T> Type of event that this class dispatches.
  */
 export class BaseListenable<T> extends BaseDisposable {
-  private callbacksMap_: Map<T, ((data: any) => void)[]>;
+  private bubbleCallbacksMap_: Map<T, ((data: any) => void)[]> = new Map();
+  private captureCallbacksMap_: Map<T, ((data: any) => void)[]> = new Map();
 
   constructor() {
     super();
-    this.callbacksMap_ = new Map();
   }
 
   /**
    * @override
    */
   disposeInternal(): void {
-    this.callbacksMap_.clear();
+    this.bubbleCallbacksMap_.clear();
+    this.captureCallbacksMap_.clear();
   }
 
   /**
+   * Dispatches the event.
+   *
+   * This function takes in a callback function. The event will be dispatched twice - once before
+   * the callback is called, and once after the callback is called. The event occuring before the
+   * callback is a `capture` event, while the one after the callback is a `bubble` event.
+   *
    * @param eventType Type of event to dispatch.
    * @param payload Any payloads that are associated with the event, if any.
+   * @param callback The function to be called during the duration of the event.
    */
-  dispatch(eventType: T, payload: any = null): void {
-    let callbacks = this.callbacksMap_.get(eventType);
-    if (!!callbacks) {
-      callbacks.forEach((callback: (data: any) => void) => {
-        callback(payload);
+  dispatch(eventType: T, callback: () => void, payload: any = null): void {
+    if (this.captureCallbacksMap_.has(eventType)) {
+      this.captureCallbacksMap_.get(eventType)!.forEach((handler: (data: any) => void) => {
+        handler(payload);
+      });
+    }
+
+    callback();
+
+    if (this.bubbleCallbacksMap_.has(eventType)) {
+      this.bubbleCallbacksMap_.get(eventType)!.forEach((handler: (data: any) => void) => {
+        handler(payload);
       });
     }
   }
@@ -45,13 +60,18 @@ export class BaseListenable<T> extends BaseDisposable {
    *
    * @param eventType Type of event to listen to.
    * @param callback The callback to be called when the specified event is dispatched.
+   * @param useCapture True iff the capture phase should be used. Defaults to false.
    * @return [[DisposableFunction]] that should be disposed to stop listening to the event.
    */
-  on(eventType: T, callback: (payload: any) => void): DisposableFunction {
-    if (!this.callbacksMap_.has(eventType)) {
-      this.callbacksMap_.set(eventType, []);
+  on(
+      eventType: T,
+      callback: (payload: any) => void,
+      useCapture: boolean = false): DisposableFunction {
+    let map = useCapture ? this.captureCallbacksMap_ : this.bubbleCallbacksMap_;
+    if (!map.has(eventType)) {
+      map.set(eventType, []);
     }
-    const callbacks = this.callbacksMap_.get(eventType);
+    const callbacks = map.get(eventType);
     callbacks!.push(callback);
     return new DisposableFunction(() => {
       let index = callbacks!.indexOf(callback);
@@ -66,13 +86,20 @@ export class BaseListenable<T> extends BaseDisposable {
    *
    * @param eventType Type of event to listen to.
    * @param callback The callback to be called when the specified event is dispatched.
+   * @param useCapture True iff the capture phase should be used. Defaults to false.
    * @return [[DisposableFunction]] that should be disposed to stop listening to the event.
    */
-  once(eventType: T, callback: (payload: any) => void): DisposableFunction {
-    let disposableFunction = this.on(eventType, (payload: any) => {
-      callback(payload);
-      disposableFunction.dispose();
-    });
+  once(
+      eventType: T,
+      callback: (payload: any) => void,
+      useCapture: boolean = false): DisposableFunction {
+    let disposableFunction = this.on(
+        eventType,
+        (payload: any) => {
+          callback(payload);
+          disposableFunction.dispose();
+        },
+        useCapture);
     return disposableFunction;
   }
 }

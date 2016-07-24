@@ -81,8 +81,12 @@ class OverflowWatcher extends BaseListenable<EventType> {
     let newState = this.getState_();
     let oldState = this.state_;
     if (newState !== oldState) {
-      this.state_ = newState;
-      this.dispatch(EventType.CHANGED, oldState);
+      this.dispatch(
+          EventType.CHANGED,
+          () => {
+            this.state_ = newState;
+          },
+          oldState);
     }
   }
 

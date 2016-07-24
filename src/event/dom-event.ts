@@ -1,70 +1,70 @@
 /**
  * Corresponds to DOM events. This must be the upper case version of the corresponding DOM events.
  */
-export enum DomEvent {
+export let DomEvent = {
   /**
    * The `beforeunload` DOM event.
    */
-  BEFOREUNLOAD,
+  BEFOREUNLOAD: 'beforeunload',
 
   /**
    * The `blur` DOM event.
    */
-  BLUR,
+  BLUR: 'blur',
 
   /**
    * The `change` DOM event.
    * @type {[type]}
    */
-  CHANGE,
+  CHANGE: 'change',
 
   /**
    * The `click` DOM event.
    */
-  CLICK,
+  CLICK: 'click',
 
   /**
    * The `finish` DOM event.
    */
-  FINISH,
+  FINISH: 'finish',
 
   /**
    * The `focus` DOM event.
    */
-  FOCUS,
+  FOCUS: 'focus',
 
   /**
    * The `keypress` DOM event.
    */
-  KEYPRESS,
+  KEYPRESS: 'keypress',
 
   /**
    * The `load` DOM event.
    */
-  LOAD,
+  LOAD: 'load',
 
   /**
    * The `message` DOM event.
    */
-  MESSAGE,
+  MESSAGE: 'message',
 
   /**
    * The `mouseenter` DOM event.
    */
-  MOUSEENTER,
+  MOUSEENTER: 'mouseenter',
 
   /**
    * The `mouseleave` DOM event.
    */
-  MOUSELEAVE,
+  MOUSELEAVE: 'mouseleave',
 
   /**
    * The `resize` DOM event.
    */
-  RESIZE,
+  RESIZE: 'resize',
 
   /**
    * The `scroll` DOM event.
    */
-  SCROLL,
+  SCROLL: 'scroll',
 };
