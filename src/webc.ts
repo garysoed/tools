@@ -5,4 +5,5 @@ export {CustomElement} from './webc/custom-element';
 export {ElementRegistrar} from './webc/element-registrar';
 export {FloatParser} from './webc/float-parser';
 export {IAttributeParser} from './webc/interfaces';
+export {StringParser} from './webc/string-parser';
 export {Templates} from './webc/templates';

@@ -41,8 +41,8 @@ export class Arrays {
    * @param The nodelist to start from.
    * @return Array wrapper object to do operations on.
    */
-  static fromNodeList(nodeList: NodeList): FluentIndexable<Node> {
-    let array: Node[] = [];
+  static fromNodeList<T extends Node>(nodeList: NodeListOf<T>): FluentIndexable<T> {
+    let array: T[] = [];
     for (let i = 0; i < nodeList.length; i++) {
       array.push(nodeList.item(i));
     }

@@ -18,37 +18,6 @@ describe('event.ListenableDom', () => {
     TestDispose.add(listenable);
   });
 
-  describe('onEventTriggered_', () => {
-    it('should call the handler if the event phase matches the useCapture', () => {
-      let mockHandler = jasmine.createSpy('handler');
-      let event = Mocks.object('event');
-      event[ListenableDom['__EVENT_CAPTURE']] = true;
-
-      listenable['onEventTriggered_'](mockHandler, true, event);
-
-      expect(mockHandler).toHaveBeenCalledWith(event);
-    });
-
-    it('should call the handler if the event has no event phase', () => {
-      let mockHandler = jasmine.createSpy('handler');
-      let event = Mocks.object('event');
-
-      listenable['onEventTriggered_'](mockHandler, true, event);
-
-      expect(mockHandler).toHaveBeenCalledWith(event);
-    });
-
-    it('should not call the handler if the event phase does not match the useCapture', () => {
-      let mockHandler = jasmine.createSpy('handler');
-      let event = Mocks.object('event');
-      event[ListenableDom['__EVENT_CAPTURE']] = true;
-
-      listenable['onEventTriggered_'](mockHandler, false, event);
-
-      expect(mockHandler).not.toHaveBeenCalled();
-    });
-  });
-
   describe('dispatch', () => {
     it('should use the event target for dispatching events', () => {
       let mockCallback = jasmine.createSpy('Callback');
@@ -57,14 +26,10 @@ describe('event.ListenableDom', () => {
 
       listenable.dispatch(eventType, mockCallback, payload);
 
-      expect(mockEventTarget.dispatchEvent).toHaveBeenCalledTimes(2);
-      let captureEvent = mockEventTarget.dispatchEvent.calls.argsFor(0)[0];
-      expect(captureEvent['payload']).toEqual(payload);
-      expect(captureEvent[ListenableDom['__EVENT_CAPTURE']]).toEqual(true);
-
-      let bubbleEvent = mockEventTarget.dispatchEvent.calls.argsFor(1)[0];
-      expect(bubbleEvent['payload']).toEqual(payload);
-      expect(bubbleEvent[ListenableDom['__EVENT_CAPTURE']]).toEqual(false);
+      expect(mockEventTarget.dispatchEvent).toHaveBeenCalledWith(jasmine.any(Event));
+      let event = mockEventTarget.dispatchEvent.calls.argsFor(0)[0];
+      expect(event['payload']).toEqual(payload);
+      expect(event.bubbles).toEqual(true);
 
       expect(mockCallback).toHaveBeenCalledWith();
     });
@@ -76,21 +41,14 @@ describe('event.ListenableDom', () => {
       let callback = Mocks.object('callback');
       let useCapture = true;
 
-      spyOn(listenable, 'onEventTriggered_');
-
       let disposableFunction = listenable.on(eventType, callback, useCapture);
 
       expect(mockEventTarget.addEventListener)
-          .toHaveBeenCalledWith(eventType, jasmine.any(Function), useCapture);
-
-      let registeredCallback = mockEventTarget.addEventListener.calls.argsFor(0)[1];
-      let event = Mocks.object('event');
-      registeredCallback(event);
-      expect(listenable['onEventTriggered_']).toHaveBeenCalledWith(callback, useCapture, event);
+          .toHaveBeenCalledWith(eventType, callback, useCapture);
 
       disposableFunction.dispose();
       expect(mockEventTarget.removeEventListener)
-          .toHaveBeenCalledWith(eventType, registeredCallback, useCapture);
+          .toHaveBeenCalledWith(eventType, callback, useCapture);
     });
   });
 });

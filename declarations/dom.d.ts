@@ -5,14 +5,16 @@ interface FormData extends Array<any> {
 }
 
 interface AnimationKeyframe {
-  height?: string,
+  height?: string
+  left?: string
   opacity?: number
+  right?: string
   width?: string
 }
 
 interface AnimationOption {
-  duration?: number,
-  easing?: string,
+  duration?: number
+  easing?: string
 }
 
 interface HTMLElement {
