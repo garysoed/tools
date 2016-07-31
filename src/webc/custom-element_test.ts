@@ -2,12 +2,12 @@ import {TestBase} from '../test-base';
 TestBase.setup();
 
 import {BaseElement} from './base-element';
-import {CustomElement} from './custom-element';
+import {customElement} from './custom-element';
 import {CustomElementUtil} from './custom-element-util';
 import {Mocks} from '../mock/mocks';
 
 
-describe('webc.CustomElement', () => {
+describe('webc.customElement', () => {
   let mockXtag;
 
   beforeEach(() => {
@@ -21,7 +21,7 @@ describe('webc.CustomElement', () => {
     let config = {tag: 'tag', templateKey: 'templateKey'};
     spyOn(CustomElementUtil, 'setConfig');
 
-    CustomElement(config)(TestElement);
+    customElement(config)(TestElement);
     expect(CustomElementUtil.setConfig).toHaveBeenCalledWith(TestElement, config);
   });
 
@@ -29,7 +29,7 @@ describe('webc.CustomElement', () => {
     class TestElement { }
 
     expect(() => {
-      CustomElement({tag: 'tag', templateKey: 'templateKey'})(TestElement);
+      customElement({tag: 'tag', templateKey: 'templateKey'})(TestElement);
     }).toThrowError(/extend BaseElement/);
   });
 
@@ -37,7 +37,7 @@ describe('webc.CustomElement', () => {
     class TestElement extends BaseElement { }
 
     expect(() => {
-      CustomElement({tag: '', templateKey: 'templateKey'})(TestElement);
+      customElement({tag: '', templateKey: 'templateKey'})(TestElement);
     }).toThrowError(/non empty tag name/);
   });
 
@@ -45,7 +45,7 @@ describe('webc.CustomElement', () => {
     class TestElement extends BaseElement { }
 
     expect(() => {
-      CustomElement({tag: 'tag', templateKey: ''})(TestElement);
+      customElement({tag: 'tag', templateKey: ''})(TestElement);
     }).toThrowError(/non empty template key/);
   });
 });

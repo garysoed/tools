@@ -47,7 +47,7 @@ import {Validate} from '../valid/validate';
  *
  * @param config The configuration object.
  */
-export function CustomElement(config: IElementConfig): ClassDecorator {
+export function customElement(config: IElementConfig): ClassDecorator {
   return function<C extends gs.ICtor<any>>(ctor: C): void {
     Validate
         .batch({
