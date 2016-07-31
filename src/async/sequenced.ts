@@ -14,7 +14,7 @@ export function sequenced(): MethodDecorator {
       property: string | symbol,
       descriptor: TypedPropertyDescriptor<(...args: any[]) => any>):
       TypedPropertyDescriptor<(...args: any[]) => any> {
-    Validate.ctor(target).to.extend(BaseDisposable).assertValid();
+    Validate.any(target).to.beAnInstanceOf(BaseDisposable).assertValid();
 
     let originalFn = descriptor.value;
     if (originalFn !== undefined) {

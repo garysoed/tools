@@ -5,6 +5,62 @@ import {Validate} from './validate';
 
 
 describe('valid.AnyValidations', () => {
+  describe('to.beAnInstanceOf', () => {
+    it('should pass if the value is an instance of its ctor', () => {
+      class Class {}
+
+      let instance = new Class();
+      let result = Validate.any(instance).to.beAnInstanceOf(Class);
+      expect(result.passes).toEqual(true);
+    });
+
+    it('should pass if the value is an instance of its parent class', () => {
+      class ParentClass {}
+      class Class extends ParentClass {}
+
+      let instance = new Class();
+      let result = Validate.any(instance).to.beAnInstanceOf(ParentClass);
+      expect(result.passes).toEqual(true);
+    });
+
+    it('should not pass if the value is not an instance of its class', () => {
+      class OtherClass {}
+      class Class {}
+
+      let instance = new Class();
+      let result = Validate.any(instance).to.beAnInstanceOf(OtherClass);
+      expect(result.passes).toEqual(false);
+    });
+  });
+
+  describe('toNot.beAnInstanceOf', () => {
+    it('should not pass if the value is an instance of its ctor', () => {
+      class Class {}
+
+      let instance = new Class();
+      let result = Validate.any(instance).toNot.beAnInstanceOf(Class);
+      expect(result.passes).toEqual(false);
+    });
+
+    it('should not pass if the value is an instance of its parent class', () => {
+      class ParentClass {}
+      class Class extends ParentClass {}
+
+      let instance = new Class();
+      let result = Validate.any(instance).toNot.beAnInstanceOf(ParentClass);
+      expect(result.passes).toEqual(false);
+    });
+
+    it('should pass if the value is not an instance of its class', () => {
+      class OtherClass {}
+      class Class {}
+
+      let instance = new Class();
+      let result = Validate.any(instance).toNot.beAnInstanceOf(OtherClass);
+      expect(result.passes).toEqual(true);
+    });
+  });
+
   describe('to.beDefined', () => {
     it('should pass if the value is defined', () => {
       let result = Validate.any('defined').to.beDefined();

@@ -18,6 +18,13 @@ export class AnyValidations<V> extends BaseValidations<V> {
   }
 
   /**
+   * Checks that the value is an instance of the given ctor.
+   */
+  beAnInstanceOf(ctor: gs.ICtor<any>): ValidationResult<any> {
+    return this.resolve(this.anyValue_ instanceof ctor, `be an instance of ${ctor.name}`);
+  }
+
+  /**
    * Checks that the value is not undefined.
    *
    * @return The validation result.

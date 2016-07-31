@@ -28,7 +28,7 @@ describe('async.sequenced', () => {
         mockSequencer.run.and.returnValue(Promise.resolve());
         spyOn(Sequencer, 'newInstance').and.returnValue(mockSequencer);
 
-        let newDescriptor = decorator(Class, property, descriptor);
+        let newDescriptor = decorator(Class.prototype, property, descriptor);
         expect(newDescriptor).toEqual(descriptor);
 
         let mockInstance = jasmine.createSpyObj('Instance', ['addDisposable']);
@@ -53,7 +53,7 @@ describe('async.sequenced', () => {
 
     let instance = Mocks.object('instance');
     instance[__SEQUENCER] = mockSequencer;
-    decorator(Class, 'property', descriptor).value.call(instance, 1, 2)
+    decorator(Class.prototype, 'property', descriptor).value.call(instance, 1, 2)
         .then(() => {
           expect(mockSequencer.run).toHaveBeenCalledWith(jasmine.any(Function));
           done();
@@ -64,13 +64,13 @@ describe('async.sequenced', () => {
     class Class extends BaseDisposable {}
 
     let descriptor = Mocks.object('descriptor');
-    expect(decorator(Class, 'property', descriptor)).toEqual(descriptor);
+    expect(decorator(Class.prototype, 'property', descriptor)).toEqual(descriptor);
   });
 
   it('should throw error if the target is not an instance of BaseDisposable', () => {
     class Class {}
     expect(() => {
-      decorator(Class, 'property', {});
-    }).toThrowError(/to extend BaseDisposable/);
+      decorator(Class.prototype, 'property', {});
+    }).toThrowError(/to be an instance of BaseDisposable/);
   });
 });
