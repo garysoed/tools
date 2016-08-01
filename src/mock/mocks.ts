@@ -41,6 +41,12 @@ export class Mocks {
     return mock;
   }
 
+  static getter(target: any, name: string, value: any): void {
+    Object.defineProperty(target, name, {
+      get: () => value,
+    });
+  }
+
   /**
    * Creates a mock element.
    *

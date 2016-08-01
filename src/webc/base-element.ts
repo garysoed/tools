@@ -1,12 +1,19 @@
 import {BaseDisposable} from '../dispose/base-disposable';
+import {ListenableDom} from '../event/listenable-dom';
 
 
 /**
  * Base class for all custom elements.
  */
 export class BaseElement extends BaseDisposable {
+  private element_: ListenableDom<HTMLElement>;
+
   constructor() {
     super();
+  }
+
+  get element(): ListenableDom<HTMLElement> {
+    return this.element_;
   }
 
   /**
@@ -23,7 +30,10 @@ export class BaseElement extends BaseDisposable {
    *
    * @param element Reference to the
    */
-  onCreated(element: HTMLElement): void { }
+  onCreated(element: HTMLElement): void {
+    this.element_ = ListenableDom.of(element);
+    this.addDisposable(this.element_);
+  }
 
   /**
    * Called when the element is inserted into the DOM.

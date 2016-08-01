@@ -2,7 +2,8 @@ Provides various utilities for my projects. Features are added / removed / chang
 basis. Use at your own risk.
 
 Naming schemes:
--   Private properties: suffix `_`
+-   Protected properties: suffix `_`
+-   No private properties.
 -   Symbols: Prefix with `__`
 -   Interfaces: Prefix with `I`
 -   Annotations: Should be passive verbs as camel case. E.g.: `sequenced`, `isGraphNode`

@@ -1,7 +1,7 @@
 import {TestBase} from '../test-base';
 TestBase.setup();
 
-import {Inject} from './a-inject';
+import {inject} from './a-inject';
 import {InjectMetadata} from './inject-metadata';
 import {InjectUtil} from './inject-util';
 import {Maps} from '../collection/maps';
@@ -21,7 +21,7 @@ describe('inject.Inject', () => {
     spyOn(InjectUtil, 'getMetadataMap').and.returnValue(fakeMetadata);
     spyOn(InjectMetadata, 'newInstance').and.returnValue(injectMetadata);
 
-    Inject(name, defaultValue)(TestClass, 'propertyName', index);
+    inject(name, defaultValue)(TestClass, 'propertyName', index);
 
     expect(Maps.of(fakeMetadata).asRecord()).toEqual({[index]: injectMetadata});
     expect(InjectMetadata.newInstance).toHaveBeenCalledWith(name, defaultValue);
@@ -36,7 +36,7 @@ describe('inject.Inject', () => {
     spyOn(InjectUtil, 'getMetadataMap').and.returnValue(fakeMetadata);
     spyOn(InjectMetadata, 'newInstance').and.returnValue(injectMetadata);
 
-    Inject()(TestClass, propertyName, index);
+    inject()(TestClass, propertyName, index);
 
     expect(Maps.of(fakeMetadata).asRecord()).toEqual({[index]: injectMetadata});
     expect(InjectMetadata.newInstance).toHaveBeenCalledWith(propertyName, undefined);
@@ -44,7 +44,7 @@ describe('inject.Inject', () => {
 
   it('should throw error if the target is not a constructor', () => {
     expect(() => {
-      Inject()(Mocks.object('target'), 'propertyName', 12);
+      inject()(Mocks.object('target'), 'propertyName', 12);
     }).toThrowError(/is not a constructor/);
   });
 });

@@ -2,6 +2,7 @@ import {AnyValidations} from './any-validations';
 import {ArrayValidations} from './array-validations';
 import {BatchValidations} from './batch-validations';
 import {CtorValidations} from './ctor-validations';
+import {HtmlElementValidations} from './html-element-validations';
 import {MapValidations} from './map-validations';
 import {NumberValidations} from './number-validations';
 import {SetValidations} from './set-validations';
@@ -90,6 +91,18 @@ export class Validate {
   static fail(message: string): void {
     let result = new ValidationResult(false, message, null);
     result.assertValid();
+  }
+
+  /**
+   * Starts validating the given HTML element.
+   *
+   * @param htmlElement The element to validate.
+   * @return Factory object to continue the validation chain.
+   */
+  static htmlElement(htmlElement: HTMLElement): ValidationsFactory<HtmlElementValidations> {
+    return new ValidationsFactory<HtmlElementValidations>((reversed: boolean) => {
+      return new HtmlElementValidations(htmlElement, reversed);
+    });
   }
 
   /**

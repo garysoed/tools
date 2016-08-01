@@ -1,6 +1,7 @@
 export {Animation} from './webc/animation';
 export {AnimationEasing} from './webc/animation-easing';
 export {BaseElement} from './webc/base-element';
+export {BooleanParser} from './webc/boolean-parser';
 export {customElement} from './webc/custom-element';
 export {ElementRegistrar} from './webc/element-registrar';
 export {FloatParser} from './webc/float-parser';

@@ -3,7 +3,7 @@ import {InjectMetadata} from './inject-metadata';
 import {InjectUtil} from './inject-util';
 
 
-export function Inject(name: (string|null) = null, defaultValue?: any): ParameterDecorator {
+export function inject(name: (string|null) = null, defaultValue?: any): ParameterDecorator {
   return function(target: Object, propertyKey: string | symbol, parameterIndex: number): void {
     if (Checks.isCtor(target)) {
       let bindKey = name || propertyKey;
