@@ -1,15 +1,17 @@
 import {TestBase} from '../test-base';
 TestBase.setup();
 
-import Http from './http';
+import {DomEvent} from '../event/dom-event';
+import {Http, HttpRequest} from './http';
+import {TestListenableDom} from '../testing/test-listenable-dom';
+
 
 describe('net.Http', () => {
-  beforeEach(() => {
-    jasmine.Ajax.install();
-  });
+  let mockRequest;
 
-  afterEach(() => {
-    jasmine.Ajax.uninstall();
+  beforeEach(() => {
+    mockRequest = jasmine.createSpyObj('Request', ['open', 'send', 'setRequestHeader']);
+    spyOn(HttpRequest, 'newRequest').and.returnValue(mockRequest);
   });
 
   describe('get', () => {
@@ -23,12 +25,16 @@ describe('net.Http', () => {
             done();
           }, done.fail);
 
-      let request = jasmine.Ajax.requests.mostRecent();
-      request.respondWith({
-        'status': 200,
-        'contentType': 'text/plain',
-        'responseText': expectedResponseText,
-      });
+      expect(mockRequest.open).toHaveBeenCalledWith('GET', path);
+
+      expect(mockRequest.send).toHaveBeenCalledWith(null);
+      expect(TestListenableDom.getListenable(mockRequest).on).toHaveBeenCalledWith(
+          DomEvent.LOAD,
+          jasmine.any(Function));
+
+      mockRequest.responseText = expectedResponseText;
+      mockRequest.status = 200;
+      TestListenableDom.getListenable(mockRequest).on.calls.argsFor(0)[1]();
     });
 
     it('should handle unsuccessful request correctly', (done: any) => {
@@ -44,11 +50,9 @@ describe('net.Http', () => {
                 done();
               });
 
-      jasmine.Ajax.requests.mostRecent().respondWith({
-        'status': status,
-        'contentType': 'text/plain',
-        'responseText': error,
-      });
+      mockRequest.responseText = error;
+      mockRequest.status = status;
+      TestListenableDom.getListenable(mockRequest).on.calls.argsFor(0)[1]();
     });
   });
 
@@ -68,19 +72,17 @@ describe('net.Http', () => {
             done();
           }, done.fail);
 
-      let request = jasmine.Ajax.requests.mostRecent();
-      expect(request.url).toEqual(path);
-      expect(request.method).toEqual('POST');
-      expect(request.params).toEqual('a=1&b=2');
-      expect(request.requestHeaders).toEqual(jasmine.objectContaining({
-        'Content-Type': 'application/x-www-form-urlencoded',
-      }));
+      expect(mockRequest.open).toHaveBeenCalledWith('POST', path);
+      expect(mockRequest.send).toHaveBeenCalledWith('a=1&b=2');
+      expect(mockRequest.setRequestHeader)
+          .toHaveBeenCalledWith('Content-Type', 'application/x-www-form-urlencoded');
+      expect(TestListenableDom.getListenable(mockRequest).on).toHaveBeenCalledWith(
+          DomEvent.LOAD,
+          jasmine.any(Function));
 
-      request.respondWith({
-        'status': 200,
-        'contentType': 'text/plain',
-        'responseText': expectedResponseText,
-      });
+      mockRequest.responseText = expectedResponseText;
+      mockRequest.status = 200;
+      TestListenableDom.getListenable(mockRequest).on.calls.argsFor(0)[1]();
     });
 
     it('should handle unsuccessful request correctly', (done: any) => {
@@ -96,11 +98,9 @@ describe('net.Http', () => {
                 done();
               });
 
-      jasmine.Ajax.requests.mostRecent().respondWith({
-        'status': status,
-        'contentType': 'text/plain',
-        'responseText': error,
-      });
+      mockRequest.responseText = error;
+      mockRequest.status = status;
+      TestListenableDom.getListenable(mockRequest).on.calls.argsFor(0)[1]();
     });
   });
 });

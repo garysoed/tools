@@ -10,6 +10,8 @@ gs_tools(
       "//src/dispose",
       "//src/inject",
       "//src/mock",
+      "//src/net",
+      "//src/secure",
       "//src/solver",
       "//src/string",
       "//src/testing",

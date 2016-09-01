@@ -3,7 +3,7 @@ import {BaseDisposable} from './base-disposable';
 /**
  * Wrapper around a function that executes the function when this object is disposed.
  */
-class DisposableFunction extends BaseDisposable {
+export class DisposableFunction extends BaseDisposable {
   private fn_: Function;
 
   /**
@@ -28,5 +28,3 @@ class DisposableFunction extends BaseDisposable {
     this.fn_();
   }
 }
-
-export default DisposableFunction;

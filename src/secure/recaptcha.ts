@@ -8,7 +8,7 @@ export enum EventType {
 /**
  * Wrapper for Google's ReCaptcha.
  */
-class Recaptcha extends BaseListenable<EventType> {
+export class Recaptcha extends BaseListenable<EventType> {
   private grecaptcha_: ReCaptchaV2.ReCaptcha;
   private widgetId_: number;
 
@@ -60,5 +60,3 @@ class Recaptcha extends BaseListenable<EventType> {
     return new Recaptcha(grecaptcha, element, sitekey);
   }
 }
-
-export default Recaptcha;

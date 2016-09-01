@@ -6,7 +6,7 @@ import {Records} from '../collection/records';
 /**
  * Base class for all HTTP requests.
  */
-abstract class HttpRequest extends BaseDisposable {
+export abstract class HttpRequest extends BaseDisposable {
   /**
    * The XMLHttpRequest object wrapped as a [[ListenableDom]]
    */
@@ -23,8 +23,8 @@ abstract class HttpRequest extends BaseDisposable {
    */
   constructor(method: string, path: string) {
     super();
-    this.request = new XMLHttpRequest();
-    this.listenableRequest = new ListenableDom(this.request);
+    this.request = HttpRequest.newRequest();
+    this.listenableRequest = ListenableDom.of(this.request);
 
     this.request.open(method, path);
 
@@ -56,6 +56,10 @@ abstract class HttpRequest extends BaseDisposable {
       }));
       this.request.send(this.sentData);
     });
+  }
+
+  private static newRequest(): XMLHttpRequest {
+    return new XMLHttpRequest();
   }
 }
 
@@ -128,7 +132,7 @@ class HttpPostRequest extends HttpRequest {
  *     });
  * ```
  */
-class Http {
+export class Http {
   /**
    * Starts to send an HTTP GET request.
    *
@@ -149,5 +153,3 @@ class Http {
     return new HttpPostRequest(path);
   }
 }
-
-export default Http;

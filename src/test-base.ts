@@ -1,6 +1,7 @@
 import {TestAsync} from './testing/test-async';
 import {TestDispose} from './testing/test-dispose';
 import {TestEvent} from './testing/test-event';
+import {TestListenableDom} from './testing/test-listenable-dom';
 import {TestSetup} from './testing/test-setup';
 
 
@@ -8,6 +9,7 @@ const TEST_SETUP = new TestSetup([
   TestAsync,
   TestDispose,
   TestEvent,
+  TestListenableDom,
 ]);
 
 let initialized = false;

@@ -1,5 +1,5 @@
 import {BaseDisposable} from '../dispose/base-disposable';
-import DisposableFunction from '../dispose/disposable-function';
+import {DisposableFunction} from '../dispose/disposable-function';
 
 
 /**
@@ -65,7 +65,7 @@ export class BaseListenable<T> extends BaseDisposable {
    */
   on(
       eventType: T,
-      callback: (payload: any) => void,
+      callback: (payload?: any) => void,
       useCapture: boolean = false): DisposableFunction {
     let map = useCapture ? this.captureCallbacksMap_ : this.bubbleCallbacksMap_;
     if (!map.has(eventType)) {
@@ -91,7 +91,7 @@ export class BaseListenable<T> extends BaseDisposable {
    */
   once(
       eventType: T,
-      callback: (payload: any) => void,
+      callback: (payload?: any) => void,
       useCapture: boolean = false): DisposableFunction {
     let disposableFunction = this.on(
         eventType,

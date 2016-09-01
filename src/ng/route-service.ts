@@ -1,6 +1,6 @@
 import {BaseDisposable} from '../dispose/base-disposable';
 import Cache from '../data/a-cache';
-import DisposableFunction from '../dispose/disposable-function';
+import {DisposableFunction} from '../dispose/disposable-function';
 import {Maps} from '../collection/maps';
 import {Records} from '../collection/records';
 
