@@ -49,6 +49,14 @@ export class Arrays {
     return Arrays.of(array);
   }
 
+  static generate<T>(value: T, count: number): FluentIndexable<T> {
+    let array: T[] = [];
+    for (let i = 0; i < count; i++) {
+      array.push(value);
+    }
+    return Arrays.of(array);
+  }
+
   /**
    * Starts by using an array.
    *
