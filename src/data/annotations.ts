@@ -48,8 +48,8 @@ export class Annotations<T> {
    * @param annotation The identifier of the annotation checked.
    * @return True iff the given constructor has the given annotation identifier.
    */
-  static hasAnnotation(ctor: any, annotation: symbol): boolean {
-    return ctor[annotation] !== undefined;
+  static hasAnnotation(proto: any, annotation: symbol): boolean {
+    return proto[annotation] !== undefined;
   }
 
   /**
@@ -59,11 +59,11 @@ export class Annotations<T> {
    * @param annotation The identifier of the annotation to be returned.
    */
   static of<T>(
-      ctor: new (...args: any[]) => T,
+      proto: any,
       annotation: symbol): Annotations<T> {
-    if (!Annotations.hasAnnotation(ctor, annotation)) {
-      ctor[annotation] = new Annotations<T>();
+    if (!Annotations.hasAnnotation(proto, annotation)) {
+      proto[annotation] = new Annotations<T>();
     }
-    return ctor[annotation];
+    return proto[annotation];
   }
 }

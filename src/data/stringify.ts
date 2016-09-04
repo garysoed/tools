@@ -1,5 +1,7 @@
 import {Annotations} from './annotations';
+import {Arrays} from '../collection/arrays';
 import {Maps} from '../collection/maps';
+import {Natives} from '../typescript/natives';
 
 
 export const __STRINGIFY: symbol = Symbol('stringify');
@@ -14,61 +16,99 @@ type Config = {
   delimiter?: string,
 
   /**
-   * True iff the produced string should be multiline.
-   */
-  multiline?: boolean,
-
-  /**
    * Pad added to indent the string. Only used if multiline.
    */
   pad?: string,
 };
 
 export class Stringify {
+
   /**
-   * Returns the string representation of the given object.
+   * Converts the normalized fields to string.
    *
-   * @param instance The object whose string representation should be returned.
-   * @param delimiter Delimiter inserted between fields for an object.
-   * @[aram ]
+   * @param fields The normalized fields to be formatted.
+   * @param delimiter String to use as delimiter.
+   * @param pad The padding to be added. The string will be multi line iff this is not empty string.
+   * @param indent The current indentation of the string for lines after the first.
+   * @return The string representation of the fields. The first line will never have the
+   *    indentation.
    */
-  private static toStringHelper_(
-      instance: any,
-      delimiter: string = ', ',
-      multiline: boolean = true,
+  private static formatField_(
+      field: any,
+      delimiter: string = ',',
       pad: string = '  ',
       indent: string = ''): string {
-    if (instance instanceof Function) {
-      return indent + String(instance).match(/^function [^\(]*\([^\)]*\)/)![0];
-    } else if (instance instanceof Object
-        && Annotations.hasAnnotation(instance.constructor, __STRINGIFY)) {
-      let annotations = Annotations.of(
-          <new (...args: any[]) => any> instance.constructor,
-          __STRINGIFY);
-      let value = Maps
-          .of(annotations.getFieldValues(instance))
+    let lines: string[] = [];
+    if (Natives.isString(field)) {
+      lines.push(`"${field}"`);
+    } else if (Natives.isNative(field)) {
+      lines.push(String(field));
+    } else if (field instanceof Date) {
+      lines.push(field.toLocaleString());
+    } else if (field instanceof Function) {
+      return String(field).match(/^function [^\(]*\([^\)]*\)/)![0];
+    } else {
+      lines.push('{');
+      let subArray = Maps
+          .fromRecord(field)
           .entries()
-          .map(([key, value]: [string | symbol, any]): string => {
-            let stringifiedValue = Stringify.toStringHelper_(
+          .map(([key, value]: [string, any]): string => {
+            let stringifiedValue = Stringify.formatField_(
                 value,
                 delimiter,
-                multiline,
                 pad,
                 pad + indent);
             return `${key}: ${stringifiedValue}`;
           })
-          .map((segment: string): string => {
-            return multiline ? indent + pad + segment : segment;
+          .map((line: string): string => {
+            if (!!pad) {
+              return (pad || '') + indent + line;
+            } else {
+              return line;
+            }
           })
-          .asArray()
-          .join(multiline ? `${delimiter}\n` : delimiter);
-      if (multiline) {
-        return `${indent}{\n${value}\n${indent}}`;
+          .asArray();
+      Arrays
+          .of(subArray)
+          .mapElement((line: string, index: number): string => {
+            return (index < subArray.length - 1) ? line + delimiter : line;
+          })
+          .forEach((line: string): void => {
+            lines.push(line);
+          });
+      if (!!pad) {
+        lines.push(indent + '}');
       } else {
-        return `{${value}}`;
+        lines.push('}');
       }
+    }
+
+    return lines.join(!!pad ? '\n' : '');
+  }
+
+  /**
+   * Collects the fields in to be stringified and normalize them.
+   *
+   * @param instance Instance whose fields should be collected and normalized.
+   * @return JSON object containing the stringified and normalized fields.
+   */
+  private static grabFields_(instance: any): any {
+    if (instance instanceof Object
+        && Annotations.hasAnnotation(instance.constructor.prototype, __STRINGIFY)) {
+      let annotations = Annotations.of(
+          <new (...args: any[]) => any> instance.constructor.prototype,
+          __STRINGIFY);
+      return Maps
+          .of(annotations.getFieldValues(instance))
+          .mapKey((value: any, key: string | symbol): string => {
+            return Natives.isSymbol(key) ? `[${key.toString()}]` : key;
+          })
+          .mapValue((value: any): any => {
+            return Stringify.grabFields_(value);
+          })
+          .asRecord();
     } else {
-      return indent + String(instance);
+      return instance;
     }
   }
 
@@ -77,9 +117,9 @@ export class Stringify {
    */
   static Property(): PropertyDecorator {
     return (
-        ctor: new (...args: any[]) => any,
+        proto: Object,
         propertyKey: string | symbol): void => {
-      Annotations.of(ctor, __STRINGIFY).addField(propertyKey);
+      Annotations.of(proto, __STRINGIFY).addField(propertyKey);
     };
   }
 
@@ -87,15 +127,14 @@ export class Stringify {
    * Stringifies the given object.
    *
    * @param instance The object to stringify.
-   * @param config Configuration object.
+   * @param indent Number of spaces to be added.
    */
   static toString(
       instance: Object,
-      config: Config = {delimiter: ', ', multiline: true, pad: '  '}): string {
-    return Stringify.toStringHelper_(
-        instance,
+      config: Config = {delimiter: ',', pad: '  '}): string {
+    return Stringify.formatField_(
+        Stringify.grabFields_(instance),
         config.delimiter,
-        config.multiline,
         config.pad);
   }
 };
