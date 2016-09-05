@@ -10,8 +10,8 @@ export class ValidationsFactory<V extends BaseValidations<any>> {
   private provider_: (reversed: boolean) => V;
 
   /**
-   * @param ctor Provider of the validations instance. This should take in one boolen, which is true
-   *    iff the validation logic should be reversed.
+   * @param provider Provider of the validations instance. This should take in one boolen, which is
+   *    true iff the validation logic should be reversed.
    */
   constructor(provider: (reversed: boolean) => V) {
     this.provider_ = provider;

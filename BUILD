@@ -23,6 +23,7 @@ test_suite(
       "//src/dispose:test",
       "//src/event:test",
       "//src/inject:test",
+      "//src/jasmine:test",
       "//src/mock:test",
       "//src/net:test",
       "//src/ng:test",

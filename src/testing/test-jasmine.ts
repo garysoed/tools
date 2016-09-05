@@ -1,5 +1,6 @@
 import {BaseDisposable, TRACKED_DISPOSABLES, Flags} from '../dispose/base-disposable';
 
+
 /**
  * @hidden
  */
@@ -32,6 +33,7 @@ const TestSetup = {
    */
   beforeEach(): void {
     jasmine['CallTracker'].prototype.firstArgsMatching = function(): any {
+      // TODO: Deprecate this.
       let matchingArgs = arguments;
       let allArgs = this.allArgs();
       for (let j = 0; j < allArgs.length; j++) {

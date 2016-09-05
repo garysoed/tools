@@ -1,3 +1,4 @@
+import {Stringify} from '../data/stringify';
 import {ValidationResult} from './validation-result';
 
 
@@ -39,6 +40,6 @@ export class BaseValidations<V> {
    * @return The value as string.
    */
   get valueAsString(): string {
-    return String(this.value_);
+    return Stringify.toString(this.value_, {pad: ''});
   }
 }

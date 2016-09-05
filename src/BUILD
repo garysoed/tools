@@ -9,6 +9,7 @@ gs_tools(
       "//src/color",
       "//src/dispose",
       "//src/inject",
+      "//src/jasmine",
       "//src/mock",
       "//src/net",
       "//src/secure",
@@ -26,6 +27,7 @@ ts_library(
     name = "test_base",
     srcs = ["test-base.ts"],
     deps = [
+      "//src/jasmine",
       "//src/testing",
     ],
 )

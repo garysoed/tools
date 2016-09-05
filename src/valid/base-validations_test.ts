@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {BaseValidations} from './base-validations';
@@ -9,7 +9,7 @@ describe('valid.BaseValidations', () => {
     it('should pass the result passes and not reversed', () => {
       let validations = new BaseValidations('value', false /* reversed */);
       let result = validations.resolve(true, 'method');
-      expect(result.passes).toEqual(true);
+      assert(result.passes).to.beTrue();
     });
 
     it('should not pass if the result does not pass and not reversed', () => {
@@ -17,15 +17,14 @@ describe('valid.BaseValidations', () => {
       let value = 'value';
       let validations = new BaseValidations(value, false /* reversed */);
       let result = validations.resolve(false, method);
-      expect(result.passes).toEqual(false);
-      expect(result.errorMessage)
-          .toEqual(jasmine.stringMatching(new RegExp(`\\[${value}\\] to ${method}`)));
+      assert(result.passes).to.beFalse();
+      assert(result.errorMessage).to.match(new RegExp(`\\[\"${value}\"\\] to ${method}`));
     });
 
     it('should pass if the result does not pass and reversed', () => {
       let validations = new BaseValidations('value', true /* reversed */);
       let result = validations.resolve(false, 'method');
-      expect(result.passes).toEqual(true);
+      assert(result.passes).to.beTrue();
     });
 
     it('should not pass if the result passes and reversed', () => {
@@ -33,9 +32,8 @@ describe('valid.BaseValidations', () => {
       let value = 'value';
       let validations = new BaseValidations(value, true /* reversed */);
       let result = validations.resolve(true, method);
-      expect(result.passes).toEqual(false);
-      expect(result.errorMessage)
-          .toEqual(jasmine.stringMatching(new RegExp(`\\[${value}\\] to not ${method}`)));
+      assert(result.passes).to.beFalse();
+      assert(result.errorMessage).to.match(new RegExp(`\\[\"${value}\"\\] to not ${method}`));
     });
   });
 });

@@ -5,5 +5,6 @@ load("//:defs.bzl", "gs_tools")
 gs_tools(
     deps = [
       "//src/collection",
+      "//src/data",
       "//src/mock",
     ])
