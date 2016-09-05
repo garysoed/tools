@@ -113,7 +113,7 @@ export class Stringify {
   }
 
   /**
-   * Indicates that a property should be included when stringified.
+   * Decorator to indicate that a property should be included when stringified.
    */
   static Property(): PropertyDecorator {
     return (
