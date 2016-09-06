@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase, verify, verifyNoCalls} from '../test-base';
 TestBase.setup();
 
 import {Interval} from './interval';
@@ -7,7 +7,7 @@ import {TestDispose} from '../testing/test-dispose';
 
 describe('async.Interval', () => {
   const INTERVAL = 100;
-  let interval;
+  let interval: Interval;
 
   beforeEach(() => {
     interval = Interval.newInstance(INTERVAL);
@@ -19,44 +19,44 @@ describe('async.Interval', () => {
       spyOn(interval, 'stop');
 
       interval.dispose();
-      expect(interval.stop).toHaveBeenCalledWith();
+      verify(interval).stop();
     });
   });
 
   describe('start', () => {
     it('should start the interval and dispatch TICK events', () => {
       let callback = jasmine.createSpy('callback');
-      let intervalId = 'intervalId';
+      let intervalId = 123;
       let spy = spyOn(window, 'setInterval').and.returnValue(intervalId);
 
       TestDispose.add(interval.on(Interval.TICK_EVENT, callback));
       interval.start();
 
-      expect(interval['intervalId_']).toEqual(intervalId);
-      expect(window.setInterval).toHaveBeenCalledWith(jasmine.any(Function), INTERVAL);
+      assert(interval['intervalId_']).to.equal(intervalId);
+      verify(window).setInterval(jasmine.any(Function), INTERVAL);
 
       spy.calls.argsFor(0)[0]();
-      expect(callback).toHaveBeenCalledWith(null);
+      verify(callback)(null);
     });
 
     it('should throw error if the interval is already running', () => {
       interval['intervalId_'] = 123;
 
-      expect(() => {
+      assert(() => {
         interval.start();
-      }).toThrowError(/is already running/);
+      }).to.throwError(/is already running/);
     });
   });
 
   describe('stop', () => {
     it('should clear the interval', () => {
-      let intervalId = 'intervalId';
+      let intervalId = 123;
       interval['intervalId_'] = intervalId;
 
       spyOn(window, 'clearInterval');
 
       interval.stop();
-      expect(window.clearInterval).toHaveBeenCalledWith(intervalId);
+      verify(window).clearInterval(intervalId);
     });
 
     it('should do nothing if the interval is already cleared', () => {
@@ -65,7 +65,7 @@ describe('async.Interval', () => {
       spyOn(window, 'clearInterval');
 
       interval.stop();
-      expect(window.clearInterval).not.toHaveBeenCalled();
+      verifyNoCalls(window.clearInterval);
     });
   });
 });

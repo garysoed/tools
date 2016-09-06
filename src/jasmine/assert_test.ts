@@ -3,6 +3,8 @@ TestBase.setup();
 
 import {assert} from './assert';
 import {BooleanAssert} from './boolean-assert';
+import {FunctionAssert} from './function-assert';
+import {NumberAssert} from './number-assert';
 import {StringAssert} from './string-assert';
 
 
@@ -13,5 +15,13 @@ describe('jasmine.assert', () => {
 
   it('should return the correct assert for string values', () => {
     expect(assert('string').to).toEqual(jasmine.any(StringAssert));
+  });
+
+  it('should return the correct assert for number values', () => {
+    expect(assert(123).to).toEqual(jasmine.any(NumberAssert));
+  });
+
+  it('should return the correct assert for function values', () => {
+    expect(assert(() => undefined).to).toEqual(jasmine.any(FunctionAssert));
   });
 });

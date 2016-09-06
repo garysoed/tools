@@ -1,7 +1,7 @@
 /**
  * Assertion for any values..
  */
-export class AnyAssert {
+export class AnyAssert<T> {
   /**
    * @param value_ The value to assert.
    * @param reversed_ True iff the assertion logic should be reversed.
@@ -52,5 +52,12 @@ export class AnyAssert {
    */
   beTruthy(): void {
     this.getMatchers_().toBeTruthy();
+  }
+
+  /**
+   * Checks that the value is equal to the given value.
+   */
+  equal(other: T): void {
+    this.getMatchers_().toEqual(other);
   }
 }

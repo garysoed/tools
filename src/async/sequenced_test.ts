@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase, verify} from '../test-base';
 TestBase.setup();
 
 import {BaseDisposable} from '../dispose/base-disposable';
@@ -29,15 +29,15 @@ describe('async.sequenced', () => {
         spyOn(Sequencer, 'newInstance').and.returnValue(mockSequencer);
 
         let newDescriptor = decorator(Class.prototype, property, descriptor);
-        expect(newDescriptor).toEqual(descriptor);
+        assert(newDescriptor).to.equal(descriptor);
 
         let mockInstance = jasmine.createSpyObj('Instance', ['addDisposable']);
         descriptor.value.call(mockInstance, 1, 2)
             .then(() => {
-              expect(mockSequencer.run).toHaveBeenCalledWith(jasmine.any(Function));
+              verify(mockSequencer).run(jasmine.any(Function));
               mockSequencer.run.calls.argsFor(0)[0]();
 
-              expect(mockFunction).toHaveBeenCalledWith(1, 2);
+              verify(mockFunction)(1, 2);
               done();
             }, done.fail);
       });
@@ -55,7 +55,7 @@ describe('async.sequenced', () => {
     instance[__SEQUENCER] = mockSequencer;
     decorator(Class.prototype, 'property', descriptor).value.call(instance, 1, 2)
         .then(() => {
-          expect(mockSequencer.run).toHaveBeenCalledWith(jasmine.any(Function));
+          verify(mockSequencer).run(jasmine.any(Function));
           done();
         }, done.fail);
   });
@@ -64,13 +64,13 @@ describe('async.sequenced', () => {
     class Class extends BaseDisposable {}
 
     let descriptor = Mocks.object('descriptor');
-    expect(decorator(Class.prototype, 'property', descriptor)).toEqual(descriptor);
+    assert(decorator(Class.prototype, 'property', descriptor)).to.equal(descriptor);
   });
 
   it('should throw error if the target is not an instance of BaseDisposable', () => {
     class Class {}
-    expect(() => {
+    assert(() => {
       decorator(Class.prototype, 'property', {});
-    }).toThrowError(/to be an instance of BaseDisposable/);
+    }).to.throwError(/to be an instance of BaseDisposable/);
   });
 });

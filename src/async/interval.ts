@@ -26,7 +26,7 @@ export class Interval extends BaseListenable<EventType> {
   static TICK_EVENT: EventType = EventType.TICK;
 
   private interval_: number;
-  private intervalId_: (number|null);
+  private intervalId_: (number | null);
 
   /**
    * Use [[newInstance]] for better testability.

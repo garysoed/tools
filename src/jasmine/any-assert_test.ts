@@ -95,4 +95,16 @@ describe('jasmine.AnyAssert', () => {
       expect(mockMatchers.toBeTruthy).toHaveBeenCalledWith();
     });
   });
+
+  describe('equal', () => {
+    it('should call the matcher correctly', () => {
+      let other = Mocks.object('other');
+      let mockMatchers = jasmine.createSpyObj('Matcher', ['toEqual']);
+      spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
+
+      assert.equal(other);
+
+      expect(mockMatchers.toEqual).toHaveBeenCalledWith(other);
+    });
+  });
 });

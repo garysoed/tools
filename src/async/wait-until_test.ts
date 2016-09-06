@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase, verify} from '../test-base';
 TestBase.setup();
 
 import {Interval} from '../async/interval';
@@ -25,13 +25,13 @@ describe('async.WaitUntil', () => {
   it('should resolve the promise when the check function returns true', (done: any) => {
     waitUntil.promise
         .then(() => {
-          expect(Interval.newInstance).toHaveBeenCalledWith(INTERVAL);
-          expect(mockInterval.dispose).toHaveBeenCalledWith();
+          verify(Interval.newInstance)(INTERVAL);
+          verify(mockInterval).dispose();
           done();
         }, done.fail);
 
-    expect(mockInterval.start).toHaveBeenCalledWith();
-    expect(mockInterval.on).toHaveBeenCalledWith(Interval.TICK_EVENT, jasmine.any(Function));
+    verify(mockInterval).start();
+    verify<Interval>(mockInterval).on(Interval.TICK_EVENT, <any> jasmine.any(Function));
     mockCheckFn.and.returnValue(true);
 
     mockInterval.on.calls.argsFor(0)[1]();
@@ -40,7 +40,7 @@ describe('async.WaitUntil', () => {
   it('should reject the promise when the waiter is disposed', (done: any) => {
     waitUntil.promise
         .then(done.fail, (error: string) => {
-          expect(error).toEqual(jasmine.stringMatching(/has not returned/));
+          assert(error).to.match(/has not returned/);
           done();
         });
 

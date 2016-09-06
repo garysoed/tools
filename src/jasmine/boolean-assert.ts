@@ -4,9 +4,9 @@ import {AnyAssert} from './any-assert';
 /**
  * Boolean related assertions.
  */
-export class BooleanAssert extends AnyAssert {
+export class BooleanAssert extends AnyAssert<boolean> {
   /**
-   * @param value_ The value to assert.
+   * @param booleanValue_ The value to assert.
    * @param reversed_ True iff the assertion logic should be reversed.
    * @param expect_ Reference to jasmine's expect function.'
    */

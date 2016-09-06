@@ -3,7 +3,11 @@ import {TestDispose} from './testing/test-dispose';
 import {TestEvent} from './testing/test-event';
 import {TestListenableDom} from './testing/test-listenable-dom';
 import {TestSetup} from './testing/test-setup';
+
+
 export {assert} from './jasmine/assert';
+export {verify} from './jasmine/verify';
+export {verifyNoCalls} from './jasmine/verify-no-calls';
 
 
 const TEST_SETUP = new TestSetup([

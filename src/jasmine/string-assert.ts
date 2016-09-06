@@ -4,7 +4,7 @@ import {AnyAssert} from './any-assert';
 /**
  * String related assertions.
  */
-export class StringAssert extends AnyAssert {
+export class StringAssert extends AnyAssert<string> {
   /**
    * @param value_ The value to assert.
    * @param reversed_ True iff the assertion logic should be reversed.
