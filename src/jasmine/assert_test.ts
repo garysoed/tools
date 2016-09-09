@@ -2,6 +2,8 @@ import {TestBase} from '../test-base';
 TestBase.setup();
 
 import {assert} from './assert';
+import {AnyAssert} from './any-assert';
+import {ArrayAssert} from './array-assert';
 import {BooleanAssert} from './boolean-assert';
 import {FunctionAssert} from './function-assert';
 import {NumberAssert} from './number-assert';
@@ -23,5 +25,13 @@ describe('jasmine.assert', () => {
 
   it('should return the correct assert for function values', () => {
     expect(assert(() => undefined).to).toEqual(jasmine.any(FunctionAssert));
+  });
+
+  fit('should return the correct assert for array values', () => {
+    expect(assert([]).to).toEqual(jasmine.any(ArrayAssert));
+  });
+
+  fit('should return the correct assert for other values', () => {
+    expect(assert({}).to).toEqual(jasmine.any(AnyAssert));
   });
 });

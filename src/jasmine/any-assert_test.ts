@@ -36,6 +36,18 @@ describe('jasmine.AnyAssert', () => {
     });
   });
 
+  describe('be', () => {
+    it('should call the matcher correctly', () => {
+      let other = Mocks.object('other');
+      let mockMatchers = jasmine.createSpyObj('Matcher', ['toBe']);
+      spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
+
+      assert.be(other);
+
+      expect(mockMatchers.toBe).toHaveBeenCalledWith(other);
+    });
+  });
+
   describe('beAnInstanceOf', () => {
     it('should call the matcher correctly', () => {
       let clazz = Mocks.object('clazz');

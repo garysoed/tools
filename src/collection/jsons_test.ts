@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase, verify} from '../test-base';
 TestBase.setup();
 
 import {Jsons} from './jsons';
@@ -10,20 +10,20 @@ describe('collection.Jsons', () => {
         a: { b: 2 },
       };
       let clone = Jsons.deepClone(original);
-      expect(clone).toEqual(original);
-      expect(clone).not.toBe(original);
+      assert(clone).to.equal(original);
+      assert(clone).toNot.be(original);
     });
   });
 
   describe('getValue', () => {
     it('should retrieve the value correctly', () => {
       let json = {a: {b: {c: 123}}};
-      expect(Jsons.getValue(json, 'a.b')).toEqual({c: 123});
+      assert(Jsons.getValue(json, 'a.b')).to.equal({c: 123});
     });
 
     it('should return undefined if the path does not exist', () => {
       let json = {a: {b: {c: 123}}};
-      expect(Jsons.getValue(json, 'a.b.d')).toEqual(undefined);
+      assert(Jsons.getValue(json, 'a.b.d')).to.equal(undefined);
     });
   });
 
@@ -33,14 +33,14 @@ describe('collection.Jsons', () => {
       let source = { b: 2, c: 3 };
       Jsons.mixin(source, dest);
 
-      expect(dest).toEqual({ a: 1, b: 2, c: 3 });
+      assert(dest).to.equal({ a: 1, b: 2, c: 3 });
     });
 
     it('should recursively mixin the values', () => {
       let dest = { a: { ab: 1 } };
       let source = { a: { cd: 2 } };
       Jsons.mixin(source, dest);
-      expect(dest).toEqual({
+      assert(dest).to.equal({
         a: {
           ab: 1,
           cd: 2,
@@ -52,7 +52,7 @@ describe('collection.Jsons', () => {
       let dest = { a: 2 };
       let source = { a: 1 };
       Jsons.mixin(source, dest);
-      expect(dest.a).toEqual(2);
+      assert(dest.a).to.equal(2);
     });
   });
 
@@ -67,8 +67,8 @@ describe('collection.Jsons', () => {
             callback(json['a'], json['b']);
           });
 
-      expect(json).toEqual({a: 1, b: undefined});
-      expect(callback).toHaveBeenCalledWith('one', 'two');
+      assert(json).to.equal({a: 1, b: undefined});
+      verify(callback)('one', 'two');
     });
   });
 
@@ -77,20 +77,20 @@ describe('collection.Jsons', () => {
       let innerObj = { };
       let obj = { 'a': innerObj };
       Jsons.setValue(obj, 'a.b.c', 123);
-      expect(obj).toEqual({ 'a': innerObj });
-      expect(innerObj).toEqual({ 'b': { 'c': 123 } });
+      assert(obj).to.equal({ 'a': innerObj });
+      assert(innerObj).to.equal({ 'b': { 'c': 123 } });
     });
 
     it('should handle a single value', () => {
       let obj = { };
       Jsons.setValue(obj, 'abc', 123);
-      expect(obj).toEqual({ 'abc': 123 });
+      assert(obj).to.equal({ 'abc': 123 });
     });
 
     it('should throw error when the path is empty', () => {
-      expect(() => {
+      assert(() => {
         Jsons.setValue({ }, '', 123);
-      }).toThrowError();
+      }).to.throwError(/to not be empty/);
     });
   });
 });

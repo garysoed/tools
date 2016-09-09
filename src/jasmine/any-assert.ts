@@ -8,7 +8,7 @@ export class AnyAssert<T> {
    * @param expect_ Reference to jasmine's expect function.'
    */
   constructor(
-      private value_: any,
+      private value_: T,
       private reversed_: boolean,
       private expect_: (actual: any) => jasmine.Matchers) { }
 
@@ -17,6 +17,13 @@ export class AnyAssert<T> {
    */
   protected getMatchers_(): jasmine.Matchers {
     return this.reversed_ ? this.expect_(this.value_).not : this.expect_(this.value_);
+  }
+
+  /**
+   * Checks that the value is exactly the same instance as the given object.
+   */
+  be(other: any): void {
+    this.getMatchers_().toBe(other);
   }
 
   /**

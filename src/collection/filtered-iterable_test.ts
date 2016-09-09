@@ -1,9 +1,9 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {ArrayIterable} from './array-iterable';
+import {Arrays} from './arrays';
 import {FilteredIterable} from './filtered-iterable';
-import {Iterables} from './iterables';
 
 
 describe('collection.FilteredIterable', () => {
@@ -12,10 +12,6 @@ describe('collection.FilteredIterable', () => {
       return value % 2 === 0;
     };
     let iterable = FilteredIterable.newInstance(ArrayIterable.newInstance([1, 2, 3, 4]), filterFn);
-    let result: number[] = [];
-    Iterables.of(iterable).iterate((value: number) => {
-      result.push(value);
-    });
-    expect(result).toEqual([2, 4]);
+    assert(Arrays.fromIterable(iterable).asArray()).to.equal([2, 4]);
   });
 });

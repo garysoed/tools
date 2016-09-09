@@ -1,5 +1,5 @@
-import {Iterables} from './iterables';
 import {FluentIndexable} from './indexables';
+
 
 /**
  * Collection of methods to help manipulate arrays.
@@ -28,10 +28,21 @@ export class Arrays {
    * @return Array wrapper object to do operations on.
    */
   static fromIterable<T>(iterable: Iterable<T>): FluentIndexable<T> {
+    return Arrays.fromIterator<T>(iterable[Symbol.iterator]());
+  }
+
+  /**
+   * Starts by using a (finite) iterator.
+   *
+   * @param <T> Type of the array element.
+   * @param iterator The iterator containing the elements.
+   * @return Array wrapper object to do operations on.
+   */
+  static fromIterator<T>(iterator: Iterator<T>): FluentIndexable<T> {
     let array: T[] = [];
-    Iterables.of(iterable).iterate((value: T) => {
-      array.push(value);
-    });
+    for (let entry = iterator.next(); !entry.done; entry = iterator.next()) {
+      array.push(entry.value);
+    }
     return Arrays.of(array);
   }
 
@@ -45,14 +56,6 @@ export class Arrays {
     let array: T[] = [];
     for (let i = 0; i < nodeList.length; i++) {
       array.push(nodeList.item(i));
-    }
-    return Arrays.of(array);
-  }
-
-  static generate<T>(value: T, count: number): FluentIndexable<T> {
-    let array: T[] = [];
-    for (let i = 0; i < count; i++) {
-      array.push(value);
     }
     return Arrays.of(array);
   }

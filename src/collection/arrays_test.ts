@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {ArrayIterable} from './array-iterable';
@@ -10,7 +10,15 @@ describe('collection.Arrays', () => {
   describe('fromIterable', () => {
     it('should return the correct FluentIndexable', () => {
       let data = [1, 1, 2, 2, 3];
-      expect(Arrays.fromIterable(ArrayIterable.newInstance(data)).asArray()).toEqual(data);
+      assert(Arrays.fromIterable(ArrayIterable.newInstance(data)).asArray()).to.equal(data);
+    });
+  });
+
+  describe('fromIterator', () => {
+    it('should return the correct FluentIndexable', () => {
+      let data = [1, 1, 2, 2, 3];
+      let iterator = ArrayIterable.newInstance(data)[Symbol.iterator]();
+      assert(Arrays.fromIterator(iterator).asArray()).to.equal(data);
     });
   });
 
@@ -25,14 +33,14 @@ describe('collection.Arrays', () => {
       });
       mockNodeList.length = data.length;
 
-      expect(Arrays.fromNodeList(mockNodeList).asArray()).toEqual(data);
+      assert(Arrays.fromNodeList(mockNodeList).asArray()).to.equal(data);
     });
   });
 
   describe('of', () => {
     it('should return the correct FluentIndexable', () => {
       let data = [1, 2, 3];
-      expect(Arrays.of(data).asArray()).toEqual(data);
+      assert(Arrays.of(data).asArray()).to.equal(data);
     });
   });
 });

@@ -15,7 +15,7 @@ const DISPOSABLES = [];
  * -   `calls.firstArgsMatching`: The input parameters are exactly the same as
  *     `toHaveBeenCalledWith`. This returns the first arguments that matches the input parameters.
  */
-const TestSetup = {
+export const TestJasmine = {
   /**
    * Runs the code in jasmine's `afterEach` logic.
    */
@@ -54,5 +54,3 @@ const TestSetup = {
     };
   },
 };
-
-export default TestSetup;

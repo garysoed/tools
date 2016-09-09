@@ -1,9 +1,9 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {ArrayIterable} from './array-iterable';
+import {Arrays} from './arrays';
 import {GeneratorIterable} from './generator-iterable';
-import {Iterables} from './iterables';
 
 
 describe('collection.GeneratorIterable', () => {
@@ -15,11 +15,6 @@ describe('collection.GeneratorIterable', () => {
     };
     let generatorIterable = GeneratorIterable.newInstance(generator);
 
-    let result: number[] = [];
-    Iterables.of(generatorIterable)
-        .iterate((value: number) => {
-          result.push(value);
-        });
-    expect(result).toEqual(expectedElements);
+    assert(Arrays.fromIterable(generatorIterable).asArray()).to.equal(expectedElements);
   });
 });

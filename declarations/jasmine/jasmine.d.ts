@@ -111,7 +111,7 @@ declare module jasmine {
     }
 
     interface CustomEqualityTester {
-        (first: any, second: any): boolean;
+        (first: any, second: any): boolean | void;
     }
 
     interface CustomMatcher {

@@ -1,4 +1,5 @@
 import {AnyAssert} from './any-assert';
+import {ArrayAssert} from './array-assert';
 import {AssertFactory} from './assert-factory';
 import {BooleanAssert} from './boolean-assert';
 import {FunctionAssert} from './function-assert';
@@ -14,6 +15,9 @@ export function assert(value: boolean | null): AssertFactory<BooleanAssert>;
 export function assert(value: Function | null): AssertFactory<FunctionAssert>;
 export function assert(value: number | null): AssertFactory<NumberAssert>;
 export function assert(value: string | null): AssertFactory<StringAssert>;
+
+export function assert<T>(value: T[] | null): AssertFactory<ArrayAssert<T>>;
+export function assert(value: any): AssertFactory<AnyAssert<any>>;
 export function assert(value: any): AssertFactory<AnyAssert<any>> {
   if (Natives.isBoolean(value)) {
     return new AssertFactory((reversed: boolean): BooleanAssert => {
@@ -30,6 +34,10 @@ export function assert(value: any): AssertFactory<AnyAssert<any>> {
   } else if (value instanceof Function) {
     return new AssertFactory((reversed: boolean): FunctionAssert => {
       return new FunctionAssert(value, reversed, expect);
+    });
+  } else if (value instanceof Array) {
+    return new AssertFactory((reversed: boolean): ArrayAssert<any> => {
+      return new ArrayAssert<any>(value, reversed, expect);
     });
   } else {
     return new AssertFactory((reversed: boolean): AnyAssert<any> => {

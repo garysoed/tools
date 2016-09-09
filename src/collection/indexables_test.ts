@@ -1,22 +1,19 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase, verify, verifyNever} from '../test-base';
 TestBase.setup();
 
 import {ArrayIterable} from './array-iterable';
+import {Arrays} from './arrays';
 import {GeneratorIterable} from './generator-iterable';
 import {Indexables} from './indexables';
-import {Iterables} from './iterables';
 
 
 describe('collection.Indexables', () => {
   describe('addAll', () => {
     it('should add all the given elements', () => {
-      let resultArray: number[] = [];
-      Indexables.of([1, 2, 3])
+      let iterable = Indexables.of([1, 2, 3])
           .addAll(ArrayIterable.newInstance([4, 5, 6]))
-          .iterate((value: number) => {
-            resultArray.push(value);
-          });
-      expect(resultArray).toEqual([1, 2, 3, 4, 5, 6]);
+          .asIterable();
+      assert(Arrays.fromIterable(iterable).asArray()).to.equal([1, 2, 3, 4, 5, 6]);
     });
 
     it('should work with infinite iterable', () => {
@@ -32,44 +29,35 @@ describe('collection.Indexables', () => {
       let resultArray = Indexables.of([1, 2, 3])
           .addAllArray([4, 5, 6])
           .asArray();
-      expect(resultArray).toEqual([1, 2, 3, 4, 5, 6]);
+      assert(resultArray).to.equal([1, 2, 3, 4, 5, 6]);
     });
   });
 
   describe('asIterable', () => {
     it('should return iterable that iterates the content', () => {
       let iterable = Indexables.of([1, 2, 3]).asIterable();
-      let array: number[] = [];
-      Iterables.of(iterable)
-          .iterate((value: number) => {
-            array.push(value);
-          });
-      expect(array).toEqual([1, 2, 3]);
+      assert(Arrays.fromIterable(iterable).asArray()).to.equal([1, 2, 3]);
     });
   });
 
   describe('asIterator', () => {
     it('should return iterator instance that iterates the iterable', () => {
       let iterator = Indexables.of([1, 2, 3]).asIterator();
-      let array: number[] = [];
-      for (let result = iterator.next(); !result.done; result = iterator.next()) {
-        array.push(result.value);
-      }
-      expect(array).toEqual([1, 2, 3]);
+      assert(Arrays.fromIterator(iterator).asArray()).to.equal([1, 2, 3]);
     });
   });
 
   describe('equalsTo', () => {
     it('should return true if the indexable has the same content as the array', () => {
-      expect(Indexables.of([1, 2, 3]).equalsTo([1, 2, 3])).toEqual(true);
+      assert(Indexables.of([1, 2, 3]).equalsTo([1, 2, 3])).to.beTrue();
     });
 
     it('should return false if the indexable has different content from the array', () => {
-      expect(Indexables.of([1, 2, 3]).equalsTo([2, 3, 1])).toEqual(false);
+      assert(Indexables.of([1, 2, 3]).equalsTo([2, 3, 1])).to.beFalse();
     });
 
     it('should return false if the indexable has less content than the array', () => {
-      expect(Indexables.of<number>([]).equalsTo([1])).toEqual(false);
+      assert(Indexables.of<number>([]).equalsTo([1])).to.beFalse();
     });
   });
 
@@ -78,10 +66,10 @@ describe('collection.Indexables', () => {
       let filterFn = jasmine.createSpy('FilterFn').and.returnValue(true);
       let result = Indexables.of([1, 2, 3]).every(filterFn);
 
-      expect(result).toEqual(true);
-      expect(filterFn).toHaveBeenCalledWith(1, 0);
-      expect(filterFn).toHaveBeenCalledWith(2, 1);
-      expect(filterFn).toHaveBeenCalledWith(3, 2);
+      assert(result).to.beTrue();
+      verify(filterFn)(1, 0);
+      verify(filterFn)(2, 1);
+      verify(filterFn)(3, 2);
     });
 
     it('should return false if the filter function returns a false for one element', () => {
@@ -90,7 +78,7 @@ describe('collection.Indexables', () => {
             return value !== 2;
           });
 
-      expect(result).toEqual(false);
+      assert(result).to.beFalse();
     });
   });
 
@@ -101,7 +89,7 @@ describe('collection.Indexables', () => {
             return value % 2 === 0;
           })
           .asArray();
-      expect(result).toEqual([2]);
+      assert(result).to.equal([2]);
     });
   });
 
@@ -112,7 +100,7 @@ describe('collection.Indexables', () => {
             return (value + index) % 2 === 0;
           })
           .asArray();
-      expect(result).toEqual([]);
+      assert(result).to.equal([]);
     });
   });
 
@@ -122,7 +110,7 @@ describe('collection.Indexables', () => {
           .find((value: number, index: number) => {
             return (value + index) % 2 === 1;
           });
-      expect(result).toEqual(1);
+      assert(result).to.equal(1);
     });
 
     it('should return null if the element is not found', () => {
@@ -130,7 +118,7 @@ describe('collection.Indexables', () => {
           .find((value: number) => {
             return false;
           });
-      expect(result).toEqual(null);
+      assert(result).to.beNull();
     });
   });
 
@@ -140,7 +128,7 @@ describe('collection.Indexables', () => {
           .findIndex((value: number, index: number) => {
             return (value + index) % 2 === 1;
           });
-      expect(result).toEqual(0);
+      assert(result).to.equal(0);
     });
 
     it('should return null if the element is not found', () => {
@@ -148,7 +136,7 @@ describe('collection.Indexables', () => {
           .findIndex((value: number) => {
             return false;
           });
-      expect(result).toEqual(null);
+      assert(result).to.beNull();
     });
   });
 
@@ -157,10 +145,10 @@ describe('collection.Indexables', () => {
       let mockHandler = jasmine.createSpy('Handler');
       Indexables.of([1, 2, 3, 4]).forEach(mockHandler);
 
-      expect(mockHandler).toHaveBeenCalledWith(1, 0);
-      expect(mockHandler).toHaveBeenCalledWith(2, 1);
-      expect(mockHandler).toHaveBeenCalledWith(3, 2);
-      expect(mockHandler).toHaveBeenCalledWith(4, 3);
+      verify(mockHandler)(1, 0);
+      verify(mockHandler)(2, 1);
+      verify(mockHandler)(3, 2);
+      verify(mockHandler)(4, 3);
     });
   });
 
@@ -169,10 +157,10 @@ describe('collection.Indexables', () => {
       let mockHandler = jasmine.createSpy('Handler');
       Indexables.of([1, 2, 3, 4]).forOf(mockHandler);
 
-      expect(mockHandler).toHaveBeenCalledWith(1, 0, jasmine.any(Function));
-      expect(mockHandler).toHaveBeenCalledWith(2, 1, jasmine.any(Function));
-      expect(mockHandler).toHaveBeenCalledWith(3, 2, jasmine.any(Function));
-      expect(mockHandler).toHaveBeenCalledWith(4, 3, jasmine.any(Function));
+      verify(mockHandler)(1, 0, jasmine.any(Function));
+      verify(mockHandler)(2, 1, jasmine.any(Function));
+      verify(mockHandler)(3, 2, jasmine.any(Function));
+      verify(mockHandler)(4, 3, jasmine.any(Function));
     });
 
     it('should stop the iteration when the break function is called', () => {
@@ -184,10 +172,10 @@ describe('collection.Indexables', () => {
           });
 
       Indexables.of([1, 2, 3, 4]).forOf(mockHandler);
-      expect(mockHandler).toHaveBeenCalledWith(1, 0, jasmine.any(Function));
-      expect(mockHandler).toHaveBeenCalledWith(2, 1, jasmine.any(Function));
-      expect(mockHandler).not.toHaveBeenCalledWith(3, 2, jasmine.any(Function));
-      expect(mockHandler).not.toHaveBeenCalledWith(4, 3, jasmine.any(Function));
+      verify(mockHandler)(1, 0, jasmine.any(Function));
+      verify(mockHandler)(2, 1, jasmine.any(Function));
+      verifyNever(mockHandler)(3, 2, jasmine.any(Function));
+      verifyNever(mockHandler)(4, 3, jasmine.any(Function));
     });
   });
 
@@ -196,10 +184,10 @@ describe('collection.Indexables', () => {
       let mockHandler = jasmine.createSpy('Handler');
       Indexables.of([1, 2, 3, 4]).iterate(mockHandler);
 
-      expect(mockHandler).toHaveBeenCalledWith(1, jasmine.any(Function));
-      expect(mockHandler).toHaveBeenCalledWith(2, jasmine.any(Function));
-      expect(mockHandler).toHaveBeenCalledWith(3, jasmine.any(Function));
-      expect(mockHandler).toHaveBeenCalledWith(4, jasmine.any(Function));
+      verify(mockHandler)(1, jasmine.any(Function));
+      verify(mockHandler)(2, jasmine.any(Function));
+      verify(mockHandler)(3, jasmine.any(Function));
+      verify(mockHandler)(4, jasmine.any(Function));
     });
 
     it('should stop the iteration when the break function is called', () => {
@@ -211,10 +199,10 @@ describe('collection.Indexables', () => {
           });
 
       Indexables.of([1, 2, 3, 4]).iterate(mockHandler);
-      expect(mockHandler).toHaveBeenCalledWith(1, jasmine.any(Function));
-      expect(mockHandler).toHaveBeenCalledWith(2, jasmine.any(Function));
-      expect(mockHandler).not.toHaveBeenCalledWith(3, jasmine.any(Function));
-      expect(mockHandler).not.toHaveBeenCalledWith(4, jasmine.any(Function));
+      verify(mockHandler)(1, jasmine.any(Function));
+      verify(mockHandler)(2, jasmine.any(Function));
+      verifyNever(mockHandler)(3, jasmine.any(Function));
+      verifyNever(mockHandler)(4, jasmine.any(Function));
     });
   });
 
@@ -225,7 +213,7 @@ describe('collection.Indexables', () => {
             return value + 1;
           })
           .asArray();
-      expect(result).toEqual([2, 3, 4, 5]);
+      assert(result).to.equal([2, 3, 4, 5]);
     });
   });
 
@@ -236,7 +224,7 @@ describe('collection.Indexables', () => {
             return value + index;
           })
           .asArray();
-      expect(result).toEqual([1, 3, 5, 7]);
+      assert(result).to.equal([1, 3, 5, 7]);
     });
   });
 
@@ -245,7 +233,7 @@ describe('collection.Indexables', () => {
       let result = Indexables.of([1, 2, 3, 4])
           .removeAll(new Set([2, 3]))
           .asArray();
-      expect(result).toEqual([1, 4]);
+      assert(result).to.equal([1, 4]);
     });
   });
 });
