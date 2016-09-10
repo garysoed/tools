@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Records} from './records';
@@ -9,7 +9,7 @@ describe('collection.Records', () => {
     it('should create the records correctly', () => {
       let keys = ['a', 'b', 'c'];
       let result = Records.fromKeys(keys, (key: string) => key + 'V').asRecord();
-      expect(result).toEqual({'a': 'aV', 'b': 'bV', 'c': 'cV'});
+      assert(result).to.equal({'a': 'aV', 'b': 'bV', 'c': 'cV'});
     });
   });
 });

@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {ArrayIterable} from './array-iterable';
@@ -18,6 +18,6 @@ describe('collection.MappedIterable', () => {
     Iterables.of(iterable).iterate((value: number) => {
       result.push(value);
     });
-    expect(result).toEqual([2, 3, 4, 5]);
+    assert(result).to.equal([2, 3, 4, 5]);
   });
 });

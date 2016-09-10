@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase, verify, verifyNever} from '../test-base';
 TestBase.setup();
 
 import {ArrayIterable} from './array-iterable';
@@ -18,7 +18,7 @@ describe('collection.Mappables', () => {
           .iterate((entry: [string, number]) => {
             result[entry[0]] = entry[1];
           });
-      expect(result).toEqual({
+      assert(result).to.equal({
         'a': 1,
         'b': 2,
         'c': 3,
@@ -41,7 +41,7 @@ describe('collection.Mappables', () => {
       let result = Mappables.of<string, number>(map)
           .addAllArray(array)
           .asRecord();
-      expect(result).toEqual({
+      assert(result).to.equal({
         'a': 1,
         'b': 2,
         'c': 3,
@@ -57,7 +57,7 @@ describe('collection.Mappables', () => {
       let result = Mappables.of<string, number>(map)
           .addAllMap(addedMap)
           .asRecord();
-      expect(result).toEqual({
+      assert(result).to.equal({
         'a': 1,
         'b': 2,
         'c': 3,
@@ -77,10 +77,10 @@ describe('collection.Mappables', () => {
          ['c', 3],
        ]);
 
-       expect(Mappables.of(map).all(checkFn)).toEqual(true);
-       expect(checkFn).toHaveBeenCalledWith(1, 'a');
-       expect(checkFn).toHaveBeenCalledWith(2, 'b');
-       expect(checkFn).toHaveBeenCalledWith(3, 'c');
+       assert(Mappables.of(map).all(checkFn)).to.beTrue();
+       verify(checkFn)(1, 'a');
+       verify(checkFn)(2, 'b');
+       verify(checkFn)(3, 'c');
      });
 
      it('should return false if one of the entries does not pass the check function', () => {
@@ -96,11 +96,11 @@ describe('collection.Mappables', () => {
          ['d', 4],
        ]);
 
-       expect(Mappables.of(map).all(checkFn)).toEqual(false);
-       expect(checkFn).toHaveBeenCalledWith(1, 'a');
-       expect(checkFn).toHaveBeenCalledWith(2, 'b');
-       expect(checkFn).toHaveBeenCalledWith(3, 'c');
-       expect(checkFn).not.toHaveBeenCalledWith(4, 'd');
+       assert(Mappables.of(map).all(checkFn)).to.beFalse();
+       verify(checkFn)(1, 'a');
+       verify(checkFn)(2, 'b');
+       verify(checkFn)(3, 'c');
+       verifyNever(checkFn)(4, 'd');
      });
   });
 
@@ -112,7 +112,7 @@ describe('collection.Mappables', () => {
       Iterables.of(iterable).iterate((entry: [string, number]) => {
         result[entry[0]] = entry[1];
       });
-      expect(result).toEqual({'a': 1, 'b': 2});
+      assert(result).to.equal({'a': 1, 'b': 2});
     });
   });
 
@@ -125,7 +125,7 @@ describe('collection.Mappables', () => {
       for (let result = iterator.next(); !result.done; result = iterator.next()) {
         resultRecord[result.value[0]] = result.value[1];
       }
-      expect(resultRecord).toEqual({'a': 1, 'b': 2});
+      assert(resultRecord).to.equal({'a': 1, 'b': 2});
     });
   });
 
@@ -139,7 +139,7 @@ describe('collection.Mappables', () => {
         resultRecord[key] = value;
       });
 
-      expect(resultRecord).toEqual({'a': 1, 'b': 2});
+      assert(resultRecord).to.equal({'a': 1, 'b': 2});
     });
   });
 
@@ -150,14 +150,14 @@ describe('collection.Mappables', () => {
         return key + '$';
       });
 
-      expect(resultRecord).toEqual({'a$': 1, 'b$': 2});
+      assert(resultRecord).to.equal({'a$': 1, 'b$': 2});
     });
 
     it('should use the default string function if not specified', () => {
       let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2]]);
       let resultRecord = Mappables.of(map).asRecord();
 
-      expect(resultRecord).toEqual({'a': 1, 'b': 2});
+      assert(resultRecord).to.equal({'a': 1, 'b': 2});
     });
   });
 
@@ -169,7 +169,7 @@ describe('collection.Mappables', () => {
             return entry[1] !== 1 && entry[0] !== 'a';
           })
           .asRecord();
-      expect(record).toEqual({'c': 3});
+      assert(record).to.equal({'c': 3});
     });
   });
 
@@ -181,7 +181,7 @@ describe('collection.Mappables', () => {
             return value !== 1 && key !== 'a';
           })
           .asRecord();
-      expect(record).toEqual({'c': 3});
+      assert(record).to.equal({'c': 3});
     });
   });
 
@@ -197,7 +197,7 @@ describe('collection.Mappables', () => {
           .findEntry((value: number, key: string) => {
             return value !== 1 && key !== 'a';
           });
-      expect(entry).toEqual(['c', 3]);
+      assert(entry).to.equal(['c', 3]);
     });
   });
 
@@ -213,7 +213,7 @@ describe('collection.Mappables', () => {
           .findKey((value: number, key: string) => {
             return value !== 1 && key !== 'a';
           });
-      expect(key).toEqual('c');
+      assert(key).to.equal('c');
     });
   });
 
@@ -229,7 +229,7 @@ describe('collection.Mappables', () => {
           .findValue((value: number, key: string) => {
             return value !== 1 && key !== 'a';
           });
-      expect(value).toEqual(3);
+      assert(value).to.equal(3);
     });
   });
 
@@ -239,9 +239,9 @@ describe('collection.Mappables', () => {
       let callback = jasmine.createSpy('Callback');
 
       Mappables.of(map).forEach(callback);
-      expect(callback).toHaveBeenCalledWith(1, 'a');
-      expect(callback).toHaveBeenCalledWith(2, 'b');
-      expect(callback).toHaveBeenCalledWith(3, 'c');
+      verify(callback)(1, 'a');
+      verify(callback)(2, 'b');
+      verify(callback)(3, 'c');
     });
   });
 
@@ -251,9 +251,9 @@ describe('collection.Mappables', () => {
       let callback = jasmine.createSpy('Callback');
 
       Mappables.of(map).forOf(callback);
-      expect(callback).toHaveBeenCalledWith(1, 'a', jasmine.any(Function));
-      expect(callback).toHaveBeenCalledWith(2, 'b', jasmine.any(Function));
-      expect(callback).toHaveBeenCalledWith(3, 'c', jasmine.any(Function));
+      verify(callback)(1, 'a', jasmine.any(Function));
+      verify(callback)(2, 'b', jasmine.any(Function));
+      verify(callback)(3, 'c', jasmine.any(Function));
     });
 
     it('should stop the iteration when the break function is called', () => {
@@ -266,9 +266,9 @@ describe('collection.Mappables', () => {
           });
 
       Mappables.of(map).forOf(callback);
-      expect(callback).toHaveBeenCalledWith(1, 'a', jasmine.any(Function));
-      expect(callback).toHaveBeenCalledWith(2, 'b', jasmine.any(Function));
-      expect(callback).not.toHaveBeenCalledWith(3, 'c', jasmine.any(Function));
+      verify(callback)(1, 'a', jasmine.any(Function));
+      verify(callback)(2, 'b', jasmine.any(Function));
+      verifyNever(callback)(3, 'c', jasmine.any(Function));
     });
   });
 
@@ -278,9 +278,9 @@ describe('collection.Mappables', () => {
       let callback = jasmine.createSpy('Callback');
 
       Mappables.of(map).iterate(callback);
-      expect(callback).toHaveBeenCalledWith(['a', 1], jasmine.any(Function));
-      expect(callback).toHaveBeenCalledWith(['b', 2], jasmine.any(Function));
-      expect(callback).toHaveBeenCalledWith(['c', 3], jasmine.any(Function));
+      verify(callback)(['a', 1], jasmine.any(Function));
+      verify(callback)(['b', 2], jasmine.any(Function));
+      verify(callback)(['c', 3], jasmine.any(Function));
     });
 
     it('should stop the iteration when the break function is called', () => {
@@ -293,16 +293,16 @@ describe('collection.Mappables', () => {
           });
 
       Mappables.of(map).iterate(callback);
-      expect(callback).toHaveBeenCalledWith(['a', 1], jasmine.any(Function));
-      expect(callback).toHaveBeenCalledWith(['b', 2], jasmine.any(Function));
-      expect(callback).not.toHaveBeenCalledWith(['c', 3], jasmine.any(Function));
+      verify(callback)(['a', 1], jasmine.any(Function));
+      verify(callback)(['b', 2], jasmine.any(Function));
+      verifyNever(callback)(['c', 3], jasmine.any(Function));
     });
   });
 
   describe('keys', () => {
     it('should return the correct set of keys', () => {
       let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
-      expect(Mappables.of(map).keys().asArray()).toEqual(['a', 'b', 'c']);
+      assert(Mappables.of(map).keys().asArray()).to.equal(['a', 'b', 'c']);
     });
   });
 
@@ -317,7 +317,7 @@ describe('collection.Mappables', () => {
             ];
           })
           .asRecord();
-      expect(result).toEqual({'a$': 2, 'b$': 3, 'c$': 4});
+      assert(result).to.equal({'a$': 2, 'b$': 3, 'c$': 4});
     });
   });
 
@@ -329,7 +329,7 @@ describe('collection.Mappables', () => {
             return key + value;
           })
           .asRecord();
-      expect(result).toEqual({'a1': 1, 'b2': 2, 'c3': 3});
+      assert(result).to.equal({'a1': 1, 'b2': 2, 'c3': 3});
     });
   });
 
@@ -341,7 +341,7 @@ describe('collection.Mappables', () => {
             return key + value;
           })
           .asRecord();
-      expect(result).toEqual({'a': 'a1', 'b': 'b2', 'c': 'c3'});
+      assert(result).to.equal({'a': 'a1', 'b': 'b2', 'c': 'c3'});
     });
   });
 
@@ -351,7 +351,7 @@ describe('collection.Mappables', () => {
       let result = Mappables.of(map)
           .removeAllKeys(new Set<string>(['a', 'c']))
           .asRecord();
-      expect(result).toEqual({'b': 2});
+      assert(result).to.equal({'b': 2});
     });
   });
 
@@ -369,11 +369,11 @@ describe('collection.Mappables', () => {
          ['d', 4],
        ]);
 
-       expect(Mappables.of(map).some(checkFn)).toEqual(true);
-       expect(checkFn).toHaveBeenCalledWith(1, 'a');
-       expect(checkFn).toHaveBeenCalledWith(2, 'b');
-       expect(checkFn).toHaveBeenCalledWith(3, 'c');
-       expect(checkFn).not.toHaveBeenCalledWith(4, 'd');
+       assert(Mappables.of(map).some(checkFn)).to.beTrue();
+       verify(checkFn)(1, 'a');
+       verify(checkFn)(2, 'b');
+       verify(checkFn)(3, 'c');
+       verifyNever(checkFn)(4, 'd');
       });
 
     it('should return false if none of the entries passes the check function', () => {
@@ -386,17 +386,17 @@ describe('collection.Mappables', () => {
          ['c', 3],
        ]);
 
-       expect(Mappables.of(map).some(checkFn)).toEqual(false);
-       expect(checkFn).toHaveBeenCalledWith(1, 'a');
-       expect(checkFn).toHaveBeenCalledWith(2, 'b');
-       expect(checkFn).toHaveBeenCalledWith(3, 'c');
+       assert(Mappables.of(map).some(checkFn)).to.beFalse();
+       verify(checkFn)(1, 'a');
+       verify(checkFn)(2, 'b');
+       verify(checkFn)(3, 'c');
     });
   });
 
   describe('values', () => {
     it('should return the correct set of values', () => {
       let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
-      expect(Mappables.of(map).values().asArray()).toEqual([1, 2, 3]);
+      assert(Mappables.of(map).values().asArray()).to.equal([1, 2, 3]);
     });
   });
 });

@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase, verify, verifyNever} from '../test-base';
 TestBase.setup();
 
 import {ArrayIterable} from './array-iterable';
@@ -16,7 +16,7 @@ describe('collection.NonIndexables', () => {
           .iterate((value: number) => {
             resultArray.push(value);
           });
-      expect(resultArray).toEqual([1, 2, 3, 4, 5, 6]);
+      assert(resultArray).to.equal([1, 2, 3, 4, 5, 6]);
     });
 
     it('should work with infinite iterable', () => {
@@ -32,7 +32,7 @@ describe('collection.NonIndexables', () => {
       let resultArray = NonIndexables.of([1, 2, 3])
           .addAllArray([4, 5, 6])
           .asArray();
-      expect(resultArray).toEqual([1, 2, 3, 4, 5, 6]);
+      assert(resultArray).to.equal([1, 2, 3, 4, 5, 6]);
     });
   });
 
@@ -44,7 +44,7 @@ describe('collection.NonIndexables', () => {
           .iterate((value: number) => {
             array.push(value);
           });
-      expect(array).toEqual([1, 2, 3]);
+      assert(array).to.equal([1, 2, 3]);
     });
   });
 
@@ -55,7 +55,7 @@ describe('collection.NonIndexables', () => {
       for (let result = iterator.next(); !result.done; result = iterator.next()) {
         array.push(result.value);
       }
-      expect(array).toEqual([1, 2, 3]);
+      assert(array).to.equal([1, 2, 3]);
     });
   });
 
@@ -63,10 +63,10 @@ describe('collection.NonIndexables', () => {
     it('should return set with all the elements', () => {
       let set = NonIndexables.of([1, 2, 3]).asSet();
 
-      expect(set.size).toEqual(3);
-      expect(set.has(1)).toEqual(true);
-      expect(set.has(2)).toEqual(true);
-      expect(set.has(3)).toEqual(true);
+      assert(set.size).to.equal(3);
+      assert(set.has(1)).to.beTrue();
+      assert(set.has(2)).to.beTrue();
+      assert(set.has(3)).to.beTrue();
     });
   });
 
@@ -77,7 +77,7 @@ describe('collection.NonIndexables', () => {
             return value % 2 === 0;
           })
           .asArray();
-      expect(result).toEqual([2]);
+      assert(result).to.equal([2]);
     });
   });
 
@@ -87,7 +87,7 @@ describe('collection.NonIndexables', () => {
           .find((value: number) => {
             return value % 2 === 0;
           });
-      expect(result).toEqual(2);
+      assert(result).to.equal(2);
     });
 
     it('should return null if the element is not found', () => {
@@ -95,7 +95,7 @@ describe('collection.NonIndexables', () => {
           .find((value: number) => {
             return false;
           });
-      expect(result).toEqual(null);
+      assert(result).to.beNull();
     });
   });
 
@@ -104,10 +104,10 @@ describe('collection.NonIndexables', () => {
       let mockHandler = jasmine.createSpy('Handler');
       NonIndexables.of([1, 2, 3, 4]).forEach(mockHandler);
 
-      expect(mockHandler).toHaveBeenCalledWith(1);
-      expect(mockHandler).toHaveBeenCalledWith(2);
-      expect(mockHandler).toHaveBeenCalledWith(3);
-      expect(mockHandler).toHaveBeenCalledWith(4);
+      verify(mockHandler)(1);
+      verify(mockHandler)(2);
+      verify(mockHandler)(3);
+      verify(mockHandler)(4);
     });
   });
 
@@ -116,10 +116,10 @@ describe('collection.NonIndexables', () => {
       let mockHandler = jasmine.createSpy('Handler');
       NonIndexables.of([1, 2, 3, 4]).forOf(mockHandler);
 
-      expect(mockHandler).toHaveBeenCalledWith(1, jasmine.any(Function));
-      expect(mockHandler).toHaveBeenCalledWith(2, jasmine.any(Function));
-      expect(mockHandler).toHaveBeenCalledWith(3, jasmine.any(Function));
-      expect(mockHandler).toHaveBeenCalledWith(4, jasmine.any(Function));
+      verify(mockHandler)(1, jasmine.any(Function));
+      verify(mockHandler)(2, jasmine.any(Function));
+      verify(mockHandler)(3, jasmine.any(Function));
+      verify(mockHandler)(4, jasmine.any(Function));
     });
 
     it('should stop the iteration when the break function is called', () => {
@@ -131,10 +131,10 @@ describe('collection.NonIndexables', () => {
           });
 
       NonIndexables.of([1, 2, 3, 4]).forOf(mockHandler);
-      expect(mockHandler).toHaveBeenCalledWith(1, jasmine.any(Function));
-      expect(mockHandler).toHaveBeenCalledWith(2, jasmine.any(Function));
-      expect(mockHandler).not.toHaveBeenCalledWith(3, jasmine.any(Function));
-      expect(mockHandler).not.toHaveBeenCalledWith(4, jasmine.any(Function));
+      verify(mockHandler)(1, jasmine.any(Function));
+      verify(mockHandler)(2, jasmine.any(Function));
+      verifyNever(mockHandler)(3, jasmine.any(Function));
+      verifyNever(mockHandler)(4, jasmine.any(Function));
     });
   });
 
@@ -143,10 +143,10 @@ describe('collection.NonIndexables', () => {
       let mockHandler = jasmine.createSpy('Handler');
       NonIndexables.of([1, 2, 3, 4]).iterate(mockHandler);
 
-      expect(mockHandler).toHaveBeenCalledWith(1, jasmine.any(Function));
-      expect(mockHandler).toHaveBeenCalledWith(2, jasmine.any(Function));
-      expect(mockHandler).toHaveBeenCalledWith(3, jasmine.any(Function));
-      expect(mockHandler).toHaveBeenCalledWith(4, jasmine.any(Function));
+      verify(mockHandler)(1, jasmine.any(Function));
+      verify(mockHandler)(2, jasmine.any(Function));
+      verify(mockHandler)(3, jasmine.any(Function));
+      verify(mockHandler)(4, jasmine.any(Function));
     });
 
     it('should stop the iteration when the break function is called', () => {
@@ -158,10 +158,10 @@ describe('collection.NonIndexables', () => {
           });
 
       NonIndexables.of([1, 2, 3, 4]).iterate(mockHandler);
-      expect(mockHandler).toHaveBeenCalledWith(1, jasmine.any(Function));
-      expect(mockHandler).toHaveBeenCalledWith(2, jasmine.any(Function));
-      expect(mockHandler).not.toHaveBeenCalledWith(3, jasmine.any(Function));
-      expect(mockHandler).not.toHaveBeenCalledWith(4, jasmine.any(Function));
+      verify(mockHandler)(1, jasmine.any(Function));
+      verify(mockHandler)(2, jasmine.any(Function));
+      verifyNever(mockHandler)(3, jasmine.any(Function));
+      verifyNever(mockHandler)(4, jasmine.any(Function));
     });
   });
 
@@ -172,7 +172,7 @@ describe('collection.NonIndexables', () => {
             return value + 1;
           })
           .asArray();
-      expect(result).toEqual([2, 3, 4, 5]);
+      assert(result).to.equal([2, 3, 4, 5]);
     });
   });
 
@@ -181,7 +181,7 @@ describe('collection.NonIndexables', () => {
       let result = NonIndexables.of([1, 2, 3, 4])
           .removeAll(new Set([2, 3]))
           .asArray();
-      expect(result).toEqual([1, 4]);
+      assert(result).to.equal([1, 4]);
     });
   });
 });

@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Maps} from './maps';
@@ -8,7 +8,7 @@ describe('collection.Maps', () => {
   describe('fromArray', () => {
     it('should create the map correctly', () => {
       let record = Maps.fromArray(['1', undefined, 'a', null]).asRecord();
-      expect(record).toEqual({'0': '1', '2': 'a', '3': null});
+      assert(record).to.equal({'0': '1', '2': 'a', '3': null});
     });
   });
 
@@ -20,14 +20,14 @@ describe('collection.Maps', () => {
       index[25] = 'z';
 
       let result = Maps.fromNumericalIndexed<string>(index).asRecord();
-      expect(result).toEqual({'2': 'b', '3': 'c', '25': 'z'});
+      assert(result).to.equal({'2': 'b', '3': 'c', '25': 'z'});
     });
   });
 
   describe('fromRecord', () => {
     it('should return the correct map', () => {
       let result = Maps.fromRecord({'a': 1, 'b': 2}).asRecord();
-      expect(result).toEqual({'a': 1, 'b': 2});
+      assert(result).to.equal({'a': 1, 'b': 2});
     });
   });
 });
