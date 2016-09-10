@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {TestBase, verify} from '../test-base';
 TestBase.setup();
 
 import {DisposableFunction} from './disposable-function';
@@ -18,14 +18,14 @@ describe('dispose.DisposableFunction', () => {
   describe('dispose', () => {
     it('should run the given function', () => {
       disposableFunction.dispose();
-      expect(mockFunction).toHaveBeenCalledWith();
+      verify(mockFunction)();
     });
   });
 
   describe('run', () => {
     it('should run the given function', () => {
       disposableFunction.run();
-      expect(mockFunction).toHaveBeenCalledWith();
+      verify(mockFunction)();
     });
   });
 });

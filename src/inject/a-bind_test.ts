@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {TestBase, verify} from '../test-base';
 TestBase.setup();
 
 import {bind} from './a-bind';
@@ -14,13 +14,13 @@ describe('inject.Bind', () => {
     spyOn(Injector, 'bind');
 
     bind(name)(TestClass);
-    expect(Injector.bind).toHaveBeenCalledWith(TestClass, name);
+    verify(Injector.bind)(TestClass, name);
   });
 
   it('should use the constructor name if the name is not given', () => {
     spyOn(Injector, 'bind');
 
     bind()(TestClass);
-    expect(Injector.bind).toHaveBeenCalledWith(TestClass, 'TestClass');
+    verify(Injector.bind)(TestClass, 'TestClass');
   });
 });

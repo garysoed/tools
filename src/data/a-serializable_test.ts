@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import Serializer, { Field, Serializable } from './a-serializable';
@@ -32,9 +32,9 @@ describe('model.Serializer', () => {
       basic.a = value;
 
       let serialized = Serializer.toJSON(basic);
-      expect(serialized).toEqual(jasmine.objectContaining({ 'fieldA': value }));
+      assert(serialized).to.equal(jasmine.objectContaining({ 'fieldA': value }));
 
-      expect(Serializer.fromJSON(serialized).a).toEqual(value);
+      assert(Serializer.fromJSON(serialized).a).to.equal(value);
     });
 
     it('should recursively convert the fields', () => {
@@ -48,7 +48,7 @@ describe('model.Serializer', () => {
       composite.basic = basic;
 
       let serialized = Serializer.toJSON(composite);
-      expect(serialized).toEqual(jasmine.objectContaining({
+      assert(serialized).to.equal(jasmine.objectContaining({
         'fieldA': compositeValue,
         'basic': jasmine.objectContaining({
           'fieldA': basicValue,
@@ -56,8 +56,8 @@ describe('model.Serializer', () => {
       }));
 
       let deserialized = Serializer.fromJSON(serialized);
-      expect(deserialized.a).toEqual(compositeValue);
-      expect(deserialized.basic).toEqual(basic);
+      assert(deserialized.a).to.equal(compositeValue);
+      assert(deserialized.basic).to.equal(basic);
     });
 
     it('should handle null fields', () => {
@@ -65,9 +65,9 @@ describe('model.Serializer', () => {
       basic.a = null;
 
       let serialized = Serializer.toJSON(basic);
-      expect(serialized).toEqual(jasmine.objectContaining({ 'fieldA': null }));
+      assert(serialized).to.equal(jasmine.objectContaining({ 'fieldA': null }));
 
-      expect(Serializer.fromJSON(serialized).a).toEqual(null);
+      assert(Serializer.fromJSON(serialized).a).to.equal(null);
     });
 
     it('should handle non native non serializable fields', () => {
@@ -76,9 +76,9 @@ describe('model.Serializer', () => {
       basic.a = value;
 
       let serialized = Serializer.toJSON(basic);
-      expect(serialized).toEqual(jasmine.objectContaining({ 'fieldA': value }));
+      assert(serialized).to.equal(jasmine.objectContaining({ 'fieldA': value }));
 
-      expect(Serializer.fromJSON(serialized).a).toEqual(value);
+      assert(Serializer.fromJSON(serialized).a).to.equal(value);
     });
 
     it('should handle arrays', () => {
@@ -90,12 +90,12 @@ describe('model.Serializer', () => {
       composite.a = [0, basic];
 
       let serialized = Serializer.toJSON(composite);
-      expect(serialized).toEqual(jasmine.objectContaining({
+      assert(serialized).to.equal(jasmine.objectContaining({
         'fieldA': [0, jasmine.objectContaining({ 'fieldA': value })],
       }));
 
       let deserialized = Serializer.fromJSON(serialized);
-      expect(deserialized.a).toEqual([0, basic]);
+      assert(deserialized.a).to.equal([0, basic]);
     });
 
     it('should handle maps', () => {
@@ -107,7 +107,7 @@ describe('model.Serializer', () => {
       composite.a = { 'basic': basic };
 
       let serialized = Serializer.toJSON(composite);
-      expect(serialized).toEqual(jasmine.objectContaining({
+      assert(serialized).to.equal(jasmine.objectContaining({
         'fieldA': {
           'basic': jasmine.objectContaining({
             'fieldA': value,
@@ -116,7 +116,7 @@ describe('model.Serializer', () => {
       }));
 
       let deserialized = Serializer.fromJSON(serialized);
-      expect(deserialized.a).toEqual({ 'basic': basic });
+      assert(deserialized.a).to.equal({ 'basic': basic });
     });
 
     it('should ignore non existent fields', () => {
@@ -127,7 +127,7 @@ describe('model.Serializer', () => {
       delete json['fieldA'];
 
       let deserialized = Serializer.fromJSON(json);
-      expect(deserialized.a).toEqual(value);
+      assert(deserialized.a).to.equal(value);
     });
   });
 });

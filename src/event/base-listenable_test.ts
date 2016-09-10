@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase, verify, verifyNoCalls} from '../test-base';
 TestBase.setup();
 
 import {BaseListenable} from './base-listenable';
@@ -23,7 +23,7 @@ describe('event.BaseListenable', () => {
 
       listenable.dispatch(event, () => {});
 
-      expect(mockCallback).not.toHaveBeenCalled();
+      verifyNoCalls(mockCallback);
     });
   });
 
@@ -56,14 +56,14 @@ describe('event.BaseListenable', () => {
           },
           payload);
 
-      expect(mockCaptureHandler).toHaveBeenCalledWith(0, payload);
-      expect(mockBubbleHandler).toHaveBeenCalledWith(1, payload);
+      verify(mockCaptureHandler)(0, payload);
+      verify(mockBubbleHandler)(1, payload);
     });
 
     it('should handle case when no callbacks are registered', () => {
-      expect(() => {
+      assert(() => {
         listenable.dispatch('event', () => {}, 'payload');
-      }).not.toThrow();
+      }).toNot.throw();
     });
   });
 
@@ -77,7 +77,7 @@ describe('event.BaseListenable', () => {
 
       listenable.dispatch(event, () => {});
 
-      expect(mockCallback).not.toHaveBeenCalled();
+      verifyNoCalls(mockCallback)();
     });
   });
 
@@ -89,13 +89,13 @@ describe('event.BaseListenable', () => {
       let disposableFunction = listenable.once(event, mockCallback);
       listenable.dispatch(event, () => {});
 
-      expect(mockCallback).toHaveBeenCalledWith(null);
+      verify(mockCallback)(null);
 
       // Dispatch the event again.
       mockCallback.calls.reset();
       listenable.dispatch(event, () => {});
-      expect(mockCallback).not.toHaveBeenCalled();
-      expect(disposableFunction.isDisposed).toEqual(true);
+      verifyNoCalls(mockCallback)();
+      assert(disposableFunction.isDisposed).to.equal(true);
     });
 
     it('should return disposable function that stops listening to the event', () => {
@@ -107,7 +107,7 @@ describe('event.BaseListenable', () => {
 
       listenable.dispatch(event, () => {});
 
-      expect(mockCallback).not.toHaveBeenCalled();
+      verifyNoCalls(mockCallback);
     });
   });
 });

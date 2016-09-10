@@ -14,6 +14,10 @@ export class FunctionAssert extends AnyAssert<Function> {
     super(functionValue_, reversed, expect);
   }
 
+  throw(): void {
+    this.getMatchers_().toThrow();
+  }
+
   /**
    * Checks that invoking the given function will throw error with message matching the given
    * Regexp.

@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase, verify} from '../test-base';
 TestBase.setup();
 
 import {ListenableDom} from './listenable-dom';
@@ -26,12 +26,12 @@ describe('event.ListenableDom', () => {
 
       listenable.dispatch(eventType, mockCallback, payload);
 
-      expect(mockEventTarget.dispatchEvent).toHaveBeenCalledWith(jasmine.any(Event));
+      verify(mockEventTarget.dispatchEvent)(jasmine.any(Event));
       let event = mockEventTarget.dispatchEvent.calls.argsFor(0)[0];
-      expect(event['payload']).toEqual(payload);
-      expect(event.bubbles).toEqual(true);
+      assert(event['payload']).to.equal(payload);
+      assert(event.bubbles).to.equal(true);
 
-      expect(mockCallback).toHaveBeenCalledWith();
+      verify(mockCallback)();
     });
   });
 
@@ -43,12 +43,10 @@ describe('event.ListenableDom', () => {
 
       let disposableFunction = listenable.on(eventType, callback, useCapture);
 
-      expect(mockEventTarget.addEventListener)
-          .toHaveBeenCalledWith(eventType, callback, useCapture);
+      verify(mockEventTarget.addEventListener)(eventType, callback, useCapture);
 
       disposableFunction.dispose();
-      expect(mockEventTarget.removeEventListener)
-          .toHaveBeenCalledWith(eventType, callback, useCapture);
+      verify(mockEventTarget.removeEventListener)(eventType, callback, useCapture);
     });
   });
 });

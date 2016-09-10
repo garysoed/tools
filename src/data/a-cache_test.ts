@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase, verify, verifyNoCalls} from '../test-base';
 TestBase.setup();
 
 import Cache from './a-cache';
@@ -34,29 +34,29 @@ describe('data.@Cache', () => {
     let value = 'value';
     spy.and.returnValue(value);
 
-    expect(test.property).toEqual(value);
+    assert(test.property).to.equal(value);
 
     spy.calls.reset();
-    expect(test.property).toEqual(value);
-    expect(spy).not.toHaveBeenCalled();
+    assert(test.property).to.equal(value);
+    verifyNoCalls(spy);
   });
 
   it('should cache the method', () => {
     let value = 'value';
     spy.and.returnValue(value);
 
-    expect(test.method()).toEqual(value);
+    assert(test.method()).to.equal(value);
 
     spy.calls.reset();
-    expect(test.method()).toEqual(value);
-    expect(spy).not.toHaveBeenCalled();
+    assert(test.method()).to.equal(value);
+    verifyNoCalls(spy);
   });
 
   it('should throw error on non getter properties', () => {
     let descriptor = <TypedPropertyDescriptor<any>> {};
-    expect(() => {
+    assert(() => {
       Cache()({}, 'property', descriptor);
-    }).toThrowError(/has to be a getter or a function/);
+    }).to.throwError(/has to be a getter or a function/);
   });
 
   describe('clear', () => {
@@ -64,39 +64,39 @@ describe('data.@Cache', () => {
       let value = 'value';
       spy.and.returnValue(value);
 
-      expect(test.property).toEqual(value);
-      expect(test.method()).toEqual(value);
+      assert(test.property).to.equal(value);
+      assert(test.method()).to.equal(value);
 
       let newValue = 'newValue';
       spy.calls.reset();
       spy.and.returnValue(newValue);
 
       Cache.clear(test);
-      expect(test.property).toEqual(newValue);
-      expect(spy).toHaveBeenCalledWith();
+      assert(test.property).to.equal(newValue);
+      verify(spy)();
 
       spy.calls.reset();
-      expect(test.method()).toEqual(newValue);
-      expect(spy).toHaveBeenCalledWith();
+      assert(test.method()).to.equal(newValue);
+      verify(spy)();
     });
 
     it('should clear only cache with the specified key', () => {
       let value = 'value';
       spy.and.returnValue(value);
 
-      expect(test.property).toEqual(value);
-      expect(test.method()).toEqual(value);
+      assert(test.property).to.equal(value);
+      assert(test.method()).to.equal(value);
 
       let newValue = 'newValue';
       spy.calls.reset();
       spy.and.returnValue(newValue);
 
       Cache.clear(test, 'method');
-      expect(test.property).toEqual(value);
-      expect(spy).not.toHaveBeenCalled();
+      assert(test.property).to.equal(value);
+      verifyNoCalls(spy);
 
-      expect(test.method()).toEqual(newValue);
-      expect(spy).toHaveBeenCalledWith();
+      assert(test.method()).to.equal(newValue);
+      verify(spy)();
     });
   });
 });

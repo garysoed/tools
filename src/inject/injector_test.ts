@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase, verify} from '../test-base';
 TestBase.setup();
 
 import {InjectUtil} from './inject-util';
@@ -25,9 +25,9 @@ describe('inject.Injector', () => {
       mockProvider.and.returnValue(mockInstance);
       mockBindings.set(bindKey, mockProvider);
 
-      expect(injector.getBoundValue(bindKey)).toEqual(mockInstance);
-      expect(mockProvider).toHaveBeenCalledWith(injector);
-      expect(injector['instances_'].get(bindKey)).toEqual(mockInstance);
+      assert(injector.getBoundValue(bindKey)).to.equal(mockInstance);
+      verify(mockProvider)(injector);
+      assert(injector['instances_'].get(bindKey)).to.equal(mockInstance);
     });
 
     it('should return the cached value', () => {
@@ -35,17 +35,17 @@ describe('inject.Injector', () => {
       let bindKey = 'bindKey';
       injector['instances_'].set(bindKey, cachedInstance);
 
-      expect(injector.getBoundValue(bindKey)).toBe(cachedInstance);
+      assert(injector.getBoundValue(bindKey)).to.be(cachedInstance);
     });
 
     it('should throw error if the bind key does not exist', () => {
-      expect(() => {
+      assert(() => {
         injector.getBoundValue('bindKey');
-      }).toThrowError(/No value bound to key/);
+      }).to.throwError(/No value bound to key/);
     });
 
     it('should return undefined if the key does not exist and it is optional', () => {
-      expect(injector.getBoundValue('bindKey', true)).not.toBeDefined();
+      assert(injector.getBoundValue('bindKey', true)).toNot.beDefined();
     });
   });
 
@@ -75,10 +75,10 @@ describe('inject.Injector', () => {
         }
       });
 
-      expect(injector.getParameters(TestClass)).toEqual([mockValue1, mockValue2]);
-      expect(injector.getBoundValue).toHaveBeenCalledWith(metadata1.keyName, metadata1.isOptional);
-      expect(injector.getBoundValue).toHaveBeenCalledWith(metadata2.keyName, metadata2.isOptional);
-      expect(InjectUtil.getMetadataMap).toHaveBeenCalledWith(TestClass);
+      assert(injector.getParameters(TestClass)).to.equal([mockValue1, mockValue2]);
+      verify(injector.getBoundValue)(metadata1.keyName, metadata1.isOptional);
+      verify(injector.getBoundValue)(metadata2.keyName, metadata2.isOptional);
+      verify(InjectUtil.getMetadataMap)(TestClass);
     });
 
     it('should use the extra arguments to override the parameters', () => {
@@ -87,16 +87,16 @@ describe('inject.Injector', () => {
       spyOn(InjectUtil, 'getMetadataMap').and.returnValue(new Map<number, string>());
 
       let parameters = injector.getParameters(TestClass, {0: mockValue1, 1: mockValue2});
-      expect(parameters).toEqual([mockValue1, mockValue2]);
-      expect(InjectUtil.getMetadataMap).toHaveBeenCalledWith(TestClass);
+      assert(parameters).to.equal([mockValue1, mockValue2]);
+      verify(InjectUtil.getMetadataMap)(TestClass);
     });
 
     it('should throw error if an index is not in the metadata', () => {
       spyOn(InjectUtil, 'getMetadataMap').and.returnValue(new Map<number, string>());
 
-      expect(() => {
+      assert(() => {
         injector.getParameters(TestClass);
-      }).toThrowError(/Cannot find injection candidate/);
+      }).to.throwError(/Cannot find injection candidate/);
     });
   });
 
@@ -111,9 +111,9 @@ describe('inject.Injector', () => {
       spyOn(injector, 'getParameters').and.returnValue(mockParameters);
       spyOn(Reflect, 'construct').and.returnValue(mockInstance);
 
-      expect(injector.instantiate(TestClass, mockExtraArguments)).toEqual(mockInstance);
-      expect(injector.getParameters).toHaveBeenCalledWith(TestClass, mockExtraArguments);
-      expect(Reflect.construct).toHaveBeenCalledWith(TestClass, mockParameters);
+      assert(injector.instantiate(TestClass, mockExtraArguments)).to.equal(mockInstance);
+      verify(injector.getParameters)(TestClass, mockExtraArguments);
+      verify(Reflect.construct)(TestClass, mockParameters);
     });
   });
 
@@ -129,10 +129,10 @@ describe('inject.Injector', () => {
       let bindProviderSpy = spyOn(Injector, 'bindProvider');
 
       Injector.bind(TestClass, bindKey);
-      expect(Injector.bindProvider).toHaveBeenCalledWith(jasmine.any(Function), bindKey);
+      verify(Injector.bindProvider)(jasmine.any(Function), bindKey);
 
-      expect(bindProviderSpy.calls.argsFor(0)[0](mockInjector)).toEqual(mockInstance);
-      expect(mockInjector.instantiate).toHaveBeenCalledWith(TestClass);
+      assert(bindProviderSpy.calls.argsFor(0)[0](mockInjector)).to.equal(mockInstance);
+      verify(mockInjector.instantiate)(TestClass);
     });
   });
 
@@ -142,8 +142,8 @@ describe('inject.Injector', () => {
       let bindKey = 'bindKey';
       Injector.bindProvider(mockProvider, bindKey);
 
-      expect(Injector['BINDINGS_'].size).toEqual(1);
-      expect(Injector['BINDINGS_'].get(bindKey)).toEqual(mockProvider);
+      assert(Injector['BINDINGS_'].size).to.equal(1);
+      assert(Injector['BINDINGS_'].get(bindKey)).to.equal(mockProvider);
     });
 
     it('should throw error if the binding key is already bound', () => {
@@ -151,15 +151,15 @@ describe('inject.Injector', () => {
       let bindKey = 'bindKey';
       Injector.bind(mockProvider, bindKey);
 
-      expect(() => {
+      assert(() => {
         Injector.bind(mockProvider, bindKey);
-      }).toThrowError(/is already bound/);
+      }).to.throwError(/is already bound/);
     });
 
     it('should throw error if the binding key is a reserved key', () => {
-      expect(() => {
+      assert(() => {
         Injector.bind(Mocks.object('Provider'), '$gsInjector');
-      }).toThrowError(/is a reserved key/);
+      }).to.throwError(/is a reserved key/);
     });
   });
 });

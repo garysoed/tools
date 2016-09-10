@@ -1,7 +1,8 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase, verify} from '../test-base';
 TestBase.setup();
 
 import {Graph} from './graph';
+import {GraphNode} from './graph-node';
 import {Mocks} from '../mock/mocks';
 import {PipeUtil} from './pipe-util';
 
@@ -15,8 +16,8 @@ describe('pipeline.Graph', () => {
       argMetaData.isExternal = true;
       argMetaData.key = key;
 
-      expect(Graph['resolveArgument_'](argMetaData, Mocks.object('context'), {[key]: value}))
-          .toEqual(value);
+      assert(Graph['resolveArgument_'](argMetaData, Mocks.object('context'), {[key]: value}))
+          .to.equal(value);
     });
 
     it('should correctly resolve internal argument', () => {
@@ -35,9 +36,9 @@ describe('pipeline.Graph', () => {
 
       spyOn(Graph, 'run').and.returnValue(value);
 
-      expect(Graph['resolveArgument_'](argMetaData, context, {[externalKey]: externalValue}))
-          .toEqual(value);
-      expect(Graph.run).toHaveBeenCalledWith(context, key, {[forwardedKey]: externalValue});
+      assert(Graph['resolveArgument_'](argMetaData, context, {[externalKey]: externalValue}))
+          .to.equal(value);
+      verify(Graph.run)(context, key, {[forwardedKey]: externalValue});
     });
 
     it('should throw error if the external argument cannot be resolved', () => {
@@ -45,9 +46,9 @@ describe('pipeline.Graph', () => {
       argMetaData.isExternal = true;
       argMetaData.key = 'key';
 
-      expect(() => {
+      assert(() => {
         Graph['resolveArgument_'](argMetaData, Mocks.object('context'), {});
-      }).toThrowError(/resolve external argument/);
+      }).to.throwError(/resolve external argument/);
     });
 
     it('should throw error if a forwarded argument cannot be resolved', () => {
@@ -59,9 +60,9 @@ describe('pipeline.Graph', () => {
       argMetaData.key = 'key';
       let context = Mocks.object('context');
 
-      expect(() => {
+      assert(() => {
         Graph['resolveArgument_'](argMetaData, context, {});
-      }).toThrowError(/resolve forwarded argument/);
+      }).to.throwError(/resolve forwarded argument/);
     });
   });
 
@@ -82,19 +83,19 @@ describe('pipeline.Graph', () => {
       let resolvedArg = Mocks.object('resolvedArg');
       spyOn(Graph, 'resolveArgument_').and.returnValue(resolvedArg);
 
-      expect(Graph.run(context, key, externalArgs)).toEqual(runResult);
-      expect(mockGraphNode.run).toHaveBeenCalledWith(context, [resolvedArg]);
-      expect(Graph['resolveArgument_']).toHaveBeenCalledWith(argData, context, externalArgs);
-      expect(PipeUtil.getNode).toHaveBeenCalledWith(prototype, key);
+      assert(Graph.run(context, key, externalArgs)).to.equal(runResult);
+      verify(<GraphNode<any>> mockGraphNode).run(context, [resolvedArg]);
+      verify(Graph)['resolveArgument_'](argData, context, externalArgs);
+      verify(PipeUtil).getNode(prototype, key);
     });
 
     it('should throw error if the node cannot be found', () => {
       let context = {'constructor': {'prototype': Mocks.object('prototype')}};
       spyOn(PipeUtil, 'getNode').and.returnValue(null);
 
-      expect(() => {
+      assert(() => {
         Graph.run(context, 'key', Mocks.object('externalArgs'));
-      }).toThrowError(/No nodes found/);
+      }).to.throwError(/No nodes found/);
     });
   });
 });

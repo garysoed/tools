@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase, verify} from '../test-base';
 TestBase.setup();
 
 import {__EQUALS, Equals} from './equals';
@@ -47,13 +47,13 @@ describe('data.Equals', () => {
         }
       });
 
-      expect(Equals.equals(a, b)).toEqual(true);
-      expect(Equals.equals).toHaveBeenCalledWith(value1A, value1B);
-      expect(Equals.equals).toHaveBeenCalledWith(value2A, value2B);
-      expect(mockAnnotations.getFieldValues).toHaveBeenCalledWith(a);
-      expect(mockAnnotations.getFieldValues).toHaveBeenCalledWith(b);
-      expect(Annotations.of).toHaveBeenCalledWith(proto, __EQUALS);
-      expect(Annotations.hasAnnotation).toHaveBeenCalledWith(proto, __EQUALS);
+      assert(Equals.equals(a, b)).to.equal(true);
+      verify(Equals.equals)(value1A, value1B);
+      verify(Equals.equals)(value2A, value2B);
+      verify(mockAnnotations.getFieldValues)(a);
+      verify(mockAnnotations.getFieldValues)(b);
+      verify(Annotations.of)(proto, __EQUALS);
+      verify(Annotations.hasAnnotation)(proto, __EQUALS);
     });
 
     it('should return false if one of the recursive fields is different', () => {
@@ -92,7 +92,7 @@ describe('data.Equals', () => {
         }
       });
 
-      expect(Equals.equals(a, b)).toEqual(false);
+      assert(Equals.equals(a, b)).to.equal(false);
     });
 
     it('should use === for values with no annotations', () => {
@@ -103,8 +103,8 @@ describe('data.Equals', () => {
 
       spyOn(Annotations, 'hasAnnotation').and.returnValue(false);
 
-      expect(Equals.equals(a, b)).toEqual(true);
-      expect(Equals.equals(a, other)).toEqual(false);
+      assert(Equals.equals(a, b)).to.equal(true);
+      assert(Equals.equals(a, other)).to.equal(false);
     });
 
     it('should use === for values that are not Objects', () => {
@@ -112,8 +112,8 @@ describe('data.Equals', () => {
       let b = 123;
       let other = 456;
 
-      expect(Equals.equals(a, b)).toEqual(true);
-      expect(Equals.equals(a, other)).toEqual(false);
+      assert(Equals.equals(a, b)).to.equal(true);
+      assert(Equals.equals(a, other)).to.equal(false);
     });
   });
 
@@ -126,8 +126,8 @@ describe('data.Equals', () => {
 
       Equals.Property()(proto, key);
 
-      expect(mockAnnotations.addField).toHaveBeenCalledWith(key);
-      expect(Annotations.of).toHaveBeenCalledWith(proto, __EQUALS);
+      verify(mockAnnotations.addField)(key);
+      verify(Annotations.of)(proto, __EQUALS);
     });
   });
 });

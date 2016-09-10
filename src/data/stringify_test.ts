@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase, verify} from '../test-base';
 TestBase.setup();
 
 import {__STRINGIFY, Stringify} from './stringify';
@@ -11,24 +11,24 @@ import {Natives} from '../typescript/natives';
 describe('data.Stringify', () => {
   describe('formatField_', () => {
     it('should stringify strings correctly', () => {
-      expect(Stringify['formatField_']('abc', '|', '--', '>>')).toEqual('"abc"');
+      assert(Stringify['formatField_']('abc', '|', '--', '>>')).to.equal('"abc"');
     });
 
     it('should stringify native values correctly', () => {
       let field = 123;
       spyOn(Natives, 'isNative').and.returnValue(true);
-      expect(Stringify['formatField_'](field, '|', '--', '>>')).toEqual(`${field}`);
-      expect(Natives.isNative).toHaveBeenCalledWith(field);
+      assert(Stringify['formatField_'](field, '|', '--', '>>')).to.equal(`${field}`);
+      verify(Natives.isNative)(field);
     });
 
     it('should stringify Dates correctly', () => {
       let date = new Date(123);
-      expect(Stringify['formatField_'](date, '|', '--')).toEqual(date.toLocaleString());
+      assert(Stringify['formatField_'](date, '|', '--')).to.equal(date.toLocaleString());
     });
 
     it('should stringify Functions correctly', () => {
       let f = function a(a: any, b: any, c: any): any {};
-      expect(Stringify['formatField_'](f, '|', '--', '>>')).toEqual('function a(a, b, c)');
+      assert(Stringify['formatField_'](f, '|', '--', '>>')).to.equal('function a(a, b, c)');
     });
 
     it('should stringify objects correctly without padding', () => {
@@ -58,7 +58,7 @@ describe('data.Stringify', () => {
       });
 
       let result = Stringify['formatField_'](instance, '|', '', '>>');
-      expect(result).toEqual(`{${key1}: ${stringifiedValue1}|${key2}: ${stringifiedValue2}}`);
+      assert(result).to.equal(`{${key1}: ${stringifiedValue1}|${key2}: ${stringifiedValue2}}`);
     });
 
     it('should stringify objects correctly with padding', () => {
@@ -88,7 +88,7 @@ describe('data.Stringify', () => {
       });
 
       let result = Stringify['formatField_'](instance, '|', '--', '>>');
-      expect(result).toEqual([
+      assert(result).to.equal([
         '{',
         `-->>${key1}: ${stringifiedValue1}|`,
         `-->>${key2}: ${stringifiedValue2}`,
@@ -127,15 +127,15 @@ describe('data.Stringify', () => {
         }
       });
 
-      expect(Stringify['grabFields_'](instance)).toEqual({
+      assert(Stringify['grabFields_'](instance)).to.equal({
         [key1]: normalizedValue1,
         [key2]: normalizedValue2,
       });
-      expect(Stringify['grabFields_']).toHaveBeenCalledWith(value1);
-      expect(Stringify['grabFields_']).toHaveBeenCalledWith(value2);
-      expect(mockAnnotations.getFieldValues).toHaveBeenCalledWith(instance);
-      expect(Annotations.of).toHaveBeenCalledWith(proto, __STRINGIFY);
-      expect(Annotations.hasAnnotation).toHaveBeenCalledWith(proto, __STRINGIFY);
+      verify(Stringify['grabFields_'])(value1);
+      verify(Stringify['grabFields_'])(value2);
+      verify(mockAnnotations.getFieldValues)(instance);
+      verify(Annotations.of)(proto, __STRINGIFY);
+      verify(Annotations.hasAnnotation)(proto, __STRINGIFY);
     });
 
     it('should normalize symbol keys correctly', () => {
@@ -169,20 +169,20 @@ describe('data.Stringify', () => {
         }
       });
 
-      expect(Stringify['grabFields_'](instance)).toEqual({
+      assert(Stringify['grabFields_'](instance)).to.equal({
         [`[${key1.toString()}]`]: normalizedValue1,
         [`[${key2.toString()}]`]: normalizedValue2,
       });
-      expect(Stringify['grabFields_']).toHaveBeenCalledWith(value1);
-      expect(Stringify['grabFields_']).toHaveBeenCalledWith(value2);
-      expect(mockAnnotations.getFieldValues).toHaveBeenCalledWith(instance);
-      expect(Annotations.of).toHaveBeenCalledWith(proto, __STRINGIFY);
-      expect(Annotations.hasAnnotation).toHaveBeenCalledWith(proto, __STRINGIFY);
+      verify(Stringify['grabFields_'])(value1);
+      verify(Stringify['grabFields_'])(value2);
+      verify(mockAnnotations.getFieldValues)(instance);
+      verify(Annotations.of)(proto, __STRINGIFY);
+      verify(Annotations.hasAnnotation)(proto, __STRINGIFY);
     });
 
     it('should return the instance if it is not an object', () => {
       let instance = 'instance';
-      expect(Stringify['grabFields_'](instance)).toEqual(instance);
+      assert(Stringify['grabFields_'](instance)).to.equal(instance);
     });
 
     it('should return the instance if it does not have the annotation', () => {
@@ -190,8 +190,8 @@ describe('data.Stringify', () => {
       let instance = {constructor: {prototype: proto}};
       spyOn(Annotations, 'hasAnnotation').and.returnValue(false);
 
-      expect(Stringify['grabFields_'](instance)).toEqual(instance);
-      expect(Annotations.hasAnnotation).toHaveBeenCalledWith(proto, __STRINGIFY);
+      assert(Stringify['grabFields_'](instance)).to.equal(instance);
+      verify(Annotations.hasAnnotation)(proto, __STRINGIFY);
     });
   });
 
@@ -205,8 +205,8 @@ describe('data.Stringify', () => {
 
       Stringify.Property()(ctor, key);
 
-      expect(mockAnnotations.addField).toHaveBeenCalledWith(key);
-      expect(Annotations.of).toHaveBeenCalledWith(ctor, __STRINGIFY);
+      verify(mockAnnotations.addField)(key);
+      verify(Annotations.of)(ctor, __STRINGIFY);
     });
   });
 
@@ -222,9 +222,9 @@ describe('data.Stringify', () => {
 
       let instance = Mocks.object('instance');
 
-      expect(Stringify.toString(instance, {delimiter, pad})).toEqual(result);
-      expect(Stringify['formatField_']).toHaveBeenCalledWith(field, delimiter, pad);
-      expect(Stringify['grabFields_']).toHaveBeenCalledWith(instance);
+      assert(Stringify.toString(instance, {delimiter, pad})).to.equal(result);
+      verify(Stringify['formatField_'])(field, delimiter, pad);
+      verify(Stringify['grabFields_'])(instance);
     });
   });
 });

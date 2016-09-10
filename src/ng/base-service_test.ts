@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {TestBase, verify} from '../test-base';
 TestBase.setup();
 
 import BaseService from './base-service';
@@ -19,12 +19,11 @@ describe('ng.BaseService', () => {
     it('should dispose itself on beforeunload', () => {
       spyOn(service, 'dispose').and.callThrough();
 
-      expect(mockWindow.addEventListener)
-          .toHaveBeenCalledWith('beforeunload', jasmine.any(Function), false);
+      verify(mockWindow.addEventListener)('beforeunload', jasmine.any(Function), false);
 
       mockWindow.addEventListener.calls.argsFor(0)[1]({ type: 'beforeunload' });
 
-      expect(service.dispose).toHaveBeenCalledWith();
+      verify(service.dispose)();
     });
   });
 });

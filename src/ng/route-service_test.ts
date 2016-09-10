@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase, verify} from '../test-base';
 TestBase.setup();
 
 import Cache from '../data/a-cache';
@@ -26,10 +26,10 @@ describe('ng.RouteService', () => {
   it('should clear the cache when route change success event is received', () => {
     spyOn(Cache, 'clear');
 
-    expect(mock$scope.$on).toHaveBeenCalledWith('$routeChangeSuccess', jasmine.any(Function));
+    verify(mock$scope.$on)('$routeChangeSuccess', jasmine.any(Function));
 
     mock$scope$onSpy.calls.argsFor(0)[1]();
-    expect(Cache.clear).toHaveBeenCalledWith(service);
+    verify(Cache.clear)(service);
   });
 
   describe('get params', () => {
@@ -39,7 +39,7 @@ describe('ng.RouteService', () => {
       mock$location.search.and.returnValue({ 'b': JSON.stringify(searchObject) });
       service.to('path', {}, memoryParams);
 
-      expect(service.params).toEqual({
+      assert(service.params).to.equal({
         'a': 1,
         'b': searchObject,
       });
@@ -53,7 +53,7 @@ describe('ng.RouteService', () => {
       mock$location.search.and.returnValue({ 'a': JSON.stringify(searchObject) });
       service.to('path', {}, memoryParams);
 
-      expect(service.params).toEqual({ 'a': searchObject });
+      assert(service.params).to.equal({ 'a': searchObject });
 
     });
   });
@@ -62,8 +62,8 @@ describe('ng.RouteService', () => {
     it('should return the path', () => {
       let path = 'path';
       mock$location.path.and.returnValue(path);
-      expect(service.path).toEqual(path);
-      expect(mock$location.path).toHaveBeenCalledWith();
+      assert(service.path).to.equal(path);
+      verify(mock$location.path)();
     });
   });
 
@@ -84,12 +84,12 @@ describe('ng.RouteService', () => {
 
       service.to(path, searchParams, memoryParams);
 
-      expect(mock$location.path).toHaveBeenCalledWith(path);
-      expect(mock$location.search).toHaveBeenCalledWith({
+      verify(mock$location.path)(path);
+      verify(mock$location.search)({
         'b': JSON.stringify(objectB),
         'overridden': JSON.stringify(objectNewOverridden),
       });
-      expect(service['tempParams_']).toEqual({
+      assert(service['tempParams_']).to.equal({
         'a': objectA,
         'b': objectB,
         'overridden': objectNewOverridden,

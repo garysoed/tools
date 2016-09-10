@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Stringify} from './stringify';
@@ -17,28 +17,28 @@ class ComplexClass {
 
 describe('data.Stringify - Functional', () => {
   it('should stringify numbers correctly', () => {
-    expect(Stringify.toString(123)).toEqual('123');
+    assert(Stringify.toString(123)).to.equal('123');
   });
 
   it('should stringify dates correctly', () => {
     let date = new Date(123);
-    expect(Stringify.toString(date)).toEqual(date.toLocaleString());
+    assert(Stringify.toString(date)).to.equal(date.toLocaleString());
   });
 
   it('should stringify strings correctly', () => {
-    expect(Stringify.toString('string')).toEqual('"string"');
+    assert(Stringify.toString('string')).to.equal('"string"');
   });
 
   it('should stringify booleans correctly', () => {
-    expect(Stringify.toString(true)).toEqual('true');
+    assert(Stringify.toString(true)).to.equal('true');
   });
 
   it('should stringify simple objects correctly with single line', () => {
     let simple = new SimpleClass();
     simple.a = 123;
     simple.b = 'b';
-    expect(Stringify.toString(simple, {delimiter: '|', pad: ''}))
-        .toEqual('{a: 123|b: "b"}');
+    assert(Stringify.toString(simple, {delimiter: '|', pad: ''}))
+        .to.equal('{a: 123|b: "b"}');
   });
 
   it('should stringify complex objects correctly with single line', () => {
@@ -49,16 +49,16 @@ describe('data.Stringify - Functional', () => {
     complex.a = 123;
     complex.b = simple;
     complex.c = 'c';
-    expect(Stringify.toString(complex, {delimiter: '|', pad: ''}))
-        .toEqual('{a: 123|b: {a: 5123|b: "sb"}|c: "c"}');
+    assert(Stringify.toString(complex, {delimiter: '|', pad: ''}))
+        .to.equal('{a: 123|b: {a: 5123|b: "sb"}|c: "c"}');
   });
 
   it('should stringify simple objects correctly with multiline', () => {
     let simple = new SimpleClass();
     simple.a = 123;
     simple.b = 'b';
-    expect(Stringify.toString(simple, {delimiter: '|', pad: '--'}))
-        .toEqual([
+    assert(Stringify.toString(simple, {delimiter: '|', pad: '--'}))
+        .to.equal([
           '{',
           '--a: 123|',
           '--b: "b"',
@@ -74,8 +74,8 @@ describe('data.Stringify - Functional', () => {
     complex.a = 123;
     complex.b = simple;
     complex.c = 'c';
-    expect(Stringify.toString(complex, {delimiter: '|', pad: '--'}))
-        .toEqual([
+    assert(Stringify.toString(complex, {delimiter: '|', pad: '--'}))
+        .to.equal([
           '{',
           '--a: 123|',
           '--b: {',

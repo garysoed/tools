@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase, verify} from '../test-base';
 TestBase.setup();
 
 import {DomEvent} from '../event/dom-event';
@@ -21,16 +21,14 @@ describe('net.Http', () => {
       Http.get(path)
           .send()
           .then((responseText: string) => {
-            expect(responseText).toEqual(expectedResponseText);
+            assert(responseText).to.equal(expectedResponseText);
             done();
           }, done.fail);
 
-      expect(mockRequest.open).toHaveBeenCalledWith('GET', path);
+      verify(mockRequest.open)('GET', path);
 
-      expect(mockRequest.send).toHaveBeenCalledWith(null);
-      expect(TestListenableDom.getListenable(mockRequest).on).toHaveBeenCalledWith(
-          DomEvent.LOAD,
-          jasmine.any(Function));
+      verify(mockRequest.send)(null);
+      verify(TestListenableDom.getListenable(mockRequest).on)(DomEvent.LOAD, jasmine.any(Function));
 
       mockRequest.responseText = expectedResponseText;
       mockRequest.status = 200;
@@ -45,8 +43,8 @@ describe('net.Http', () => {
           .then(
               done.fail,
               (request: XMLHttpRequest) => {
-                expect(request.status).toEqual(status);
-                expect(request.responseText).toEqual(error);
+                assert(request.status).to.equal(status);
+                assert(request.responseText).to.equal(error);
                 done();
               });
 
@@ -68,17 +66,14 @@ describe('net.Http', () => {
           .setFormData(formData)
           .send()
           .then((responseText: string) => {
-            expect(responseText).toEqual(expectedResponseText);
+            assert(responseText).to.equal(expectedResponseText);
             done();
           }, done.fail);
 
-      expect(mockRequest.open).toHaveBeenCalledWith('POST', path);
-      expect(mockRequest.send).toHaveBeenCalledWith('a=1&b=2');
-      expect(mockRequest.setRequestHeader)
-          .toHaveBeenCalledWith('Content-Type', 'application/x-www-form-urlencoded');
-      expect(TestListenableDom.getListenable(mockRequest).on).toHaveBeenCalledWith(
-          DomEvent.LOAD,
-          jasmine.any(Function));
+      verify(mockRequest.open)('POST', path);
+      verify(mockRequest.send)('a=1&b=2');
+      verify(mockRequest.setRequestHeader)('Content-Type', 'application/x-www-form-urlencoded');
+      verify(TestListenableDom.getListenable(mockRequest).on)(DomEvent.LOAD, jasmine.any(Function));
 
       mockRequest.responseText = expectedResponseText;
       mockRequest.status = 200;
@@ -93,8 +88,8 @@ describe('net.Http', () => {
           .then(
               done.fail,
               (request: XMLHttpRequest) => {
-                expect(request.status).toEqual(status);
-                expect(request.responseText).toEqual(error);
+                assert(request.status).to.equal(status);
+                assert(request.responseText).to.equal(error);
                 done();
               });
 
