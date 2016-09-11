@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Arrays} from '../collection/arrays';
@@ -36,7 +36,7 @@ describe('ui.Doms', () => {
             }
           });
 
-      expect(Arrays.fromIterable(Doms.domIterable(element1, mockCallback)).asArray()).toEqual([
+      assert(Arrays.fromIterable(Doms.domIterable(element1, mockCallback)).asArray()).to.equal([
         element1,
         element2,
         element3,
@@ -50,14 +50,14 @@ describe('ui.Doms', () => {
       let fromEl = document.createElement('div');
       let shadowRoot = host['createShadowRoot']();
       shadowRoot.appendChild(fromEl);
-      expect(Doms.getShadowHost(fromEl)).toEqual(host);
+      assert(Doms.getShadowHost(fromEl)).to.equal(host);
     });
 
     it('should return null if the parent node is not a shadow root', () => {
       let host = document.createElement('div');
       let fromEl = document.createElement('div');
       host.appendChild(fromEl);
-      expect(Doms.getShadowHost(fromEl)).toEqual(null);
+      assert(Doms.getShadowHost(fromEl)).to.equal(null);
     });
   });
 
@@ -73,7 +73,7 @@ describe('ui.Doms', () => {
 
       rootEl.appendChild(ancestorEl);
 
-      expect(Arrays.fromIterable(Doms.offsetParentIterable(fromEl)).asArray()).toEqual([
+      assert(Arrays.fromIterable(Doms.offsetParentIterable(fromEl)).asArray()).to.equal([
         fromEl,
         parentEl,
         ancestorEl,
@@ -92,7 +92,7 @@ describe('ui.Doms', () => {
 
       rootEl.appendChild(ancestorEl);
 
-      expect(Arrays.fromIterable(Doms.parentIterable(fromEl)).asArray()).toEqual([
+      assert(Arrays.fromIterable(Doms.parentIterable(fromEl)).asArray()).to.equal([
         fromEl,
         parentEl,
         ancestorEl,
@@ -111,7 +111,7 @@ describe('ui.Doms', () => {
       parentEl.appendChild(fromEl);
       rootEl.appendChild(host);
 
-      expect(Arrays.fromIterable(Doms.parentIterable(fromEl, true)).asArray()).toEqual([
+      assert(Arrays.fromIterable(Doms.parentIterable(fromEl, true)).asArray()).to.equal([
         fromEl,
         parentEl,
         host,
@@ -135,7 +135,7 @@ describe('ui.Doms', () => {
 
       rootEl.appendChild(toEl);
 
-      expect(Doms.relativeOffsetTop(fromEl, toEl)).toEqual(60);
+      assert(Doms.relativeOffsetTop(fromEl, toEl)).to.equal(60);
     });
 
     it('should throw error if the to element is statically positioned', () => {
@@ -146,9 +146,9 @@ describe('ui.Doms', () => {
 
       rootEl.appendChild(toEl);
 
-      expect(() => {
+      assert(() => {
         Doms.relativeOffsetTop(fromEl, toEl);
-      }).toThrowError(/offset ancestor/);
+      }).to.throwError(/offset ancestor/);
     });
 
     it('should throw error if the to element is not an ancestor of the from element', () => {
@@ -157,9 +157,9 @@ describe('ui.Doms', () => {
 
       rootEl.appendChild(toEl);
 
-      expect(() => {
+      assert(() => {
         Doms.relativeOffsetTop(fromEl, toEl);
-      }).toThrowError(/offset ancestor/);
+      }).to.throwError(/offset ancestor/);
     });
   });
 });

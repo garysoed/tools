@@ -49,7 +49,7 @@ describe('ng.BemClassCtrl', () => {
 
       ctrl['onWatchValueChange_'](newClass);
 
-      verifyNoCalls(mockElementClassList.remove)();
+      verifyNoCalls(mockElementClassList.remove);
     });
 
     it('should handle array of strings', () => {

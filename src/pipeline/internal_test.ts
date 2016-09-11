@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {TestBase, verify} from '../test-base';
 TestBase.setup();
 
 import {ArgMetaData} from './arg-meta-data';
@@ -22,11 +22,7 @@ describe('pipeline.Internal', () => {
 
     Internal(key, forwardedArguments)(target, propertyKey, parameterIndex);
 
-    expect(PipeUtil.addArgument).toHaveBeenCalledWith(
-        target,
-        propertyKey,
-        parameterIndex,
-        argMetaData);
-    expect(ArgMetaData.newInstance).toHaveBeenCalledWith(key, forwardedArguments, false);
+    verify(PipeUtil).addArgument(target, propertyKey, parameterIndex, argMetaData);
+    verify(ArgMetaData.newInstance)(key, forwardedArguments, false);
   });
 });

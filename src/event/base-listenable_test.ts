@@ -77,7 +77,7 @@ describe('event.BaseListenable', () => {
 
       listenable.dispatch(event, () => {});
 
-      verifyNoCalls(mockCallback)();
+      verifyNoCalls(mockCallback);
     });
   });
 
@@ -94,7 +94,7 @@ describe('event.BaseListenable', () => {
       // Dispatch the event again.
       mockCallback.calls.reset();
       listenable.dispatch(event, () => {});
-      verifyNoCalls(mockCallback)();
+      verifyNoCalls(mockCallback);
       assert(disposableFunction.isDisposed).to.equal(true);
     });
 

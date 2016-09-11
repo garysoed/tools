@@ -85,7 +85,7 @@ describe('pipeline.Graph', () => {
 
       assert(Graph.run(context, key, externalArgs)).to.equal(runResult);
       verify(<GraphNode<any>> mockGraphNode).run(context, [resolvedArg]);
-      verify(Graph)['resolveArgument_'](argData, context, externalArgs);
+      verify(Graph['resolveArgument_'])(argData, context, externalArgs);
       verify(PipeUtil).getNode(prototype, key);
     });
 

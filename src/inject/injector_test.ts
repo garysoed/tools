@@ -129,7 +129,7 @@ describe('inject.Injector', () => {
       let bindProviderSpy = spyOn(Injector, 'bindProvider');
 
       Injector.bind(TestClass, bindKey);
-      verify(Injector.bindProvider)(jasmine.any(Function), bindKey);
+      verify(Injector.bindProvider)(<any> jasmine.any(Function), bindKey);
 
       assert(bindProviderSpy.calls.argsFor(0)[0](mockInjector)).to.equal(mockInstance);
       verify(mockInjector.instantiate)(TestClass);

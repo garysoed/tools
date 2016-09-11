@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase, verify} from '../test-base';
 TestBase.setup();
 
 import {Mocks} from '../mock/mocks';
@@ -8,15 +8,15 @@ import {Natives} from './natives';
 describe('typescript.Natives', () => {
   describe('isBoolean', () => {
     it('should return true if the value is a native boolean', () => {
-      expect(Natives.isBoolean(false)).toEqual(true);
+      assert(Natives.isBoolean(false)).to.beTrue();
     });
 
     it('should return true if the value is a Boolean object', () => {
-      expect(Natives.isBoolean(Boolean(false))).toEqual(true);
+      assert(Natives.isBoolean(Boolean(false))).to.beTrue();
     });
 
     it('should return false otherwise', () => {
-      expect(Natives.isBoolean(123)).toEqual(false);
+      assert(Natives.isBoolean(123)).to.beFalse();
     });
   });
 
@@ -24,8 +24,10 @@ describe('typescript.Natives', () => {
     it('should return true if the value is a boolean', () => {
       let value = Mocks.object('value');
       spyOn(Natives, 'isBoolean').and.returnValue(true);
+
+      // We cannot use assert, since assert relies on Natives.
       expect(Natives.isNative(value)).toEqual(true);
-      expect(Natives.isBoolean).toHaveBeenCalledWith(value);
+      verify(Natives.isBoolean)(value);
     });
 
     it('should return true if the value is a number', () => {
@@ -33,9 +35,10 @@ describe('typescript.Natives', () => {
       spyOn(Natives, 'isBoolean').and.returnValue(false);
       spyOn(Natives, 'isNumber').and.returnValue(true);
 
+      // We cannot use assert, since assert relies on Natives.
       expect(Natives.isNative(value)).toEqual(true);
-      expect(Natives.isBoolean).toHaveBeenCalledWith(value);
-      expect(Natives.isNumber).toHaveBeenCalledWith(value);
+      verify(Natives.isBoolean)(value);
+      verify(Natives.isNumber)(value);
     });
 
     it('should return true if the value is a string', () => {
@@ -44,10 +47,11 @@ describe('typescript.Natives', () => {
       spyOn(Natives, 'isNumber').and.returnValue(false);
       spyOn(Natives, 'isString').and.returnValue(true);
 
+      // We cannot use assert, since assert relies on Natives.
       expect(Natives.isNative(value)).toEqual(true);
-      expect(Natives.isBoolean).toHaveBeenCalledWith(value);
-      expect(Natives.isNumber).toHaveBeenCalledWith(value);
-      expect(Natives.isString).toHaveBeenCalledWith(value);
+      verify(Natives.isBoolean)(value);
+      verify(Natives.isNumber)(value);
+      verify(Natives.isString)(value);
     });
 
     it('should return true if the value is a symbol', () => {
@@ -57,11 +61,12 @@ describe('typescript.Natives', () => {
       spyOn(Natives, 'isString').and.returnValue(false);
       spyOn(Natives, 'isSymbol').and.returnValue(true);
 
+      // We cannot use assert, since assert relies on Natives.
       expect(Natives.isNative(value)).toEqual(true);
-      expect(Natives.isBoolean).toHaveBeenCalledWith(value);
-      expect(Natives.isNumber).toHaveBeenCalledWith(value);
-      expect(Natives.isString).toHaveBeenCalledWith(value);
-      expect(Natives.isSymbol).toHaveBeenCalledWith(value);
+      verify(Natives.isBoolean)(value);
+      verify(Natives.isNumber)(value);
+      verify(Natives.isString)(value);
+      verify(Natives.isSymbol)(value);
     });
 
     it('should return false otherwise', () => {
@@ -71,49 +76,50 @@ describe('typescript.Natives', () => {
       spyOn(Natives, 'isString').and.returnValue(false);
       spyOn(Natives, 'isSymbol').and.returnValue(false);
 
+      // We cannot use assert, since assert relies on Natives.
       expect(Natives.isNative(value)).toEqual(false);
-      expect(Natives.isBoolean).toHaveBeenCalledWith(value);
-      expect(Natives.isNumber).toHaveBeenCalledWith(value);
-      expect(Natives.isString).toHaveBeenCalledWith(value);
-      expect(Natives.isSymbol).toHaveBeenCalledWith(value);
+      verify(Natives.isBoolean)(value);
+      verify(Natives.isNumber)(value);
+      verify(Natives.isString)(value);
+      verify(Natives.isSymbol)(value);
     });
   });
 
   describe('isNumber', () => {
     it('should return true if the value is a native number', () => {
-      expect(Natives.isNumber(123)).toEqual(true);
+      assert(Natives.isNumber(123)).to.beTrue();
     });
 
     it('should return true if the value is a Number object', () => {
-      expect(Natives.isNumber(Number(123))).toEqual(true);
+      assert(Natives.isNumber(Number(123))).to.beTrue();
     });
 
     it('should return false otherwise', () => {
-      expect(Natives.isNumber('string')).toEqual(false);
+      assert(Natives.isNumber('string')).to.beFalse();
     });
   });
 
   describe('isString', () => {
     it('should return true if the value is a native string', () => {
-      expect(Natives.isString('string')).toEqual(true);
+      assert(Natives.isString('string')).to.beTrue();
     });
 
     it('should return true if the value is a String object', () => {
-      expect(Natives.isString(String('string'))).toEqual(true);
+      assert(Natives.isString(String('string'))).to.beTrue();
     });
 
     it('should return false otherwise', () => {
-      expect(Natives.isString(Symbol('symbol'))).toEqual(false);
+      assert(Natives.isString(Symbol('symbol'))).to.beFalse();
     });
   });
 
   describe('isSymbol', () => {
     it('should return true if the value is a symbol', () => {
-      expect(Natives.isSymbol(Symbol('symbol'))).toEqual(true);
+      assert(Natives.isSymbol(Symbol('symbol'))).to.beTrue();
     });
 
     it('should return false otherwise', () => {
-      expect(Natives.isSymbol(true)).toEqual(false);
+      assert(Natives.isSymbol(true)).to.beFalse();
     });
   });
 });

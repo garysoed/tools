@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Spec} from './spec';
@@ -7,34 +7,34 @@ import {Spec} from './spec';
 describe('solver.Spec', () => {
   describe('generateValues', () => {
     it('should generate the correct values', () => {
-      expect(Spec.newInstance(0, 0.5, 2).generateValues()).toEqual([0, 0.5, 1, 1.5]);
+      assert(Spec.newInstance(0, 0.5, 2).generateValues()).to.equal([0, 0.5, 1, 1.5]);
     });
   });
 
   describe('newInstance', () => {
     it('should create the correct Spec instance', () => {
       let spec = Spec.newInstance(0, 1, 2);
-      expect(spec.start).toEqual(0);
-      expect(spec.delta).toEqual(1);
-      expect(spec.end).toEqual(2);
+      assert(spec.start).to.equal(0);
+      assert(spec.delta).to.equal(1);
+      assert(spec.end).to.equal(2);
     });
 
     it('should throw error if the end is smaller than the start', () => {
-      expect(() => {
+      assert(() => {
         Spec.newInstance(2, 1, 0);
-      }).toThrowError(/BOUNDARIES/);
+      }).to.throwError(/BOUNDARIES/);
     });
 
     it('should throw error if the delta is negative', () => {
-      expect(() => {
+      assert(() => {
         Spec.newInstance(2, -1, 0);
-      }).toThrowError(/DELTA/);
+      }).to.throwError(/DELTA/);
     });
 
     it('should throw error if the delta is zero', () => {
-      expect(() => {
+      assert(() => {
         Spec.newInstance(2, 0, 0);
-      }).toThrowError(/DELTA/);
+      }).to.throwError(/DELTA/);
     });
   });
 });

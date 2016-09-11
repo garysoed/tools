@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase, verify} from '../test-base';
 TestBase.setup();
 
 import {GraphNodeBuilder} from './graph-node-builder';
@@ -22,8 +22,8 @@ describe('pipeline.PipeUtil', () => {
 
       PipeUtil.addArgument(target, propertyKey, parameterIndex, argMetaData);
 
-      expect(nodeBuilder.argMetaData[parameterIndex]).toEqual(argMetaData);
-      expect(PipeUtil.initializeNodeBuilder).toHaveBeenCalledWith(target, propertyKey);
+      assert(nodeBuilder.argMetaData[parameterIndex]).to.equal(argMetaData);
+      verify(PipeUtil).initializeNodeBuilder(target, propertyKey);
     });
   });
 
@@ -38,8 +38,8 @@ describe('pipeline.PipeUtil', () => {
       let newSetter = PipeUtil.createSetter(mockSetter, mockGraphNode);
       newSetter.call(context, value);
 
-      expect(mockGraphNode.clearCache).toHaveBeenCalledWith(context, []);
-      expect(mockSetter).toHaveBeenCalledWith(value);
+      verify(mockGraphNode).clearCache(context, []);
+      verify(mockSetter)(value);
     });
   });
 
@@ -53,11 +53,11 @@ describe('pipeline.PipeUtil', () => {
       let graphNode = Mocks.object('graphNode');
       map.set(key, graphNode);
 
-      expect(PipeUtil.getNode<any>(context, key)).toEqual(graphNode);
+      assert(PipeUtil.getNode<any>(context, key)).to.equal(graphNode);
     });
 
     it('should return null if there are no maps', () => {
-      expect(PipeUtil.getNode<any>(Mocks.object('context'), 'key')).toEqual(null);
+      assert(PipeUtil.getNode<any>(Mocks.object('context'), 'key')).to.equal(null);
     });
 
     it('should return null if the map does not have the key', () => {
@@ -65,7 +65,7 @@ describe('pipeline.PipeUtil', () => {
       let context = Mocks.object('context');
       context[__NODE_DATA_MAP] = map;
 
-      expect(PipeUtil.getNode<any>(context, 'key')).toEqual(null);
+      assert(PipeUtil.getNode<any>(context, 'key')).to.equal(null);
     });
   });
 
@@ -75,8 +75,8 @@ describe('pipeline.PipeUtil', () => {
       let key = 'key';
 
       let builder = PipeUtil.initializeNodeBuilder(context, key);
-      expect(builder).toEqual(jasmine.any(GraphNodeBuilder));
-      expect(Maps.of(context[__NODE_BUILDER_DATA_MAP]).asRecord()).toEqual({
+      assert(builder).to.equal(jasmine.any(GraphNodeBuilder));
+      assert(Maps.of(context[__NODE_BUILDER_DATA_MAP]).asRecord()).to.equal({
         [key]: builder,
       });
     });
@@ -89,11 +89,11 @@ describe('pipeline.PipeUtil', () => {
       let key = 'key';
 
       let builder = PipeUtil.initializeNodeBuilder(context, key);
-      expect(builder).toEqual(jasmine.any(GraphNodeBuilder));
-      expect(Maps.of(context[__NODE_BUILDER_DATA_MAP]).asRecord()).toEqual({
+      assert(builder).to.equal(jasmine.any(GraphNodeBuilder));
+      assert(Maps.of(context[__NODE_BUILDER_DATA_MAP]).asRecord()).to.equal({
         [key]: builder,
       });
-      expect(context[__NODE_BUILDER_DATA_MAP]).toBe(map);
+      assert(context[__NODE_BUILDER_DATA_MAP]).to.be(map);
     });
 
     it('should return the existing node builder', () => {
@@ -105,7 +105,7 @@ describe('pipeline.PipeUtil', () => {
       let context = Mocks.object('context');
       context[__NODE_BUILDER_DATA_MAP] = map;
 
-      expect(PipeUtil.initializeNodeBuilder(context, key)).toEqual(builder);
+      assert(PipeUtil.initializeNodeBuilder(context, key)).to.equal(builder);
     });
   });
 });

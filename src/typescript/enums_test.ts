@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Enums} from './enums';
@@ -11,13 +11,13 @@ enum TestEnum {
 describe('typescript.Enums', () => {
   describe('fromLowerCaseString', () => {
     it('should return the correct enum', () => {
-      expect(Enums.fromLowerCaseString('value_a', TestEnum)).toEqual(TestEnum.VALUE_A);
+      assert(Enums.fromLowerCaseString('value_a', TestEnum)).to.equal(TestEnum.VALUE_A);
     });
   });
 
   describe('toLowerCaseString', () => {
     it('should return the correct string', () => {
-      expect(Enums.toLowerCaseString(TestEnum.VALUE_A, TestEnum)).toEqual('value_a');
+      assert(Enums.toLowerCaseString(TestEnum.VALUE_A, TestEnum)).to.equal('value_a');
     });
   });
 });
