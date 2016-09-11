@@ -1,4 +1,4 @@
-import {assert, TestBase, verify} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {GraphNodeBuilder} from './graph-node-builder';
@@ -23,7 +23,7 @@ describe('pipeline.PipeUtil', () => {
       PipeUtil.addArgument(target, propertyKey, parameterIndex, argMetaData);
 
       assert(nodeBuilder.argMetaData[parameterIndex]).to.equal(argMetaData);
-      verify(PipeUtil).initializeNodeBuilder(target, propertyKey);
+      assert(PipeUtil.initializeNodeBuilder).to.haveBeenCalledWith(target, propertyKey);
     });
   });
 
@@ -38,8 +38,8 @@ describe('pipeline.PipeUtil', () => {
       let newSetter = PipeUtil.createSetter(mockSetter, mockGraphNode);
       newSetter.call(context, value);
 
-      verify(mockGraphNode).clearCache(context, []);
-      verify(mockSetter)(value);
+      assert(mockGraphNode.clearCache).to.haveBeenCalledWith(context, []);
+      assert(mockSetter).to.haveBeenCalledWith(value);
     });
   });
 

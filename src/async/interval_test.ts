@@ -1,4 +1,4 @@
-import {assert, TestBase, verify, verifyNoCalls} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Interval} from './interval';
@@ -19,7 +19,7 @@ describe('async.Interval', () => {
       spyOn(interval, 'stop');
 
       interval.dispose();
-      verify(interval).stop();
+      assert(interval.stop).to.haveBeenCalledWith();
     });
   });
 
@@ -33,10 +33,10 @@ describe('async.Interval', () => {
       interval.start();
 
       assert(interval['intervalId_']).to.equal(intervalId);
-      verify(window).setInterval(jasmine.any(Function), INTERVAL);
+      assert(window.setInterval).to.haveBeenCalledWith(jasmine.any(Function), INTERVAL);
 
       spy.calls.argsFor(0)[0]();
-      verify(callback)(null);
+      assert(callback).to.haveBeenCalledWith(null);
     });
 
     it('should throw error if the interval is already running', () => {
@@ -56,7 +56,7 @@ describe('async.Interval', () => {
       spyOn(window, 'clearInterval');
 
       interval.stop();
-      verify(window).clearInterval(intervalId);
+      assert(window.clearInterval).to.haveBeenCalledWith(intervalId);
     });
 
     it('should do nothing if the interval is already cleared', () => {
@@ -65,7 +65,7 @@ describe('async.Interval', () => {
       spyOn(window, 'clearInterval');
 
       interval.stop();
-      verifyNoCalls(window.clearInterval);
+      assert(window.clearInterval).toNot.haveBeenCalled();
     });
   });
 });

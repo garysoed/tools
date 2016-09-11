@@ -1,4 +1,4 @@
-import {assert, TestBase, verify, verifyNoCalls} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {BaseDisposable} from './base-disposable';
@@ -27,8 +27,8 @@ describe('dispose.BaseDisposable', () => {
       disposable.addDisposable(mockDisposable);
       disposable.dispose();
 
-      verify(callback)();
-      verify(mockDisposable.dispose)();
+      assert(callback).to.haveBeenCalledWith();
+      assert(mockDisposable.dispose).to.haveBeenCalledWith();
       assert(disposable.isDisposed).to.equal(true);
     });
   });
@@ -41,6 +41,6 @@ describe('dispose.BaseDisposable', () => {
     callback.calls.reset();
 
     disposable.dispose();
-    verifyNoCalls(callback);
+    assert(callback).toNot.haveBeenCalled();
   });
 });

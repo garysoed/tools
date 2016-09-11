@@ -1,4 +1,4 @@
-import {TestBase, verify} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import BaseComponent from './base-component';
@@ -20,7 +20,7 @@ describe('ng.BaseComponent', () => {
     it('should dispose the controller', () => {
       let spyDispose = spyOn(component, 'dispose').and.callThrough();
       component.$onDestroy();
-      verify(spyDispose)();
+      assert(spyDispose).to.haveBeenCalledWith();
     });
   });
 
@@ -28,7 +28,7 @@ describe('ng.BaseComponent', () => {
     it('should trigger the digest cycle', () => {
       spyOn(mock$scope, '$apply');
       component.triggerDigest();
-      verify(mock$scope.$apply)(jasmine.any(Function));
+      assert(mock$scope.$apply).to.haveBeenCalledWith(jasmine.any(Function));
     });
   });
 });

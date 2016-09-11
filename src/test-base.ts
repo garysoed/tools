@@ -6,9 +6,6 @@ import {TestSetup} from './testing/test-setup';
 
 
 export {assert} from './jasmine/assert';
-export {verify} from './jasmine/verify';
-export {verifyNever} from './jasmine/verify-never';
-export {verifyNoCalls} from './jasmine/verify-no-calls';
 
 
 const TEST_SETUP = new TestSetup([

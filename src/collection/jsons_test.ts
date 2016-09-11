@@ -1,4 +1,4 @@
-import {assert, TestBase, verify} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Jsons} from './jsons';
@@ -68,7 +68,7 @@ describe('collection.Jsons', () => {
           });
 
       assert(json).to.equal({a: 1, b: undefined});
-      verify(callback)('one', 'two');
+      assert(callback).to.haveBeenCalledWith('one', 'two');
     });
   });
 

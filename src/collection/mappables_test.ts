@@ -1,4 +1,4 @@
-import {assert, TestBase, verify, verifyNever} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {ArrayIterable} from './array-iterable';
@@ -78,9 +78,9 @@ describe('collection.Mappables', () => {
        ]);
 
        assert(Mappables.of(map).all(checkFn)).to.beTrue();
-       verify(checkFn)(1, 'a');
-       verify(checkFn)(2, 'b');
-       verify(checkFn)(3, 'c');
+       assert(checkFn).to.haveBeenCalledWith(1, 'a');
+       assert(checkFn).to.haveBeenCalledWith(2, 'b');
+       assert(checkFn).to.haveBeenCalledWith(3, 'c');
      });
 
      it('should return false if one of the entries does not pass the check function', () => {
@@ -97,10 +97,10 @@ describe('collection.Mappables', () => {
        ]);
 
        assert(Mappables.of(map).all(checkFn)).to.beFalse();
-       verify(checkFn)(1, 'a');
-       verify(checkFn)(2, 'b');
-       verify(checkFn)(3, 'c');
-       verifyNever(checkFn)(4, 'd');
+       assert(checkFn).to.haveBeenCalledWith(1, 'a');
+       assert(checkFn).to.haveBeenCalledWith(2, 'b');
+       assert(checkFn).to.haveBeenCalledWith(3, 'c');
+       assert(checkFn).toNot.haveBeenCalledWith(4, 'd');
      });
   });
 
@@ -239,9 +239,9 @@ describe('collection.Mappables', () => {
       let callback = jasmine.createSpy('Callback');
 
       Mappables.of(map).forEach(callback);
-      verify(callback)(1, 'a');
-      verify(callback)(2, 'b');
-      verify(callback)(3, 'c');
+      assert(callback).to.haveBeenCalledWith(1, 'a');
+      assert(callback).to.haveBeenCalledWith(2, 'b');
+      assert(callback).to.haveBeenCalledWith(3, 'c');
     });
   });
 
@@ -251,9 +251,9 @@ describe('collection.Mappables', () => {
       let callback = jasmine.createSpy('Callback');
 
       Mappables.of(map).forOf(callback);
-      verify(callback)(1, 'a', jasmine.any(Function));
-      verify(callback)(2, 'b', jasmine.any(Function));
-      verify(callback)(3, 'c', jasmine.any(Function));
+      assert(callback).to.haveBeenCalledWith(1, 'a', jasmine.any(Function));
+      assert(callback).to.haveBeenCalledWith(2, 'b', jasmine.any(Function));
+      assert(callback).to.haveBeenCalledWith(3, 'c', jasmine.any(Function));
     });
 
     it('should stop the iteration when the break function is called', () => {
@@ -266,9 +266,9 @@ describe('collection.Mappables', () => {
           });
 
       Mappables.of(map).forOf(callback);
-      verify(callback)(1, 'a', jasmine.any(Function));
-      verify(callback)(2, 'b', jasmine.any(Function));
-      verifyNever(callback)(3, 'c', jasmine.any(Function));
+      assert(callback).to.haveBeenCalledWith(1, 'a', jasmine.any(Function));
+      assert(callback).to.haveBeenCalledWith(2, 'b', jasmine.any(Function));
+      assert(callback).toNot.haveBeenCalledWith(3, 'c', jasmine.any(Function));
     });
   });
 
@@ -278,9 +278,9 @@ describe('collection.Mappables', () => {
       let callback = jasmine.createSpy('Callback');
 
       Mappables.of(map).iterate(callback);
-      verify(callback)(['a', 1], jasmine.any(Function));
-      verify(callback)(['b', 2], jasmine.any(Function));
-      verify(callback)(['c', 3], jasmine.any(Function));
+      assert(callback).to.haveBeenCalledWith(['a', 1], jasmine.any(Function));
+      assert(callback).to.haveBeenCalledWith(['b', 2], jasmine.any(Function));
+      assert(callback).to.haveBeenCalledWith(['c', 3], jasmine.any(Function));
     });
 
     it('should stop the iteration when the break function is called', () => {
@@ -293,9 +293,9 @@ describe('collection.Mappables', () => {
           });
 
       Mappables.of(map).iterate(callback);
-      verify(callback)(['a', 1], jasmine.any(Function));
-      verify(callback)(['b', 2], jasmine.any(Function));
-      verifyNever(callback)(['c', 3], jasmine.any(Function));
+      assert(callback).to.haveBeenCalledWith(['a', 1], jasmine.any(Function));
+      assert(callback).to.haveBeenCalledWith(['b', 2], jasmine.any(Function));
+      assert(callback).toNot.haveBeenCalledWith(['c', 3], jasmine.any(Function));
     });
   });
 
@@ -370,10 +370,10 @@ describe('collection.Mappables', () => {
        ]);
 
        assert(Mappables.of(map).some(checkFn)).to.beTrue();
-       verify(checkFn)(1, 'a');
-       verify(checkFn)(2, 'b');
-       verify(checkFn)(3, 'c');
-       verifyNever(checkFn)(4, 'd');
+       assert(checkFn).to.haveBeenCalledWith(1, 'a');
+       assert(checkFn).to.haveBeenCalledWith(2, 'b');
+       assert(checkFn).to.haveBeenCalledWith(3, 'c');
+       assert(checkFn).toNot.haveBeenCalledWith(4, 'd');
       });
 
     it('should return false if none of the entries passes the check function', () => {
@@ -387,9 +387,9 @@ describe('collection.Mappables', () => {
        ]);
 
        assert(Mappables.of(map).some(checkFn)).to.beFalse();
-       verify(checkFn)(1, 'a');
-       verify(checkFn)(2, 'b');
-       verify(checkFn)(3, 'c');
+       assert(checkFn).to.haveBeenCalledWith(1, 'a');
+       assert(checkFn).to.haveBeenCalledWith(2, 'b');
+       assert(checkFn).to.haveBeenCalledWith(3, 'c');
     });
   });
 

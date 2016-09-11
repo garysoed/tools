@@ -1,4 +1,4 @@
-import {assert, TestBase, verify} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {BaseDisposable} from '../dispose/base-disposable';
@@ -34,10 +34,10 @@ describe('async.sequenced', () => {
         let mockInstance = jasmine.createSpyObj('Instance', ['addDisposable']);
         descriptor.value.call(mockInstance, 1, 2)
             .then(() => {
-              verify(mockSequencer).run(jasmine.any(Function));
+              assert(mockSequencer.run).to.haveBeenCalledWith(jasmine.any(Function));
               mockSequencer.run.calls.argsFor(0)[0]();
 
-              verify(mockFunction)(1, 2);
+              assert(mockFunction).to.haveBeenCalledWith(1, 2);
               done();
             }, done.fail);
       });
@@ -55,7 +55,7 @@ describe('async.sequenced', () => {
     instance[__SEQUENCER] = mockSequencer;
     decorator(Class.prototype, 'property', descriptor).value.call(instance, 1, 2)
         .then(() => {
-          verify(mockSequencer).run(jasmine.any(Function));
+          assert(mockSequencer.run).to.haveBeenCalledWith(jasmine.any(Function));
           done();
         }, done.fail);
   });

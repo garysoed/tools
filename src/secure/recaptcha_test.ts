@@ -1,4 +1,4 @@
-import {assert, TestBase, verify} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Mocks} from '../mock/mocks';
@@ -25,7 +25,7 @@ describe('secure.Recaptcha', () => {
   it('should call render correctly', () => {
     let callback = jasmine.createSpy('Callback');
 
-    verify(mockGrecaptcha).render(mockElement, {
+    assert(mockGrecaptcha.render).to.haveBeenCalledWith(mockElement, {
       callback: jasmine.any(Function),
       sitekey: SITEKEY,
     });
@@ -33,13 +33,13 @@ describe('secure.Recaptcha', () => {
     TestDispose.add(recaptcha.on(EventType.NEW_RESPONSE, callback));
 
     mockGrecaptcha.render.calls.argsFor(0)[1].callback();
-    verify(callback)(null);
+    assert(callback).to.haveBeenCalledWith(null);
   });
 
   describe('reset', () => {
     it('should reset the recaptcha widget', () => {
       recaptcha.reset();
-      verify(mockGrecaptcha.reset)(WIDGET_ID);
+      assert(mockGrecaptcha.reset).to.haveBeenCalledWith(WIDGET_ID);
     });
   });
 
@@ -48,7 +48,7 @@ describe('secure.Recaptcha', () => {
       let response = 'response';
       mockGrecaptcha.getResponse.and.returnValue(response);
       assert(recaptcha.response).to.equal(response);
-      verify(mockGrecaptcha).getResponse(WIDGET_ID);
+      assert(mockGrecaptcha.getResponse).to.haveBeenCalledWith(WIDGET_ID);
     });
   });
 });

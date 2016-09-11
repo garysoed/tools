@@ -1,4 +1,4 @@
-import {assert, TestBase, verify} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Graph} from './graph';
@@ -38,7 +38,7 @@ describe('pipeline.Graph', () => {
 
       assert(Graph['resolveArgument_'](argMetaData, context, {[externalKey]: externalValue}))
           .to.equal(value);
-      verify(Graph.run)(context, key, {[forwardedKey]: externalValue});
+      assert(Graph.run).to.haveBeenCalledWith(context, key, {[forwardedKey]: externalValue});
     });
 
     it('should throw error if the external argument cannot be resolved', () => {
@@ -84,9 +84,9 @@ describe('pipeline.Graph', () => {
       spyOn(Graph, 'resolveArgument_').and.returnValue(resolvedArg);
 
       assert(Graph.run(context, key, externalArgs)).to.equal(runResult);
-      verify(<GraphNode<any>> mockGraphNode).run(context, [resolvedArg]);
-      verify(Graph['resolveArgument_'])(argData, context, externalArgs);
-      verify(PipeUtil).getNode(prototype, key);
+      assert((<GraphNode<any>> mockGraphNode).run).to.haveBeenCalledWith(context, [resolvedArg]);
+      assert(Graph['resolveArgument_']).to.haveBeenCalledWith(argData, context, externalArgs);
+      assert(PipeUtil.getNode).to.haveBeenCalledWith(prototype, key);
     });
 
     it('should throw error if the node cannot be found', () => {

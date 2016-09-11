@@ -1,4 +1,4 @@
-import {assert, TestBase, verify} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Maps} from '../collection/maps';
@@ -25,7 +25,7 @@ describe('pipeline.Pipe', () => {
 
     assert(Pipe()(target, propertyKey, descriptor)).to.equal(descriptor);
     assert(Maps.of(map).asRecord()).to.equal({[propertyKey]: graphNode});
-    verify(PipeUtil).initializeNodeBuilder(target, propertyKey);
+    assert(PipeUtil.initializeNodeBuilder).to.haveBeenCalledWith(target, propertyKey);
     assert(mockNodeBuilder.fn).to.equal(fn);
   });
 
@@ -51,9 +51,9 @@ describe('pipeline.Pipe', () => {
 
     assert(Pipe()(target, propertyKey, descriptor)).to.equal(descriptor);
     assert(descriptor.set).to.equal(newSetter);
-    verify(PipeUtil).createSetter(setter, graphNode);
+    assert(PipeUtil.createSetter).to.haveBeenCalledWith(setter, graphNode);
     assert(Maps.of(map).asRecord()).to.equal({[propertyKey]: graphNode});
-    verify(PipeUtil).initializeNodeBuilder(target, propertyKey);
+    assert(PipeUtil.initializeNodeBuilder).to.haveBeenCalledWith(target, propertyKey);
     assert(mockNodeBuilder.fn).to.equal(getter);
   });
 

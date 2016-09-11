@@ -1,4 +1,4 @@
-import {assert, TestBase, verify} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Mocks} from '../mock/mocks';
@@ -27,7 +27,7 @@ describe('typescript.Natives', () => {
 
       // We cannot use assert, since assert relies on Natives.
       expect(Natives.isNative(value)).toEqual(true);
-      verify(Natives.isBoolean)(value);
+      expect(Natives.isBoolean).toHaveBeenCalledWith(value);
     });
 
     it('should return true if the value is a number', () => {
@@ -37,8 +37,8 @@ describe('typescript.Natives', () => {
 
       // We cannot use assert, since assert relies on Natives.
       expect(Natives.isNative(value)).toEqual(true);
-      verify(Natives.isBoolean)(value);
-      verify(Natives.isNumber)(value);
+      expect(Natives.isBoolean).toHaveBeenCalledWith(value);
+      expect(Natives.isNumber).toHaveBeenCalledWith(value);
     });
 
     it('should return true if the value is a string', () => {
@@ -49,9 +49,9 @@ describe('typescript.Natives', () => {
 
       // We cannot use assert, since assert relies on Natives.
       expect(Natives.isNative(value)).toEqual(true);
-      verify(Natives.isBoolean)(value);
-      verify(Natives.isNumber)(value);
-      verify(Natives.isString)(value);
+      expect(Natives.isBoolean).toHaveBeenCalledWith(value);
+      expect(Natives.isNumber).toHaveBeenCalledWith(value);
+      expect(Natives.isString).toHaveBeenCalledWith(value);
     });
 
     it('should return true if the value is a symbol', () => {
@@ -63,10 +63,10 @@ describe('typescript.Natives', () => {
 
       // We cannot use assert, since assert relies on Natives.
       expect(Natives.isNative(value)).toEqual(true);
-      verify(Natives.isBoolean)(value);
-      verify(Natives.isNumber)(value);
-      verify(Natives.isString)(value);
-      verify(Natives.isSymbol)(value);
+      expect(Natives.isBoolean).toHaveBeenCalledWith(value);
+      expect(Natives.isNumber).toHaveBeenCalledWith(value);
+      expect(Natives.isString).toHaveBeenCalledWith(value);
+      expect(Natives.isSymbol).toHaveBeenCalledWith(value);
     });
 
     it('should return false otherwise', () => {
@@ -78,10 +78,10 @@ describe('typescript.Natives', () => {
 
       // We cannot use assert, since assert relies on Natives.
       expect(Natives.isNative(value)).toEqual(false);
-      verify(Natives.isBoolean)(value);
-      verify(Natives.isNumber)(value);
-      verify(Natives.isString)(value);
-      verify(Natives.isSymbol)(value);
+      expect(Natives.isBoolean).toHaveBeenCalledWith(value);
+      expect(Natives.isNumber).toHaveBeenCalledWith(value);
+      expect(Natives.isString).toHaveBeenCalledWith(value);
+      expect(Natives.isSymbol).toHaveBeenCalledWith(value);
     });
   });
 

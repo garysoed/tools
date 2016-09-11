@@ -1,4 +1,4 @@
-import {assert, TestBase, verify, verifyNoCalls} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import Cache from './a-cache';
@@ -38,7 +38,7 @@ describe('data.@Cache', () => {
 
     spy.calls.reset();
     assert(test.property).to.equal(value);
-    verifyNoCalls(spy);
+    assert(spy).toNot.haveBeenCalled();
   });
 
   it('should cache the method', () => {
@@ -49,7 +49,7 @@ describe('data.@Cache', () => {
 
     spy.calls.reset();
     assert(test.method()).to.equal(value);
-    verifyNoCalls(spy);
+    assert(spy).toNot.haveBeenCalled();
   });
 
   it('should throw error on non getter properties', () => {
@@ -73,11 +73,11 @@ describe('data.@Cache', () => {
 
       Cache.clear(test);
       assert(test.property).to.equal(newValue);
-      verify(spy)();
+      assert(spy).to.haveBeenCalledWith();
 
       spy.calls.reset();
       assert(test.method()).to.equal(newValue);
-      verify(spy)();
+      assert(spy).to.haveBeenCalledWith();
     });
 
     it('should clear only cache with the specified key', () => {
@@ -93,10 +93,10 @@ describe('data.@Cache', () => {
 
       Cache.clear(test, 'method');
       assert(test.property).to.equal(value);
-      verifyNoCalls(spy);
+      assert(spy).toNot.haveBeenCalled();
 
       assert(test.method()).to.equal(newValue);
-      verify(spy)();
+      assert(spy).to.haveBeenCalledWith();
     });
   });
 });

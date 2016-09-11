@@ -1,4 +1,4 @@
-import {assert, TestBase, verify} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {InjectUtil} from './inject-util';
@@ -26,7 +26,7 @@ describe('inject.Injector', () => {
       mockBindings.set(bindKey, mockProvider);
 
       assert(injector.getBoundValue(bindKey)).to.equal(mockInstance);
-      verify(mockProvider)(injector);
+      assert(mockProvider).to.haveBeenCalledWith(injector);
       assert(injector['instances_'].get(bindKey)).to.equal(mockInstance);
     });
 
@@ -76,9 +76,9 @@ describe('inject.Injector', () => {
       });
 
       assert(injector.getParameters(TestClass)).to.equal([mockValue1, mockValue2]);
-      verify(injector.getBoundValue)(metadata1.keyName, metadata1.isOptional);
-      verify(injector.getBoundValue)(metadata2.keyName, metadata2.isOptional);
-      verify(InjectUtil.getMetadataMap)(TestClass);
+      assert(injector.getBoundValue).to.haveBeenCalledWith(metadata1.keyName, metadata1.isOptional);
+      assert(injector.getBoundValue).to.haveBeenCalledWith(metadata2.keyName, metadata2.isOptional);
+      assert(InjectUtil.getMetadataMap).to.haveBeenCalledWith(TestClass);
     });
 
     it('should use the extra arguments to override the parameters', () => {
@@ -88,7 +88,7 @@ describe('inject.Injector', () => {
 
       let parameters = injector.getParameters(TestClass, {0: mockValue1, 1: mockValue2});
       assert(parameters).to.equal([mockValue1, mockValue2]);
-      verify(InjectUtil.getMetadataMap)(TestClass);
+      assert(InjectUtil.getMetadataMap).to.haveBeenCalledWith(TestClass);
     });
 
     it('should throw error if an index is not in the metadata', () => {
@@ -112,8 +112,8 @@ describe('inject.Injector', () => {
       spyOn(Reflect, 'construct').and.returnValue(mockInstance);
 
       assert(injector.instantiate(TestClass, mockExtraArguments)).to.equal(mockInstance);
-      verify(injector.getParameters)(TestClass, mockExtraArguments);
-      verify(Reflect.construct)(TestClass, mockParameters);
+      assert(injector.getParameters).to.haveBeenCalledWith(TestClass, mockExtraArguments);
+      assert(Reflect.construct).to.haveBeenCalledWith(TestClass, mockParameters);
     });
   });
 
@@ -129,10 +129,10 @@ describe('inject.Injector', () => {
       let bindProviderSpy = spyOn(Injector, 'bindProvider');
 
       Injector.bind(TestClass, bindKey);
-      verify(Injector.bindProvider)(<any> jasmine.any(Function), bindKey);
+      assert(Injector.bindProvider).to.haveBeenCalledWith(<any> jasmine.any(Function), bindKey);
 
       assert(bindProviderSpy.calls.argsFor(0)[0](mockInjector)).to.equal(mockInstance);
-      verify(mockInjector.instantiate)(TestClass);
+      assert(mockInjector.instantiate).to.haveBeenCalledWith(TestClass);
     });
   });
 

@@ -1,4 +1,4 @@
-import {assert, TestBase, verify} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Interval} from '../async/interval';
@@ -25,13 +25,13 @@ describe('async.WaitUntil', () => {
   it('should resolve the promise when the check function returns true', (done: any) => {
     waitUntil.promise
         .then(() => {
-          verify(Interval.newInstance)(INTERVAL);
-          verify(mockInterval).dispose();
+          assert(Interval.newInstance).to.haveBeenCalledWith(INTERVAL);
+          assert(mockInterval.dispose).to.haveBeenCalledWith();
           done();
         }, done.fail);
 
-    verify(mockInterval).start();
-    verify<Interval>(mockInterval).on(Interval.TICK_EVENT, <any> jasmine.any(Function));
+    assert(mockInterval.start).to.haveBeenCalledWith();
+    assert(mockInterval.on).to.haveBeenCalledWith(Interval.TICK_EVENT, <any> jasmine.any(Function));
     mockCheckFn.and.returnValue(true);
 
     mockInterval.on.calls.argsFor(0)[1]();

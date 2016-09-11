@@ -1,4 +1,4 @@
-import {assert, TestBase, verify, verifyNoCalls} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {BaseListenable} from './base-listenable';
@@ -23,7 +23,7 @@ describe('event.BaseListenable', () => {
 
       listenable.dispatch(event, () => {});
 
-      verifyNoCalls(mockCallback);
+      assert(mockCallback).toNot.haveBeenCalled();
     });
   });
 
@@ -56,8 +56,8 @@ describe('event.BaseListenable', () => {
           },
           payload);
 
-      verify(mockCaptureHandler)(0, payload);
-      verify(mockBubbleHandler)(1, payload);
+      assert(mockCaptureHandler).to.haveBeenCalledWith(0, payload);
+      assert(mockBubbleHandler).to.haveBeenCalledWith(1, payload);
     });
 
     it('should handle case when no callbacks are registered', () => {
@@ -77,7 +77,7 @@ describe('event.BaseListenable', () => {
 
       listenable.dispatch(event, () => {});
 
-      verifyNoCalls(mockCallback);
+      assert(mockCallback).toNot.haveBeenCalled();
     });
   });
 
@@ -89,12 +89,12 @@ describe('event.BaseListenable', () => {
       let disposableFunction = listenable.once(event, mockCallback);
       listenable.dispatch(event, () => {});
 
-      verify(mockCallback)(null);
+      assert(mockCallback).to.haveBeenCalledWith(null);
 
       // Dispatch the event again.
       mockCallback.calls.reset();
       listenable.dispatch(event, () => {});
-      verifyNoCalls(mockCallback);
+      assert(mockCallback).toNot.haveBeenCalled();
       assert(disposableFunction.isDisposed).to.equal(true);
     });
 
@@ -107,7 +107,7 @@ describe('event.BaseListenable', () => {
 
       listenable.dispatch(event, () => {});
 
-      verifyNoCalls(mockCallback);
+      assert(mockCallback).toNot.haveBeenCalled();
     });
   });
 });

@@ -1,4 +1,4 @@
-import {assert, TestBase, verify} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {__EQUALS, Equals} from './equals';
@@ -48,12 +48,12 @@ describe('data.Equals', () => {
       });
 
       assert(Equals.equals(a, b)).to.equal(true);
-      verify(Equals.equals)(value1A, value1B);
-      verify(Equals.equals)(value2A, value2B);
-      verify(mockAnnotations.getFieldValues)(a);
-      verify(mockAnnotations.getFieldValues)(b);
-      verify(Annotations.of)(proto, __EQUALS);
-      verify(Annotations.hasAnnotation)(proto, __EQUALS);
+      assert(Equals.equals).to.haveBeenCalledWith(value1A, value1B);
+      assert(Equals.equals).to.haveBeenCalledWith(value2A, value2B);
+      assert(mockAnnotations.getFieldValues).to.haveBeenCalledWith(a);
+      assert(mockAnnotations.getFieldValues).to.haveBeenCalledWith(b);
+      assert(Annotations.of).to.haveBeenCalledWith(proto, __EQUALS);
+      assert(Annotations.hasAnnotation).to.haveBeenCalledWith(proto, __EQUALS);
     });
 
     it('should return false if one of the recursive fields is different', () => {
@@ -126,8 +126,8 @@ describe('data.Equals', () => {
 
       Equals.Property()(proto, key);
 
-      verify(mockAnnotations.addField)(key);
-      verify(Annotations.of)(proto, __EQUALS);
+      assert(mockAnnotations.addField).to.haveBeenCalledWith(key);
+      assert(Annotations.of).to.haveBeenCalledWith(proto, __EQUALS);
     });
   });
 });

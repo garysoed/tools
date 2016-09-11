@@ -1,4 +1,4 @@
-import {assert, TestBase, verify} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {NonIndexables} from './non-indexables';
@@ -12,7 +12,7 @@ describe('collection.Sets', () => {
       spyOn(NonIndexables, 'fromIterable').and.callThrough();
 
       assert(Sets.fromArray(data).asArray()).to.equal([1, 2, 3]);
-      verify(NonIndexables.fromIterable)(new Set(data));
+      assert(NonIndexables.fromIterable).to.haveBeenCalledWith(new Set(data));
     });
   });
 
@@ -22,7 +22,7 @@ describe('collection.Sets', () => {
       spyOn(NonIndexables, 'fromIterable').and.callThrough();
 
       assert(Sets.of(data).asArray()).to.equal([1, 2, 3]);
-      verify(NonIndexables.fromIterable)(data);
+      assert(NonIndexables.fromIterable).to.haveBeenCalledWith(data);
     });
   });
 });

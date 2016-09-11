@@ -1,4 +1,4 @@
-import {TestBase, verify} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {ArgMetaData} from './arg-meta-data';
@@ -21,7 +21,8 @@ describe('pipeline.External', () => {
     let decorator = External(key);
     decorator(target, propertyKey, parameterIndex);
 
-    verify(PipeUtil.addArgument)(target, propertyKey, parameterIndex, argMetaData);
-    verify(ArgMetaData.newInstance)(key, {}, true);
+    assert(PipeUtil.addArgument).to
+        .haveBeenCalledWith(target, propertyKey, parameterIndex, argMetaData);
+    assert(ArgMetaData.newInstance).to.haveBeenCalledWith(key, {}, true);
   });
 });

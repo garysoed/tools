@@ -1,4 +1,4 @@
-import {assert, TestBase, verify} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {DomEvent} from '../event/dom-event';
@@ -25,10 +25,11 @@ describe('net.Http', () => {
             done();
           }, done.fail);
 
-      verify(mockRequest.open)('GET', path);
+      assert(mockRequest.open).to.haveBeenCalledWith('GET', path);
 
-      verify(mockRequest.send)(null);
-      verify(TestListenableDom.getListenable(mockRequest).on)(DomEvent.LOAD, jasmine.any(Function));
+      assert(mockRequest.send).to.haveBeenCalledWith(null);
+      assert(TestListenableDom.getListenable(mockRequest).on).to
+          .haveBeenCalledWith(DomEvent.LOAD, jasmine.any(Function));
 
       mockRequest.responseText = expectedResponseText;
       mockRequest.status = 200;
@@ -70,10 +71,12 @@ describe('net.Http', () => {
             done();
           }, done.fail);
 
-      verify(mockRequest.open)('POST', path);
-      verify(mockRequest.send)('a=1&b=2');
-      verify(mockRequest.setRequestHeader)('Content-Type', 'application/x-www-form-urlencoded');
-      verify(TestListenableDom.getListenable(mockRequest).on)(DomEvent.LOAD, jasmine.any(Function));
+      assert(mockRequest.open).to.haveBeenCalledWith('POST', path);
+      assert(mockRequest.send).to.haveBeenCalledWith('a=1&b=2');
+      assert(mockRequest.setRequestHeader).to
+          .haveBeenCalledWith('Content-Type', 'application/x-www-form-urlencoded');
+      assert(TestListenableDom.getListenable(mockRequest).on).to
+          .haveBeenCalledWith(DomEvent.LOAD, jasmine.any(Function));
 
       mockRequest.responseText = expectedResponseText;
       mockRequest.status = 200;

@@ -1,4 +1,4 @@
-import {assert, TestBase, verify, verifyNever} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {ArrayIterable} from './array-iterable';
@@ -104,10 +104,10 @@ describe('collection.NonIndexables', () => {
       let mockHandler = jasmine.createSpy('Handler');
       NonIndexables.of([1, 2, 3, 4]).forEach(mockHandler);
 
-      verify(mockHandler)(1);
-      verify(mockHandler)(2);
-      verify(mockHandler)(3);
-      verify(mockHandler)(4);
+      assert(mockHandler).to.haveBeenCalledWith(1);
+      assert(mockHandler).to.haveBeenCalledWith(2);
+      assert(mockHandler).to.haveBeenCalledWith(3);
+      assert(mockHandler).to.haveBeenCalledWith(4);
     });
   });
 
@@ -116,10 +116,10 @@ describe('collection.NonIndexables', () => {
       let mockHandler = jasmine.createSpy('Handler');
       NonIndexables.of([1, 2, 3, 4]).forOf(mockHandler);
 
-      verify(mockHandler)(1, jasmine.any(Function));
-      verify(mockHandler)(2, jasmine.any(Function));
-      verify(mockHandler)(3, jasmine.any(Function));
-      verify(mockHandler)(4, jasmine.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(1, jasmine.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(2, jasmine.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(3, jasmine.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(4, jasmine.any(Function));
     });
 
     it('should stop the iteration when the break function is called', () => {
@@ -131,10 +131,10 @@ describe('collection.NonIndexables', () => {
           });
 
       NonIndexables.of([1, 2, 3, 4]).forOf(mockHandler);
-      verify(mockHandler)(1, jasmine.any(Function));
-      verify(mockHandler)(2, jasmine.any(Function));
-      verifyNever(mockHandler)(3, jasmine.any(Function));
-      verifyNever(mockHandler)(4, jasmine.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(1, jasmine.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(2, jasmine.any(Function));
+      assert(mockHandler).toNot.haveBeenCalledWith(3, jasmine.any(Function));
+      assert(mockHandler).toNot.haveBeenCalledWith(4, jasmine.any(Function));
     });
   });
 
@@ -143,10 +143,10 @@ describe('collection.NonIndexables', () => {
       let mockHandler = jasmine.createSpy('Handler');
       NonIndexables.of([1, 2, 3, 4]).iterate(mockHandler);
 
-      verify(mockHandler)(1, jasmine.any(Function));
-      verify(mockHandler)(2, jasmine.any(Function));
-      verify(mockHandler)(3, jasmine.any(Function));
-      verify(mockHandler)(4, jasmine.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(1, jasmine.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(2, jasmine.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(3, jasmine.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(4, jasmine.any(Function));
     });
 
     it('should stop the iteration when the break function is called', () => {
@@ -158,10 +158,10 @@ describe('collection.NonIndexables', () => {
           });
 
       NonIndexables.of([1, 2, 3, 4]).iterate(mockHandler);
-      verify(mockHandler)(1, jasmine.any(Function));
-      verify(mockHandler)(2, jasmine.any(Function));
-      verifyNever(mockHandler)(3, jasmine.any(Function));
-      verifyNever(mockHandler)(4, jasmine.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(1, jasmine.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(2, jasmine.any(Function));
+      assert(mockHandler).toNot.haveBeenCalledWith(3, jasmine.any(Function));
+      assert(mockHandler).toNot.haveBeenCalledWith(4, jasmine.any(Function));
     });
   });
 

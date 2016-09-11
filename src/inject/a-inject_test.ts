@@ -1,4 +1,4 @@
-import {assert, TestBase, verify} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {inject} from './a-inject';
@@ -24,7 +24,7 @@ describe('inject.Inject', () => {
     inject(name, defaultValue)(TestClass, 'propertyName', index);
 
     assert(Maps.of(fakeMetadata).asRecord()).to.equal({[index]: injectMetadata});
-    verify(InjectMetadata.newInstance)(name, defaultValue);
+    assert(InjectMetadata.newInstance).to.haveBeenCalledWith(name, defaultValue);
   });
 
   it('should use the parameter name if not specified', () => {
@@ -39,7 +39,7 @@ describe('inject.Inject', () => {
     inject()(TestClass, propertyName, index);
 
     assert(Maps.of(fakeMetadata).asRecord()).to.equal({[index]: injectMetadata});
-    verify(InjectMetadata.newInstance)(propertyName, undefined);
+    assert(InjectMetadata.newInstance).to.haveBeenCalledWith(propertyName, undefined);
   });
 
   it('should throw error if the target is not a constructor', () => {

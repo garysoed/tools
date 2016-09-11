@@ -1,4 +1,4 @@
-import {assert, TestBase, verify, verifyNever, verifyNoCalls} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Attributes} from '../ui/attributes';
@@ -38,8 +38,8 @@ describe('ng.BemClassCtrl', () => {
 
       ctrl['onWatchValueChange_'](newClass);
 
-      verify(mockElementClassList.remove)(oldClass);
-      verify(mockElementClassList.add)(`${mockClassPrefix}__${newClass}`);
+      assert(mockElementClassList.remove).to.haveBeenCalledWith(oldClass);
+      assert(mockElementClassList.add).to.haveBeenCalledWith(`${mockClassPrefix}__${newClass}`);
     });
 
     it('should not remove the old class if it is added', () => {
@@ -49,7 +49,7 @@ describe('ng.BemClassCtrl', () => {
 
       ctrl['onWatchValueChange_'](newClass);
 
-      verifyNoCalls(mockElementClassList.remove);
+      assert(mockElementClassList.remove).toNot.haveBeenCalled();
     });
 
     it('should handle array of strings', () => {
@@ -62,10 +62,10 @@ describe('ng.BemClassCtrl', () => {
 
       ctrl['onWatchValueChange_']([existingClass, newClass]);
 
-      verify(mockElementClassList.remove)(oldClass);
-      verifyNever(mockElementClassList.remove)(existingClass);
+      assert(mockElementClassList.remove).to.haveBeenCalledWith(oldClass);
+      assert(mockElementClassList.remove).toNot.haveBeenCalledWith(existingClass);
 
-      verify(mockElementClassList.add)(`${mockClassPrefix}__${newClass}`);
+      assert(mockElementClassList.add).to.haveBeenCalledWith(`${mockClassPrefix}__${newClass}`);
     });
 
     it('should handle records', () => {
@@ -83,11 +83,12 @@ describe('ng.BemClassCtrl', () => {
         [ignoredClass]: false,
       });
 
-      verify(mockElementClassList.remove)(oldClass);
-      verifyNever(mockElementClassList.remove)(existingClass);
+      assert(mockElementClassList.remove).to.haveBeenCalledWith(oldClass);
+      assert(mockElementClassList.remove).toNot.haveBeenCalledWith(existingClass);
 
-      verify(mockElementClassList.add)(`${mockClassPrefix}__${newClass}`);
-      verifyNever(mockElementClassList.add)(`${mockClassPrefix}__${ignoredClass}`);
+      assert(mockElementClassList.add).to.haveBeenCalledWith(`${mockClassPrefix}__${newClass}`);
+      assert(mockElementClassList.add).toNot
+          .haveBeenCalledWith(`${mockClassPrefix}__${ignoredClass}`);
     });
 
     it('should throw error if the value type cannot be handled', () => {
@@ -120,9 +121,9 @@ describe('ng.BemClassCtrl', () => {
       assert(ctrl['classPrefix_']).to.equal(bemRootClass);
       assert(ctrl['element_']).to.equal(el);
 
-      verify(mock$scope.$watch)(attrValue, jasmine.any(Function));
+      assert(mock$scope.$watch).to.haveBeenCalledWith(attrValue, jasmine.any(Function));
       mock$scope.$watch.calls.argsFor(0)[1]();
-      verify(ctrl['onWatchValueChange_'])();
+      assert(ctrl['onWatchValueChange_']).to.haveBeenCalledWith();
     });
 
     it('should throw error if the bem-root cannot be found', () => {

@@ -1,4 +1,4 @@
-import {assert, TestBase, verify} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {__STRINGIFY, Stringify} from './stringify';
@@ -18,7 +18,7 @@ describe('data.Stringify', () => {
       let field = 123;
       spyOn(Natives, 'isNative').and.returnValue(true);
       assert(Stringify['formatField_'](field, '|', '--', '>>')).to.equal(`${field}`);
-      verify(Natives.isNative)(field);
+      assert(Natives.isNative).to.haveBeenCalledWith(field);
     });
 
     it('should stringify Dates correctly', () => {
@@ -131,11 +131,11 @@ describe('data.Stringify', () => {
         [key1]: normalizedValue1,
         [key2]: normalizedValue2,
       });
-      verify(Stringify['grabFields_'])(value1);
-      verify(Stringify['grabFields_'])(value2);
-      verify(mockAnnotations.getFieldValues)(instance);
-      verify(Annotations.of)(proto, __STRINGIFY);
-      verify(Annotations.hasAnnotation)(proto, __STRINGIFY);
+      assert(Stringify['grabFields_']).to.haveBeenCalledWith(value1);
+      assert(Stringify['grabFields_']).to.haveBeenCalledWith(value2);
+      assert(mockAnnotations.getFieldValues).to.haveBeenCalledWith(instance);
+      assert(Annotations.of).to.haveBeenCalledWith(proto, __STRINGIFY);
+      assert(Annotations.hasAnnotation).to.haveBeenCalledWith(proto, __STRINGIFY);
     });
 
     it('should normalize symbol keys correctly', () => {
@@ -173,11 +173,11 @@ describe('data.Stringify', () => {
         [`[${key1.toString()}]`]: normalizedValue1,
         [`[${key2.toString()}]`]: normalizedValue2,
       });
-      verify(Stringify['grabFields_'])(value1);
-      verify(Stringify['grabFields_'])(value2);
-      verify(mockAnnotations.getFieldValues)(instance);
-      verify(Annotations.of)(proto, __STRINGIFY);
-      verify(Annotations.hasAnnotation)(proto, __STRINGIFY);
+      assert(Stringify['grabFields_']).to.haveBeenCalledWith(value1);
+      assert(Stringify['grabFields_']).to.haveBeenCalledWith(value2);
+      assert(mockAnnotations.getFieldValues).to.haveBeenCalledWith(instance);
+      assert(Annotations.of).to.haveBeenCalledWith(proto, __STRINGIFY);
+      assert(Annotations.hasAnnotation).to.haveBeenCalledWith(proto, __STRINGIFY);
     });
 
     it('should return the instance if it is not an object', () => {
@@ -191,7 +191,7 @@ describe('data.Stringify', () => {
       spyOn(Annotations, 'hasAnnotation').and.returnValue(false);
 
       assert(Stringify['grabFields_'](instance)).to.equal(instance);
-      verify(Annotations.hasAnnotation)(proto, __STRINGIFY);
+      assert(Annotations.hasAnnotation).to.haveBeenCalledWith(proto, __STRINGIFY);
     });
   });
 
@@ -205,8 +205,8 @@ describe('data.Stringify', () => {
 
       Stringify.Property()(ctor, key);
 
-      verify(mockAnnotations.addField)(key);
-      verify(Annotations.of)(ctor, __STRINGIFY);
+      assert(mockAnnotations.addField).to.haveBeenCalledWith(key);
+      assert(Annotations.of).to.haveBeenCalledWith(ctor, __STRINGIFY);
     });
   });
 
@@ -223,8 +223,8 @@ describe('data.Stringify', () => {
       let instance = Mocks.object('instance');
 
       assert(Stringify.toString(instance, {delimiter, pad})).to.equal(result);
-      verify(Stringify['formatField_'])(field, delimiter, pad);
-      verify(Stringify['grabFields_'])(instance);
+      assert(Stringify['formatField_']).to.haveBeenCalledWith(field, delimiter, pad);
+      assert(Stringify['grabFields_']).to.haveBeenCalledWith(instance);
     });
   });
 });

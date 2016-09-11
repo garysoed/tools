@@ -1,4 +1,4 @@
-import {assert, TestBase, verify} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import Cache from '../data/a-cache';
@@ -26,10 +26,10 @@ describe('ng.RouteService', () => {
   it('should clear the cache when route change success event is received', () => {
     spyOn(Cache, 'clear');
 
-    verify(mock$scope.$on)('$routeChangeSuccess', jasmine.any(Function));
+    assert(mock$scope.$on).to.haveBeenCalledWith('$routeChangeSuccess', jasmine.any(Function));
 
     mock$scope$onSpy.calls.argsFor(0)[1]();
-    verify(Cache.clear)(service);
+    assert(Cache.clear).to.haveBeenCalledWith(service);
   });
 
   describe('get params', () => {
@@ -63,7 +63,7 @@ describe('ng.RouteService', () => {
       let path = 'path';
       mock$location.path.and.returnValue(path);
       assert(service.path).to.equal(path);
-      verify(mock$location.path)();
+      assert(mock$location.path).to.haveBeenCalledWith();
     });
   });
 
@@ -84,8 +84,8 @@ describe('ng.RouteService', () => {
 
       service.to(path, searchParams, memoryParams);
 
-      verify(mock$location.path)(path);
-      verify(mock$location.search)({
+      assert(mock$location.path).to.haveBeenCalledWith(path);
+      assert(mock$location.search).to.haveBeenCalledWith({
         'b': JSON.stringify(objectB),
         'overridden': JSON.stringify(objectNewOverridden),
       });

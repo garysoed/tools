@@ -12,10 +12,10 @@ import {StringAssert} from './string-assert';
  * Wraps jasmine's expect to add type safetiness.
  */
 export function assert(value: boolean | null): AssertFactory<BooleanAssert>;
-export function assert(value: Function | null): AssertFactory<FunctionAssert>;
 export function assert(value: number | null): AssertFactory<NumberAssert>;
 export function assert(value: string | null): AssertFactory<StringAssert>;
 
+export function assert<T extends Function>(value: T | null): AssertFactory<FunctionAssert<T>>;
 export function assert<T>(value: T[] | null): AssertFactory<ArrayAssert<T>>;
 export function assert(value: any): AssertFactory<AnyAssert<any>>;
 export function assert(value: any): AssertFactory<AnyAssert<any>> {
@@ -32,7 +32,7 @@ export function assert(value: any): AssertFactory<AnyAssert<any>> {
       return new NumberAssert(value, reversed, expect);
     });
   } else if (value instanceof Function) {
-    return new AssertFactory((reversed: boolean): FunctionAssert => {
+    return new AssertFactory((reversed: boolean): FunctionAssert<any> => {
       return new FunctionAssert(value, reversed, expect);
     });
   } else if (value instanceof Array) {

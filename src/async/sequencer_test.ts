@@ -1,4 +1,4 @@
-import {TestBase, verify, verifyNoCalls} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Sequencer} from './sequencer';
@@ -24,7 +24,7 @@ describe('async.Sequencer', () => {
       mockOperation.and.returnValue(Promise.resolve());
       sequencer.run(mockOperation)
           .then(() => {
-            verify(mockOperation)();
+            assert(mockOperation).to.haveBeenCalledWith();
             done();
           }, done.fail);
     });
@@ -33,7 +33,7 @@ describe('async.Sequencer', () => {
       sequencer.dispose();
       sequencer.run(mockOperation)
           .then(() => {
-            verifyNoCalls(mockOperation);
+            assert(mockOperation).toNot.haveBeenCalled();
             done();
           }, done.fail);
     });
