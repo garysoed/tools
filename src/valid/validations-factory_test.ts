@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Mocks} from '../mock/mocks';
@@ -19,8 +19,8 @@ describe('valid.ValidationsFactory', () => {
       let mockValidations = Mocks.object('Validations');
       mockProvider.and.returnValue(mockValidations);
 
-      expect(factory.to).toEqual(mockValidations);
-      expect(mockProvider).toHaveBeenCalledWith(false);
+      assert(factory.to).to.equal(mockValidations);
+      assert(mockProvider).to.haveBeenCalledWith(false);
     });
   });
 
@@ -29,8 +29,8 @@ describe('valid.ValidationsFactory', () => {
       let mockValidations = Mocks.object('Validations');
       mockProvider.and.returnValue(mockValidations);
 
-      expect(factory.toNot).toEqual(mockValidations);
-      expect(mockProvider).toHaveBeenCalledWith(true);
+      assert(factory.toNot).to.equal(mockValidations);
+      assert(mockProvider).to.haveBeenCalledWith(true);
     });
   });
 });

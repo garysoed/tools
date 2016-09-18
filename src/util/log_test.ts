@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Log} from './log';
@@ -19,7 +19,7 @@ describe('util.Log', () => {
       let log = new Log(namespace);
       log['callIfEnabled_'](callback, message);
 
-      expect(callback).toHaveBeenCalledWith(`[${namespace}] ${message}`);
+      assert(callback).to.haveBeenCalledWith(`[${namespace}] ${message}`);
     });
 
     it('should do nothing if logging is disabled', () => {
@@ -29,7 +29,7 @@ describe('util.Log', () => {
       let log = new Log('namespace');
       log['callIfEnabled_'](callback, 'message');
 
-      expect(callback).not.toHaveBeenCalled();
+      assert(callback).toNot.haveBeenCalled();
     });
   });
 
@@ -44,10 +44,10 @@ describe('util.Log', () => {
 
       Log.error(log, message);
 
-      expect(log['callIfEnabled_']).toHaveBeenCalledWith(jasmine.any(Function), message);
+      assert(log['callIfEnabled_']).to.haveBeenCalledWith(<any> jasmine.any(Function), message);
 
       spy.calls.argsFor(0)[0](message);
-      expect(console.error).toHaveBeenCalledWith(message);
+      assert(console.error).to.haveBeenCalledWith(message);
     });
   });
 
@@ -62,10 +62,10 @@ describe('util.Log', () => {
 
       Log.info(log, message);
 
-      expect(log['callIfEnabled_']).toHaveBeenCalledWith(jasmine.any(Function), message);
+      assert(log['callIfEnabled_']).to.haveBeenCalledWith(<any> jasmine.any(Function), message);
 
       spy.calls.argsFor(0)[0](message);
-      expect(console.info).toHaveBeenCalledWith(message);
+      assert(console.info).to.haveBeenCalledWith(message);
     });
   });
 
@@ -80,10 +80,10 @@ describe('util.Log', () => {
 
       Log.warn(log, message);
 
-      expect(log['callIfEnabled_']).toHaveBeenCalledWith(jasmine.any(Function), message);
+      assert(log['callIfEnabled_']).to.haveBeenCalledWith(<any> jasmine.any(Function), message);
 
       spy.calls.argsFor(0)[0](message);
-      expect(console.warn).toHaveBeenCalledWith(message);
+      assert(console.warn).to.haveBeenCalledWith(message);
     });
   });
 });

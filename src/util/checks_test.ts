@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Checks} from './checks';
@@ -7,15 +7,15 @@ import {Checks} from './checks';
 describe('Checks', () => {
   describe('isArrayOf', () => {
     it('should return true if the object is the correct array type', () => {
-      expect(Checks.isArrayOf(['a', 'b', 'c'], String)).toEqual(true);
+      assert(Checks.isArrayOf(['a', 'b', 'c'], String)).to.beTrue();
     });
 
     it('should return false if an element of the array is of the wrong type', () => {
-      expect(Checks.isArrayOf(['1', 2, '3'], String)).toEqual(false);
+      assert(Checks.isArrayOf(['1', 2, '3'], String)).to.beFalse();
     });
 
     it('should return false if the object is not an array', () => {
-      expect(Checks.isArrayOf({}, String)).toEqual(false);
+      assert(Checks.isArrayOf({}, String)).to.beFalse();
     });
   });
 
@@ -23,11 +23,11 @@ describe('Checks', () => {
     class TestClass { }
 
     it('should return true if the object is a constructor', () => {
-      expect(Checks.isCtor(TestClass)).toEqual(true);
+      assert(Checks.isCtor(TestClass)).to.beTrue();
     });
 
     it('should return false if the object is not a function', () => {
-      expect(Checks.isCtor(1)).toEqual(false);
+      assert(Checks.isCtor(1)).to.beFalse();
     });
   });
 
@@ -35,45 +35,45 @@ describe('Checks', () => {
     class TestClass {}
 
     it('should return true if the object is of the correct type', () => {
-      expect(Checks.isInstanceOf(new TestClass(), TestClass)).toEqual(true);
+      assert(Checks.isInstanceOf(new TestClass(), TestClass)).to.beTrue();
     });
 
     it('should return false if the object is of the wrong type', () => {
-      expect(Checks.isInstanceOf('blah', TestClass)).toEqual(false);
+      assert(Checks.isInstanceOf('blah', TestClass)).to.beFalse();
     });
 
     it('should handle strings', () => {
-      expect(Checks.isInstanceOf('string', String)).toEqual(true);
+      assert(Checks.isInstanceOf('string', String)).to.beTrue();
     });
 
     it('should handler new String', () => {
       /* tslint:disable:no-construct */
-      expect(Checks.isInstanceOf(new String(), String)).toEqual(true);
+      assert(Checks.isInstanceOf(new String(), String)).to.beTrue();
       /* tslint:enable:no-construct */
     });
 
     it('should handle booleans', () => {
-      expect(Checks.isInstanceOf(true, Boolean)).toEqual(true);
+      assert(Checks.isInstanceOf(true, Boolean)).to.beTrue();
     });
 
     it('should handle new Booleans', () => {
       /* tslint:disable:no-construct */
-      expect(Checks.isInstanceOf(new Boolean(), Boolean)).toEqual(true);
+      assert(Checks.isInstanceOf(new Boolean(), Boolean)).to.beTrue();
       /* tslint:enable:no-construct */
     });
   });
 
   describe('isRecordOf', () => {
     it('should return true if the object is a record with the correct value', () => {
-      expect(Checks.isRecordOf({'a': true, 'b': false}, Boolean)).toEqual(true);
+      assert(Checks.isRecordOf({'a': true, 'b': false}, Boolean)).to.beTrue();
     });
 
     it('should return false if a value in the record is not the correct type', () => {
-      expect(Checks.isRecordOf({'a': true, 'b': 'false'}, Boolean)).toEqual(false);
+      assert(Checks.isRecordOf({'a': true, 'b': 'false'}, Boolean)).to.beFalse();
     });
 
     it('should return false if the object is not an Object', () => {
-      expect(Checks.isRecordOf(1, Boolean)).toEqual(false);
+      assert(Checks.isRecordOf(1, Boolean)).to.beFalse();
     });
   });
 });

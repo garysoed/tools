@@ -1,22 +1,20 @@
+import {BaseAssert} from './base-assert';
+
+
 /**
  * Assertion for any values..
  */
-export class AnyAssert<T> {
+export class AnyAssert<T> extends BaseAssert {
   /**
-   * @param value_ The value to assert.
-   * @param reversed_ True iff the assertion logic should be reversed.
-   * @param expect_ Reference to jasmine's expect function.'
+   * @param value The value to assert.
+   * @param reversed True iff the assertion logic should be reversed.
+   * @param expect Reference to jasmine's expect function.'
    */
   constructor(
-      private value_: T,
-      private reversed_: boolean,
-      private expect_: (actual: any) => jasmine.Matchers) { }
-
-  /**
-   * @return The base matchers object for checking.
-   */
-  protected getMatchers_(): jasmine.Matchers {
-    return this.reversed_ ? this.expect_(this.value_).not : this.expect_(this.value_);
+      private value: T,
+      private reversed: boolean,
+      private expect: (actual: any) => jasmine.Matchers) {
+    super(value, reversed, expect);
   }
 
   /**

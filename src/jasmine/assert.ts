@@ -1,6 +1,7 @@
 import {AnyAssert} from './any-assert';
 import {ArrayAssert} from './array-assert';
 import {AssertFactory} from './assert-factory';
+import {BaseAssert} from './base-assert';
 import {BooleanAssert} from './boolean-assert';
 import {FunctionAssert} from './function-assert';
 import {Natives} from '../typescript/natives';
@@ -18,7 +19,7 @@ export function assert(value: string | null): AssertFactory<StringAssert>;
 export function assert<T extends Function>(value: T | null): AssertFactory<FunctionAssert<T>>;
 export function assert<T>(value: T[] | null): AssertFactory<ArrayAssert<T>>;
 export function assert(value: any): AssertFactory<AnyAssert<any>>;
-export function assert(value: any): AssertFactory<AnyAssert<any>> {
+export function assert(value: any): AssertFactory<BaseAssert> {
   if (Natives.isBoolean(value)) {
     return new AssertFactory((reversed: boolean): BooleanAssert => {
       return new BooleanAssert(value, reversed, expect);

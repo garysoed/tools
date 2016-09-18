@@ -95,7 +95,7 @@ describe('event.BaseListenable', () => {
       mockCallback.calls.reset();
       listenable.dispatch(event, () => {});
       assert(mockCallback).toNot.haveBeenCalled();
-      assert(disposableFunction.isDisposed).to.equal(true);
+      assert(<boolean> disposableFunction.isDisposed).to.beTrue();
     });
 
     it('should return disposable function that stops listening to the event', () => {

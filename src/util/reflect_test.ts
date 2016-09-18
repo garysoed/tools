@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import Reflect from './reflect';
@@ -29,9 +29,9 @@ describe('Reflect', () => {
       let b = 'b';
       let instance = Reflect.construct(TestClass, [a, b]);
 
-      expect(instance).toEqual(jasmine.any(TestClass));
-      expect(instance.a).toEqual(a);
-      expect(instance.b).toEqual(b);
+      assert(instance).to.equal(jasmine.any(TestClass));
+      assert(instance.a).to.equal(a);
+      assert(instance.b).to.equal(b);
     });
   });
 
@@ -43,10 +43,10 @@ describe('Reflect', () => {
     }
 
     it('should override the getter property', () => {
-      let newValue = 'newValue';
+      let newValue = 123;
       let object = new TestClass();
       Reflect.overrideGetter(object, 'a', newValue);
-      expect(object.a).toEqual(newValue);
+      assert(object.a).to.equal(newValue);
     });
   });
 });

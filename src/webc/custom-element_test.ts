@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {BaseElement} from './base-element';
@@ -22,30 +22,30 @@ describe('webc.customElement', () => {
     spyOn(CustomElementUtil, 'setConfig');
 
     customElement(config)(TestElement);
-    expect(CustomElementUtil.setConfig).toHaveBeenCalledWith(TestElement, config);
+    assert(CustomElementUtil.setConfig).to.haveBeenCalledWith(TestElement, config);
   });
 
   it('should throw exception if the constructor does not extend BaseElement', () => {
     class TestElement { }
 
-    expect(() => {
+    assert(() => {
       customElement({tag: 'tag', templateKey: 'templateKey'})(TestElement);
-    }).toThrowError(/extend BaseElement/);
+    }).to.throwError(/extend BaseElement/);
   });
 
   it('should throw error if the tag name is empty', () => {
     class TestElement extends BaseElement { }
 
-    expect(() => {
+    assert(() => {
       customElement({tag: '', templateKey: 'templateKey'})(TestElement);
-    }).toThrowError(/non empty tag name/);
+    }).to.throwError(/non empty tag name/);
   });
 
   it('should throw error if the template URL is empty', () => {
     class TestElement extends BaseElement { }
 
-    expect(() => {
+    assert(() => {
       customElement({tag: 'tag', templateKey: ''})(TestElement);
-    }).toThrowError(/non empty template key/);
+    }).to.throwError(/non empty template key/);
   });
 });

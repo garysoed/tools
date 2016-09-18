@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import Cache from '../data/a-cache';
@@ -30,22 +30,22 @@ describe('ui.KeyboardEventPolyfill', () => {
   it('should throw error if the KeyboardEvent cannot be found', () => {
     window['KeyboardEvent'] = undefined;
     Cache.clear(KeyboardEventPolyfill);
-    expect(() => {
+    assert(() => {
       KeyboardEventPolyfill.polyfill();
-    }).toThrowError(/KeyboardEvent not defined/);
+    }).to.throwError(/KeyboardEvent not defined/);
   });
 
   describe('polyfill key', () => {
     it('should return the value correctly', () => {
       let event = new MockKeyboardEvent(97);
-      expect(event['key']).toEqual('a');
+      assert(event['key']).to.equal('a');
     });
 
     it('should throw error if the event has no charCode', () => {
       let event = new MockKeyboardEvent(undefined);
-      expect(() => {
+      assert(() => {
         event['key'];
-      }).toThrowError(/Unhandled KeyboardEvent platform/);
+      }).to.throwError(/Unhandled KeyboardEvent platform/);
     });
   });
 });

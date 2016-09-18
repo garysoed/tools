@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {CustomElementUtil} from './custom-element-util';
@@ -22,12 +22,12 @@ describe('webc.CustomElementUtil', () => {
 
       let newValue = Mocks.object('newValue');
       mockElement.attrName = newValue;
-      expect(mockElement.setAttribute).toHaveBeenCalledWith('attr-name', stringValue);
-      expect(mockAttributeParser.stringify).toHaveBeenCalledWith(newValue);
+      assert(mockElement.setAttribute).to.haveBeenCalledWith('attr-name', stringValue);
+      assert(mockAttributeParser.stringify).to.haveBeenCalledWith(newValue);
 
-      expect(mockElement.attrName).toEqual(parsedValue);
-      expect(mockElement.getAttribute).toHaveBeenCalledWith('attr-name');
-      expect(mockAttributeParser.parse).toHaveBeenCalledWith(attrValue);
+      assert(mockElement.attrName).to.equal(parsedValue);
+      assert(mockElement.getAttribute).to.haveBeenCalledWith('attr-name');
+      assert(mockAttributeParser.parse).to.haveBeenCalledWith(attrValue);
     });
   });
 
@@ -37,7 +37,7 @@ describe('webc.CustomElementUtil', () => {
       let ctor = Mocks.object('ctor');
 
       CustomElementUtil.setConfig(ctor, config);
-      expect(CustomElementUtil.getConfig(ctor)).toEqual(config);
+      assert(CustomElementUtil.getConfig(ctor)).to.equal(config);
     });
   });
 
@@ -47,7 +47,7 @@ describe('webc.CustomElementUtil', () => {
       let element = Mocks.object('element');
 
       CustomElementUtil.setElement(instance, element);
-      expect(CustomElementUtil.getElement(instance)).toEqual(element);
+      assert(CustomElementUtil.getElement(instance)).to.equal(element);
     });
   });
 });

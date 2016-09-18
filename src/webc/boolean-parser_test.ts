@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {BooleanParser} from './boolean-parser';
@@ -7,33 +7,33 @@ import {BooleanParser} from './boolean-parser';
 describe('webc.BooleanParser', () => {
   describe('parse', () => {
     it('should parse "true" as true', () => {
-      expect(BooleanParser.parse('true')).toEqual(true);
+      assert(BooleanParser.parse('true')).to.beTrue();
     });
 
     it('should parse "TRUE" as true', () => {
-      expect(BooleanParser.parse('TRUE')).toEqual(true);
+      assert(BooleanParser.parse('TRUE')).to.beTrue();
     });
 
     it('should parse "false" as false', () => {
-      expect(BooleanParser.parse('false')).toEqual(false);
+      assert(BooleanParser.parse('false')).to.beFalse();
     });
 
     it('should parse any other strings as false', () => {
-      expect(BooleanParser.parse('randomString')).toEqual(false);
+      assert(BooleanParser.parse('randomString')).to.beFalse();
     });
 
     it('should parse null as false', () => {
-      expect(BooleanParser.parse(null)).toEqual(false);
+      assert(BooleanParser.parse(null)).to.beFalse();
     });
   });
 
   describe('stringify', () => {
     it('should return true as "true"', () => {
-      expect(BooleanParser.stringify(true)).toEqual('true');
+      assert(BooleanParser.stringify(true)).to.equal('true');
     });
 
     it('should return false as "false', () => {
-      expect(BooleanParser.stringify(false)).toEqual('false');
+      assert(BooleanParser.stringify(false)).to.equal('false');
     });
   });
 });

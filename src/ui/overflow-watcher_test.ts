@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {TestDispose} from '../testing/test-dispose';
@@ -23,8 +23,8 @@ describe('ui.OverflowWatcher', () => {
   });
 
   it('should initialize correctly', () => {
-    expect(mockContainer.addEventListener)
-        .toHaveBeenCalledWith('scroll', jasmine.any(Function), false);
+    assert(mockContainer.addEventListener)
+        .to.haveBeenCalledWith('scroll', jasmine.any(Function), false);
   });
 
   describe('getState_', () => {
@@ -33,8 +33,8 @@ describe('ui.OverflowWatcher', () => {
 
       spyOn(Doms, 'relativeOffsetTop').and.returnValue(40);
 
-      expect(watcher['getState_']()).toEqual(State.UNCOVERED);
-      expect(Doms.relativeOffsetTop).toHaveBeenCalledWith(mockElement, mockContainer);
+      assert(watcher['getState_']()).to.equal(State.UNCOVERED);
+      assert(Doms.relativeOffsetTop).to.haveBeenCalledWith(mockElement, mockContainer);
     });
 
     it('should return UNCOVERED if the element is just completely visible', () => {
@@ -42,8 +42,8 @@ describe('ui.OverflowWatcher', () => {
 
       spyOn(Doms, 'relativeOffsetTop').and.returnValue(20);
 
-      expect(watcher['getState_']()).toEqual(State.UNCOVERED);
-      expect(Doms.relativeOffsetTop).toHaveBeenCalledWith(mockElement, mockContainer);
+      assert(watcher['getState_']()).to.equal(State.UNCOVERED);
+      assert(Doms.relativeOffsetTop).to.haveBeenCalledWith(mockElement, mockContainer);
     });
 
     it('should return PARTIAL if the element is partially visible', () => {
@@ -52,8 +52,8 @@ describe('ui.OverflowWatcher', () => {
 
       spyOn(Doms, 'relativeOffsetTop').and.returnValue(10);
 
-      expect(watcher['getState_']()).toEqual(State.PARTIAL);
-      expect(Doms.relativeOffsetTop).toHaveBeenCalledWith(mockElement, mockContainer);
+      assert(watcher['getState_']()).to.equal(State.PARTIAL);
+      assert(Doms.relativeOffsetTop).to.haveBeenCalledWith(mockElement, mockContainer);
     });
 
     it('should return COVERED if the element is completely invisible', () => {
@@ -62,8 +62,8 @@ describe('ui.OverflowWatcher', () => {
 
       spyOn(Doms, 'relativeOffsetTop').and.returnValue(20);
 
-      expect(watcher['getState_']()).toEqual(State.COVERED);
-      expect(Doms.relativeOffsetTop).toHaveBeenCalledWith(mockElement, mockContainer);
+      assert(watcher['getState_']()).to.equal(State.COVERED);
+      assert(Doms.relativeOffsetTop).to.haveBeenCalledWith(mockElement, mockContainer);
     });
   });
 
@@ -81,7 +81,7 @@ describe('ui.OverflowWatcher', () => {
 
       watcher['onScroll_']();
 
-      expect(TestEvent.getPayloads(watcher, EventType.CHANGED)).toEqual([oldState]);
+      assert(TestEvent.getPayloads(watcher, EventType.CHANGED)).to.equal([oldState]);
     });
 
     it('should do nothing if the new state is the same as the old state', () => {
@@ -97,7 +97,7 @@ describe('ui.OverflowWatcher', () => {
 
       watcher['onScroll_']();
 
-      expect(TestEvent.getPayloads(watcher, EventType.CHANGED)).toEqual([]);
+      assert(TestEvent.getPayloads(watcher, EventType.CHANGED)).to.equal([]);
     });
   });
 
@@ -106,8 +106,8 @@ describe('ui.OverflowWatcher', () => {
       let state = State.COVERED;
       spyOn(watcher, 'getState_').and.returnValue(state);
 
-      expect(watcher.state).toEqual(state);
-      expect(watcher.getState_).toHaveBeenCalledWith();
+      assert(watcher.state).to.equal(state);
+      assert(watcher.getState_).to.haveBeenCalledWith();
     });
 
     it('should cache the output of getState_', () => {
@@ -118,8 +118,8 @@ describe('ui.OverflowWatcher', () => {
 
       spyGetState_.calls.reset();
 
-      expect(watcher.state).toEqual(state);
-      expect(watcher.getState_).not.toHaveBeenCalled();
+      assert(watcher.state).to.equal(state);
+      assert(watcher.getState_).toNot.haveBeenCalled();
     });
   });
 });

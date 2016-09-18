@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {FloatParser} from './float-parser';
@@ -7,17 +7,17 @@ import {FloatParser} from './float-parser';
 describe('webc.FloatParser', () => {
   describe('parse', () => {
     it('should return the parsed value correctly', () => {
-      expect(FloatParser.parse('1.23')).toEqual(1.23);
+      assert(FloatParser.parse('1.23')).to.equal(1.23);
     });
 
     it('should return NaN if the input is null', () => {
-      expect(FloatParser.parse(null)).toEqual(NaN);
+      assert(FloatParser.parse(null)).to.equal(NaN);
     });
   });
 
   describe('stringify', () => {
     it('should return the string representation of the number', () => {
-      expect(FloatParser.stringify(1.23)).toEqual('1.23');
+      assert(FloatParser.stringify(1.23)).to.equal('1.23');
     });
   });
 });

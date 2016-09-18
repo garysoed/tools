@@ -47,7 +47,7 @@ describe('data.Equals', () => {
         }
       });
 
-      assert(Equals.equals(a, b)).to.equal(true);
+      assert(Equals.equals(a, b)).to.beTrue();
       assert(Equals.equals).to.haveBeenCalledWith(value1A, value1B);
       assert(Equals.equals).to.haveBeenCalledWith(value2A, value2B);
       assert(mockAnnotations.getFieldValues).to.haveBeenCalledWith(a);
@@ -92,7 +92,7 @@ describe('data.Equals', () => {
         }
       });
 
-      assert(Equals.equals(a, b)).to.equal(false);
+      assert(Equals.equals(a, b)).to.beFalse();
     });
 
     it('should use === for values with no annotations', () => {
@@ -103,8 +103,8 @@ describe('data.Equals', () => {
 
       spyOn(Annotations, 'hasAnnotation').and.returnValue(false);
 
-      assert(Equals.equals(a, b)).to.equal(true);
-      assert(Equals.equals(a, other)).to.equal(false);
+      assert(Equals.equals(a, b)).to.beTrue();
+      assert(Equals.equals(a, other)).to.beFalse();
     });
 
     it('should use === for values that are not Objects', () => {
@@ -112,8 +112,8 @@ describe('data.Equals', () => {
       let b = 123;
       let other = 456;
 
-      assert(Equals.equals(a, b)).to.equal(true);
-      assert(Equals.equals(a, other)).to.equal(false);
+      assert(Equals.equals(a, b)).to.beTrue();
+      assert(Equals.equals(a, other)).to.beFalse();
     });
   });
 

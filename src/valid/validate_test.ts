@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Validate} from './validate';
@@ -9,9 +9,9 @@ describe('valid.Validate', () => {
   describe('fail', () => {
     it('should throw the correct error', () => {
       let message = 'message';
-      expect(() => {
+      assert(() => {
         Validate.fail(message);
-      }).toThrowError(message);
+      }).to.throwError(new RegExp(message));
     });
   });
 });

@@ -14,10 +14,16 @@ export class FunctionAssert<T extends Function> extends AnyAssert<T> {
     super(functionValue_, reversed, expect);
   }
 
+  /**
+   * Checks that the given function has been called.
+   */
   haveBeenCalled(): void {
     this.getMatchers_().toHaveBeenCalled();
   }
 
+  /**
+   * Checks that the given function has been called with the given arguments.
+   */
   get haveBeenCalledWith(): T {
     return <T> <any> ((...args: any[]) => {
       let matchers = this.getMatchers_();
@@ -25,6 +31,9 @@ export class FunctionAssert<T extends Function> extends AnyAssert<T> {
     });
   }
 
+  /**
+   * Checks that invoking the given function will throw an error.
+   */
   throw(): void {
     this.getMatchers_().toThrow();
   }

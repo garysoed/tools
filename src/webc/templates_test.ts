@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Templates} from './templates';
@@ -22,11 +22,11 @@ describe('webc.Templates', () => {
       replacementMap.set(/2/g, 'two');
       replacementMap.set(/3/, 'three');
 
-      expect(templates.getTemplate(key)).toEqual('1twothreetwo34');
+      assert(templates.getTemplate(key)).to.equal('1twothreetwo34');
     });
 
     it('should return null if the templates map does not have the requested key', () => {
-      expect(templates.getTemplate('key')).toEqual(null);
+      assert(templates.getTemplate('key')).to.beNull();
     });
   });
 
@@ -38,7 +38,7 @@ describe('webc.Templates', () => {
       Templates.register(key, templateString);
 
       let templates = Templates.newInstance();
-      expect(templates.getTemplate(key)).toEqual(templateString);
+      assert(templates.getTemplate(key)).to.equal(templateString);
     });
 
     it('should throw error if the key has already been registered', () => {
@@ -46,9 +46,9 @@ describe('webc.Templates', () => {
 
       Templates.register(key, 'templateString1');
 
-      expect(() => {
+      assert(() => {
         Templates.register(key, 'templateString2');
-      }).toThrowError(/is already registered/);
+      }).to.throwError(/is already registered/);
     });
   });
 });

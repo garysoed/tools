@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Validate} from './validate';
@@ -10,14 +10,14 @@ describe('valid.MapValidations', () => {
     it('should pass if the map contains the key', () => {
       let map = Maps.fromRecord({'key': 1, 'other': 2}).asMap();
       let result = Validate.map(map).to.containKey('key');
-      expect(result.passes).toEqual(true);
+      assert(result.passes).to.beTrue();
     });
 
     it('should not pass if the map does not contain the key', () => {
       let map = Maps.fromRecord({}).asMap();
       let result = Validate.map(map).to.containKey('key');
-      expect(result.passes).toEqual(false);
-      expect(result.errorMessage).toEqual(jasmine.stringMatching(/to contain key "key"/));
+      assert(result.passes).to.beFalse();
+      assert(result.errorMessage).to.match(/to contain key "key"/);
     });
   });
 
@@ -25,14 +25,14 @@ describe('valid.MapValidations', () => {
     it('should not pass if the map contains the key', () => {
       let map = Maps.fromRecord({'key': 1, 'other': 2}).asMap();
       let result = Validate.map(map).toNot.containKey('key');
-      expect(result.passes).toEqual(false);
-      expect(result.errorMessage).toEqual(jasmine.stringMatching(/to not contain key "key"/));
+      assert(result.passes).to.beFalse();
+      assert(result.errorMessage).to.match(/to not contain key "key"/);
     });
 
     it('should pass if the map does not contain the key', () => {
       let map = Maps.fromRecord({}).asMap();
       let result = Validate.map(map).toNot.containKey('key');
-      expect(result.passes).toEqual(true);
+      assert(result.passes).to.beTrue();
     });
   });
 });

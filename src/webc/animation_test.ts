@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Animation} from './animation';
@@ -22,8 +22,8 @@ describe('webc.Animation', () => {
       let newAnimation = Mocks.object('newAnimation');
       spyOn(Animation, 'newInstance').and.returnValue(newAnimation);
 
-      expect(animation.appendKeyframe(keyframe)).toEqual(newAnimation);
-      expect(Animation.newInstance).toHaveBeenCalledWith([keyframe], {});
+      assert(animation.appendKeyframe(keyframe)).to.equal(newAnimation);
+      assert(Animation.newInstance).to.haveBeenCalledWith([keyframe], {});
     });
   });
 
@@ -33,8 +33,8 @@ describe('webc.Animation', () => {
       let mockElement = jasmine.createSpyObj('Element', ['animate']);
       mockElement.animate.and.returnValue(domAnimate);
 
-      expect(animation.applyTo(mockElement)).toEqual(domAnimate);
-      expect(mockElement.animate).toHaveBeenCalledWith(keyframes, options);
+      assert(animation.applyTo(mockElement)).to.equal(domAnimate);
+      assert(mockElement.animate).to.haveBeenCalledWith(keyframes, options);
     });
   });
 });

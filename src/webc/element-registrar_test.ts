@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {BaseElement} from './base-element';
@@ -47,13 +47,13 @@ describe('webc.ElementRegistrar', () => {
           .attributeChanged.call(mockHTMLElement, 'attr-name', oldValue, newValue);
 
       mockHTMLElement[attrName] = parsedValue;
-      expect(mockAttributeParser.parse).toHaveBeenCalledWith(newValue);
+      assert(mockAttributeParser.parse).to.haveBeenCalledWith(newValue);
 
-      expect(ElementRegistrar['runOnInstance_'])
-          .toHaveBeenCalledWith(mockHTMLElement, jasmine.any(Function));
+      assert(ElementRegistrar['runOnInstance_'])
+          .to.haveBeenCalledWith(mockHTMLElement, <any> jasmine.any(Function));
 
       runOnInstanceSpy.calls.argsFor(0)[1](mockElement);
-      expect(mockElement.onAttributeChanged).toHaveBeenCalledWith('attr-name', oldValue, newValue);
+      assert(mockElement.onAttributeChanged).to.haveBeenCalledWith('attr-name', oldValue, newValue);
     });
 
     it('should return config with correct created handler', () => {
@@ -74,11 +74,11 @@ describe('webc.ElementRegistrar', () => {
       registrar['getLifecycleConfig_'](attributes, mockProvider, content).created
           .call(mockHTMLElement);
 
-      expect(mockHTMLElement[ElementRegistrar['__instance']]).toEqual(mockElement);
-      expect(mockElement.onCreated).toHaveBeenCalledWith(mockHTMLElement);
-      expect(mockShadowRoot.innerHTML).toEqual(content);
-      expect(CustomElementUtil.addAttributes).toHaveBeenCalledWith(mockHTMLElement, attributes);
-      expect(CustomElementUtil.setElement).toHaveBeenCalledWith(mockElement, mockHTMLElement);
+      assert(mockHTMLElement[ElementRegistrar['__instance']]).to.equal(mockElement);
+      assert(mockElement.onCreated).to.haveBeenCalledWith(mockHTMLElement);
+      assert(mockShadowRoot.innerHTML).to.equal(content);
+      assert(CustomElementUtil.addAttributes).to.haveBeenCalledWith(mockHTMLElement, attributes);
+      assert(CustomElementUtil.setElement).to.haveBeenCalledWith(mockElement, mockHTMLElement);
     });
 
     it('should return config with correct inserted handler', () => {
@@ -89,11 +89,11 @@ describe('webc.ElementRegistrar', () => {
 
       registrar['getLifecycleConfig_']({}, mockProvider, 'content').inserted.call(mockHTMLElement);
 
-      expect(ElementRegistrar['runOnInstance_'])
-          .toHaveBeenCalledWith(mockHTMLElement, jasmine.any(Function));
+      assert(ElementRegistrar['runOnInstance_'])
+          .to.haveBeenCalledWith(mockHTMLElement, <any> jasmine.any(Function));
 
       runOnInstanceSpy.calls.argsFor(0)[1](mockElement);
-      expect(mockElement.onInserted).toHaveBeenCalledWith();
+      assert(mockElement.onInserted).to.haveBeenCalledWith();
     });
 
     it('should return config with correct removed handler', () => {
@@ -104,11 +104,11 @@ describe('webc.ElementRegistrar', () => {
 
       registrar['getLifecycleConfig_']({}, mockProvider, 'content').removed.call(mockHTMLElement);
 
-      expect(ElementRegistrar['runOnInstance_'])
-          .toHaveBeenCalledWith(mockHTMLElement, jasmine.any(Function));
+      assert(ElementRegistrar['runOnInstance_'])
+          .to.haveBeenCalledWith(mockHTMLElement, <any> jasmine.any(Function));
 
       runOnInstanceSpy.calls.argsFor(0)[1](mockElement);
-      expect(mockElement.onRemoved).toHaveBeenCalledWith();
+      assert(mockElement.onRemoved).to.haveBeenCalledWith();
     });
   });
 
@@ -154,21 +154,21 @@ describe('webc.ElementRegistrar', () => {
 
       registrar.register(mockConfig)
           .then(() => {
-            expect(mockXtag.register).toHaveBeenCalledWith(
+            assert(mockXtag.register).to.haveBeenCalledWith(
                 name,
                 {
                   lifecycle: mockLifecycleConfig,
                 });
 
-            expect(registrar['getLifecycleConfig_'])
-                .toHaveBeenCalledWith(attributes, jasmine.any(Function), templateContent);
-            expect(registrar['getLifecycleConfig_'].calls.argsFor(0)[1]()).toEqual(instance);
-            expect(mockInjector.instantiate).toHaveBeenCalledWith(ctor);
+            assert(registrar['getLifecycleConfig_'])
+                .to.haveBeenCalledWith(attributes, jasmine.any(Function), templateContent);
+            assert(registrar['getLifecycleConfig_'].calls.argsFor(0)[1]()).to.equal(instance);
+            assert(mockInjector.instantiate).to.haveBeenCalledWith(ctor);
 
-            expect(registrar['registeredCtors_'].has(ctor)).toBe(true);
-            expect(registrar.register).toHaveBeenCalledWith(mockDependency);
+            assert(<boolean> registrar['registeredCtors_'].has(ctor)).to.beTrue();
+            assert(registrar.register).to.haveBeenCalledWith(mockDependency);
 
-            expect(mockTemplates.getTemplate).toHaveBeenCalledWith(templateKey);
+            assert(mockTemplates.getTemplate).to.haveBeenCalledWith(templateKey);
             done();
           }, done.fail);
     });
@@ -185,8 +185,8 @@ describe('webc.ElementRegistrar', () => {
 
       registrar.register(ctor)
           .then(done.fail, (error: Error) => {
-            expect(error.message)
-                .toEqual(jasmine.stringMatching(/No templates found for key/));
+            assert(error.message)
+                .to.match(/No templates found for key/);
             done();
           });
     });
@@ -196,7 +196,7 @@ describe('webc.ElementRegistrar', () => {
 
       registrar.register(ctor)
           .then(() => {
-            expect(mockXtag.register).not.toHaveBeenCalled();
+            assert(mockXtag.register).toNot.haveBeenCalled();
             done();
           }, done.fail);
     });
@@ -205,7 +205,7 @@ describe('webc.ElementRegistrar', () => {
       spyOn(CustomElementUtil, 'getConfig').and.returnValue(null);
       registrar.register(ctor)
           .then(() => {
-            expect(mockXtag.register).not.toHaveBeenCalled();
+            assert(mockXtag.register).toNot.haveBeenCalled();
             done();
           }, done.fail);
     });
@@ -222,7 +222,7 @@ describe('webc.ElementRegistrar', () => {
 
       ElementRegistrar['runOnInstance_'](mockElement, mockCallback);
 
-      expect(mockCallback).toHaveBeenCalledWith(mockInstance);
+      assert(mockCallback).to.haveBeenCalledWith(mockInstance);
     });
 
     it('should throw error if the instance is not an instance of BaseElement', () => {
@@ -232,9 +232,9 @@ describe('webc.ElementRegistrar', () => {
 
       mockElement[ElementRegistrar['__instance']] = mockInstance;
 
-      expect(() => {
+      assert(() => {
         ElementRegistrar['runOnInstance_'](mockElement, mockCallback);
-      }).toThrowError(/Cannot find valid instance/);
+      }).to.throwError(/Cannot find valid instance/);
     });
   });
 });

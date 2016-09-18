@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {BatchValidations} from './batch-validations';
@@ -29,8 +29,8 @@ describe('valid.BatchValidations', () => {
       let result2 = createMockValidationResult(false);
       result2.errorMessage = message2;
 
-      expect(Validate.batch({'a': result1, 'b': result2}).to['getMessage_']())
-          .toEqual(`{a: ${message1}, b: ${message2}}`);
+      assert(Validate.batch({'a': result1, 'b': result2}).to['getMessage_']())
+          .to.equal(`{a: ${message1}, b: ${message2}}`);
     });
   });
 
@@ -42,8 +42,8 @@ describe('valid.BatchValidations', () => {
             'b': createMockValidationResult(true),
           })
           .to.allBeValid();
-      expect(result.passes).toEqual(true);
-      expect(result.value).toEqual({});
+      assert(result.passes).to.beTrue();
+      assert(result.value).to.equal({});
     });
 
     it('should not pass if one of the results in the batch fails', () => {
@@ -56,10 +56,9 @@ describe('valid.BatchValidations', () => {
             'b': createMockValidationResult(false),
           })
           .to.allBeValid();
-      expect(result.passes).toEqual(false);
-      expect(result.errorMessage)
-          .toEqual(jasmine.stringMatching(new RegExp(`all be valid: ${errorMessage}`)));
-      expect(result.value).toEqual({'b': jasmine.any(Object)});
+      assert(result.passes).to.beFalse();
+      assert(result.errorMessage).to.match(new RegExp(`all be valid: ${errorMessage}`));
+      assert(result.value).to.equal({'b': jasmine.any(Object)});
     });
   });
 
@@ -74,10 +73,9 @@ describe('valid.BatchValidations', () => {
             'b': createMockValidationResult(true),
           })
           .toNot.allBeValid();
-      expect(result.passes).toEqual(false);
-      expect(result.errorMessage)
-          .toEqual(jasmine.stringMatching(new RegExp(`not all be valid: ${errorMessage}`)));
-      expect(result.value).toEqual({
+      assert(result.passes).to.beFalse();
+      assert(result.errorMessage).to.match(new RegExp(`not all be valid: ${errorMessage}`));
+      assert(result.value).to.equal({
         'a': jasmine.any(Object),
         'b': jasmine.any(Object),
       });
@@ -90,8 +88,8 @@ describe('valid.BatchValidations', () => {
             'b': createMockValidationResult(false),
           })
           .toNot.allBeValid();
-      expect(result.passes).toEqual(true);
-      expect(result.value).toEqual({'a': jasmine.any(Object)});
+      assert(result.passes).to.beTrue();
+      assert(result.value).to.equal({'a': jasmine.any(Object)});
     });
   });
 
@@ -103,8 +101,8 @@ describe('valid.BatchValidations', () => {
             'b': createMockValidationResult(false),
           })
           .to.someBeValid();
-      expect(result.passes).toEqual(true);
-      expect(result.value).toEqual({'b': jasmine.any(Object)});
+      assert(result.passes).to.beTrue();
+      assert(result.value).to.equal({'b': jasmine.any(Object)});
     });
 
     it('should not pass if all of the results fails', () => {
@@ -117,10 +115,9 @@ describe('valid.BatchValidations', () => {
             'b': createMockValidationResult(false),
           })
           .to.someBeValid();
-      expect(result.passes).toEqual(false);
-      expect(result.errorMessage)
-          .toEqual(jasmine.stringMatching(new RegExp(`some be valid: ${errorMessage}`)));
-      expect(result.value).toEqual({
+      assert(result.passes).to.beFalse();
+      assert(result.errorMessage).to.match(new RegExp(`some be valid: ${errorMessage}`));
+      assert(result.value).to.equal({
         'a': jasmine.any(Object),
         'b': jasmine.any(Object),
       });
@@ -138,10 +135,9 @@ describe('valid.BatchValidations', () => {
             'b': createMockValidationResult(false),
           })
           .toNot.someBeValid();
-      expect(result.passes).toEqual(false);
-      expect(result.errorMessage)
-          .toEqual(jasmine.stringMatching(new RegExp(`not some be valid: ${errorMessage}`)));
-      expect(result.value).toEqual({
+      assert(result.passes).to.beFalse();
+      assert(result.errorMessage).to.match(new RegExp(`not some be valid: ${errorMessage}`));
+      assert(result.value).to.equal({
         'a': jasmine.any(Object),
       });
     });
@@ -153,8 +149,8 @@ describe('valid.BatchValidations', () => {
             'b': createMockValidationResult(false),
           })
           .toNot.someBeValid();
-      expect(result.passes).toEqual(true);
-      expect(result.value).toEqual({});
+      assert(result.passes).to.beTrue();
+      assert(result.value).to.equal({});
     });
   });
 });

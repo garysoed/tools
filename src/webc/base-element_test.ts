@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {BaseElement} from './base-element';
@@ -21,7 +21,7 @@ describe('webc.BaseElement', () => {
 
       baseElement.onCreated(element);
 
-      expect(baseElement.element).toEqual(TestListenableDom.getListenable(element));
+      assert(baseElement.element).to.equal(TestListenableDom.getListenable(element));
     });
   });
 });

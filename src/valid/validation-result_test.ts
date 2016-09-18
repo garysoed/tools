@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {ValidationResult} from './validation-result';
@@ -8,30 +8,30 @@ describe('valid.ValidationResult', () => {
   describe('assertValid', () => {
     it('should be noop if the validation passed', () => {
       let result = new ValidationResult(true, 'errorMessage', 'value');
-      expect(() => {
+      assert(() => {
         result.assertValid();
-      }).not.toThrow();
+      }).toNot.throw();
     });
 
     it('should throw error if the validation did not pass', () => {
       let errorMessage = 'errorMessage';
       let result = new ValidationResult(false, errorMessage, 'value');
-      expect(() => {
+      assert(() => {
         result.assertValid();
-      }).toThrowError(errorMessage);
+      }).to.throwError(new RegExp(errorMessage));
     });
   });
 
   describe('errorMessage', () => {
     it('should return null if the validation passed', () => {
       let result = new ValidationResult(true, 'errorMessage', 'value');
-      expect(result.errorMessage).toEqual(null);
+      assert(result.errorMessage).to.beNull();
     });
 
     it('should return the error message if the validation did not pass', () => {
       let errorMessage = 'errorMessage';
       let result = new ValidationResult(false, errorMessage, 'value');
-      expect(result.errorMessage).toEqual(errorMessage);
+      assert(result.errorMessage).to.equal(errorMessage);
     });
   });
 
@@ -41,18 +41,18 @@ describe('valid.ValidationResult', () => {
       let result = new ValidationResult(false, 'oldErrorMessage', 'value');
       let newResult = result.orThrows(newErrorMessage);
 
-      expect(newResult.errorMessage).toEqual(newErrorMessage);
-      expect(newResult.passes).toEqual(false);
-      expect(newResult.value).toEqual('value');
+      assert(newResult.errorMessage).to.equal(newErrorMessage);
+      assert(newResult.passes).to.beFalse();
+      assert(newResult.value).to.equal('value');
     });
 
     it('should substitute "${value}" with the value being tested', () => {
       let result = new ValidationResult(false, 'oldErrorMessage', 'value');
       let newResult = result.orThrows('value: ${value}');
 
-      expect(newResult.errorMessage).toEqual('value: "value"');
-      expect(newResult.passes).toEqual(false);
-      expect(newResult.value).toEqual('value');
+      assert(newResult.errorMessage).to.equal('value: "value"');
+      assert(newResult.passes).to.beFalse();
+      assert(newResult.value).to.equal('value');
     });
   });
 });

@@ -46,13 +46,13 @@ describe('data.Annotations', () => {
       let ctor = Mocks.object('ctor');
       let annotation = Mocks.object('annotation');
       ctor[annotation] = Mocks.object('annotations');
-      assert(Annotations.hasAnnotation(ctor, annotation)).to.equal(true);
+      assert(Annotations.hasAnnotation(ctor, annotation)).to.beTrue();
     });
 
     it('should return false if the constructor does not have the annotation', () => {
       let ctor = Mocks.object('ctor');
       let annotation = Mocks.object('annotation');
-      assert(Annotations.hasAnnotation(ctor, annotation)).to.equal(false);
+      assert(Annotations.hasAnnotation(ctor, annotation)).to.beFalse();
     });
   });
 

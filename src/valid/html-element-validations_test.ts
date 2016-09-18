@@ -1,4 +1,4 @@
-import {TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Mocks} from '../mock/mocks';
@@ -11,21 +11,21 @@ describe('valid.HtmlElementValidations', () => {
       let element = Mocks.object('element');
       element.nodeName = 'node-name';
       let result = Validate.htmlElement(element).to.beNamed('node-name');
-      expect(result.passes).toEqual(true);
+      assert(result.passes).to.beTrue();
     });
 
     it('should pass if the name matches case insensitive way', () => {
       let element = Mocks.object('element');
       element.nodeName = 'node-name';
       let result = Validate.htmlElement(element).to.beNamed('NODE-name');
-      expect(result.passes).toEqual(true);
+      assert(result.passes).to.beTrue();
     });
 
     it('should not pass if the name does not match', () => {
       let element = Mocks.object('element');
       element.nodeName = 'node-name';
       let result = Validate.htmlElement(element).to.beNamed('other-name');
-      expect(result.passes).toEqual(false);
+      assert(result.passes).to.beFalse();
     });
   });
 
@@ -34,21 +34,21 @@ describe('valid.HtmlElementValidations', () => {
       let element = Mocks.object('element');
       element.nodeName = 'node-name';
       let result = Validate.htmlElement(element).toNot.beNamed('node-name');
-      expect(result.passes).toEqual(false);
+      assert(result.passes).to.beFalse();
     });
 
     it('should not pass if the name matches case insensitive way', () => {
       let element = Mocks.object('element');
       element.nodeName = 'node-name';
       let result = Validate.htmlElement(element).toNot.beNamed('NODE-name');
-      expect(result.passes).toEqual(false);
+      assert(result.passes).to.beFalse();
     });
 
     it('should pass if the name does not match', () => {
       let element = Mocks.object('element');
       element.nodeName = 'node-name';
       let result = Validate.htmlElement(element).toNot.beNamed('other-name');
-      expect(result.passes).toEqual(true);
+      assert(result.passes).to.beTrue();
     });
   });
 });

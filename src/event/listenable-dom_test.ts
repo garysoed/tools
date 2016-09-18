@@ -29,7 +29,7 @@ describe('event.ListenableDom', () => {
       assert(mockEventTarget.dispatchEvent).to.haveBeenCalledWith(jasmine.any(Event));
       let event = mockEventTarget.dispatchEvent.calls.argsFor(0)[0];
       assert(event['payload']).to.equal(payload);
-      assert(event.bubbles).to.equal(true);
+      assert(<boolean> event.bubbles).to.beTrue();
 
       assert(mockCallback).to.haveBeenCalledWith();
     });

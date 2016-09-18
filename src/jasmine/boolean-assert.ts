@@ -1,10 +1,10 @@
-import {AnyAssert} from './any-assert';
+import {BaseAssert} from './base-assert';
 
 
 /**
  * Boolean related assertions.
  */
-export class BooleanAssert extends AnyAssert<boolean> {
+export class BooleanAssert extends BaseAssert {
   /**
    * @param booleanValue_ The value to assert.
    * @param reversed_ True iff the assertion logic should be reversed.
