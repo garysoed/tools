@@ -6,18 +6,6 @@ import {BaseAssert} from './base-assert';
  */
 export class AnyAssert<T> extends BaseAssert {
   /**
-   * @param value The value to assert.
-   * @param reversed True iff the assertion logic should be reversed.
-   * @param expect Reference to jasmine's expect function.'
-   */
-  constructor(
-      private value: T,
-      private reversed: boolean,
-      private expect: (actual: any) => jasmine.Matchers) {
-    super(value, reversed, expect);
-  }
-
-  /**
    * Checks that the value is exactly the same instance as the given object.
    */
   be(other: any): void {
