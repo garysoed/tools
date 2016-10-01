@@ -21,7 +21,7 @@ describe('webc.BaseElement', () => {
 
       baseElement.onCreated(element);
 
-      assert(baseElement.element).to.equal(TestListenableDom.getListenable(element));
+      assert(baseElement.getElement()).to.equal(TestListenableDom.getListenable(element));
     });
   });
 });

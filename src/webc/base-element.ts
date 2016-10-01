@@ -12,7 +12,7 @@ export class BaseElement extends BaseDisposable {
     super();
   }
 
-  get element(): ListenableDom<HTMLElement> {
+  getElement(): ListenableDom<HTMLElement> {
     return this.element_;
   }
 
