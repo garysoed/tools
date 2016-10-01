@@ -42,7 +42,7 @@ describe('valid.ValidationResult', () => {
       let newResult = result.orThrows(newErrorMessage);
 
       assert(newResult.getErrorMessage()).to.equal(newErrorMessage);
-      assert(newResult.getPasses()).to.beFalse();
+      assert(newResult.isValid()).to.beFalse();
       assert(newResult.getValue()).to.equal('value');
     });
 
@@ -51,7 +51,7 @@ describe('valid.ValidationResult', () => {
       let newResult = result.orThrows('value: ${value}');
 
       assert(newResult.getErrorMessage()).to.equal('value: "value"');
-      assert(newResult.getPasses()).to.beFalse();
+      assert(newResult.isValid()).to.beFalse();
       assert(newResult.getValue()).to.equal('value');
     });
   });

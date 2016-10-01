@@ -14,8 +14,8 @@ describe('valid.BatchValidations', () => {
    */
   function createMockValidationResult(passes: boolean): any {
     let mockValidationResult = jasmine.createSpyObj(
-        'ValidationResult', ['getErrorMessage', 'getPasses']);
-    mockValidationResult.getPasses.and.returnValue(passes);
+        'ValidationResult', ['getErrorMessage', 'isValid']);
+    mockValidationResult.isValid.and.returnValue(passes);
     return mockValidationResult;
   }
 
@@ -42,7 +42,7 @@ describe('valid.BatchValidations', () => {
             'b': createMockValidationResult(true),
           })
           .to.allBeValid();
-      assert(result.getPasses()).to.beTrue();
+      assert(result.isValid()).to.beTrue();
       assert(result.getValue()).to.equal({});
     });
 
@@ -56,7 +56,7 @@ describe('valid.BatchValidations', () => {
             'b': createMockValidationResult(false),
           })
           .to.allBeValid();
-      assert(result.getPasses()).to.beFalse();
+      assert(result.isValid()).to.beFalse();
       assert(result.getErrorMessage()).to.match(new RegExp(`all be valid: ${errorMessage}`));
       assert(result.getValue()).to.equal({'b': jasmine.any(Object)});
     });
@@ -73,7 +73,7 @@ describe('valid.BatchValidations', () => {
             'b': createMockValidationResult(true),
           })
           .toNot.allBeValid();
-      assert(result.getPasses()).to.beFalse();
+      assert(result.isValid()).to.beFalse();
       assert(result.getErrorMessage()).to.match(new RegExp(`not all be valid: ${errorMessage}`));
       assert(result.getValue()).to.equal({
         'a': jasmine.any(Object),
@@ -88,7 +88,7 @@ describe('valid.BatchValidations', () => {
             'b': createMockValidationResult(false),
           })
           .toNot.allBeValid();
-      assert(result.getPasses()).to.beTrue();
+      assert(result.isValid()).to.beTrue();
       assert(result.getValue()).to.equal({'a': jasmine.any(Object)});
     });
   });
@@ -101,7 +101,7 @@ describe('valid.BatchValidations', () => {
             'b': createMockValidationResult(false),
           })
           .to.someBeValid();
-      assert(result.getPasses()).to.beTrue();
+      assert(result.isValid()).to.beTrue();
       assert(result.getValue()).to.equal({'b': jasmine.any(Object)});
     });
 
@@ -115,7 +115,7 @@ describe('valid.BatchValidations', () => {
             'b': createMockValidationResult(false),
           })
           .to.someBeValid();
-      assert(result.getPasses()).to.beFalse();
+      assert(result.isValid()).to.beFalse();
       assert(result.getErrorMessage()).to.match(new RegExp(`some be valid: ${errorMessage}`));
       assert(result.getValue()).to.equal({
         'a': jasmine.any(Object),
@@ -135,7 +135,7 @@ describe('valid.BatchValidations', () => {
             'b': createMockValidationResult(false),
           })
           .toNot.someBeValid();
-      assert(result.getPasses()).to.beFalse();
+      assert(result.isValid()).to.beFalse();
       assert(result.getErrorMessage()).to.match(new RegExp(`not some be valid: ${errorMessage}`));
       assert(result.getValue()).to.equal({
         'a': jasmine.any(Object),
@@ -149,7 +149,7 @@ describe('valid.BatchValidations', () => {
             'b': createMockValidationResult(false),
           })
           .toNot.someBeValid();
-      assert(result.getPasses()).to.beTrue();
+      assert(result.isValid()).to.beTrue();
       assert(result.getValue()).to.equal({});
     });
   });

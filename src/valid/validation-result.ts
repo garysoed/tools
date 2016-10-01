@@ -48,16 +48,16 @@ export class ValidationResult<V> {
   }
 
   /**
-   * True iff the validation passed.
-   */
-  getPasses(): boolean {
-    return this.passes_;
-  }
-
-  /**
    * The value being validated.
    */
   getValue(): V {
     return this.value_;
+  }
+
+  /**
+   * True iff the validation passed.
+   */
+  isValid(): boolean {
+    return this.passes_;
   }
 }

@@ -10,13 +10,13 @@ describe('valid.MapValidations', () => {
     it('should pass if the map contains the key', () => {
       let map = Maps.fromRecord({'key': 1, 'other': 2}).asMap();
       let result = Validate.map(map).to.containKey('key');
-      assert(result.getPasses()).to.beTrue();
+      assert(result.isValid()).to.beTrue();
     });
 
     it('should not pass if the map does not contain the key', () => {
       let map = Maps.fromRecord({}).asMap();
       let result = Validate.map(map).to.containKey('key');
-      assert(result.getPasses()).to.beFalse();
+      assert(result.isValid()).to.beFalse();
       assert(result.getErrorMessage()).to.match(/to contain key "key"/);
     });
   });
@@ -25,14 +25,14 @@ describe('valid.MapValidations', () => {
     it('should not pass if the map contains the key', () => {
       let map = Maps.fromRecord({'key': 1, 'other': 2}).asMap();
       let result = Validate.map(map).toNot.containKey('key');
-      assert(result.getPasses()).to.beFalse();
+      assert(result.isValid()).to.beFalse();
       assert(result.getErrorMessage()).to.match(/to not contain key "key"/);
     });
 
     it('should pass if the map does not contain the key', () => {
       let map = Maps.fromRecord({}).asMap();
       let result = Validate.map(map).toNot.containKey('key');
-      assert(result.getPasses()).to.beTrue();
+      assert(result.isValid()).to.beTrue();
     });
   });
 });

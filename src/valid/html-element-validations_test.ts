@@ -11,21 +11,21 @@ describe('valid.HtmlElementValidations', () => {
       let element = Mocks.object('element');
       element.nodeName = 'node-name';
       let result = Validate.htmlElement(element).to.beNamed('node-name');
-      assert(result.getPasses()).to.beTrue();
+      assert(result.isValid()).to.beTrue();
     });
 
     it('should pass if the name matches case insensitive way', () => {
       let element = Mocks.object('element');
       element.nodeName = 'node-name';
       let result = Validate.htmlElement(element).to.beNamed('NODE-name');
-      assert(result.getPasses()).to.beTrue();
+      assert(result.isValid()).to.beTrue();
     });
 
     it('should not pass if the name does not match', () => {
       let element = Mocks.object('element');
       element.nodeName = 'node-name';
       let result = Validate.htmlElement(element).to.beNamed('other-name');
-      assert(result.getPasses()).to.beFalse();
+      assert(result.isValid()).to.beFalse();
     });
   });
 
@@ -34,21 +34,21 @@ describe('valid.HtmlElementValidations', () => {
       let element = Mocks.object('element');
       element.nodeName = 'node-name';
       let result = Validate.htmlElement(element).toNot.beNamed('node-name');
-      assert(result.getPasses()).to.beFalse();
+      assert(result.isValid()).to.beFalse();
     });
 
     it('should not pass if the name matches case insensitive way', () => {
       let element = Mocks.object('element');
       element.nodeName = 'node-name';
       let result = Validate.htmlElement(element).toNot.beNamed('NODE-name');
-      assert(result.getPasses()).to.beFalse();
+      assert(result.isValid()).to.beFalse();
     });
 
     it('should pass if the name does not match', () => {
       let element = Mocks.object('element');
       element.nodeName = 'node-name';
       let result = Validate.htmlElement(element).toNot.beNamed('other-name');
-      assert(result.getPasses()).to.beTrue();
+      assert(result.isValid()).to.beTrue();
     });
   });
 });

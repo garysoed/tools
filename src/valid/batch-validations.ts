@@ -20,7 +20,7 @@ export class BatchValidations extends BaseValidations<{[key: string]: Validation
   private getMessage_(): string {
     let content = Records.of(this.batchValue_)
         .filterEntry((result: ValidationResult<any>, key: string) => {
-          return !result.getPasses();
+          return !result.isValid();
         })
         .mapValue((value: ValidationResult<any>, key: string) => {
           return value.getErrorMessage();
@@ -42,7 +42,7 @@ export class BatchValidations extends BaseValidations<{[key: string]: Validation
   allBeValid(): ValidationResult<{[key: string]: ValidationResult<any>}> {
     return this.resolve(
         Records.of(this.batchValue_).all((result: ValidationResult<any>) => {
-          return result.getPasses();
+          return result.isValid();
         }),
         `all be valid: ${this.getMessage_()}`);
   }
@@ -54,11 +54,11 @@ export class BatchValidations extends BaseValidations<{[key: string]: Validation
     let validationResult = super.resolve(result, method);
     let newValue = Records.of(this.batchValue_)
         .filterEntry((value: ValidationResult<any>, key: string) => {
-          return value.getPasses() === this.batchReversed_;
+          return value.isValid() === this.batchReversed_;
         })
         .asRecord();
     return new ValidationResult<any>(
-        validationResult.getPasses(),
+        validationResult.isValid(),
         validationResult.getErrorMessage(),
         newValue);
   }
@@ -71,7 +71,7 @@ export class BatchValidations extends BaseValidations<{[key: string]: Validation
   someBeValid(): ValidationResult<{[key: string]: ValidationResult<any>}> {
     return this.resolve(
         Records.of(this.batchValue_).some((result: ValidationResult<any>) => {
-          return result.getPasses();
+          return result.isValid();
         }),
         `some be valid: ${this.getMessage_()}`);
   }
