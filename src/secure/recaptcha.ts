@@ -42,7 +42,7 @@ export class Recaptcha extends BaseListenable<EventType> {
   /**
    * The ReCaptcha response from the widget.
    */
-  get response(): string {
+  getResponse(): string {
     return this.grecaptcha_.getResponse(this.widgetId_);
   }
 

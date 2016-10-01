@@ -74,7 +74,7 @@ describe('ui.OverflowWatcher', () => {
 
       let spyGetState_ = spyOn(watcher, 'getState_');
       spyGetState_.and.returnValue(oldState);
-      watcher.state;
+      watcher.getState();
 
       spyGetState_.and.returnValue(newState);
       TestEvent.spyOn(watcher, [EventType.CHANGED]);
@@ -90,7 +90,7 @@ describe('ui.OverflowWatcher', () => {
 
       let spyGetState_ = spyOn(watcher, 'getState_');
       spyGetState_.and.returnValue(oldState);
-      watcher.state;
+      watcher.getState();
 
       spyGetState_.and.returnValue(newState);
       TestEvent.spyOn(watcher, [EventType.CHANGED]);
@@ -101,12 +101,12 @@ describe('ui.OverflowWatcher', () => {
     });
   });
 
-  describe('get state', () => {
+  describe('getState', () => {
     it('should call getState_ if the state is unknown', () => {
       let state = State.COVERED;
       spyOn(watcher, 'getState_').and.returnValue(state);
 
-      assert(watcher.state).to.equal(state);
+      assert(watcher.getState()).to.equal(state);
       assert(watcher.getState_).to.haveBeenCalledWith();
     });
 
@@ -114,11 +114,11 @@ describe('ui.OverflowWatcher', () => {
       let state = State.COVERED;
       let spyGetState_ = spyOn(watcher, 'getState_');
       spyGetState_.and.returnValue(state);
-      watcher.state;
+      watcher.getState();
 
       spyGetState_.calls.reset();
 
-      assert(watcher.state).to.equal(state);
+      assert(watcher.getState()).to.equal(state);
       assert(watcher.getState_).toNot.haveBeenCalled();
     });
   });

@@ -18,7 +18,7 @@ export class Spec {
   /**
    * The delta of the numbers.
    */
-  get delta(): number {
+  getDelta(): number {
     return this.delta_;
   }
 
@@ -36,14 +36,14 @@ export class Spec {
   /**
    * The end value of the range.
    */
-  get end(): number {
+  getEnd(): number {
     return this.end_;
   }
 
   /**
    * The starting value of the range. This is inclusive.
    */
-  get start(): number {
+  getStart(): number {
     return this.start_;
   }
 

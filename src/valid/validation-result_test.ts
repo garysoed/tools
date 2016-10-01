@@ -25,13 +25,13 @@ describe('valid.ValidationResult', () => {
   describe('errorMessage', () => {
     it('should return null if the validation passed', () => {
       let result = new ValidationResult(true, 'errorMessage', 'value');
-      assert(result.errorMessage).to.beNull();
+      assert(result.getErrorMessage()).to.beNull();
     });
 
     it('should return the error message if the validation did not pass', () => {
       let errorMessage = 'errorMessage';
       let result = new ValidationResult(false, errorMessage, 'value');
-      assert(result.errorMessage).to.equal(errorMessage);
+      assert(result.getErrorMessage()).to.equal(errorMessage);
     });
   });
 
@@ -41,18 +41,18 @@ describe('valid.ValidationResult', () => {
       let result = new ValidationResult(false, 'oldErrorMessage', 'value');
       let newResult = result.orThrows(newErrorMessage);
 
-      assert(newResult.errorMessage).to.equal(newErrorMessage);
-      assert(newResult.passes).to.beFalse();
-      assert(newResult.value).to.equal('value');
+      assert(newResult.getErrorMessage()).to.equal(newErrorMessage);
+      assert(newResult.getPasses()).to.beFalse();
+      assert(newResult.getValue()).to.equal('value');
     });
 
     it('should substitute "${value}" with the value being tested', () => {
       let result = new ValidationResult(false, 'oldErrorMessage', 'value');
       let newResult = result.orThrows('value: ${value}');
 
-      assert(newResult.errorMessage).to.equal('value: "value"');
-      assert(newResult.passes).to.beFalse();
-      assert(newResult.value).to.equal('value');
+      assert(newResult.getErrorMessage()).to.equal('value: "value"');
+      assert(newResult.getPasses()).to.beFalse();
+      assert(newResult.getValue()).to.equal('value');
     });
   });
 });

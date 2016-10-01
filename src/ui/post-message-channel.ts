@@ -26,11 +26,11 @@ export class Message {
     this.type_ = type;
   }
 
-  get payload(): gs.IJson {
+  getPayload(): gs.IJson {
     return this.payload_;
   }
 
-  get type(): MessageType {
+  getType(): MessageType {
     return this.type_;
   }
 }
@@ -144,10 +144,10 @@ class PostMessageChannel extends BaseDisposable {
    */
   waitForMessage(testFn: (message: gs.IJson) => boolean): Promise<gs.IJson> {
     return this.waitForMessage_((message: Message) => {
-      return (message.type === MessageType.DATA) && testFn(message.payload);
+      return (message.getType() === MessageType.DATA) && testFn(message.getPayload());
     })
     .then((message: Message) => {
-      return message.payload;
+      return message.getPayload();
     });
   }
 
@@ -183,7 +183,7 @@ class PostMessageChannel extends BaseDisposable {
 
     return channel
         .waitForMessage_((message: Message) => {
-          return message.payload['id'] === id && message.type === MessageType.ACK;
+          return message.getPayload()['id'] === id && message.getType() === MessageType.ACK;
         })
         .then(() => {
           window.clearInterval(intervalId);
@@ -219,9 +219,9 @@ class PostMessageChannel extends BaseDisposable {
 
           let message = Serializer.fromJSON(event.data);
 
-          if (message.type === MessageType.PING) {
+          if (message.getType() === MessageType.PING) {
             let channel = PostMessageChannel.newInstance_(srcWindow, event.source);
-            channel.post_(new Message(MessageType.ACK, message.payload));
+            channel.post_(new Message(MessageType.ACK, message.getPayload()));
             srcWindowListenable.dispose();
             unlistenFn!.dispose();
             window.clearTimeout(timeoutId);

@@ -80,7 +80,7 @@ describe('ui.PostMessageChannel', () => {
               }, done.fail);
 
           assert(channel['srcWindow_'].on)
-              .to.haveBeenCalledWith(DomEvent.MESSAGE, jasmine.any(Function));
+              .to.haveBeenCalledWith(DomEvent.MESSAGE, <any> jasmine.any(Function));
 
           channel['srcWindow_'].on.calls.argsFor(0)[1]({data: json1, origin: origin});
           channel['srcWindow_'].on.calls.argsFor(0)[1]({data: json2, origin: origin});
@@ -119,7 +119,7 @@ describe('ui.PostMessageChannel', () => {
               }, done.fail);
 
           assert(channel['srcWindow_'].on)
-              .to.haveBeenCalledWith(DomEvent.MESSAGE, jasmine.any(Function));
+              .to.haveBeenCalledWith(DomEvent.MESSAGE, <any> jasmine.any(Function));
 
           channel['srcWindow_'].on.calls.argsFor(0)[1]({data: json1, origin: 'otherOrigin'});
           channel['srcWindow_'].on.calls.argsFor(0)[1]({data: json2, origin: origin});
@@ -134,11 +134,11 @@ describe('ui.PostMessageChannel', () => {
 
       channel.post(message);
 
-      assert(channel['post_']).to.haveBeenCalledWith(jasmine.any(Message));
+      assert(channel['post_']).to.haveBeenCalledWith(<any> jasmine.any(Message));
 
       let systemMessage = channel['post_'].calls.argsFor(0)[0];
-      assert(systemMessage.type).to.equal(MessageType.DATA);
-      assert(systemMessage.payload).to.equal(message);
+      assert(systemMessage.getType()).to.equal(MessageType.DATA);
+      assert(systemMessage.getPayload()).to.equal(message);
     });
   });
 
@@ -232,8 +232,8 @@ describe('ui.PostMessageChannel', () => {
             assert(mockChannel.post_).to.haveBeenCalledWith(jasmine.any(Message));
 
             let postMessage = mockChannel.post_.calls.argsFor(0)[0];
-            assert(postMessage.type).to.equal(MessageType.PING);
-            assert(postMessage.payload).to.equal({ 'id': id });
+            assert(postMessage.getType()).to.equal(MessageType.PING);
+            assert(postMessage.getPayload()).to.equal({ 'id': id });
 
             // Check that the interval is cleared.
             assert(window.clearInterval).to.haveBeenCalledWith(intervalId);
@@ -299,8 +299,8 @@ describe('ui.PostMessageChannel', () => {
 
             assert(mockChannel.post_).to.haveBeenCalledWith(jasmine.any(Message));
             let postMessage = mockChannel.post_.calls.argsFor(0)[0];
-            assert(postMessage.type).to.equal(MessageType.ACK);
-            assert(postMessage.payload).to.equal({ 'id': id });
+            assert(postMessage.getType()).to.equal(MessageType.ACK);
+            assert(postMessage.getPayload()).to.equal({ 'id': id });
 
             assert(PostMessageChannel['newInstance_'])
                 .to.haveBeenCalledWith(mockSrcWindow, mockDestWindow);
@@ -315,9 +315,9 @@ describe('ui.PostMessageChannel', () => {
           .to.haveBeenCalledWith('message', jasmine.any(Function), false);
       mockSrcWindow.addEventListener.calls.argsFor(0)[1]({
         data: Serializer.toJSON(new Message(MessageType.PING, { 'id': id })),
+        getType: () => 'message',
         origin: expectedOrigin,
         source: mockDestWindow,
-        type: 'message',
       });
     });
 
@@ -355,10 +355,7 @@ describe('ui.PostMessageChannel', () => {
           .then(done.fail, done);
 
       mockSrcWindow.addEventListener.calls.argsFor(0)[1]({
-        data: {
-          'id': 123,
-          'type': 'NOT_PING',
-        },
+        data: Serializer.toJSON(new Message(MessageType.DATA, {})),
         origin: expectedOrigin,
         source: mockDestWindow,
         type: 'message',

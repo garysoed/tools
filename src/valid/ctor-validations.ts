@@ -31,7 +31,7 @@ export class CtorValidations extends AnyValidations<gs.ICtor<any>> {
   /**
    * @override
    */
-  get valueAsString(): string {
+  getValueAsString(): string {
     return this.ctorValue_.name;
   }
 }

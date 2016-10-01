@@ -20,10 +20,10 @@ export class BatchValidations extends BaseValidations<{[key: string]: Validation
   private getMessage_(): string {
     let content = Records.of(this.batchValue_)
         .filterEntry((result: ValidationResult<any>, key: string) => {
-          return !result.passes;
+          return !result.getPasses();
         })
         .mapValue((value: ValidationResult<any>, key: string) => {
-          return value.errorMessage;
+          return value.getErrorMessage();
         })
         .entries()
         .map((entry: [string, string]) => {
@@ -42,7 +42,7 @@ export class BatchValidations extends BaseValidations<{[key: string]: Validation
   allBeValid(): ValidationResult<{[key: string]: ValidationResult<any>}> {
     return this.resolve(
         Records.of(this.batchValue_).all((result: ValidationResult<any>) => {
-          return result.passes;
+          return result.getPasses();
         }),
         `all be valid: ${this.getMessage_()}`);
   }
@@ -54,12 +54,12 @@ export class BatchValidations extends BaseValidations<{[key: string]: Validation
     let validationResult = super.resolve(result, method);
     let newValue = Records.of(this.batchValue_)
         .filterEntry((value: ValidationResult<any>, key: string) => {
-          return value.passes === this.batchReversed_;
+          return value.getPasses() === this.batchReversed_;
         })
         .asRecord();
     return new ValidationResult<any>(
-        validationResult.passes,
-        validationResult.errorMessage,
+        validationResult.getPasses(),
+        validationResult.getErrorMessage(),
         newValue);
   }
 
@@ -71,7 +71,7 @@ export class BatchValidations extends BaseValidations<{[key: string]: Validation
   someBeValid(): ValidationResult<{[key: string]: ValidationResult<any>}> {
     return this.resolve(
         Records.of(this.batchValue_).some((result: ValidationResult<any>) => {
-          return result.passes;
+          return result.getPasses();
         }),
         `some be valid: ${this.getMessage_()}`);
   }
@@ -79,7 +79,7 @@ export class BatchValidations extends BaseValidations<{[key: string]: Validation
   /**
    * @override
    */
-  get valueAsString(): string {
+  getValueAsString(): string {
     return 'Batch Validation';
   }
 }

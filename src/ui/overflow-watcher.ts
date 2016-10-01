@@ -93,7 +93,7 @@ class OverflowWatcher extends BaseListenable<EventType> {
   /**
    * [[State]] of the element being watched.
    */
-  get state(): State {
+  getState(): State {
     if (this.state_ === null) {
       this.state_ = this.getState_();
     }

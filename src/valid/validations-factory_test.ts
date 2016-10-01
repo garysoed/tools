@@ -7,11 +7,9 @@ import {ValidationsFactory} from './validations-factory';
 
 describe('valid.ValidationsFactory', () => {
   let mockProvider;
-  let factory;
 
   beforeEach(() => {
     mockProvider = jasmine.createSpy('Provider');
-    factory = new ValidationsFactory(mockProvider);
   });
 
   describe('to', () => {
@@ -19,6 +17,7 @@ describe('valid.ValidationsFactory', () => {
       let mockValidations = Mocks.object('Validations');
       mockProvider.and.returnValue(mockValidations);
 
+      let factory = new ValidationsFactory(mockProvider);
       assert(factory.to).to.equal(mockValidations);
       assert(mockProvider).to.haveBeenCalledWith(false);
     });
@@ -29,6 +28,7 @@ describe('valid.ValidationsFactory', () => {
       let mockValidations = Mocks.object('Validations');
       mockProvider.and.returnValue(mockValidations);
 
+      let factory = new ValidationsFactory(mockProvider);
       assert(factory.toNot).to.equal(mockValidations);
       assert(mockProvider).to.haveBeenCalledWith(true);
     });

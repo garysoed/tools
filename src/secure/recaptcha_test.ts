@@ -9,7 +9,7 @@ import {TestDispose} from '../testing/test-dispose';
 describe('secure.Recaptcha', () => {
   const SITEKEY = 'sitekey';
   const WIDGET_ID = 'widgetId';
-  let recaptcha;
+  let recaptcha: Recaptcha;
   let mockElement;
   let mockGrecaptcha;
 
@@ -47,7 +47,7 @@ describe('secure.Recaptcha', () => {
     it('should return the response from the widget', () => {
       let response = 'response';
       mockGrecaptcha.getResponse.and.returnValue(response);
-      assert(recaptcha.response).to.equal(response);
+      assert(recaptcha.getResponse()).to.equal(response);
       assert(mockGrecaptcha.getResponse).to.haveBeenCalledWith(WIDGET_ID);
     });
   });

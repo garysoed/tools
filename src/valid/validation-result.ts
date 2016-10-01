@@ -30,7 +30,7 @@ export class ValidationResult<V> {
   /**
    * The error message. Null if the validation passes.
    */
-  get errorMessage(): (string|null) {
+  getErrorMessage(): (string|null) {
     return this.passes_ ? null : this.errorMessage_;
   }
 
@@ -50,14 +50,14 @@ export class ValidationResult<V> {
   /**
    * True iff the validation passed.
    */
-  get passes(): boolean {
+  getPasses(): boolean {
     return this.passes_;
   }
 
   /**
    * The value being validated.
    */
-  get value(): V {
+  getValue(): V {
     return this.value_;
   }
 }

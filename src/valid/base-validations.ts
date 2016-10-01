@@ -32,14 +32,14 @@ export class BaseValidations<V> {
 
     return new ValidationResult<V>(
         result !== this.reversed_,
-        `Expected [${this.valueAsString}] to ${normalizedMethod}.`,
+        `Expected [${this.getValueAsString()}] to ${normalizedMethod}.`,
         this.value_);
   }
 
   /**
    * @return The value as string.
    */
-  get valueAsString(): string {
+  getValueAsString(): string {
     return Stringify.toString(this.value_, {pad: ''});
   }
 }
