@@ -99,7 +99,7 @@ export class RgbColor implements IColor {
    * @override
    */
   @Pipe()
-  get blue(): number {
+  getBlue(): number {
     return this.blue_;
   }
 
@@ -107,7 +107,7 @@ export class RgbColor implements IColor {
    * @override
    */
   @Pipe()
-  get chroma(): number {
+  getChroma(): number {
     return Graph.run<number>(this, 'pipeChroma_');
   }
 
@@ -115,14 +115,14 @@ export class RgbColor implements IColor {
    * @override
    */
   @Pipe()
-  get green(): number {
+  getGreen(): number {
     return this.green_;
   }
 
   /**
    * @override
    */
-  get hue(): number {
+  getHue(): number {
     return Graph.run<number>(this, 'pipeHue_');
   }
 
@@ -130,14 +130,14 @@ export class RgbColor implements IColor {
    * @override
    */
   @Pipe()
-  get lightness(): number {
+  getLightness(): number {
     return Graph.run<number>(this, 'pipeLightness_');
   }
 
   /**
    * @override
    */
-  get luminance(): number {
+  getLuminance(): number {
     return Graph.run<number>(this, 'pipeLuminance_');
   }
 
@@ -145,14 +145,14 @@ export class RgbColor implements IColor {
    * @override
    */
   @Pipe()
-  get red(): number {
+  getRed(): number {
     return this.red_;
   }
 
   /**
    * @override
    */
-  get saturation(): number {
+  getSaturation(): number {
     return Graph.run<number>(this, 'pipeSaturation_');
   }
 

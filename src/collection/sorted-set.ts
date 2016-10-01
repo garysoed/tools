@@ -49,7 +49,7 @@ class SortedSet<T> implements Iterable<T> {
    * @param value The element to insert.
    */
   push(value: T): void {
-    this.insertAt(value, this.size);
+    this.insertAt(value, this.getSize());
   }
 
   /**
@@ -67,7 +67,7 @@ class SortedSet<T> implements Iterable<T> {
   /**
    * Number of elements in the set.
    */
-  get size(): number {
+  getSize(): number {
     return this.array_.length;
   }
 }

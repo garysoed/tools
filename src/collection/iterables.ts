@@ -25,7 +25,7 @@ export class FluentIterable<T>
   }
 
   addAll(other: Iterable<T>): FluentIterable<T> {
-    return Iterables.of<T>(ChainIterable.newInstance<T>(this.data, other));
+    return Iterables.of<T>(ChainIterable.newInstance<T>(this.getData(), other));
   }
 
   addAllArray(array: T[]): FluentIterable<T> {
@@ -33,19 +33,19 @@ export class FluentIterable<T>
   }
 
   asIterable(): Iterable<T> {
-    return this.data;
+    return this.getData();
   }
 
   asIterator(): Iterator<T> {
-    return this.data[Symbol.iterator]();
+    return this.getData()[Symbol.iterator]();
   }
 
   filter(fn: (value: T) => boolean): IFluentIterable<T> {
-    return Iterables.of<T>(FilteredIterable.newInstance<T>(this.data, fn));
+    return Iterables.of<T>(FilteredIterable.newInstance<T>(this.getData(), fn));
   }
 
   iterate(fn: (value: T, breakFn: () => void) => void): FluentIterable<T> {
-    let iterator = this.data[Symbol.iterator]();
+    let iterator = this.getData()[Symbol.iterator]();
     let shouldBreak = false;
     for (let entry = iterator.next(); !entry.done && !shouldBreak; entry = iterator.next()) {
       fn(entry.value, () => {
@@ -56,7 +56,7 @@ export class FluentIterable<T>
   }
 
   map<T2>(fn: (value: T) => T2): IFluentIterable<T2> {
-    return Iterables.of(MappedIterable.newInstance<T, T2>(this.data, fn));
+    return Iterables.of(MappedIterable.newInstance<T, T2>(this.getData(), fn));
   }
 }
 

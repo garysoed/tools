@@ -2,40 +2,40 @@ export interface IColor {
   /**
    * Blue component of the color.
    */
-  blue: number;
+  getBlue(): number;
 
   /**
    * The chroma of the color.
    */
-  chroma: number;
+  getChroma(): number;
 
   /**
    * Green component of the color.
    */
-  green: number;
+  getGreen(): number;
 
   /**
    * Hue component of the color.
    */
-  hue: number;
+  getHue(): number;
 
   /**
    * Lightness component of the color.
    */
-  lightness: number;
+  getLightness(): number;
 
   /**
    * Luminance of the color.
    */
-  luminance: number;
+  getLuminance(): number;
 
   /**
    * Red component of the color.
    */
-  red: number;
+  getRed(): number;
 
   /**
    * Saturation component of the color.
    */
-  saturation: number;
+  getSaturation(): number;
 }

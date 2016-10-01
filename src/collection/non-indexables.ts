@@ -15,18 +15,18 @@ export class FluentNonIndexable<T> extends BaseFluent<T[]> implements IFluentNon
 
   addAllArray(array: T[]): FluentNonIndexable<T> {
     array.forEach((value: T) => {
-      this.data.push(value);
+      this.getData().push(value);
     });
 
     return this;
   }
 
   asArray(): T[] {
-    return this.data;
+    return this.getData();
   }
 
   asIterable(): Iterable<T> {
-    return new ArrayIterable(this.data);
+    return new ArrayIterable(this.getData());
   }
 
   asIterator(): Iterator<T> {
@@ -34,7 +34,7 @@ export class FluentNonIndexable<T> extends BaseFluent<T[]> implements IFluentNon
   }
 
   asSet(): Set<T> {
-    return new Set(this.data);
+    return new Set(this.getData());
   }
 
   filter(filterFn: (value: T) => boolean): FluentNonIndexable<T> {
@@ -48,9 +48,9 @@ export class FluentNonIndexable<T> extends BaseFluent<T[]> implements IFluentNon
   }
 
   find(fn: (value: T) => boolean): (T|null) {
-    for (let i = 0; i < this.data.length; i++) {
-      if (fn(this.data[i])) {
-        return this.data[i];
+    for (let i = 0; i < this.getData().length; i++) {
+      if (fn(this.getData()[i])) {
+        return this.getData()[i];
       }
     }
 
@@ -58,7 +58,7 @@ export class FluentNonIndexable<T> extends BaseFluent<T[]> implements IFluentNon
   }
 
   forEach(fn: (value: T) => void): FluentNonIndexable<T> {
-    this.data.forEach((value: T) => {
+    this.getData().forEach((value: T) => {
       fn(value);
     });
     return this;
@@ -69,7 +69,7 @@ export class FluentNonIndexable<T> extends BaseFluent<T[]> implements IFluentNon
   }
 
   iterate(fn: (value: T, breakFn: () => void) => void): FluentNonIndexable<T> {
-    Iterables.of(ArrayIterable.newInstance(this.data))
+    Iterables.of(ArrayIterable.newInstance(this.getData()))
         .iterate(fn);
     return this;
   }

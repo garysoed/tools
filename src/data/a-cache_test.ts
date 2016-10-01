@@ -12,7 +12,7 @@ describe('data.@Cache', () => {
     }
 
     @Cache()
-    get property(): any {
+    getProperty(): any {
       return this.spy_();
     }
 
@@ -22,7 +22,7 @@ describe('data.@Cache', () => {
     }
   }
 
-  let test;
+  let test: TestClass;
   let spy;
 
   beforeEach(() => {
@@ -34,10 +34,10 @@ describe('data.@Cache', () => {
     let value = 'value';
     spy.and.returnValue(value);
 
-    assert(test.property).to.equal(value);
+    assert(test.getProperty()).to.equal(value);
 
     spy.calls.reset();
-    assert(test.property).to.equal(value);
+    assert(test.getProperty()).to.equal(value);
     assert(spy).toNot.haveBeenCalled();
   });
 
@@ -64,7 +64,7 @@ describe('data.@Cache', () => {
       let value = 'value';
       spy.and.returnValue(value);
 
-      assert(test.property).to.equal(value);
+      assert(test.getProperty()).to.equal(value);
       assert(test.method()).to.equal(value);
 
       let newValue = 'newValue';
@@ -72,7 +72,7 @@ describe('data.@Cache', () => {
       spy.and.returnValue(newValue);
 
       Cache.clear(test);
-      assert(test.property).to.equal(newValue);
+      assert(test.getProperty()).to.equal(newValue);
       assert(spy).to.haveBeenCalledWith();
 
       spy.calls.reset();
@@ -84,7 +84,7 @@ describe('data.@Cache', () => {
       let value = 'value';
       spy.and.returnValue(value);
 
-      assert(test.property).to.equal(value);
+      assert(test.getProperty()).to.equal(value);
       assert(test.method()).to.equal(value);
 
       let newValue = 'newValue';
@@ -92,7 +92,7 @@ describe('data.@Cache', () => {
       spy.and.returnValue(newValue);
 
       Cache.clear(test, 'method');
-      assert(test.property).to.equal(value);
+      assert(test.getProperty()).to.equal(value);
       assert(spy).toNot.haveBeenCalled();
 
       assert(test.method()).to.equal(newValue);

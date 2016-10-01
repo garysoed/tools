@@ -10,23 +10,23 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
   }
 
   addAll(other: Iterable<T>): FluentIterable<T> {
-    return Iterables.of(ArrayIterable.newInstance(this.data))
+    return Iterables.of(ArrayIterable.newInstance(this.getData()))
         .addAll(other);
   }
 
   addAllArray(array: T[]): FluentIndexable<T> {
     array.forEach((element: T) => {
-      this.data.push(element);
+      this.getData().push(element);
     });
     return this;
   }
 
   asArray(): Array<T> {
-    return this.data;
+    return this.getData();
   }
 
   asIterable(): Iterable<T> {
-    return ArrayIterable.newInstance(this.data);
+    return ArrayIterable.newInstance(this.getData());
   }
 
   asIterator(): Iterator<T> {
@@ -34,7 +34,7 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
   }
 
   equalsTo(other: T[]): boolean {
-    if (this.data.length !== other.length) {
+    if (this.getData().length !== other.length) {
       return false;
     }
 
@@ -44,7 +44,7 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
   }
 
   every(fn: (value: T, index: number) => boolean): boolean {
-    return this.data.every((value: T, index: number) => {
+    return this.getData().every((value: T, index: number) => {
       return fn(value, index);
     });
   }
@@ -67,12 +67,12 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
 
   find(fn: (value: T, index: number) => boolean): (T|null) {
     let index = this.findIndex(fn);
-    return index !== null ? this.data[index] : null;
+    return index !== null ? this.getData()[index] : null;
   }
 
   findIndex(fn: (value: T, index: number) => boolean): (number|null) {
-    for (let i = 0; i < this.data.length; i++) {
-      if (fn(this.data[i], i)) {
+    for (let i = 0; i < this.getData().length; i++) {
+      if (fn(this.getData()[i], i)) {
         return i;
       }
     }
@@ -87,8 +87,8 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
 
   forOf(fn: (value: T, index: number, breakFn: () => void) => void): FluentIndexable<T> {
     let shouldBreak = false;
-    for (let i = 0; i < this.data.length && !shouldBreak; i++) {
-      fn(this.data[i], i, () => {
+    for (let i = 0; i < this.getData().length && !shouldBreak; i++) {
+      fn(this.getData()[i], i, () => {
         shouldBreak = true;
       });
     }

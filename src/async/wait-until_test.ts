@@ -10,7 +10,7 @@ describe('async.WaitUntil', () => {
   const INTERVAL = 200;
   let mockCheckFn;
   let mockInterval;
-  let waitUntil;
+  let waitUntil: WaitUntil;
 
   beforeEach(() => {
     mockCheckFn = jasmine.createSpy('CheckFn');
@@ -23,7 +23,7 @@ describe('async.WaitUntil', () => {
   });
 
   it('should resolve the promise when the check function returns true', (done: any) => {
-    waitUntil.promise
+    waitUntil.getPromise()
         .then(() => {
           assert(Interval.newInstance).to.haveBeenCalledWith(INTERVAL);
           assert(mockInterval.dispose).to.haveBeenCalledWith();
@@ -38,7 +38,7 @@ describe('async.WaitUntil', () => {
   });
 
   it('should reject the promise when the waiter is disposed', (done: any) => {
-    waitUntil.promise
+    waitUntil.getPromise()
         .then(done.fail, (error: string) => {
           assert(error).to.match(/has not returned/);
           done();

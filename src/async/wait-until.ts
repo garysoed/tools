@@ -44,7 +44,7 @@ class WaitUntil extends BaseDisposable {
   /**
    * Promise that will be resolved when the check function has returned true.
    */
-  get promise(): Promise<void> {
+  getPromise(): Promise<void> {
     return this.promise_;
   }
 

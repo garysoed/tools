@@ -16,7 +16,7 @@ export class BaseFluent<T> {
   /**
    * The underlying data object.
    */
-  protected get data(): T {
+  protected getData(): T {
     return this.data_;
   }
 }

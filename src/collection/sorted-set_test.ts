@@ -6,7 +6,7 @@ import SortedSet from './sorted-set';
 
 
 describe('collection.SortedSet', () => {
-  let sortedSet;
+  let sortedSet: SortedSet<number>;
 
   beforeEach(() => {
     sortedSet = new SortedSet<number>();
@@ -78,7 +78,7 @@ describe('collection.SortedSet', () => {
       sortedSet.push(1);
       sortedSet.push(2);
 
-      assert(sortedSet.size).to.equal(2);
+      assert(sortedSet.getSize()).to.equal(2);
     });
   });
 });

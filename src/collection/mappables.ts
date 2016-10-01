@@ -11,7 +11,7 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
   }
 
   addAll(other: Iterable<[K, V]>): FluentIterable<[K, V]> {
-    return Iterables.of(this.data).addAll(other);
+    return Iterables.of(this.getData()).addAll(other);
   }
 
   addAllArray(array: [K, V][]): FluentMappable<K, V> {
@@ -20,7 +20,7 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
 
   addAllMap(map: Map<K, V>): FluentMappable<K, V> {
     Iterables.of(map).iterate((entry: [K, V]) => {
-      this.data.set(entry[0], entry[1]);
+      this.getData().set(entry[0], entry[1]);
     });
     return this;
   }
@@ -37,15 +37,15 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
   }
 
   asIterable(): Iterable<[K, V]> {
-    return this.data;
+    return this.getData();
   }
 
   asIterator(): Iterator<[K, V]> {
-    return this.data[Symbol.iterator]();
+    return this.getData()[Symbol.iterator]();
   }
 
   asMap(): Map<K, V> {
-    return this.data;
+    return this.getData();
   }
 
   asRecord(toString: (key: K) => string = (key: K) => String(key)): {[key: string]: V} {
@@ -101,21 +101,21 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
   }
 
   forEach(fn: (value: V, key: K) => void): FluentMappable<K, V> {
-    this.data.forEach((value: V, key: K) => {
+    this.getData().forEach((value: V, key: K) => {
       fn(value, key);
     });
     return this;
   }
 
   forOf(fn: (value: V, key: K, breakFn: () => void) => void): FluentMappable<K, V> {
-    Iterables.of(this.data).iterate((entry: [K, V], breakFn: () => void) => {
+    Iterables.of(this.getData()).iterate((entry: [K, V], breakFn: () => void) => {
       fn(entry[1], entry[0], breakFn);
     });
     return this;
   }
 
   iterate(fn: (value: [K, V], breakFn: () => void) => void): FluentMappable<K, V> {
-    Iterables.of(this.data).iterate(fn);
+    Iterables.of(this.getData()).iterate(fn);
     return this;
   }
 
@@ -150,7 +150,7 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
 
   removeAllKeys(toRemove: Set<K>): FluentMappable<K, V> {
     Iterables.of(toRemove).iterate((key: K) => {
-      this.data.delete(key);
+      this.getData().delete(key);
     });
     return this;
   }

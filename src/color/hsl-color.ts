@@ -78,7 +78,7 @@ export class HslColor implements IColor {
    * @override
    */
   @Pipe()
-  get blue(): number {
+  getBlue(): number {
     return Graph.run(this, 'pipeRgb_')[2];
   }
 
@@ -86,7 +86,7 @@ export class HslColor implements IColor {
    * @override
    */
   @Pipe()
-  get chroma(): number {
+  getChroma(): number {
     return Graph.run<number>(this, 'pipeChroma_');
   }
 
@@ -94,7 +94,7 @@ export class HslColor implements IColor {
    * @override
    */
   @Pipe()
-  get green(): number {
+  getGreen(): number {
     return Graph.run(this, 'pipeRgb_')[1];
   }
 
@@ -102,7 +102,7 @@ export class HslColor implements IColor {
    * @override
    */
   @Pipe()
-  get hue(): number {
+  getHue(): number {
     return this.hue_;
   }
 
@@ -110,14 +110,14 @@ export class HslColor implements IColor {
    * @override
    */
   @Pipe()
-  get lightness(): number {
+  getLightness(): number {
     return this.lightness_;
   }
 
   /**
    * @override
    */
-  get luminance(): number {
+  getLuminance(): number {
     return Graph.run<number>(this, 'pipeLuminance_');
   }
 
@@ -125,7 +125,7 @@ export class HslColor implements IColor {
    * @override
    */
   @Pipe()
-  get red(): number {
+  getRed(): number {
     return Graph.run(this, 'pipeRgb_')[0];
   }
 
@@ -133,7 +133,7 @@ export class HslColor implements IColor {
    * @override
    */
   @Pipe()
-  get saturation(): number {
+  getSaturation(): number {
     return this.saturation_;
   }
 

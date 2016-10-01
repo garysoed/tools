@@ -23,7 +23,7 @@ export class Annotations<T> {
   /**
    * Fields annotated for the given class.
    */
-  get annotatedFields(): (string | symbol)[] {
+  getAnnotatedFields(): (string | symbol)[] {
     return this.fieldKeys_;
   }
 
@@ -36,7 +36,7 @@ export class Annotations<T> {
   getFieldValues(instance: T): Map<string | symbol, any> {
     let fields = new Map<string | symbol, any>();
     Arrays
-        .of(this.annotatedFields)
+        .of(this.getAnnotatedFields())
         .forEach((key: string | symbol) => {
           fields.set(key, instance[key]);
         });

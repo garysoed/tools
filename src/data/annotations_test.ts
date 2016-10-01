@@ -7,7 +7,7 @@ import {Mocks} from '../mock/mocks';
 
 
 describe('data.Annotations', () => {
-  let annotations;
+  let annotations: Annotations<any>;
 
   beforeEach(() => {
     annotations = new Annotations();
@@ -17,7 +17,7 @@ describe('data.Annotations', () => {
     it('should add the given field key', () => {
       let key = 'key';
       annotations.addField(key);
-      assert(annotations.annotatedFields).to.equal([key]);
+      assert(annotations.getAnnotatedFields()).to.equal([key]);
     });
   });
 
@@ -33,7 +33,7 @@ describe('data.Annotations', () => {
         'ignored': 'ignored',
       };
 
-      annotations.fieldKeys_ = [field1, field2];
+      annotations['fieldKeys_'] = [field1, field2];
       assert(Maps.of(annotations.getFieldValues(object)).asRecord()).to.equal({
         [field1]: value1,
         [field2]: value2,
