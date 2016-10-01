@@ -34,7 +34,7 @@ export class RouteService extends BaseDisposable {
    * Routing parameters, both in memory only and URL search parameters.
    */
   @Cache()
-  get params(): gs.IJson {
+  getParams(): gs.IJson {
     let searchParams = Records.of(this.$location_.search())
         .mapValue((value: string) => {
           return JSON.parse(value);
@@ -48,7 +48,7 @@ export class RouteService extends BaseDisposable {
   /**
    * Current routing path.
    */
-  get path(): string {
+  getPath(): string {
     return this.$location_.path();
   }
 

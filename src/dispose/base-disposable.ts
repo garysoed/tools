@@ -68,7 +68,7 @@ export class BaseDisposable {
   /**
    * True iff the object has been disposed.
    */
-  get isDisposed(): boolean {
+  isDisposed(): boolean {
     return this.isDisposed_;
   }
 };

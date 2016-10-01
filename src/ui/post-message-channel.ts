@@ -95,14 +95,14 @@ class PostMessageChannel extends BaseDisposable {
 
   private post_(message: Message): Promise<void> {
     return Asyncs.run(() => {
-      this.destWindow_.eventTarget.postMessage(
+      this.destWindow_.getEventTarget().postMessage(
           Serializer.toJSON(message),
-          PostMessageChannel.getOrigin(this.srcWindow_.eventTarget));
+          PostMessageChannel.getOrigin(this.srcWindow_.getEventTarget()));
     });
   }
 
   private waitForMessage_(testFn: (message: Message) => boolean): Promise<Message> {
-    let destWindowOrigin = PostMessageChannel.getOrigin(this.destWindow_.eventTarget);
+    let destWindowOrigin = PostMessageChannel.getOrigin(this.destWindow_.getEventTarget());
     return new Promise((resolve: Function) => {
       let unlistenFn = this.srcWindow_.on(
           DomEvent.MESSAGE,

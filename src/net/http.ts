@@ -34,7 +34,7 @@ export abstract class HttpRequest extends BaseDisposable {
   /**
    * @return The data to be sent or null if there are no data to be sent.
    */
-  protected get sentData(): (string|null) {
+  protected getSentData(): (string|null) {
     return null;
   }
 
@@ -54,7 +54,7 @@ export abstract class HttpRequest extends BaseDisposable {
         }
         this.dispose();
       }));
-      this.request.send(this.sentData);
+      this.request.send(this.getSentData());
     });
   }
 
@@ -86,7 +86,7 @@ class HttpPostRequest extends HttpRequest {
   /**
    * @return The data to be sent.
    */
-  protected get sentData(): string {
+  protected getSentData(): string {
     return this.formData_;
   }
 

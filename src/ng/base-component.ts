@@ -25,7 +25,7 @@ class BaseComponent extends BaseDisposable {
   /**
    * The $scope object related to this component.
    */
-  get $scope(): angular.IScope {
+  get$scope(): angular.IScope {
     return this.$scope_;
   }
 

@@ -12,9 +12,9 @@ describe('pipeline.Graph', () => {
     it('should correctly resolve external argument', () => {
       let key = 'key';
       let value = 'value';
-      let argMetaData = Mocks.object('argMetaData');
-      argMetaData.isExternal = true;
-      argMetaData.key = key;
+      let argMetaData = jasmine.createSpyObj('argMetaData', ['isExternal', 'getKey']);
+      argMetaData.isExternal.and.returnValue(true);
+      argMetaData.getKey.and.returnValue(key);
 
       assert(Graph['resolveArgument_'](argMetaData, Mocks.object('context'), {[key]: value}))
           .to.equal(value);
@@ -26,12 +26,14 @@ describe('pipeline.Graph', () => {
       let externalKey = 'externalKey';
       let externalValue = 'externalValue';
       let value = 'value';
-      let argMetaData = Mocks.object('argMetaData');
-      argMetaData.isExternal = false;
-      argMetaData.forwardedArguments = {
+      let argMetaData = jasmine.createSpyObj(
+          'argMetaData',
+          ['isExternal', 'getForwardedArguments', 'getKey']);
+      argMetaData.isExternal.and.returnValue(false);
+      argMetaData.getForwardedArguments.and.returnValue({
         [forwardedKey]: externalKey,
-      };
-      argMetaData.key = key;
+      });
+      argMetaData.getKey.and.returnValue(key);
       let context = Mocks.object('context');
 
       spyOn(Graph, 'run').and.returnValue(value);
@@ -42,9 +44,9 @@ describe('pipeline.Graph', () => {
     });
 
     it('should throw error if the external argument cannot be resolved', () => {
-      let argMetaData = Mocks.object('argMetaData');
-      argMetaData.isExternal = true;
-      argMetaData.key = 'key';
+      let argMetaData = jasmine.createSpyObj('argMetaData', ['isExternal', 'getKey']);
+      argMetaData.isExternal.and.returnValue(true);
+      argMetaData.getKey.and.returnValue('key');
 
       assert(() => {
         Graph['resolveArgument_'](argMetaData, Mocks.object('context'), {});
@@ -52,12 +54,13 @@ describe('pipeline.Graph', () => {
     });
 
     it('should throw error if a forwarded argument cannot be resolved', () => {
-      let argMetaData = Mocks.object('argMetaData');
-      argMetaData.isExternal = false;
-      argMetaData.forwardedArguments = {
+      let argMetaData = jasmine.createSpyObj(
+          'argMetaData', ['isExternal', 'getForwardedArguments', 'getKey']);
+      argMetaData.isExternal.and.returnValue(false);
+      argMetaData.getForwardedArguments.and.returnValue({
         'forwardedKey': 'externalKey',
-      };
-      argMetaData.key = 'key';
+      });
+      argMetaData.getKey.and.returnValue('key');
       let context = Mocks.object('context');
 
       assert(() => {
@@ -75,8 +78,8 @@ describe('pipeline.Graph', () => {
 
       let argData = Mocks.object('argData');
       let runResult = Mocks.object('runResult');
-      let mockGraphNode = jasmine.createSpyObj('GraphNode', ['run']);
-      mockGraphNode.args = [argData];
+      let mockGraphNode = jasmine.createSpyObj('GraphNode', ['getArgs', 'run']);
+      mockGraphNode.getArgs.and.returnValue([argData]);
       mockGraphNode.run.and.returnValue(runResult);
       spyOn(PipeUtil, 'getNode').and.returnValue(mockGraphNode);
 

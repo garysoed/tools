@@ -13,7 +13,7 @@ export class Sequencer extends BaseDisposable {
   run<T>(operation: () => Promise<T>): Promise<T> {
     let newPromise = this.lastOperation_
         .then(() => {
-          if (!this.isDisposed) {
+          if (!this.isDisposed()) {
             return operation();
           } else {
             return Promise.resolve();

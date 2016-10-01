@@ -11,7 +11,7 @@ describe('ng.RouteService', () => {
   let mock$location;
   let mock$scope;
   let mock$scope$onSpy;
-  let service;
+  let service: RouteService;
 
   beforeEach(() => {
     mock$location = jasmine.createSpyObj('$location', ['path', 'search']);
@@ -39,7 +39,7 @@ describe('ng.RouteService', () => {
       mock$location.search.and.returnValue({ 'b': JSON.stringify(searchObject) });
       service.to('path', {}, memoryParams);
 
-      assert(service.params).to.equal({
+      assert(service.getParams()).to.equal({
         'a': 1,
         'b': searchObject,
       });
@@ -53,7 +53,7 @@ describe('ng.RouteService', () => {
       mock$location.search.and.returnValue({ 'a': JSON.stringify(searchObject) });
       service.to('path', {}, memoryParams);
 
-      assert(service.params).to.equal({ 'a': searchObject });
+      assert(service.getParams()).to.equal({ 'a': searchObject });
 
     });
   });
@@ -62,7 +62,7 @@ describe('ng.RouteService', () => {
     it('should return the path', () => {
       let path = 'path';
       mock$location.path.and.returnValue(path);
-      assert(service.path).to.equal(path);
+      assert(service.getPath()).to.equal(path);
       assert(mock$location.path).to.haveBeenCalledWith();
     });
   });

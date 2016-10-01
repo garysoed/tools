@@ -13,14 +13,14 @@ export class InjectMetadata {
   /**
    * True iff the injection parameter is optional.
    */
-  get isOptional(): boolean {
+  isOptional(): boolean {
     return this.isOptional_;
   }
 
   /**
    * The injection key of the parameter.
    */
-  get keyName(): string | symbol {
+  getKeyName(): string | symbol {
     return this.keyName_;
   }
 

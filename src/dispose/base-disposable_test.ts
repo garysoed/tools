@@ -29,7 +29,7 @@ describe('dispose.BaseDisposable', () => {
 
       assert(callback).to.haveBeenCalledWith();
       assert(mockDisposable.dispose).to.haveBeenCalledWith();
-      assert(disposable.isDisposed).to.beTrue();
+      assert(disposable.isDisposed()).to.beTrue();
     });
   });
 

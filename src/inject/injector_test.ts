@@ -9,7 +9,7 @@ import Reflect from '../util/reflect';
 
 describe('inject.Injector', () => {
   let mockBindings;
-  let injector;
+  let injector: Injector;
 
   beforeEach(() => {
     injector = new Injector();
@@ -55,8 +55,8 @@ describe('inject.Injector', () => {
     }
 
     it('should return the parameters correctly', () => {
-      let metadata1 = {isOptional: true, keyName: 'key1'};
-      let metadata2 = {isOptional: false, keyName: 'key2'};
+      let metadata1 = {getKeyName: () => 'key1', isOptional: () => true};
+      let metadata2 = {getKeyName: () => 'key2', isOptional: () => false};
       let mockValue1 = Mocks.object('Value1');
       let mockValue2 = Mocks.object('Value2');
       let metadata = new Map<number, any>();
@@ -66,9 +66,9 @@ describe('inject.Injector', () => {
 
       spyOn(injector, 'getBoundValue').and.callFake((name: string) => {
         switch (name) {
-          case metadata1.keyName:
+          case metadata1.getKeyName():
             return mockValue1;
-          case metadata2.keyName:
+          case metadata2.getKeyName():
             return mockValue2;
           default:
             return null;
@@ -76,8 +76,10 @@ describe('inject.Injector', () => {
       });
 
       assert(injector.getParameters(TestClass)).to.equal([mockValue1, mockValue2]);
-      assert(injector.getBoundValue).to.haveBeenCalledWith(metadata1.keyName, metadata1.isOptional);
-      assert(injector.getBoundValue).to.haveBeenCalledWith(metadata2.keyName, metadata2.isOptional);
+      assert(injector.getBoundValue).to
+          .haveBeenCalledWith(metadata1.getKeyName(), metadata1.isOptional());
+      assert(injector.getBoundValue).to
+          .haveBeenCalledWith(metadata2.getKeyName(), metadata2.isOptional());
       assert(InjectUtil.getMetadataMap).to.haveBeenCalledWith(TestClass);
     });
 

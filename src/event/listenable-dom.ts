@@ -29,7 +29,7 @@ export class ListenableDom<T extends EventTarget> extends BaseListenable<string>
   /**
    * The wrapped EventTarget
    */
-  get eventTarget(): T {
+  getEventTarget(): T {
     return this.eventTarget_;
   }
 

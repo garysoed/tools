@@ -19,7 +19,7 @@ export class ArgMetaData {
    * The identifier for this argument. The argument will be assigned value corresponding to this
    * key.
    */
-  get key(): string {
+  getKey(): string {
     return this.key_;
   }
 
@@ -27,14 +27,14 @@ export class ArgMetaData {
    * A mapping from external arguments required by the dependency for this argument to the external
    * argument required by this argument.
    */
-  get forwardedArguments(): {[key: string]: string} {
+  getForwardedArguments(): {[key: string]: string} {
     return this.forwardedArguments_;
   }
 
   /**
    * True iff the argument is an external argument.
    */
-  get isExternal(): boolean {
+  isExternal(): boolean {
     return this.isExternal_;
   }
 

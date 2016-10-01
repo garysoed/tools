@@ -29,7 +29,7 @@ class WaitUntil extends BaseDisposable {
     let interval = Interval.newInstance(this.interval_);
     this.addDisposable(interval);
     interval.on(Interval.TICK_EVENT, () => {
-      if (this.isDisposed) {
+      if (this.isDisposed()) {
         reject('Check function has not returned true when waiter is disposed');
       }
 

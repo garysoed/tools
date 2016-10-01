@@ -18,8 +18,8 @@ export class Graph {
       argMetaData: ArgMetaData,
       context: any,
       externalArgs: {[key: string]: any}): T {
-    let argKey = argMetaData.key;
-    if (argMetaData.isExternal) {
+    let argKey = argMetaData.getKey();
+    if (argMetaData.isExternal()) {
       // Use external value.
       let externalValue = externalArgs[argKey];
       Validate.any(externalValue).to.beDefined()
@@ -30,7 +30,7 @@ export class Graph {
       let validations: {[key: string]: any} = {};
 
       // Use other pipes.
-      let forwardedArgs = Maps.fromRecord(argMetaData.forwardedArguments)
+      let forwardedArgs = Maps.fromRecord(argMetaData.getForwardedArguments())
           .mapValue((forwardedArgKey: string) => {
             let forwardedValue = externalArgs[forwardedArgKey];
             validations[forwardedArgKey] = Validate.any(forwardedValue)
@@ -56,7 +56,7 @@ export class Graph {
         .orThrows(`No nodes found for key "${key}" at object ${context}`)
         .assertValid();
 
-    let args = Arrays.of(graphNode!.args)
+    let args = Arrays.of(graphNode!.getArgs())
         .map((argData: ArgMetaData) => {
           return Graph.resolveArgument_(argData, context, opt_externalArgs);
         })

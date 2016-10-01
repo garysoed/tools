@@ -142,7 +142,7 @@ export class Injector {
                 `Cannot find injection candidate for index ${i} for ${ctor} when instantiating`)
             .assertValid();
         let metadata = metadataMap.get(i);
-        args.push(this.getBoundValue(metadata!.keyName, metadata!.isOptional));
+        args.push(this.getBoundValue(metadata!.getKeyName(), metadata!.isOptional()));
       }
     }
     return args;

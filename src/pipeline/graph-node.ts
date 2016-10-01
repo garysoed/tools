@@ -39,7 +39,7 @@ export class GraphNode<T> {
   /**
    * The argument metadata for this node.
    */
-  get args(): ArgMetaData[] {
+  getArgs(): ArgMetaData[] {
     return this.argsMetaData_;
   }
 
