@@ -1,4 +1,4 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Mocks} from '../mock/mocks';
@@ -26,7 +26,7 @@ describe('secure.Recaptcha', () => {
     let callback = jasmine.createSpy('Callback');
 
     assert(mockGrecaptcha.render).to.haveBeenCalledWith(mockElement, {
-      callback: jasmine.any(Function),
+      callback: Matchers.any(Function),
       sitekey: SITEKEY,
     });
 

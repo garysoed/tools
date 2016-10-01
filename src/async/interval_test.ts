@@ -1,4 +1,4 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Interval} from './interval';
@@ -33,7 +33,7 @@ describe('async.Interval', () => {
       interval.start();
 
       assert(interval['intervalId_']).to.equal(intervalId);
-      assert(window.setInterval).to.haveBeenCalledWith(jasmine.any(Function), INTERVAL);
+      assert(window.setInterval).to.haveBeenCalledWith(Matchers.any(Function), INTERVAL);
 
       spy.calls.argsFor(0)[0]();
       assert(callback).to.haveBeenCalledWith(null);

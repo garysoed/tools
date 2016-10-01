@@ -27,11 +27,11 @@ describe('jasmine.assert', () => {
     expect(assert(() => undefined).to).toEqual(jasmine.any(FunctionAssert));
   });
 
-  fit('should return the correct assert for array values', () => {
+  it('should return the correct assert for array values', () => {
     expect(assert([]).to).toEqual(jasmine.any(ArrayAssert));
   });
 
-  fit('should return the correct assert for other values', () => {
+  it('should return the correct assert for other values', () => {
     expect(assert({}).to).toEqual(jasmine.any(AnyAssert));
   });
 });

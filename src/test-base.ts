@@ -6,6 +6,7 @@ import {TestSetup} from './testing/test-setup';
 
 
 export {assert} from './jasmine/assert';
+export {Matchers} from './jasmine/matchers';
 
 
 const TEST_SETUP = new TestSetup([

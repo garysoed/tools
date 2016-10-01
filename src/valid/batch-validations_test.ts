@@ -1,4 +1,4 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import {BatchValidations} from './batch-validations';
@@ -58,7 +58,7 @@ describe('valid.BatchValidations', () => {
           .to.allBeValid();
       assert(result.isValid()).to.beFalse();
       assert(result.getErrorMessage()).to.match(new RegExp(`all be valid: ${errorMessage}`));
-      assert(result.getValue()).to.equal({'b': jasmine.any(Object)});
+      assert(result.getValue()).to.equal({'b': Matchers.any(Object)});
     });
   });
 
@@ -76,8 +76,8 @@ describe('valid.BatchValidations', () => {
       assert(result.isValid()).to.beFalse();
       assert(result.getErrorMessage()).to.match(new RegExp(`not all be valid: ${errorMessage}`));
       assert(result.getValue()).to.equal({
-        'a': jasmine.any(Object),
-        'b': jasmine.any(Object),
+        'a': Matchers.any(Object),
+        'b': Matchers.any(Object),
       });
     });
 
@@ -89,7 +89,7 @@ describe('valid.BatchValidations', () => {
           })
           .toNot.allBeValid();
       assert(result.isValid()).to.beTrue();
-      assert(result.getValue()).to.equal({'a': jasmine.any(Object)});
+      assert(result.getValue()).to.equal({'a': Matchers.any(Object)});
     });
   });
 
@@ -102,7 +102,7 @@ describe('valid.BatchValidations', () => {
           })
           .to.someBeValid();
       assert(result.isValid()).to.beTrue();
-      assert(result.getValue()).to.equal({'b': jasmine.any(Object)});
+      assert(result.getValue()).to.equal({'b': Matchers.any(Object)});
     });
 
     it('should not pass if all of the results fails', () => {
@@ -118,8 +118,8 @@ describe('valid.BatchValidations', () => {
       assert(result.isValid()).to.beFalse();
       assert(result.getErrorMessage()).to.match(new RegExp(`some be valid: ${errorMessage}`));
       assert(result.getValue()).to.equal({
-        'a': jasmine.any(Object),
-        'b': jasmine.any(Object),
+        'a': Matchers.any(Object),
+        'b': Matchers.any(Object),
       });
     });
   });
@@ -138,7 +138,7 @@ describe('valid.BatchValidations', () => {
       assert(result.isValid()).to.beFalse();
       assert(result.getErrorMessage()).to.match(new RegExp(`not some be valid: ${errorMessage}`));
       assert(result.getValue()).to.equal({
-        'a': jasmine.any(Object),
+        'a': Matchers.any(Object),
       });
     });
 

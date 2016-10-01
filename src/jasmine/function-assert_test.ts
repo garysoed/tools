@@ -16,7 +16,7 @@ describe('jasmine.FunctionAssert', () => {
   });
 
   describe('haveBeenCalled', () => {
-    fit('should call the matchers correctly', () => {
+    it('should call the matchers correctly', () => {
       let mockMatchers = jasmine.createSpyObj('Matchers', ['toHaveBeenCalled']);
       spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
 
@@ -27,7 +27,7 @@ describe('jasmine.FunctionAssert', () => {
   });
 
   describe('haveBeenCalledWith', () => {
-    fit('should return a function which calls the matchers correctly', () => {
+    it('should return a function which calls the matchers correctly', () => {
       let mockMatchers = jasmine.createSpyObj('Matchers', ['toHaveBeenCalledWith']);
       spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
 
@@ -38,7 +38,7 @@ describe('jasmine.FunctionAssert', () => {
   });
 
   describe('throw', () => {
-    fit('should call the matchers correctly', () => {
+    it('should call the matchers correctly', () => {
       let mockMatchers = jasmine.createSpyObj('Matchers', ['toThrow']);
       spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
 

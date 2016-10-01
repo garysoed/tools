@@ -1,4 +1,4 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import {GraphNodeBuilder} from './graph-node-builder';
@@ -75,7 +75,7 @@ describe('pipeline.PipeUtil', () => {
       let key = 'key';
 
       let builder = PipeUtil.initializeNodeBuilder(context, key);
-      assert(builder).to.equal(jasmine.any(GraphNodeBuilder));
+      assert(builder).to.equal(Matchers.any(GraphNodeBuilder));
       assert(Maps.of(context[__NODE_BUILDER_DATA_MAP]).asRecord()).to.equal({
         [key]: builder,
       });
@@ -89,7 +89,7 @@ describe('pipeline.PipeUtil', () => {
       let key = 'key';
 
       let builder = PipeUtil.initializeNodeBuilder(context, key);
-      assert(builder).to.equal(jasmine.any(GraphNodeBuilder));
+      assert(builder).to.equal(Matchers.any(GraphNodeBuilder));
       assert(Maps.of(context[__NODE_BUILDER_DATA_MAP]).asRecord()).to.equal({
         [key]: builder,
       });

@@ -26,11 +26,11 @@ export class RgbColor implements IColor {
 
   @Pipe()
   private pipeHue_(
-      @Internal('chroma') chroma: number,
+      @Internal('getChroma') chroma: number,
       @Internal('pipeMax_') max: number,
-      @Internal('red') red: number,
-      @Internal('green') green: number,
-      @Internal('blue') blue: number): number {
+      @Internal('getRed') red: number,
+      @Internal('getGreen') green: number,
+      @Internal('getBlue') blue: number): number {
     if (chroma === 0) {
       return 0;
     }
@@ -58,9 +58,9 @@ export class RgbColor implements IColor {
 
   @Pipe()
   private pipeLuminance_(
-      @Internal('red') red: number,
-      @Internal('green') green: number,
-      @Internal('blue') blue: number): number {
+      @Internal('getRed') red: number,
+      @Internal('getGreen') green: number,
+      @Internal('getBlue') blue: number): number {
     let [computedRed, computedGreen, computedBlue] = Arrays.of([red, green, blue])
         .map((value: number) => {
           let normalized = value / 255;
@@ -74,24 +74,24 @@ export class RgbColor implements IColor {
 
   @Pipe()
   private pipeMax_(
-      @Internal('red') red: number,
-      @Internal('green') green: number,
-      @Internal('blue') blue: number): number {
+      @Internal('getRed') red: number,
+      @Internal('getGreen') green: number,
+      @Internal('getBlue') blue: number): number {
     return Math.max(red, green, blue);
   }
 
   @Pipe()
   private pipeMin_(
-      @Internal('red') red: number,
-      @Internal('green') green: number,
-      @Internal('blue') blue: number): number {
+      @Internal('getRed') red: number,
+      @Internal('getGreen') green: number,
+      @Internal('getBlue') blue: number): number {
     return Math.min(red, green, blue);
   }
 
   @Pipe()
   private pipeSaturation_(
-      @Internal('chroma') chroma: number,
-      @Internal('lightness') lightness: number): number {
+      @Internal('getChroma') chroma: number,
+      @Internal('getLightness') lightness: number): number {
     return chroma / (1 - Math.abs(2 * lightness - 1));
   }
 

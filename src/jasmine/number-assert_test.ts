@@ -12,7 +12,7 @@ describe('jasmine.NumberAssert', () => {
   });
 
   describe('beCloseTo', () => {
-    fit('should call the matchers correctly', () => {
+    it('should call the matchers correctly', () => {
       let target = 123;
       let precision = 456;
       let mockMatchers = jasmine.createSpyObj('Matcher', ['toBeCloseTo']);

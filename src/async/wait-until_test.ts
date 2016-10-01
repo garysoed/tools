@@ -1,4 +1,4 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Interval} from '../async/interval';
@@ -31,7 +31,7 @@ describe('async.WaitUntil', () => {
         }, done.fail);
 
     assert(mockInterval.start).to.haveBeenCalledWith();
-    assert(mockInterval.on).to.haveBeenCalledWith(Interval.TICK_EVENT, <any> jasmine.any(Function));
+    assert(mockInterval.on).to.haveBeenCalledWith(Interval.TICK_EVENT, Matchers.any(Function));
     mockCheckFn.and.returnValue(true);
 
     mockInterval.on.calls.argsFor(0)[1]();

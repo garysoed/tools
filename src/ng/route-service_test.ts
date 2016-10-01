@@ -1,4 +1,4 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import Cache from '../data/a-cache';
@@ -26,7 +26,7 @@ describe('ng.RouteService', () => {
   it('should clear the cache when route change success event is received', () => {
     spyOn(Cache, 'clear');
 
-    assert(mock$scope.$on).to.haveBeenCalledWith('$routeChangeSuccess', jasmine.any(Function));
+    assert(mock$scope.$on).to.haveBeenCalledWith('$routeChangeSuccess', Matchers.any(Function));
 
     mock$scope$onSpy.calls.argsFor(0)[1]();
     assert(Cache.clear).to.haveBeenCalledWith(service);

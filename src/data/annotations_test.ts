@@ -1,4 +1,4 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Annotations} from './annotations';
@@ -61,7 +61,7 @@ describe('data.Annotations', () => {
       let ctor = Mocks.object('ctor');
       let annotation = Symbol('annotation');
       let annotations = Annotations.of(ctor, annotation);
-      assert(annotations).to.equal(jasmine.any(Annotations));
+      assert(annotations).to.equal(Matchers.any(Annotations));
       assert(ctor[annotation]).to.be(annotations);
     });
 

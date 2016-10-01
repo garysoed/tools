@@ -1,4 +1,4 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import {BaseElement} from './base-element';
@@ -50,7 +50,7 @@ describe('webc.ElementRegistrar', () => {
       assert(mockAttributeParser.parse).to.haveBeenCalledWith(newValue);
 
       assert(ElementRegistrar['runOnInstance_'])
-          .to.haveBeenCalledWith(mockHTMLElement, <any> jasmine.any(Function));
+          .to.haveBeenCalledWith(mockHTMLElement, <any> Matchers.any(Function));
 
       runOnInstanceSpy.calls.argsFor(0)[1](mockElement);
       assert(mockElement.onAttributeChanged).to.haveBeenCalledWith('attr-name', oldValue, newValue);
@@ -90,7 +90,7 @@ describe('webc.ElementRegistrar', () => {
       registrar['getLifecycleConfig_']({}, mockProvider, 'content').inserted.call(mockHTMLElement);
 
       assert(ElementRegistrar['runOnInstance_'])
-          .to.haveBeenCalledWith(mockHTMLElement, <any> jasmine.any(Function));
+          .to.haveBeenCalledWith(mockHTMLElement, <any> Matchers.any(Function));
 
       runOnInstanceSpy.calls.argsFor(0)[1](mockElement);
       assert(mockElement.onInserted).to.haveBeenCalledWith();
@@ -105,7 +105,7 @@ describe('webc.ElementRegistrar', () => {
       registrar['getLifecycleConfig_']({}, mockProvider, 'content').removed.call(mockHTMLElement);
 
       assert(ElementRegistrar['runOnInstance_'])
-          .to.haveBeenCalledWith(mockHTMLElement, <any> jasmine.any(Function));
+          .to.haveBeenCalledWith(mockHTMLElement, <any> Matchers.any(Function));
 
       runOnInstanceSpy.calls.argsFor(0)[1](mockElement);
       assert(mockElement.onRemoved).to.haveBeenCalledWith();
@@ -161,7 +161,7 @@ describe('webc.ElementRegistrar', () => {
                 });
 
             assert(registrar['getLifecycleConfig_'])
-                .to.haveBeenCalledWith(attributes, jasmine.any(Function), templateContent);
+                .to.haveBeenCalledWith(attributes, Matchers.any(Function), templateContent);
             assert(registrar['getLifecycleConfig_'].calls.argsFor(0)[1]()).to.equal(instance);
             assert(mockInjector.instantiate).to.haveBeenCalledWith(ctor);
 

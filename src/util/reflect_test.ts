@@ -1,4 +1,4 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import Reflect from './reflect';
@@ -29,7 +29,7 @@ describe('Reflect', () => {
       let b = 'b';
       let instance = Reflect.construct(TestClass, [a, b]);
 
-      assert(instance).to.equal(jasmine.any(TestClass));
+      assert(instance).to.equal(Matchers.any(TestClass));
       assert(instance.a).to.equal(a);
       assert(instance.b).to.equal(b);
     });

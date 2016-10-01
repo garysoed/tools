@@ -1,4 +1,4 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import {DomEvent} from '../event/dom-event';
@@ -29,7 +29,7 @@ describe('net.Http', () => {
 
       assert(mockRequest.send).to.haveBeenCalledWith(null);
       assert(TestListenableDom.getListenable(mockRequest).on).to
-          .haveBeenCalledWith(DomEvent.LOAD, jasmine.any(Function));
+          .haveBeenCalledWith(DomEvent.LOAD, Matchers.any(Function));
 
       mockRequest.responseText = expectedResponseText;
       mockRequest.status = 200;
@@ -76,7 +76,7 @@ describe('net.Http', () => {
       assert(mockRequest.setRequestHeader).to
           .haveBeenCalledWith('Content-Type', 'application/x-www-form-urlencoded');
       assert(TestListenableDom.getListenable(mockRequest).on).to
-          .haveBeenCalledWith(DomEvent.LOAD, jasmine.any(Function));
+          .haveBeenCalledWith(DomEvent.LOAD, Matchers.any(Function));
 
       mockRequest.responseText = expectedResponseText;
       mockRequest.status = 200;

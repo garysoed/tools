@@ -1,4 +1,4 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import {ArrayIterable} from './array-iterable';
@@ -251,9 +251,9 @@ describe('collection.Mappables', () => {
       let callback = jasmine.createSpy('Callback');
 
       Mappables.of(map).forOf(callback);
-      assert(callback).to.haveBeenCalledWith(1, 'a', jasmine.any(Function));
-      assert(callback).to.haveBeenCalledWith(2, 'b', jasmine.any(Function));
-      assert(callback).to.haveBeenCalledWith(3, 'c', jasmine.any(Function));
+      assert(callback).to.haveBeenCalledWith(1, 'a', Matchers.any(Function));
+      assert(callback).to.haveBeenCalledWith(2, 'b', Matchers.any(Function));
+      assert(callback).to.haveBeenCalledWith(3, 'c', Matchers.any(Function));
     });
 
     it('should stop the iteration when the break function is called', () => {
@@ -266,9 +266,9 @@ describe('collection.Mappables', () => {
           });
 
       Mappables.of(map).forOf(callback);
-      assert(callback).to.haveBeenCalledWith(1, 'a', jasmine.any(Function));
-      assert(callback).to.haveBeenCalledWith(2, 'b', jasmine.any(Function));
-      assert(callback).toNot.haveBeenCalledWith(3, 'c', jasmine.any(Function));
+      assert(callback).to.haveBeenCalledWith(1, 'a', Matchers.any(Function));
+      assert(callback).to.haveBeenCalledWith(2, 'b', Matchers.any(Function));
+      assert(callback).toNot.haveBeenCalledWith(3, 'c', Matchers.any(Function));
     });
   });
 
@@ -278,9 +278,9 @@ describe('collection.Mappables', () => {
       let callback = jasmine.createSpy('Callback');
 
       Mappables.of(map).iterate(callback);
-      assert(callback).to.haveBeenCalledWith(['a', 1], jasmine.any(Function));
-      assert(callback).to.haveBeenCalledWith(['b', 2], jasmine.any(Function));
-      assert(callback).to.haveBeenCalledWith(['c', 3], jasmine.any(Function));
+      assert(callback).to.haveBeenCalledWith(['a', 1], Matchers.any(Function));
+      assert(callback).to.haveBeenCalledWith(['b', 2], Matchers.any(Function));
+      assert(callback).to.haveBeenCalledWith(['c', 3], Matchers.any(Function));
     });
 
     it('should stop the iteration when the break function is called', () => {
@@ -293,9 +293,9 @@ describe('collection.Mappables', () => {
           });
 
       Mappables.of(map).iterate(callback);
-      assert(callback).to.haveBeenCalledWith(['a', 1], jasmine.any(Function));
-      assert(callback).to.haveBeenCalledWith(['b', 2], jasmine.any(Function));
-      assert(callback).toNot.haveBeenCalledWith(['c', 3], jasmine.any(Function));
+      assert(callback).to.haveBeenCalledWith(['a', 1], Matchers.any(Function));
+      assert(callback).to.haveBeenCalledWith(['b', 2], Matchers.any(Function));
+      assert(callback).toNot.haveBeenCalledWith(['c', 3], Matchers.any(Function));
     });
   });
 

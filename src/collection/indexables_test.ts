@@ -1,4 +1,4 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import {ArrayIterable} from './array-iterable';
@@ -157,10 +157,10 @@ describe('collection.Indexables', () => {
       let mockHandler = jasmine.createSpy('Handler');
       Indexables.of([1, 2, 3, 4]).forOf(mockHandler);
 
-      assert(mockHandler).to.haveBeenCalledWith(1, 0, jasmine.any(Function));
-      assert(mockHandler).to.haveBeenCalledWith(2, 1, jasmine.any(Function));
-      assert(mockHandler).to.haveBeenCalledWith(3, 2, jasmine.any(Function));
-      assert(mockHandler).to.haveBeenCalledWith(4, 3, jasmine.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(1, 0, Matchers.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(2, 1, Matchers.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(3, 2, Matchers.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(4, 3, Matchers.any(Function));
     });
 
     it('should stop the iteration when the break function is called', () => {
@@ -172,10 +172,10 @@ describe('collection.Indexables', () => {
           });
 
       Indexables.of([1, 2, 3, 4]).forOf(mockHandler);
-      assert(mockHandler).to.haveBeenCalledWith(1, 0, jasmine.any(Function));
-      assert(mockHandler).to.haveBeenCalledWith(2, 1, jasmine.any(Function));
-      assert(mockHandler).toNot.haveBeenCalledWith(3, 2, jasmine.any(Function));
-      assert(mockHandler).toNot.haveBeenCalledWith(4, 3, jasmine.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(1, 0, Matchers.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(2, 1, Matchers.any(Function));
+      assert(mockHandler).toNot.haveBeenCalledWith(3, 2, Matchers.any(Function));
+      assert(mockHandler).toNot.haveBeenCalledWith(4, 3, Matchers.any(Function));
     });
   });
 
@@ -184,10 +184,10 @@ describe('collection.Indexables', () => {
       let mockHandler = jasmine.createSpy('Handler');
       Indexables.of([1, 2, 3, 4]).iterate(mockHandler);
 
-      assert(mockHandler).to.haveBeenCalledWith(1, jasmine.any(Function));
-      assert(mockHandler).to.haveBeenCalledWith(2, jasmine.any(Function));
-      assert(mockHandler).to.haveBeenCalledWith(3, jasmine.any(Function));
-      assert(mockHandler).to.haveBeenCalledWith(4, jasmine.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(1, Matchers.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(2, Matchers.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(3, Matchers.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(4, Matchers.any(Function));
     });
 
     it('should stop the iteration when the break function is called', () => {
@@ -199,10 +199,10 @@ describe('collection.Indexables', () => {
           });
 
       Indexables.of([1, 2, 3, 4]).iterate(mockHandler);
-      assert(mockHandler).to.haveBeenCalledWith(1, jasmine.any(Function));
-      assert(mockHandler).to.haveBeenCalledWith(2, jasmine.any(Function));
-      assert(mockHandler).toNot.haveBeenCalledWith(3, jasmine.any(Function));
-      assert(mockHandler).toNot.haveBeenCalledWith(4, jasmine.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(1, Matchers.any(Function));
+      assert(mockHandler).to.haveBeenCalledWith(2, Matchers.any(Function));
+      assert(mockHandler).toNot.haveBeenCalledWith(3, Matchers.any(Function));
+      assert(mockHandler).toNot.haveBeenCalledWith(4, Matchers.any(Function));
     });
   });
 

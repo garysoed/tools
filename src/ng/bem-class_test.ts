@@ -1,4 +1,4 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Attributes} from '../ui/attributes';
@@ -121,7 +121,7 @@ describe('ng.BemClassCtrl', () => {
       assert(ctrl['classPrefix_']).to.equal(bemRootClass);
       assert(ctrl['element_']).to.equal(el);
 
-      assert(mock$scope.$watch).to.haveBeenCalledWith(attrValue, jasmine.any(Function));
+      assert(mock$scope.$watch).to.haveBeenCalledWith(attrValue, Matchers.any(Function));
       mock$scope.$watch.calls.argsFor(0)[1]();
       assert(ctrl['onWatchValueChange_']).to.haveBeenCalledWith();
     });

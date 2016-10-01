@@ -1,4 +1,4 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import {InjectUtil} from './inject-util';
@@ -131,7 +131,7 @@ describe('inject.Injector', () => {
       let bindProviderSpy = spyOn(Injector, 'bindProvider');
 
       Injector.bind(TestClass, bindKey);
-      assert(Injector.bindProvider).to.haveBeenCalledWith(<any> jasmine.any(Function), bindKey);
+      assert(Injector.bindProvider).to.haveBeenCalledWith(<any> Matchers.any(Function), bindKey);
 
       assert(bindProviderSpy.calls.argsFor(0)[0](mockInjector)).to.equal(mockInstance);
       assert(mockInjector.instantiate).to.haveBeenCalledWith(TestClass);

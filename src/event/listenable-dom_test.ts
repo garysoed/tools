@@ -1,4 +1,4 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import {ListenableDom} from './listenable-dom';
@@ -26,7 +26,7 @@ describe('event.ListenableDom', () => {
 
       listenable.dispatch(eventType, mockCallback, payload);
 
-      assert(mockEventTarget.dispatchEvent).to.haveBeenCalledWith(jasmine.any(Event));
+      assert(mockEventTarget.dispatchEvent).to.haveBeenCalledWith(Matchers.any(Event));
       let event = mockEventTarget.dispatchEvent.calls.argsFor(0)[0];
       assert(event['payload']).to.equal(payload);
       assert(<boolean> event.bubbles).to.beTrue();

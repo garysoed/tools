@@ -1,4 +1,4 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Log} from './log';
@@ -44,7 +44,7 @@ describe('util.Log', () => {
 
       Log.error(log, message);
 
-      assert(log['callIfEnabled_']).to.haveBeenCalledWith(<any> jasmine.any(Function), message);
+      assert(log['callIfEnabled_']).to.haveBeenCalledWith(<any> Matchers.any(Function), message);
 
       spy.calls.argsFor(0)[0](message);
       assert(console.error).to.haveBeenCalledWith(message);
@@ -62,7 +62,7 @@ describe('util.Log', () => {
 
       Log.info(log, message);
 
-      assert(log['callIfEnabled_']).to.haveBeenCalledWith(<any> jasmine.any(Function), message);
+      assert(log['callIfEnabled_']).to.haveBeenCalledWith(<any> Matchers.any(Function), message);
 
       spy.calls.argsFor(0)[0](message);
       assert(console.info).to.haveBeenCalledWith(message);
@@ -80,7 +80,7 @@ describe('util.Log', () => {
 
       Log.warn(log, message);
 
-      assert(log['callIfEnabled_']).to.haveBeenCalledWith(<any> jasmine.any(Function), message);
+      assert(log['callIfEnabled_']).to.haveBeenCalledWith(<any> Matchers.any(Function), message);
 
       spy.calls.argsFor(0)[0](message);
       assert(console.warn).to.haveBeenCalledWith(message);

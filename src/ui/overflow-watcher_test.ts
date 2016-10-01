@@ -1,4 +1,4 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import {TestDispose} from '../testing/test-dispose';
@@ -24,7 +24,7 @@ describe('ui.OverflowWatcher', () => {
 
   it('should initialize correctly', () => {
     assert(mockContainer.addEventListener)
-        .to.haveBeenCalledWith('scroll', jasmine.any(Function), false);
+        .to.haveBeenCalledWith('scroll', Matchers.any(Function), false);
   });
 
   describe('getState_', () => {

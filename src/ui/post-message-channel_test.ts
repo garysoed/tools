@@ -1,4 +1,4 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import Asyncs from '../async/asyncs';
@@ -34,7 +34,7 @@ describe('ui.PostMessageChannel', () => {
 
       channel['post_'](message);
 
-      assert(Asyncs.run).to.haveBeenCalledWith(<any> jasmine.any(Function));
+      assert(Asyncs.run).to.haveBeenCalledWith(<any> Matchers.any(Function));
       assert(mockDestWindow.postMessage).to.haveBeenCalledWith(json, origin);
       assert(PostMessageChannel.getOrigin).to.haveBeenCalledWith(mockSrcWindow);
       assert(Serializer.toJSON).to.haveBeenCalledWith(message);
@@ -80,7 +80,7 @@ describe('ui.PostMessageChannel', () => {
               }, done.fail);
 
           assert(channel['srcWindow_'].on)
-              .to.haveBeenCalledWith(DomEvent.MESSAGE, <any> jasmine.any(Function));
+              .to.haveBeenCalledWith(DomEvent.MESSAGE, <any> Matchers.any(Function));
 
           channel['srcWindow_'].on.calls.argsFor(0)[1]({data: json1, origin: origin});
           channel['srcWindow_'].on.calls.argsFor(0)[1]({data: json2, origin: origin});
@@ -119,7 +119,7 @@ describe('ui.PostMessageChannel', () => {
               }, done.fail);
 
           assert(channel['srcWindow_'].on)
-              .to.haveBeenCalledWith(DomEvent.MESSAGE, <any> jasmine.any(Function));
+              .to.haveBeenCalledWith(DomEvent.MESSAGE, <any> Matchers.any(Function));
 
           channel['srcWindow_'].on.calls.argsFor(0)[1]({data: json1, origin: 'otherOrigin'});
           channel['srcWindow_'].on.calls.argsFor(0)[1]({data: json2, origin: origin});
@@ -134,7 +134,7 @@ describe('ui.PostMessageChannel', () => {
 
       channel.post(message);
 
-      assert(channel['post_']).to.haveBeenCalledWith(<any> jasmine.any(Message));
+      assert(channel['post_']).to.haveBeenCalledWith(<any> Matchers.any(Message));
 
       let systemMessage = channel['post_'].calls.argsFor(0)[0];
       assert(systemMessage.getType()).to.equal(MessageType.DATA);
@@ -226,10 +226,10 @@ describe('ui.PostMessageChannel', () => {
                 .to.beTrue();
 
             assert(window.setInterval)
-                .to.haveBeenCalledWith(jasmine.any(Function), jasmine.any(Number));
+                .to.haveBeenCalledWith(Matchers.any(Function), Matchers.any(Number));
 
             setIntervalSpy.calls.argsFor(0)[0]();
-            assert(mockChannel.post_).to.haveBeenCalledWith(jasmine.any(Message));
+            assert(mockChannel.post_).to.haveBeenCalledWith(Matchers.any(Message));
 
             let postMessage = mockChannel.post_.calls.argsFor(0)[0];
             assert(postMessage.getType()).to.equal(MessageType.PING);
@@ -297,7 +297,7 @@ describe('ui.PostMessageChannel', () => {
           .then((channel: PostMessageChannel) => {
             assert(channel).to.equal(mockChannel);
 
-            assert(mockChannel.post_).to.haveBeenCalledWith(jasmine.any(Message));
+            assert(mockChannel.post_).to.haveBeenCalledWith(Matchers.any(Message));
             let postMessage = mockChannel.post_.calls.argsFor(0)[0];
             assert(postMessage.getType()).to.equal(MessageType.ACK);
             assert(postMessage.getPayload()).to.equal({ 'id': id });
@@ -306,13 +306,13 @@ describe('ui.PostMessageChannel', () => {
                 .to.haveBeenCalledWith(mockSrcWindow, mockDestWindow);
 
             assert(window.setTimeout)
-                .to.haveBeenCalledWith(jasmine.any(Function), jasmine.any(Number));
+                .to.haveBeenCalledWith(Matchers.any(Function), Matchers.any(Number));
             assert(window.clearTimeout).to.haveBeenCalledWith(timeoutId);
             done();
           }, done.fail);
 
       assert(mockSrcWindow.addEventListener)
-          .to.haveBeenCalledWith('message', jasmine.any(Function), false);
+          .to.haveBeenCalledWith('message', Matchers.any(Function), false);
       mockSrcWindow.addEventListener.calls.argsFor(0)[1]({
         data: Serializer.toJSON(new Message(MessageType.PING, { 'id': id })),
         getType: () => 'message',

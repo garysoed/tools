@@ -1,4 +1,4 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import BaseService from './base-service';
@@ -20,7 +20,7 @@ describe('ng.BaseService', () => {
       spyOn(service, 'dispose').and.callThrough();
 
       assert(mockWindow.addEventListener).to
-          .haveBeenCalledWith('beforeunload', jasmine.any(Function), false);
+          .haveBeenCalledWith('beforeunload', Matchers.any(Function), false);
 
       mockWindow.addEventListener.calls.argsFor(0)[1]({ type: 'beforeunload' });
 

@@ -19,16 +19,16 @@ export class HslColor implements IColor {
 
   @Pipe()
   private pipeChroma_(
-      @Internal('lightness') lightness: number,
-      @Internal('saturation') saturation: number): number {
+      @Internal('getLightness') lightness: number,
+      @Internal('getSaturation') saturation: number): number {
     return (1 - Math.abs(2 * lightness - 1)) * saturation;
   }
 
   @Pipe()
   private pipeLuminance_(
-      @Internal('red') red: number,
-      @Internal('green') green: number,
-      @Internal('blue') blue: number): number {
+      @Internal('getRed') red: number,
+      @Internal('getGreen') green: number,
+      @Internal('getBlue') blue: number): number {
     let [computedRed, computedGreen, computedBlue] = Arrays.of([red, green, blue])
         .map((value: number) => {
           let normalized = value / 255;
@@ -42,9 +42,9 @@ export class HslColor implements IColor {
 
   @Pipe()
   private pipeRgb_(
-      @Internal('chroma') chroma: number,
-      @Internal('hue') hue: number,
-      @Internal('lightness') lightness: number): [number, number, number] {
+      @Internal('getChroma') chroma: number,
+      @Internal('getHue') hue: number,
+      @Internal('getLightness') lightness: number): [number, number, number] {
     let h1 = hue / 60;
     let x = chroma * (1 - Math.abs((h1 % 2) - 1));
     let r1;
