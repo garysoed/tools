@@ -34,6 +34,11 @@ export let DomEvent = {
   FOCUS: 'focus',
 
   /**
+   * The `hashchange` DOM event.
+   */
+  HASHCHANGE: 'hashchange',
+
+  /**
    * The `keypress` DOM event.
    */
   KEYPRESS: 'keypress',

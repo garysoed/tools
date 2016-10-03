@@ -36,10 +36,10 @@ export class BaseListenable<T> extends BaseDisposable {
    * callback is a `capture` event, while the one after the callback is a `bubble` event.
    *
    * @param eventType Type of event to dispatch.
-   * @param payload Any payloads that are associated with the event, if any.
    * @param callback The function to be called during the duration of the event.
+   * @param payload Any payloads that are associated with the event, if any.
    */
-  dispatch(eventType: T, callback: () => void, payload: any = null): void {
+  dispatch(eventType: T, callback: () => void = () => undefined, payload: any = null): void {
     if (this.captureCallbacksMap_.has(eventType)) {
       this.captureCallbacksMap_.get(eventType)!.forEach((handler: (data: any) => void) => {
         handler(payload);

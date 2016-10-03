@@ -4,7 +4,7 @@ TestBase.setup();
 import {InjectUtil} from './inject-util';
 import {Injector} from './injector';
 import {Mocks} from '../mock/mocks';
-import Reflect from '../util/reflect';
+import {Reflect} from '../util/reflect';
 
 
 describe('inject.Injector', () => {

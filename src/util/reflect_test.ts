@@ -1,7 +1,7 @@
 import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
-import Reflect from './reflect';
+import {Reflect} from './reflect';
 
 
 describe('Reflect', () => {
@@ -15,6 +15,8 @@ describe('Reflect', () => {
         this.b_ = b;
       }
 
+      static [Reflect.__initialize](instance: TestClass): void { }
+
       get a(): number {
         return this.a_;
       }
@@ -27,11 +29,14 @@ describe('Reflect', () => {
     it('should construct a new instance of the constructor', () => {
       let a = 123;
       let b = 'b';
-      let instance = Reflect.construct(TestClass, [a, b]);
 
+      spyOn(TestClass, Reflect.__initialize);
+
+      let instance: TestClass = Reflect.construct(TestClass, [a, b]);
       assert(instance).to.equal(Matchers.any(TestClass));
       assert(instance.a).to.equal(a);
       assert(instance.b).to.equal(b);
+      assert(TestClass[Reflect.__initialize]).to.haveBeenCalledWith(instance);
     });
   });
 

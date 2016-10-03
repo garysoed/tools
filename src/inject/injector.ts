@@ -1,5 +1,5 @@
 import {InjectUtil} from './inject-util';
-import Reflect from '../util/reflect';
+import {Reflect} from '../util/reflect';
 import {Validate} from '../valid/validate';
 
 
