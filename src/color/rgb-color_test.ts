@@ -7,40 +7,40 @@ import {RgbColor} from './rgb-color';
 describe('color.RgbColor', () => {
   describe('chroma', () => {
     it('should return the correct value of chroma', () => {
-      assert(RgbColor.newInstance(126, 126, 184).chroma).to.beCloseTo(0.23, 2);
+      assert(RgbColor.newInstance(126, 126, 184).getChroma()).to.beCloseTo(0.23, 2);
     });
   });
 
   describe('hue', () => {
     it('should return the correct value of hue', () => {
-      assert(RgbColor.newInstance(126, 126, 184).hue).to.beCloseTo(240, 0);
+      assert(RgbColor.newInstance(126, 126, 184).getHue()).to.beCloseTo(240, 0);
     });
   });
 
   describe('lightness', () => {
     it('should return the correct value of lightness', () => {
-      assert(RgbColor.newInstance(126, 126, 184).lightness).to.beCloseTo(0.608, 3);
+      assert(RgbColor.newInstance(126, 126, 184).getLightness()).to.beCloseTo(0.608, 3);
     });
   });
 
   describe('luminance', () => {
     it('should return the correct value of luminance', () => {
-      assert(RgbColor.newInstance(126, 126, 184).luminance).to.beCloseTo(0.23, 2);
+      assert(RgbColor.newInstance(126, 126, 184).getLuminance()).to.beCloseTo(0.23, 2);
     });
   });
 
   describe('saturation', () => {
     it('should return the correct value of saturation', () => {
-      assert(RgbColor.newInstance(126, 126, 184).saturation).to.beCloseTo(0.290, 3);
+      assert(RgbColor.newInstance(126, 126, 184).getSaturation()).to.beCloseTo(0.290, 3);
     });
   });
 
   describe('newInstance', () => {
     it('should create the correct color object', () => {
       let color = RgbColor.newInstance(1, 23, 45);
-      assert(color.red).to.equal(1);
-      assert(color.green).to.equal(23);
-      assert(color.blue).to.equal(45);
+      assert(color.getRed()).to.equal(1);
+      assert(color.getGreen()).to.equal(23);
+      assert(color.getBlue()).to.equal(45);
     });
 
     it('should throw error if red is not an integer', () => {

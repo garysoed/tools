@@ -14,9 +14,9 @@ describe('solver.Spec', () => {
   describe('newInstance', () => {
     it('should create the correct Spec instance', () => {
       let spec = Spec.newInstance(0, 1, 2);
-      assert(spec.start).to.equal(0);
-      assert(spec.delta).to.equal(1);
-      assert(spec.end).to.equal(2);
+      assert(spec.getStart()).to.equal(0);
+      assert(spec.getDelta()).to.equal(1);
+      assert(spec.getEnd()).to.equal(2);
     });
 
     it('should throw error if the end is smaller than the start', () => {

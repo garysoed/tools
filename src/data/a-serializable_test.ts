@@ -1,7 +1,7 @@
 import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
-import Serializer, { Field, Serializable } from './a-serializable';
+import {Field, Serializable, Serializer} from './a-serializable';
 
 describe('model.Serializer', () => {
 

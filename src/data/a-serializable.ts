@@ -65,7 +65,7 @@ function initField_(obj: Object): void {
 /**
  * Manages conversion of serializable objects to / from JSON objects.
  */
-class Serializer {
+export class Serializer {
 
   /**
    * Converts the given JSON object to a known [[Serializable]] object.
@@ -132,7 +132,6 @@ class Serializer {
     }
   }
 };
-export default Serializer;
 
 /**
  * Annotates a class and marks it as serializable.
