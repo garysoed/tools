@@ -25,6 +25,11 @@ describe('model.Serializer', () => {
     }
   }
 
+  @Serializable('sub', BasicClass)
+  class SubClass extends BasicClass {
+    @Field('subField') subfield: any;
+  }
+
   describe('toJSON, fromJSON', () => {
     it('should handle basic class', () => {
       let value = 'value';
@@ -128,6 +133,24 @@ describe('model.Serializer', () => {
 
       let deserialized = Serializer.fromJSON(json);
       assert(deserialized.a).to.equal(value);
+    });
+
+    fit('should handle subclasses', () => {
+      let value = 'value';
+      let subValue = 'subValue';
+      let sub = new SubClass();
+      sub.a = value;
+      sub.subfield = subValue;
+
+      let serialized = Serializer.toJSON(sub);
+      assert(serialized).to.equal(jasmine.objectContaining({
+        'fieldA': value,
+        'subField': subValue,
+      }));
+
+      let deserialized: SubClass = Serializer.fromJSON(serialized);
+      assert(deserialized.a).to.equal(value);
+      assert(deserialized.subfield).to.equal(subValue);
     });
   });
 });

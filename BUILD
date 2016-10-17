@@ -29,6 +29,7 @@ test_suite(
       "//src/net:test",
       "//src/ng:test",
       "//src/pipeline:test",
+      "//src/random:test",
       "//src/secure:test",
       "//src/solver:test",
       "//src/store:test",

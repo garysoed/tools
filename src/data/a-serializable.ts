@@ -1,3 +1,6 @@
+import {Maps} from '../collection/maps';
+
+
 /**
  * Provides a convenient way to serialize / deserialize objects to / from JSON.
  *
@@ -36,12 +39,14 @@
 /**
  * @hidden
  */
-const __fields = Symbol('fields');
+const __FIELDS = Symbol('fields');
 
 /**
  * @hidden
  */
-const __name = Symbol('name');
+const __NAME = Symbol('name');
+
+const __PARENT = Symbol('parent');
 
 /**
  * @hidden
@@ -57,8 +62,8 @@ const CTORS = new Map<string, any>();
  * @hidden
  */
 function initField_(obj: Object): void {
-  if (!obj[__fields]) {
-    obj[__fields] = new Map<string | symbol, string>();
+  if (!obj[__FIELDS]) {
+    obj[__FIELDS] = new Map<string | symbol, string>();
   }
 }
 
@@ -66,6 +71,19 @@ function initField_(obj: Object): void {
  * Manages conversion of serializable objects to / from JSON objects.
  */
 export class Serializer {
+
+  /**
+   * Retrieves the fields for the given constructor.
+   */
+  private static getFields_(ctor: any): Map<string, string> {
+    let fluentFields = Maps.of(new Map<string, string>());
+    if (!!ctor.prototype[__PARENT]) {
+      fluentFields.addAllMap(Serializer.getFields_(ctor.prototype[__PARENT]));
+    }
+
+    fluentFields.addAllMap(ctor.prototype[__FIELDS]);
+    return fluentFields.asMap();
+  }
 
   /**
    * Converts the given JSON object to a known [[Serializable]] object.
@@ -82,7 +100,7 @@ export class Serializer {
     if (!!ctor) {
       let defaultInstance = new ctor();
 
-      ctor.prototype[__fields].forEach((jsonKey: string, key: string) => {
+      Serializer.getFields_(ctor).forEach((jsonKey: string, key: string) => {
         let jsonValue = json[jsonKey];
         if (jsonValue !== undefined) {
           defaultInstance[key] = this.fromJSON(jsonValue);
@@ -115,9 +133,9 @@ export class Serializer {
     }
 
     let ctor = obj.constructor;
-    if (!!ctor.prototype[__name]) {
-      let json = { [TYPE_FIELD]: ctor.prototype[__name] };
-      ctor.prototype[__fields].forEach((jsonKey: string, key: string) => {
+    if (!!ctor.prototype[__NAME]) {
+      let json = {[TYPE_FIELD]: ctor.prototype[__NAME]};
+      Serializer.getFields_(ctor).forEach((jsonKey: string, key: string) => {
         json[jsonKey] = this.toJSON(obj[key]);
       });
       return json;
@@ -138,12 +156,16 @@ export class Serializer {
  *
  * @param name Name of the class. This name should be unique within the binary.
  */
-export function Serializable(name: string): ClassDecorator {
+export function Serializable(name: string, parent: any = null): ClassDecorator {
   // TODO(gs): Check uniqueness.
   return function<F extends Function>(ctor: F): void {
     CTORS.set(name, ctor);
     initField_(ctor.prototype);
-    ctor.prototype[__name] = name;
+    ctor.prototype[__NAME] = name;
+
+    if (parent !== null) {
+      ctor.prototype[__PARENT] = parent;
+    }
   };
 };
 
@@ -158,6 +180,6 @@ export function Field(name: string): PropertyDecorator {
   // TODO(gs): Assert that the name does not start with _
   return function(target: Object, propertyKey: string | symbol): void {
     initField_(target);
-    target[__fields].set(propertyKey, name);
+    target[__FIELDS].set(propertyKey, name);
   };
 }
