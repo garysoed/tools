@@ -5,7 +5,7 @@ import Asyncs from '../async/asyncs';
 import {DomEvent} from '../event/dom-event';
 import {Mocks} from '../mock/mocks';
 import PostMessageChannel, {Message, MessageType} from './post-message-channel';
-import Serializer from '../data/a-serializable';
+import {Serializer} from '../data/a-serializable';
 import {TestDispose} from '../testing/test-dispose';
 
 

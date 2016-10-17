@@ -12,7 +12,7 @@ import {Templates} from './templates';
 /**
  * @hidden
  */
-const LOG = new Log('pb.component.ComponentConfig');
+const LOG = new Log('gs.webc.ElementRegistrar');
 
 
 /**

@@ -19,6 +19,7 @@ test_suite(
     tests = [
       "//src/async:test",
       "//src/collection:test",
+      "//src/color:test",
       "//src/data:test",
       "//src/dispose:test",
       "//src/event:test",
@@ -29,10 +30,13 @@ test_suite(
       "//src/ng:test",
       "//src/pipeline:test",
       "//src/secure:test",
+      "//src/solver:test",
+      "//src/store:test",
       "//src/string:test",
       "//src/testing:test",
       "//src/typescript:test",
       "//src/ui:test",
+      "//src/util:test",
       "//src/valid:test",
       "//src/webc:test",
     ]

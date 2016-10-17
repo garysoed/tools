@@ -1,1 +1,1 @@
-Contains various DOM manipulation tools.
+Contains various DOM manipulation tools and UI elements.
