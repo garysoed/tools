@@ -1,4 +1,6 @@
 import {AnyValidations} from './any-validations';
+import {Maps} from '../collection/maps';
+import {Stringify} from '../data/stringify';
 import {ValidationResult} from './validation-result';
 
 
@@ -24,5 +26,12 @@ export class MapValidations extends AnyValidations<Map<any, any>> {
    */
   containKey(key: any): ValidationResult<Map<any, any>> {
     return this.resolve(this.mapValue_.has(key), `contain key "${key}"`);
+  }
+
+  /**
+   * @override
+   */
+  getValueAsString(): string {
+    return Stringify.toString(Maps.of(this.mapValue_).asRecord());
   }
 }

@@ -2,13 +2,18 @@
  * Fake implementation of an HTMLElement.
  */
 class MockElement {
-  private queries_: { [query: string]: any };
+  private classList_: any;
+  private queries_: {[query: string]: any};
 
   /**
    * @param queries Used to implement [[querySelector]]. The key is the query, and the value is the
    *    value(s) to return for the query.
    */
-  constructor(queries: { [query: string]: any }) {
+  constructor(queries: {[query: string]: any}) {
+    this.classList_ = {
+      add: () => {},
+      remove: () => {},
+    };
     this.queries_ = queries;
   }
 
@@ -19,8 +24,16 @@ class MockElement {
     // Noop
   }
 
+  get classList(): any {
+    return this.classList_;
+  }
+
   dispatchEvent(): void {
     // Noop
+  }
+
+  getAttribute(attrName: string): string {
+    return '';
   }
 
   /**

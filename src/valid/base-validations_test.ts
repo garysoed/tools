@@ -8,8 +8,11 @@ describe('valid.BaseValidations', () => {
   describe('resolve', () => {
     it('should pass the result passes and not reversed', () => {
       let validations = new BaseValidations('value', false /* reversed */);
+      spyOn(validations, 'getValueAsString');
+
       let result = validations.resolve(true, 'method');
       assert(result.isValid()).to.beTrue();
+      assert(validations.getValueAsString).toNot.haveBeenCalled();
     });
 
     it('should not pass if the result does not pass and not reversed', () => {

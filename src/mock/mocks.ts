@@ -54,7 +54,7 @@ export class Mocks {
    *    value(s) to return for the query.
    * @return The mock element object.
    */
-  static element(queries: { [query: string]: any}): any {
+  static element(queries: {[query: string]: any} = {}): any {
     return new MockElement(queries);
   }
 
@@ -64,12 +64,13 @@ export class Mocks {
    * @param name Name to identify the mock object.
    * @return The mock listenable object.
    */
-  static listenable(name: string): any {
+  static listenable(name: string, target: any = undefined): any {
     let mock = Mocks.disposable(name);
     mock.on = () => {
       return new DisposableFunction(() => undefined);
     };
     mock.dispatch = () => undefined;
+    mock.getEventTarget = () => target;
     return mock;
   }
 

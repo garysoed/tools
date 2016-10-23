@@ -21,6 +21,8 @@ type Config = {
   pad?: string,
 };
 
+type Stringifiable = string | number | boolean | Date | Function | {[key: string]: any};
+
 export class Stringify {
 
   /**
@@ -34,7 +36,7 @@ export class Stringify {
    *    indentation.
    */
   private static formatField_(
-      field: any,
+      field: Stringifiable,
       delimiter: string = ',',
       pad: string = '  ',
       indent: string = ''): string {
@@ -92,7 +94,7 @@ export class Stringify {
    * @param instance Instance whose fields should be collected and normalized.
    * @return JSON object containing the stringified and normalized fields.
    */
-  private static grabFields_(instance: any): any {
+  private static grabFields_(instance: any): Stringifiable {
     if (instance instanceof Object
         && Annotations.hasAnnotation(instance.constructor.prototype, __STRINGIFY)) {
       let annotations = Annotations.of(

@@ -6,13 +6,22 @@ import {ListenableDom} from '../event/listenable-dom';
  * Base class for all custom elements.
  */
 export class BaseElement extends BaseDisposable {
-  private element_: ListenableDom<HTMLElement>;
+  private element_: ListenableDom<HTMLElement> | null = null;
 
   constructor() {
     super();
   }
 
-  getElement(): ListenableDom<HTMLElement> {
+  // TODO: Add parser
+  getAttribute(attrName: string): string {
+    if (this.element_ === null) {
+      return '';
+    } else {
+      return this.element_.getEventTarget()[attrName];
+    }
+  }
+
+  getElement(): ListenableDom<HTMLElement> | null {
     return this.element_;
   }
 
@@ -37,11 +46,20 @@ export class BaseElement extends BaseDisposable {
 
   /**
    * Called when the element is inserted into the DOM.
+   * TODO: Pass the element.
    */
   onInserted(): void { }
 
   /**
    * Called when the element is removed from the DOM.
+   * TODO: Pass the element
    */
   onRemoved(): void { }
+
+  // TODO: add parser
+  setAttribute(attrName: string, value: string): void {
+    if (this.element_ !== null) {
+      this.element_.getEventTarget()[attrName] = value;
+    }
+  }
 }

@@ -1,8 +1,9 @@
 import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
-import {Validate} from './validate';
 import {Maps} from '../collection/maps';
+import {Validate} from './validate';
+import {Stringify} from '../data/stringify';
 
 
 describe('valid.MapValidations', () => {
@@ -33,6 +34,14 @@ describe('valid.MapValidations', () => {
       let map = Maps.fromRecord({}).asMap();
       let result = Validate.map(map).toNot.containKey('key');
       assert(result.isValid()).to.beTrue();
+    });
+  });
+
+  describe('getValueAsString', () => {
+    it('should return the correct string', () => {
+      let record = {'a': 1, 'b': 2};
+      let map = Maps.fromRecord(record).asMap();
+      assert(Validate.map(map).to.getValueAsString()).to.equal(Stringify.toString(record));
     });
   });
 });

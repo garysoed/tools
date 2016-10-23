@@ -18,7 +18,10 @@ export class ListenableDom<T extends EventTarget> extends BaseListenable<string>
   /**
    * @override
    */
-  dispatch(eventType: string, callback: () => void, payload: any = null): void {
+  dispatch(
+      eventType: string,
+      callback: () => void = () => undefined,
+      payload: any = null): void {
     callback();
 
     let bubbleEvent = new Event(eventType, {bubbles: true});

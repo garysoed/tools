@@ -29,11 +29,10 @@ export class BaseValidations<V> {
    */
   resolve(result: boolean, method: string): ValidationResult<V> {
     let normalizedMethod = this.reversed_ ? `not ${method}` : method;
+    let passes = result !== this.reversed_;
+    let error = passes ? '' : `Expected [${this.getValueAsString()}] to ${normalizedMethod}.`;
 
-    return new ValidationResult<V>(
-        result !== this.reversed_,
-        `Expected [${this.getValueAsString()}] to ${normalizedMethod}.`,
-        this.value_);
+    return new ValidationResult<V>(passes, error, this.value_);
   }
 
   /**
