@@ -1,69 +1,115 @@
 import {Arrays} from '../collection/arrays';
+import {Maps} from '../collection/maps';
 
 
 /**
- * Generic class to manage annotations.
+ * @param <T> The type of value associated with the annotation.
  */
-export class Annotations<T> {
-  private fieldKeys_: (string | symbol)[] = [];
+export class AnnotationsHandler<T> {
+  private annotation_: symbol;
+  private propertyValues_: Map<string | symbol, T>;
+  private parent_: any;
 
   /**
-   * @param annotation_ Annotation identifier.
-   * @param ctor_ Constructor of the objecto to be annotated.
+   * @param annotation The symbol to identify the annotation.
+   * @param parent Pointer to the parent class to follow the annotation.
    */
-  constructor() { }
-
-  /**
-   * Declare the given field
-   */
-  addField(fieldKey: (string | symbol)): void {
-    this.fieldKeys_.push(fieldKey);
+  constructor(annotation: symbol, parent: any) {
+    this.annotation_ = annotation;
+    this.parent_ = parent;
+    this.propertyValues_ = new Map<string | symbol, T>();
   }
 
   /**
-   * Fields annotated for the given class.
-   */
-  getAnnotatedFields(): (string | symbol)[] {
-    return this.fieldKeys_;
-  }
-
-  /**
-   * Returns the annotated fields recursively.
+   * Adds the given value to the given property identifier.
    *
-   * @param instance Instance of the class to get the annotations of.
-   * @return Map of the annotated field name to the field value.
+   * @param key Identifier of the property to attach the value to.
+   * @param value The value to attach to the given property.
    */
-  getFieldValues(instance: T): Map<string | symbol, any> {
-    let fields = new Map<string | symbol, any>();
-    Arrays
-        .of(this.getAnnotatedFields())
-        .forEach((key: string | symbol) => {
-          fields.set(key, instance[key]);
-        });
-    return fields;
+  attachValueToProperty(key: string | symbol, value: T): void {
+    this.propertyValues_.set(key, value);
   }
 
   /**
-   * @param ctor The constructor to be checked.
+   * @return Names of properties with attached values.
+   */
+  getAnnotatedProperties(): (string | symbol)[] {
+    return Arrays.fromIterator(this.getAttachedValues().keys()).asArray();
+  }
+
+  /**
+   * @return Map of property name to the value attached to that property.
+   */
+  getAttachedValues(): Map<string | symbol, T> {
+    let fluentMappable = Maps.of(this.propertyValues_);
+    if (this.parent_ !== null) {
+      let parentAnnotationValues = AnnotationsHandler
+          .of<T>(this.annotation_, this.parent_)
+          .getAttachedValues();
+      fluentMappable = fluentMappable.addAllMap(parentAnnotationValues);
+    }
+    return fluentMappable.asMap();
+  }
+
+  /**
+   * @param proto The prototype to be checked.
    * @param annotation The identifier of the annotation checked.
-   * @return True iff the given constructor has the given annotation identifier.
+   * @return True iff the given prototype has the given annotation identifier.
    */
   static hasAnnotation(proto: any, annotation: symbol): boolean {
     return proto[annotation] !== undefined;
   }
 
   /**
-   * Gets the annotations object for the given constructor.
-   *
-   * @param ctor The constructor whose annotations object should be returned.
-   * @param annotation The identifier of the annotation to be returned.
+   * @param annotation The symbol to identify the annotation.
+   * @param proto The prototype to add the annotation to.
+   * @param parent Pointer to the parent class to follow the annotation.
    */
-  static of<T>(
-      proto: any,
-      annotation: symbol): Annotations<T> {
-    if (!Annotations.hasAnnotation(proto, annotation)) {
-      proto[annotation] = new Annotations<T>();
+  static of<T>(annotation: symbol, proto: any, parent: any = null): AnnotationsHandler<T> {
+    if (!AnnotationsHandler.hasAnnotation(proto, annotation)) {
+      proto[annotation] = new AnnotationsHandler<T>(annotation, parent);
     }
     return proto[annotation];
+  }
+}
+
+/**
+ * Generic class to manage annotations.
+ */
+export class Annotations {
+  private annotation_: symbol;
+
+  /**
+   * @param annotation The symbol to identify the annotation.
+   */
+  constructor(annotation: symbol) {
+    this.annotation_ = annotation;
+  }
+
+  /**
+   * Creates a new handler for the given prototype.
+   *
+   * @param proto The prototype to associate the annotation to.
+   * @param parent The parent class of the prototype.
+   * @return New instance of annotations handler for the given prototype.
+   */
+  forPrototype<T>(proto: any, parent: any = null): AnnotationsHandler<T> {
+    return AnnotationsHandler.of<T>(this.annotation_, proto, parent);
+  }
+
+  /**
+   * @return True iff the given prototype has the annotation.
+   */
+  hasAnnotation(proto: any): boolean {
+    return AnnotationsHandler.hasAnnotation(proto, this.annotation_);
+  }
+
+  /**
+   * Gets the annotations object for the given constructor.
+   *
+   * @param annotation The identifier of the annotation to be returned.
+   */
+  static of(annotation: symbol): Annotations {
+    return new Annotations(annotation);
   }
 }

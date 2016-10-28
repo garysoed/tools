@@ -3,7 +3,7 @@ TestBase.setup();
 
 import {Field, Serializable, Serializer} from './a-serializable';
 
-describe('model.Serializer', () => {
+describe('data.Serializable', () => {
 
   @Serializable('basic')
   class BasicClass {
@@ -135,7 +135,7 @@ describe('model.Serializer', () => {
       assert(deserialized.a).to.equal(value);
     });
 
-    fit('should handle subclasses', () => {
+    it('should handle subclasses', () => {
       let value = 'value';
       let subValue = 'subValue';
       let sub = new SubClass();

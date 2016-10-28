@@ -4,7 +4,7 @@ import {Maps} from '../collection/maps';
 import {Natives} from '../typescript/natives';
 
 
-export const __STRINGIFY: symbol = Symbol('stringify');
+export const ANNOTATIONS = Annotations.of(Symbol('stringify'));
 
 /**
  * Configuration for stringifying an object.
@@ -96,19 +96,16 @@ export class Stringify {
    */
   private static grabFields_(instance: any): Stringifiable {
     if (instance instanceof Object
-        && Annotations.hasAnnotation(instance.constructor.prototype, __STRINGIFY)) {
-      let annotations = Annotations.of(
-          <new (...args: any[]) => any> instance.constructor.prototype,
-          __STRINGIFY);
-      return Maps
-          .of(annotations.getFieldValues(instance))
-          .mapKey((value: any, key: string | symbol): string => {
-            return Natives.isSymbol(key) ? `[${key.toString()}]` : key;
-          })
-          .mapValue((value: any): any => {
-            return Stringify.grabFields_(value);
-          })
-          .asRecord();
+        && ANNOTATIONS.hasAnnotation(instance.constructor.prototype)) {
+      let record = {};
+      Arrays
+          .of(ANNOTATIONS.forPrototype(instance.constructor.prototype).getAnnotatedProperties())
+          .forEach((field: string | symbol): void => {
+            let stringifiedField = Natives.isSymbol(field) ? `[${field.toString()}]` : field;
+            let value = Stringify.grabFields_(instance[field]);
+            record[stringifiedField] = value;
+          });
+      return record;
     } else {
       return instance;
     }
@@ -121,7 +118,7 @@ export class Stringify {
     return (
         proto: Object,
         propertyKey: string | symbol): void => {
-      Annotations.of(proto, __STRINGIFY).addField(propertyKey);
+      ANNOTATIONS.forPrototype(proto).attachValueToProperty(propertyKey, {});
     };
   }
 

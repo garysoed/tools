@@ -1,8 +1,8 @@
 import {Annotations} from './annotations';
-import {Maps} from '../collection/maps';
+import {Arrays} from '../collection/arrays';
 
 
-export const __EQUALS: symbol = Symbol('equals');
+export const ANNOTATIONS = Annotations.of(Symbol('equals'));
 
 export class Equals {
   /**
@@ -12,16 +12,11 @@ export class Equals {
    */
   static equals<T>(a: T, b: T): boolean {
     if (a instanceof Object &&
-        Annotations.hasAnnotation(a.constructor.prototype, __EQUALS)) {
-      let annotations = Annotations.of(
-          <new (...args: any[]) => any> a.constructor.prototype,
-          __EQUALS);
-      let fieldsA = annotations.getFieldValues(a);
-      let fieldsB = annotations.getFieldValues(b);
-      return Maps
-          .of(fieldsA)
-          .all((value: any, key: string | symbol): boolean => {
-            return Equals.equals(value, fieldsB.get(key));
+        ANNOTATIONS.hasAnnotation(a.constructor.prototype)) {
+      let fields = ANNOTATIONS.forPrototype(a.constructor.prototype).getAnnotatedProperties();
+      return Arrays.of(fields)
+          .every((field: symbol | string) => {
+            return Equals.equals(a[field], b[field]);
           });
     } else {
       return a === b;
@@ -35,7 +30,7 @@ export class Equals {
     return (
         proto: Object,
         propertyKey: string | symbol): void => {
-      Annotations.of(proto, __EQUALS).addField(propertyKey);
+      ANNOTATIONS.forPrototype(proto).attachValueToProperty(propertyKey, {});
     };
   }
 }

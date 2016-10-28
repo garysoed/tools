@@ -6,6 +6,7 @@ import {AnyAssert} from './any-assert';
 import {ArrayAssert} from './array-assert';
 import {BooleanAssert} from './boolean-assert';
 import {FunctionAssert} from './function-assert';
+import {MapAssert} from './map-assert';
 import {NumberAssert} from './number-assert';
 import {StringAssert} from './string-assert';
 
@@ -29,6 +30,10 @@ describe('jasmine.assert', () => {
 
   it('should return the correct assert for array values', () => {
     expect(assert([]).to).toEqual(jasmine.any(ArrayAssert));
+  });
+
+  it('should return the correct assert for map values', () => {
+    expect(assert(new Map<any, any>()).to).toEqual(jasmine.any(MapAssert));
   });
 
   it('should return the correct assert for other values', () => {

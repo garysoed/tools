@@ -1,9 +1,7 @@
 import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
-import {__STRINGIFY, Stringify} from './stringify';
-import {Annotations} from './annotations';
-import {Maps} from '../collection/maps';
+import {ANNOTATIONS, Stringify} from './stringify';
 import {Mocks} from '../mock/mocks';
 import {Natives} from '../typescript/natives';
 
@@ -109,11 +107,12 @@ describe('data.Stringify', () => {
 
       let instance = {[key1]: value1, [key2]: value2, constructor: {prototype: proto}};
 
-      let mockAnnotations = jasmine.createSpyObj('Annotations', ['getFieldValues']);
-      mockAnnotations.getFieldValues.and
-          .returnValue(Maps.fromRecord({[key1]: value1, [key2]: value2}).asMap());
-      spyOn(Annotations, 'of').and.returnValue(mockAnnotations);
-      spyOn(Annotations, 'hasAnnotation').and.returnValue(true);
+      let mockAnnotationHandler =
+          jasmine.createSpyObj('AnnotationHandler', ['getAnnotatedProperties']);
+      mockAnnotationHandler.getAnnotatedProperties.and.returnValue([key1, key2]);
+
+      spyOn(ANNOTATIONS, 'forPrototype').and.returnValue(mockAnnotationHandler);
+      spyOn(ANNOTATIONS, 'hasAnnotation').and.returnValue(true);
 
       let originalGrabFields = Stringify['grabFields_'];
       spyOn(Stringify, 'grabFields_').and.callFake((instance: any): any => {
@@ -133,9 +132,8 @@ describe('data.Stringify', () => {
       });
       assert(Stringify['grabFields_']).to.haveBeenCalledWith(value1);
       assert(Stringify['grabFields_']).to.haveBeenCalledWith(value2);
-      assert(mockAnnotations.getFieldValues).to.haveBeenCalledWith(instance);
-      assert(Annotations.of).to.haveBeenCalledWith(proto, __STRINGIFY);
-      assert(Annotations.hasAnnotation).to.haveBeenCalledWith(proto, __STRINGIFY);
+      assert(ANNOTATIONS.forPrototype).to.haveBeenCalledWith(proto);
+      assert(ANNOTATIONS.hasAnnotation).to.haveBeenCalledWith(proto);
     });
 
     it('should normalize symbol keys correctly', () => {
@@ -149,13 +147,12 @@ describe('data.Stringify', () => {
 
       let instance = {[key1]: value1, [key2]: value2, constructor: {prototype: proto}};
 
-      let mockAnnotations = jasmine.createSpyObj('Annotations', ['getFieldValues']);
-      let map = new Map<symbol, any>();
-      map.set(key1, value1);
-      map.set(key2, value2);
-      mockAnnotations.getFieldValues.and.returnValue(map);
-      spyOn(Annotations, 'of').and.returnValue(mockAnnotations);
-      spyOn(Annotations, 'hasAnnotation').and.returnValue(true);
+      let mockAnnotationHandler =
+          jasmine.createSpyObj('AnnotationHandler', ['getAnnotatedProperties']);
+      mockAnnotationHandler.getAnnotatedProperties.and.returnValue([key1, key2]);
+
+      spyOn(ANNOTATIONS, 'forPrototype').and.returnValue(mockAnnotationHandler);
+      spyOn(ANNOTATIONS, 'hasAnnotation').and.returnValue(true);
 
       let originalGrabFields = Stringify['grabFields_'];
       spyOn(Stringify, 'grabFields_').and.callFake((instance: any): any => {
@@ -175,9 +172,8 @@ describe('data.Stringify', () => {
       });
       assert(Stringify['grabFields_']).to.haveBeenCalledWith(value1);
       assert(Stringify['grabFields_']).to.haveBeenCalledWith(value2);
-      assert(mockAnnotations.getFieldValues).to.haveBeenCalledWith(instance);
-      assert(Annotations.of).to.haveBeenCalledWith(proto, __STRINGIFY);
-      assert(Annotations.hasAnnotation).to.haveBeenCalledWith(proto, __STRINGIFY);
+      assert(ANNOTATIONS.forPrototype).to.haveBeenCalledWith(proto);
+      assert(ANNOTATIONS.hasAnnotation).to.haveBeenCalledWith(proto);
     });
 
     it('should return the instance if it is not an object', () => {
@@ -188,25 +184,26 @@ describe('data.Stringify', () => {
     it('should return the instance if it does not have the annotation', () => {
       let proto = Mocks.object('prototype');
       let instance = {constructor: {prototype: proto}};
-      spyOn(Annotations, 'hasAnnotation').and.returnValue(false);
+      spyOn(ANNOTATIONS, 'hasAnnotation').and.returnValue(false);
 
       assert(Stringify['grabFields_'](instance)).to.equal(instance);
-      assert(Annotations.hasAnnotation).to.haveBeenCalledWith(proto, __STRINGIFY);
+      assert(ANNOTATIONS.hasAnnotation).to.haveBeenCalledWith(proto);
     });
   });
 
   describe('Property', () => {
     it('should add the field to the annotations', () => {
-      let mockAnnotations = jasmine.createSpyObj('Annotations', ['addField']);
+      let mockAnnotationHandler =
+          jasmine.createSpyObj('AnnotationHandler', ['attachValueToProperty']);
       let ctor = Mocks.object('ctor');
       let key = 'key';
 
-      spyOn(Annotations, 'of').and.returnValue(mockAnnotations);
+      spyOn(ANNOTATIONS, 'forPrototype').and.returnValue(mockAnnotationHandler);
 
       Stringify.Property()(ctor, key);
 
-      assert(mockAnnotations.addField).to.haveBeenCalledWith(key);
-      assert(Annotations.of).to.haveBeenCalledWith(ctor, __STRINGIFY);
+      assert(ANNOTATIONS.forPrototype).to.haveBeenCalledWith(ctor);
+      assert(mockAnnotationHandler.attachValueToProperty).to.haveBeenCalledWith(key, {});
     });
   });
 
