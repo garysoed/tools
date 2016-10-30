@@ -5,10 +5,16 @@ import {IFluentIndexable} from './interfaces';
 
 
 export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexable<T> {
+  /**
+   * @param data The underlying data.
+   */
   constructor(data: T[]) {
     super(data);
   }
 
+  /**
+   * @override
+   */
   addAll(other: Iterable<T>): FluentIterable<T> {
     return Iterables.of(ArrayIterable.newInstance(this.getData()))
         .addAll(other);

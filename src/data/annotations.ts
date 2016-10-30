@@ -3,6 +3,7 @@ import {Maps} from '../collection/maps';
 
 
 /**
+ * Generic class to manage annotations.
  * @param <T> The type of value associated with the annotation.
  */
 export class AnnotationsHandler<T> {
@@ -76,7 +77,7 @@ export class AnnotationsHandler<T> {
 /**
  * Generic class to manage annotations.
  */
-export class Annotations {
+export class Annotations<T> {
   private annotation_: symbol;
 
   /**
@@ -93,7 +94,7 @@ export class Annotations {
    * @param parent The parent class of the prototype.
    * @return New instance of annotations handler for the given prototype.
    */
-  forPrototype<T>(proto: any, parent: any = null): AnnotationsHandler<T> {
+  forPrototype(proto: any, parent: any = null): AnnotationsHandler<T> {
     return AnnotationsHandler.of<T>(this.annotation_, proto, parent);
   }
 
@@ -109,7 +110,7 @@ export class Annotations {
    *
    * @param annotation The identifier of the annotation to be returned.
    */
-  static of(annotation: symbol): Annotations {
-    return new Annotations(annotation);
+  static of<T>(annotation: symbol): Annotations<T> {
+    return new Annotations<T>(annotation);
   }
 }

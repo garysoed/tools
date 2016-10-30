@@ -399,4 +399,21 @@ describe('collection.Mappables', () => {
       assert(Mappables.of(map).values().asArray()).to.equal([1, 2, 3]);
     });
   });
+
+  describe('group', () => {
+    it('should create the correct grouped map', () => {
+      let entries: [string, number][] = [
+        ['a', 1],
+        ['b', 2],
+        ['a', 2],
+        ['c', 3],
+      ];
+      assert(Mappables.group<string, number>(entries).asMap()).to
+          .haveEntries(<[string, number[]][]> [
+            ['a', [1, 2]],
+            ['b', [2]],
+            ['c', [3]],
+          ]);
+    });
+  });
 });

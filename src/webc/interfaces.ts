@@ -17,6 +17,27 @@ export interface IAttributeParser<T> {
 }
 
 /**
+ * Describes a binder to a dom location.
+ */
+export interface IDomBinder<T> {
+  /**
+   * Deletes the value.
+   */
+  delete(): void;
+
+  /**
+   * @return The value at the location.
+   */
+  get(): string | null;
+
+  /**
+   * Sets the value to the location.
+   * @param value The value to set.
+   */
+  set(value: string | null): void;
+}
+
+/**
  * Configures a element.
  */
 export interface IElementConfig {

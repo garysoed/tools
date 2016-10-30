@@ -74,6 +74,10 @@ export class Maps {
     return Maps.of<string, V>(new Map<string, V>(entries));
   }
 
+  static group<K, V>(entries: [K, V][]): FluentMappable<K, V[]> {
+    return Mappables.group(entries);
+  }
+
   /**
    * Starts by using a map.
    *

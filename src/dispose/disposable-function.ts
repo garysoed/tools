@@ -27,4 +27,8 @@ export class DisposableFunction extends BaseDisposable {
   run(): void {
     this.fn_();
   }
+
+  static of(fn: () => void): DisposableFunction {
+    return new DisposableFunction(fn);
+  }
 }
