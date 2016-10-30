@@ -1,4 +1,5 @@
 import {BaseFluent} from './base-fluent';
+import {Indexables} from './indexables';
 import {FluentIterable, Iterables} from './iterables';
 import {IFluentMappable} from './interfaces';
 import {FluentNonIndexable, NonIndexables} from './non-indexables';
@@ -176,6 +177,24 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
 }
 
 export class Mappables {
+  /**
+   * Groups together values with the same key.
+   *
+   * @param entries
+   * @return Map wrapper object with values of the same key grouped together into one array.
+   */
+  static group<K, V>(entries: [K, V][]): FluentMappable<K, V[]> {
+    let map: Map<K, V[]> = new Map();
+    Indexables.of(entries)
+        .forEach(([key, value]: [K, V]) => {
+          if (!map.has(key)) {
+            map.set(key, []);
+          }
+          map.get(key)!.push(value);
+        });
+    return Mappables.of(map);
+  }
+
   /**
    * Starts by using a map.
    *

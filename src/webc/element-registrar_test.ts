@@ -1,8 +1,10 @@
 import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
+import {ANNOTATIONS as BindAnnotations} from './bind';
 import {BaseElement} from './base-element';
 import {CustomElementUtil} from './custom-element-util';
+import {DomBridge} from './dom-bridge';
 import {ElementRegistrar} from './element-registrar';
 import {Log} from '../util/log';
 import {Mocks} from '../mock/mocks';
@@ -68,6 +70,29 @@ describe('webc.ElementRegistrar', () => {
 
       mockHTMLElement.createShadowRoot.and.returnValue(mockShadowRoot);
 
+      let binder1 = Mocks.object('binder1');
+      let binder2 = Mocks.object('binder2');
+
+      let mockBinderFactory1 = jasmine.createSpy('BinderFactory1').and.returnValue(binder1);
+      let mockBinderFactory2 = jasmine.createSpy('BinderFactory2').and.returnValue(binder2);
+
+      let key1 = 'key1';
+      let mockBridge1 = jasmine.createSpyObj('Bridge1', ['open']);
+      Object.setPrototypeOf(mockBridge1, DomBridge.prototype);
+      mockElement[key1] = mockBridge1;
+
+      let key2 = 'key2';
+      let mockBridge2 = jasmine.createSpyObj('Bridge2', ['open']);
+      Object.setPrototypeOf(mockBridge2, DomBridge.prototype);
+      mockElement[key2] = mockBridge2;
+
+      let binderMap = new Map();
+      binderMap.set(key1, mockBinderFactory1);
+      binderMap.set(key2, mockBinderFactory2);
+      let mockBindAnnotations = jasmine.createSpyObj('BindAnnotations', ['getAttachedValues']);
+      mockBindAnnotations.getAttachedValues.and.returnValue(binderMap);
+      spyOn(BindAnnotations, 'forPrototype').and.returnValue(mockBindAnnotations);
+
       spyOn(CustomElementUtil, 'addAttributes');
       spyOn(CustomElementUtil, 'setElement');
 
@@ -79,6 +104,11 @@ describe('webc.ElementRegistrar', () => {
       assert(mockShadowRoot.innerHTML).to.equal(content);
       assert(CustomElementUtil.addAttributes).to.haveBeenCalledWith(mockHTMLElement, attributes);
       assert(CustomElementUtil.setElement).to.haveBeenCalledWith(mockElement, mockHTMLElement);
+      assert(mockBridge1.open).to.haveBeenCalledWith(binder1);
+      assert(mockBridge2.open).to.haveBeenCalledWith(binder2);
+      assert(mockBinderFactory1).to.haveBeenCalledWith(mockHTMLElement);
+      assert(mockBinderFactory2).to.haveBeenCalledWith(mockHTMLElement);
+      assert(BindAnnotations.forPrototype).to.haveBeenCalledWith(mockElement.constructor.prototype);
     });
 
     it('should return config with correct inserted handler', () => {

@@ -1,13 +1,17 @@
+import {ANNOTATIONS as BindAnnotations} from './bind';
 import {BaseDisposable} from '../dispose/base-disposable';
 import {BaseElement} from './base-element';
 import {Cases} from '../string/cases';
 import {Checks} from '../util/checks';
 import {CustomElementUtil} from './custom-element-util';
-import {IAttributeParser} from './interfaces';
+import {DomBridge} from './dom-bridge';
+import {Handler} from './handle';
+import {IAttributeParser, IDomBinder} from './interfaces';
 import {Injector} from '../inject/injector';
 import {Log} from '../util/log';
-import {Validate} from '../valid/validate';
+import {Maps} from '../collection/maps';
 import {Templates} from './templates';
+import {Validate} from '../valid/validate';
 
 /**
  * @hidden
@@ -59,7 +63,18 @@ export class ElementRegistrar extends BaseDisposable {
         CustomElementUtil.addAttributes(this, attributes);
         CustomElementUtil.setElement(instance, this);
 
+        let instancePrototype = instance.constructor.prototype;
+        Maps.of(BindAnnotations.forPrototype(instancePrototype).getAttachedValues())
+            .forEach((
+                factory: (element: HTMLElement) => IDomBinder<any>,
+                key: string | symbol) => {
+              let bridge = instance[key];
+              Validate.any(bridge).to.beAnInstanceOf(DomBridge).assertValid();
+              (<DomBridge<any>> bridge).open(factory(this));
+            });
+
         instance.onCreated(this);
+        Handler.configure(this, instance);
       },
       inserted: function(): void {
         ElementRegistrar.runOnInstance_(this, (element: BaseElement) => {

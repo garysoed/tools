@@ -2,7 +2,7 @@ import {Annotations} from './annotations';
 import {Arrays} from '../collection/arrays';
 
 
-export const ANNOTATIONS = Annotations.of(Symbol('equals'));
+export const ANNOTATIONS: Annotations<any> = Annotations.of<any>(Symbol('equals'));
 
 export class Equals {
   /**

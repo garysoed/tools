@@ -139,10 +139,10 @@ describe('data.AnnotationsHandler', () => {
 
 describe('data.Annotations', () => {
   const __SYMBOL = Symbol('symbol');
-  let annotations: Annotations;
+  let annotations: Annotations<number>;
 
   beforeEach(() => {
-    annotations = new Annotations(__SYMBOL);
+    annotations = new Annotations<number>(__SYMBOL);
   });
 
   describe('forPrototype', () => {
