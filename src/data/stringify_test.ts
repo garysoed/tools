@@ -97,7 +97,7 @@ describe('data.Stringify', () => {
 
   describe('grabFields_', () => {
     it('should grab all the fields with stringify annotation', () => {
-      let proto = Mocks.object('prototype');
+      let ctor = Mocks.object('ctor');
       let key1 = 'key1';
       let value1 = Mocks.object('value1');
       let normalizedValue1 = Mocks.object('normalizedValue1');
@@ -105,7 +105,7 @@ describe('data.Stringify', () => {
       let value2 = Mocks.object('value2');
       let normalizedValue2 = Mocks.object('normalizedValue2');
 
-      let instance = {[key1]: value1, [key2]: value2, constructor: {prototype: proto}};
+      let instance = {[key1]: value1, [key2]: value2, constructor: ctor};
 
       let mockAnnotationHandler =
           jasmine.createSpyObj('AnnotationHandler', ['getAnnotatedProperties']);
@@ -132,12 +132,12 @@ describe('data.Stringify', () => {
       });
       assert(Stringify['grabFields_']).to.haveBeenCalledWith(value1);
       assert(Stringify['grabFields_']).to.haveBeenCalledWith(value2);
-      assert(ANNOTATIONS.forPrototype).to.haveBeenCalledWith(proto);
-      assert(ANNOTATIONS.hasAnnotation).to.haveBeenCalledWith(proto);
+      assert(ANNOTATIONS.forPrototype).to.haveBeenCalledWith(ctor);
+      assert(ANNOTATIONS.hasAnnotation).to.haveBeenCalledWith(ctor);
     });
 
     it('should normalize symbol keys correctly', () => {
-      let proto = Mocks.object('prototype');
+      let ctor = Mocks.object('prototype');
       let key1 = Symbol('key1');
       let value1 = Mocks.object('value1');
       let normalizedValue1 = Mocks.object('normalizedValue1');
@@ -145,7 +145,7 @@ describe('data.Stringify', () => {
       let value2 = Mocks.object('value2');
       let normalizedValue2 = Mocks.object('normalizedValue2');
 
-      let instance = {[key1]: value1, [key2]: value2, constructor: {prototype: proto}};
+      let instance = {[key1]: value1, [key2]: value2, constructor: ctor};
 
       let mockAnnotationHandler =
           jasmine.createSpyObj('AnnotationHandler', ['getAnnotatedProperties']);
@@ -172,8 +172,8 @@ describe('data.Stringify', () => {
       });
       assert(Stringify['grabFields_']).to.haveBeenCalledWith(value1);
       assert(Stringify['grabFields_']).to.haveBeenCalledWith(value2);
-      assert(ANNOTATIONS.forPrototype).to.haveBeenCalledWith(proto);
-      assert(ANNOTATIONS.hasAnnotation).to.haveBeenCalledWith(proto);
+      assert(ANNOTATIONS.forPrototype).to.haveBeenCalledWith(ctor);
+      assert(ANNOTATIONS.hasAnnotation).to.haveBeenCalledWith(ctor);
     });
 
     it('should return the instance if it is not an object', () => {
@@ -182,12 +182,12 @@ describe('data.Stringify', () => {
     });
 
     it('should return the instance if it does not have the annotation', () => {
-      let proto = Mocks.object('prototype');
-      let instance = {constructor: {prototype: proto}};
+      let ctor = Mocks.object('ctor');
+      let instance = {constructor: ctor};
       spyOn(ANNOTATIONS, 'hasAnnotation').and.returnValue(false);
 
       assert(Stringify['grabFields_'](instance)).to.equal(instance);
-      assert(ANNOTATIONS.hasAnnotation).to.haveBeenCalledWith(proto);
+      assert(ANNOTATIONS.hasAnnotation).to.haveBeenCalledWith(ctor);
     });
   });
 

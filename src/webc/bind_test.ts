@@ -79,9 +79,9 @@ describe('webc.Bind', () => {
     it('should attach the correct factory to the property', () => {
       let selector = 'selector';
       let attributeName = 'attributeName';
-      let proto = Mocks.object('proto');
+      let ctor = Mocks.object('ctor');
       let target = Mocks.object('target');
-      target.constructor = {prototype: proto};
+      target.constructor = ctor;
 
       let propertyKey = 'propertyKey';
 
@@ -93,7 +93,7 @@ describe('webc.Bind', () => {
       spyOn(bind, 'createBinder_').and.returnValue(binder);
 
       bind.attribute(selector, attributeName)(target, propertyKey);
-      assert(ANNOTATIONS.forPrototype).to.haveBeenCalledWith(proto);
+      assert(ANNOTATIONS.forPrototype).to.haveBeenCalledWith(ctor);
       assert(mockAnnotationsHandler.attachValueToProperty).to.haveBeenCalledWith(
           propertyKey,
           jasmine.any(Function));

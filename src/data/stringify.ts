@@ -96,10 +96,10 @@ export class Stringify {
    */
   private static grabFields_(instance: any): Stringifiable {
     if (instance instanceof Object
-        && ANNOTATIONS.hasAnnotation(instance.constructor.prototype)) {
+        && ANNOTATIONS.hasAnnotation(instance.constructor)) {
       let record = {};
       Arrays
-          .of(ANNOTATIONS.forPrototype(instance.constructor.prototype).getAnnotatedProperties())
+          .of(ANNOTATIONS.forPrototype(instance.constructor).getAnnotatedProperties())
           .forEach((field: string | symbol): void => {
             let stringifiedField = Natives.isSymbol(field) ? `[${field.toString()}]` : field;
             let value = Stringify.grabFields_(instance[field]);

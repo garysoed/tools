@@ -8,7 +8,7 @@ import {Mocks} from '../mock/mocks';
 describe('data.Equals', () => {
   describe('equals', () => {
     it('should recursively check the fields', () => {
-      let proto = Mocks.object('proto');
+      let ctor = Mocks.object('ctor');
 
       let key1 = 'key1';
       let key2 = 'key2';
@@ -18,7 +18,7 @@ describe('data.Equals', () => {
       let a = {
         [key1]: value1A,
         [key2]: value2A,
-        constructor: {prototype: proto},
+        constructor: ctor,
       };
 
       let value1B = Mocks.object('value1B');
@@ -50,12 +50,12 @@ describe('data.Equals', () => {
       assert(Equals.equals(a, b)).to.beTrue();
       assert(Equals.equals).to.haveBeenCalledWith(value1A, value1B);
       assert(Equals.equals).to.haveBeenCalledWith(value2A, value2B);
-      assert(ANNOTATIONS.hasAnnotation).to.haveBeenCalledWith(proto);
-      assert(ANNOTATIONS.forPrototype).to.haveBeenCalledWith(proto);
+      assert(ANNOTATIONS.hasAnnotation).to.haveBeenCalledWith(ctor);
+      assert(ANNOTATIONS.forPrototype).to.haveBeenCalledWith(ctor);
     });
 
     it('should return false if one of the recursive fields is different', () => {
-      let proto = Mocks.object('proto');
+      let ctor = Mocks.object('ctor');
 
       let key1 = 'key1';
       let key2 = 'key2';
@@ -65,7 +65,7 @@ describe('data.Equals', () => {
       let a = {
         [key1]: value1A,
         [key2]: value2A,
-        constructor: {prototype: proto},
+        constructor: ctor,
       };
 
       let value1B = Mocks.object('value1B');
@@ -126,12 +126,12 @@ describe('data.Equals', () => {
 
       spyOn(ANNOTATIONS, 'forPrototype').and.returnValue(mockAnnotationHandler);
 
-      let proto = Mocks.object('proto');
+      let ctor = Mocks.object('ctor');
       let key = 'key';
 
-      Equals.Property()(proto, key);
+      Equals.Property()({constructor: ctor}, key);
 
-      assert(ANNOTATIONS.forPrototype).to.haveBeenCalledWith(proto);
+      assert(ANNOTATIONS.forPrototype).to.haveBeenCalledWith(ctor);
       assert(mockAnnotationHandler.attachValueToProperty).to.haveBeenCalledWith(key, {});
     });
   });

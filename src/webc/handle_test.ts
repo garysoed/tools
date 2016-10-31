@@ -326,9 +326,9 @@ describe('webc.Handler', () => {
       let selector = 'selector';
       let attributeName = 'attributeName';
       let parser = Mocks.object('parser');
-      let proto = Mocks.object('proto');
+      let ctor = Mocks.object('proto');
       let target = Mocks.object('target');
-      target.constructor = {prototype: proto};
+      target.constructor = ctor;
       let propertyKey = 'propertyKey';
       let descriptor = Mocks.object('descriptor');
 
@@ -338,7 +338,7 @@ describe('webc.Handler', () => {
 
       let decorator = handler.attributeChange(selector, attributeName, parser);
       assert(decorator(target, propertyKey, descriptor)).to.equal(descriptor);
-      assert(ATTR_CHANGE_ANNOTATIONS.forPrototype).to.haveBeenCalledWith(proto);
+      assert(ATTR_CHANGE_ANNOTATIONS.forPrototype).to.haveBeenCalledWith(ctor);
       assert(mockAnnotationsHandler.attachValueToProperty).to.haveBeenCalledWith(
           propertyKey,
           {
@@ -354,9 +354,9 @@ describe('webc.Handler', () => {
   describe('configure', () => {
     it('should start the mutation observer correctly and call the initial mutation', () => {
       let element = Mocks.object('element');
-      let proto = Mocks.object('proto');
+      let ctor = Mocks.object('ctor');
       let instance = Mocks.object('instance');
-      instance.constructor = {prototype: proto};
+      instance.constructor = ctor;
 
       let configs1_1 = Mocks.object('configs1_1');
       let configs1_2 = Mocks.object('configs1_2');
@@ -398,7 +398,7 @@ describe('webc.Handler', () => {
       assert(Handler['getTargetEl_']).to.haveBeenCalledWith(configs2_1, element);
       assert(Handler['getTargetEl_']).to.haveBeenCalledWith(configs2_2, element);
 
-      assert(ATTR_CHANGE_ANNOTATIONS.forPrototype).to.haveBeenCalledWith(proto);
+      assert(ATTR_CHANGE_ANNOTATIONS.forPrototype).to.haveBeenCalledWith(ctor);
     });
   });
 });

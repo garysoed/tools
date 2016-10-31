@@ -18,8 +18,8 @@ describe('webc.BooleanParser', () => {
       assert(BooleanParser.parse('false')).to.beFalse();
     });
 
-    it('should parse any other strings as false', () => {
-      assert(BooleanParser.parse('randomString')).to.beFalse();
+    it('should parse any other strings as true', () => {
+      assert(BooleanParser.parse('randomString')).to.beTrue();
     });
 
     it('should parse null as false', () => {

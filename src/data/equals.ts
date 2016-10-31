@@ -12,8 +12,8 @@ export class Equals {
    */
   static equals<T>(a: T, b: T): boolean {
     if (a instanceof Object &&
-        ANNOTATIONS.hasAnnotation(a.constructor.prototype)) {
-      let fields = ANNOTATIONS.forPrototype(a.constructor.prototype).getAnnotatedProperties();
+        ANNOTATIONS.hasAnnotation(a.constructor)) {
+      let fields = ANNOTATIONS.forPrototype(a.constructor).getAnnotatedProperties();
       return Arrays.of(fields)
           .every((field: symbol | string) => {
             return Equals.equals(a[field], b[field]);
@@ -30,7 +30,7 @@ export class Equals {
     return (
         proto: Object,
         propertyKey: string | symbol): void => {
-      ANNOTATIONS.forPrototype(proto).attachValueToProperty(propertyKey, {});
+      ANNOTATIONS.forPrototype(proto.constructor).attachValueToProperty(propertyKey, {});
     };
   }
 }

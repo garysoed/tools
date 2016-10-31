@@ -12,7 +12,7 @@ export const BooleanParser: IAttributeParser<boolean> = {
    * @return The parsed boolean value.
    */
   parse(input: string| null): boolean {
-    return input !== null && input.toLowerCase() === 'true';
+    return input !== null && input.toLowerCase() !== 'false';
   },
 
   /**

@@ -108,7 +108,7 @@ describe('webc.ElementRegistrar', () => {
       assert(mockBridge2.open).to.haveBeenCalledWith(binder2);
       assert(mockBinderFactory1).to.haveBeenCalledWith(mockHTMLElement);
       assert(mockBinderFactory2).to.haveBeenCalledWith(mockHTMLElement);
-      assert(BindAnnotations.forPrototype).to.haveBeenCalledWith(mockElement.constructor.prototype);
+      assert(BindAnnotations.forPrototype).to.haveBeenCalledWith(mockElement.constructor);
     });
 
     it('should return config with correct inserted handler', () => {

@@ -156,7 +156,7 @@ export class Handler {
         target: Object,
         propertyKey: string | symbol,
         descriptor: PropertyDescriptor): PropertyDescriptor {
-      ATTR_CHANGE_ANNOTATIONS.forPrototype(target.constructor.prototype).attachValueToProperty(
+      ATTR_CHANGE_ANNOTATIONS.forPrototype(target.constructor).attachValueToProperty(
           propertyKey,
           {
             attributeName: attributeName,
@@ -178,7 +178,7 @@ export class Handler {
   static configure(element: HTMLElement, instance: BaseDisposable): void {
     let configEntries = Maps.of(
         ATTR_CHANGE_ANNOTATIONS
-            .forPrototype(instance.constructor.prototype)
+            .forPrototype(instance.constructor)
             .getAttachedValues())
         .values()
         .map((config: AttributeChangeHandlerConfig):
