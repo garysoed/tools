@@ -38,12 +38,12 @@ describe('ui.LocationService', () => {
   describe('getParts_', () => {
     it('should split the normalized parts', () => {
       let path = 'path';
-      let normalizedPath = '/a/b/c';
+      let normalizedPath = '/a/./b/c';
 
-      spyOn(service, 'normalizePath_').and.returnValue(normalizedPath);
+      spyOn(LocationService, 'normalizePath').and.returnValue(normalizedPath);
 
       assert(service['getParts_'](path)).to.equal(['', 'a', 'b', 'c']);
-      assert(service['normalizePath_']).to.haveBeenCalledWith(path);
+      assert(LocationService.normalizePath).to.haveBeenCalledWith(path);
     });
   });
 
@@ -56,16 +56,6 @@ describe('ui.LocationService', () => {
       assert(mockWindow.on).to.haveBeenCalledWith(DomEvent.HASHCHANGE, Matchers.any(Function));
       mockWindow.on.calls.argsFor(0)[1]();
       assert(service['onHashChange_']).to.haveBeenCalledWith();
-    });
-  });
-
-  describe('normalizePath_', () => {
-    it('should add missing `/` at the start of the path', () => {
-      assert(service['normalizePath_']('path')).to.equal('/path');
-    });
-
-    it('should remove extra `/` at the end of the path', () => {
-      assert(service['normalizePath_']('/path/')).to.equal('/path');
     });
   });
 
@@ -122,11 +112,47 @@ describe('ui.LocationService', () => {
     it('should set the location with the normalized path', () => {
       let path = 'path';
       let normalizedPath = 'normalizedPath';
-      spyOn(service, 'normalizePath_').and.returnValue(normalizedPath);
+      spyOn(LocationService, 'normalizePath').and.returnValue(normalizedPath);
       service.goTo(path);
 
       assert(mockLocation.hash).to.equal(normalizedPath);
-      assert(service['normalizePath_']).to.haveBeenCalledWith(path);
+      assert(LocationService.normalizePath).to.haveBeenCalledWith(path);
+    });
+  });
+
+  describe('hasMatch', () => {
+    it('should return true if there are matches', () => {
+      let matcher = 'matcher';
+      spyOn(service, 'getMatches').and.returnValue({});
+      assert(service.hasMatch(matcher)).to.beTrue();
+      assert(service.getMatches).to.haveBeenCalledWith(matcher);
+    });
+
+    it('should return false if there are no matches', () => {
+      let matcher = 'matcher';
+      spyOn(service, 'getMatches').and.returnValue(null);
+      assert(service.hasMatch(matcher)).to.beFalse();
+      assert(service.getMatches).to.haveBeenCalledWith(matcher);
+    });
+  });
+
+  describe('appendParts', () => {
+    it('should combine the parts together', () => {
+      assert(LocationService.appendParts(['a', 'b/', '/c', '.', '/d/e/'])).to.equal('/a/b/c/d/e');
+    });
+
+    it('should return "/" if there path is empty', () => {
+      assert(LocationService.appendParts(['.', ''])).to.equal('/');
+    });
+  });
+
+  describe('normalizePath', () => {
+    it('should add missing `/` at the start of the path', () => {
+      assert(LocationService.normalizePath('path')).to.equal('/path');
+    });
+
+    it('should remove extra `/` at the end of the path', () => {
+      assert(LocationService.normalizePath('/path/')).to.equal('/path');
     });
   });
 });

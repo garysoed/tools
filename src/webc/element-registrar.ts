@@ -78,12 +78,12 @@ export class ElementRegistrar extends BaseDisposable {
       },
       inserted: function(): void {
         ElementRegistrar.runOnInstance_(this, (element: BaseElement) => {
-          element.onInserted();
+          element.onInserted(this);
         });
       },
       removed: function(): void {
         ElementRegistrar.runOnInstance_(this, (element: BaseElement) => {
-          element.onRemoved();
+          element.onRemoved(this);
         });
       },
     };

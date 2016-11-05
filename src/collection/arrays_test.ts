@@ -7,6 +7,22 @@ import {Mocks} from '../mock/mocks';
 
 
 describe('collection.Arrays', () => {
+  describe('fromHtmlCollection', () => {
+    it('should return the correct FluentIndexable', () => {
+      let element1 = Mocks.object('element1');
+      let element2 = Mocks.object('element2');
+      let element3 = Mocks.object('element3');
+      let elements = [element1, element2, element3];
+      let mockCollection = jasmine.createSpyObj('Collection', ['item']);
+      mockCollection.length = 3;
+      mockCollection.item.and.callFake((i: number) => {
+        return elements[i];
+      });
+
+      assert(Arrays.fromHtmlCollection(mockCollection).asArray()).to.equal(elements);
+    });
+  });
+
   describe('fromIterable', () => {
     it('should return the correct FluentIndexable', () => {
       let data = [1, 1, 2, 2, 3];

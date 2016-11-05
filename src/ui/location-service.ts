@@ -1,3 +1,4 @@
+import {Arrays} from '../collection/arrays';
 import {BaseListenable} from '../event/base-listenable';
 import {DomEvent} from '../event/dom-event';
 import {ListenableDom} from '../event/listenable-dom';
@@ -41,7 +42,12 @@ export class LocationService extends BaseListenable<LocationServiceEvents> {
    * @return Parts of the given path.
    */
   private getParts_(path: string): string[] {
-    return this.normalizePath_(path).split('/');
+    return Arrays
+        .of(LocationService.normalizePath(path).split('/'))
+        .filter((part: string) => {
+          return part !== '.';
+        })
+        .asArray();
   }
 
   /**
@@ -49,15 +55,6 @@ export class LocationService extends BaseListenable<LocationServiceEvents> {
    */
   private init_(): void {
     this.window_.on(DomEvent.HASHCHANGE, this.onHashChange_.bind(this));
-  }
-
-  /**
-   * @return The normalized path. This makes sure that every part starts with a '/' and does not end
-   *    with a '/'.
-   */
-  private normalizePath_(path: string): string {
-    path = path[0] === '/' ? path : '/' + path;
-    return path[path.length - 1] === '/' ? path.substr(0, path.length - 1) : path;
   }
 
   /**
@@ -105,6 +102,43 @@ export class LocationService extends BaseListenable<LocationServiceEvents> {
    * @param path Path to navigate to.
    */
   goTo(path: string): void {
-    this.location_.hash = this.normalizePath_(path);
+    this.location_.hash = LocationService.normalizePath(path);
+  }
+
+  /**
+   * @param matcher Matcher to determine if there is a match.
+   * @return True iff the given matcher matches the current path.
+   */
+  hasMatch(matcher: string): boolean {
+    return this.getMatches(matcher) !== null;
+  }
+
+  /**
+   * Appends the given parts to a single part.
+   *
+   * @param parts Parts to be joined.
+   * @return The joined parts.
+   */
+  static appendParts(parts: string[]): string {
+    let path = Arrays
+        .of(parts)
+        .filter((part: string) => {
+          return part !== '.';
+        })
+        .map((part: string) => {
+          return LocationService.normalizePath(part);
+        })
+        .asArray()
+        .join('');
+    return path === '' ? '/' : path;
+  }
+
+  /**
+   * @return The normalized path. This makes sure that every part starts with a '/' and does not end
+   *    with a '/'.
+   */
+  static normalizePath(path: string): string {
+    path = path[0] === '/' ? path : '/' + path;
+    return path[path.length - 1] === '/' ? path.substr(0, path.length - 1) : path;
   }
 }

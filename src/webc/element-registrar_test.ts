@@ -112,33 +112,33 @@ describe('webc.ElementRegistrar', () => {
     });
 
     it('should return config with correct inserted handler', () => {
-      let mockHTMLElement = Mocks.object('HTMLElement');
+      let mockHtmlElement = Mocks.object('HTMLElement');
       let mockElement = jasmine.createSpyObj('Component', ['onInserted']);
 
       let runOnInstanceSpy = spyOn(ElementRegistrar, 'runOnInstance_');
 
-      registrar['getLifecycleConfig_']({}, mockProvider, 'content').inserted.call(mockHTMLElement);
+      registrar['getLifecycleConfig_']({}, mockProvider, 'content').inserted.call(mockHtmlElement);
 
       assert(ElementRegistrar['runOnInstance_'])
-          .to.haveBeenCalledWith(mockHTMLElement, <any> Matchers.any(Function));
+          .to.haveBeenCalledWith(mockHtmlElement, <any> Matchers.any(Function));
 
       runOnInstanceSpy.calls.argsFor(0)[1](mockElement);
-      assert(mockElement.onInserted).to.haveBeenCalledWith();
+      assert(mockElement.onInserted).to.haveBeenCalledWith(mockHtmlElement);
     });
 
     it('should return config with correct removed handler', () => {
-      let mockHTMLElement = Mocks.object('HTMLElement');
+      let mockHtmlElement = Mocks.object('HTMLElement');
       let mockElement = jasmine.createSpyObj('Element', ['onRemoved']);
 
       let runOnInstanceSpy = spyOn(ElementRegistrar, 'runOnInstance_');
 
-      registrar['getLifecycleConfig_']({}, mockProvider, 'content').removed.call(mockHTMLElement);
+      registrar['getLifecycleConfig_']({}, mockProvider, 'content').removed.call(mockHtmlElement);
 
       assert(ElementRegistrar['runOnInstance_'])
-          .to.haveBeenCalledWith(mockHTMLElement, <any> Matchers.any(Function));
+          .to.haveBeenCalledWith(mockHtmlElement, <any> Matchers.any(Function));
 
       runOnInstanceSpy.calls.argsFor(0)[1](mockElement);
-      assert(mockElement.onRemoved).to.haveBeenCalledWith();
+      assert(mockElement.onRemoved).to.haveBeenCalledWith(mockHtmlElement);
     });
   });
 

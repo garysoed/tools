@@ -21,6 +21,19 @@ import {FluentIndexable} from './indexables';
  */
 export class Arrays {
   /**
+   * Starts by using an HTML collection.
+   *
+   * @param collection The HTML collection object to start from.
+   * @return Array wrapper object to do operations on.
+   */
+  static fromHtmlCollection(collection: HTMLCollection): FluentIndexable<Element> {
+    let array: Element[] = [];
+    for (let i = 0; i < collection.length; i++) {
+      array.push(collection.item(i));
+    }
+    return Arrays.of(array);
+  }
+  /**
    * Starts by using a (finite) iterable.
    *
    * @param <T> Type of the array element.

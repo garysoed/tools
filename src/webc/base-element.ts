@@ -37,7 +37,7 @@ export class BaseElement extends BaseDisposable {
   /**
    * Called when the element is created.
    *
-   * @param element Reference to the
+   * @param element Reference to the element.
    */
   onCreated(element: HTMLElement): void {
     this.element_ = ListenableDom.of(element);
@@ -46,15 +46,17 @@ export class BaseElement extends BaseDisposable {
 
   /**
    * Called when the element is inserted into the DOM.
-   * TODO: Pass the element.
+   *
+   * @param element Reference to the element.
    */
-  onInserted(): void { }
+  onInserted(element: HTMLElement): void { }
 
   /**
    * Called when the element is removed from the DOM.
-   * TODO: Pass the element
+   *
+   * @param element Reference to the element.
    */
-  onRemoved(): void { }
+  onRemoved(element: HTMLElement): void { }
 
   // TODO: add parser
   setAttribute(attrName: string, value: string): void {
