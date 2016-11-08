@@ -11,6 +11,7 @@ def _ts_binary_impl(ctx):
 
   compile_command = ' '.join([
     ctx.executable._ts_bin.path,
+    '--baseUrl', '.',
     '--experimentalDecorators',
     '--module', 'commonjs',
     '--outDir', ctx.label.name,
