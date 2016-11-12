@@ -16,12 +16,7 @@ describe('ui.LocationService', () => {
 
   beforeEach(() => {
     mockLocation = {hash: ''};
-    mockWindow = Mocks.disposable('Window');
-    mockWindow.getEventTarget = () => {
-      return {location: mockLocation};
-    };
-    mockWindow.on = jasmine.createSpy('on');
-    mockWindow.getEventTarget;
+    mockWindow = Mocks.listenable('window', {location: mockLocation});
 
     service = new LocationService(mockWindow);
     TestDispose.add(service);
@@ -50,6 +45,7 @@ describe('ui.LocationService', () => {
   describe('init_', () => {
     it('should listen to the hashchange event', () => {
       spyOn(service, 'onHashChange_');
+      spyOn(mockWindow, 'on').and.callThrough();
 
       service['init_']();
 

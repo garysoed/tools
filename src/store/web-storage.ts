@@ -1,10 +1,11 @@
 import {Serializer} from '../data/a-serializable';
 import {Storage as GsStorage} from './interfaces';
+import {Validate} from '../valid/validate';
 
 
 export class WebStorage<T> implements GsStorage<T> {
-  private prefix_: string;
-  private storage_: Storage;
+  private readonly prefix_: string;
+  private readonly storage_: Storage;
 
   /**
    * @param storage Reference to storage instance.
@@ -13,6 +14,28 @@ export class WebStorage<T> implements GsStorage<T> {
   constructor(storage: Storage, prefix: string) {
     this.prefix_ = prefix;
     this.storage_ = storage;
+  }
+
+  /**
+   * Returns the indexes in the storage.
+   * @private
+   */
+  private getIndexes_(): string[] {
+    let indexes = this.storage_.getItem(this.prefix_);
+    if (indexes === null) {
+      this.updateIndexes_([]);
+    }
+    return JSON.parse(this.storage_.getItem(this.prefix_));
+  }
+
+  /**
+   * Updates the indexes with the given values.
+   *
+   * @param indexes Indexes to update.
+   * @private
+   */
+  private updateIndexes_(indexes: string[]): void {
+    this.storage_.setItem(this.prefix_, JSON.stringify(indexes));
   }
 
   /**
@@ -27,6 +50,13 @@ export class WebStorage<T> implements GsStorage<T> {
    * @override
    */
   create(id: string, instance: T): Promise<void> {
+    let indexes = this.getIndexes_();
+    if (!Validate.array(indexes).toNot.contain(id).isValid()) {
+      // TODO: Make custom error thrower that surrounds values with '[]'
+      return Promise.reject(new Error(`Index [${id}] already exist`));
+    }
+    indexes.push(id);
+    this.updateIndexes_(indexes);
     return this.update(id, instance);
   }
 
@@ -34,6 +64,12 @@ export class WebStorage<T> implements GsStorage<T> {
    * @override
    */
   delete(id: string): Promise<void> {
+    let indexes = this.getIndexes_();
+    if (!Validate.array(indexes).to.contain(id).isValid()) {
+      return Promise.reject(new Error(`Index [${id}] does not exist`));
+    }
+    indexes.splice(indexes.indexOf(id), 1);
+    this.updateIndexes_(indexes);
     this.storage_.removeItem(this.getPath_(id));
     return Promise.resolve();
   }
@@ -42,7 +78,15 @@ export class WebStorage<T> implements GsStorage<T> {
    * @override
    */
   has(id: string): Promise<boolean> {
-    return Promise.resolve(this.storage_.getItem(this.getPath_(id)) !== null);
+    let indexes = this.getIndexes_();
+    return Promise.resolve(indexes.indexOf(id) >= 0);
+  }
+
+  /**
+   * @override
+   */
+  list(): Promise<string[]> {
+    return Promise.resolve(this.getIndexes_());
   }
 
   /**

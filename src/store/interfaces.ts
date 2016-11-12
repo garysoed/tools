@@ -25,6 +25,11 @@ export interface Storage<T> {
   has(id: string): Promise<boolean>;
 
   /**
+   * @return IDs of the data in the storage.
+   */
+  list(): Promise<string[]>;
+
+  /**
    * Reads the object corresponding to the given ID.
    *
    * @param id ID of the object to be read.

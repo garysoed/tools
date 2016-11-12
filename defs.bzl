@@ -69,7 +69,7 @@ def gs_tools(deps = [], test_deps = []):
 
     ts_binary(
         name = test_src_bin_name,
-        deps = [":" + testlib_name]
+        deps = [":" + testlib_name],
     )
 
     webpack_binary(

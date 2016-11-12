@@ -16,10 +16,41 @@ describe('store.WebStorage', () => {
     storage = new WebStorage<any>(mockStorage, PREFIX);
   });
 
+  describe('getIndexes_', () => {
+    it('should initialize the indexes first', () => {
+      let indexes = Mocks.object('indexes');
+      mockStorage.getItem.and.returnValues(null, JSON.stringify(indexes));
+
+      spyOn(storage, 'updateIndexes_');
+
+      assert(storage['getIndexes_']()).to.equal(indexes);
+      assert(storage['updateIndexes_']).to.haveBeenCalledWith([]);
+      assert(mockStorage.getItem).to.haveBeenCalledWith(PREFIX);
+    });
+
+    it('should not reinitialize the indexes if exists', () => {
+      let indexes = Mocks.object('indexes');
+      mockStorage.getItem.and.returnValue(JSON.stringify(indexes));
+
+      spyOn(storage, 'updateIndexes_');
+
+      assert(storage['getIndexes_']()).to.equal(indexes);
+      assert(storage['updateIndexes_']).toNot.haveBeenCalled();
+    });
+  });
+
   describe('getPath_', () => {
     it('should return the correct path', () => {
       let key = 'key';
       assert(storage['getPath_'](key)).to.equal(`${PREFIX}/${key}`);
+    });
+  });
+
+  describe('updateIndexes_', () => {
+    it('should update the storage correctly', () => {
+      let indexes = Mocks.object('indexes');
+      storage['updateIndexes_'](indexes);
+      assert(mockStorage.setItem).to.haveBeenCalledWith(PREFIX, JSON.stringify(indexes));
     });
   });
 
@@ -28,13 +59,37 @@ describe('store.WebStorage', () => {
       let id = 'id';
       let object = Mocks.object('object');
 
+      spyOn(storage, 'getIndexes_').and.returnValue([]);
+      spyOn(storage, 'updateIndexes_');
       spyOn(storage, 'update').and.returnValue(Promise.resolve());
 
-      storage.create(id, object)
+      storage
+          .create(id, object)
           .then(() => {
             assert(storage.update).to.haveBeenCalledWith(id, object);
+            assert(storage['updateIndexes_']).to.haveBeenCalledWith([id]);
             done();
           }, done.fail);
+    });
+
+    it('should reject if the ID already exist', (done: any) => {
+      let id = 'id';
+      let object = Mocks.object('object');
+
+      spyOn(storage, 'getIndexes_').and.returnValue([id]);
+      spyOn(storage, 'updateIndexes_');
+      spyOn(storage, 'update');
+
+      storage
+          .create(id, object)
+          .then(
+              done.fail,
+              (error: Error) => {
+                assert(error.message).to.match(/already exist/);
+                assert(storage.update).toNot.haveBeenCalled();
+                assert(storage['updateIndexes_']).toNot.haveBeenCalled();
+                done();
+              });
     });
   });
 
@@ -43,43 +98,72 @@ describe('store.WebStorage', () => {
       let id = 'id';
       let path = 'path';
       spyOn(storage, 'getPath_').and.returnValue(path);
-      storage.delete(id)
+      spyOn(storage, 'getIndexes_').and.returnValue([id]);
+      spyOn(storage, 'updateIndexes_');
+      storage
+          .delete(id)
           .then(() => {
             assert(mockStorage.removeItem).to.haveBeenCalledWith(path);
             assert(storage['getPath_']).to.haveBeenCalledWith(id);
+            assert(storage['updateIndexes_']).to.haveBeenCalledWith([]);
             done();
           }, done.fail);
+    });
+
+    it('should reject if the ID does not exist', (done: any) => {
+      let id = 'id';
+      let path = 'path';
+      spyOn(storage, 'getPath_').and.returnValue(path);
+      spyOn(storage, 'getIndexes_').and.returnValue([]);
+      spyOn(storage, 'updateIndexes_');
+      storage
+          .delete(id)
+          .then(
+              done.fail,
+              (error: Error) => {
+                assert(error.message).to.match(/does not exist/);
+                assert(mockStorage.removeItem).toNot.haveBeenCalled();
+                assert(storage['updateIndexes_']).toNot.haveBeenCalled();
+                done();
+              });
     });
   });
 
   describe('has', () => {
     it('should resolve with true if the object is in the storage', (done: any) => {
       let id = 'id';
-      let path = 'path';
-      let object = Mocks.object('object');
+      spyOn(storage, 'getIndexes_').and.returnValue([id]);
 
-      spyOn(storage, 'getPath_').and.returnValue(path);
-      mockStorage.getItem.and.returnValue(object);
-
-      storage.has(id)
+      storage
+          .has(id)
           .then((result: boolean) => {
             assert(result).to.beTrue();
-            assert(mockStorage.getItem).to.haveBeenCalledWith(path);
-            assert(storage['getPath_']).to.haveBeenCalledWith(id);
             done();
           }, done.fail);
     });
 
     it('should resolve with false if the object is in the storage', (done: any) => {
       let id = 'id';
-      let path = 'path';
 
-      spyOn(storage, 'getPath_').and.returnValue(path);
-      mockStorage.getItem.and.returnValue(null);
+      spyOn(storage, 'getIndexes_').and.returnValue([]);
 
-      storage.has(id)
+      storage
+          .has(id)
           .then((result: boolean) => {
             assert(result).to.beFalse();
+            done();
+          }, done.fail);
+    });
+  });
+
+  describe('list', () => {
+    it('should return the correct indexes', (done: any) => {
+      let indexes = Mocks.object('indexes');
+      spyOn(storage, 'getIndexes_').and.returnValue(indexes);
+      storage
+          .list()
+          .then((values: any) => {
+            assert(values).to.equal(indexes);
             done();
           }, done.fail);
     });
@@ -147,7 +231,8 @@ describe('store.WebStorage', () => {
       spyOn(Serializer, 'toJSON').and.returnValue(json);
       spyOn(JSON, 'stringify').and.returnValue(stringValue);
 
-      storage.create(id, object)
+      storage
+          .update(id, object)
           .then(() => {
             assert(mockStorage.setItem).to.haveBeenCalledWith(path, stringValue);
             assert(JSON.stringify).to.haveBeenCalledWith(json);
@@ -161,7 +246,8 @@ describe('store.WebStorage', () => {
 
       spyOn(Serializer, 'toJSON').and.throwError(errorMsg);
 
-      storage.create('id', Mocks.object('object'))
+      storage
+          .update('id', Mocks.object('object'))
           .then(
               done.fail,
               (error: Error) => {

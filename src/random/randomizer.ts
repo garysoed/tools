@@ -52,14 +52,14 @@ export class Randomizer {
   /**
    * Generates a random short ID.
    *
-   * A short ID is a 5 characters long ID. Each character is a case sensitive alphanumeric
+   * A short ID is a 7 characters long ID. Each character is a case sensitive alphanumeric
    * character.
    *
    * @return A randomly generated short ID.
    */
   shortId(): string {
     let id: string[] = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 7; i++) {
       id.push(this.list(ID_CHARS));
     }
     return id.join('');
