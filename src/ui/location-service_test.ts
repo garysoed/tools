@@ -102,6 +102,46 @@ describe('ui.LocationService', () => {
 
       assert(service.getMatches(matcher)).to.equal(null);
     });
+
+    fit('should return the matches for exact match', () => {
+      let matcher = 'matcher';
+      let hash = 'hash';
+      spyOn(service, 'getParts_').and.callFake((path: string): string[] | void => {
+        switch (path) {
+          case matcher:
+            return [':a', '_', ':b'];
+          case hash:
+            return ['hello', '_', 'location'];
+        }
+      });
+      mockLocation.hash = '#' + hash;
+
+      assert(service.getMatches(`${matcher}$`)).to.equal({
+        'a': 'hello',
+        'b': 'location',
+      });
+      assert(service['getParts_']).to.haveBeenCalledWith(hash);
+      assert(service['getParts_']).to.haveBeenCalledWith(matcher);
+    });
+
+    fit('should return null for exact match if the number of parts are not the same', () => {
+      let matcher = 'matcher';
+      let hash = 'hash';
+      spyOn(service, 'getParts_').and.callFake((path: string): string[] | void => {
+        switch (path) {
+          case matcher:
+            return [':a', '_', ':b'];
+          case hash:
+            return [':a', '_'];
+        }
+      });
+      mockLocation.hash = '#' + hash;
+
+      assert(service.getMatches(`${matcher}$`)).to.beNull();
+      assert(service['getParts_']).to.haveBeenCalledWith(hash);
+      assert(service['getParts_']).to.haveBeenCalledWith(matcher);
+    });
+
   });
 
   describe('goTo', () => {

@@ -76,8 +76,17 @@ export class LocationService extends BaseListenable<LocationServiceEvents> {
    * @return Object containing the matches if it matches, or null otherwise.
    */
   getMatches(matcher: string): {[key: string]: string} | null {
-    let matcherParts = this.getParts_(matcher);
+    let exactMatch = false;
+    if (matcher[matcher.length - 1] === '$') {
+      matcher = matcher.substr(0, matcher.length - 1);
+      exactMatch = true;
+    }
     let hashParts = this.getParts_(this.location_.hash.substr(1));
+    let matcherParts = this.getParts_(matcher);
+
+    if (exactMatch && matcherParts.length !== hashParts.length) {
+      return null;
+    }
 
     let matches = {};
     for (let i = 0; i < matcherParts.length; i++) {

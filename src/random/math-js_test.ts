@@ -12,7 +12,7 @@ describe('random.MathJs', () => {
   });
 
   describe('next', () => {
-    fit('should return the value returned from Math.random', () => {
+    it('should return the value returned from Math.random', () => {
       let value = 123;
       spyOn(Math, 'random').and.returnValue(value);
 
