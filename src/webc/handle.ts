@@ -2,6 +2,7 @@ import {Annotations} from '../data/annotations';
 import {Arrays} from '../collection/arrays';
 import {BaseDisposable} from '../dispose/base-disposable';
 import {DisposableFunction} from '../dispose/disposable-function';
+import {DomEvent} from '../event/dom-event';
 import {IAttributeParser} from './interfaces';
 import {Maps} from '../collection/maps';
 
@@ -14,8 +15,16 @@ export type AttributeChangeHandlerConfig = {
   useShadow: boolean,
 };
 
+export type EventHandlerConfig = {
+  event: string,
+  selector: string | null,
+}
+
 export const ATTR_CHANGE_ANNOTATIONS: Annotations<AttributeChangeHandlerConfig> =
     Annotations.of<AttributeChangeHandlerConfig>(Symbol('attributeChangeHandler'));
+
+export const EVENT_ANNOTATIONS: Annotations<EventHandlerConfig> =
+    Annotations.of<EventHandlerConfig>(Symbol('eventHandler'));
 
 
 /**
@@ -164,6 +173,22 @@ export class Handler {
             parser: parser,
             selector: selector,
             useShadow: useShadow,
+          });
+      return descriptor;
+    }.bind(null, this.useShadow_);
+  }
+
+  event(selector: string | null, event: string): MethodDecorator {
+    return function(
+        useShadow: boolean,
+        target: Object,
+        propertyKey: string | symbol,
+        descriptor: PropertyDescriptor): PropertyDescriptor {
+      EVENT_ANNOTATIONS.forPrototype(target.constructor).attachValueToProperty(
+          propertyKey,
+          {
+            event: event,
+            selector: selector,
           });
       return descriptor;
     }.bind(null, this.useShadow_);
