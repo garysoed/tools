@@ -42,6 +42,7 @@ export class ElementRegistrar extends BaseDisposable {
       elementProvider: () => BaseElement,
       content: string): xtag.ILifecycleConfig {
     let addDisposable = this.addDisposable.bind(this);
+    // TODO: Log error for every one of these methods.
     return {
       attributeChanged: function(attrName: string, oldValue: string, newValue: string): void {
         let propertyName = Cases.of(attrName).toCamelCase();

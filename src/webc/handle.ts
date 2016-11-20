@@ -2,8 +2,8 @@ import {Annotations} from '../data/annotations';
 import {Arrays} from '../collection/arrays';
 import {BaseDisposable} from '../dispose/base-disposable';
 import {DisposableFunction} from '../dispose/disposable-function';
-import {DomEvent} from '../event/dom-event';
 import {IAttributeParser} from './interfaces';
+import {ListenableDom} from '../event/listenable-dom';
 import {Maps} from '../collection/maps';
 
 
@@ -11,14 +11,19 @@ export type AttributeChangeHandlerConfig = {
   attributeName: string,
   handlerKey: string | symbol,
   parser: IAttributeParser<any>,
-  selector: string | null,
-  useShadow: boolean,
+  selector: SelectorConfig,
 };
 
 export type EventHandlerConfig = {
   event: string,
-  selector: string | null,
-}
+  handlerKey: string | symbol,
+  selector: SelectorConfig,
+};
+
+export type SelectorConfig = {
+  query: string | null,
+  useShadow: boolean,
+};
 
 export const ATTR_CHANGE_ANNOTATIONS: Annotations<AttributeChangeHandlerConfig> =
     Annotations.of<AttributeChangeHandlerConfig>(Symbol('attributeChangeHandler'));
@@ -47,7 +52,7 @@ export class Handler {
    * @param configs Configurations to configure the element.
    * @param targetEl Target element to listen to elements to.
    */
-  private static configureElement_(
+  private static configureAttrChangeHandler_(
       instance: BaseDisposable,
       configs: AttributeChangeHandlerConfig[],
       targetEl: Element): void {
@@ -87,6 +92,21 @@ export class Handler {
     }));
   }
 
+  private static configureEventHandler_(
+      instance: BaseDisposable,
+      configs: EventHandlerConfig[],
+      targetEl: Element): void {
+    let listenable = ListenableDom.of(targetEl);
+    Arrays
+        .of(configs)
+        .forEach((config: EventHandlerConfig) => {
+          listenable.on(
+              config.event,
+              instance[config.handlerKey].bind(instance));
+        });
+    instance.addDisposable(listenable);
+  }
+
   /**
    * @param callback
    * @return New instance of mutation observer.
@@ -102,10 +122,11 @@ export class Handler {
    * @param element The root of the element.
    * @return The target element.
    */
-  private static getTargetEl_(config: AttributeChangeHandlerConfig, element: HTMLElement): Element {
-    let {selector, useShadow} = config;
-    let rootEl = useShadow ? element.shadowRoot : element;
-    return selector === null ? rootEl : rootEl.querySelector(selector);
+  private static getTargetEl_(
+      selector: SelectorConfig,
+      element: HTMLElement): Element {
+    let rootEl = selector.useShadow ? element.shadowRoot : element;
+    return selector.query === null ? rootEl : rootEl.querySelector(selector.query);
   }
 
   /**
@@ -171,8 +192,10 @@ export class Handler {
             attributeName: attributeName,
             handlerKey: propertyKey,
             parser: parser,
-            selector: selector,
-            useShadow: useShadow,
+            selector: {
+              query: selector,
+              useShadow: useShadow,
+            },
           });
       return descriptor;
     }.bind(null, this.useShadow_);
@@ -188,7 +211,11 @@ export class Handler {
           propertyKey,
           {
             event: event,
-            selector: selector,
+            handlerKey: propertyKey,
+            selector: {
+              query: selector,
+              useShadow: useShadow,
+            },
           });
       return descriptor;
     }.bind(null, this.useShadow_);
@@ -201,21 +228,38 @@ export class Handler {
    * @param instance The handler for events on the given element.
    */
   static configure(element: HTMLElement, instance: BaseDisposable): void {
-    let configEntries = Maps.of(
-        ATTR_CHANGE_ANNOTATIONS
-            .forPrototype(instance.constructor)
-            .getAttachedValues())
+    // Configures the attr change handlers.
+    let attrChangeConfigEntries = Maps
+        .of(
+            ATTR_CHANGE_ANNOTATIONS
+                .forPrototype(instance.constructor)
+                .getAttachedValues())
         .values()
         .map((config: AttributeChangeHandlerConfig):
             [Element, AttributeChangeHandlerConfig] => {
-          return [Handler.getTargetEl_(config, element), config];
+          return [Handler.getTargetEl_(config.selector, element), config];
         })
         .asArray();
 
     Maps
-        .group(configEntries)
+        .group(attrChangeConfigEntries)
         .forEach((configs: AttributeChangeHandlerConfig[], targetEl: Element) => {
-          Handler.configureElement_(instance, configs, targetEl);
+          Handler.configureAttrChangeHandler_(instance, configs, targetEl);
+        });
+
+    // Configures the event handlers.
+    let eventHandlerConfigEntries = Maps
+        .of(EVENT_ANNOTATIONS.forPrototype(instance.constructor).getAttachedValues())
+        .values()
+        .map((config: EventHandlerConfig): [Element, EventHandlerConfig] => {
+          return [Handler.getTargetEl_(config.selector, element), config];
+        })
+        .asArray();
+
+    Maps
+        .group(eventHandlerConfigEntries)
+        .forEach((configs: EventHandlerConfig[], targetEl: Element) => {
+          Handler.configureEventHandler_(instance, configs, targetEl);
         });
   }
 }
