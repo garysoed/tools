@@ -164,15 +164,15 @@ export class RgbColor implements IColor {
    */
   static newInstance(red: number, green: number, blue: number): RgbColor {
     Validate.batch({
-      'RED_INT': Validate.number(red).to.beAnInteger(),
-      'RED_MIN': Validate.number(red).to.beGreaterThanOrEqualTo(0),
-      'RED_MAX': Validate.number(red).toNot.beGreaterThan(255),
+      'BLUE_INT': Validate.number(blue).to.beAnInteger(),
+      'BLUE_MAX': Validate.number(blue).toNot.beGreaterThan(255),
+      'BLUE_MIN': Validate.number(blue).to.beGreaterThanOrEqualTo(0),
       'GREEN_INT': Validate.number(green).to.beAnInteger(),
       'GREEN_MAX': Validate.number(green).toNot.beGreaterThan(255),
       'GREEN_MIN': Validate.number(green).to.beGreaterThanOrEqualTo(0),
-      'BLUE_INT': Validate.number(blue).to.beAnInteger(),
-      'BLUE_MIN': Validate.number(blue).to.beGreaterThanOrEqualTo(0),
-      'BLUE_MAX': Validate.number(blue).toNot.beGreaterThan(255),
+      'RED_INT': Validate.number(red).to.beAnInteger(),
+      'RED_MAX': Validate.number(red).toNot.beGreaterThan(255),
+      'RED_MIN': Validate.number(red).to.beGreaterThanOrEqualTo(0),
     }).to.allBeValid().assertValid();
     return new RgbColor(red, green, blue);
   }

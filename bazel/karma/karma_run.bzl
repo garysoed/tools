@@ -3,6 +3,8 @@ def _karma_run_impl(ctx):
   config_file = ctx.new_file('%s_karma.config.js' % target_name)
 
   path_to_root = '/'.join(['..' for part in ctx.build_file_path.split('/')[:-1]])
+  if path_to_root == '':
+    path_to_root = '.'
 
   file_configs = []
   # deps must all come before the srcs
@@ -20,7 +22,7 @@ def _karma_run_impl(ctx):
 
   ctx.file_action(
       output = ctx.outputs.executable,
-      content = '%s start %s' % (ctx.executable._karma_bin.path, config_file.short_path)
+      content = '%s start %s' % ('karma', config_file.short_path)
   )
 
   runfiles = ctx.runfiles(

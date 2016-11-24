@@ -15,14 +15,14 @@ def _webpack_binary_impl(ctx):
   ctx.action(
       command = "tar xf %s && %s %s %s --hide-modules --config %s" % (
         tarfile,
-        ctx.executable._webpack_bin.path,
+        'webpack',
         tardir + '/' + ctx.attr.entry,
         ctx.outputs.out.path,
         config_file.path),
       execution_requirements = {
         "exclusive": "True"
       },
-      inputs = [ctx.file.package, config_file],
+      inputs = [ctx.file.package, config_file, ctx.file._webpack_js],
       outputs = [ctx.outputs.out],
       progress_message = 'Extracting srcs and running webpack with %s' % (ctx.outputs.out.path),
       use_default_shell_env = True)
@@ -43,7 +43,10 @@ webpack_binary = rule(
       "_webpack_bin": attr.label(
           default = Label("@webpack//:webpack"),
           executable = True,
-          single_file = True)
+          single_file = True),
+      "_webpack_js": attr.label(
+          default = Label("@webpack//:webpack_js"),
+          single_file = True),
     },
     outputs = {
       "out": "%{name}.js"

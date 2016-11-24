@@ -1,5 +1,6 @@
 package(default_visibility = ["//:internal"])
 
+load("//bazel/karma:defs.bzl", "karma_run")
 load("//bazel/webc:defs.bzl", "webc_gen_template")
 
 webc_gen_template(
@@ -14,32 +15,59 @@ package_group(
     packages = ["//..."]
 )
 
-test_suite(
+karma_run(
     name = "test",
+    srcs = [
+        "//src/async:test_src",
+        "//src/collection:test_src",
+        "//src/color:test_src",
+        "//src/data:test_src",
+        "//src/dispose:test_src",
+        "//src/event:test_src",
+        "//src/inject:test_src",
+        "//src/jasmine:test_src",
+        "//src/net:test_src",
+        "//src/ng:test_src",
+        "//src/pipeline:test_src",
+        "//src/random:test_src",
+        "//src/secure:test_src",
+        "//src/solver:test_src",
+        "//src/store:test_src",
+        "//src/string:test_src",
+        "//src/typescript:test_src",
+        "//src/ui:test_src",
+        "//src/util:test_src",
+        "//src/valid:test_src",
+        "//src/webc:test_src",
+    ]
+)
+
+test_suite(
+    name = "lint",
     tests = [
-      "//src/async:test",
-      "//src/collection:test",
-      "//src/color:test",
-      "//src/data:test",
-      "//src/dispose:test",
-      "//src/event:test",
-      "//src/inject:test",
-      "//src/jasmine:test",
-      "//src/mock:test",
-      "//src/net:test",
-      "//src/ng:test",
-      "//src/pipeline:test",
-      "//src/random:test",
-      "//src/secure:test",
-      "//src/solver:test",
-      "//src/store:test",
-      "//src/string:test",
-      "//src/testing:test",
-      "//src/typescript:test",
-      "//src/ui:test",
-      "//src/util:test",
-      "//src/valid:test",
-      "//src/webc:test",
+      "//src/async:lint",
+      "//src/collection:lint",
+      "//src/color:lint",
+      "//src/data:lint",
+      "//src/dispose:lint",
+      "//src/event:lint",
+      "//src/inject:lint",
+      "//src/jasmine:lint",
+      "//src/mock:lint",
+      "//src/net:lint",
+      "//src/ng:lint",
+      "//src/pipeline:lint",
+      "//src/random:lint",
+      "//src/secure:lint",
+      "//src/solver:lint",
+      "//src/store:lint",
+      "//src/string:lint",
+      "//src/testing:lint",
+      "//src/typescript:lint",
+      "//src/ui:lint",
+      "//src/util:lint",
+      "//src/valid:lint",
+      "//src/webc:lint",
     ]
 )
 

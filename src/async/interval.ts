@@ -8,7 +8,7 @@ enum EventType {
   /**
    * Called at every interval.
    */
-  TICK
+  TICK,
 }
 
 

@@ -10,7 +10,7 @@ def _ts_binary_impl(ctx):
   paths = ' '.join([f.path for f in files])
 
   compile_command = ' '.join([
-    ctx.executable._ts_bin.path,
+    'tsc',
     '--baseUrl', '.',
     '--experimentalDecorators',
     '--module', 'commonjs',
@@ -48,6 +48,9 @@ ts_binary = rule(
       "_ts_bin": attr.label(
           default = Label("@typescript//:tsc"),
           executable = True,
+          single_file = True),
+      "_ts_lib": attr.label(
+          default = Label("@typescript//:tsc_lib"),
           single_file = True)
     },
     outputs = {

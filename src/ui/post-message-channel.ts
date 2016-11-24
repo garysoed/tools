@@ -13,7 +13,7 @@ const TIMEOUT_MS_ = 3000;
 export enum MessageType {
   ACK,
   DATA,
-  PING
+  PING,
 }
 
 @Serializable('message')

@@ -2,7 +2,7 @@ import {BaseListenable} from '../event/base-listenable';
 
 
 export enum EventType {
-  NEW_RESPONSE
+  NEW_RESPONSE,
 }
 
 /**

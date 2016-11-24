@@ -6,3 +6,10 @@ filegroup(
       "bin/webpack.js"
     ],
 )
+
+filegroup(
+    name = "webpack_js",
+    srcs = [
+      "bin/webpack.js"
+    ]
+)

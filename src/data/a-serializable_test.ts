@@ -54,10 +54,10 @@ describe('data.Serializable', () => {
 
       let serialized = Serializer.toJSON(composite);
       assert(serialized).to.equal(jasmine.objectContaining({
-        'fieldA': compositeValue,
         'basic': jasmine.objectContaining({
           'fieldA': basicValue,
         }),
+        'fieldA': compositeValue,
       }));
 
       let deserialized = Serializer.fromJSON(serialized);

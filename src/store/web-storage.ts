@@ -24,8 +24,9 @@ export class WebStorage<T> implements GsStorage<T> {
     let indexes = this.storage_.getItem(this.prefix_);
     if (indexes === null) {
       this.updateIndexes_([]);
+      indexes = JSON.stringify([]);
     }
-    return JSON.parse(this.storage_.getItem(this.prefix_));
+    return JSON.parse(indexes);
   }
 
   /**
@@ -99,10 +100,10 @@ export class WebStorage<T> implements GsStorage<T> {
         let stringValue = this.storage_.getItem(path);
         if (stringValue === null) {
           resolve(null);
+        } else {
+          let json = JSON.parse(stringValue);
+          resolve(Serializer.fromJSON(json));
         }
-
-        let json = JSON.parse(stringValue);
-        resolve(Serializer.fromJSON(json));
       } catch (e) {
         reject(e);
       }

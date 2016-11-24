@@ -145,10 +145,10 @@ export class HslColor implements IColor {
    */
   static newInstance(hue: number, saturation: number, lightness: number): HslColor {
     Validate.batch({
-      'SATURATION_MAX': Validate.number(saturation).toNot.beGreaterThan(1),
-      'SATURATION_MIN': Validate.number(saturation).to.beGreaterThanOrEqualTo(0),
       'LIGHTNESS_MAX': Validate.number(lightness).toNot.beGreaterThan(1),
       'LIGHTNESS_MIN': Validate.number(lightness).to.beGreaterThanOrEqualTo(0),
+      'SATURATION_MAX': Validate.number(saturation).toNot.beGreaterThan(1),
+      'SATURATION_MIN': Validate.number(saturation).to.beGreaterThanOrEqualTo(0),
     }).to.allBeValid().assertValid();
     return new HslColor(hue % 360, saturation, lightness);
   }

@@ -1,4 +1,4 @@
-load("//bazel/karma:defs.bzl", "karma_run", "karma_test")
+load("//bazel/karma:defs.bzl", "karma_run")
 load("//bazel/ts:defs.bzl", "ts_binary", "ts_library")
 load("//bazel/tslint:defs.bzl", "tslint_test")
 load("//bazel/webpack:defs.bzl", "webpack_binary")
@@ -27,8 +27,7 @@ def gs_tools(deps = [], test_deps = []):
           `.tar` file.
       {test}_pack: A `webpack_binary` target that packs `test.js` and all its dependencies into a
           single `.js` file.
-      {test}: A `karma_test` target that runs the tests in `test.ts`.
-      {test}_run: A `karma_run` target that runs a continuously running server on tests defined by
+      {test}_test: A `karma_run` target that runs a continuously running server on tests defined by
           `test.ts`.
   """
 
@@ -58,7 +57,7 @@ def gs_tools(deps = [], test_deps = []):
       deps = [":" + lib_name] + ["//src:test_base"],
   )
 
-  # Generates a pack, karma run, and karma test file for every test.
+  # Generates a pack and karma run file for every test.
   test_src_pack_labels = []
   test_targets = []
   for test_src in test_srcs:
@@ -78,21 +77,14 @@ def gs_tools(deps = [], test_deps = []):
         entry = "%s/%s.js" % (PACKAGE_NAME, test_src[:-3]),
     )
 
-    karma_test(
-        name = test_src_name,
-        srcs = [test_src_pack_label],
-        deps = test_deps,
-        size = "small",
-    )
-
     karma_run(
-        name = "%s_run" % test_src_name,
+        name = test_src_name,
         srcs = [test_src_pack_label],
         deps = test_deps,
     )
 
     test_src_pack_labels.append(test_src_pack_label)
-    test_targets.append(test_src_name);
+    test_targets.append(test_src_name)
 
   tslint_test(
       name = "lint",
@@ -100,24 +92,14 @@ def gs_tools(deps = [], test_deps = []):
       config = "//:tslint_config"
   )
 
-  tests = [":lint"]
+  native.filegroup(
+      name = "test_src",
+      srcs = test_src_pack_labels,
+      data = test_deps,
+  )
+
   if len(test_src_pack_labels) > 0:
     karma_run(
-        name = "test_run",
-        srcs = test_src_pack_labels,
-        deps = test_deps,
+        name = "test",
+        srcs = [":test_src"],
     )
-
-    karma_test(
-        name = "all_test",
-        srcs = test_src_pack_labels,
-        deps = test_deps,
-        size = "small"
-    )
-
-    tests.append(":all_test")
-
-  native.test_suite(
-      name = "test",
-      tests = tests
-  )

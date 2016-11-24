@@ -13,3 +13,10 @@ filegroup(
       "bin/tsc"
     ],
 )
+
+filegroup(
+    name = "tsc_lib",
+    srcs = [
+      "lib/tsc.js"
+    ]
+)
