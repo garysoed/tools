@@ -2,9 +2,9 @@ import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {BaseElement} from './base-element';
+import {ListenableDom} from '../event/listenable-dom';
 import {Mocks} from '../mock/mocks';
 import {TestDispose} from '../testing/test-dispose';
-import {TestListenableDom} from '../testing/test-listenable-dom';
 
 
 describe('webc.BaseElement', () => {
@@ -39,10 +39,13 @@ describe('webc.BaseElement', () => {
   describe('onCreated', () => {
     it('should create the listenable element', () => {
       let element = Mocks.object('element');
+      let mockListenable = Mocks.listenable('listenableElement');
+      spyOn(ListenableDom, 'of').and.returnValue(mockListenable);
 
       baseElement.onCreated(element);
 
-      assert(baseElement.getElement()).to.equal(TestListenableDom.getListenable(element));
+      assert(baseElement.getElement()).to.equal(mockListenable);
+      assert(ListenableDom.of).to.haveBeenCalledWith(element);
     });
   });
 

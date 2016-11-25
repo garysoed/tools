@@ -18,12 +18,11 @@ describe('store.WebStorage', () => {
 
   describe('getIndexes_', () => {
     it('should initialize the indexes first', () => {
-      let indexes = Mocks.object('indexes');
-      mockStorage.getItem.and.returnValues(null, JSON.stringify(indexes));
+      mockStorage.getItem.and.returnValues(null);
 
       spyOn(storage, 'updateIndexes_');
 
-      assert(storage['getIndexes_']()).to.equal(indexes);
+      assert(storage['getIndexes_']()).to.equal([]);
       assert(storage['updateIndexes_']).to.haveBeenCalledWith([]);
       assert(mockStorage.getItem).to.haveBeenCalledWith(PREFIX);
     });

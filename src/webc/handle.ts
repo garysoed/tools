@@ -50,7 +50,7 @@ export class Handler {
   /**
    * @param instance Instance to call the handler on.
    * @param configs Configurations to configure the element.
-   * @param targetEl Target element to listen to elements to.
+   * @param targetEl Target element to listen to attribute change events.
    */
   private static configureAttrChangeHandler_(
       instance: BaseDisposable,
@@ -92,6 +92,11 @@ export class Handler {
     }));
   }
 
+  /**
+   * @param instance Instance to call the handler on.
+   * @param configs Configurations to configure the element.
+   * @param targetEl Target element to listen to events.
+   */
   private static configureEventHandler_(
       instance: BaseDisposable,
       configs: EventHandlerConfig[],
@@ -100,9 +105,9 @@ export class Handler {
     Arrays
         .of(configs)
         .forEach((config: EventHandlerConfig) => {
-          listenable.on(
+          instance.addDisposable(listenable.on(
               config.event,
-              instance[config.handlerKey].bind(instance));
+              instance[config.handlerKey].bind(instance)));
         });
     instance.addDisposable(listenable);
   }
@@ -201,6 +206,13 @@ export class Handler {
     }.bind(null, this.useShadow_);
   }
 
+  /**
+   * Annotates the method to handle the given DOM event.
+   *
+   * @param selector The selector of the element to listen to events to.
+   * @param event The event to listen to.
+   * @return The method decorator.
+   */
   event(selector: string | null, event: string): MethodDecorator {
     return function(
         useShadow: boolean,

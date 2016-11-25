@@ -1,19 +1,25 @@
 import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
-import {ATTR_CHANGE_ANNOTATIONS, AttributeChangeHandlerConfig, Handler} from './handle';
+import {
+  ATTR_CHANGE_ANNOTATIONS,
+  AttributeChangeHandlerConfig,
+  EVENT_ANNOTATIONS,
+  Handler} from './handle';
 import {DisposableFunction} from '../dispose/disposable-function';
+import {ListenableDom} from '../event/listenable-dom';
 import {Mocks} from '../mock/mocks';
+import {TestDispose} from '../testing/test-dispose';
 
 
 describe('webc.Handler', () => {
-  let handler;
+  let handler: Handler;
 
   beforeEach(() => {
     handler = new Handler(true /* useShadow */);
   });
 
-  describe('configureElement_', () => {
+  describe('configureAttrChangeHandler_', () => {
     it('should start the mutation observer correctly and call the initial mutation', () => {
       let proto = Mocks.object('proto');
       let mockInstance = jasmine.createSpyObj('Instance', ['addDisposable']);
@@ -41,7 +47,7 @@ describe('webc.Handler', () => {
       spyOn(DisposableFunction, 'of').and.returnValue(disposableFunction);
 
       let targetEl = Mocks.object('targetEl');
-      Handler['configureElement_'](mockInstance, [config1, config2], targetEl);
+      Handler['configureAttrChangeHandler_'](mockInstance, [config1, config2], targetEl);
 
       assert(mockInstance.addDisposable).to.haveBeenCalledWith(disposableFunction);
       assert(DisposableFunction.of).to.haveBeenCalledWith(<any> Matchers.any(Function));
@@ -98,9 +104,49 @@ describe('webc.Handler', () => {
     });
   });
 
+  describe('configureEventHandler_', () => {
+    it('should listen to the events correctly', () => {
+      let targetEl = Mocks.object('targetEl');
+      let mockListenableDom = Mocks.listenable('targetEl');
+      TestDispose.add(mockListenableDom);
+
+      spyOn(mockListenableDom, 'on').and.callThrough();
+      spyOn(ListenableDom, 'of').and.returnValue(mockListenableDom);
+
+      let event1 = 'event1';
+      let key1 = 'key1';
+      let handler1 = jasmine.createSpy('handler1');
+      let config1 = Mocks.object('config1');
+      config1['event'] = event1;
+      config1['handlerKey'] = key1;
+
+      let event2 = 'event2';
+      let key2 = 'key2';
+      let handler2 = jasmine.createSpy('handler2');
+      let config2 = Mocks.object('config2');
+      config2['event'] = event2;
+      config2['handlerKey'] = key2;
+
+      let mockInstance = Mocks.disposable('instance');
+      mockInstance[key1] = handler1;
+      mockInstance[key2] = handler2;
+      TestDispose.add(mockInstance);
+
+      Handler['configureEventHandler_'](mockInstance, [config1, config2], targetEl);
+
+      assert(mockListenableDom.on).to.haveBeenCalledWith(event1, jasmine.any(Function));
+      mockListenableDom.on.calls.argsFor(0)[1]();
+      assert(mockInstance[key1]).to.haveBeenCalledWith();
+
+      assert(mockListenableDom.on).to.haveBeenCalledWith(event2, jasmine.any(Function));
+      mockListenableDom.on.calls.argsFor(1)[1]();
+      assert(mockInstance[key2]).to.haveBeenCalledWith();
+    });
+  });
+
   describe('getTargetEl_', () => {
     it('should return the correct element when using shadow root and selector', () => {
-      let selector = 'selector';
+      let query = 'query';
       let targetEl = Mocks.object('targetEl');
       let mockShadowRoot = jasmine.createSpyObj('ShadowRoot', ['querySelector']);
       mockShadowRoot.querySelector.and.returnValue(targetEl);
@@ -108,21 +154,21 @@ describe('webc.Handler', () => {
       let element = Mocks.object('element');
       element.shadowRoot = mockShadowRoot;
 
-      let config: any = {selector: selector, useShadow: true};
+      let config: any = {query: query, useShadow: true};
       assert(Handler['getTargetEl_'](config, element)).to.equal(targetEl);
-      assert(mockShadowRoot.querySelector).to.haveBeenCalledWith(selector);
+      assert(mockShadowRoot.querySelector).to.haveBeenCalledWith(query);
     });
 
     it('should return the correct element when not using shadow root but using selector', () => {
-      let selector = 'selector';
+      let query = 'query';
       let targetEl = Mocks.object('targetEl');
 
       let mockElement = jasmine.createSpyObj('Element', ['querySelector']);
       mockElement.querySelector.and.returnValue(targetEl);
 
-      let config: any = {selector: selector, useShadow: false};
+      let config: any = {query: query, useShadow: false};
       assert(Handler['getTargetEl_'](config, mockElement)).to.equal(targetEl);
-      assert(mockElement.querySelector).to.haveBeenCalledWith(selector);
+      assert(mockElement.querySelector).to.haveBeenCalledWith(query);
     });
 
     it('should return the correct element when using shadow root but not selector', () => {
@@ -131,13 +177,13 @@ describe('webc.Handler', () => {
       let element = Mocks.object('element');
       element.shadowRoot = shadowRoot;
 
-      let config: any = {selector: null, useShadow: true};
+      let config: any = {query: null, useShadow: true};
       assert(Handler['getTargetEl_'](config, element)).to.equal(shadowRoot);
     });
 
     it('should return the correct element when not using shadow root or selector', () => {
       let element = Mocks.object('element');
-      let config: any = {selector: null, useShadow: false};
+      let config: any = {query: null, useShadow: false};
       assert(Handler['getTargetEl_'](config, element)).to.equal(element);
     });
   });
@@ -345,8 +391,40 @@ describe('webc.Handler', () => {
             attributeName: attributeName,
             handlerKey: propertyKey,
             parser: parser,
-            selector: selector,
-            useShadow: true,
+            selector: {
+              query: selector,
+              useShadow: true,
+            },
+          });
+    });
+  });
+
+  describe('event', () => {
+    it('should add the value to the annotations correctly', () => {
+      let selector = 'selector';
+      let event = 'event';
+      let ctor = Mocks.object('proto');
+      let target = Mocks.object('target');
+      target.constructor = ctor;
+      let propertyKey = 'propertyKey';
+      let descriptor = Mocks.object('descriptor');
+
+      let mockAnnotationsHandler =
+          jasmine.createSpyObj('AnnotationsHandler', ['attachValueToProperty']);
+      spyOn(EVENT_ANNOTATIONS, 'forPrototype').and.returnValue(mockAnnotationsHandler);
+
+      let decorator = handler.event(selector, event);
+      assert(decorator(target, propertyKey, descriptor)).to.equal(descriptor);
+      assert(EVENT_ANNOTATIONS.forPrototype).to.haveBeenCalledWith(ctor);
+      assert(mockAnnotationsHandler.attachValueToProperty).to.haveBeenCalledWith(
+          propertyKey,
+          {
+            event: event,
+            handlerKey: propertyKey,
+            selector: {
+              query: selector,
+              useShadow: true,
+            },
           });
     });
   });
@@ -359,9 +437,20 @@ describe('webc.Handler', () => {
       instance.constructor = ctor;
 
       let configs1_1 = Mocks.object('configs1_1');
+      let selector1_1 = Mocks.object('selector1_1');
+      configs1_1.selector = selector1_1;
+
       let configs1_2 = Mocks.object('configs1_2');
+      let selector1_2 = Mocks.object('selector1_2');
+      configs1_2.selector = selector1_2;
+
       let configs2_1 = Mocks.object('configs2_1');
+      let selector2_1 = Mocks.object('selector2_1');
+      configs2_1.selector = selector2_1;
+
       let configs2_2 = Mocks.object('configs2_2');
+      let selector2_2 = Mocks.object('selector2_2');
+      configs2_2.selector = selector2_2;
 
       let map = new Map();
       map.set('propertyKey1_1', configs1_1);
@@ -377,28 +466,88 @@ describe('webc.Handler', () => {
       let targetEl2 = Mocks.object('targetEl2');
       spyOn(Handler, 'getTargetEl_').and.callFake((config: any) => {
         switch (config) {
-          case configs1_1:
-          case configs1_2:
+          case selector1_1:
+          case selector1_2:
             return targetEl1;
-          case configs2_1:
-          case configs2_2:
-          return targetEl2;
+          case selector2_1:
+          case selector2_2:
+            return targetEl2;
         }
       });
-      spyOn(Handler, 'configureElement_');
+      spyOn(Handler, 'configureAttrChangeHandler_');
 
       Handler.configure(element, instance);
 
-      assert(Handler['configureElement_']).to
+      assert(Handler['configureAttrChangeHandler_']).to
           .haveBeenCalledWith(instance, [configs1_1, configs1_2], targetEl1);
-      assert(Handler['configureElement_']).to
+      assert(Handler['configureAttrChangeHandler_']).to
           .haveBeenCalledWith(instance, [configs2_1, configs2_2], targetEl2);
-      assert(Handler['getTargetEl_']).to.haveBeenCalledWith(configs1_1, element);
-      assert(Handler['getTargetEl_']).to.haveBeenCalledWith(configs1_2, element);
-      assert(Handler['getTargetEl_']).to.haveBeenCalledWith(configs2_1, element);
-      assert(Handler['getTargetEl_']).to.haveBeenCalledWith(configs2_2, element);
+      assert(Handler['getTargetEl_']).to.haveBeenCalledWith(selector1_1, element);
+      assert(Handler['getTargetEl_']).to.haveBeenCalledWith(selector1_2, element);
+      assert(Handler['getTargetEl_']).to.haveBeenCalledWith(selector2_1, element);
+      assert(Handler['getTargetEl_']).to.haveBeenCalledWith(selector2_2, element);
 
       assert(ATTR_CHANGE_ANNOTATIONS.forPrototype).to.haveBeenCalledWith(ctor);
+    });
+
+    it('should configure event handlers', () => {
+      let element = Mocks.object('element');
+      let ctor = Mocks.object('ctor');
+      let instance = Mocks.object('instance');
+      instance.constructor = ctor;
+
+      let configs1_1 = Mocks.object('configs1_1');
+      let selector1_1 = Mocks.object('selector1_1');
+      configs1_1.selector = selector1_1;
+
+      let configs1_2 = Mocks.object('configs1_2');
+      let selector1_2 = Mocks.object('selector1_2');
+      configs1_2.selector = selector1_2;
+
+      let configs2_1 = Mocks.object('configs2_1');
+      let selector2_1 = Mocks.object('selector2_1');
+      configs2_1.selector = selector2_1;
+
+      let configs2_2 = Mocks.object('configs2_2');
+      let selector2_2 = Mocks.object('selector2_2');
+      configs2_2.selector = selector2_2;
+
+      let map = new Map();
+      map.set('propertyKey1_1', configs1_1);
+      map.set('propertyKey1_2', configs1_2);
+      map.set('propertyKey2_1', configs2_1);
+      map.set('propertyKey2_2', configs2_2);
+
+      let mockAnnotationsHandle = jasmine.createSpyObj('AnnotationsHandle', ['getAttachedValues']);
+      mockAnnotationsHandle.getAttachedValues.and.returnValue(map);
+      spyOn(EVENT_ANNOTATIONS, 'forPrototype').and.returnValue(mockAnnotationsHandle);
+
+      let targetEl1 = Mocks.object('targetEl1');
+      let targetEl2 = Mocks.object('targetEl2');
+      spyOn(Handler, 'getTargetEl_').and.callFake((config: any) => {
+        switch (config) {
+          case selector1_1:
+          case selector1_2:
+            return targetEl1;
+          case selector2_1:
+          case selector2_2:
+            return targetEl2;
+        }
+      });
+      spyOn(Handler, 'configureEventHandler_');
+
+      Handler.configure(element, instance);
+
+      assert(Handler['configureEventHandler_']).to
+          .haveBeenCalledWith(instance, [configs1_1, configs1_2], targetEl1);
+      assert(Handler['configureEventHandler_']).to
+          .haveBeenCalledWith(instance, [configs2_1, configs2_2], targetEl2);
+      assert(Handler['getTargetEl_']).to.haveBeenCalledWith(selector1_1, element);
+      assert(Handler['getTargetEl_']).to.haveBeenCalledWith(selector1_2, element);
+      assert(Handler['getTargetEl_']).to.haveBeenCalledWith(selector2_1, element);
+      assert(Handler['getTargetEl_']).to.haveBeenCalledWith(selector2_2, element);
+
+      assert(EVENT_ANNOTATIONS.forPrototype).to.haveBeenCalledWith(ctor);
     });
   });
 });

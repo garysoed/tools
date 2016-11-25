@@ -3,7 +3,8 @@ TestBase.setup();
 
 import {DomEvent} from '../event/dom-event';
 import {Http, HttpRequest} from './http';
-import {TestListenableDom} from '../testing/test-listenable-dom';
+import {ListenableDom} from '../event/listenable-dom';
+import {Mocks} from '../mock/mocks';
 
 
 describe('net.Http', () => {
@@ -18,6 +19,10 @@ describe('net.Http', () => {
     it('should handle successful request correctly', (done: any) => {
       let path = 'path';
       let expectedResponseText = 'responseText';
+      let listenableRequest = Mocks.listenable('listenableRequest');
+      spyOn(listenableRequest, 'on').and.callThrough();
+      spyOn(ListenableDom, 'of').and.returnValue(listenableRequest);
+
       Http.get(path)
           .send()
           .then((responseText: string) => {
@@ -28,17 +33,21 @@ describe('net.Http', () => {
       assert(mockRequest.open).to.haveBeenCalledWith('GET', path);
 
       assert(mockRequest.send).to.haveBeenCalledWith(null);
-      assert(TestListenableDom.getListenable(mockRequest).on).to
+      assert(listenableRequest.on).to
           .haveBeenCalledWith(DomEvent.LOAD, Matchers.any(Function));
 
       mockRequest.responseText = expectedResponseText;
       mockRequest.status = 200;
-      TestListenableDom.getListenable(mockRequest).on.calls.argsFor(0)[1]();
+      listenableRequest.on.calls.argsFor(0)[1]();
     });
 
     it('should handle unsuccessful request correctly', (done: any) => {
       let status = 400;
       let error = 'error';
+      let listenableRequest = Mocks.listenable('listenableRequest', mockRequest);
+      spyOn(listenableRequest, 'on').and.callThrough();
+
+      spyOn(ListenableDom, 'of').and.returnValue(listenableRequest);
       Http.get('path')
           .send()
           .then(
@@ -51,7 +60,7 @@ describe('net.Http', () => {
 
       mockRequest.responseText = error;
       mockRequest.status = status;
-      TestListenableDom.getListenable(mockRequest).on.calls.argsFor(0)[1]();
+      listenableRequest.on.calls.argsFor(0)[1]();
     });
   });
 
@@ -62,6 +71,11 @@ describe('net.Http', () => {
         'a': '1',
         'b': '2',
       };
+      let listenableRequest = Mocks.listenable('listenableRequest', mockRequest);
+      spyOn(listenableRequest, 'on').and.callThrough();
+
+      spyOn(ListenableDom, 'of').and.returnValue(listenableRequest);
+
       let expectedResponseText = 'responseText';
       Http.post(path)
           .setFormData(formData)
@@ -75,17 +89,20 @@ describe('net.Http', () => {
       assert(mockRequest.send).to.haveBeenCalledWith('a=1&b=2');
       assert(mockRequest.setRequestHeader).to
           .haveBeenCalledWith('Content-Type', 'application/x-www-form-urlencoded');
-      assert(TestListenableDom.getListenable(mockRequest).on).to
-          .haveBeenCalledWith(DomEvent.LOAD, Matchers.any(Function));
+      assert(listenableRequest.on).to.haveBeenCalledWith(DomEvent.LOAD, Matchers.any(Function));
 
       mockRequest.responseText = expectedResponseText;
       mockRequest.status = 200;
-      TestListenableDom.getListenable(mockRequest).on.calls.argsFor(0)[1]();
+      listenableRequest.on.calls.argsFor(0)[1]();
     });
 
     it('should handle unsuccessful request correctly', (done: any) => {
       let status = 400;
       let error = 'error';
+      let listenableRequest = Mocks.listenable('listenableRequest', mockRequest);
+      spyOn(listenableRequest, 'on').and.callThrough();
+
+      spyOn(ListenableDom, 'of').and.returnValue(listenableRequest);
       Http.post('path')
           .send()
           .then(
@@ -98,7 +115,7 @@ describe('net.Http', () => {
 
       mockRequest.responseText = error;
       mockRequest.status = status;
-      TestListenableDom.getListenable(mockRequest).on.calls.argsFor(0)[1]();
+      listenableRequest.on.calls.argsFor(0)[1]();
     });
   });
 });
