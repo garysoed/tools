@@ -43,6 +43,7 @@ karma_run = rule(
           default = Label("//bazel/karma:config_template"),
           single_file = True),
       "_karma_bin": attr.label(
+          cfg = "host",
           default = Label("@karma//:karma"),
           executable = True,
           single_file = True),

@@ -65,7 +65,7 @@ export class ElementRegistrar extends BaseDisposable {
         CustomElementUtil.setElement(instance, this);
 
         let instancePrototype = instance.constructor;
-        Maps.of(BindAnnotations.forPrototype(instancePrototype).getAttachedValues())
+        Maps.of(BindAnnotations.forCtor(instancePrototype).getAttachedValues())
             .forEach((
                 factory: (element: HTMLElement) => IDomBinder<any>,
                 key: string | symbol) => {

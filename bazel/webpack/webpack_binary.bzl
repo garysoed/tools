@@ -22,7 +22,7 @@ def _webpack_binary_impl(ctx):
       execution_requirements = {
         "exclusive": "True"
       },
-      inputs = [ctx.file.package, config_file, ctx.file._webpack_js],
+      inputs = [ctx.file.package, config_file],
       outputs = [ctx.outputs.out],
       progress_message = 'Extracting srcs and running webpack with %s' % (ctx.outputs.out.path),
       use_default_shell_env = True)
@@ -39,13 +39,6 @@ webpack_binary = rule(
           single_file = True),
       "_config_template": attr.label(
           default = Label("//bazel/webpack:config_template"),
-          single_file = True),
-      "_webpack_bin": attr.label(
-          default = Label("@webpack//:webpack"),
-          executable = True,
-          single_file = True),
-      "_webpack_js": attr.label(
-          default = Label("@webpack//:webpack_js"),
           single_file = True),
     },
     outputs = {

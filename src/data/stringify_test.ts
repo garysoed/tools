@@ -111,7 +111,7 @@ describe('data.Stringify', () => {
           jasmine.createSpyObj('AnnotationHandler', ['getAnnotatedProperties']);
       mockAnnotationHandler.getAnnotatedProperties.and.returnValue([key1, key2]);
 
-      spyOn(ANNOTATIONS, 'forPrototype').and.returnValue(mockAnnotationHandler);
+      spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationHandler);
       spyOn(ANNOTATIONS, 'hasAnnotation').and.returnValue(true);
 
       let originalGrabFields = Stringify['grabFields_'];
@@ -132,7 +132,7 @@ describe('data.Stringify', () => {
       });
       assert(Stringify['grabFields_']).to.haveBeenCalledWith(value1);
       assert(Stringify['grabFields_']).to.haveBeenCalledWith(value2);
-      assert(ANNOTATIONS.forPrototype).to.haveBeenCalledWith(ctor);
+      assert(ANNOTATIONS.forCtor).to.haveBeenCalledWith(ctor);
       assert(ANNOTATIONS.hasAnnotation).to.haveBeenCalledWith(ctor);
     });
 
@@ -151,7 +151,7 @@ describe('data.Stringify', () => {
           jasmine.createSpyObj('AnnotationHandler', ['getAnnotatedProperties']);
       mockAnnotationHandler.getAnnotatedProperties.and.returnValue([key1, key2]);
 
-      spyOn(ANNOTATIONS, 'forPrototype').and.returnValue(mockAnnotationHandler);
+      spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationHandler);
       spyOn(ANNOTATIONS, 'hasAnnotation').and.returnValue(true);
 
       let originalGrabFields = Stringify['grabFields_'];
@@ -172,7 +172,7 @@ describe('data.Stringify', () => {
       });
       assert(Stringify['grabFields_']).to.haveBeenCalledWith(value1);
       assert(Stringify['grabFields_']).to.haveBeenCalledWith(value2);
-      assert(ANNOTATIONS.forPrototype).to.haveBeenCalledWith(ctor);
+      assert(ANNOTATIONS.forCtor).to.haveBeenCalledWith(ctor);
       assert(ANNOTATIONS.hasAnnotation).to.haveBeenCalledWith(ctor);
     });
 
@@ -198,11 +198,11 @@ describe('data.Stringify', () => {
       let ctor = Mocks.object('ctor');
       let key = 'key';
 
-      spyOn(ANNOTATIONS, 'forPrototype').and.returnValue(mockAnnotationHandler);
+      spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationHandler);
 
       Stringify.Property()(ctor, key);
 
-      assert(ANNOTATIONS.forPrototype).to.haveBeenCalledWith(ctor);
+      assert(ANNOTATIONS.forCtor).to.haveBeenCalledWith(Object);
       assert(mockAnnotationHandler.attachValueToProperty).to.haveBeenCalledWith(key, {});
     });
   });

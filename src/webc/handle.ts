@@ -191,7 +191,7 @@ export class Handler {
         target: Object,
         propertyKey: string | symbol,
         descriptor: PropertyDescriptor): PropertyDescriptor {
-      ATTR_CHANGE_ANNOTATIONS.forPrototype(target.constructor).attachValueToProperty(
+      ATTR_CHANGE_ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
           propertyKey,
           {
             attributeName: attributeName,
@@ -219,7 +219,7 @@ export class Handler {
         target: Object,
         propertyKey: string | symbol,
         descriptor: PropertyDescriptor): PropertyDescriptor {
-      EVENT_ANNOTATIONS.forPrototype(target.constructor).attachValueToProperty(
+      EVENT_ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
           propertyKey,
           {
             event: event,
@@ -244,7 +244,7 @@ export class Handler {
     let attrChangeConfigEntries = Maps
         .of(
             ATTR_CHANGE_ANNOTATIONS
-                .forPrototype(instance.constructor)
+                .forCtor(instance.constructor)
                 .getAttachedValues())
         .values()
         .map((config: AttributeChangeHandlerConfig):
@@ -261,7 +261,7 @@ export class Handler {
 
     // Configures the event handlers.
     let eventHandlerConfigEntries = Maps
-        .of(EVENT_ANNOTATIONS.forPrototype(instance.constructor).getAttachedValues())
+        .of(EVENT_ANNOTATIONS.forCtor(instance.constructor).getAttachedValues())
         .values()
         .map((config: EventHandlerConfig): [Element, EventHandlerConfig] => {
           return [Handler.getTargetEl_(config.selector, element), config];

@@ -11,7 +11,7 @@ def _tslint_test_impl(ctx):
   )
 
   runfiles = ctx.runfiles(
-      files = [ctx.executable._tslint_bin, ctx.file.config] + ctx.files.srcs
+      files = [ctx.file.config] + ctx.files.srcs
   )
   return struct(runfiles = runfiles)
 
@@ -23,11 +23,6 @@ tslint_test = rule(
       ),
       "config": attr.label(
           allow_files = FileType([".json"]),
-          single_file = True,
-      ),
-      "_tslint_bin": attr.label(
-          default = Label("@tslint//:tslint"),
-          executable = True,
           single_file = True,
       )
     },

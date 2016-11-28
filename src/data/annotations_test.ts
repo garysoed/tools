@@ -145,15 +145,25 @@ describe('data.Annotations', () => {
     annotations = new Annotations<number>(__SYMBOL);
   });
 
-  describe('forPrototype', () => {
+  describe('forCtor', () => {
+    class BaseClass {}
+
+    class SubClass extends BaseClass {}
+
     it('should create a correct instance of annotations handler', () => {
-      let parent = Mocks.object('parent');
-      let proto = Mocks.object('proto');
       let handler = Mocks.object('handler');
       spyOn(AnnotationsHandler, 'of').and.returnValue(handler);
 
-      assert(annotations.forPrototype(proto, parent)).to.equal(handler);
-      assert(AnnotationsHandler.of).to.haveBeenCalledWith(__SYMBOL, proto, parent);
+      assert(annotations.forCtor(BaseClass)).to.equal(handler);
+      assert(AnnotationsHandler.of).to.haveBeenCalledWith(__SYMBOL, BaseClass, Object);
+    });
+
+    it('should specify the parent class correctly', () => {
+      let handler = Mocks.object('handler');
+      spyOn(AnnotationsHandler, 'of').and.returnValue(handler);
+
+      assert(annotations.forCtor(SubClass)).to.equal(handler);
+      assert(AnnotationsHandler.of).to.haveBeenCalledWith(__SYMBOL, SubClass, BaseClass);
     });
   });
 

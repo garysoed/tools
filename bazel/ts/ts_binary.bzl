@@ -46,6 +46,7 @@ ts_binary = rule(
           default = "ES5",
           values = ["ES3", "ES5", "ES2015"]),
       "_ts_bin": attr.label(
+          cfg = "host",
           default = Label("@typescript//:tsc"),
           executable = True,
           single_file = True),

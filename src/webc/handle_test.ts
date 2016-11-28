@@ -380,11 +380,11 @@ describe('webc.Handler', () => {
 
       let mockAnnotationsHandler =
           jasmine.createSpyObj('AnnotationsHandler', ['attachValueToProperty']);
-      spyOn(ATTR_CHANGE_ANNOTATIONS, 'forPrototype').and.returnValue(mockAnnotationsHandler);
+      spyOn(ATTR_CHANGE_ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationsHandler);
 
       let decorator = handler.attributeChange(selector, attributeName, parser);
       assert(decorator(target, propertyKey, descriptor)).to.equal(descriptor);
-      assert(ATTR_CHANGE_ANNOTATIONS.forPrototype).to.haveBeenCalledWith(ctor);
+      assert(ATTR_CHANGE_ANNOTATIONS.forCtor).to.haveBeenCalledWith(ctor);
       assert(mockAnnotationsHandler.attachValueToProperty).to.haveBeenCalledWith(
           propertyKey,
           {
@@ -411,11 +411,11 @@ describe('webc.Handler', () => {
 
       let mockAnnotationsHandler =
           jasmine.createSpyObj('AnnotationsHandler', ['attachValueToProperty']);
-      spyOn(EVENT_ANNOTATIONS, 'forPrototype').and.returnValue(mockAnnotationsHandler);
+      spyOn(EVENT_ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationsHandler);
 
       let decorator = handler.event(selector, event);
       assert(decorator(target, propertyKey, descriptor)).to.equal(descriptor);
-      assert(EVENT_ANNOTATIONS.forPrototype).to.haveBeenCalledWith(ctor);
+      assert(EVENT_ANNOTATIONS.forCtor).to.haveBeenCalledWith(ctor);
       assert(mockAnnotationsHandler.attachValueToProperty).to.haveBeenCalledWith(
           propertyKey,
           {
@@ -460,7 +460,11 @@ describe('webc.Handler', () => {
 
       let mockAnnotationsHandle = jasmine.createSpyObj('AnnotationsHandle', ['getAttachedValues']);
       mockAnnotationsHandle.getAttachedValues.and.returnValue(map);
-      spyOn(ATTR_CHANGE_ANNOTATIONS, 'forPrototype').and.returnValue(mockAnnotationsHandle);
+      spyOn(ATTR_CHANGE_ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationsHandle);
+
+      let mockEventHandle = jasmine.createSpyObj('EventHandle', ['getAttachedValues']);
+      mockEventHandle.getAttachedValues.and.returnValue(new Map());
+      spyOn(EVENT_ANNOTATIONS, 'forCtor').and.returnValue(mockEventHandle);
 
       let targetEl1 = Mocks.object('targetEl1');
       let targetEl2 = Mocks.object('targetEl2');
@@ -487,7 +491,7 @@ describe('webc.Handler', () => {
       assert(Handler['getTargetEl_']).to.haveBeenCalledWith(selector2_1, element);
       assert(Handler['getTargetEl_']).to.haveBeenCalledWith(selector2_2, element);
 
-      assert(ATTR_CHANGE_ANNOTATIONS.forPrototype).to.haveBeenCalledWith(ctor);
+      assert(ATTR_CHANGE_ANNOTATIONS.forCtor).to.haveBeenCalledWith(ctor);
     });
 
     it('should configure event handlers', () => {
@@ -519,8 +523,12 @@ describe('webc.Handler', () => {
       map.set('propertyKey2_2', configs2_2);
 
       let mockAnnotationsHandle = jasmine.createSpyObj('AnnotationsHandle', ['getAttachedValues']);
-      mockAnnotationsHandle.getAttachedValues.and.returnValue(map);
-      spyOn(EVENT_ANNOTATIONS, 'forPrototype').and.returnValue(mockAnnotationsHandle);
+      mockAnnotationsHandle.getAttachedValues.and.returnValue(new Map());
+      spyOn(ATTR_CHANGE_ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationsHandle);
+
+      let mockEventsHandle = jasmine.createSpyObj('EventsHandle', ['getAttachedValues']);
+      mockEventsHandle.getAttachedValues.and.returnValue(map);
+      spyOn(EVENT_ANNOTATIONS, 'forCtor').and.returnValue(mockEventsHandle);
 
       let targetEl1 = Mocks.object('targetEl1');
       let targetEl2 = Mocks.object('targetEl2');
@@ -547,7 +555,7 @@ describe('webc.Handler', () => {
       assert(Handler['getTargetEl_']).to.haveBeenCalledWith(selector2_1, element);
       assert(Handler['getTargetEl_']).to.haveBeenCalledWith(selector2_2, element);
 
-      assert(EVENT_ANNOTATIONS.forPrototype).to.haveBeenCalledWith(ctor);
+      assert(EVENT_ANNOTATIONS.forCtor).to.haveBeenCalledWith(ctor);
     });
   });
 });

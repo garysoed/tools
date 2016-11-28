@@ -13,7 +13,7 @@ export class Equals {
   static equals<T>(a: T, b: T): boolean {
     if (a instanceof Object &&
         ANNOTATIONS.hasAnnotation(a.constructor)) {
-      let fields = ANNOTATIONS.forPrototype(a.constructor).getAnnotatedProperties();
+      let fields = ANNOTATIONS.forCtor(a.constructor).getAnnotatedProperties();
       return Arrays.of(fields)
           .every((field: symbol | string) => {
             return Equals.equals(a[field], b[field]);
@@ -30,7 +30,7 @@ export class Equals {
     return (
         proto: Object,
         propertyKey: string | symbol): void => {
-      ANNOTATIONS.forPrototype(proto.constructor).attachValueToProperty(propertyKey, {});
+      ANNOTATIONS.forCtor(proto.constructor).attachValueToProperty(propertyKey, {});
     };
   }
 }

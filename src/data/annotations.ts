@@ -90,19 +90,19 @@ export class Annotations<T> {
   /**
    * Creates a new handler for the given prototype.
    *
-   * @param proto The prototype to associate the annotation to.
-   * @param parent The parent class of the prototype.
-   * @return New instance of annotations handler for the given prototype.
+   * @param ctor The constructor to associate the annotation to.
+   * @return New instance of annotations handler for the given constructor.
    */
-  forPrototype(proto: any, parent: any = null): AnnotationsHandler<T> {
-    return AnnotationsHandler.of<T>(this.annotation_, proto, parent);
+  forCtor(ctor: any): AnnotationsHandler<T> {
+    let parent = Object.getPrototypeOf(ctor.prototype).constructor;
+    return AnnotationsHandler.of<T>(this.annotation_, ctor, parent);
   }
 
   /**
-   * @return True iff the given prototype has the annotation.
+   * @return True iff the given constructor has the annotation.
    */
-  hasAnnotation(proto: any): boolean {
-    return AnnotationsHandler.hasAnnotation(proto, this.annotation_);
+  hasAnnotation(ctor: any): boolean {
+    return AnnotationsHandler.hasAnnotation(ctor, this.annotation_);
   }
 
   /**

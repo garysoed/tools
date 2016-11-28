@@ -99,7 +99,7 @@ export class Stringify {
         && ANNOTATIONS.hasAnnotation(instance.constructor)) {
       let record = {};
       Arrays
-          .of(ANNOTATIONS.forPrototype(instance.constructor).getAnnotatedProperties())
+          .of(ANNOTATIONS.forCtor(instance.constructor).getAnnotatedProperties())
           .forEach((field: string | symbol): void => {
             let stringifiedField = Natives.isSymbol(field) ? `[${field.toString()}]` : field;
             let value = Stringify.grabFields_(instance[field]);
@@ -118,7 +118,7 @@ export class Stringify {
     return (
         proto: Object,
         propertyKey: string | symbol): void => {
-      ANNOTATIONS.forPrototype(proto).attachValueToProperty(propertyKey, {});
+      ANNOTATIONS.forCtor(proto.constructor).attachValueToProperty(propertyKey, {});
     };
   }
 

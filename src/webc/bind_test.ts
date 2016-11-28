@@ -87,13 +87,13 @@ describe('webc.Bind', () => {
 
       let mockAnnotationsHandler =
           jasmine.createSpyObj('AnnotationsHandler', ['attachValueToProperty']);
-      spyOn(ANNOTATIONS, 'forPrototype').and.returnValue(mockAnnotationsHandler);
+      spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationsHandler);
 
       let binder = Mocks.object('binder');
       spyOn(bind, 'createBinder_').and.returnValue(binder);
 
       bind.attribute(selector, attributeName)(target, propertyKey);
-      assert(ANNOTATIONS.forPrototype).to.haveBeenCalledWith(ctor);
+      assert(ANNOTATIONS.forCtor).to.haveBeenCalledWith(ctor);
       assert(mockAnnotationsHandler.attachValueToProperty).to.haveBeenCalledWith(
           propertyKey,
           jasmine.any(Function));

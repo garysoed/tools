@@ -37,7 +37,7 @@ export class Bind {
   attribute(selector: string | null, attributeName: string): PropertyDecorator {
     let self: Bind = this;
     return function(useShadow: boolean, target: Object, propertyKey: string | symbol): void {
-      ANNOTATIONS.forPrototype(target.constructor).attachValueToProperty(
+      ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
           propertyKey,
           (element: HTMLElement): IDomBinder<any> => {
             return self.createBinder_(element, selector, attributeName);

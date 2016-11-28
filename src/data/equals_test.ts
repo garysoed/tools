@@ -32,7 +32,7 @@ describe('data.Equals', () => {
           .createSpyObj('AnnotationHandler', ['getAnnotatedProperties']);
       mockAnnotationHandler.getAnnotatedProperties.and.returnValue([key1, key2]);
 
-      spyOn(ANNOTATIONS, 'forPrototype').and.returnValue(mockAnnotationHandler);
+      spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationHandler);
       spyOn(ANNOTATIONS, 'hasAnnotation').and.returnValue(true);
 
       let originalEquals = Equals.equals;
@@ -51,7 +51,7 @@ describe('data.Equals', () => {
       assert(Equals.equals).to.haveBeenCalledWith(value1A, value1B);
       assert(Equals.equals).to.haveBeenCalledWith(value2A, value2B);
       assert(ANNOTATIONS.hasAnnotation).to.haveBeenCalledWith(ctor);
-      assert(ANNOTATIONS.forPrototype).to.haveBeenCalledWith(ctor);
+      assert(ANNOTATIONS.forCtor).to.haveBeenCalledWith(ctor);
     });
 
     it('should return false if one of the recursive fields is different', () => {
@@ -79,7 +79,7 @@ describe('data.Equals', () => {
           .createSpyObj('AnnotationHandler', ['getAnnotatedProperties']);
       mockAnnotationHandler.getAnnotatedProperties.and.returnValue([key1, key2]);
 
-      spyOn(ANNOTATIONS, 'forPrototype').and.returnValue(mockAnnotationHandler);
+      spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationHandler);
       spyOn(ANNOTATIONS, 'hasAnnotation').and.returnValue(true);
 
       let originalEquals = Equals.equals;
@@ -124,14 +124,14 @@ describe('data.Equals', () => {
       let mockAnnotationHandler =
           jasmine.createSpyObj('AnnotationHandler', ['attachValueToProperty']);
 
-      spyOn(ANNOTATIONS, 'forPrototype').and.returnValue(mockAnnotationHandler);
+      spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationHandler);
 
       let ctor = Mocks.object('ctor');
       let key = 'key';
 
       Equals.Property()({constructor: ctor}, key);
 
-      assert(ANNOTATIONS.forPrototype).to.haveBeenCalledWith(ctor);
+      assert(ANNOTATIONS.forCtor).to.haveBeenCalledWith(ctor);
       assert(mockAnnotationHandler.attachValueToProperty).to.haveBeenCalledWith(key, {});
     });
   });

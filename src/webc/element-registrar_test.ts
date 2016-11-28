@@ -91,7 +91,7 @@ describe('webc.ElementRegistrar', () => {
       binderMap.set(key2, mockBinderFactory2);
       let mockBindAnnotations = jasmine.createSpyObj('BindAnnotations', ['getAttachedValues']);
       mockBindAnnotations.getAttachedValues.and.returnValue(binderMap);
-      spyOn(BindAnnotations, 'forPrototype').and.returnValue(mockBindAnnotations);
+      spyOn(BindAnnotations, 'forCtor').and.returnValue(mockBindAnnotations);
 
       spyOn(CustomElementUtil, 'addAttributes');
       spyOn(CustomElementUtil, 'setElement');
@@ -108,7 +108,7 @@ describe('webc.ElementRegistrar', () => {
       assert(mockBridge2.open).to.haveBeenCalledWith(binder2);
       assert(mockBinderFactory1).to.haveBeenCalledWith(mockHTMLElement);
       assert(mockBinderFactory2).to.haveBeenCalledWith(mockHTMLElement);
-      assert(BindAnnotations.forPrototype).to.haveBeenCalledWith(mockElement.constructor);
+      assert(BindAnnotations.forCtor).to.haveBeenCalledWith(mockElement.constructor);
     });
 
     it('should return config with correct inserted handler', () => {
