@@ -13,10 +13,11 @@ import {TestDispose} from '../testing/test-dispose';
 
 
 describe('webc.Handler', () => {
+  const SELECTOR = 'SELECTOR';
   let handler: Handler;
 
   beforeEach(() => {
-    handler = new Handler(true /* useShadow */);
+    handler = new Handler(SELECTOR);
   });
 
   describe('configureAttrChangeHandler_', () => {
@@ -145,8 +146,8 @@ describe('webc.Handler', () => {
   });
 
   describe('getTargetEl_', () => {
-    it('should return the correct element when using shadow root and selector', () => {
-      let query = 'query';
+    it('should return the correct element when the selector is not null', () => {
+      let selector = 'selector';
       let targetEl = Mocks.object('targetEl');
       let mockShadowRoot = jasmine.createSpyObj('ShadowRoot', ['querySelector']);
       mockShadowRoot.querySelector.and.returnValue(targetEl);
@@ -154,37 +155,13 @@ describe('webc.Handler', () => {
       let element = Mocks.object('element');
       element.shadowRoot = mockShadowRoot;
 
-      let config: any = {query: query, useShadow: true};
-      assert(Handler['getTargetEl_'](config, element)).to.equal(targetEl);
-      assert(mockShadowRoot.querySelector).to.haveBeenCalledWith(query);
+      assert(Handler['getTargetEl_'](selector, element)).to.equal(targetEl);
+      assert(mockShadowRoot.querySelector).to.haveBeenCalledWith(selector);
     });
 
-    it('should return the correct element when not using shadow root but using selector', () => {
-      let query = 'query';
-      let targetEl = Mocks.object('targetEl');
-
-      let mockElement = jasmine.createSpyObj('Element', ['querySelector']);
-      mockElement.querySelector.and.returnValue(targetEl);
-
-      let config: any = {query: query, useShadow: false};
-      assert(Handler['getTargetEl_'](config, mockElement)).to.equal(targetEl);
-      assert(mockElement.querySelector).to.haveBeenCalledWith(query);
-    });
-
-    it('should return the correct element when using shadow root but not selector', () => {
-      let shadowRoot = Mocks.object('shadowRoot');
-
+    it('should return the element when the selector is null', () => {
       let element = Mocks.object('element');
-      element.shadowRoot = shadowRoot;
-
-      let config: any = {query: null, useShadow: true};
-      assert(Handler['getTargetEl_'](config, element)).to.equal(shadowRoot);
-    });
-
-    it('should return the correct element when not using shadow root or selector', () => {
-      let element = Mocks.object('element');
-      let config: any = {query: null, useShadow: false};
-      assert(Handler['getTargetEl_'](config, element)).to.equal(element);
+      assert(Handler['getTargetEl_'](null, element)).to.equal(element);
     });
   });
 
@@ -369,7 +346,6 @@ describe('webc.Handler', () => {
 
   describe('attributeChange', () => {
     it('should add the value to annotations correctly', () => {
-      let selector = 'selector';
       let attributeName = 'attributeName';
       let parser = Mocks.object('parser');
       let ctor = Mocks.object('proto');
@@ -382,7 +358,7 @@ describe('webc.Handler', () => {
           jasmine.createSpyObj('AnnotationsHandler', ['attachValueToProperty']);
       spyOn(ATTR_CHANGE_ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationsHandler);
 
-      let decorator = handler.attributeChange(selector, attributeName, parser);
+      let decorator = handler.attributeChange(attributeName, parser);
       assert(decorator(target, propertyKey, descriptor)).to.equal(descriptor);
       assert(ATTR_CHANGE_ANNOTATIONS.forCtor).to.haveBeenCalledWith(ctor);
       assert(mockAnnotationsHandler.attachValueToProperty).to.haveBeenCalledWith(
@@ -391,17 +367,13 @@ describe('webc.Handler', () => {
             attributeName: attributeName,
             handlerKey: propertyKey,
             parser: parser,
-            selector: {
-              query: selector,
-              useShadow: true,
-            },
+            selector: SELECTOR,
           });
     });
   });
 
   describe('event', () => {
     it('should add the value to the annotations correctly', () => {
-      let selector = 'selector';
       let event = 'event';
       let ctor = Mocks.object('proto');
       let target = Mocks.object('target');
@@ -413,7 +385,7 @@ describe('webc.Handler', () => {
           jasmine.createSpyObj('AnnotationsHandler', ['attachValueToProperty']);
       spyOn(EVENT_ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationsHandler);
 
-      let decorator = handler.event(selector, event);
+      let decorator = handler.event(event);
       assert(decorator(target, propertyKey, descriptor)).to.equal(descriptor);
       assert(EVENT_ANNOTATIONS.forCtor).to.haveBeenCalledWith(ctor);
       assert(mockAnnotationsHandler.attachValueToProperty).to.haveBeenCalledWith(
@@ -421,10 +393,7 @@ describe('webc.Handler', () => {
           {
             event: event,
             handlerKey: propertyKey,
-            selector: {
-              query: selector,
-              useShadow: true,
-            },
+            selector: SELECTOR,
           });
     });
   });

@@ -11,18 +11,13 @@ export type AttributeChangeHandlerConfig = {
   attributeName: string,
   handlerKey: string | symbol,
   parser: IAttributeParser<any>,
-  selector: SelectorConfig,
+  selector: string | null,
 };
 
 export type EventHandlerConfig = {
   event: string,
   handlerKey: string | symbol,
-  selector: SelectorConfig,
-};
-
-export type SelectorConfig = {
-  query: string | null,
-  useShadow: boolean,
+  selector: string | null,
 };
 
 export const ATTR_CHANGE_ANNOTATIONS: Annotations<AttributeChangeHandlerConfig> =
@@ -38,13 +33,13 @@ export const EVENT_ANNOTATIONS: Annotations<EventHandlerConfig> =
  * Use this to annotate methods to handle various DOM events.
  */
 export class Handler {
-  private useShadow_: boolean;
+  private selector_: string | null;
 
   /**
    * @param useShadow True iff evaluating the selector should look in the element's shadow root.
    */
-  constructor(useShadow: boolean) {
-    this.useShadow_ = useShadow;
+  constructor(selector: string | null) {
+    this.selector_ = selector;
   }
 
   /**
@@ -128,10 +123,13 @@ export class Handler {
    * @return The target element.
    */
   private static getTargetEl_(
-      selector: SelectorConfig,
+      selector: string | null,
       element: HTMLElement): Element {
-    let rootEl = selector.useShadow ? element.shadowRoot : element;
-    return selector.query === null ? rootEl : rootEl.querySelector(selector.query);
+    if (selector === null) {
+      return element;
+    } else {
+      return element.shadowRoot.querySelector(selector);
+    }
   }
 
   /**
@@ -183,11 +181,10 @@ export class Handler {
    * @return The method decorator.
    */
   attributeChange(
-      selector: string | null,
       attributeName: string,
       parser: IAttributeParser<any>): MethodDecorator {
     return function(
-        useShadow: boolean,
+        selector: string | null,
         target: Object,
         propertyKey: string | symbol,
         descriptor: PropertyDescriptor): PropertyDescriptor {
@@ -197,13 +194,10 @@ export class Handler {
             attributeName: attributeName,
             handlerKey: propertyKey,
             parser: parser,
-            selector: {
-              query: selector,
-              useShadow: useShadow,
-            },
+            selector: selector,
           });
       return descriptor;
-    }.bind(null, this.useShadow_);
+    }.bind(null, this.selector_);
   }
 
   /**
@@ -213,9 +207,9 @@ export class Handler {
    * @param event The event to listen to.
    * @return The method decorator.
    */
-  event(selector: string | null, event: string): MethodDecorator {
+  event(event: string): MethodDecorator {
     return function(
-        useShadow: boolean,
+        selector: string | null,
         target: Object,
         propertyKey: string | symbol,
         descriptor: PropertyDescriptor): PropertyDescriptor {
@@ -224,13 +218,10 @@ export class Handler {
           {
             event: event,
             handlerKey: propertyKey,
-            selector: {
-              query: selector,
-              useShadow: useShadow,
-            },
+            selector: selector,
           });
       return descriptor;
-    }.bind(null, this.useShadow_);
+    }.bind(null, this.selector_);
   }
 
   /**
@@ -276,7 +267,6 @@ export class Handler {
   }
 }
 
-export const handle = {
-  host: new Handler(false),
-  shadow: new Handler(true),
+export function handle(selector: string | null): Handler {
+  return new Handler(selector);
 };
