@@ -1,12 +1,24 @@
-export interface Storage<T> {
+export interface IdGenerator {
   /**
-   * Creates the given object in the storage.
+   * Generates a new ID.
    *
-   * @param id ID of the object to be created.
-   * @param instance The object to be stored.
-   * @return Promise that will be resolved when the creation process is successful.
+   * @return The newly generated ID.
    */
-  create(id: string, instance: T): Promise<void>;
+  generate(): string;
+
+  /**
+   * Attempts to resolve a conflict for the given ID.
+   *
+   * This is a best effort method to come up with another ID based on the knowledge that the given
+   * ID already conflicts.
+   *
+   * @param id The conflicting ID.
+   * @return Best effort new ID.
+   */
+  resolveConflict(id: string): string;
+}
+
+export interface Storage<T> {
 
   /**
    * Deletes the object corresponding to the given ID.
@@ -37,6 +49,12 @@ export interface Storage<T> {
    *    the object does not exist.
    */
   read(id: string): Promise<T | null>;
+
+  /**
+   * Reserves a new ID in the storage.
+   * @return Promise that will be resolved with the new ID.
+   */
+  reserve(): Promise<string>;
 
   /**
    * Updates the given object.

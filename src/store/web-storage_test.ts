@@ -218,6 +218,28 @@ describe('store.WebStorage', () => {
     });
   });
 
+  describe('reserve', () => {
+    it('should reserve a new ID correctly', (done: any) => {
+      let initialId = 'initialId';
+      let id1 = 'id1';
+      let id2 = 'id2';
+      let id3 = 'id3';
+      spyOn(storage['idGenerator_'], 'generate').and.returnValue(initialId);
+      spyOn(storage['idGenerator_'], 'resolveConflict').and.returnValues(id1, id2, id3);
+      spyOn(storage, 'getIndexes_').and.returnValue([initialId, id1, id2]);
+
+      storage.reserve()
+          .then((id: string) => {
+            assert(id).to.equal(id3);
+            assert(storage['idGenerator_'].resolveConflict).to.haveBeenCalledWith(initialId);
+            assert(storage['idGenerator_'].resolveConflict).to.haveBeenCalledWith(id1);
+            assert(storage['idGenerator_'].resolveConflict).to.haveBeenCalledWith(id2);
+            assert(storage['idGenerator_'].resolveConflict).toNot.haveBeenCalledWith(id3);
+            done();
+          });
+    });
+  });
+
   describe('update', () => {
     it('should store the correct object in the storage', (done: any) => {
       let id = 'id';

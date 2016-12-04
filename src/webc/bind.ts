@@ -9,21 +9,21 @@ export const ANNOTATIONS: Annotations<BinderFactory> =
     Annotations.of<BinderFactory>(Symbol('bind'));
 
 export class Bind {
-  private useShadow_: boolean;
+  private selector_: string | null;
 
   /**
    * @param useShadow True iff evaluating the selector should look in the element's shadow root.
    */
-  constructor(useShadow: boolean) {
-    this.useShadow_ = useShadow;
+  constructor(selector: string | null) {
+    this.selector_ = selector;
   }
 
   private createBinder_(
       element: HTMLElement,
-      selector: string | null,
       attributeName: string): IDomBinder<any> {
-    let rootEl = this.useShadow_ ? element.shadowRoot : element;
-    let targetEl = selector === null ? rootEl : rootEl.querySelector(selector);
+    let targetEl = this.selector_ === null ?
+        element :
+        element.shadowRoot.querySelector(this.selector_);
     return AttributeBinder.of(targetEl, attributeName);
   }
 
@@ -34,22 +34,21 @@ export class Bind {
    * @param attributeName Name of the attribute to bind to.
    * @return Property descriptor.
    */
-  attribute(selector: string | null, attributeName: string): PropertyDecorator {
+  attribute(attributeName: string): PropertyDecorator {
     let self: Bind = this;
-    return function(useShadow: boolean, target: Object, propertyKey: string | symbol): void {
+    return function(target: Object, propertyKey: string | symbol): void {
       ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
           propertyKey,
           (element: HTMLElement): IDomBinder<any> => {
-            return self.createBinder_(element, selector, attributeName);
+            return self.createBinder_(element, attributeName);
           });
-    }.bind(this, this.useShadow_);
+    };
   }
 }
 
 /**
  * Annotation to bind classes to a location in the DOM.
  */
-export const bind = {
-  host: new Bind(false),
-  shadow: new Bind(true),
+export function bind(selector: string): Bind {
+  return new Bind(selector);
 };

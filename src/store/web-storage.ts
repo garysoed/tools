@@ -1,9 +1,11 @@
+import {IdGenerator, Storage as GsStorage} from './interfaces';
 import {Serializer} from '../data/a-serializable';
-import {Storage as GsStorage} from './interfaces';
+import {SimpleIdGenerator} from './simple-id-generator';
 import {Validate} from '../valid/validate';
 
 
 export class WebStorage<T> implements GsStorage<T> {
+  private readonly idGenerator_: IdGenerator;
   private readonly prefix_: string;
   private readonly storage_: Storage;
 
@@ -12,6 +14,7 @@ export class WebStorage<T> implements GsStorage<T> {
    * @param prefix The prefix of the IDs added by this storage.
    */
   constructor(storage: Storage, prefix: string) {
+    this.idGenerator_ = new SimpleIdGenerator();
     this.prefix_ = prefix;
     this.storage_ = storage;
   }
@@ -108,6 +111,18 @@ export class WebStorage<T> implements GsStorage<T> {
         reject(e);
       }
     });
+  }
+
+  /**
+   * @override
+   */
+  reserve(): Promise<string> {
+    let id = this.idGenerator_.generate();
+    let indexes = new Set(this.getIndexes_());
+    while (indexes.has(id)) {
+      id = this.idGenerator_.resolveConflict(id);
+    }
+    return Promise.resolve(id);
   }
 
   /**
