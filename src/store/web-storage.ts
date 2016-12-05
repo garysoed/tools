@@ -1,3 +1,4 @@
+import {Arrays} from '../collection/arrays';
 import {IdGenerator, Storage as GsStorage} from './interfaces';
 import {Serializer} from '../data/a-serializable';
 import {SimpleIdGenerator} from './simple-id-generator';
@@ -23,13 +24,13 @@ export class WebStorage<T> implements GsStorage<T> {
    * Returns the indexes in the storage.
    * @private
    */
-  private getIndexes_(): string[] {
+  private getIndexes_(): Set<string> {
     let indexes = this.storage_.getItem(this.prefix_);
     if (indexes === null) {
-      this.updateIndexes_([]);
+      this.updateIndexes_(new Set());
       indexes = JSON.stringify([]);
     }
-    return JSON.parse(indexes);
+    return new Set(<string[]> JSON.parse(indexes));
   }
 
   /**
@@ -38,8 +39,8 @@ export class WebStorage<T> implements GsStorage<T> {
    * @param indexes Indexes to update.
    * @private
    */
-  private updateIndexes_(indexes: string[]): void {
-    this.storage_.setItem(this.prefix_, JSON.stringify(indexes));
+  private updateIndexes_(indexes: Set<string>): void {
+    this.storage_.setItem(this.prefix_, JSON.stringify(Arrays.fromIterable(indexes).asArray()));
   }
 
   /**
@@ -53,26 +54,12 @@ export class WebStorage<T> implements GsStorage<T> {
   /**
    * @override
    */
-  create(id: string, instance: T): Promise<void> {
-    let indexes = this.getIndexes_();
-    if (!Validate.array(indexes).toNot.contain(id).isValid()) {
-      // TODO: Make custom error thrower that surrounds values with '[]'
-      return Promise.reject(new Error(`Index [${id}] already exist`));
-    }
-    indexes.push(id);
-    this.updateIndexes_(indexes);
-    return this.update(id, instance);
-  }
-
-  /**
-   * @override
-   */
   delete(id: string): Promise<void> {
     let indexes = this.getIndexes_();
-    if (!Validate.array(indexes).to.contain(id).isValid()) {
+    if (!Validate.set(indexes).to.contain(id).isValid()) {
       return Promise.reject(new Error(`Index [${id}] does not exist`));
     }
-    indexes.splice(indexes.indexOf(id), 1);
+    indexes.delete(id);
     this.updateIndexes_(indexes);
     this.storage_.removeItem(this.getPath_(id));
     return Promise.resolve();
@@ -83,13 +70,13 @@ export class WebStorage<T> implements GsStorage<T> {
    */
   has(id: string): Promise<boolean> {
     let indexes = this.getIndexes_();
-    return Promise.resolve(indexes.indexOf(id) >= 0);
+    return Promise.resolve(indexes.has(id));
   }
 
   /**
    * @override
    */
-  list(): Promise<string[]> {
+  list(): Promise<Set<string>> {
     return Promise.resolve(this.getIndexes_());
   }
 
@@ -130,6 +117,10 @@ export class WebStorage<T> implements GsStorage<T> {
    */
   update(id: string, instance: T): Promise<void> {
     let path = this.getPath_(id);
+    let indexes = this.getIndexes_();
+    indexes.add(id);
+    this.updateIndexes_(indexes);
+
     return new Promise((resolve: () => void, reject: (cause: Error) => void) => {
       try {
         let json = Serializer.toJSON(instance);

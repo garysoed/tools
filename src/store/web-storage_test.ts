@@ -1,6 +1,7 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
+import {Arrays} from '../collection/arrays';
 import {Mocks} from '../mock/mocks';
 import {Serializer} from '../data/a-serializable';
 import {WebStorage} from './web-storage';
@@ -22,18 +23,24 @@ describe('store.WebStorage', () => {
 
       spyOn(storage, 'updateIndexes_');
 
-      assert(storage['getIndexes_']()).to.equal([]);
-      assert(storage['updateIndexes_']).to.haveBeenCalledWith([]);
+      let indexes = storage['getIndexes_']();
+
+      assert(Arrays.fromIterable(indexes).asArray()).to.equal([]);
+      assert(storage['updateIndexes_']).to.haveBeenCalledWith(Matchers.any(Set));
+      assert(storage['updateIndexes_']['calls'].argsFor(0)[0].size).to.equal(0);
       assert(mockStorage.getItem).to.haveBeenCalledWith(PREFIX);
     });
 
     it('should not reinitialize the indexes if exists', () => {
-      let indexes = Mocks.object('indexes');
+      let index = 'index';
+      let indexes = [index];
       mockStorage.getItem.and.returnValue(JSON.stringify(indexes));
 
       spyOn(storage, 'updateIndexes_');
 
-      assert(storage['getIndexes_']()).to.equal(indexes);
+      let indexSet = storage['getIndexes_']();
+
+      assert(Arrays.fromIterable(indexSet).asArray()).to.equal(indexes);
       assert(storage['updateIndexes_']).toNot.haveBeenCalled();
     });
   });
@@ -47,48 +54,9 @@ describe('store.WebStorage', () => {
 
   describe('updateIndexes_', () => {
     it('should update the storage correctly', () => {
-      let indexes = Mocks.object('indexes');
-      storage['updateIndexes_'](indexes);
+      let indexes = ['index'];
+      storage['updateIndexes_'](new Set(indexes));
       assert(mockStorage.setItem).to.haveBeenCalledWith(PREFIX, JSON.stringify(indexes));
-    });
-  });
-
-  describe('create', () => {
-    it('should call the update method correctly', (done: any) => {
-      let id = 'id';
-      let object = Mocks.object('object');
-
-      spyOn(storage, 'getIndexes_').and.returnValue([]);
-      spyOn(storage, 'updateIndexes_');
-      spyOn(storage, 'update').and.returnValue(Promise.resolve());
-
-      storage
-          .create(id, object)
-          .then(() => {
-            assert(storage.update).to.haveBeenCalledWith(id, object);
-            assert(storage['updateIndexes_']).to.haveBeenCalledWith([id]);
-            done();
-          }, done.fail);
-    });
-
-    it('should reject if the ID already exist', (done: any) => {
-      let id = 'id';
-      let object = Mocks.object('object');
-
-      spyOn(storage, 'getIndexes_').and.returnValue([id]);
-      spyOn(storage, 'updateIndexes_');
-      spyOn(storage, 'update');
-
-      storage
-          .create(id, object)
-          .then(
-              done.fail,
-              (error: Error) => {
-                assert(error.message).to.match(/already exist/);
-                assert(storage.update).toNot.haveBeenCalled();
-                assert(storage['updateIndexes_']).toNot.haveBeenCalled();
-                done();
-              });
     });
   });
 
@@ -97,14 +65,15 @@ describe('store.WebStorage', () => {
       let id = 'id';
       let path = 'path';
       spyOn(storage, 'getPath_').and.returnValue(path);
-      spyOn(storage, 'getIndexes_').and.returnValue([id]);
+      spyOn(storage, 'getIndexes_').and.returnValue(new Set([id]));
       spyOn(storage, 'updateIndexes_');
       storage
           .delete(id)
           .then(() => {
             assert(mockStorage.removeItem).to.haveBeenCalledWith(path);
             assert(storage['getPath_']).to.haveBeenCalledWith(id);
-            assert(storage['updateIndexes_']).to.haveBeenCalledWith([]);
+            assert(storage['updateIndexes_']).to.haveBeenCalledWith(Matchers.any(Set));
+            assert(storage['updateIndexes_']['calls'].argsFor(0)[0].size).to.equal(0);
             done();
           }, done.fail);
     });
@@ -113,7 +82,7 @@ describe('store.WebStorage', () => {
       let id = 'id';
       let path = 'path';
       spyOn(storage, 'getPath_').and.returnValue(path);
-      spyOn(storage, 'getIndexes_').and.returnValue([]);
+      spyOn(storage, 'getIndexes_').and.returnValue(new Set());
       spyOn(storage, 'updateIndexes_');
       storage
           .delete(id)
@@ -131,7 +100,7 @@ describe('store.WebStorage', () => {
   describe('has', () => {
     it('should resolve with true if the object is in the storage', (done: any) => {
       let id = 'id';
-      spyOn(storage, 'getIndexes_').and.returnValue([id]);
+      spyOn(storage, 'getIndexes_').and.returnValue(new Set([id]));
 
       storage
           .has(id)
@@ -144,7 +113,7 @@ describe('store.WebStorage', () => {
     it('should resolve with false if the object is in the storage', (done: any) => {
       let id = 'id';
 
-      spyOn(storage, 'getIndexes_').and.returnValue([]);
+      spyOn(storage, 'getIndexes_').and.returnValue(new Set());
 
       storage
           .has(id)
@@ -226,7 +195,7 @@ describe('store.WebStorage', () => {
       let id3 = 'id3';
       spyOn(storage['idGenerator_'], 'generate').and.returnValue(initialId);
       spyOn(storage['idGenerator_'], 'resolveConflict').and.returnValues(id1, id2, id3);
-      spyOn(storage, 'getIndexes_').and.returnValue([initialId, id1, id2]);
+      spyOn(storage, 'getIndexes_').and.returnValue(new Set([initialId, id1, id2]));
 
       storage.reserve()
           .then((id: string) => {
@@ -247,7 +216,11 @@ describe('store.WebStorage', () => {
       let object = Mocks.object('object');
       let stringValue = 'stringValue';
       let json = Mocks.object('json');
+      let oldId = 'oldId';
+      let indexes = new Set([oldId]);
 
+      spyOn(storage, 'getIndexes_').and.returnValue(indexes);
+      spyOn(storage, 'updateIndexes_');
       spyOn(storage, 'getPath_').and.returnValue(path);
       spyOn(Serializer, 'toJSON').and.returnValue(json);
       spyOn(JSON, 'stringify').and.returnValue(stringValue);
@@ -258,6 +231,9 @@ describe('store.WebStorage', () => {
             assert(mockStorage.setItem).to.haveBeenCalledWith(path, stringValue);
             assert(JSON.stringify).to.haveBeenCalledWith(json);
             assert(Serializer.toJSON).to.haveBeenCalledWith(object);
+            assert(storage['updateIndexes_']).to.haveBeenCalledWith(Matchers.any(Set));
+            assert(Arrays.fromIterable(storage['updateIndexes_']['calls'].argsFor(0)[0]).asArray())
+                .to.equal([oldId, id]);
             done();
           }, done.fail);
     });
@@ -266,6 +242,7 @@ describe('store.WebStorage', () => {
       let errorMsg = 'errorMsg';
 
       spyOn(Serializer, 'toJSON').and.throwError(errorMsg);
+      spyOn(storage, 'getIndexes_').and.returnValue(new Set());
 
       storage
           .update('id', Mocks.object('object'))

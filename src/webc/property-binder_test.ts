@@ -35,7 +35,7 @@ describe('webc.PropertyBinder', () => {
     it('should set the property value', () => {
       let value = 123;
       binder.set(value);
-      assert(element[PROPERTY_NAME]).to.equal(value);;
+      assert(element[PROPERTY_NAME]).to.equal(value);
     });
   });
 });
