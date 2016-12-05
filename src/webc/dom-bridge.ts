@@ -1,4 +1,4 @@
-import {IAttributeParser, IDomBinder} from './interfaces';
+import {IDomBinder} from './interfaces';
 import {Validate} from '../valid/validate';
 
 
@@ -7,16 +7,14 @@ import {Validate} from '../valid/validate';
  */
 export class DomBridge<T> {
   private deleteOnFalsy_: boolean;
-  private parser_: IAttributeParser<T>;
   private binder_: IDomBinder<T> | null = null;
 
   /**
    * @param parser Parser for parsing the value at the DOM location.
    * @param deleteOnFalsy True iff the DOM location should be deleted when the value is falsy.
    */
-  constructor(parser: IAttributeParser<T>, deleteOnFalsy: boolean) {
+  constructor(deleteOnFalsy: boolean) {
     this.deleteOnFalsy_ = deleteOnFalsy;
-    this.parser_ = parser;
   }
 
   /**
@@ -36,7 +34,7 @@ export class DomBridge<T> {
     if (this.binder_ === null) {
       throw Error('"open" has not been called.');
     }
-    return this.parser_.parse(this.binder_.get());
+    return this.binder_.get();
   }
 
   /**
@@ -62,19 +60,16 @@ export class DomBridge<T> {
     if (!value && this.deleteOnFalsy_) {
       this.delete();
     } else {
-      this.binder_.set(this.parser_.stringify(value));
+      this.binder_.set(value);
     }
   }
 
   /**
    * Creates a new instance of DomBridge.
    *
-   * @param parser Parser to parse the data in the DOM location.
    * @param deleteOnFalsy True iff the DOM location should be deleted when the value is falsy.
    */
-  static of<T>(
-      parser: IAttributeParser<T>,
-      deleteOnFalsy: boolean = false): DomBridge<T> {
-    return new DomBridge(parser, deleteOnFalsy);
+  static of<T>(deleteOnFalsy: boolean = false): DomBridge<T> {
+    return new DomBridge<T>(deleteOnFalsy);
   }
 }

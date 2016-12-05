@@ -28,13 +28,13 @@ export interface IDomBinder<T> {
   /**
    * @return The value at the location.
    */
-  get(): string | null;
+  get(): T | null;
 
   /**
    * Sets the value to the location.
    * @param value The value to set.
    */
-  set(value: string | null): void;
+  set(value: T | null): void;
 }
 
 /**

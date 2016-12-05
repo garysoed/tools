@@ -6,12 +6,10 @@ import {Mocks} from '../mock/mocks';
 
 
 describe('webc.DomBridge', () => {
-  let mockParser;
-  let bridge: DomBridge<number>;
+  let bridge: DomBridge<string>;
 
   beforeEach(() => {
-    mockParser = jasmine.createSpyObj('Parser', ['parse', 'stringify']);
-    bridge = new DomBridge<number>(mockParser, true /* deleteOnFalsy */);
+    bridge = new DomBridge<string>(true /* deleteOnFalsy */);
   });
 
   describe('delete', () => {
@@ -37,11 +35,7 @@ describe('webc.DomBridge', () => {
       mockBinder.get.and.returnValue(value);
       bridge['binder_'] = mockBinder;
 
-      let parsedValue = Mocks.object('parsedValue');
-      mockParser.parse.and.returnValue(parsedValue);
-
-      assert(bridge.get()).to.equal(parsedValue);
-      assert(mockParser.parse).to.haveBeenCalledWith(value);
+      assert(bridge.get()).to.equal(value);
     });
 
     it('should throw error if open has not been called', () => {
@@ -70,16 +64,12 @@ describe('webc.DomBridge', () => {
 
   describe('set', () => {
     it('should set the value correctly', () => {
-      let stringifiedValue = 'stringifiedValue';
-      mockParser.stringify.and.returnValue(stringifiedValue);
-
       let mockBinder = jasmine.createSpyObj('Binder', ['set']);
       bridge['binder_'] = mockBinder;
 
       let value = Mocks.object('value');
       bridge.set(value);
-      assert(mockBinder.set).to.haveBeenCalledWith(stringifiedValue);
-      assert(mockParser.stringify).to.haveBeenCalledWith(value);
+      assert(mockBinder.set).to.haveBeenCalledWith(value);
     });
 
     it('should delete the DOM location if the value is falsy and deleteOnFalsy is set', () => {
@@ -89,7 +79,7 @@ describe('webc.DomBridge', () => {
 
       spyOn(bridge, 'delete');
 
-      bridge.set(0);
+      bridge.set('');
       assert(bridge.delete).to.haveBeenCalledWith();
       assert(mockBinder.set).toNot.haveBeenCalled();
     });
@@ -102,7 +92,7 @@ describe('webc.DomBridge', () => {
 
           spyOn(bridge, 'delete');
 
-          bridge.set(0);
+          bridge.set('');
           assert(bridge.delete).toNot.haveBeenCalledWith();
         });
 
@@ -114,14 +104,14 @@ describe('webc.DomBridge', () => {
 
           spyOn(bridge, 'delete');
 
-          bridge.set(1);
+          bridge.set('vallue');
           assert(bridge.delete).toNot.haveBeenCalledWith();
         });
 
     it('should throw error if open has not been called', () => {
       bridge['binder_'] = null;
       assert(() => {
-        bridge.set(123);
+        bridge.set('value');
       }).to.throwError(/"open" has not been called/);
     });
   });

@@ -1,20 +1,23 @@
-import {IDomBinder} from './interfaces';
+import {IAttributeParser, IDomBinder} from './interfaces';
 
 
 /**
  * Binds to an attribute in the DOM.
  */
 export class AttributeBinder<T> implements IDomBinder<T> {
-  private attributeName_: string;
-  private element_: Element;
+  private readonly attributeName_: string;
+  private readonly element_: Element;
+  private readonly parser_: IAttributeParser<T>;
 
   /**
    * @param element The element to bind to.
    * @param attributeName Name of the attribute on the element to bind to.
+   * @param parser The attribute value parser.
    */
-  constructor(element: Element, attributeName: string) {
+  constructor(element: Element, attributeName: string, parser: IAttributeParser<T>) {
     this.attributeName_ = attributeName;
     this.element_ = element;
+    this.parser_ = parser;
   }
 
   /**
@@ -30,15 +33,15 @@ export class AttributeBinder<T> implements IDomBinder<T> {
   /**
    * @override
    */
-  get(): string | null {
-    return this.element_.getAttribute(this.attributeName_);
+  get(): T | null {
+    return this.parser_.parse(this.element_.getAttribute(this.attributeName_));
   }
 
   /**
    * @override
    */
-  set(value: string | null): void {
-    this.element_.setAttribute(this.attributeName_, value || '');
+  set(value: T | null): void {
+    this.element_.setAttribute(this.attributeName_, this.parser_.stringify(value) || '');
   }
 
   /**
@@ -46,7 +49,10 @@ export class AttributeBinder<T> implements IDomBinder<T> {
    * @param attributeName Name of the attribute on the element to bind to.
    * @return New instance of attribute binder.
    */
-  static of<T>(element: Element, attributeName: string): AttributeBinder<T> {
-    return new AttributeBinder(element, attributeName);
+  static of<T>(
+      element: Element,
+      attributeName: string,
+      parser: IAttributeParser<T>): AttributeBinder<T> {
+    return new AttributeBinder<T>(element, attributeName, parser);
   }
 }
