@@ -64,6 +64,6 @@ export class Bind {
 /**
  * Annotation to bind classes to a location in the DOM.
  */
-export function bind(selector: string): Bind {
+export function bind(selector: string | null): Bind {
   return new Bind(selector);
 };
