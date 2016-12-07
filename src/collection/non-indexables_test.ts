@@ -36,6 +36,19 @@ describe('collection.NonIndexables', () => {
     });
   });
 
+  describe('anyValue', () => {
+    it('should return a value in the collection', () => {
+      let collection = [1, 2, 3];
+      let value = NonIndexables.of(collection).anyValue();
+
+      assert(collection).to.contain(value!);
+    });
+
+    it('should return null if the collection is empty', () => {
+      assert(NonIndexables.of<number>([]).anyValue()).to.beNull();
+    });
+  });
+
   describe('asIterable', () => {
     it('should return iterable that iterates the content', () => {
       let iterable = NonIndexables.of([1, 2, 3]).asIterable();
@@ -67,6 +80,15 @@ describe('collection.NonIndexables', () => {
       assert(set.has(1)).to.beTrue();
       assert(set.has(2)).to.beTrue();
       assert(set.has(3)).to.beTrue();
+    });
+  });
+
+  describe('diff', () => {
+    it('should return the correct diff sets', () => {
+      let {added, removed, same} = NonIndexables.of([1, 2, 3, 4, 5, 6]).diff(new Set([1, 3, 5, 7]));
+      assert(added).to.haveElements([7]);
+      assert(removed).to.haveElements([2, 4, 6]);
+      assert(same).to.haveElements([1, 3, 5]);
     });
   });
 

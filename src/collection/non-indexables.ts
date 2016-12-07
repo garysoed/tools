@@ -21,6 +21,18 @@ export class FluentNonIndexable<T> extends BaseFluent<T[]> implements IFluentNon
     return this;
   }
 
+  /**
+   * @override
+   */
+  anyValue(): T | null {
+    let data = this.getData();
+    if (data.length > 0) {
+      return data[0];
+    } else {
+      return null;
+    }
+  }
+
   asArray(): T[] {
     return this.getData();
   }
@@ -35,6 +47,37 @@ export class FluentNonIndexable<T> extends BaseFluent<T[]> implements IFluentNon
 
   asSet(): Set<T> {
     return new Set(this.getData());
+  }
+
+  /**
+   * @override
+   */
+  diff(other: Set<T>): {added: Set<T>, removed: Set<T>, same: Set<T>} {
+    let addedSet = new Set();
+    let removedSet = new Set();
+    let sameSet = new Set();
+
+    this.forEach((value: T) => {
+      if (other.has(value)) {
+        sameSet.add(value);
+      } else {
+        removedSet.add(value);
+      }
+    });
+
+    let thisSet = new Set(this.getData());
+    NonIndexables
+        .fromIterable(other)
+        .forEach((value: T) => {
+          if (!thisSet.has(value)) {
+            addedSet.add(value);
+          }
+        });
+    return {
+      added: addedSet,
+      removed: removedSet,
+      same: sameSet,
+    };
   }
 
   filter(filterFn: (value: T) => boolean): FluentNonIndexable<T> {

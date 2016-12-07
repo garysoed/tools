@@ -75,6 +75,11 @@ export interface IFluentIterable<T> {
  */
 export interface IFluentNonIndexable<T> extends IFluentIterable<T> {
   /**
+   * @return Any value that are in the collection, or null if the collection is empty.
+   */
+  anyValue(): T | null;
+
+  /**
    * Returns the non indexable as an array.
    *
    * @return The array containing elements in the non indexable.
@@ -87,6 +92,17 @@ export interface IFluentNonIndexable<T> extends IFluentIterable<T> {
    * @return The set containing elements in the non indexable.
    */
   asSet(): Set<T>;
+
+  /**
+   * Does a diff comparison against the given set.
+   *
+   * @param other The set to do a diff against.
+   * @return Object containing 3 parameters:
+   *    -   added - Set of elements that are in the given set, but not in the original set.
+   *    -   removed - Set of elements that are not in the given set, but are in the original set.
+   *    -   same - Set of elements that are in both sets.
+   */
+  diff(other: Set<T>): {added: Set<T>, removed: Set<T>, same: Set<T>};
 
   /**
    * Finds an element matching the given match function.

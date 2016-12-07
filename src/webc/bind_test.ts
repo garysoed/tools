@@ -3,6 +3,7 @@ TestBase.setup();
 
 import {ANNOTATIONS, Bind} from './bind';
 import {AttributeBinder} from './attribute-binder';
+import {ChildrenElementsBinder} from './children-elements-binder';
 import {Mocks} from '../mock/mocks';
 import {PropertyBinder} from './property-binder';
 
@@ -69,6 +70,50 @@ describe('webc.Bind', () => {
           .to.equal(binder);
       assert(bind['getTargetEl_']).to.haveBeenCalledWith(element);
       assert(AttributeBinder.of).to.haveBeenCalledWith(targetEl, attributeName, parser);
+    });
+  });
+
+  describe('childrenElement', () => {
+    it('should attach the correct factory to the property', () => {
+      let elementGenerator = Mocks.object('elementGenerator');
+      let dataSetter = Mocks.object('dataSetter');
+      let ctor = Mocks.object('ctor');
+      let target = Mocks.object('target');
+      target.constructor = ctor;
+
+      let propertyKey = 'propertyKey';
+
+      let mockAnnotationsHandler =
+          jasmine.createSpyObj('AnnotationsHandler', ['attachValueToProperty']);
+      spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationsHandler);
+
+      let targetEl = Mocks.object('targetEl');
+      spyOn(bind, 'getTargetEl_').and.returnValue(targetEl);
+
+      let binder = Mocks.object('binder');
+      spyOn(ChildrenElementsBinder, 'of').and.returnValue(binder);
+
+      bind.childrenElements(elementGenerator, dataSetter)(target, propertyKey);
+      assert(ANNOTATIONS.forCtor).to.haveBeenCalledWith(ctor);
+      assert(mockAnnotationsHandler.attachValueToProperty).to.haveBeenCalledWith(
+          propertyKey,
+          jasmine.any(Function));
+
+      let element = Mocks.object('element');
+      assert(mockAnnotationsHandler.attachValueToProperty.calls.argsFor(0)[1](element))
+          .to.equal(binder);
+      assert(bind['getTargetEl_']).to.haveBeenCalledWith(element);
+      assert(ChildrenElementsBinder.of).to
+          .haveBeenCalledWith(targetEl, dataSetter, elementGenerator);
+    });
+  });
+
+  describe('innerText', () => {
+    it('should return the correct factory to the property', () => {
+      let decorator = Mocks.object('decorator');
+      spyOn(bind, 'property').and.returnValue(decorator);
+      assert(bind.innerText()).to.equal(decorator);
+      assert(bind.property).to.haveBeenCalledWith('innerText');
     });
   });
 

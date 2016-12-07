@@ -13,4 +13,11 @@ export class ArrayAssert<T> extends AnyAssert<T[]> {
       expect: (actual: any) => jasmine.Matchers) {
     super(arrayValue_, reversed, expect);
   }
+
+  /**
+   * Checks if the array contains the given element.
+   */
+  contain(element: T): void {
+    this.getMatchers_().toContain(element);
+  }
 }

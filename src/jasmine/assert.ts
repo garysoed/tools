@@ -7,6 +7,7 @@ import {FunctionAssert} from './function-assert';
 import {MapAssert} from './map-assert';
 import {Natives} from '../typescript/natives';
 import {NumberAssert} from './number-assert';
+import {SetAssert} from './set-assert';
 import {StringAssert} from './string-assert';
 
 
@@ -20,6 +21,7 @@ export function assert(value: string | null): AssertFactory<StringAssert>;
 export function assert<T extends Function>(value: T | null): AssertFactory<FunctionAssert<T>>;
 export function assert<T>(value: T[] | null): AssertFactory<ArrayAssert<T>>;
 export function assert<K, V>(value: Map<K, V>): AssertFactory<MapAssert<K, V>>;
+export function assert<T>(value: Set<T>): AssertFactory<SetAssert<T>>;
 export function assert(value: any): AssertFactory<AnyAssert<any>>;
 export function assert(value: any): AssertFactory<BaseAssert> {
   if (Natives.isBoolean(value)) {
@@ -45,6 +47,10 @@ export function assert(value: any): AssertFactory<BaseAssert> {
   } else if (value instanceof Map) {
     return new AssertFactory((reversed: boolean): MapAssert<any, any> => {
       return new MapAssert<any, any>(value, reversed, expect);
+    });
+  } else if (value instanceof Set) {
+    return new AssertFactory((reversed: boolean): SetAssert<any> => {
+      return new SetAssert<any>(value, reversed, expect);
     });
   } else {
     return new AssertFactory((reversed: boolean): AnyAssert<any> => {
