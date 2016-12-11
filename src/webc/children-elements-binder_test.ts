@@ -26,6 +26,9 @@ describe('webc.ChildrenElementsBinder', () => {
         () => {
           let key = 'key';
           let value = 123;
+          let document = Mocks.object('document');
+          mockParentEl.ownerDocument = document;
+
           let element = Mocks.object('element');
           mockGenerator.and.returnValue(element);
 
@@ -35,6 +38,7 @@ describe('webc.ChildrenElementsBinder', () => {
           assert(binder['entries_']).to.haveEntries([[key, [element, value]]]);
           assert(mockDataSetter).to.haveBeenCalledWith(value, element);
           assert(binder['elementPool_']).to.haveElements([]);
+          assert(mockGenerator).to.haveBeenCalledWith(document);
         });
 
     it('should reuse an element from the pool', () => {

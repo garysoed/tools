@@ -27,11 +27,11 @@ export class BatchValidations extends BaseValidations<{[key: string]: Validation
         })
         .entries()
         .map((entry: [string, string]) => {
-          return `${entry[0]}: ${entry[1]}`;
+          return `  ${entry[0]}: ${entry[1]}`;
         })
         .asArray()
-        .join(', ');
-    return `{${content}}`;
+        .join(',\n');
+    return `{\n${content}\n}`;
   }
 
   /**

@@ -5,6 +5,7 @@ import {DisposableFunction} from '../dispose/disposable-function';
 import {IAttributeParser} from './interfaces';
 import {ListenableDom} from '../event/listenable-dom';
 import {Maps} from '../collection/maps';
+import {Validate} from '../valid/validate';
 
 
 export type AttributeChangeHandlerConfig = {
@@ -252,14 +253,20 @@ export class Handler {
         });
 
     // Configures the event handlers.
+    let validations = {};
     let eventHandlerConfigEntries = Maps
         .of(EVENT_ANNOTATIONS.forCtor(instance.constructor).getAttachedValues())
         .values()
         .map((config: EventHandlerConfig): [Element, EventHandlerConfig] => {
-          return [Handler.getTargetEl_(config.selector, element), config];
+          let targetEl = Handler.getTargetEl_(config.selector, element);
+          validations[`${config.selector}`] = Validate.any(targetEl)
+              .to.exist()
+              .orThrows(`"${config.selector}" selector cannot find any elements`);
+          return [targetEl, config];
         })
         .asArray();
 
+    Validate.batch(validations).to.allBeValid().assertValid();
     Maps
         .group(eventHandlerConfigEntries)
         .forEach((configs: EventHandlerConfig[], targetEl: Element) => {

@@ -56,7 +56,7 @@ export class Bind {
    * @return Property descriptor
    */
   childrenElements<T>(
-      elementGenerator: () => Element,
+      elementGenerator: (document: Document) => Element,
       dataSetter: (data: T, element: Element) => void): PropertyDecorator {
     let self: Bind = this;
     return function(target: Object, propertyKey: string | symbol): void {

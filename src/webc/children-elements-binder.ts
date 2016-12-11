@@ -6,14 +6,14 @@ import {Sets} from '../collection/sets';
 export class ChildrenElementsBinder<T> implements IDomBinder<Map<string, T>> {
   private readonly parentEl_: Element;
   private readonly dataSetter_: (data: T, element: Element) => void;
-  private readonly generator_: () => Element;
+  private readonly generator_: (document: Document) => Element;
   private readonly elementPool_: Set<Element>;
   private readonly entries_: Map<string, [Element, T]>;
 
   constructor(
       parentEl: Element,
       dataSetter: (data: T, element: Element) => void,
-      generator: () => Element) {
+      generator: (document: Document) => Element) {
     this.parentEl_ = parentEl;
     this.dataSetter_ = dataSetter;
     this.generator_ = generator;
@@ -34,7 +34,7 @@ export class ChildrenElementsBinder<T> implements IDomBinder<Map<string, T>> {
 
     let element = Sets.of(this.elementPool_).anyValue();
     if (element === null) {
-      element = this.generator_();
+      element = this.generator_(this.parentEl_.ownerDocument);
     } else {
       this.elementPool_.delete(element);
     }
@@ -127,7 +127,7 @@ export class ChildrenElementsBinder<T> implements IDomBinder<Map<string, T>> {
   static of<T>(
       parentEl: Element,
       dataSetter: (data: T, element: Element) => void,
-      generator: () => Element): ChildrenElementsBinder<T> {
+      generator: (document: Document) => Element): ChildrenElementsBinder<T> {
     return new ChildrenElementsBinder(parentEl, dataSetter, generator);
   }
 }

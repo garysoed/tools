@@ -30,7 +30,7 @@ describe('valid.BatchValidations', () => {
       result2.getErrorMessage.and.returnValue(message2);
 
       assert(Validate.batch({'a': result1, 'b': result2}).to['getMessage_']())
-          .to.equal(`{a: ${message1}, b: ${message2}}`);
+          .to.equal(`{\n  a: ${message1},\n  b: ${message2}\n}`);
     });
   });
 
