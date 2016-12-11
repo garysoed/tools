@@ -1,4 +1,4 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {DomEvent} from '../event/dom-event';
@@ -49,9 +49,8 @@ describe('ui.LocationService', () => {
 
       service['init_']();
 
-      assert(mockWindow.on).to.haveBeenCalledWith(DomEvent.HASHCHANGE, Matchers.any(Function));
-      mockWindow.on.calls.argsFor(0)[1]();
-      assert(service['onHashChange_']).to.haveBeenCalledWith();
+      assert(mockWindow.on).to
+          .haveBeenCalledWith(DomEvent.HASHCHANGE, service['onHashChange_'], service);
     });
   });
 

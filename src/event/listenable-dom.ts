@@ -42,10 +42,12 @@ export class ListenableDom<T extends EventTarget> extends BaseListenable<string>
   on(
       eventType: string,
       handler: (event: Event) => void,
+      context: Object,
       useCapture: boolean = false): DisposableFunction {
-    this.eventTarget_.addEventListener(eventType, handler, useCapture);
+    let boundHandler = handler.bind(context);
+    this.eventTarget_.addEventListener(eventType, boundHandler, useCapture);
     return new DisposableFunction(() => {
-      this.eventTarget_.removeEventListener(eventType, handler, useCapture);
+      this.eventTarget_.removeEventListener(eventType, boundHandler, useCapture);
     });
   }
 

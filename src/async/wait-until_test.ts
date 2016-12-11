@@ -31,7 +31,8 @@ describe('async.WaitUntil', () => {
         }, done.fail);
 
     assert(mockInterval.start).to.haveBeenCalledWith();
-    assert(mockInterval.on).to.haveBeenCalledWith(Interval.TICK_EVENT, Matchers.any(Function));
+    assert(mockInterval.on).to
+        .haveBeenCalledWith(Interval.TICK_EVENT, Matchers.any(Function), waitUntil);
     mockCheckFn.and.returnValue(true);
 
     mockInterval.on.calls.argsFor(0)[1]();

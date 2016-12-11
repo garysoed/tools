@@ -58,7 +58,7 @@ class OverflowWatcher extends BaseListenable<EventType> {
     let listenableContainer = new ListenableDom(container);
     this.addDisposable(
         listenableContainer,
-        listenableContainer.on(DomEvent.SCROLL, this.onScroll_.bind(this)));
+        listenableContainer.on(DomEvent.SCROLL, this.onScroll_, this));
   }
 
   // TODO(gs): Memoize this.

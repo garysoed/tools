@@ -53,7 +53,7 @@ export abstract class HttpRequest extends BaseDisposable {
           reject(this.request);
         }
         this.dispose();
-      }));
+      }, this));
       this.request.send(this.getSentData());
     });
   }

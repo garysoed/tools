@@ -60,21 +60,26 @@ export class BaseListenable<T> extends BaseDisposable {
    *
    * @param eventType Type of event to listen to.
    * @param callback The callback to be called when the specified event is dispatched.
+   * @param context The context to call the callback in.
    * @param useCapture True iff the capture phase should be used. Defaults to false.
    * @return [[DisposableFunction]] that should be disposed to stop listening to the event.
+   *
+   * TODO: Pass in the context.
    */
   on(
       eventType: T,
       callback: (payload?: any) => void,
+      context: Object,
       useCapture: boolean = false): DisposableFunction {
     let map = useCapture ? this.captureCallbacksMap_ : this.bubbleCallbacksMap_;
     if (!map.has(eventType)) {
       map.set(eventType, []);
     }
     const callbacks = map.get(eventType);
-    callbacks!.push(callback);
+    const boundCallback = callback.bind(context);
+    callbacks!.push(boundCallback);
     return new DisposableFunction(() => {
-      let index = callbacks!.indexOf(callback);
+      let index = callbacks!.indexOf(boundCallback);
       if (index >= 0) {
         callbacks!.splice(index, 1);
       }
@@ -86,12 +91,14 @@ export class BaseListenable<T> extends BaseDisposable {
    *
    * @param eventType Type of event to listen to.
    * @param callback The callback to be called when the specified event is dispatched.
+   * @param context The context to call the callback in.
    * @param useCapture True iff the capture phase should be used. Defaults to false.
    * @return [[DisposableFunction]] that should be disposed to stop listening to the event.
    */
   once(
       eventType: T,
       callback: (payload?: any) => void,
+      context: Object,
       useCapture: boolean = false): DisposableFunction {
     let disposableFunction = this.on(
         eventType,
@@ -99,6 +106,7 @@ export class BaseListenable<T> extends BaseDisposable {
           callback(payload);
           disposableFunction.dispose();
         },
+        context,
         useCapture);
     return disposableFunction;
   }

@@ -29,7 +29,7 @@ describe('async.Interval', () => {
       let intervalId = 123;
       let spy = spyOn(window, 'setInterval').and.returnValue(intervalId);
 
-      TestDispose.add(interval.on(Interval.TICK_EVENT, callback));
+      TestDispose.add(interval.on(Interval.TICK_EVENT, callback, this));
       interval.start();
 
       assert(interval['intervalId_']).to.equal(intervalId);

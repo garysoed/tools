@@ -54,7 +54,7 @@ export class LocationService extends BaseListenable<LocationServiceEvents> {
    * Initializes the service.
    */
   private init_(): void {
-    this.addDisposable(this.window_.on(DomEvent.HASHCHANGE, this.onHashChange_.bind(this)));
+    this.addDisposable(this.window_.on(DomEvent.HASHCHANGE, this.onHashChange_, this));
   }
 
   /**

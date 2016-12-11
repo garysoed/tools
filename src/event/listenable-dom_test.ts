@@ -38,17 +38,22 @@ describe('event.ListenableDom', () => {
   describe('on', () => {
     it('should listen to the event target correctly', () => {
       let eventType = 'eventType';
-      let callback = Mocks.object('callback');
+      let boundCallback = Mocks.object('boundCallback');
+      let mockCallback = jasmine.createSpyObj('Callback', ['bind']);
+      mockCallback.bind.and.returnValue(boundCallback);
+
+      let instance = Mocks.object('instance');
       let useCapture = true;
 
-      let disposableFunction = listenable.on(eventType, callback, useCapture);
+      let disposableFunction = listenable.on(eventType, mockCallback, instance, useCapture);
 
       assert(mockEventTarget.addEventListener).to
-          .haveBeenCalledWith(eventType, callback, useCapture);
+          .haveBeenCalledWith(eventType, boundCallback, useCapture);
+      assert(mockCallback.bind).to.haveBeenCalledWith(instance);
 
       disposableFunction.dispose();
       assert(mockEventTarget.removeEventListener).to
-          .haveBeenCalledWith(eventType, callback, useCapture);
+          .haveBeenCalledWith(eventType, boundCallback, useCapture);
     });
   });
 });

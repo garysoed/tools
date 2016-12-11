@@ -22,7 +22,7 @@ class BaseService<E> extends BaseListenable<E> {
     this.addDisposable(listenableWindow);
 
     this.addDisposable(
-        listenableWindow.on(DomEvent.BEFOREUNLOAD, this.onBeforeUnload_.bind(this)));
+        listenableWindow.on(DomEvent.BEFOREUNLOAD, this.onBeforeUnload_, this));
   }
 
   private onBeforeUnload_(): void {

@@ -37,6 +37,7 @@ describe('event.BaseListenable', () => {
           (payload: any) => {
             mockBubbleHandler(i, payload);
           },
+          this,
           false));
 
       let mockCaptureHandler = jasmine.createSpy('CaptureHandler');
@@ -45,6 +46,7 @@ describe('event.BaseListenable', () => {
           (payload: any) => {
             mockCaptureHandler(i, payload);
           },
+          this,
           true));
 
       let payload = Mocks.object('payload');

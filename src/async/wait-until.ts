@@ -28,16 +28,20 @@ class WaitUntil extends BaseDisposable {
   private promiseHandler_(resolve: () => void, reject: (error: any) => void): void {
     let interval = Interval.newInstance(this.interval_);
     this.addDisposable(interval);
-    interval.on(Interval.TICK_EVENT, () => {
-      if (this.isDisposed()) {
-        reject('Check function has not returned true when waiter is disposed');
-      }
+    interval
+        .on(
+            Interval.TICK_EVENT,
+            () => {
+              if (this.isDisposed()) {
+                reject('Check function has not returned true when waiter is disposed');
+              }
 
-      if (this.checkFn_()) {
-        interval.dispose();
-        resolve();
-      }
-    });
+              if (this.checkFn_()) {
+                interval.dispose();
+                resolve();
+              }
+            },
+            this);
     interval.start();
   }
 

@@ -34,7 +34,7 @@ describe('net.Http', () => {
 
       assert(mockRequest.send).to.haveBeenCalledWith(null);
       assert(listenableRequest.on).to
-          .haveBeenCalledWith(DomEvent.LOAD, Matchers.any(Function));
+          .haveBeenCalledWith(DomEvent.LOAD, Matchers.any(Function), Matchers.any(Object));
 
       mockRequest.responseText = expectedResponseText;
       mockRequest.status = 200;
@@ -89,7 +89,8 @@ describe('net.Http', () => {
       assert(mockRequest.send).to.haveBeenCalledWith('a=1&b=2');
       assert(mockRequest.setRequestHeader).to
           .haveBeenCalledWith('Content-Type', 'application/x-www-form-urlencoded');
-      assert(listenableRequest.on).to.haveBeenCalledWith(DomEvent.LOAD, Matchers.any(Function));
+      assert(listenableRequest.on).to
+          .haveBeenCalledWith(DomEvent.LOAD, Matchers.any(Function), Matchers.any(Object));
 
       mockRequest.responseText = expectedResponseText;
       mockRequest.status = 200;

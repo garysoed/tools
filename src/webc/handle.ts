@@ -102,7 +102,8 @@ export class Handler {
         .forEach((config: EventHandlerConfig) => {
           instance.addDisposable(listenable.on(
               config.event,
-              instance[config.handlerKey].bind(instance)));
+              instance[config.handlerKey],
+              instance));
         });
     instance.addDisposable(listenable);
   }

@@ -80,7 +80,7 @@ describe('ui.PostMessageChannel', () => {
               }, done.fail);
 
           assert(channel['srcWindow_'].on)
-              .to.haveBeenCalledWith(DomEvent.MESSAGE, <any> Matchers.any(Function));
+              .to.haveBeenCalledWith(DomEvent.MESSAGE, Matchers.any(Function), channel);
 
           channel['srcWindow_'].on.calls.argsFor(0)[1]({data: json1, origin: origin});
           channel['srcWindow_'].on.calls.argsFor(0)[1]({data: json2, origin: origin});
@@ -119,7 +119,7 @@ describe('ui.PostMessageChannel', () => {
               }, done.fail);
 
           assert(channel['srcWindow_'].on)
-              .to.haveBeenCalledWith(DomEvent.MESSAGE, <any> Matchers.any(Function));
+              .to.haveBeenCalledWith(DomEvent.MESSAGE, Matchers.any(Function), channel);
 
           channel['srcWindow_'].on.calls.argsFor(0)[1]({data: json1, origin: 'otherOrigin'});
           channel['srcWindow_'].on.calls.argsFor(0)[1]({data: json2, origin: origin});

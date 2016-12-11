@@ -37,7 +37,7 @@ export const TestEvent = {
         }
 
         target[__calls].get(eventType).push(payload);
-      }));
+      }, this));
     });
   },
 

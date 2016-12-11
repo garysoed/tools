@@ -116,7 +116,8 @@ class PostMessageChannel extends BaseDisposable {
               unlistenFn.dispose();
               resolve(message);
             }
-          });
+          },
+          this);
     });
   }
 
@@ -227,7 +228,8 @@ class PostMessageChannel extends BaseDisposable {
             window.clearTimeout(timeoutId);
             resolve(channel);
           }
-        });
+        },
+        this);
     });
   }
 }

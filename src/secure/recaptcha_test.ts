@@ -30,7 +30,7 @@ describe('secure.Recaptcha', () => {
       sitekey: SITEKEY,
     });
 
-    TestDispose.add(recaptcha.on(EventType.NEW_RESPONSE, callback));
+    TestDispose.add(recaptcha.on(EventType.NEW_RESPONSE, callback, this));
 
     mockGrecaptcha.render.calls.argsFor(0)[1].callback();
     assert(callback).to.haveBeenCalledWith(null);

@@ -135,13 +135,8 @@ describe('webc.Handler', () => {
 
       Handler['configureEventHandler_'](mockInstance, [config1, config2], targetEl);
 
-      assert(mockListenableDom.on).to.haveBeenCalledWith(event1, jasmine.any(Function));
-      mockListenableDom.on.calls.argsFor(0)[1]();
-      assert(mockInstance[key1]).to.haveBeenCalledWith();
-
-      assert(mockListenableDom.on).to.haveBeenCalledWith(event2, jasmine.any(Function));
-      mockListenableDom.on.calls.argsFor(1)[1]();
-      assert(mockInstance[key2]).to.haveBeenCalledWith();
+      assert(mockListenableDom.on).to.haveBeenCalledWith(event1, mockInstance[key1], mockInstance);
+      assert(mockListenableDom.on).to.haveBeenCalledWith(event2, mockInstance[key2], mockInstance);
     });
   });
 
