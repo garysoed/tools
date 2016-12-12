@@ -63,8 +63,6 @@ export class BaseListenable<T> extends BaseDisposable {
    * @param context The context to call the callback in.
    * @param useCapture True iff the capture phase should be used. Defaults to false.
    * @return [[DisposableFunction]] that should be disposed to stop listening to the event.
-   *
-   * TODO: Pass in the context.
    */
   on(
       eventType: T,
@@ -103,10 +101,10 @@ export class BaseListenable<T> extends BaseDisposable {
     let disposableFunction = this.on(
         eventType,
         (payload: any) => {
-          callback(payload);
+          callback.call(context, payload);
           disposableFunction.dispose();
         },
-        context,
+        this,
         useCapture);
     return disposableFunction;
   }

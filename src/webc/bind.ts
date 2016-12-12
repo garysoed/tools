@@ -3,6 +3,7 @@ import {AttributeBinder} from './attribute-binder';
 import {ChildrenElementsBinder} from './children-elements-binder';
 import {IAttributeParser, IDomBinder} from './interfaces';
 import {PropertyBinder} from './property-binder';
+import {Util} from './util';
 
 
 type BinderFactory = (element: HTMLElement) => IDomBinder<any>;
@@ -22,15 +23,6 @@ export class Bind {
   }
 
   /**
-   * @return The target element corresponding to the selector rooted on the given element.
-   */
-  private getTargetEl_(element: HTMLElement): Element {
-    return this.selector_ === null ?
-        element :
-        element.shadowRoot.querySelector(this.selector_);
-  }
-
-  /**
    * Binds the annotated [IDomBinder] to an annotation in the DOM.
    *
    * @param attributeName Name of the attribute to bind to.
@@ -38,12 +30,14 @@ export class Bind {
    * @return Property descriptor.
    */
   attribute<T>(attributeName: string, parser: IAttributeParser<T>): PropertyDecorator {
-    let self: Bind = this;
+    let self = this;
     return function(target: Object, propertyKey: string | symbol): void {
       ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
           propertyKey,
           (element: HTMLElement): IDomBinder<any> => {
-            return AttributeBinder.of<T>(self.getTargetEl_(element), attributeName, parser);
+            // TODO: Warn that targetEl is null.
+            return AttributeBinder
+                .of<T>(Util.resolveSelector(self.selector_, element)!, attributeName, parser);
           });
     };
   }
@@ -58,13 +52,14 @@ export class Bind {
   childrenElements<T>(
       elementGenerator: (document: Document) => Element,
       dataSetter: (data: T, element: Element) => void): PropertyDecorator {
-    let self: Bind = this;
+    let self = this;
     return function(target: Object, propertyKey: string | symbol): void {
       ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
           propertyKey,
           (element: HTMLElement): IDomBinder<any> => {
+            // TODO: Warn that targetEl is null.
             return ChildrenElementsBinder.of<T>(
-                self.getTargetEl_(element),
+                Util.resolveSelector(self.selector_, element)!,
                 dataSetter,
                 elementGenerator);
           });
@@ -85,12 +80,14 @@ export class Bind {
    * @return Property descriptor
    */
   property(propertyName: string): PropertyDecorator {
-    let self: Bind = this;
+    let self = this;
     return function(target: Object, propertyKey: string | symbol): void {
       ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
           propertyKey,
           (element: HTMLElement): IDomBinder<any> => {
-            return PropertyBinder.of<any>(self.getTargetEl_(element), propertyName);
+            // TODO: Warn that targetEl is null.
+            return PropertyBinder.of<any>(
+                Util.resolveSelector(self.selector_, element)!, propertyName);
           });
     };
   }

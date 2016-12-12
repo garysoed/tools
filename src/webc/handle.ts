@@ -1,31 +1,16 @@
-import {Annotations} from '../data/annotations';
 import {Arrays} from '../collection/arrays';
+import {AttributeChangeHandler} from './attribute-change-handler';
 import {BaseDisposable} from '../dispose/base-disposable';
-import {DisposableFunction} from '../dispose/disposable-function';
-import {IAttributeParser} from './interfaces';
-import {ListenableDom} from '../event/listenable-dom';
+import {EventHandler} from './event-handler';
+import {IAttributeParser, IHandler} from './interfaces';
 import {Maps} from '../collection/maps';
+import {Sets} from '../collection/sets';
+import {Util} from './util';
 import {Validate} from '../valid/validate';
 
 
-export type AttributeChangeHandlerConfig = {
-  attributeName: string,
-  handlerKey: string | symbol,
-  parser: IAttributeParser<any>,
-  selector: string | null,
-};
-
-export type EventHandlerConfig = {
-  event: string,
-  handlerKey: string | symbol,
-  selector: string | null,
-};
-
-export const ATTR_CHANGE_ANNOTATIONS: Annotations<AttributeChangeHandlerConfig> =
-    Annotations.of<AttributeChangeHandlerConfig>(Symbol('attributeChangeHandler'));
-
-export const EVENT_ANNOTATIONS: Annotations<EventHandlerConfig> =
-    Annotations.of<EventHandlerConfig>(Symbol('eventHandler'));
+export const ATTRIBUTE_CHANGE_HANDLER = new AttributeChangeHandler();
+export const EVENT_HANDLER = new EventHandler();
 
 
 /**
@@ -44,134 +29,6 @@ export class Handler {
   }
 
   /**
-   * @param instance Instance to call the handler on.
-   * @param configs Configurations to configure the element.
-   * @param targetEl Target element to listen to attribute change events.
-   */
-  private static configureAttrChangeHandler_(
-      instance: BaseDisposable,
-      configs: AttributeChangeHandlerConfig[],
-      targetEl: Element): void {
-    // Group the configs together.
-    let configEntries: [string, AttributeChangeHandlerConfig][] = Arrays
-        .of(configs)
-        .map((config: AttributeChangeHandlerConfig):
-            [string, AttributeChangeHandlerConfig] => {
-          return [config.attributeName, config];
-        })
-        .asArray();
-    let groupedConfig: Map<string, AttributeChangeHandlerConfig[]> =
-        Maps.group(configEntries).asMap();
-    let observer = Handler.createMutationObserver_(
-        Handler.onMutation_.bind(this, instance, groupedConfig));
-    observer.observe(targetEl, {attributes: true});
-
-    // Calls the initial "change".
-    Maps
-        .of(groupedConfig)
-        .keys()
-        .forEach((attributeName: string) => {
-          Handler.onMutation_(instance, groupedConfig, [{
-            addedNodes: <NodeList> <any> {length: 0},
-            attributeName: attributeName,
-            attributeNamespace: null,
-            nextSibling: null,
-            oldValue: null,
-            previousSibling: null,
-            removedNodes: <NodeList> <any> {length: 0},
-            target: targetEl,
-            type: 'attributes',
-          }]);
-        });
-    instance.addDisposable(DisposableFunction.of(() => {
-      observer.disconnect();
-    }));
-  }
-
-  /**
-   * @param instance Instance to call the handler on.
-   * @param configs Configurations to configure the element.
-   * @param targetEl Target element to listen to events.
-   */
-  private static configureEventHandler_(
-      instance: BaseDisposable,
-      configs: EventHandlerConfig[],
-      targetEl: Element): void {
-    let listenable = ListenableDom.of(targetEl);
-    Arrays
-        .of(configs)
-        .forEach((config: EventHandlerConfig) => {
-          instance.addDisposable(listenable.on(
-              config.event,
-              instance[config.handlerKey],
-              instance));
-        });
-    instance.addDisposable(listenable);
-  }
-
-  /**
-   * @param callback
-   * @return New instance of mutation observer.
-   */
-  private static createMutationObserver_(callback: MutationCallback): MutationObserver {
-    return new MutationObserver(callback);
-  }
-
-  /**
-   * Gets the target element according to the given config.
-   *
-   * @param config The configuration to use to get the target element.
-   * @param element The root of the element.
-   * @return The target element.
-   */
-  private static getTargetEl_(
-      selector: string | null,
-      element: HTMLElement): Element {
-    if (selector === null) {
-      return element;
-    } else {
-      return element.shadowRoot.querySelector(selector);
-    }
-  }
-
-  /**
-   * Handles event when there is a mutation on the mutation observer.
-   *
-   * @param instance Instance to call the handler on.
-   * @param configs Array of attribute change configurations.
-   * @param records Records collected by the mutation observer.
-   */
-  private static onMutation_(
-      instance: any,
-      configs: Map<string, AttributeChangeHandlerConfig[]>,
-      records: MutationRecord[]): void {
-    Arrays.of(records)
-        .forEach((record: MutationRecord) => {
-          let attributeName = record.attributeName;
-          if (attributeName === null) {
-            return;
-          }
-
-          if (configs.has(attributeName)) {
-            Arrays
-                .of(configs.get(attributeName)!)
-                .forEach(((attributeName: string, config: AttributeChangeHandlerConfig) => {
-                  let {handlerKey, parser} = config;
-                  let handler = instance[handlerKey];
-                  if (!!handler) {
-                    let targetNode = record.target;
-                    if (targetNode instanceof Element) {
-                      let oldValue = parser.parse(record.oldValue);
-                      let newValue = parser.parse(targetNode.getAttribute(attributeName));
-                      handler.call(instance, newValue, oldValue);
-                    }
-                  }
-                }).bind(this, attributeName));
-          }
-        });
-  }
-
-  /**
    * Annotates the method to handle attribute changes.
    *
    * The method should take two parameters: the new parsed value of the attribute and the old parsed
@@ -185,21 +42,7 @@ export class Handler {
   attributeChange(
       attributeName: string,
       parser: IAttributeParser<any>): MethodDecorator {
-    return function(
-        selector: string | null,
-        target: Object,
-        propertyKey: string | symbol,
-        descriptor: PropertyDescriptor): PropertyDescriptor {
-      ATTR_CHANGE_ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
-          propertyKey,
-          {
-            attributeName: attributeName,
-            handlerKey: propertyKey,
-            parser: parser,
-            selector: selector,
-          });
-      return descriptor;
-    }.bind(null, this.selector_);
+    return ATTRIBUTE_CHANGE_HANDLER.createDecorator(attributeName, parser, this.selector_);
   }
 
   /**
@@ -210,20 +53,7 @@ export class Handler {
    * @return The method decorator.
    */
   event(event: string): MethodDecorator {
-    return function(
-        selector: string | null,
-        target: Object,
-        propertyKey: string | symbol,
-        descriptor: PropertyDescriptor): PropertyDescriptor {
-      EVENT_ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
-          propertyKey,
-          {
-            event: event,
-            handlerKey: propertyKey,
-            selector: selector,
-          });
-      return descriptor;
-    }.bind(null, this.selector_);
+    return EVENT_HANDLER.createDecorator(event, this.selector_);
   }
 
   /**
@@ -233,45 +63,49 @@ export class Handler {
    * @param instance The handler for events on the given element.
    */
   static configure(element: HTMLElement, instance: BaseDisposable): void {
-    // Configures the attr change handlers.
-    let attrChangeConfigEntries = Maps
-        .of(
-            ATTR_CHANGE_ANNOTATIONS
-                .forCtor(instance.constructor)
-                .getAttachedValues())
+    let unresolvedSelectorIterable = Sets
+        .of(new Set<string | null>())
+        .addAll(Handler.configure_(element, instance, ATTRIBUTE_CHANGE_HANDLER))
+        .addAll(Handler.configure_(element, instance, EVENT_HANDLER))
+        .asIterable();
+
+    let unresolvedSelectors = Arrays.fromIterable(unresolvedSelectorIterable).asArray();
+    let selectorsString = unresolvedSelectors.join(', ');
+    Validate.set(new Set(unresolvedSelectors))
+        .to.beEmpty()
+        .orThrows(`The following selectors cannot be resolved for handle: ${selectorsString}`)
+        .assertValid();
+  }
+
+  private static configure_<T extends {selector: string | null}>(
+      parentElement: HTMLElement,
+      instance: BaseDisposable,
+      handler: IHandler<T>): Set<string | null> {
+    let unresolvedSelectors = new Set<string | null>();
+    let configEntries = Maps
+        .of(handler.getConfigs(instance))
         .values()
-        .map((config: AttributeChangeHandlerConfig):
-            [Element, AttributeChangeHandlerConfig] => {
-          return [Handler.getTargetEl_(config.selector, element), config];
+        .map((config: T): [Element | null, T] => {
+          let selector = config.selector;
+          let element = Util.resolveSelector(selector, parentElement);
+          if (element === null) {
+            unresolvedSelectors.add(selector);
+          }
+
+          // Element can be null, but keep going to make debugging easier.
+          return [element, config];
         })
         .asArray();
 
     Maps
-        .group(attrChangeConfigEntries)
-        .forEach((configs: AttributeChangeHandlerConfig[], targetEl: Element) => {
-          Handler.configureAttrChangeHandler_(instance, configs, targetEl);
+        .group(configEntries)
+        .forEach((configs: T[], targetEl: Element | null) => {
+          if (targetEl !== null) {
+            handler.configure(targetEl, instance, configs);
+          }
         });
 
-    // Configures the event handlers.
-    let validations = {};
-    let eventHandlerConfigEntries = Maps
-        .of(EVENT_ANNOTATIONS.forCtor(instance.constructor).getAttachedValues())
-        .values()
-        .map((config: EventHandlerConfig): [Element, EventHandlerConfig] => {
-          let targetEl = Handler.getTargetEl_(config.selector, element);
-          validations[`${config.selector}`] = Validate.any(targetEl)
-              .to.exist()
-              .orThrows(`"${config.selector}" selector cannot find any elements`);
-          return [targetEl, config];
-        })
-        .asArray();
-
-    Validate.batch(validations).to.allBeValid().assertValid();
-    Maps
-        .group(eventHandlerConfigEntries)
-        .forEach((configs: EventHandlerConfig[], targetEl: Element) => {
-          Handler.configureEventHandler_(instance, configs, targetEl);
-        });
+    return unresolvedSelectors;
   }
 }
 

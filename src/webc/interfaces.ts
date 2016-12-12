@@ -1,3 +1,6 @@
+import {BaseDisposable} from '../dispose/base-disposable';
+
+
 export interface IAttributeParser<T> {
   /**
    * Parses the input string.
@@ -64,3 +67,17 @@ export interface IElementConfig {
   templateKey: string;
 };
 
+export interface IHandler<T> {
+  /**
+   * Configures the given instance to handle events from the given element.
+   *
+   * @param element The element that the given instance is listening to.
+   * @param instance The handler for events on the given element.
+   */
+  configure(targetEl: Element, instance: BaseDisposable, configs: T[]): void;
+
+  /**
+   * @return Configuration objects registered for the given instance.
+   */
+  getConfigs(instance: BaseDisposable): Map<string | symbol, T>;
+}
