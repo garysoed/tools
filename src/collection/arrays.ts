@@ -21,6 +21,19 @@ import {FluentIndexable} from './indexables';
  */
 export class Arrays {
   /**
+   * Starts by using a DOM token list.
+   *
+   * @param tokenList The token list
+   */
+  static fromDomTokenList(tokenList: DOMTokenList): FluentIndexable<string> {
+    let array: string[] = [];
+    for (let i = 0; i < tokenList.length; i++) {
+      array.push(tokenList.item(i));
+    }
+    return Arrays.of(array);
+  }
+
+  /**
    * Starts by using an HTML collection.
    *
    * @param collection The HTML collection object to start from.

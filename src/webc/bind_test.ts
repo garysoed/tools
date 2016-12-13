@@ -1,9 +1,10 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import {ANNOTATIONS, Bind} from './bind';
 import {AttributeBinder} from './attribute-binder';
 import {ChildrenElementsBinder} from './children-elements-binder';
+import {ClassListBinder} from './class-list-binder';
 import {Mocks} from '../mock/mocks';
 import {PropertyBinder} from './property-binder';
 import {Util} from './util';
@@ -15,6 +16,41 @@ describe('webc.Bind', () => {
 
   beforeEach(() => {
     bind = new Bind(SELECTOR);
+  });
+
+  describe('createDecorator_', () => {
+    it('should return the correct decorator', () => {
+      let ctor = Mocks.object('ctor');
+      let target = Mocks.object('target');
+      target.constructor = ctor;
+
+      let propertyKey = 'propertyKey';
+      let binder = Mocks.object('binder');
+      let mockBinderFactory = jasmine.createSpy('BinderFactory');
+      mockBinderFactory.and.returnValue(binder);
+
+      let targetEl = Mocks.object('targetEl');
+      spyOn(Util, 'resolveSelector').and.returnValue(targetEl);
+
+      let mockAnnotationHandler =
+          jasmine.createSpyObj('AnnotationHandler', ['attachValueToProperty']);
+      spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationHandler);
+
+      let decorator = bind['createDecorator_'](mockBinderFactory);
+      decorator(target, propertyKey);
+
+      assert(mockAnnotationHandler.attachValueToProperty).to
+          .haveBeenCalledWith(propertyKey, Matchers.any(Function));
+
+      let parentEl = Mocks.object('parentEl');
+      assert(mockAnnotationHandler.attachValueToProperty.calls.argsFor(0)[1](parentEl))
+          .to.equal(binder);
+
+      assert(mockBinderFactory).to.haveBeenCalledWith(targetEl);
+      assert(Util.resolveSelector).to.haveBeenCalledWith(SELECTOR, parentEl);
+
+      assert(ANNOTATIONS.forCtor).to.haveBeenCalledWith(ctor);
+    });
   });
 
   describe('attribute', () => {
@@ -83,6 +119,23 @@ describe('webc.Bind', () => {
       assert(Util.resolveSelector).to.haveBeenCalledWith(SELECTOR, element);
       assert(ChildrenElementsBinder.of).to
           .haveBeenCalledWith(targetEl, dataSetter, elementGenerator);
+    });
+  });
+
+  describe('classList', () => {
+    it('should create the decorator correctly', () => {
+      let binder = Mocks.object('binder');
+      spyOn(ClassListBinder, 'of').and.returnValue(binder);
+
+      let decorator = Mocks.object('decorator');
+      let createDecoratorSpy = spyOn(bind, 'createDecorator_').and.returnValue(decorator);
+
+      assert(bind.classList()).to.equal(decorator);
+      assert(bind['createDecorator_']).to.haveBeenCalledWith(<any> Matchers.any((Function)));
+
+      let element = Mocks.object('element');
+      assert(createDecoratorSpy.calls.argsFor(0)[0](element)).to.equal(binder);
+      assert(ClassListBinder.of).to.haveBeenCalledWith(element);
     });
   });
 

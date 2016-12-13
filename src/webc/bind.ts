@@ -1,6 +1,7 @@
 import {Annotations} from '../data/annotations';
 import {AttributeBinder} from './attribute-binder';
 import {ChildrenElementsBinder} from './children-elements-binder';
+import {ClassListBinder} from './class-list-binder';
 import {IAttributeParser, IDomBinder} from './interfaces';
 import {PropertyBinder} from './property-binder';
 import {Util} from './util';
@@ -23,6 +24,25 @@ export class Bind {
   }
 
   /**
+   * Creates the decorator.
+   *
+   * @param binderFactory Factory that generates the binder.
+   * @return The property decorator.
+   */
+  private createDecorator_(
+      binderFactory: (element: Element) => IDomBinder<any>): PropertyDecorator {
+    let self = this;
+    return function(target: Object, propertyKey: string | symbol): void {
+      // TODO: Warn that targetEl is null.
+      ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
+          propertyKey,
+          (parentEl: HTMLElement): IDomBinder<any> => {
+            return binderFactory(Util.resolveSelector(self.selector_, parentEl)!);
+          });
+    };
+  }
+
+  /**
    * Binds the annotated [IDomBinder] to an annotation in the DOM.
    *
    * @param attributeName Name of the attribute to bind to.
@@ -30,16 +50,10 @@ export class Bind {
    * @return Property descriptor.
    */
   attribute<T>(attributeName: string, parser: IAttributeParser<T>): PropertyDecorator {
-    let self = this;
-    return function(target: Object, propertyKey: string | symbol): void {
-      ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
-          propertyKey,
-          (element: HTMLElement): IDomBinder<any> => {
-            // TODO: Warn that targetEl is null.
-            return AttributeBinder
-                .of<T>(Util.resolveSelector(self.selector_, element)!, attributeName, parser);
-          });
-    };
+    return this.createDecorator_(
+        (element: Element): IDomBinder<any> => {
+          return AttributeBinder.of<T>(element, attributeName, parser);
+        });
   }
 
   /**
@@ -52,18 +66,22 @@ export class Bind {
   childrenElements<T>(
       elementGenerator: (document: Document) => Element,
       dataSetter: (data: T, element: Element) => void): PropertyDecorator {
-    let self = this;
-    return function(target: Object, propertyKey: string | symbol): void {
-      ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
-          propertyKey,
-          (element: HTMLElement): IDomBinder<any> => {
-            // TODO: Warn that targetEl is null.
-            return ChildrenElementsBinder.of<T>(
-                Util.resolveSelector(self.selector_, element)!,
-                dataSetter,
-                elementGenerator);
-          });
-    };
+    return this.createDecorator_(
+        (element: Element): IDomBinder<any> => {
+          return ChildrenElementsBinder.of<T>(element, dataSetter, elementGenerator);
+        });
+  }
+
+  /**
+   * Binds the annotated [IDomBinder] to control the class list of the DOM element.
+   *
+   * @return Property descriptor
+   */
+  classList(): PropertyDecorator {
+    return this.createDecorator_(
+        (element: Element): IDomBinder<any> => {
+          return ClassListBinder.of(element);
+        });
   }
 
   /**
@@ -80,16 +98,10 @@ export class Bind {
    * @return Property descriptor
    */
   property(propertyName: string): PropertyDecorator {
-    let self = this;
-    return function(target: Object, propertyKey: string | symbol): void {
-      ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
-          propertyKey,
-          (element: HTMLElement): IDomBinder<any> => {
-            // TODO: Warn that targetEl is null.
-            return PropertyBinder.of<any>(
-                Util.resolveSelector(self.selector_, element)!, propertyName);
-          });
-    };
+    return this.createDecorator_(
+        (element: HTMLElement): IDomBinder<any> => {
+          return PropertyBinder.of<any>(element, propertyName);
+        });
   }
 }
 

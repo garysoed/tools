@@ -7,6 +7,19 @@ import {Mocks} from '../mock/mocks';
 
 
 describe('collection.Arrays', () => {
+  describe('fromDomTokenList', () => {
+    it('should create the correct array', () => {
+      let values = ['a', 'b', 'c'];
+      let mockTokenList = jasmine.createSpyObj('TokenList', ['item']);
+      mockTokenList.length = 3;
+      mockTokenList.item.and.callFake((i: number) => {
+        return values[i];
+      });
+
+      assert(Arrays.fromDomTokenList(mockTokenList).asArray()).to.equal(values);
+    });
+  });
+
   describe('fromHtmlCollection', () => {
     it('should return the correct FluentIndexable', () => {
       let element1 = Mocks.object('element1');
