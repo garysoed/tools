@@ -1,14 +1,15 @@
+import {Arrays} from '../collection/arrays';
 import {IDomBinder} from './interfaces';
-import {Maps} from '../collection/maps';
 import {Sets} from '../collection/sets';
 
+export const __data = Symbol('data');
 
-export class ChildrenElementsBinder<T> implements IDomBinder<Map<string, T>> {
+
+export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
   private readonly parentEl_: Element;
   private readonly dataSetter_: (data: T, element: Element) => void;
   private readonly generator_: (document: Document) => Element;
   private readonly elementPool_: Set<Element>;
-  private readonly entries_: Map<string, [Element, T]>;
 
   constructor(
       parentEl: Element,
@@ -18,102 +19,84 @@ export class ChildrenElementsBinder<T> implements IDomBinder<Map<string, T>> {
     this.dataSetter_ = dataSetter;
     this.generator_ = generator;
     this.elementPool_ = new Set();
-    this.entries_ = new Map();
   }
 
   /**
-   * Adds an entry.
-   *
-   * @param key Key of the entry.
-   * @param value Value of the entry.
+   * @param element The element whose embedded data should be returned.
+   * @return The data embedded in the given element.
    */
-  private addEntry_(key: string, value: T): void {
-    if (this.entries_.has(key)) {
-      this.removeEntry_(key);
-    }
+  private getData_(element: Element): T {
+    return element[__data];
+  }
 
+  /**
+   * @return A newly created element, or a reused element from the element pool.
+   */
+  private getElement_(): Element {
     let element = Sets.of(this.elementPool_).anyValue();
     if (element === null) {
-      element = this.generator_(this.parentEl_.ownerDocument);
+      return this.generator_(this.parentEl_.ownerDocument);
     } else {
       this.elementPool_.delete(element);
+      return element;
     }
-
-    this.dataSetter_(value, element);
-    this.entries_.set(key, [element, value]);
-    this.parentEl_.appendChild(element);
   }
 
   /**
-   * Removes an entry.
-   *
-   * @param key Key of the entry to remove.
+   * Embeds the given data into the given element.
+   * @param element The element to embed the data in.
+   * @param data The data to embed.
    */
-  private removeEntry_(key: string): void {
-    let entry = this.entries_.get(key);
-    if (!!entry) {
-      this.elementPool_.add(entry[0]);
-      this.parentEl_.removeChild(entry[0]);
-      this.entries_.delete(key);
-    }
+  private setData_(element: Element, data: T): void {
+    element[__data] = data;
   }
 
   /**
    * @override
    */
   delete(): void {
-    Maps.of(this.entries_)
-        .forEach((value: [Element, T], key: string) => {
-          this.removeEntry_(key);
+    Arrays
+        .fromHtmlCollection(this.parentEl_.children)
+        .forEach((child: Element) => {
+          this.parentEl_.removeChild(child);
         });
   }
 
   /**
    * @override
    */
-  get(): Map<string, T> {
-    return Maps
-        .of(this.entries_)
-        .mapValue((value: [Element, T]) => {
-          return value[1];
+  get(): T[] {
+    return Arrays
+        .fromHtmlCollection(this.parentEl_.children)
+        .map((child: Element) => {
+          return this.getData_(child);
         })
-        .asMap();
+        .asArray();
   }
 
   /**
    * @override
    */
-  set(value: Map<string, T> | null): void {
-    let addedSet: Set<string>;
-    let removedSet: Set<string>;
-    let sameSet: Set<string>;
+  set(value: T[] | null): void {
+    let valueArray = value || [];
 
-    if (value === null) {
-      addedSet = new Set();
-      removedSet = new Set(this.entries_.keys());
-      sameSet = new Set();
-    } else {
-      let diff = Maps.of(this.entries_)
-          .keys()
-          .diff(new Set(value.keys()));
-      addedSet = diff.added;
-      removedSet = diff.removed;
-      sameSet = diff.same;
+    // Make sure that there are equal number of children.
+    while (this.parentEl_.children.length < valueArray.length) {
+      this.parentEl_.appendChild(this.getElement_());
     }
 
-    removedSet.forEach((key: string) => {
-      this.removeEntry_(key);
-    });
+    while (this.parentEl_.children.length > valueArray.length) {
+      this.parentEl_.removeChild(this.parentEl_.children.item(0));
+    }
 
-    addedSet.forEach((key: string) => {
-      this.addEntry_(key, value!.get(key)!);
-    });
-
-    sameSet.forEach((key: string) => {
-      let newValue = value!.get(key)!;
-      let oldEntry = this.entries_.get(key)!;
-      this.dataSetter_(newValue, oldEntry[0]);
-    });
+    // Now set the data.
+    Arrays
+        .of(valueArray)
+        .forEach((value: T, index: number) => {
+          let element = this.parentEl_.children.item(index);
+          this.dataSetter_(value, element);
+          this.setData_(element, value);
+        });
   }
 
   /**

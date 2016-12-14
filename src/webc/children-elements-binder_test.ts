@@ -1,186 +1,178 @@
 import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
-import {ChildrenElementsBinder} from './children-elements-binder';
+import {__data, ChildrenElementsBinder} from './children-elements-binder';
+import {Arrays} from '../collection/arrays';
 import {Mocks} from '../mock/mocks';
 
 
 describe('webc.ChildrenElementsBinder', () => {
   let binder: ChildrenElementsBinder<number>;
-  let mockParentEl;
+  let parentEl: Element;
   let mockDataSetter;
   let mockGenerator;
 
   beforeEach(() => {
-    mockParentEl = jasmine.createSpyObj('ParentEl', ['appendChild', 'removeChild']);
+    parentEl = document.createElement('div');
     mockDataSetter = jasmine.createSpy('DataSetter');
     mockGenerator = jasmine.createSpy('Generator');
     binder = new ChildrenElementsBinder<number>(
-        mockParentEl,
+        parentEl,
         mockDataSetter,
         mockGenerator);
   });
 
-  describe('addEntry_', () => {
-    it('should create a new element, apply the data to it, and add it to the parent element',
-        () => {
-          let key = 'key';
-          let value = 123;
-          let document = Mocks.object('document');
-          mockParentEl.ownerDocument = document;
+  describe('getData_', () => {
+    it('should return the embedded data', () => {
+      let data = Mocks.object('data');
+      let element = Mocks.object('element');
+      element[__data] = data;
 
-          let element = Mocks.object('element');
-          mockGenerator.and.returnValue(element);
-
-          binder['addEntry_'](key, value);
-
-          assert(mockParentEl.appendChild).to.haveBeenCalledWith(element);
-          assert(binder['entries_']).to.haveEntries([[key, [element, value]]]);
-          assert(mockDataSetter).to.haveBeenCalledWith(value, element);
-          assert(binder['elementPool_']).to.haveElements([]);
-          assert(mockGenerator).to.haveBeenCalledWith(document);
-        });
-
-    it('should reuse an element from the pool', () => {
-        let key = 'key';
-        let value = 123;
-        let element = Mocks.object('element');
-
-        binder['elementPool_'].add(element);
-        binder['addEntry_'](key, value);
-
-        assert(mockParentEl.appendChild).to.haveBeenCalledWith(element);
-        assert(binder['entries_']).to.haveEntries([[key, [element, value]]]);
-        assert(mockDataSetter).to.haveBeenCalledWith(value, element);
-        assert(binder['elementPool_']).to.haveElements([]);
-        assert(mockGenerator).toNot.haveBeenCalled();
-    });
-
-    it('should remove existing entry', () => {
-      let key = 'key';
-      mockGenerator.and.returnValue(Mocks.object('element'));
-
-      spyOn(binder, 'removeEntry_');
-
-      binder['entries_'].set(key, Mocks.object('entry'));
-      binder['addEntry_'](key, 123);
-
-      assert(binder['removeEntry_']).to.haveBeenCalledWith(key);
+      assert(binder['getData_'](element)).to.equal(data);
     });
   });
 
-  describe('removeEntry_', () => {
-    it('should remove the element and put it back to the pool', () => {
-      let key = 'key';
+  describe('getElement_', () => {
+    it('should create an element using the generator if the pool is empty', () => {
       let element = Mocks.object('element');
+      mockGenerator.and.returnValue(element);
 
-      binder['entries_'].set(key, [element, 123]);
-
-      binder['removeEntry_'](key);
-
-      assert(binder['entries_']).to.haveEntries([]);
-      assert(mockParentEl.removeChild).to.haveBeenCalledWith(element);
-      assert(binder['elementPool_']).to.haveElements([element]);
+      assert(binder['getElement_']()).to.equal(element);
+      assert(binder['elementPool_']).to.haveElements([]);
+      assert(mockGenerator).to.haveBeenCalledWith(document);
     });
 
-    it('should do nothing if the key does not exist', () => {
-      binder['removeEntry_']('key');
+    it('should reuse an element from the pool', () => {
+      let element = Mocks.object('element');
 
-      assert(mockParentEl.removeChild).toNot.haveBeenCalled();
+      binder['elementPool_'].add(element);
+
+      assert(binder['getElement_']()).to.equal(element);
+      assert(binder['elementPool_']).to.haveElements([]);
+      assert(mockGenerator).toNot.haveBeenCalled();
+    });
+  });
+
+  describe('setData_', () => {
+    it('should embed the data in the given element', () => {
+      let element = Mocks.object('element');
+      let data = Mocks.object('data');
+      binder['setData_'](element, data);
+
+      assert(element[__data]).to.equal(data);
     });
   });
 
   describe('delete', () => {
     it('should remove all known entries', () => {
-      let key1 = 'key1';
-      let key2 = 'key2';
-      binder['entries_'].set(key1, Mocks.object('entry1'));
-      binder['entries_'].set(key2, Mocks.object('entry2'));
+      let child1 = document.createElement('div');
+      let child2 = document.createElement('div');
+      parentEl.appendChild(child1);
+      parentEl.appendChild(child2);
 
-      spyOn(binder, 'removeEntry_');
+      spyOn(parentEl, 'removeChild').and.callThrough();
 
       binder.delete();
 
-      assert(binder['removeEntry_']).to.haveBeenCalledWith(key1);
-      assert(binder['removeEntry_']).to.haveBeenCalledWith(key2);
+      assert(parentEl.removeChild).to.haveBeenCalledWith(child1);
+      assert(parentEl.removeChild).to.haveBeenCalledWith(child2);
     });
   });
 
   describe('get', () => {
     it('should return a map of all the entries', () => {
-      let key1 = 'key1';
-      let value1 = Mocks.object('value1');
-      let key2 = 'key2';
-      let value2 = Mocks.object('value2');
+      let child1 = document.createElement('div');
+      let child2 = document.createElement('div');
+      parentEl.appendChild(child1);
+      parentEl.appendChild(child2);
 
-      binder['entries_'].set(key1, [Mocks.object('element1'), value1]);
-      binder['entries_'].set(key2, [Mocks.object('element2'), value2]);
+      let data1 = Mocks.object('data1');
+      let data2 = Mocks.object('data2');
+      spyOn(binder, 'getData_').and.callFake((element: any) => {
+        switch (element) {
+          case child1:
+            return data1;
+          case child2:
+            return data2;
+        }
+      });
 
-      assert(binder.get()).to.haveEntries([[key1, value1], [key2, value2]]);
+      assert(binder.get()).to.equal([data1, data2]);
+      assert(binder['getData_']).to.haveBeenCalledWith(child1);
+      assert(binder['getData_']).to.haveBeenCalledWith(child2);
     });
   });
 
   describe('set', () => {
     it('should add all new entries', () => {
-      let key1 = 'key1';
       let value1 = Mocks.object('value1');
-      let key2 = 'key2';
       let value2 = Mocks.object('value2');
 
-      let newValue = new Map([[key1, value1], [key2, value2]]);
-      spyOn(binder, 'addEntry_');
-      spyOn(binder, 'removeEntry_');
+      let element1 = document.createElement('div');
+      let element2 = document.createElement('div');
+      spyOn(binder, 'getElement_').and.returnValues(element1, element2);
+      spyOn(binder, 'setData_');
 
-      binder.set(newValue);
+      spyOn(parentEl, 'appendChild').and.callThrough();
 
-      assert(binder['addEntry_']).to.haveBeenCalledWith(key1, value1);
-      assert(binder['addEntry_']).to.haveBeenCalledWith(key2, value2);
-      assert(binder['removeEntry_']).toNot.haveBeenCalled();
-      assert(mockDataSetter).toNot.haveBeenCalled();
+      binder.set([value1, value2]);
+
+      assert(binder['setData_']).to.haveBeenCalledWith(element1, value1);
+      assert(binder['setData_']).to.haveBeenCalledWith(element2, value2);
+
+      assert(mockDataSetter).to.haveBeenCalledWith(value1, element1);
+      assert(mockDataSetter).to.haveBeenCalledWith(value2, element2);
+
+      assert(parentEl.appendChild).to.haveBeenCalledWith(element1);
+      assert(parentEl.appendChild).to.haveBeenCalledWith(element2);
     });
 
     it('should remove all deleted entries', () => {
-      let key1 = 'key1';
-      let value1 = Mocks.object('value1');
-      let key2 = 'key2';
-      let value2 = Mocks.object('value2');
+      let child1 = document.createElement('div');
+      let data1 = Mocks.object('data1');
+      child1[__data] = data1;
 
-      binder['entries_'].set(key1, value1);
-      binder['entries_'].set(key2, value2);
+      let child2 = document.createElement('div');
+      let data2 = Mocks.object('data2');
+      child2[__data] = data2;
 
-      spyOn(binder, 'addEntry_');
-      spyOn(binder, 'removeEntry_');
+      parentEl.appendChild(child1);
+      parentEl.appendChild(child2);
 
-      binder.set(new Map());
+      spyOn(parentEl, 'removeChild').and.callThrough();
 
-      assert(binder['addEntry_']).toNot.haveBeenCalled();
-      assert(binder['removeEntry_']).to.haveBeenCalledWith(key1);
-      assert(binder['removeEntry_']).to.haveBeenCalledWith(key2);
-      assert(mockDataSetter).toNot.haveBeenCalled();
+      binder.set([]);
+
+      assert(parentEl.removeChild).to.haveBeenCalledWith(child1);
+      assert(parentEl.removeChild).to.haveBeenCalledWith(child2);
     });
 
     it('should update all updated entries', () => {
-      let key1 = 'key1';
-      let newValue1 = 111;
-      let element1 = Mocks.object('element1');
+      let child1 = document.createElement('div');
+      let data1 = Mocks.object('data1');
+      child1[__data] = data1;
 
-      let key2 = 'key2';
-      let newValue2 = 222;
-      let element2 = Mocks.object('element2');
+      let child2 = document.createElement('div');
+      let data2 = Mocks.object('data2');
+      child2[__data] = data2;
 
-      let newValue = new Map([[key1, newValue1], [key2, newValue2]]);
-      binder['entries_'].set(key1, [element1, 1]);
-      binder['entries_'].set(key2, [element2, 2]);
+      parentEl.appendChild(child1);
+      parentEl.appendChild(child2);
 
-      spyOn(binder, 'addEntry_');
-      spyOn(binder, 'removeEntry_');
+      let newData1 = Mocks.object('newData1');
+      let newData2 = Mocks.object('newData2');
 
-      binder.set(newValue);
+      spyOn(parentEl, 'removeChild').and.callThrough();
+      spyOn(binder, 'setData_');
 
-      assert(binder['addEntry_']).toNot.haveBeenCalled();
-      assert(binder['removeEntry_']).toNot.haveBeenCalled();
-      assert(mockDataSetter).to.haveBeenCalledWith(newValue1, element1);
-      assert(mockDataSetter).to.haveBeenCalledWith(newValue2, element2);
+      binder.set([newData1, newData2]);
+
+      assert(Arrays.fromHtmlCollection(parentEl.children).asArray()).to.equal([child1, child2]);
+      assert(binder['setData_']).to.haveBeenCalledWith(child1, newData1);
+      assert(binder['setData_']).to.haveBeenCalledWith(child2, newData2);
+
+      assert(mockDataSetter).to.haveBeenCalledWith(newData1, child1);
+      assert(mockDataSetter).to.haveBeenCalledWith(newData2, child2);
     });
   });
 });
