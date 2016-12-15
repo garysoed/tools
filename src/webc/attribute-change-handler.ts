@@ -87,7 +87,16 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
     let groupedConfig: Map<string, AttributeChangeHandlerConfig[]> =
         Maps.group(configEntries).asMap();
     let observer = this.createMutationObserver_(instance, groupedConfig);
-    observer.observe(targetEl, {attributes: true});
+
+    let attributeFilter = Arrays
+        .of(configs)
+        .map((config: AttributeChangeHandlerConfig) => {
+          return config.attributeName;
+        })
+        .asArray();
+    observer.observe(
+        targetEl,
+        {attributeFilter: attributeFilter, attributeOldValue: true, attributes: true});
 
     // Calls the initial "change".
     Maps

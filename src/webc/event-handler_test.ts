@@ -1,5 +1,5 @@
 import {assert, TestBase} from '../test-base';
-TestBase.setup()
+TestBase.setup();
 
 import {EVENT_ANNOTATIONS, EventHandler} from './event-handler';
 import {ListenableDom} from '../event/listenable-dom';

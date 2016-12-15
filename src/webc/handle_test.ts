@@ -1,11 +1,8 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {ATTRIBUTE_CHANGE_HANDLER, EVENT_HANDLER, Handler} from './handle';
-import {DisposableFunction} from '../dispose/disposable-function';
-import {ListenableDom} from '../event/listenable-dom';
 import {Mocks} from '../mock/mocks';
-import {TestDispose} from '../testing/test-dispose';
 import {Util} from './util';
 
 

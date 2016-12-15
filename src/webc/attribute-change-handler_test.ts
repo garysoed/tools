@@ -217,8 +217,7 @@ describe('webc.AttributeChangeHandler', () => {
       spyOn(handler, 'onMutation_');
 
       let mockObserver = jasmine.createSpyObj('Observer', ['disconnect', 'observe']);
-      let spyCreateObserver = spyOn(handler, 'createMutationObserver_')
-          .and.returnValue(mockObserver);
+      spyOn(handler, 'createMutationObserver_').and.returnValue(mockObserver);
 
       let disposableFunction = Mocks.object('disposableFunction');
       spyOn(DisposableFunction, 'of').and.returnValue(disposableFunction);
@@ -269,7 +268,14 @@ describe('webc.AttributeChangeHandler', () => {
       ]);
       assert((<any> handler['onMutation_']).calls.argsFor(1)[1]).to.be(map);
 
-      assert(mockObserver.observe).to.haveBeenCalledWith(targetEl, {attributes: true});
+      assert(mockObserver.observe).to
+          .haveBeenCalledWith(
+              targetEl,
+              {
+                attributeFilter: [attributeName1, attributeName2],
+                attributeOldValue: true,
+                attributes: true,
+              });
 
       assert(handler['createMutationObserver_']).to.haveBeenCalledWith(mockInstance, map);
     });

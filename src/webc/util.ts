@@ -13,5 +13,5 @@ export const Util = {
     } else {
       return parentElement.shadowRoot.querySelector(selector);
     }
-  }
+  },
 };
