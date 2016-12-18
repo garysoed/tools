@@ -30,13 +30,13 @@ describe('Reflect', () => {
       let a = 123;
       let b = 'b';
 
-      spyOn(TestClass, Reflect.__initialize);
+      TestClass.prototype[Reflect.__initialize] = jasmine.createSpy('initialize');
 
       let instance: TestClass = Reflect.construct(TestClass, [a, b]);
       assert(instance).to.equal(Matchers.any(TestClass));
       assert(instance.a).to.equal(a);
       assert(instance.b).to.equal(b);
-      assert(TestClass[Reflect.__initialize]).to.haveBeenCalledWith(instance);
+      assert(instance[Reflect.__initialize]).to.haveBeenCalledWith(instance);
     });
   });
 

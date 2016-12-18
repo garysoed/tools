@@ -6,7 +6,7 @@ import {ListenableDom} from '../event/listenable-dom';
  * Base class for all custom elements.
  */
 export class BaseElement extends BaseDisposable {
-  private element_: ListenableDom<HTMLElement> | null = null;
+  protected element_: ListenableDom<HTMLElement> | null = null;
 
   constructor() {
     super();

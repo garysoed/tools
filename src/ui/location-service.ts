@@ -32,10 +32,9 @@ export class LocationService extends BaseListenable<LocationServiceEvents> {
   /**
    * Initializes the given LocationService instance.
    * @param service The service instance to be initialized.
-   * @static
    */
-  private static [Reflect.__initialize](service: LocationService): void {
-    service.init_();
+  private [Reflect.__initialize](service: LocationService): void {
+    this.addDisposable(this.window_.on(DomEvent.HASHCHANGE, this.onHashChange_, this));
   }
 
   /**
@@ -48,13 +47,6 @@ export class LocationService extends BaseListenable<LocationServiceEvents> {
           return part !== '.';
         })
         .asArray();
-  }
-
-  /**
-   * Initializes the service.
-   */
-  private init_(): void {
-    this.addDisposable(this.window_.on(DomEvent.HASHCHANGE, this.onHashChange_, this));
   }
 
   /**

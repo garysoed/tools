@@ -96,10 +96,6 @@ export class ElementRegistrar extends BaseDisposable {
    * @return Promise that will be resolved when the registration process is done.
    */
   register(ctor: gs.ICtor<BaseElement>): Promise<void> {
-    if (this.registeredCtors_.has(ctor)) {
-      return Promise.resolve();
-    }
-
     let config = CustomElementUtil.getConfig(ctor);
     if (!config) {
       return Promise.resolve();
@@ -112,24 +108,26 @@ export class ElementRegistrar extends BaseDisposable {
           return this.register(dependency);
         }))
         .then(() => {
-          let template = this.templates_.getTemplate(config.templateKey);
-          Validate.any(template).toNot.beNull()
-              .orThrows(`No templates found for key ${config.templateKey}`)
-              .assertValid();
+          if (!this.registeredCtors_.has(ctor)) {
+            let template = this.templates_.getTemplate(config.templateKey);
+            Validate.any(template).toNot.beNull()
+                .orThrows(`No templates found for key ${config.templateKey}`)
+                .assertValid();
 
-          this.xtag_.register(
-              config.tag,
-              {
-                lifecycle: this.getLifecycleConfig_(
-                    config.attributes || {},
-                    () => {
-                      return this.injector_.instantiate(ctor);
-                    },
-                    template!),
-              });
+            this.xtag_.register(
+                config.tag,
+                {
+                  lifecycle: this.getLifecycleConfig_(
+                      config.attributes || {},
+                      () => {
+                        return this.injector_.instantiate(ctor);
+                      },
+                      template!),
+                });
 
-          this.registeredCtors_.add(ctor);
-          Log.info(LOG, `Registered: ${config.tag}`);
+            this.registeredCtors_.add(ctor);
+            Log.info(LOG, `Registered: ${config.tag}`);
+          }
         },
         (error: string) => {
           Log.error(LOG, `Failed to register ${config.tag}. Error: ${error}`);

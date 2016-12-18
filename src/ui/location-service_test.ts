@@ -22,14 +22,6 @@ describe('ui.LocationService', () => {
     TestDispose.add(service);
   });
 
-  describe('[Reflect.__initialize]', () => {
-    it('should call the init_ method on the instance', () => {
-      let mockService = jasmine.createSpyObj('Service', ['init_']);
-      LocationService[Reflect.__initialize](mockService);
-      assert(mockService.init_).to.haveBeenCalledWith();
-    });
-  });
-
   describe('getParts_', () => {
     it('should split the normalized parts', () => {
       let path = 'path';
@@ -42,12 +34,12 @@ describe('ui.LocationService', () => {
     });
   });
 
-  describe('init_', () => {
+  describe('[Reflect.__initialize]', () => {
     it('should listen to the hashchange event', () => {
       spyOn(service, 'onHashChange_');
       spyOn(mockWindow, 'on').and.callThrough();
 
-      service['init_']();
+      service[Reflect.__initialize]();
 
       assert(mockWindow.on).to
           .haveBeenCalledWith(DomEvent.HASHCHANGE, service['onHashChange_'], service);

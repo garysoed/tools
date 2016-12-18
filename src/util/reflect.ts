@@ -22,8 +22,8 @@ export class Reflect {
    */
   static construct(ctor: gs.ICtor<any>, args: any[]): any {
     let instance = new (ctor.bind.apply(ctor, [null].concat(args)));
-    if (ctor[Reflect.__initialize] instanceof Function) {
-      ctor[Reflect.__initialize](instance);
+    if (instance[Reflect.__initialize] instanceof Function) {
+      instance[Reflect.__initialize](instance);
     }
     return instance;
   }
