@@ -1,8 +1,9 @@
-import {assert, TestBase} from '../test-base';
+import {assert, TestBase} from 'src/test-base';
 TestBase.setup();
 
+import {TestDispose} from 'src/testing/test-dispose';
+
 import {DisposableFunction} from './disposable-function';
-import {TestDispose} from '../testing/test-dispose';
 
 
 describe('dispose.DisposableFunction', () => {

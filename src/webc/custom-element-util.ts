@@ -1,6 +1,7 @@
-import {Cases} from '../string/cases';
+import {Maps} from 'src/collection/maps';
+import {Cases} from 'src/string/cases';
+
 import {IAttributeParser, IElementConfig} from './interfaces';
-import {Maps} from '../collection/maps';
 
 
 const __CONFIG: symbol = Symbol('config');

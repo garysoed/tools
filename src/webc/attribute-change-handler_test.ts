@@ -1,12 +1,13 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from 'src/test-base';
 TestBase.setup();
+
+import {DisposableFunction} from 'src/dispose/disposable-function';
+import {Mocks} from 'src/mock/mocks';
 
 import {
   ATTR_CHANGE_ANNOTATIONS,
   AttributeChangeHandler,
   AttributeChangeHandlerConfig as Config} from './attribute-change-handler';
-import {DisposableFunction} from '../dispose/disposable-function';
-import {Mocks} from '../mock/mocks';
 
 
 describe('webc.AttributeChangeHandler', () => {

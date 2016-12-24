@@ -1,6 +1,7 @@
+import {Maps} from 'src/collection/maps';
+import {Stringify} from 'src/data/stringify';
+
 import {AnyValidations} from './any-validations';
-import {Maps} from '../collection/maps';
-import {Stringify} from '../data/stringify';
 import {ValidationResult} from './validation-result';
 
 

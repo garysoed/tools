@@ -1,17 +1,18 @@
-import {ANNOTATIONS as BindAnnotations} from './bind';
-import {BaseDisposable} from '../dispose/base-disposable';
+import {Maps} from 'src/collection/maps';
+import {BaseDisposable} from 'src/dispose/base-disposable';
+import {Injector} from 'src/inject/injector';
+import {Cases} from 'src/string/cases';
+import {Checks} from 'src/util/checks';
+import {Log} from 'src/util/log';
+import {Validate} from 'src/valid/validate';
+
 import {BaseElement} from './base-element';
-import {Cases} from '../string/cases';
-import {Checks} from '../util/checks';
+import {ANNOTATIONS as BindAnnotations} from './bind';
 import {CustomElementUtil} from './custom-element-util';
 import {DomBridge} from './dom-bridge';
 import {Handler} from './handle';
 import {IAttributeParser, IDomBinder} from './interfaces';
-import {Injector} from '../inject/injector';
-import {Log} from '../util/log';
-import {Maps} from '../collection/maps';
 import {Templates} from './templates';
-import {Validate} from '../valid/validate';
 
 /**
  * @hidden

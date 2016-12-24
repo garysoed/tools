@@ -1,11 +1,12 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from 'src/test-base';
 TestBase.setup();
 
-import {ANNOTATIONS, Bind} from './bind';
+import {Mocks} from 'src/mock/mocks';
+
 import {AttributeBinder} from './attribute-binder';
+import {ANNOTATIONS, Bind} from './bind';
 import {ChildrenElementsBinder} from './children-elements-binder';
 import {ClassListBinder} from './class-list-binder';
-import {Mocks} from '../mock/mocks';
 import {PropertyBinder} from './property-binder';
 import {Util} from './util';
 

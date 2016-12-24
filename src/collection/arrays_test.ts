@@ -1,9 +1,10 @@
-import {assert, TestBase} from '../test-base';
+import {assert, TestBase} from 'src/test-base';
 TestBase.setup();
+
+import {Mocks} from 'src/mock/mocks';
 
 import {ArrayIterable} from './array-iterable';
 import {Arrays} from './arrays';
-import {Mocks} from '../mock/mocks';
 
 
 describe('collection.Arrays', () => {

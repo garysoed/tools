@@ -1,9 +1,9 @@
-import {TestBase} from '../test-base';
+import {TestBase} from 'src/test-base';
 TestBase.setup();
 
-import {assert} from './assert';
 import {AnyAssert} from './any-assert';
 import {ArrayAssert} from './array-assert';
+import {assert} from './assert';
 import {BooleanAssert} from './boolean-assert';
 import {FunctionAssert} from './function-assert';
 import {MapAssert} from './map-assert';

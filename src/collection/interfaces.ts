@@ -394,4 +394,18 @@ export interface IFluentIndexable<T> extends IFluentIterable<T> {
    * @return This indexable with the specified keys removed.
    */
   removeAll(toRemove: Set<T>): IFluentIndexable<T>;
+
+  /**
+   * Reverses the elements.
+   *
+   * @return The indexable with the element in reversed order.
+   */
+  reverse(): IFluentIndexable<T>;
+
+  /**
+   * Combines the current indexable with the given indexable to form a collection of pairs.
+   *
+   * @return Indexable containing paired elements.
+   */
+  zip<T2>(others: T2[]): IFluentIndexable<[T, T2]>;
 }

@@ -1,10 +1,11 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from 'src/test-base';
 TestBase.setup();
+
+import {Mocks} from 'src/mock/mocks';
+import {Reflect} from 'src/util/reflect';
 
 import {InjectUtil} from './inject-util';
 import {Injector} from './injector';
-import {Mocks} from '../mock/mocks';
-import {Reflect} from '../util/reflect';
 
 
 describe('inject.Injector', () => {

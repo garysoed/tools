@@ -1,8 +1,9 @@
-import {assert, TestBase} from '../test-base';
+import {assert, TestBase} from 'src/test-base';
 TestBase.setup();
 
+import {Mocks} from 'src/mock/mocks';
+
 import {ANNOTATIONS, Equals} from './equals';
-import {Mocks} from '../mock/mocks';
 
 
 describe('data.Equals', () => {

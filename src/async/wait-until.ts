@@ -1,5 +1,5 @@
-import {BaseDisposable} from '../dispose/base-disposable';
-import {Interval} from '../async/interval';
+import {Interval} from 'src/async/interval';
+import {BaseDisposable} from 'src/dispose/base-disposable';
 
 
 /**

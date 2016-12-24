@@ -1,9 +1,11 @@
-import {Arrays} from '../collection/arrays';
-import {BaseListenable} from '../event/base-listenable';
-import {DomEvent} from '../event/dom-event';
-import {ListenableDom} from '../event/listenable-dom';
+import {Arrays} from 'src/collection/arrays';
+import {BaseListenable} from 'src/event/base-listenable';
+import {DomEvent} from 'src/event/dom-event';
+import {ListenableDom} from 'src/event/listenable-dom';
+import {Reflect} from 'src/util/reflect';
+
 import {LocationServiceEvents} from './location-service-events';
-import {Reflect} from '../util/reflect';
+import {Locations} from './locations';
 
 
 /**
@@ -12,8 +14,6 @@ import {Reflect} from '../util/reflect';
  * This only uses the location's hash.
  */
 export class LocationService extends BaseListenable<LocationServiceEvents> {
-  private static MATCHER_REGEXP: RegExp = /:([^:\/]+)/;
-
   private location_: Location;
   private window_: ListenableDom<Window>;
 
@@ -38,18 +38,6 @@ export class LocationService extends BaseListenable<LocationServiceEvents> {
   }
 
   /**
-   * @return Parts of the given path.
-   */
-  private getParts_(path: string): string[] {
-    return Arrays
-        .of(LocationService.normalizePath(path).split('/'))
-        .filter((part: string) => {
-          return part !== '.';
-        })
-        .asArray();
-  }
-
-  /**
    * Handles event when the hash has been changed.
    */
   private onHashChange_(): void {
@@ -68,33 +56,11 @@ export class LocationService extends BaseListenable<LocationServiceEvents> {
    * @return Object containing the matches if it matches, or null otherwise.
    */
   getMatches(matcher: string): {[key: string]: string} | null {
-    let exactMatch = false;
-    if (matcher[matcher.length - 1] === '$') {
-      matcher = matcher.substr(0, matcher.length - 1);
-      exactMatch = true;
-    }
-    let hashParts = this.getParts_(this.location_.hash.substr(1));
-    let matcherParts = this.getParts_(matcher);
+    return Locations.getMatches(this.getPath(), matcher);
+  }
 
-    if (exactMatch && matcherParts.length !== hashParts.length) {
-      return null;
-    }
-
-    let matches = {};
-    for (let i = 0; i < matcherParts.length; i++) {
-      let matchPart = matcherParts[i];
-      let hashPart = hashParts[i];
-
-      let matcherResult = LocationService.MATCHER_REGEXP.exec(matchPart);
-
-      if (matcherResult !== null) {
-        matches[matcherResult[1]] = hashPart;
-      } else if (hashPart !== matchPart) {
-        return null;
-      }
-    }
-
-    return matches;
+  getPath(): string {
+    return Locations.normalizePath(this.location_.hash.substr(1));
   }
 
   /**
@@ -103,7 +69,7 @@ export class LocationService extends BaseListenable<LocationServiceEvents> {
    * @param path Path to navigate to.
    */
   goTo(path: string): void {
-    this.location_.hash = LocationService.normalizePath(path);
+    this.location_.hash = Locations.normalizePath(path);
   }
 
   /**
@@ -127,19 +93,10 @@ export class LocationService extends BaseListenable<LocationServiceEvents> {
           return part !== '.';
         })
         .map((part: string) => {
-          return LocationService.normalizePath(part);
+          return Locations.normalizePath(part);
         })
         .asArray()
         .join('');
     return path === '' ? '/' : path;
-  }
-
-  /**
-   * @return The normalized path. This makes sure that every part starts with a '/' and does not end
-   *    with a '/'.
-   */
-  static normalizePath(path: string): string {
-    path = path[0] === '/' ? path : '/' + path;
-    return path[path.length - 1] === '/' ? path.substr(0, path.length - 1) : path;
   }
 }

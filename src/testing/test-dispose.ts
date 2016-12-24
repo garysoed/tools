@@ -1,4 +1,4 @@
-import {BaseDisposable, TRACKED_DISPOSABLES, Flags} from '../dispose/base-disposable';
+import {BaseDisposable, Flags, TRACKED_DISPOSABLES} from 'src/dispose/base-disposable';
 
 
 /**

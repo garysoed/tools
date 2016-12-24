@@ -1,7 +1,7 @@
 import {BaseFluent} from './base-fluent';
 import {Indexables} from './indexables';
-import {FluentIterable, Iterables} from './iterables';
 import {IFluentMappable} from './interfaces';
+import {FluentIterable, Iterables} from './iterables';
 import {FluentNonIndexable, NonIndexables} from './non-indexables';
 
 

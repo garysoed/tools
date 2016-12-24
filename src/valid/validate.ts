@@ -7,8 +7,8 @@ import {MapValidations} from './map-validations';
 import {NumberValidations} from './number-validations';
 import {SetValidations} from './set-validations';
 import {StringValidations} from './string-validations';
-import {ValidationsFactory} from './validations-factory';
 import {ValidationResult} from './validation-result';
+import {ValidationsFactory} from './validations-factory';
 
 
 /**
@@ -32,6 +32,7 @@ import {ValidationResult} from './validation-result';
  *     .orThrows('Something went wrong - this is a custom message')
  *     .assertValid();
  * ```
+ * TODO: Improve with type guarding.
  */
 export class Validate {
   /**

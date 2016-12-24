@@ -1,6 +1,7 @@
+import {Validate} from 'src/valid/validate';
+
 import {ArgMetaData} from './arg-meta-data';
 import {GraphNode} from './graph-node';
-import {Validate} from '../valid/validate';
 
 
 /**

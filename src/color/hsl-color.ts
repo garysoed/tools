@@ -1,9 +1,10 @@
-import {Arrays} from '../collection/arrays';
+import {Arrays} from 'src/collection/arrays';
+import {Graph} from 'src/pipeline/graph';
+import {Internal} from 'src/pipeline/internal';
+import {Pipe} from 'src/pipeline/pipe';
+import {Validate} from 'src/valid/validate';
+
 import {IColor} from './interface';
-import {Internal} from '../pipeline/internal';
-import {Graph} from '../pipeline/graph';
-import {Pipe} from '../pipeline/pipe';
-import {Validate} from '../valid/validate';
 
 
 export class HslColor implements IColor {

@@ -1,5 +1,6 @@
+import {Maps} from 'src/collection/maps';
+
 import {AnyAssert} from './any-assert';
-import {Maps} from '../collection/maps';
 
 
 /**

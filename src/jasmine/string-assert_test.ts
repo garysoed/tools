@@ -1,7 +1,8 @@
-import {TestBase} from '../test-base';
+import {TestBase} from 'src/test-base';
 TestBase.setup();
 
-import {Mocks} from '../mock/mocks';
+import {Mocks} from 'src/mock/mocks';
+
 import {StringAssert} from './string-assert';
 
 

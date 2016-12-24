@@ -1,11 +1,12 @@
-import {assert, TestBase} from '../test-base';
+import {assert, TestBase} from 'src/test-base';
 TestBase.setup();
+
+import {Maps} from 'src/collection/maps';
+import {Mocks} from 'src/mock/mocks';
 
 import {inject} from './a-inject';
 import {InjectMetadata} from './inject-metadata';
 import {InjectUtil} from './inject-util';
-import {Maps} from '../collection/maps';
-import {Mocks} from '../mock/mocks';
 
 class TestClass {}
 

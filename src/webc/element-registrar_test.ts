@@ -1,14 +1,15 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from 'src/test-base';
 TestBase.setup();
 
-import {ANNOTATIONS as BindAnnotations} from './bind';
+import {Mocks} from 'src/mock/mocks';
+import {TestDispose} from 'src/testing/test-dispose';
+import {Log} from 'src/util/log';
+
 import {BaseElement} from './base-element';
+import {ANNOTATIONS as BindAnnotations} from './bind';
 import {CustomElementUtil} from './custom-element-util';
 import {DomBridge} from './dom-bridge';
 import {ElementRegistrar} from './element-registrar';
-import {Log} from '../util/log';
-import {Mocks} from '../mock/mocks';
-import {TestDispose} from '../testing/test-dispose';
 
 
 describe('webc.ElementRegistrar', () => {

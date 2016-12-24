@@ -1,4 +1,5 @@
-import {BaseListenable} from '../event/base-listenable';
+import {BaseListenable} from 'src/event/base-listenable';
+
 import {TestDispose} from './test-dispose';
 
 /**

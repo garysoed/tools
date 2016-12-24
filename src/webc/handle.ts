@@ -1,12 +1,13 @@
-import {Arrays} from '../collection/arrays';
+import {Arrays} from 'src/collection/arrays';
+import {Maps} from 'src/collection/maps';
+import {Sets} from 'src/collection/sets';
+import {BaseDisposable} from 'src/dispose/base-disposable';
+import {Validate} from 'src/valid/validate';
+
 import {AttributeChangeHandler} from './attribute-change-handler';
-import {BaseDisposable} from '../dispose/base-disposable';
 import {EventHandler} from './event-handler';
 import {IAttributeParser, IHandler} from './interfaces';
-import {Maps} from '../collection/maps';
-import {Sets} from '../collection/sets';
 import {Util} from './util';
-import {Validate} from '../valid/validate';
 
 
 export const ATTRIBUTE_CHANGE_HANDLER = new AttributeChangeHandler();

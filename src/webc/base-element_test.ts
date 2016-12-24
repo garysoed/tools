@@ -1,10 +1,11 @@
-import {assert, TestBase} from '../test-base';
+import {assert, TestBase} from 'src/test-base';
 TestBase.setup();
 
+import {ListenableDom} from 'src/event/listenable-dom';
+import {Mocks} from 'src/mock/mocks';
+import {TestDispose} from 'src/testing/test-dispose';
+
 import {BaseElement} from './base-element';
-import {ListenableDom} from '../event/listenable-dom';
-import {Mocks} from '../mock/mocks';
-import {TestDispose} from '../testing/test-dispose';
 
 
 describe('webc.BaseElement', () => {

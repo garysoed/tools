@@ -1,4 +1,5 @@
-import {Annotations} from '../data/annotations';
+import {Annotations} from 'src/data/annotations';
+
 import {AttributeBinder} from './attribute-binder';
 import {ChildrenElementsBinder} from './children-elements-binder';
 import {ClassListBinder} from './class-list-binder';
@@ -58,7 +59,7 @@ export class Bind {
 
   /**
    * Binds the annotated [IDomBinder] to control the children of DOM elements.
-   *
+   * $annotates DOM Binders of type DomBinder<T[]>
    * @param elementGenerator Function to generate new elements to use for the children.
    * @param dataSetter Function to add data to the generated element.
    * @return Property descriptor

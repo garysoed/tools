@@ -1,4 +1,4 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from 'src/test-base';
 TestBase.setup();
 
 import {Reflect} from './reflect';

@@ -1,4 +1,5 @@
-import {Stringify} from '../data/stringify';
+import {Stringify} from 'src/data/stringify';
+
 import {ValidationResult} from './validation-result';
 
 

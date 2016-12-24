@@ -1,4 +1,4 @@
-import {Maps} from '../collection/maps';
+import {Maps} from 'src/collection/maps';
 
 
 /**

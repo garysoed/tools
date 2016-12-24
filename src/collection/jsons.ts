@@ -1,5 +1,5 @@
-import {Maps} from '../collection/maps';
-import {Validate} from '../valid/validate';
+import {Maps} from 'src/collection/maps';
+import {Validate} from 'src/valid/validate';
 
 
 /**
@@ -115,16 +115,17 @@ export class Jsons {
    * @param {gs.IJson} fromObj [description]
    * @param {gs.IJson} toObj [description]
    */
-  static mixin(fromObj: gs.IJson, toObj: gs.IJson): void {
+  static mixin<A extends gs.IJson, B extends gs.IJson>(fromObj: A, toObj: B): A & B {
     for (let key in fromObj) {
       let value = fromObj[key];
       if (toObj[key] !== undefined) {
         if (typeof toObj[key] === 'object') {
-          this.mixin(value, toObj[key]);
+          this.mixin(<any> value, <any> toObj[key]);
         }
       } else {
-        toObj[key] = this.deepClone(value);
+        toObj[key] = <any> this.deepClone(<any> value);
       }
     }
+    return <A & B> toObj;
   }
 };

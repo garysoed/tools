@@ -1,6 +1,8 @@
-import {Arrays} from '../collection/arrays';
+import {Arrays} from 'src/collection/arrays';
+import {Sets} from 'src/collection/sets';
+
 import {IDomBinder} from './interfaces';
-import {Sets} from '../collection/sets';
+
 
 export const __data = Symbol('data');
 

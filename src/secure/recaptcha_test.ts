@@ -1,9 +1,10 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from 'src/test-base';
 TestBase.setup();
 
-import {Mocks} from '../mock/mocks';
+import {Mocks} from 'src/mock/mocks';
+import {TestDispose} from 'src/testing/test-dispose';
+
 import {EventType, Recaptcha} from './recaptcha';
-import {TestDispose} from '../testing/test-dispose';
 
 
 describe('secure.Recaptcha', () => {

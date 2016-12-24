@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "baseUrl": ".",
         "target": "es5",
         "module": "commonjs",
         "moduleResolution": "node",
@@ -13,7 +14,9 @@
         "noLib": false,
         "preserveConstEnums": true,
         "suppressImplicitAnyIndexErrors": true,
+        "outDir": "out/",
         "rootDir": "./",
+        "skipLibCheck": true,
         "strictNullChecks": true
     },
     "exclude": [

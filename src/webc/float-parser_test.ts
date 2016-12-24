@@ -1,4 +1,4 @@
-import {assert, TestBase} from '../test-base';
+import {assert, TestBase} from 'src/test-base';
 TestBase.setup();
 
 import {FloatParser} from './float-parser';

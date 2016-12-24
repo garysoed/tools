@@ -1,10 +1,11 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from 'src/test-base';
 TestBase.setup();
 
-import {DomEvent} from '../event/dom-event';
+import {DomEvent} from 'src/event/dom-event';
+import {ListenableDom} from 'src/event/listenable-dom';
+import {Mocks} from 'src/mock/mocks';
+
 import {Http, HttpRequest} from './http';
-import {ListenableDom} from '../event/listenable-dom';
-import {Mocks} from '../mock/mocks';
 
 
 describe('net.Http', () => {

@@ -1,4 +1,5 @@
-import {Checks} from '../util/checks';
+import {Checks} from 'src/util/checks';
+
 import {InjectMetadata} from './inject-metadata';
 import {InjectUtil} from './inject-util';
 

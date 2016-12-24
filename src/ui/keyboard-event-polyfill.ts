@@ -1,5 +1,5 @@
-import Cache from '../data/a-cache';
-import {Validate} from '../valid/validate';
+import Cache from 'src/data/a-cache';
+import {Validate} from 'src/valid/validate';
 
 
 /**

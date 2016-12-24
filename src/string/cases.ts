@@ -1,5 +1,5 @@
-import {Arrays} from '../collection/arrays';
-import {Validate} from '../valid/validate';
+import {Arrays} from 'src/collection/arrays';
+import {Validate} from 'src/valid/validate';
 
 
 /**

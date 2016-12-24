@@ -1,7 +1,8 @@
+import {Arrays} from 'src/collection/arrays';
+import {Maps} from 'src/collection/maps';
+import {Natives} from 'src/typescript/natives';
+
 import {Annotations} from './annotations';
-import {Arrays} from '../collection/arrays';
-import {Maps} from '../collection/maps';
-import {Natives} from '../typescript/natives';
 
 
 export const ANNOTATIONS = Annotations.of(Symbol('stringify'));

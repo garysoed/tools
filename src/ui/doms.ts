@@ -1,4 +1,4 @@
-import {Iterables} from '../collection/iterables';
+import {Iterables} from 'src/collection/iterables';
 
 /**
  * Methods to manipulate DOM objects.

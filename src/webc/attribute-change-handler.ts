@@ -1,9 +1,10 @@
-import {Annotations} from '../data/annotations';
-import {Arrays} from '../collection/arrays';
-import {BaseDisposable} from '../dispose/base-disposable';
-import {DisposableFunction} from '../dispose/disposable-function';
+import {Arrays} from 'src/collection/arrays';
+import {Maps} from 'src/collection/maps';
+import {Annotations} from 'src/data/annotations';
+import {BaseDisposable} from 'src/dispose/base-disposable';
+import {DisposableFunction} from 'src/dispose/disposable-function';
+
 import {IAttributeParser, IHandler} from './interfaces';
-import {Maps} from '../collection/maps';
 
 
 export type AttributeChangeHandlerConfig = {

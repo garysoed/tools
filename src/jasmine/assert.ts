@@ -1,3 +1,5 @@
+import {Natives} from 'src/typescript/natives';
+
 import {AnyAssert} from './any-assert';
 import {ArrayAssert} from './array-assert';
 import {AssertFactory} from './assert-factory';
@@ -5,7 +7,6 @@ import {BaseAssert} from './base-assert';
 import {BooleanAssert} from './boolean-assert';
 import {FunctionAssert} from './function-assert';
 import {MapAssert} from './map-assert';
-import {Natives} from '../typescript/natives';
 import {NumberAssert} from './number-assert';
 import {SetAssert} from './set-assert';
 import {StringAssert} from './string-assert';

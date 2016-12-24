@@ -1,11 +1,12 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from 'src/test-base';
 TestBase.setup();
 
-import Cache from '../data/a-cache';
+import Cache from 'src/data/a-cache';
+import {Mocks} from 'src/mock/mocks';
+import {TestDispose} from 'src/testing/test-dispose';
+
 import FakeScope from './fake-scope';
-import {Mocks} from '../mock/mocks';
 import {RouteService} from './route-service';
-import {TestDispose} from '../testing/test-dispose';
 
 describe('ng.RouteService', () => {
   let mock$location;

@@ -1,8 +1,9 @@
-import {assert, TestBase} from '../test-base';
+import {assert, TestBase} from 'src/test-base';
 TestBase.setup();
 
+import {Mocks} from 'src/mock/mocks';
+
 import {ATTRIBUTE_CHANGE_HANDLER, EVENT_HANDLER, Handler} from './handle';
-import {Mocks} from '../mock/mocks';
 import {Util} from './util';
 
 

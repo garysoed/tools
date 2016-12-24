@@ -1,9 +1,10 @@
-import {assert, TestBase} from '../test-base';
+import {assert, TestBase} from 'src/test-base';
 TestBase.setup();
 
+import {Arrays} from 'src/collection/arrays';
+import {Mocks} from 'src/mock/mocks';
+
 import {__data, ChildrenElementsBinder} from './children-elements-binder';
-import {Arrays} from '../collection/arrays';
-import {Mocks} from '../mock/mocks';
 
 
 describe('webc.ChildrenElementsBinder', () => {

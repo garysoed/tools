@@ -1,9 +1,10 @@
-import {assert, TestBase} from '../test-base';
+import {assert, TestBase} from 'src/test-base';
 TestBase.setup();
 
+import {Mocks} from 'src/mock/mocks';
+import {Natives} from 'src/typescript/natives';
+
 import {ANNOTATIONS, Stringify} from './stringify';
-import {Mocks} from '../mock/mocks';
-import {Natives} from '../typescript/natives';
 
 
 describe('data.Stringify', () => {

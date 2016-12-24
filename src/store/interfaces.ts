@@ -54,7 +54,7 @@ export interface Storage<T> {
    * Reserves a new ID in the storage.
    * @return Promise that will be resolved with the new ID.
    */
-  reserve(): Promise<string>;
+  generateId(): Promise<string>;
 
   /**
    * Updates the given object.

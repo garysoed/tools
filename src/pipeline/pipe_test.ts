@@ -1,10 +1,11 @@
-import {assert, TestBase} from '../test-base';
+import {assert, TestBase} from 'src/test-base';
 TestBase.setup();
 
-import {Maps} from '../collection/maps';
-import {Mocks} from '../mock/mocks';
+import {Maps} from 'src/collection/maps';
+import {Mocks} from 'src/mock/mocks';
+
 import {Pipe} from './pipe';
-import {PipeUtil, __NODE_DATA_MAP} from './pipe-util';
+import {__NODE_DATA_MAP, PipeUtil} from './pipe-util';
 
 
 describe('pipeline.Pipe', () => {

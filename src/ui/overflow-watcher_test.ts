@@ -1,11 +1,12 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from 'src/test-base';
 TestBase.setup();
 
-import {TestDispose} from '../testing/test-dispose';
-import {Doms} from '../ui/doms';
-import {Mocks} from '../mock/mocks';
+import {Mocks} from 'src/mock/mocks';
+import {TestDispose} from 'src/testing/test-dispose';
+import {TestEvent} from 'src/testing/test-event';
+import {Doms} from 'src/ui/doms';
+
 import OverflowWatcher, {EventType, State} from './overflow-watcher';
-import {TestEvent} from '../testing/test-event';
 
 
 describe('ui.OverflowWatcher', () => {

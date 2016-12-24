@@ -1,8 +1,10 @@
-import {assert, TestBase} from '../test-base';
+import {assert, TestBase} from 'src/test-base';
 TestBase.setup();
 
-import {Arrays} from '../collection/arrays';
+import {Arrays} from 'src/collection/arrays';
+
 import {Doms} from './doms';
+
 
 describe('ui.Doms', () => {
   let rootEl;

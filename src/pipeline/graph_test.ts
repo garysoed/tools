@@ -1,9 +1,10 @@
-import {assert, TestBase} from '../test-base';
+import {assert, TestBase} from 'src/test-base';
 TestBase.setup();
+
+import {Mocks} from 'src/mock/mocks';
 
 import {Graph} from './graph';
 import {GraphNode} from './graph-node';
-import {Mocks} from '../mock/mocks';
 import {PipeUtil} from './pipe-util';
 
 

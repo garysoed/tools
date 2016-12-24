@@ -1,5 +1,5 @@
-import {Arrays} from '../collection/arrays';
-import {Maps} from '../collection/maps';
+import {Arrays} from 'src/collection/arrays';
+import {Maps} from 'src/collection/maps';
 
 
 /**

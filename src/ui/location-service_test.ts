@@ -1,12 +1,14 @@
-import {assert, TestBase} from '../test-base';
+import {assert, TestBase} from 'src/test-base';
 TestBase.setup();
 
-import {DomEvent} from '../event/dom-event';
+import {DomEvent} from 'src/event/dom-event';
+import {Mocks} from 'src/mock/mocks';
+import {TestDispose} from 'src/testing/test-dispose';
+import {Reflect} from 'src/util/reflect';
+
 import {LocationService} from './location-service';
 import {LocationServiceEvents} from './location-service-events';
-import {Mocks} from '../mock/mocks';
-import {Reflect} from '../util/reflect';
-import {TestDispose} from '../testing/test-dispose';
+import {Locations} from './locations';
 
 
 describe('ui.LocationService', () => {
@@ -20,18 +22,6 @@ describe('ui.LocationService', () => {
 
     service = new LocationService(mockWindow);
     TestDispose.add(service);
-  });
-
-  describe('getParts_', () => {
-    it('should split the normalized parts', () => {
-      let path = 'path';
-      let normalizedPath = '/a/./b/c';
-
-      spyOn(LocationService, 'normalizePath').and.returnValue(normalizedPath);
-
-      assert(service['getParts_'](path)).to.equal(['', 'a', 'b', 'c']);
-      assert(LocationService.normalizePath).to.haveBeenCalledWith(path);
-    });
   });
 
   describe('[Reflect.__initialize]', () => {
@@ -56,94 +46,15 @@ describe('ui.LocationService', () => {
     });
   });
 
-  describe('getMatches', () => {
-    it('should return the correct matches', () => {
-      let matcher = 'matcher';
-      let hash = 'hash';
-      spyOn(service, 'getParts_').and.callFake((path: string): string[] | void => {
-        switch (path) {
-          case matcher:
-            return [':a', '_', ':b'];
-          case hash:
-            return ['hello', '_', 'location'];
-        }
-      });
-      mockLocation.hash = '#' + hash;
-
-      assert(service.getMatches(matcher)).to.equal({
-        'a': 'hello',
-        'b': 'location',
-      });
-      assert(service['getParts_']).to.haveBeenCalledWith(hash);
-      assert(service['getParts_']).to.haveBeenCalledWith(matcher);
-    });
-
-    it('should return null if the matcher does not match the hash', () => {
-      let matcher = 'matcher';
-      let hash = 'hash';
-      spyOn(service, 'getParts_').and.callFake((path: string): string[] | void => {
-        switch (path) {
-          case matcher:
-            return [':a', '_', ':b'];
-          case hash:
-            return ['hello', '+'];
-        }
-      });
-      mockLocation.hash = '#' + hash;
-
-      assert(service.getMatches(matcher)).to.equal(null);
-    });
-
-    it('should return the matches for exact match', () => {
-      let matcher = 'matcher';
-      let hash = 'hash';
-      spyOn(service, 'getParts_').and.callFake((path: string): string[] | void => {
-        switch (path) {
-          case matcher:
-            return [':a', '_', ':b'];
-          case hash:
-            return ['hello', '_', 'location'];
-        }
-      });
-      mockLocation.hash = '#' + hash;
-
-      assert(service.getMatches(`${matcher}$`)).to.equal({
-        'a': 'hello',
-        'b': 'location',
-      });
-      assert(service['getParts_']).to.haveBeenCalledWith(hash);
-      assert(service['getParts_']).to.haveBeenCalledWith(matcher);
-    });
-
-    it('should return null for exact match if the number of parts are not the same', () => {
-      let matcher = 'matcher';
-      let hash = 'hash';
-      spyOn(service, 'getParts_').and.callFake((path: string): string[] | void => {
-        switch (path) {
-          case matcher:
-            return [':a', '_', ':b'];
-          case hash:
-            return [':a', '_'];
-        }
-      });
-      mockLocation.hash = '#' + hash;
-
-      assert(service.getMatches(`${matcher}$`)).to.beNull();
-      assert(service['getParts_']).to.haveBeenCalledWith(hash);
-      assert(service['getParts_']).to.haveBeenCalledWith(matcher);
-    });
-
-  });
-
   describe('goTo', () => {
     it('should set the location with the normalized path', () => {
       let path = 'path';
       let normalizedPath = 'normalizedPath';
-      spyOn(LocationService, 'normalizePath').and.returnValue(normalizedPath);
+      spyOn(Locations, 'normalizePath').and.returnValue(normalizedPath);
       service.goTo(path);
 
       assert(mockLocation.hash).to.equal(normalizedPath);
-      assert(LocationService.normalizePath).to.haveBeenCalledWith(path);
+      assert(Locations.normalizePath).to.haveBeenCalledWith(path);
     });
   });
 
@@ -170,16 +81,6 @@ describe('ui.LocationService', () => {
 
     it('should return "/" if there path is empty', () => {
       assert(LocationService.appendParts(['.', ''])).to.equal('/');
-    });
-  });
-
-  describe('normalizePath', () => {
-    it('should add missing `/` at the start of the path', () => {
-      assert(LocationService.normalizePath('path')).to.equal('/path');
-    });
-
-    it('should remove extra `/` at the end of the path', () => {
-      assert(LocationService.normalizePath('/path/')).to.equal('/path');
     });
   });
 });

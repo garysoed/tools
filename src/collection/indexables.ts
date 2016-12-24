@@ -1,7 +1,9 @@
+import {Validate} from 'src/valid/validate';
+
 import {ArrayIterable} from './array-iterable';
 import {BaseFluent} from './base-fluent';
-import {FluentIterable, Iterables} from './iterables';
 import {IFluentIndexable} from './interfaces';
+import {FluentIterable, Iterables} from './iterables';
 
 
 export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexable<T> {
@@ -128,6 +130,21 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
       }
     });
     return new FluentIndexable<T>(newArray);
+  }
+
+  reverse(): IFluentIndexable<T> {
+    return Indexables.of(this.getData().reverse());
+  }
+
+  zip<T2>(other: T2[]): IFluentIndexable<[T, T2]> {
+    let thisData = this.getData();
+    Validate.any(other.length).to.beEqualTo(thisData.length)
+        .orThrows(`Other array has a length of ${other.length}, expected ${thisData.length}`);
+
+    return this
+        .mapElement((value: T, index: number) => {
+          return <[T, T2]> [value, other[index]];
+        });
   }
 }
 

@@ -1,9 +1,10 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from 'src/test-base';
 TestBase.setup();
 
-import {Arrays} from '../collection/arrays';
-import {Mocks} from '../mock/mocks';
-import {Serializer} from '../data/a-serializable';
+import {Arrays} from 'src/collection/arrays';
+import {Serializer} from 'src/data/a-serializable';
+import {Mocks} from 'src/mock/mocks';
+
 import {WebStorage} from './web-storage';
 
 
@@ -197,7 +198,7 @@ describe('store.WebStorage', () => {
       spyOn(storage['idGenerator_'], 'resolveConflict').and.returnValues(id1, id2, id3);
       spyOn(storage, 'getIndexes_').and.returnValue(new Set([initialId, id1, id2]));
 
-      storage.reserve()
+      storage.generateId()
           .then((id: string) => {
             assert(id).to.equal(id3);
             assert(storage['idGenerator_'].resolveConflict).to.haveBeenCalledWith(initialId);

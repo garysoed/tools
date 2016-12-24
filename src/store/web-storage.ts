@@ -1,8 +1,9 @@
-import {Arrays} from '../collection/arrays';
+import {Arrays} from 'src/collection/arrays';
+import {Serializer} from 'src/data/a-serializable';
+import {Validate} from 'src/valid/validate';
+
 import {IdGenerator, Storage as GsStorage} from './interfaces';
-import {Serializer} from '../data/a-serializable';
 import {SimpleIdGenerator} from './simple-id-generator';
-import {Validate} from '../valid/validate';
 
 
 export class WebStorage<T> implements GsStorage<T> {
@@ -68,6 +69,18 @@ export class WebStorage<T> implements GsStorage<T> {
   /**
    * @override
    */
+  generateId(): Promise<string> {
+    let id = this.idGenerator_.generate();
+    let indexes = new Set(this.getIndexes_());
+    while (indexes.has(id)) {
+      id = this.idGenerator_.resolveConflict(id);
+    }
+    return Promise.resolve(id);
+  }
+
+  /**
+   * @override
+   */
   has(id: string): Promise<boolean> {
     let indexes = this.getIndexes_();
     return Promise.resolve(indexes.has(id));
@@ -98,18 +111,6 @@ export class WebStorage<T> implements GsStorage<T> {
         reject(e);
       }
     });
-  }
-
-  /**
-   * @override
-   */
-  reserve(): Promise<string> {
-    let id = this.idGenerator_.generate();
-    let indexes = new Set(this.getIndexes_());
-    while (indexes.has(id)) {
-      id = this.idGenerator_.resolveConflict(id);
-    }
-    return Promise.resolve(id);
   }
 
   /**

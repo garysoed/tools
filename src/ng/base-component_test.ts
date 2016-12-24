@@ -1,9 +1,10 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from 'src/test-base';
 TestBase.setup();
+
+import {TestDispose} from 'src/testing/test-dispose';
 
 import BaseComponent from './base-component';
 import FakeScope from './fake-scope';
-import {TestDispose} from '../testing/test-dispose';
 
 
 describe('ng.BaseComponent', () => {

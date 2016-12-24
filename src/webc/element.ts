@@ -1,5 +1,5 @@
-import {BaseElement} from '../webc/base-element';
-import {Validate} from '../valid/validate';
+import {Validate} from 'src/valid/validate';
+import {BaseElement} from 'src/webc/base-element';
 
 
 const __CONFIG = Symbol('config');
