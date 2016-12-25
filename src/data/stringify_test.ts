@@ -1,8 +1,8 @@
-import {assert, TestBase} from 'src/test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
-import {Mocks} from 'src/mock/mocks';
-import {Natives} from 'src/typescript/natives';
+import {Mocks} from '../mock/mocks';
+import {Natives} from '../typescript/natives';
 
 import {ANNOTATIONS, Stringify} from './stringify';
 

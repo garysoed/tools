@@ -1,7 +1,7 @@
-import {Arrays} from 'src/collection/arrays';
-import {Annotations} from 'src/data/annotations';
-import {BaseDisposable} from 'src/dispose/base-disposable';
-import {ListenableDom} from 'src/event/listenable-dom';
+import {Arrays} from '../collection/arrays';
+import {Annotations} from '../data/annotations';
+import {BaseDisposable} from '../dispose/base-disposable';
+import {ListenableDom} from '../event/listenable-dom';
 
 import {IHandler} from './interfaces';
 

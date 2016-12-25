@@ -1,7 +1,7 @@
-import {assert, TestBase} from 'src/test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
-import {Arrays} from 'src/collection/arrays';
+import {Arrays} from '../collection/arrays';
 
 import {Doms} from './doms';
 

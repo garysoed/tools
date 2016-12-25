@@ -32,7 +32,7 @@ export class Enums {
    * @param enumSet The set of enum values.
    * @return The lower case version of the enum name that corresponds to the enum value.
    */
-  static toLowerCaseString(enumValue: number, enumSet: gs.IEnum): string {
+  static toLowerCaseString(enumValue: any, enumSet: gs.IEnum): string {
     return enumSet[enumValue].toLowerCase();
   }
 };

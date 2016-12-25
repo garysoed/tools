@@ -1,8 +1,8 @@
-import {assert, Matchers, TestBase} from 'src/test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
-import {BaseDisposable} from 'src/dispose/base-disposable';
-import {Mocks} from 'src/mock/mocks';
+import {BaseDisposable} from '../dispose/base-disposable';
+import {Mocks} from '../mock/mocks';
 
 import {__SEQUENCER, sequenced} from './sequenced';
 import {Sequencer} from './sequencer';

@@ -1,10 +1,10 @@
-import {Arrays} from 'src/collection/arrays';
-import {Iterables} from 'src/collection/iterables';
-import {Records} from 'src/collection/records';
-import {BaseDisposable} from 'src/dispose/base-disposable';
-import {DisposableFunction} from 'src/dispose/disposable-function';
-import {Doms} from 'src/ui/doms';
-import {Checks} from 'src/util/checks';
+import {Arrays} from '../collection/arrays';
+import {Iterables} from '../collection/iterables';
+import {Records} from '../collection/records';
+import {BaseDisposable} from '../dispose/base-disposable';
+import {DisposableFunction} from '../dispose/disposable-function';
+import {Doms} from '../ui/doms';
+import {Checks} from '../util/checks';
 
 /**
  * @hidden

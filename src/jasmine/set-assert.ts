@@ -1,4 +1,4 @@
-import {Sets} from 'src/collection/sets';
+import {Sets} from '../collection/sets';
 
 import {AnyAssert} from './any-assert';
 

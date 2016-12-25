@@ -31,7 +31,7 @@ import ITestSetup from './i-test-setup';
  * In your test:
  *
  * ```
- * import {TestBase} from 'src/test-base';
+ * import {TestBase} from '../test-base';
  * TestBase.setup();
  *
  * import DisposableClass from './disposable-class';

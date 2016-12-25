@@ -1,7 +1,7 @@
-import {TestBase} from 'src/test-base';
+import {TestBase} from '../test-base';
 TestBase.setup();
 
-import {Mocks} from 'src/mock/mocks';
+import {Mocks} from '../mock/mocks';
 
 import {AnyAssert} from './any-assert';
 

@@ -1,4 +1,4 @@
-import {BaseListenable} from 'src/event/base-listenable';
+import {BaseListenable} from '../event/base-listenable';
 
 
 export enum EventType {

@@ -1,10 +1,10 @@
-import {Maps} from 'src/collection/maps';
-import {BaseDisposable} from 'src/dispose/base-disposable';
-import {Injector} from 'src/inject/injector';
-import {Cases} from 'src/string/cases';
-import {Checks} from 'src/util/checks';
-import {Log} from 'src/util/log';
-import {Validate} from 'src/valid/validate';
+import {Maps} from '../collection/maps';
+import {BaseDisposable} from '../dispose/base-disposable';
+import {Injector} from '../inject/injector';
+import {Cases} from '../string/cases';
+import {Checks} from '../util/checks';
+import {Log} from '../util/log';
+import {Validate} from '../valid/validate';
 
 import {BaseElement} from './base-element';
 import {ANNOTATIONS as BindAnnotations} from './bind';
@@ -68,11 +68,11 @@ export class ElementRegistrar extends BaseDisposable {
         let instancePrototype = instance.constructor;
         Maps.of(BindAnnotations.forCtor(instancePrototype).getAttachedValues())
             .forEach((
-                factory: (element: HTMLElement) => IDomBinder<any>,
+                factory: (element: HTMLElement, instance: any) => IDomBinder<any>,
                 key: string | symbol) => {
               let bridge = instance[key];
               Validate.any(bridge).to.beAnInstanceOf(DomBridge).assertValid();
-              (<DomBridge<any>> bridge).open(factory(this));
+              (<DomBridge<any>> bridge).open(factory(this, instance));
             });
 
         instance.onCreated(this);

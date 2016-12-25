@@ -1,7 +1,7 @@
-import {assert, Matchers, TestBase} from 'src/test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
-import {Mocks} from 'src/mock/mocks';
+import {Mocks} from '../mock/mocks';
 
 import {AttributeBinder} from './attribute-binder';
 import {ANNOTATIONS, Bind} from './bind';
@@ -44,10 +44,11 @@ describe('webc.Bind', () => {
           .haveBeenCalledWith(propertyKey, Matchers.any(Function));
 
       let parentEl = Mocks.object('parentEl');
-      assert(mockAnnotationHandler.attachValueToProperty.calls.argsFor(0)[1](parentEl))
+      let instance = Mocks.object('instance');
+      assert(mockAnnotationHandler.attachValueToProperty.calls.argsFor(0)[1](parentEl, instance))
           .to.equal(binder);
 
-      assert(mockBinderFactory).to.haveBeenCalledWith(targetEl);
+      assert(mockBinderFactory).to.haveBeenCalledWith(targetEl, instance);
       assert(Util.resolveSelector).to.haveBeenCalledWith(SELECTOR, parentEl);
 
       assert(ANNOTATIONS.forCtor).to.haveBeenCalledWith(ctor);
@@ -115,11 +116,12 @@ describe('webc.Bind', () => {
           jasmine.any(Function));
 
       let element = Mocks.object('element');
-      assert(mockAnnotationsHandler.attachValueToProperty.calls.argsFor(0)[1](element))
+      let instance = Mocks.object('instance');
+      assert(mockAnnotationsHandler.attachValueToProperty.calls.argsFor(0)[1](element, instance))
           .to.equal(binder);
       assert(Util.resolveSelector).to.haveBeenCalledWith(SELECTOR, element);
       assert(ChildrenElementsBinder.of).to
-          .haveBeenCalledWith(targetEl, dataSetter, elementGenerator);
+          .haveBeenCalledWith(targetEl, dataSetter, elementGenerator, instance);
     });
   });
 

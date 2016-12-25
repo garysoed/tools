@@ -1,8 +1,8 @@
-import {Arrays} from 'src/collection/arrays';
-import {Maps} from 'src/collection/maps';
-import {Sets} from 'src/collection/sets';
-import {BaseDisposable} from 'src/dispose/base-disposable';
-import {Validate} from 'src/valid/validate';
+import {Arrays} from '../collection/arrays';
+import {Maps} from '../collection/maps';
+import {Sets} from '../collection/sets';
+import {BaseDisposable} from '../dispose/base-disposable';
+import {Validate} from '../valid/validate';
 
 import {AttributeChangeHandler} from './attribute-change-handler';
 import {EventHandler} from './event-handler';

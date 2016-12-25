@@ -1,8 +1,8 @@
-import {Arrays} from 'src/collection/arrays';
-import {Graph} from 'src/pipeline/graph';
-import {Internal} from 'src/pipeline/internal';
-import {Pipe} from 'src/pipeline/pipe';
-import {Validate} from 'src/valid/validate';
+import {Arrays} from '../collection/arrays';
+import {Graph} from '../pipeline/graph';
+import {Internal} from '../pipeline/internal';
+import {Pipe} from '../pipeline/pipe';
+import {Validate} from '../valid/validate';
 
 import {IColor} from './interface';
 

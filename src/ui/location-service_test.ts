@@ -1,10 +1,10 @@
-import {assert, TestBase} from 'src/test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
-import {DomEvent} from 'src/event/dom-event';
-import {Mocks} from 'src/mock/mocks';
-import {TestDispose} from 'src/testing/test-dispose';
-import {Reflect} from 'src/util/reflect';
+import {DomEvent} from '../event/dom-event';
+import {Mocks} from '../mock/mocks';
+import {TestDispose} from '../testing/test-dispose';
+import {Reflect} from '../util/reflect';
 
 import {LocationService} from './location-service';
 import {LocationServiceEvents} from './location-service-events';

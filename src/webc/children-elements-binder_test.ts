@@ -1,26 +1,29 @@
-import {assert, TestBase} from 'src/test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
-import {Arrays} from 'src/collection/arrays';
-import {Mocks} from 'src/mock/mocks';
+import {Arrays} from '../collection/arrays';
+import {Mocks} from '../mock/mocks';
 
 import {__data, ChildrenElementsBinder} from './children-elements-binder';
 
 
 describe('webc.ChildrenElementsBinder', () => {
   let binder: ChildrenElementsBinder<number>;
+  let instance;
   let parentEl: Element;
   let mockDataSetter;
   let mockGenerator;
 
   beforeEach(() => {
+    instance = Mocks.object('instance');
     parentEl = document.createElement('div');
     mockDataSetter = jasmine.createSpy('DataSetter');
     mockGenerator = jasmine.createSpy('Generator');
     binder = new ChildrenElementsBinder<number>(
         parentEl,
         mockDataSetter,
-        mockGenerator);
+        mockGenerator,
+        instance);
   });
 
   describe('getData_', () => {
@@ -40,7 +43,7 @@ describe('webc.ChildrenElementsBinder', () => {
 
       assert(binder['getElement_']()).to.equal(element);
       assert(binder['elementPool_']).to.haveElements([]);
-      assert(mockGenerator).to.haveBeenCalledWith(document);
+      assert(mockGenerator).to.haveBeenCalledWith(document, instance);
     });
 
     it('should reuse an element from the pool', () => {
@@ -121,8 +124,8 @@ describe('webc.ChildrenElementsBinder', () => {
       assert(binder['setData_']).to.haveBeenCalledWith(element1, value1);
       assert(binder['setData_']).to.haveBeenCalledWith(element2, value2);
 
-      assert(mockDataSetter).to.haveBeenCalledWith(value1, element1);
-      assert(mockDataSetter).to.haveBeenCalledWith(value2, element2);
+      assert(mockDataSetter).to.haveBeenCalledWith(value1, element1, instance);
+      assert(mockDataSetter).to.haveBeenCalledWith(value2, element2, instance);
 
       assert(parentEl.appendChild).to.haveBeenCalledWith(element1);
       assert(parentEl.appendChild).to.haveBeenCalledWith(element2);
@@ -172,8 +175,8 @@ describe('webc.ChildrenElementsBinder', () => {
       assert(binder['setData_']).to.haveBeenCalledWith(child1, newData1);
       assert(binder['setData_']).to.haveBeenCalledWith(child2, newData2);
 
-      assert(mockDataSetter).to.haveBeenCalledWith(newData1, child1);
-      assert(mockDataSetter).to.haveBeenCalledWith(newData2, child2);
+      assert(mockDataSetter).to.haveBeenCalledWith(newData1, child1, instance);
+      assert(mockDataSetter).to.haveBeenCalledWith(newData2, child2, instance);
     });
   });
 });

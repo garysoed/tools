@@ -1,4 +1,4 @@
-import {Maps} from 'src/collection/maps';
+import {Maps} from '../collection/maps';
 
 import {AnyAssert} from './any-assert';
 

@@ -1,4 +1,4 @@
-import {Injector} from 'src/inject/injector';
+import {Injector} from '../inject/injector';
 
 
 const BOUND_VALUES_: Map<string | symbol, any> = new Map();

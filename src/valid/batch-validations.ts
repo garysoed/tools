@@ -1,4 +1,4 @@
-import {Records} from 'src/collection/records';
+import {Records} from '../collection/records';
 
 import {BaseValidations} from './base-validations';
 import {ValidationResult} from './validation-result';

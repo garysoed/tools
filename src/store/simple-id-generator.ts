@@ -1,4 +1,4 @@
-import {Random, Randomizer} from 'src/random/randomizer';
+import {Random, Randomizer} from '../random/randomizer';
 
 import {IdGenerator} from './interfaces';
 

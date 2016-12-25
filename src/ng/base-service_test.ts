@@ -1,7 +1,7 @@
-import {assert, Matchers, TestBase} from 'src/test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
-import {TestDispose} from 'src/testing/test-dispose';
+import {TestDispose} from '../testing/test-dispose';
 
 import BaseService from './base-service';
 

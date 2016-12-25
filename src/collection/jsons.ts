@@ -1,5 +1,5 @@
-import {Maps} from 'src/collection/maps';
-import {Validate} from 'src/valid/validate';
+import {Maps} from '../collection/maps';
+import {Validate} from '../valid/validate';
 
 
 /**

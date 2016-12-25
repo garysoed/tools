@@ -6,6 +6,7 @@ export {BooleanParser} from './webc/boolean-parser';
 export {customElement} from './webc/custom-element';
 export {DomBridge} from './webc/dom-bridge';
 export {ElementRegistrar} from './webc/element-registrar';
+export {EnumParser} from './webc/enum-parser';
 export {FloatParser} from './webc/float-parser';
 export {handle} from './webc/handle';
 export {IAttributeParser} from './webc/interfaces';

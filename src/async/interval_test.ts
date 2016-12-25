@@ -1,8 +1,8 @@
-import {assert, Matchers, TestBase} from 'src/test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
-import {Interval} from 'src/async/interval';
-import {TestDispose} from 'src/testing/test-dispose';
+import {Interval} from '../async/interval';
+import {TestDispose} from '../testing/test-dispose';
 
 
 describe('async.Interval', () => {

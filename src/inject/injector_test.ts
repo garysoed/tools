@@ -1,8 +1,8 @@
-import {assert, Matchers, TestBase} from 'src/test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
-import {Mocks} from 'src/mock/mocks';
-import {Reflect} from 'src/util/reflect';
+import {Mocks} from '../mock/mocks';
+import {Reflect} from '../util/reflect';
 
 import {InjectUtil} from './inject-util';
 import {Injector} from './injector';

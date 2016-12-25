@@ -1,4 +1,4 @@
-import {assert, Matchers, TestBase} from 'src/test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import {ArrayIterable} from './array-iterable';

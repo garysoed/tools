@@ -1,7 +1,7 @@
-import {Records} from 'src/collection/records';
-import {BaseDisposable} from 'src/dispose/base-disposable';
-import {DomEvent} from 'src/event/dom-event';
-import {ListenableDom} from 'src/event/listenable-dom';
+import {Records} from '../collection/records';
+import {BaseDisposable} from '../dispose/base-disposable';
+import {DomEvent} from '../event/dom-event';
+import {ListenableDom} from '../event/listenable-dom';
 
 /**
  * Base class for all HTTP requests.

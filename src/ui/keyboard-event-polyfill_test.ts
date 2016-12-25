@@ -1,7 +1,7 @@
-import {assert, TestBase} from 'src/test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
-import Cache from 'src/data/a-cache';
+import Cache from '../data/a-cache';
 
 import KeyboardEventPolyfill from './keyboard-event-polyfill';
 

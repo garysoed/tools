@@ -1,4 +1,4 @@
-import {Natives} from 'src/typescript/natives';
+import {Natives} from '../typescript/natives';
 
 import {AnyAssert} from './any-assert';
 import {ArrayAssert} from './array-assert';

@@ -1,9 +1,9 @@
-import {assert, Matchers, TestBase} from 'src/test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
-import {Arrays} from 'src/collection/arrays';
-import {Serializer} from 'src/data/a-serializable';
-import {Mocks} from 'src/mock/mocks';
+import {Arrays} from '../collection/arrays';
+import {Serializer} from '../data/a-serializable';
+import {Mocks} from '../mock/mocks';
 
 import {WebStorage} from './web-storage';
 

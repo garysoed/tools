@@ -1,8 +1,8 @@
-import {Arrays} from 'src/collection/arrays';
-import {BaseListenable} from 'src/event/base-listenable';
-import {DomEvent} from 'src/event/dom-event';
-import {ListenableDom} from 'src/event/listenable-dom';
-import {Reflect} from 'src/util/reflect';
+import {Arrays} from '../collection/arrays';
+import {BaseListenable} from '../event/base-listenable';
+import {DomEvent} from '../event/dom-event';
+import {ListenableDom} from '../event/listenable-dom';
+import {Reflect} from '../util/reflect';
 
 import {LocationServiceEvents} from './location-service-events';
 import {Locations} from './locations';

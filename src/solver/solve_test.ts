@@ -1,4 +1,4 @@
-import {assert, TestBase} from 'src/test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Solve} from './solve';

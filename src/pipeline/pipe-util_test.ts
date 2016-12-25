@@ -1,8 +1,8 @@
-import {assert, Matchers, TestBase} from 'src/test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
-import {Maps} from 'src/collection/maps';
-import {Mocks} from 'src/mock/mocks';
+import {Maps} from '../collection/maps';
+import {Mocks} from '../mock/mocks';
 
 import {GraphNodeBuilder} from './graph-node-builder';
 import {__NODE_BUILDER_DATA_MAP, __NODE_DATA_MAP, PipeUtil} from './pipe-util';

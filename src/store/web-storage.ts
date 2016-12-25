@@ -1,6 +1,6 @@
-import {Arrays} from 'src/collection/arrays';
-import {Serializer} from 'src/data/a-serializable';
-import {Validate} from 'src/valid/validate';
+import {Arrays} from '../collection/arrays';
+import {Serializer} from '../data/a-serializable';
+import {Validate} from '../valid/validate';
 
 import {IdGenerator, Storage as GsStorage} from './interfaces';
 import {SimpleIdGenerator} from './simple-id-generator';

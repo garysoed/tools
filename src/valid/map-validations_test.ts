@@ -1,8 +1,8 @@
-import {assert, TestBase} from 'src/test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
-import {Maps} from 'src/collection/maps';
-import {Stringify} from 'src/data/stringify';
+import {Maps} from '../collection/maps';
+import {Stringify} from '../data/stringify';
 
 import {Validate} from './validate';
 

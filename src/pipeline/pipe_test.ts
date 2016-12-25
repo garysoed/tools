@@ -1,8 +1,8 @@
-import {assert, TestBase} from 'src/test-base';
+import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
-import {Maps} from 'src/collection/maps';
-import {Mocks} from 'src/mock/mocks';
+import {Maps} from '../collection/maps';
+import {Mocks} from '../mock/mocks';
 
 import {Pipe} from './pipe';
 import {__NODE_DATA_MAP, PipeUtil} from './pipe-util';

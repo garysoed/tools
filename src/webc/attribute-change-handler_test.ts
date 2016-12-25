@@ -1,8 +1,8 @@
-import {assert, Matchers, TestBase} from 'src/test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
-import {DisposableFunction} from 'src/dispose/disposable-function';
-import {Mocks} from 'src/mock/mocks';
+import {DisposableFunction} from '../dispose/disposable-function';
+import {Mocks} from '../mock/mocks';
 
 import {
   ATTR_CHANGE_ANNOTATIONS,

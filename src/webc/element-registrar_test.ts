@@ -1,9 +1,9 @@
-import {assert, Matchers, TestBase} from 'src/test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
-import {Mocks} from 'src/mock/mocks';
-import {TestDispose} from 'src/testing/test-dispose';
-import {Log} from 'src/util/log';
+import {Mocks} from '../mock/mocks';
+import {TestDispose} from '../testing/test-dispose';
+import {Log} from '../util/log';
 
 import {BaseElement} from './base-element';
 import {ANNOTATIONS as BindAnnotations} from './bind';
@@ -107,8 +107,8 @@ describe('webc.ElementRegistrar', () => {
       assert(CustomElementUtil.setElement).to.haveBeenCalledWith(mockElement, mockHTMLElement);
       assert(mockBridge1.open).to.haveBeenCalledWith(binder1);
       assert(mockBridge2.open).to.haveBeenCalledWith(binder2);
-      assert(mockBinderFactory1).to.haveBeenCalledWith(mockHTMLElement);
-      assert(mockBinderFactory2).to.haveBeenCalledWith(mockHTMLElement);
+      assert(mockBinderFactory1).to.haveBeenCalledWith(mockHTMLElement, mockElement);
+      assert(mockBinderFactory2).to.haveBeenCalledWith(mockHTMLElement, mockElement);
       assert(BindAnnotations.forCtor).to.haveBeenCalledWith(mockElement.constructor);
     });
 

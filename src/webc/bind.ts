@@ -1,4 +1,4 @@
-import {Annotations} from 'src/data/annotations';
+import {Annotations} from '../data/annotations';
 
 import {AttributeBinder} from './attribute-binder';
 import {ChildrenElementsBinder} from './children-elements-binder';
@@ -8,7 +8,7 @@ import {PropertyBinder} from './property-binder';
 import {Util} from './util';
 
 
-type BinderFactory = (element: HTMLElement) => IDomBinder<any>;
+type BinderFactory = (element: HTMLElement, instance: any) => IDomBinder<any>;
 
 export const ANNOTATIONS: Annotations<BinderFactory> =
     Annotations.of<BinderFactory>(Symbol('bind'));
@@ -31,14 +31,14 @@ export class Bind {
    * @return The property decorator.
    */
   private createDecorator_(
-      binderFactory: (element: Element) => IDomBinder<any>): PropertyDecorator {
+      binderFactory: (element: Element, instance: any) => IDomBinder<any>): PropertyDecorator {
     let self = this;
     return function(target: Object, propertyKey: string | symbol): void {
       // TODO: Warn that targetEl is null.
       ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
           propertyKey,
-          (parentEl: HTMLElement): IDomBinder<any> => {
-            return binderFactory(Util.resolveSelector(self.selector_, parentEl)!);
+          (parentEl: HTMLElement, instance: any): IDomBinder<any> => {
+            return binderFactory(Util.resolveSelector(self.selector_, parentEl)!, instance);
           });
     };
   }
@@ -65,11 +65,15 @@ export class Bind {
    * @return Property descriptor
    */
   childrenElements<T>(
-      elementGenerator: (document: Document) => Element,
-      dataSetter: (data: T, element: Element) => void): PropertyDecorator {
+      elementGenerator: (document: Document, instance: any) => Element,
+      dataSetter: (data: T, element: Element, instance: any) => void): PropertyDecorator {
     return this.createDecorator_(
-        (element: Element): IDomBinder<any> => {
-          return ChildrenElementsBinder.of<T>(element, dataSetter, elementGenerator);
+        (element: Element, instance: any): IDomBinder<any> => {
+          return ChildrenElementsBinder.of<T>(
+              element,
+              dataSetter,
+              elementGenerator,
+              instance);
         });
   }
 

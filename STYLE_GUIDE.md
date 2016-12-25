@@ -4,7 +4,6 @@
 -   Test files must have a `_test` suffix.
 
 # Imports
--   No relative imports to other dir: Imports from another directory should use absolute path.
 -   Imports should be grouped by:
     1.  External packages coming from the same package.
     1.  Imports coming from the current package but in different directories.
@@ -19,7 +18,7 @@
 Example:
 
 ```typescript
-import {assert, Matchers, TestBase} from 'src/test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Validate} from 'external/gs_tools/src/util';
@@ -27,10 +26,17 @@ import {Validate} from 'external/gs_tools/src/util';
 import {BasicButton} from 'external/gs_ui/src/input';
 import {Breadcrumb} from 'external/gs_ui/src/routing';
 
-import {Interval} from 'src/async/interval';
-import {TestDispose} from 'src/testing/test-dispose';
+import {Interval} from '../async/interval';
+import {TestDispose} from '../testing/test-dispose';
 
 import {Sequencer} from './sequencer';
 ```
 
 *DONE projects: `gs_tools`*
+
+# Classes
+-   All private properties must be readonly if possible.
+-   Private properties must be ordered by:
+    1.  Annotated properties first.
+    1.  Read only properties first.
+    1.  Alphabetical order.

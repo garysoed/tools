@@ -1,5 +1,5 @@
-import {BaseListenable} from 'src/event/base-listenable';
-import {Validate} from 'src/valid/validate';
+import {BaseListenable} from '../event/base-listenable';
+import {Validate} from '../valid/validate';
 
 /**
  * Events dispatched by [[Interval]].

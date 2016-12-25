@@ -1,9 +1,9 @@
-import {assert, Matchers, TestBase} from 'src/test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
-import Cache from 'src/data/a-cache';
-import {Mocks} from 'src/mock/mocks';
-import {TestDispose} from 'src/testing/test-dispose';
+import Cache from '../data/a-cache';
+import {Mocks} from '../mock/mocks';
+import {TestDispose} from '../testing/test-dispose';
 
 import FakeScope from './fake-scope';
 import {RouteService} from './route-service';

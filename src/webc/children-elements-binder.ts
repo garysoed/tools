@@ -1,5 +1,5 @@
-import {Arrays} from 'src/collection/arrays';
-import {Sets} from 'src/collection/sets';
+import {Arrays} from '../collection/arrays';
+import {Sets} from '../collection/sets';
 
 import {IDomBinder} from './interfaces';
 
@@ -8,19 +8,22 @@ export const __data = Symbol('data');
 
 
 export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
-  private readonly parentEl_: Element;
-  private readonly dataSetter_: (data: T, element: Element) => void;
-  private readonly generator_: (document: Document) => Element;
+  private readonly dataSetter_: (data: T, element: Element, instance: any) => void;
   private readonly elementPool_: Set<Element>;
+  private readonly generator_: (document: Document, instance: any) => Element;
+  private readonly instance_: any;
+  private readonly parentEl_: Element;
 
   constructor(
       parentEl: Element,
-      dataSetter: (data: T, element: Element) => void,
-      generator: (document: Document) => Element) {
-    this.parentEl_ = parentEl;
+      dataSetter: (data: T, element: Element, instance: any) => void,
+      generator: (document: Document, instance: any) => Element,
+      instance: any) {
     this.dataSetter_ = dataSetter;
-    this.generator_ = generator;
     this.elementPool_ = new Set();
+    this.generator_ = generator;
+    this.instance_ = instance;
+    this.parentEl_ = parentEl;
   }
 
   /**
@@ -37,7 +40,7 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
   private getElement_(): Element {
     let element = Sets.of(this.elementPool_).anyValue();
     if (element === null) {
-      return this.generator_(this.parentEl_.ownerDocument);
+      return this.generator_(this.parentEl_.ownerDocument, this.instance_);
     } else {
       this.elementPool_.delete(element);
       return element;
@@ -96,7 +99,7 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
         .of(valueArray)
         .forEach((value: T, index: number) => {
           let element = this.parentEl_.children.item(index);
-          this.dataSetter_(value, element);
+          this.dataSetter_(value, element, this.instance_);
           this.setData_(element, value);
         });
   }
@@ -111,8 +114,9 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
    */
   static of<T>(
       parentEl: Element,
-      dataSetter: (data: T, element: Element) => void,
-      generator: (document: Document) => Element): ChildrenElementsBinder<T> {
-    return new ChildrenElementsBinder(parentEl, dataSetter, generator);
+      dataSetter: (data: T, element: Element, instance: any) => void,
+      generator: (document: Document, instance: any) => Element,
+      instance: any): ChildrenElementsBinder<T> {
+    return new ChildrenElementsBinder(parentEl, dataSetter, generator, instance);
   }
 }

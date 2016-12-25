@@ -1,5 +1,5 @@
-import {BaseDisposable} from 'src/dispose/base-disposable';
-import {Validate} from 'src/valid/validate';
+import {BaseDisposable} from '../dispose/base-disposable';
+import {Validate} from '../valid/validate';
 
 import {Sequencer} from './sequencer';
 

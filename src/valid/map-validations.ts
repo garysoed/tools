@@ -1,5 +1,5 @@
-import {Maps} from 'src/collection/maps';
-import {Stringify} from 'src/data/stringify';
+import {Maps} from '../collection/maps';
+import {Stringify} from '../data/stringify';
 
 import {AnyValidations} from './any-validations';
 import {ValidationResult} from './validation-result';

@@ -1,4 +1,4 @@
-import {Validate} from 'src/valid/validate';
+import {Validate} from '../valid/validate';
 
 import {GraphNode} from './graph-node';
 import {__NODE_DATA_MAP, PipeUtil} from './pipe-util';

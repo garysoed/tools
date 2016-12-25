@@ -1,10 +1,10 @@
-import {assert, Matchers, TestBase} from 'src/test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
-import FakeScope from 'src/ng/fake-scope';
-import {angular} from 'src/testing/mock-angular';
-import {TestDispose} from 'src/testing/test-dispose';
-import {Attributes} from 'src/ui/attributes';
+import FakeScope from '../ng/fake-scope';
+import {angular} from '../testing/mock-angular';
+import {TestDispose} from '../testing/test-dispose';
+import {Attributes} from '../ui/attributes';
 
 import {BemClassCtrl} from './bem-class';
 

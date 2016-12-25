@@ -1,5 +1,5 @@
-import {Maps} from 'src/collection/maps';
-import {Cases} from 'src/string/cases';
+import {Maps} from '../collection/maps';
+import {Cases} from '../string/cases';
 
 import {IAttributeParser, IElementConfig} from './interfaces';
 

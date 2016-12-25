@@ -1,4 +1,4 @@
-import {TestBase} from 'src/test-base';
+import {TestBase} from '../test-base';
 TestBase.setup();
 
 import {NumberAssert} from './number-assert';
