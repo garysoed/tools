@@ -3,6 +3,7 @@ import {Annotations} from '../data/annotations';
 import {AttributeBinder} from './attribute-binder';
 import {ChildrenElementsBinder} from './children-elements-binder';
 import {ClassListBinder} from './class-list-binder';
+import {ElementSwitchBinder} from './element-switch-binder';
 import {IAttributeParser, IDomBinder} from './interfaces';
 import {PropertyBinder} from './property-binder';
 import {Util} from './util';
@@ -86,6 +87,19 @@ export class Bind {
     return this.createDecorator_(
         (element: Element): IDomBinder<any> => {
           return ClassListBinder.of(element);
+        });
+  }
+
+  /**
+   * Binds the annotated [IDomBinder] to control the visibility of children elements.
+   *
+   * @param mapping Mapping from enum value to ID of the element to associate it with.
+   * @return Property decorator.
+   */
+  elementSwitch<T>(mapping: Map<T, string>): PropertyDecorator {
+    return this.createDecorator_(
+        (element: Element): IDomBinder<any> => {
+          return ElementSwitchBinder.of(element, mapping);
         });
   }
 

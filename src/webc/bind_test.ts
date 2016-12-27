@@ -7,6 +7,7 @@ import {AttributeBinder} from './attribute-binder';
 import {ANNOTATIONS, Bind} from './bind';
 import {ChildrenElementsBinder} from './children-elements-binder';
 import {ClassListBinder} from './class-list-binder';
+import {ElementSwitchBinder} from './element-switch-binder';
 import {PropertyBinder} from './property-binder';
 import {Util} from './util';
 
@@ -139,6 +140,24 @@ describe('webc.Bind', () => {
       let element = Mocks.object('element');
       assert(createDecoratorSpy.calls.argsFor(0)[0](element)).to.equal(binder);
       assert(ClassListBinder.of).to.haveBeenCalledWith(element);
+    });
+  });
+
+  describe('elementSwitch', () => {
+    it('should create the decorator correctly', () => {
+      let map = new Map();
+      let binder = Mocks.object('binder');
+      spyOn(ElementSwitchBinder, 'of').and.returnValue(binder);
+
+      let decorator = Mocks.object('decorator');
+      let createDecoratorSpy = spyOn(bind, 'createDecorator_').and.returnValue(decorator);
+
+      assert(bind.elementSwitch<number>(map)).to.equal(decorator);
+      assert(bind['createDecorator_']).to.haveBeenCalledWith(<any> Matchers.any((Function)));
+
+      let element = Mocks.object('element');
+      assert(createDecoratorSpy.calls.argsFor(0)[0](element)).to.equal(binder);
+      assert(ElementSwitchBinder.of).to.haveBeenCalledWith(element, map);
     });
   });
 

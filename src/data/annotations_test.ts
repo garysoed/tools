@@ -107,33 +107,50 @@ describe('data.AnnotationsHandler', () => {
   });
 
   describe('of', () => {
-    let proto;
+    let ctor;
     let annotation;
-    let parent;
 
     beforeEach(() => {
-      proto = Mocks.object('proto');
+      ctor = Mocks.object('ctor');
       annotation = Symbol('annotation');
-      parent = Mocks.object('parent');
     });
 
     it('should create a new handler if one does not exist', () => {
+      let parentCtor = Mocks.object('parentCtor');
+      let parentProto = Mocks.object('parentProto');
+      parentProto.constructor = parentCtor;
+
+      spyOn(Object, 'getPrototypeOf').and.returnValue(parentProto);
       spyOn(AnnotationsHandler, 'hasAnnotation').and.returnValue(false);
 
-      let handler = AnnotationsHandler.of(annotation, proto, parent);
-      assert(proto[annotation]).to.be(handler);
-      assert(AnnotationsHandler.hasAnnotation).to.haveBeenCalledWith(proto, annotation);
-      assert(handler['parent_']).to.equal(parent);
+      let handler = AnnotationsHandler.of(annotation, ctor);
+      assert(ctor[annotation]).to.be(handler);
+      assert(AnnotationsHandler.hasAnnotation).to.haveBeenCalledWith(ctor, annotation);
+      assert(handler['parent_']).to.equal(parentCtor);
       assert(handler['annotation_']).to.equal(annotation);
+      assert(Object.getPrototypeOf).to.haveBeenCalledWith(ctor.prototype);
+    });
+
+    it('should add the parent constructor if there is any', () => {
+      spyOn(Object, 'getPrototypeOf').and.returnValue(null);
+      spyOn(AnnotationsHandler, 'hasAnnotation').and.returnValue(false);
+
+      let handler = AnnotationsHandler.of(annotation, ctor);
+      assert(ctor[annotation]).to.be(handler);
+      assert(AnnotationsHandler.hasAnnotation).to.haveBeenCalledWith(ctor, annotation);
+      assert(handler['parent_']).to.equal(null);
+      assert(handler['annotation_']).to.equal(annotation);
+      assert(Object.getPrototypeOf).to.haveBeenCalledWith(ctor.prototype);
     });
 
     it('should reuse an existing annotations handler', () => {
+      spyOn(Object, 'getPrototypeOf').and.returnValue(null);
       spyOn(AnnotationsHandler, 'hasAnnotation').and.returnValue(true);
 
       let handler = Mocks.object('handler');
-      proto[annotation] = handler;
+      ctor[annotation] = handler;
 
-      assert(AnnotationsHandler.of(annotation, proto, parent)).to.be(handler);
+      assert(AnnotationsHandler.of(annotation, ctor)).to.be(handler);
     });
   });
 });
@@ -156,7 +173,7 @@ describe('data.Annotations', () => {
       spyOn(AnnotationsHandler, 'of').and.returnValue(handler);
 
       assert(annotations.forCtor(BaseClass)).to.equal(handler);
-      assert(AnnotationsHandler.of).to.haveBeenCalledWith(__SYMBOL, BaseClass, Object);
+      assert(AnnotationsHandler.of).to.haveBeenCalledWith(__SYMBOL, BaseClass);
     });
 
     it('should specify the parent class correctly', () => {
@@ -164,7 +181,7 @@ describe('data.Annotations', () => {
       spyOn(AnnotationsHandler, 'of').and.returnValue(handler);
 
       assert(annotations.forCtor(SubClass)).to.equal(handler);
-      assert(AnnotationsHandler.of).to.haveBeenCalledWith(__SYMBOL, SubClass, BaseClass);
+      assert(AnnotationsHandler.of).to.haveBeenCalledWith(__SYMBOL, SubClass);
     });
   });
 

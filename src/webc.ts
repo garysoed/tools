@@ -10,5 +10,6 @@ export {EnumParser} from './webc/enum-parser';
 export {FloatParser} from './webc/float-parser';
 export {handle} from './webc/handle';
 export {IAttributeParser} from './webc/interfaces';
+export {IntegerParser} from './webc/integer-parser';
 export {StringParser} from './webc/string-parser';
 export {Templates} from './webc/templates';

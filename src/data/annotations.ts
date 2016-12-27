@@ -24,6 +24,7 @@ export class AnnotationsHandler<T> {
   /**
    * Adds the given value to the given property identifier.
    *
+   * TODO: Support multiple annotations on the same key.
    * @param key Identifier of the property to attach the value to.
    * @param value The value to attach to the given property.
    */
@@ -66,11 +67,13 @@ export class AnnotationsHandler<T> {
    * @param proto The prototype to add the annotation to.
    * @param parent Pointer to the parent class to follow the annotation.
    */
-  static of<T>(annotation: symbol, proto: any, parent: any = null): AnnotationsHandler<T> {
-    if (!AnnotationsHandler.hasAnnotation(proto, annotation)) {
-      proto[annotation] = new AnnotationsHandler<T>(annotation, parent);
+  static of<T>(annotation: symbol, ctor: any): AnnotationsHandler<T> {
+    let parentProto = Object.getPrototypeOf(ctor.prototype);
+    let parent = parentProto === null ? null : parentProto.constructor;
+    if (!AnnotationsHandler.hasAnnotation(ctor, annotation)) {
+      ctor[annotation] = new AnnotationsHandler<T>(annotation, parent);
     }
-    return proto[annotation];
+    return ctor[annotation];
   }
 }
 
@@ -94,8 +97,7 @@ export class Annotations<T> {
    * @return New instance of annotations handler for the given constructor.
    */
   forCtor(ctor: any): AnnotationsHandler<T> {
-    let parent = Object.getPrototypeOf(ctor.prototype).constructor;
-    return AnnotationsHandler.of<T>(this.annotation_, ctor, parent);
+    return AnnotationsHandler.of<T>(this.annotation_, ctor);
   }
 
   /**
