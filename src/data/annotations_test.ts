@@ -1,8 +1,9 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import {Mocks} from '../mock/mocks';
 
+import {Maps} from '../collection/maps';
 import {Annotations, AnnotationsHandler} from './annotations';
 
 
@@ -21,7 +22,12 @@ describe('data.AnnotationsHandler', () => {
       let key = 'key';
       let value = 123;
       handler.attachValueToProperty(key, value);
-      assert(handler['propertyValues_']).to.haveEntries([[key, value]]);
+
+      let values = Maps.of(handler['propertyValues_']).asRecord();
+      assert(values).to.equal(Matchers.objectContaining({
+        [key]: Matchers.any(Set),
+      }));
+      assert(values[key]).to.haveElements([value]);
     });
   });
 
@@ -45,28 +51,31 @@ describe('data.AnnotationsHandler', () => {
       let key2 = 'key2';
       let value1 = 789;
       let value2 = 12;
-      handler['propertyValues_'].set(key1, value1);
-      handler['propertyValues_'].set(key2, value2);
+      handler['propertyValues_'].set(key1, new Set([value1]));
+      handler['propertyValues_'].set(key2, new Set([value2]));
 
       let parent1 = 'parent1';
       let parent2 = 'parent2';
-      let parentValue1 = 123;
-      let parentValue2 = 456;
+      let parentValues1 = Mocks.object('parentValues1');
+      let parentValues2 = Mocks.object('parentValues2');
       let parentMap = new Map<string, number>();
-      parentMap.set(parent1, parentValue1);
-      parentMap.set(parent2, parentValue2);
+      parentMap.set(parent1, parentValues1);
+      parentMap.set(parent2, parentValues2);
 
       let mockParentHandler = jasmine.createSpyObj('ParentHandler', ['getAttachedValues']);
       mockParentHandler.getAttachedValues.and.returnValue(parentMap);
 
       spyOn(AnnotationsHandler, 'of').and.returnValue(mockParentHandler);
 
-      assert(handler.getAttachedValues()).to.haveEntries([
-        [key1, value1],
-        [key2, value2],
-        [parent1, parentValue1],
-        [parent2, parentValue2],
-      ]);
+      let values = Maps.of(handler.getAttachedValues()).asRecord();
+      assert(values).to.equal(Matchers.objectContaining({
+        [key1]: Matchers.any(Set),
+        [key2]: Matchers.any(Set),
+        [parent1]: Mocks.object('parentValues1'),
+        [parent2]: Mocks.object('parentValues2'),
+      }));
+      assert(values[key1]).to.haveElements([value1]);
+      assert(values[key2]).to.haveElements([value2]);
       assert(AnnotationsHandler.of).to.haveBeenCalledWith(__SYMBOL, parent);
     });
 
@@ -75,15 +84,18 @@ describe('data.AnnotationsHandler', () => {
       let key2 = 'key2';
       let value1 = 789;
       let value2 = 12;
-      handler['propertyValues_'].set(key1, value1);
-      handler['propertyValues_'].set(key2, value2);
+      handler['propertyValues_'].set(key1, new Set([value1]));
+      handler['propertyValues_'].set(key2, new Set([value2]));
 
       handler['parent_'] = null;
 
-      assert(handler.getAttachedValues()).to.haveEntries([
-        [key1, value1],
-        [key2, value2],
-      ]);
+      let values = Maps.of(handler.getAttachedValues()).asRecord();
+      assert(values).to.equal(Matchers.objectContaining({
+        [key1]: Matchers.any(Set),
+        [key2]: Matchers.any(Set),
+      }));
+      assert(values[key1]).to.haveElements([value1]);
+      assert(values[key2]).to.haveElements([value2]);
     });
   });
 

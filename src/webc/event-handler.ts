@@ -62,7 +62,7 @@ export class EventHandler implements IHandler<EventHandlerConfig> {
   /**
    * @override
    */
-  getConfigs(instance: BaseDisposable): Map<string | symbol, EventHandlerConfig> {
+  getConfigs(instance: BaseDisposable): Map<string | symbol, Set<EventHandlerConfig>> {
     return EVENT_ANNOTATIONS
         .forCtor(instance.constructor)
         .getAttachedValues();

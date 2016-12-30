@@ -8,6 +8,17 @@ import {Arrays} from './arrays';
 
 
 describe('collection.Arrays', () => {
+  describe('flatten', () => {
+    it('should flatten the array correctly', () => {
+      let items = [
+        [1, 2, 3],
+        [4, 5],
+        [6, 7, 8, 9],
+      ];
+      assert(Arrays.flatten(items).asArray()).to.equal([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    });
+  });
+
   describe('fromDomTokenList', () => {
     it('should create the correct array', () => {
       let values = ['a', 'b', 'c'];

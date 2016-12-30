@@ -86,20 +86,25 @@ export class Handler {
     let configEntries = Maps
         .of(handler.getConfigs(instance))
         .values()
-        .map((config: T): [Element | null, T] => {
-          let selector = config.selector;
-          let element = Util.resolveSelector(selector, parentElement);
-          if (element === null) {
-            unresolvedSelectors.add(selector);
-          }
+        .map((configs: Set<T>): [Element | null, T][] => {
+          return Sets
+              .of(configs)
+              .map((config: T): [Element | null, T] => {
+                let selector = config.selector;
+                let element = Util.resolveSelector(selector, parentElement);
+                if (element === null) {
+                  unresolvedSelectors.add(selector);
+                }
 
-          // Element can be null, but keep going to make debugging easier.
-          return [element, config];
+                // Element can be null, but keep going to make debugging easier.
+                return [element, config];
+              })
+              .asArray();
         })
         .asArray();
 
     Maps
-        .group(configEntries)
+        .group(Arrays.flatten(configEntries).asArray())
         .forEach((configs: T[], targetEl: Element | null) => {
           if (targetEl !== null) {
             handler.configure(targetEl, instance, configs);

@@ -21,9 +21,30 @@ import {FluentIndexable} from './indexables';
  */
 export class Arrays {
   /**
+   * Flattens an array of arrays into an array.
+   *
+   * @param items The array of arrays to flatten.
+   * @return Array wrapper object to do operations on.
+   */
+  static flatten<T>(items: T[][]): FluentIndexable<T> {
+    let array: T[] = [];
+    Arrays
+        .of(items)
+        .forEach((values: T[]) => {
+          Arrays
+              .of(values)
+              .forEach((value: T) => {
+                array.push(value);
+              });
+        });
+    return Arrays.of(array);
+  }
+
+  /**
    * Starts by using a DOM token list.
    *
    * @param tokenList The token list
+   * @return Array wrapper object to do operations on.
    */
   static fromDomTokenList(tokenList: DOMTokenList): FluentIndexable<string> {
     let array: string[] = [];

@@ -1,4 +1,5 @@
 import {Maps} from '../collection/maps';
+import {Sets} from '../collection/sets';
 import {BaseDisposable} from '../dispose/base-disposable';
 import {Injector} from '../inject/injector';
 import {Cases} from '../string/cases';
@@ -68,8 +69,16 @@ export class ElementRegistrar extends BaseDisposable {
         let instancePrototype = instance.constructor;
         Maps.of(BindAnnotations.forCtor(instancePrototype).getAttachedValues())
             .forEach((
-                factory: (element: HTMLElement, instance: any) => IDomBinder<any>,
+                factories: Set<(element: HTMLElement, instance: any) => IDomBinder<any>>,
                 key: string | symbol) => {
+              if (factories.size > 1) {
+                throw Validate.fail(`Key ${key} can only have 1 Bind annotation`);
+              }
+              let factory = Sets.of(factories).anyValue();
+              if (factory === null) {
+                return;
+              }
+
               let bridge = instance[key];
               Validate.any(bridge).to.beAnInstanceOf(DomBridge).assertValid();
               (<DomBridge<any>> bridge).open(factory(this, instance));

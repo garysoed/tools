@@ -64,10 +64,8 @@ describe('webc.Handler', () => {
       configs2_2.selector = selector2_2;
 
       let map = new Map();
-      map.set('propertyKey1_1', configs1_1);
-      map.set('propertyKey1_2', configs1_2);
-      map.set('propertyKey2_1', configs2_1);
-      map.set('propertyKey2_2', configs2_2);
+      map.set('propertyKey1', new Set([configs1_1, configs1_2]));
+      map.set('propertyKey2', new Set([configs2_1, configs2_2]));
       mockHandler.getConfigs.and.returnValue(map);
 
       let targetEl1 = Mocks.object('targetEl1');
@@ -109,7 +107,7 @@ describe('webc.Handler', () => {
       configs.selector = selector;
 
       let map = new Map();
-      map.set('propertyKey', configs);
+      map.set('propertyKey', new Set([configs]));
       mockHandler.getConfigs.and.returnValue(map);
 
       spyOn(Util, 'resolveSelector').and.returnValue(null);

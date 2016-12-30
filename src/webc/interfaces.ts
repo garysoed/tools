@@ -79,5 +79,5 @@ export interface IHandler<T> {
   /**
    * @return Configuration objects registered for the given instance.
    */
-  getConfigs(instance: BaseDisposable): Map<string | symbol, T>;
+  getConfigs(instance: BaseDisposable): Map<string | symbol, Set<T>>;
 }

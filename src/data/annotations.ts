@@ -8,7 +8,7 @@ import {Maps} from '../collection/maps';
  */
 export class AnnotationsHandler<T> {
   private annotation_: symbol;
-  private propertyValues_: Map<string | symbol, T>;
+  private propertyValues_: Map<string | symbol, Set<T>>;
   private parent_: any;
 
   /**
@@ -18,7 +18,7 @@ export class AnnotationsHandler<T> {
   constructor(annotation: symbol, parent: any) {
     this.annotation_ = annotation;
     this.parent_ = parent;
-    this.propertyValues_ = new Map<string | symbol, T>();
+    this.propertyValues_ = new Map<string | symbol, Set<T>>();
   }
 
   /**
@@ -29,7 +29,12 @@ export class AnnotationsHandler<T> {
    * @param value The value to attach to the given property.
    */
   attachValueToProperty(key: string | symbol, value: T): void {
-    this.propertyValues_.set(key, value);
+    let values = this.propertyValues_.get(key);
+    if (!values) {
+      values = new Set<T>();
+      this.propertyValues_.set(key, values);
+    }
+    values.add(value);
   }
 
   /**
@@ -42,7 +47,7 @@ export class AnnotationsHandler<T> {
   /**
    * @return Map of property name to the value attached to that property.
    */
-  getAttachedValues(): Map<string | symbol, T> {
+  getAttachedValues(): Map<string | symbol, Set<T>> {
     let fluentMappable = Maps.of(this.propertyValues_);
     if (this.parent_ !== null) {
       let parentAnnotationValues = AnnotationsHandler

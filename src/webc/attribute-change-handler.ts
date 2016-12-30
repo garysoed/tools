@@ -156,7 +156,7 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
   /**
    * @override
    */
-  getConfigs(instance: BaseDisposable): Map<string | symbol, AttributeChangeHandlerConfig> {
+  getConfigs(instance: BaseDisposable): Map<string | symbol, Set<AttributeChangeHandlerConfig>> {
     return ATTR_CHANGE_ANNOTATIONS
         .forCtor(instance.constructor)
         .getAttachedValues();

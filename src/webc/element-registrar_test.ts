@@ -88,8 +88,8 @@ describe('webc.ElementRegistrar', () => {
       mockElement[key2] = mockBridge2;
 
       let binderMap = new Map();
-      binderMap.set(key1, mockBinderFactory1);
-      binderMap.set(key2, mockBinderFactory2);
+      binderMap.set(key1, new Set([mockBinderFactory1]));
+      binderMap.set(key2, new Set([mockBinderFactory2]));
       let mockBindAnnotations = jasmine.createSpyObj('BindAnnotations', ['getAttachedValues']);
       mockBindAnnotations.getAttachedValues.and.returnValue(binderMap);
       spyOn(BindAnnotations, 'forCtor').and.returnValue(mockBindAnnotations);
