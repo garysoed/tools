@@ -19,20 +19,7 @@ describe('collection.Arrays', () => {
     });
   });
 
-  describe('fromDomTokenList', () => {
-    it('should create the correct array', () => {
-      let values = ['a', 'b', 'c'];
-      let mockTokenList = jasmine.createSpyObj('TokenList', ['item']);
-      mockTokenList.length = 3;
-      mockTokenList.item.and.callFake((i: number) => {
-        return values[i];
-      });
-
-      assert(Arrays.fromDomTokenList(mockTokenList).asArray()).to.equal(values);
-    });
-  });
-
-  describe('fromHtmlCollection', () => {
+  describe('fromItemList', () => {
     it('should return the correct FluentIndexable', () => {
       let element1 = Mocks.object('element1');
       let element2 = Mocks.object('element2');
@@ -44,7 +31,7 @@ describe('collection.Arrays', () => {
         return elements[i];
       });
 
-      assert(Arrays.fromHtmlCollection(mockCollection).asArray()).to.equal(elements);
+      assert(Arrays.fromItemList(mockCollection).asArray()).to.equal(elements);
     });
   });
 
@@ -63,18 +50,14 @@ describe('collection.Arrays', () => {
     });
   });
 
-  describe('fromNodeList', () => {
+  describe('fromNumericIndexable', () => {
     it('should return the correct FluentIndexable', () => {
-      let mockNode1 = Mocks.object('Node1');
-      let mockNode2 = Mocks.object('Node2');
-      let data: Node[] = [mockNode1, mockNode2];
-      let mockNodeList = jasmine.createSpyObj('NodeList', ['item']);
-      mockNodeList.item.and.callFake((index: number) => {
-        return data[index];
-      });
-      mockNodeList.length = data.length;
+      let element1 = Mocks.object('element1');
+      let element2 = Mocks.object('element2');
+      let element3 = Mocks.object('element3');
+      let elements = [element1, element2, element3];
 
-      assert(Arrays.fromNodeList(mockNodeList).asArray()).to.equal(data);
+      assert(Arrays.fromNumericIndexable(elements).asArray()).to.equal(elements);
     });
   });
 

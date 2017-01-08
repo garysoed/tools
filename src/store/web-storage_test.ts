@@ -127,12 +127,49 @@ describe('store.WebStorage', () => {
 
   describe('list', () => {
     it('should return the correct indexes', (done: any) => {
-      let indexes = Mocks.object('indexes');
-      spyOn(storage, 'getIndexes_').and.returnValue(indexes);
+      let id1 = 'id1';
+      let id2 = 'id2';
+      let item1 = Mocks.object('item1');
+      let item2 = Mocks.object('item2');
+      spyOn(storage, 'listIds').and.returnValue(Promise.resolve([id1, id2]));
+      spyOn(storage, 'read').and.callFake((id: string) => {
+        switch (id) {
+          case id1:
+            return Promise.resolve(item1);
+          case id2:
+            return Promise.resolve(item2);
+        }
+      });
       storage
           .list()
           .then((values: any) => {
-            assert(values).to.equal(indexes);
+            assert(values).to.equal([item1, item2]);
+            assert(storage.read).to.haveBeenCalledWith(id1);
+            assert(storage.read).to.haveBeenCalledWith(id2);
+            done();
+          }, done.fail);
+    });
+
+    it('should filter out null items', (done: any) => {
+      let id = 'id';
+      spyOn(storage, 'listIds').and.returnValue(Promise.resolve([id]));
+      spyOn(storage, 'read').and.returnValue(Promise.resolve(null)); ;
+      storage
+          .list()
+          .then((values: any) => {
+            assert(values).to.equal([]);
+            done();
+          }, done.fail);
+    });
+  });
+
+  describe('listIds', () => {
+    it('should return the indexes', (done: any) => {
+      let indexes = Mocks.object('indexes');
+      spyOn(storage, 'getIndexes_').and.returnValue(indexes);
+      storage.listIds()
+          .then((ids: any) => {
+            assert(ids).to.equal(indexes);
             done();
           }, done.fail);
     });

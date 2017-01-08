@@ -168,6 +168,8 @@ export interface IFluentMappable<K, V> extends IFluentIterable<[K, V]> {
    */
   all(checkFn: (value: V, key: K) => boolean): boolean;
 
+  anyEntry(): [K, V] | null;
+
   /**
    * Returns the collection as a map.
    *

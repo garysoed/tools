@@ -61,7 +61,7 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
    */
   delete(): void {
     Arrays
-        .fromHtmlCollection(this.parentEl_.children)
+        .fromItemList(this.parentEl_.children)
         .forEach((child: Element) => {
           this.parentEl_.removeChild(child);
         });
@@ -72,7 +72,7 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
    */
   get(): T[] {
     return Arrays
-        .fromHtmlCollection(this.parentEl_.children)
+        .fromItemList(this.parentEl_.children)
         .map((child: Element) => {
           return this.getData_(child);
         })

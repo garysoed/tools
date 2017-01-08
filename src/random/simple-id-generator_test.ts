@@ -4,7 +4,7 @@ TestBase.setup();
 import {SimpleIdGenerator} from './simple-id-generator';
 
 
-describe('store.SimpleIdGenerator', () => {
+describe('random.SimpleIdGenerator', () => {
   let generator: SimpleIdGenerator;
 
   beforeEach(() => {

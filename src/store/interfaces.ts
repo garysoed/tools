@@ -1,23 +1,3 @@
-export interface IdGenerator {
-  /**
-   * Generates a new ID.
-   *
-   * @return The newly generated ID.
-   */
-  generate(): string;
-
-  /**
-   * Attempts to resolve a conflict for the given ID.
-   *
-   * This is a best effort method to come up with another ID based on the knowledge that the given
-   * ID already conflicts.
-   *
-   * @param id The conflicting ID.
-   * @return Best effort new ID.
-   */
-  resolveConflict(id: string): string;
-}
-
 export interface Storage<T> {
 
   /**
@@ -37,9 +17,14 @@ export interface Storage<T> {
   has(id: string): Promise<boolean>;
 
   /**
+   * @return Array of data in the storage.
+   */
+  list(): Promise<T[]>;
+
+  /**
    * @return IDs of the data in the storage.
    */
-  list(): Promise<string[]>;
+  listIds(): Promise<string[]>;
 
   /**
    * Reads the object corresponding to the given ID.

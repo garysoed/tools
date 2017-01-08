@@ -37,6 +37,10 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
     return result;
   }
 
+  anyEntry(): [K, V] | null {
+    return this.entries().anyValue();
+  }
+
   asIterable(): Iterable<[K, V]> {
     return this.getData();
   }

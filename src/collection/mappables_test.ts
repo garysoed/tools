@@ -104,6 +104,14 @@ describe('collection.Mappables', () => {
      });
   });
 
+  describe('anyEntry', () => {
+    it('should return an entry in the map', () => {
+      let map = new Map([[1, 'a'], [2, 'b']]);
+      let [key, value] = Mappables.of(map).anyEntry()!;
+      assert(map.get(key)).to.equal(value);
+    });
+  });
+
   describe('asIterable', () => {
     it('should return iterable that iterates the content', () => {
       let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2]]);

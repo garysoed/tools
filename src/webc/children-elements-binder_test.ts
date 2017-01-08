@@ -171,7 +171,7 @@ describe('webc.ChildrenElementsBinder', () => {
 
       binder.set([newData1, newData2]);
 
-      assert(Arrays.fromHtmlCollection(parentEl.children).asArray()).to.equal([child1, child2]);
+      assert(Arrays.fromItemList(parentEl.children).asArray()).to.equal([child1, child2]);
       assert(binder['setData_']).to.haveBeenCalledWith(child1, newData1);
       assert(binder['setData_']).to.haveBeenCalledWith(child2, newData2);
 

@@ -18,7 +18,7 @@ export class ClassListBinder implements IDomBinder<Set<string>> {
    */
   delete(): void {
     Arrays
-        .fromDomTokenList(this.classList_)
+        .fromItemList(this.classList_)
         .forEach((className: string) => {
           this.classList_.remove(className);
         });
@@ -29,7 +29,7 @@ export class ClassListBinder implements IDomBinder<Set<string>> {
    */
   get(): Set<string> {
     let classNames = Arrays
-        .fromDomTokenList(this.classList_)
+        .fromItemList(this.classList_)
         .asArray();
     return new Set(classNames);
   }
@@ -42,7 +42,7 @@ export class ClassListBinder implements IDomBinder<Set<string>> {
 
     // Remove the ones that are removed.
     Arrays
-        .fromDomTokenList(this.classList_)
+        .fromItemList(this.classList_)
         .forEach((className: string) => {
           if (!classNames.has(className)) {
             this.classList_.remove(className);

@@ -2,8 +2,9 @@ import {Arrays} from '../collection/arrays';
 import {Serializer} from '../data/a-serializable';
 import {Validate} from '../valid/validate';
 
-import {IdGenerator, Storage as GsStorage} from './interfaces';
-import {SimpleIdGenerator} from './simple-id-generator';
+import {IdGenerator} from '../random/interfaces';
+import {SimpleIdGenerator} from '../random/simple-id-generator';
+import {Storage as GsStorage} from './interfaces';
 
 
 export class WebStorage<T> implements GsStorage<T> {
@@ -89,7 +90,34 @@ export class WebStorage<T> implements GsStorage<T> {
   /**
    * @override
    */
-  list(): Promise<Set<string>> {
+  list(): Promise<T[]> {
+    return this
+        .listIds()
+        .then((ids: Set<string>) => {
+          return Arrays
+              .fromIterable(ids)
+              .map((id: string) => {
+                return this.read(id);
+              })
+              .asArray();
+        })
+        .then((promises: Promise<T | null>[]) => {
+          return Promise.all(promises);
+        })
+        .then((items: (T | null)[]) => {
+          return Arrays
+              .of(items)
+              .filter((item: T | null) => {
+                return item !== null;
+              })
+              .asArray();
+        });
+  }
+
+  /**
+   * @override
+   */
+  listIds(): Promise<Set<string>> {
     return Promise.resolve(this.getIndexes_());
   }
 

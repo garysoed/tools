@@ -41,32 +41,20 @@ export class Arrays {
   }
 
   /**
-   * Starts by using a DOM token list.
+   * Starts by using an object with length and item method to get the item.
    *
-   * @param tokenList The token list
+   * @param list The object to start from.
+   * @param <T> Type of element in the collection.
    * @return Array wrapper object to do operations on.
    */
-  static fromDomTokenList(tokenList: DOMTokenList): FluentIndexable<string> {
-    let array: string[] = [];
-    for (let i = 0; i < tokenList.length; i++) {
-      array.push(tokenList.item(i));
+  static fromItemList<T>(list: {length: number, item: (index: number) => T}): FluentIndexable<T> {
+    let array: T[] = [];
+    for (let i = 0; i < list.length; i++) {
+      array.push(list.item(i));
     }
     return Arrays.of(array);
   }
 
-  /**
-   * Starts by using an HTML collection.
-   *
-   * @param collection The HTML collection object to start from.
-   * @return Array wrapper object to do operations on.
-   */
-  static fromHtmlCollection(collection: HTMLCollection): FluentIndexable<Element> {
-    let array: Element[] = [];
-    for (let i = 0; i < collection.length; i++) {
-      array.push(collection.item(i));
-    }
-    return Arrays.of(array);
-  }
   /**
    * Starts by using a (finite) iterable.
    *
@@ -94,15 +82,16 @@ export class Arrays {
   }
 
   /**
-   * Starts by using a NodeList
+   * Starts from an object with numerical index.
    *
-   * @param The nodelist to start from.
+   * @param list The object to start from.
+   * @param <T> Type of the array element.
    * @return Array wrapper object to do operations on.
    */
-  static fromNodeList<T extends Node>(nodeList: NodeListOf<T>): FluentIndexable<T> {
+  static fromNumericIndexable<T>(list: {[index: number]: T, length: number}): FluentIndexable<T> {
     let array: T[] = [];
-    for (let i = 0; i < nodeList.length; i++) {
-      array.push(nodeList.item(i));
+    for (let i = 0; i < list.length; i++) {
+      array.push(list[i]);
     }
     return Arrays.of(array);
   }
