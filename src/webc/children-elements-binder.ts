@@ -13,15 +13,18 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
   private readonly generator_: (document: Document, instance: any) => Element;
   private readonly instance_: any;
   private readonly parentEl_: Element;
+  private insertionIndex_: number;
 
   constructor(
       parentEl: Element,
       dataSetter: (data: T, element: Element, instance: any) => void,
       generator: (document: Document, instance: any) => Element,
+      insertionIndex: number,
       instance: any) {
     this.dataSetter_ = dataSetter;
     this.elementPool_ = new Set();
     this.generator_ = generator;
+    this.insertionIndex_ = insertionIndex;
     this.instance_ = instance;
     this.parentEl_ = parentEl;
   }
@@ -84,14 +87,22 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
    */
   set(value: T[] | null): void {
     let valueArray = value || [];
+    let dataChildren = Arrays
+        .fromItemList(this.parentEl_.children)
+        .filterElement((element: Element, index: number) => {
+          return index >= this.insertionIndex_ && this.getData_(element) !== undefined;
+        })
+        .asArray();
 
     // Make sure that there are equal number of children.
-    while (this.parentEl_.children.length < valueArray.length) {
-      this.parentEl_.appendChild(this.getElement_());
+    for (let i = 0; i < valueArray.length - dataChildren.length; i++) {
+      this.parentEl_.insertBefore(
+          this.getElement_(),
+          this.parentEl_.children.item(this.insertionIndex_ + i + 1) || null);
     }
 
-    while (this.parentEl_.children.length > valueArray.length) {
-      this.parentEl_.removeChild(this.parentEl_.children.item(0));
+    for (let i = dataChildren.length - valueArray.length - 1; i >= 0; i--) {
+      this.parentEl_.removeChild(this.parentEl_.children.item(this.insertionIndex_ + i));
     }
 
     // Now set the data.
@@ -116,7 +127,8 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
       parentEl: Element,
       dataSetter: (data: T, element: Element, instance: any) => void,
       generator: (document: Document, instance: any) => Element,
+      insertionIndex: number,
       instance: any): ChildrenElementsBinder<T> {
-    return new ChildrenElementsBinder(parentEl, dataSetter, generator, instance);
+    return new ChildrenElementsBinder(parentEl, dataSetter, generator, insertionIndex, instance);
   }
 }

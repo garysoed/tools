@@ -5,6 +5,7 @@ import {ArrayAssert} from './array-assert';
 import {AssertFactory} from './assert-factory';
 import {BaseAssert} from './base-assert';
 import {BooleanAssert} from './boolean-assert';
+import {ElementAssert} from './element-assert';
 import {FunctionAssert} from './function-assert';
 import {MapAssert} from './map-assert';
 import {NumberAssert} from './number-assert';
@@ -18,6 +19,7 @@ import {StringAssert} from './string-assert';
 export function assert(value: boolean | null): AssertFactory<BooleanAssert>;
 export function assert(value: number | null): AssertFactory<NumberAssert>;
 export function assert(value: string | null): AssertFactory<StringAssert>;
+export function assert(value: Element): AssertFactory<ElementAssert>;
 
 export function assert<T extends Function>(value: T | null): AssertFactory<FunctionAssert<T>>;
 export function assert<T>(value: T[] | null): AssertFactory<ArrayAssert<T>>;
@@ -36,6 +38,10 @@ export function assert(value: any): AssertFactory<BaseAssert> {
   } else if (Natives.isNumber(value)) {
     return new AssertFactory((reversed: boolean): NumberAssert => {
       return new NumberAssert(value, reversed, expect);
+    });
+  } else if (value instanceof Element) {
+    return new AssertFactory((reversed: boolean): ElementAssert => {
+      return new ElementAssert(value, reversed, expect);
     });
   } else if (value instanceof Function) {
     return new AssertFactory((reversed: boolean): FunctionAssert<any> => {

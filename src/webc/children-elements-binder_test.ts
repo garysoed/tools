@@ -23,6 +23,7 @@ describe('webc.ChildrenElementsBinder', () => {
         parentEl,
         mockDataSetter,
         mockGenerator,
+        0,
         instance);
   });
 
@@ -117,8 +118,13 @@ describe('webc.ChildrenElementsBinder', () => {
       spyOn(binder, 'getElement_').and.returnValues(element1, element2);
       spyOn(binder, 'setData_');
 
-      spyOn(parentEl, 'appendChild').and.callThrough();
+      let existingChild1 = document.createElement('div');
+      let existingChild2 = document.createElement('div');
 
+      parentEl.appendChild(existingChild1);
+      parentEl.appendChild(existingChild2);
+
+      binder['insertionIndex_'] = 1;
       binder.set([value1, value2]);
 
       assert(binder['setData_']).to.haveBeenCalledWith(element1, value1);
@@ -127,8 +133,7 @@ describe('webc.ChildrenElementsBinder', () => {
       assert(mockDataSetter).to.haveBeenCalledWith(value1, element1, instance);
       assert(mockDataSetter).to.haveBeenCalledWith(value2, element2, instance);
 
-      assert(parentEl.appendChild).to.haveBeenCalledWith(element1);
-      assert(parentEl.appendChild).to.haveBeenCalledWith(element2);
+      assert(parentEl).to.haveChildren([existingChild1, element1, element2, existingChild2]);
     });
 
     it('should remove all deleted entries', () => {
@@ -140,15 +145,20 @@ describe('webc.ChildrenElementsBinder', () => {
       let data2 = Mocks.object('data2');
       child2[__data] = data2;
 
+      let existingChild1 = document.createElement('div');
+      let existingChild2 = document.createElement('div');
+
+      parentEl.appendChild(existingChild1);
       parentEl.appendChild(child1);
       parentEl.appendChild(child2);
+      parentEl.appendChild(existingChild2);
 
       spyOn(parentEl, 'removeChild').and.callThrough();
 
+      binder['insertionIndex_'] = 1;
       binder.set([]);
 
-      assert(parentEl.removeChild).to.haveBeenCalledWith(child1);
-      assert(parentEl.removeChild).to.haveBeenCalledWith(child2);
+      assert(parentEl).to.haveChildren([existingChild1, existingChild2]);
     });
 
     it('should update all updated entries', () => {

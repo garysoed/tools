@@ -67,13 +67,15 @@ export class Bind {
    */
   childrenElements<T>(
       elementGenerator: (document: Document, instance: any) => Element,
-      dataSetter: (data: T, element: Element, instance: any) => void): PropertyDecorator {
+      dataSetter: (data: T, element: Element, instance: any) => void,
+      insertionIndex: number = 0): PropertyDecorator {
     return this.createDecorator_(
         (element: Element, instance: any): IDomBinder<any> => {
           return ChildrenElementsBinder.of<T>(
               element,
               dataSetter,
               elementGenerator,
+              insertionIndex,
               instance);
         });
   }

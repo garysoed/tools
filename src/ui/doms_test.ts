@@ -59,7 +59,7 @@ describe('ui.Doms', () => {
       let host = document.createElement('div');
       let fromEl = document.createElement('div');
       host.appendChild(fromEl);
-      assert(Doms.getShadowHost(fromEl)).to.equal(null);
+      assert(Doms.getShadowHost(fromEl)).to.beNull();
     });
   });
 

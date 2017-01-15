@@ -96,6 +96,7 @@ describe('webc.Bind', () => {
       let dataSetter = Mocks.object('dataSetter');
       let ctor = Mocks.object('ctor');
       let target = Mocks.object('target');
+      let insertionIndex = 12;
       target.constructor = ctor;
 
       let propertyKey = 'propertyKey';
@@ -110,7 +111,7 @@ describe('webc.Bind', () => {
       let binder = Mocks.object('binder');
       spyOn(ChildrenElementsBinder, 'of').and.returnValue(binder);
 
-      bind.childrenElements(elementGenerator, dataSetter)(target, propertyKey);
+      bind.childrenElements(elementGenerator, dataSetter, insertionIndex)(target, propertyKey);
       assert(ANNOTATIONS.forCtor).to.haveBeenCalledWith(ctor);
       assert(mockAnnotationsHandler.attachValueToProperty).to.haveBeenCalledWith(
           propertyKey,
@@ -122,7 +123,7 @@ describe('webc.Bind', () => {
           .to.equal(binder);
       assert(Util.resolveSelector).to.haveBeenCalledWith(SELECTOR, element);
       assert(ChildrenElementsBinder.of).to
-          .haveBeenCalledWith(targetEl, dataSetter, elementGenerator, instance);
+          .haveBeenCalledWith(targetEl, dataSetter, elementGenerator, insertionIndex, instance);
     });
   });
 

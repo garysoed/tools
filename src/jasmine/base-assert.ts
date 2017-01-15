@@ -1,7 +1,7 @@
 export class BaseAssert {
-  protected anyValue_: any;
+  protected readonly anyValue_: any;
   protected reversed_: boolean;
-  protected expect_: (actual: any) => jasmine.Matchers;
+  protected readonly expect_: (actual: any) => jasmine.Matchers;
 
   /**
    * @param value_ The value to assert.
