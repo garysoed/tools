@@ -30,6 +30,18 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
   }
 
   /**
+   * @return The children elements with the data object.
+   */
+  private getChildElements_(): Element[] {
+    return Arrays
+        .fromItemList(this.parentEl_.children)
+        .filterElement((element: Element, index: number) => {
+          return index >= this.insertionIndex_ && this.getData_(element) !== undefined;
+        })
+        .asArray();
+  }
+
+  /**
    * @param element The element whose embedded data should be returned.
    * @return The data embedded in the given element.
    */
@@ -75,7 +87,7 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
    */
   get(): T[] {
     return Arrays
-        .fromItemList(this.parentEl_.children)
+        .of(this.getChildElements_())
         .map((child: Element) => {
           return this.getData_(child);
         })
@@ -87,18 +99,13 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
    */
   set(value: T[] | null): void {
     let valueArray = value || [];
-    let dataChildren = Arrays
-        .fromItemList(this.parentEl_.children)
-        .filterElement((element: Element, index: number) => {
-          return index >= this.insertionIndex_ && this.getData_(element) !== undefined;
-        })
-        .asArray();
+    let dataChildren = this.getChildElements_();
 
     // Make sure that there are equal number of children.
     for (let i = 0; i < valueArray.length - dataChildren.length; i++) {
       this.parentEl_.insertBefore(
           this.getElement_(),
-          this.parentEl_.children.item(this.insertionIndex_ + i + 1) || null);
+          this.parentEl_.children.item(this.insertionIndex_ + i) || null);
     }
 
     for (let i = dataChildren.length - valueArray.length - 1; i >= 0; i--) {
@@ -109,7 +116,7 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
     Arrays
         .of(valueArray)
         .forEach((value: T, index: number) => {
-          let element = this.parentEl_.children.item(index);
+          let element = this.parentEl_.children.item(this.insertionIndex_ + index);
           this.dataSetter_(value, element, this.instance_);
           this.setData_(element, value);
         });

@@ -27,6 +27,26 @@ describe('webc.ChildrenElementsBinder', () => {
         instance);
   });
 
+  describe('getChildElements_', () => {
+    it('should return the elements with the data', () => {
+      let child1 = document.createElement('div');
+      let child2 = document.createElement('div');
+      let child3 = document.createElement('div');
+      let child4 = document.createElement('div');
+      parentEl.appendChild(child1);
+      parentEl.appendChild(child2);
+      parentEl.appendChild(child3);
+      parentEl.appendChild(child4);
+
+      spyOn(binder, 'getData_').and.callFake((element: any) => {
+        return element === child4 ? undefined : {};
+      });
+
+      binder['insertionIndex_'] = 1;
+      assert(binder['getChildElements_']()).to.equal([child2, child3]);
+    });
+  });
+
   describe('getData_', () => {
     it('should return the embedded data', () => {
       let data = Mocks.object('data');
@@ -113,13 +133,13 @@ describe('webc.ChildrenElementsBinder', () => {
       let value1 = Mocks.object('value1');
       let value2 = Mocks.object('value2');
 
-      let element1 = document.createElement('div');
-      let element2 = document.createElement('div');
+      let element1 = document.createElement('div1');
+      let element2 = document.createElement('div2');
       spyOn(binder, 'getElement_').and.returnValues(element1, element2);
       spyOn(binder, 'setData_');
 
-      let existingChild1 = document.createElement('div');
-      let existingChild2 = document.createElement('div');
+      let existingChild1 = document.createElement('div3');
+      let existingChild2 = document.createElement('div4');
 
       parentEl.appendChild(existingChild1);
       parentEl.appendChild(existingChild2);
@@ -132,21 +152,20 @@ describe('webc.ChildrenElementsBinder', () => {
 
       assert(mockDataSetter).to.haveBeenCalledWith(value1, element1, instance);
       assert(mockDataSetter).to.haveBeenCalledWith(value2, element2, instance);
-
       assert(parentEl).to.haveChildren([existingChild1, element1, element2, existingChild2]);
     });
 
     it('should remove all deleted entries', () => {
-      let child1 = document.createElement('div');
+      let child1 = document.createElement('div1');
       let data1 = Mocks.object('data1');
       child1[__data] = data1;
 
-      let child2 = document.createElement('div');
+      let child2 = document.createElement('div2');
       let data2 = Mocks.object('data2');
       child2[__data] = data2;
 
-      let existingChild1 = document.createElement('div');
-      let existingChild2 = document.createElement('div');
+      let existingChild1 = document.createElement('div3');
+      let existingChild2 = document.createElement('div4');
 
       parentEl.appendChild(existingChild1);
       parentEl.appendChild(child1);
@@ -162,11 +181,11 @@ describe('webc.ChildrenElementsBinder', () => {
     });
 
     it('should update all updated entries', () => {
-      let child1 = document.createElement('div');
+      let child1 = document.createElement('div1');
       let data1 = Mocks.object('data1');
       child1[__data] = data1;
 
-      let child2 = document.createElement('div');
+      let child2 = document.createElement('div2');
       let data2 = Mocks.object('data2');
       child2[__data] = data2;
 

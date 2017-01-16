@@ -5,12 +5,14 @@ import {BaseDisposable} from '../dispose/base-disposable';
 import {Validate} from '../valid/validate';
 
 import {AttributeChangeHandler} from './attribute-change-handler';
+import {ChildListChangeHandler} from './child-list-change-handler';
 import {EventHandler} from './event-handler';
 import {IAttributeParser, IHandler} from './interfaces';
 import {Util} from './util';
 
 
 export const ATTRIBUTE_CHANGE_HANDLER = new AttributeChangeHandler();
+export const CHILD_LIST_CHANGE_HANDLER = new ChildListChangeHandler();
 export const EVENT_HANDLER = new EventHandler();
 
 
@@ -47,6 +49,14 @@ export class Handler {
   }
 
   /**
+   * Annotates the method to handle child list changes.
+   * @return The method decorator.
+   */
+  childListChange(): MethodDecorator {
+    return CHILD_LIST_CHANGE_HANDLER.createDecorator(this.selector_);
+  }
+
+  /**
    * Annotates the method to handle the given DOM event.
    *
    * @param selector The selector of the element to listen to events to.
@@ -68,6 +78,7 @@ export class Handler {
         .of(new Set<string | null>())
         .addAll(Handler.configure_(element, instance, ATTRIBUTE_CHANGE_HANDLER))
         .addAll(Handler.configure_(element, instance, EVENT_HANDLER))
+        .addAll(Handler.configure_(element, instance, CHILD_LIST_CHANGE_HANDLER))
         .asIterable();
 
     let unresolvedSelectors = Arrays.fromIterable(unresolvedSelectorIterable).asArray();
