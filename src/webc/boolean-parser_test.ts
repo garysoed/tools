@@ -22,8 +22,8 @@ describe('webc.BooleanParser', () => {
       assert(BooleanParser.parse('randomString')).to.beTrue();
     });
 
-    it('should parse null as false', () => {
-      assert(BooleanParser.parse(null)).to.beFalse();
+    it('should parse null as null', () => {
+      assert(<any> BooleanParser.parse(null)).to.beNull();
     });
   });
 

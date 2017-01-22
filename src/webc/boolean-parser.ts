@@ -11,8 +11,8 @@ export const BooleanParser: IAttributeParser<boolean> = {
    * @param input The input string.
    * @return The parsed boolean value.
    */
-  parse(input: string| null): boolean {
-    return input !== null && input.toLowerCase() !== 'false';
+  parse(input: string| null): boolean | null {
+    return input !== null ? input.toLowerCase() !== 'false' : null;
   },
 
   /**

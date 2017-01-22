@@ -24,7 +24,7 @@ export interface Storage<T> {
   /**
    * @return IDs of the data in the storage.
    */
-  listIds(): Promise<string[]>;
+  listIds(): Promise<Set<string>>;
 
   /**
    * Reads the object corresponding to the given ID.
