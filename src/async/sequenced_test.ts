@@ -16,7 +16,7 @@ describe('async.sequenced', () => {
   });
 
   it('should replace the descriptor with a function that sequence the annotated function',
-      (done: any) => {
+      async (done: any) => {
         class Class extends BaseDisposable {}
 
         let mockFunction = jasmine.createSpy('Function');
@@ -33,17 +33,15 @@ describe('async.sequenced', () => {
         assert(newDescriptor).to.equal(descriptor);
 
         let mockInstance = jasmine.createSpyObj('Instance', ['addDisposable']);
-        descriptor.value.call(mockInstance, 1, 2)
-            .then(() => {
-              assert(mockSequencer.run).to.haveBeenCalledWith(Matchers.any(Function));
-              mockSequencer.run.calls.argsFor(0)[0]();
+        await descriptor.value.call(mockInstance, 1, 2);
 
-              assert(mockFunction).to.haveBeenCalledWith(1, 2);
-              done();
-            }, done.fail);
+        assert(mockSequencer.run).to.haveBeenCalledWith(Matchers.any(Function));
+        mockSequencer.run.calls.argsFor(0)[0]();
+
+        assert(mockFunction).to.haveBeenCalledWith(1, 2);
       });
 
-  it('should reuse existing sequencer', (done: any) => {
+  it('should reuse existing sequencer', async (done: any) => {
     class Class extends BaseDisposable {}
 
     let descriptor = Mocks.object('descriptor');
@@ -54,11 +52,8 @@ describe('async.sequenced', () => {
 
     let instance = Mocks.object('instance');
     instance[__SEQUENCER] = mockSequencer;
-    decorator(Class.prototype, 'property', descriptor).value.call(instance, 1, 2)
-        .then(() => {
-          assert(mockSequencer.run).to.haveBeenCalledWith(Matchers.any(Function));
-          done();
-        }, done.fail);
+    await decorator(Class.prototype, 'property', descriptor).value.call(instance, 1, 2);
+    assert(mockSequencer.run).to.haveBeenCalledWith(Matchers.any(Function));
   });
 
   it('should not throw error if the descriptor has no values', () => {

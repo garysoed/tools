@@ -21,22 +21,16 @@ describe('async.Sequencer', () => {
       mockOperation = jasmine.createSpy('Operation');
     });
 
-    it('should return promise that is ran after the operation has completed', (done: any) => {
+    it('should return promise that is ran after the operation has completed', async (done: any) => {
       mockOperation.and.returnValue(Promise.resolve());
-      sequencer.run(mockOperation)
-          .then(() => {
-            assert(mockOperation).to.haveBeenCalledWith();
-            done();
-          }, done.fail);
+      await sequencer.run(mockOperation);
+      assert(mockOperation).to.haveBeenCalledWith();
     });
 
-    it('should not run the operation if the sequencer is disposed', (done: any) => {
+    it('should not run the operation if the sequencer is disposed', async (done: any) => {
       sequencer.dispose();
-      sequencer.run(mockOperation)
-          .then(() => {
-            assert(mockOperation).toNot.haveBeenCalled();
-            done();
-          }, done.fail);
+      await sequencer.run(mockOperation);
+      assert(mockOperation).toNot.haveBeenCalled();
     });
   });
 });

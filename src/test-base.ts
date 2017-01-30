@@ -1,6 +1,7 @@
 import {TestAsync} from './testing/test-async';
 import {TestDispose} from './testing/test-dispose';
 import {TestEvent} from './testing/test-event';
+import {TestJasmine} from './testing/test-jasmine';
 import {TestSetup} from './testing/test-setup';
 
 
@@ -12,6 +13,7 @@ const TEST_SETUP = new TestSetup([
   TestAsync,
   TestDispose,
   TestEvent,
+  TestJasmine,
 ]);
 
 let initialized = false;
