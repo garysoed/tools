@@ -40,3 +40,5 @@ import {Sequencer} from './sequencer';
     1.  Annotated properties first.
     1.  Read only properties first.
     1.  Alphabetical order.
+-   All private and protected properties must end with `_`
+-   Annotated properties must be public, but end with `_`.

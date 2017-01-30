@@ -1,4 +1,4 @@
-import Asyncs from '../async/asyncs';
+import {Asyncs} from '../async/asyncs';
 
 
 /**
@@ -22,4 +22,6 @@ export const TestAsync = {
       return fn();
     });
   },
+
+  init(): void { },
 };

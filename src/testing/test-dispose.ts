@@ -44,5 +44,7 @@ export const TestDispose = {
     DISPOSABLES.splice(0, DISPOSABLES.length);
     Flags.enableTracking = true;
   },
+
+  init(): void { },
 };
 

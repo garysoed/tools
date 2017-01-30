@@ -1,12 +1,3 @@
-import {BaseDisposable, Flags, TRACKED_DISPOSABLES} from '../dispose/base-disposable';
-
-
-/**
- * @hidden
- */
-const DISPOSABLES = [];
-
-
 /**
  * Test setup object for using jasmine.
  *
@@ -19,38 +10,28 @@ export const TestJasmine = {
   /**
    * Runs the code in jasmine's `afterEach` logic.
    */
-  afterEach(): void {
-    DISPOSABLES.forEach((disposable: BaseDisposable) => disposable.dispose());
-    Flags.enableTracking = false;
-
-    expect(TRACKED_DISPOSABLES).toEqual([]);
-
-    TRACKED_DISPOSABLES.splice(0, TRACKED_DISPOSABLES.length);
-  },
+  afterEach(): void {},
 
   /**
    * Runs the code in jasmine's `beforeEach` logic.
    */
-  beforeEach(): void {
-    jasmine['CallTracker'].prototype.firstArgsMatching = function(): any {
-      // TODO: Deprecate this.
-      let matchingArgs = arguments;
-      let allArgs = this.allArgs();
-      for (let j = 0; j < allArgs.length; j++) {
-        let matches = true;
-        let args = allArgs[j];
-        for (let i = 0; i < args.length; i++) {
-          let matchingArg = matchingArgs[i];
-          let isEqual = matchingArg === args[i];
-          let isMatch = matchingArg.asymmetricMatch instanceof Function
-              && matchingArg.asymmetricMatch(args[i]);
-          matches = matches && (isEqual || isMatch);
-        }
+  beforeEach(): void {},
 
-        if (matches) {
-          return args;
-        }
+  init(): void {
+    function runTest(origRun: any, description: string, callback: (done: any) => any): void {
+      if (callback.length === 1) {
+        origRun(description, (done: any) => {
+          let promise = callback(done);
+          if (promise instanceof Promise) {
+            promise.then(done, done.fail);
+          }
+        });
+      } else {
+        origRun(description, callback);
       }
     };
+
+    window['fit'] = runTest.bind(window, fit);
+    window['it'] = runTest.bind(window, it);
   },
 };

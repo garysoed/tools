@@ -63,8 +63,8 @@ export class Handler {
    * @param event The event to listen to.
    * @return The method decorator.
    */
-  event(event: string): MethodDecorator {
-    return EVENT_HANDLER.createDecorator(event, this.selector_);
+  event(event: string, boundArgs: any[] = []): MethodDecorator {
+    return EVENT_HANDLER.createDecorator(event, this.selector_, boundArgs);
   }
 
   /**

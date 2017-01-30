@@ -1,4 +1,4 @@
-import Asyncs from '../async/asyncs';
+import {Asyncs} from '../async/asyncs';
 import {Field, Serializable, Serializer} from '../data/a-serializable';
 import {BaseDisposable} from '../dispose/base-disposable';
 import {DomEvent} from '../event/dom-event';

@@ -7,6 +7,7 @@ import {IHandler} from './interfaces';
 
 
 export type EventHandlerConfig = {
+  boundArgs: any[],
   event: string,
   handlerKey: string | symbol,
   selector: string | null,
@@ -31,7 +32,7 @@ export class EventHandler implements IHandler<EventHandlerConfig> {
         .forEach((config: EventHandlerConfig) => {
           instance.addDisposable(listenable.on(
               config.event,
-              instance[config.handlerKey],
+              instance[config.handlerKey].bind(instance, ...config.boundArgs),
               instance));
         });
   }
@@ -43,7 +44,7 @@ export class EventHandler implements IHandler<EventHandlerConfig> {
    * @param selector Selector for the element whose event should be listened to.
    * @return The method decorator. The method should take in the event object.
    */
-  createDecorator(eventName: string, selector: string | null): MethodDecorator {
+  createDecorator(eventName: string, selector: string | null, boundArgs: any[]): MethodDecorator {
     return function(
         target: Object,
         propertyKey: string | symbol,
@@ -51,6 +52,7 @@ export class EventHandler implements IHandler<EventHandlerConfig> {
       EVENT_ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
           propertyKey,
           {
+            boundArgs,
             event: eventName,
             handlerKey: propertyKey,
             selector: selector,

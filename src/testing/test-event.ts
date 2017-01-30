@@ -55,4 +55,6 @@ export const TestEvent = {
   beforeEach(): void {
     // Noop
   },
+
+  init(): void { },
 };

@@ -9,6 +9,7 @@ interface AnimationKeyframe {
   left?: string
   opacity?: number
   right?: string
+  top?: string
   width?: string
 }
 

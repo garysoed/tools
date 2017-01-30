@@ -40,5 +40,7 @@ export const TestInject = {
           BOUND_VALUES_.set(bindKey, provider);
         });
   },
+
+  init(): void { },
 };
 

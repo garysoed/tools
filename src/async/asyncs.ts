@@ -1,7 +1,7 @@
 /**
  * Collection of miscellaneous methods to do asynchronous operations.
  */
-class Asyncs {
+export class Asyncs {
   /**
    * Runs the given function asynchronously.
    *
@@ -17,5 +17,3 @@ class Asyncs {
     });
   }
 };
-
-export default Asyncs;

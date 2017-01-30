@@ -1,4 +1,4 @@
-import {assert, TestBase} from '../test-base';
+import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
 import {ListenableDom} from '../event/listenable-dom';
@@ -28,15 +28,19 @@ describe('web.EventHandler', () => {
       let key1 = 'key1';
       let handler1 = jasmine.createSpy('handler1');
       let config1 = Mocks.object('config1');
+      let boundArgs1 = Mocks.object('boundArgs1');
       config1['event'] = event1;
       config1['handlerKey'] = key1;
+      config1['boundArgs'] = boundArgs1;
 
       let event2 = 'event2';
       let key2 = 'key2';
       let handler2 = jasmine.createSpy('handler2');
       let config2 = Mocks.object('config2');
+      let boundArgs2 = Mocks.object('boundArgs2');
       config2['event'] = event2;
       config2['handlerKey'] = key2;
+      config2['boundArgs'] = boundArgs2;
 
       let mockInstance = Mocks.disposable('instance');
       mockInstance[key1] = handler1;
@@ -45,8 +49,16 @@ describe('web.EventHandler', () => {
 
       handler.configure(targetEl, mockInstance, [config1, config2]);
 
-      assert(mockListenableDom.on).to.haveBeenCalledWith(event1, mockInstance[key1], mockInstance);
-      assert(mockListenableDom.on).to.haveBeenCalledWith(event2, mockInstance[key2], mockInstance);
+      assert(mockListenableDom.on).to
+          .haveBeenCalledWith(event1, Matchers.any(Function), mockInstance);
+      assert(mockListenableDom.on)
+          .to.haveBeenCalledWith(event2, Matchers.any(Function), mockInstance);
+
+      mockListenableDom.on.calls.argsFor(0)[1]();
+      assert(handler1).to.haveBeenCalledWith(boundArgs1);
+
+      mockListenableDom.on.calls.argsFor(1)[1]();
+      assert(handler2).to.haveBeenCalledWith(boundArgs2);
     });
   });
 
@@ -64,12 +76,14 @@ describe('web.EventHandler', () => {
           jasmine.createSpyObj('AnnotationsHandler', ['attachValueToProperty']);
       spyOn(EVENT_ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationsHandler);
 
-      let decorator = handler.createDecorator(event, selector);
+      let boundArgs = Mocks.object('boundArgs');
+      let decorator = handler.createDecorator(event, selector, boundArgs);
       assert(decorator(target, propertyKey, descriptor)).to.equal(descriptor);
       assert(EVENT_ANNOTATIONS.forCtor).to.haveBeenCalledWith(ctor);
       assert(mockAnnotationsHandler.attachValueToProperty).to.haveBeenCalledWith(
           propertyKey,
           {
+            boundArgs,
             event: event,
             handlerKey: propertyKey,
             selector: selector,

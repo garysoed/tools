@@ -56,6 +56,10 @@ export class TestSetup {
   }
 
   setup(): void {
+    this.setups_.forEach((setup: ITestSetup) => {
+      setup.init();
+    });
+
     beforeEach(() => {
       this.setups_.forEach((setup: ITestSetup) => {
         setup.beforeEach();

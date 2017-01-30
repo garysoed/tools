@@ -1,7 +1,7 @@
 import {assert, Matchers, TestBase} from '../test-base';
 TestBase.setup();
 
-import Asyncs from '../async/asyncs';
+import {Asyncs} from '../async/asyncs';
 import {Serializer} from '../data/a-serializable';
 import {DomEvent} from '../event/dom-event';
 import {Mocks} from '../mock/mocks';
