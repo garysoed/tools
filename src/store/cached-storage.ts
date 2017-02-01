@@ -59,28 +59,22 @@ export class CachedStorage<T> extends BaseDisposable implements Storage<T> {
   /**
    * @override
    */
-  list(): Promise<T[]> {
-    return this
-        .listIds()
-        .then((ids: Set<string>) => {
-          return Sets
-              .of(ids)
-              .map((id: string) => {
-                return this.read(id);
-              })
-              .asArray();
+  async list(): Promise<T[]> {
+    let ids = await this.listIds();
+    let promises = Sets
+        .of(ids)
+        .map((id: string) => {
+          return this.read(id);
         })
-        .then((promises: Promise<T | null>[]) => {
-          return Promise.all(promises);
+        .asArray();
+    let items = await Promise.all(promises);
+    return Arrays
+        .of(items)
+        .filter((item: T | null) => {
+          return item !== null;
         })
-        .then((items: (T | null)[]) => {
-          return Arrays
-              .of(items)
-              .filter((item: T | null) => {
-                return item !== null;
-              })
-              .asArray();
-        });
+        .castElements<T>()
+        .asArray();
   }
 
   /**
@@ -93,30 +87,24 @@ export class CachedStorage<T> extends BaseDisposable implements Storage<T> {
   /**
    * @override
    */
-  read(id: string): Promise<T | null> {
+  async read(id: string): Promise<T | null> {
     if (this.cache_.has(id)) {
-      return Promise.resolve(this.cache_.get(id));
+      return this.cache_.get(id) || null;
     }
 
-    return this.innerStorage_
-        .read(id)
-        .then((item: T | null) => {
-          if (item !== null) {
-            this.cache_.set(id, item);
-          }
-          return item;
-        });
+    let item = await this.innerStorage_.read(id);
+    if (item !== null) {
+      this.cache_.set(id, item);
+    }
+    return item;
   }
 
   /**
    * @override
    */
-  update(id: string, instance: T): Promise<void> {
-    return this.innerStorage_
-        .update(id, instance)
-        .then(() => {
-          this.cache_.set(id, instance);
-        });
+  async update(id: string, instance: T): Promise<void> {
+    await this.innerStorage_.update(id, instance);
+    this.cache_.set(id, instance);
   }
 
   /**

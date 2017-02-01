@@ -105,43 +105,43 @@ export class ElementRegistrar extends BaseDisposable {
    * @param config The configuration object to register.
    * @return Promise that will be resolved when the registration process is done.
    */
-  register(ctor: gs.ICtor<BaseElement>): Promise<void> {
+  async register(ctor: gs.ICtor<BaseElement>): Promise<void> {
     let config = CustomElementUtil.getConfig(ctor);
     if (!config) {
       return Promise.resolve();
     }
 
     let dependencies = config.dependencies || [];
+    let promises = dependencies.map((dependency: gs.ICtor<BaseElement>) => {
+      return this.register(dependency);
+    });
 
-    return Promise
-        .all(dependencies.map((dependency: gs.ICtor<BaseElement>) => {
-          return this.register(dependency);
-        }))
-        .then(() => {
-          if (!this.registeredCtors_.has(ctor)) {
-            let template = this.templates_.getTemplate(config.templateKey);
-            Validate.any(template).toNot.beNull()
-                .orThrows(`No templates found for key ${config.templateKey}`)
-                .assertValid();
+    try {
+      await Promise.all(promises);
+      if (!this.registeredCtors_.has(ctor)) {
+        let template = this.templates_.getTemplate(config.templateKey);
+        Validate.any(template).toNot.beNull()
+            .orThrows(`No templates found for key ${config.templateKey}`)
+            .assertValid();
 
-            this.xtag_.register(
-                config.tag,
-                {
-                  lifecycle: this.getLifecycleConfig_(
-                      config.attributes || {},
-                      () => {
-                        return this.injector_.instantiate(ctor);
-                      },
-                      template!),
-                });
+        this.xtag_.register(
+            config.tag,
+            {
+              lifecycle: this.getLifecycleConfig_(
+                  config.attributes || {},
+                  () => {
+                    return this.injector_.instantiate(ctor);
+                  },
+                  template!),
+            });
 
-            this.registeredCtors_.add(ctor);
-            Log.info(LOG, `Registered: ${config.tag}`);
-          }
-        },
-        (error: string) => {
-          Log.error(LOG, `Failed to register ${config.tag}. Error: ${error}`);
-        });
+        this.registeredCtors_.add(ctor);
+        Log.info(LOG, `Registered: ${config.tag}`);
+      }
+    } catch (error) {
+      Log.error(LOG, `Failed to register ${config.tag}. Error: ${error}`);
+      throw error;
+    }
   }
 
   /**

@@ -150,7 +150,7 @@ describe('webc.ElementRegistrar', () => {
       ctor = Mocks.object('ctor');
     });
 
-    it('should return promise that registers the element correctly', (done: any) => {
+    it('should return promise that registers the element correctly', async (done: any) => {
       let mockDependency = Mocks.object('Dependency');
       let name = 'name';
       let templateKey = 'templateKey';
@@ -183,28 +183,25 @@ describe('webc.ElementRegistrar', () => {
       let instance = Mocks.object('instance');
       mockInjector.instantiate.and.returnValue(instance);
 
-      registrar.register(mockConfig)
-          .then(() => {
-            assert(mockXtag.register).to.haveBeenCalledWith(
-                name,
-                {
-                  lifecycle: mockLifecycleConfig,
-                });
+      await registrar.register(mockConfig);
+      assert(mockXtag.register).to.haveBeenCalledWith(
+          name,
+          {
+            lifecycle: mockLifecycleConfig,
+          });
 
-            assert(registrar['getLifecycleConfig_'])
-                .to.haveBeenCalledWith(attributes, Matchers.any(Function), templateContent);
-            assert(registrar['getLifecycleConfig_'].calls.argsFor(0)[1]()).to.equal(instance);
-            assert(mockInjector.instantiate).to.haveBeenCalledWith(ctor);
+      assert(registrar['getLifecycleConfig_'])
+          .to.haveBeenCalledWith(attributes, Matchers.any(Function), templateContent);
+      assert(registrar['getLifecycleConfig_'].calls.argsFor(0)[1]()).to.equal(instance);
+      assert(mockInjector.instantiate).to.haveBeenCalledWith(ctor);
 
-            assert(<boolean> registrar['registeredCtors_'].has(ctor)).to.beTrue();
-            assert(registrar.register).to.haveBeenCalledWith(mockDependency);
+      assert(<boolean> registrar['registeredCtors_'].has(ctor)).to.beTrue();
+      assert(registrar.register).to.haveBeenCalledWith(mockDependency);
 
-            assert(mockTemplates.getTemplate).to.haveBeenCalledWith(templateKey);
-            done();
-          }, done.fail);
+      assert(mockTemplates.getTemplate).to.haveBeenCalledWith(templateKey);
     });
 
-    it('should log error if the template key does not exist', (done: any) => {
+    it('should log error if the template key does not exist', async (done: any) => {
       spyOn(Log, 'error');
       mockTemplates.getTemplate.and.returnValue(null);
 
@@ -214,31 +211,26 @@ describe('webc.ElementRegistrar', () => {
         templateKey: 'templateKey',
       });
 
-      registrar.register(ctor)
-          .then(done.fail, (error: Error) => {
-            assert(error.message)
-                .to.match(/No templates found for key/);
-            done();
-          });
+      try {
+        await registrar.register(ctor);
+        done.fail();
+      } catch (e) {
+        const error: Error = e;
+        assert(error.message).to.match(/No templates found for key/);
+      }
     });
 
-    it('should be noop if the config has been registered', (done: any) => {
+    it('should be noop if the config has been registered', async (done: any) => {
       registrar['registeredCtors_'].add(ctor);
 
-      registrar.register(ctor)
-          .then(() => {
-            assert(mockXtag.register).toNot.haveBeenCalled();
-            done();
-          }, done.fail);
+      await registrar.register(ctor);
+      assert(mockXtag.register).toNot.haveBeenCalled();
     });
 
-    it('should be noop if the ctor has no configs', (done: any) => {
+    it('should be noop if the ctor has no configs', async (done: any) => {
       spyOn(CustomElementUtil, 'getConfig').and.returnValue(null);
-      registrar.register(ctor)
-          .then(() => {
-            assert(mockXtag.register).toNot.haveBeenCalled();
-            done();
-          }, done.fail);
+      await registrar.register(ctor);
+      assert(mockXtag.register).toNot.haveBeenCalled();
     });
   });
 

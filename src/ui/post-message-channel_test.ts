@@ -144,49 +144,40 @@ describe('ui.PostMessageChannel', () => {
   });
 
   describe('waitForMessage', () => {
-    it('should return the payload returned by waitForMessage_', (done: any) => {
+    it('should return the payload returned by waitForMessage_', async (done: any) => {
       let testFn = jasmine.createSpy('testFn');
       let returnedJson = Mocks.object('returnedJson');
       let message = new Message(MessageType.DATA, returnedJson);
 
       spyOn(channel, 'waitForMessage_').and.returnValue(Promise.resolve(message));
 
-      channel.waitForMessage(testFn)
-          .then((json: gs.IJson) => {
-            assert(json).to.equal(returnedJson);
-            done();
-          }, done.fail);
+      let json = await channel.waitForMessage(testFn);
+      assert(json).to.equal(returnedJson);
     });
 
-    it('should call the testFn for testing', (done: any) => {
+    it('should call the testFn for testing', async (done: any) => {
       let testFn = jasmine.createSpy('testFn').and.returnValue(true);
       let testPayload = Mocks.object('payload');
       let testMessage = new Message(MessageType.DATA, testPayload);
 
       spyOn(channel, 'waitForMessage_').and.returnValue(Promise.resolve(testMessage));
 
-      channel.waitForMessage(testFn)
-          .then(() => {
-            assert(<boolean> channel['waitForMessage_'].calls.argsFor(0)[0](testMessage))
-                .to.beTrue();
-            assert(testFn).to.haveBeenCalledWith(testPayload);
-            done();
-          }, done.fail);
+      await channel.waitForMessage(testFn);
+      assert(<boolean> channel['waitForMessage_'].calls.argsFor(0)[0](testMessage))
+          .to.beTrue();
+      assert(testFn).to.haveBeenCalledWith(testPayload);
     });
 
-    it('should ignore message with message type other than DATA', (done: any) => {
+    it('should ignore message with message type other than DATA', async (done: any) => {
       let testFn = jasmine.createSpy('testFn').and.returnValue(true);
       let testPayload = Mocks.object('payload');
       let testMessage = new Message(MessageType.PING, testPayload);
 
       spyOn(channel, 'waitForMessage_').and.returnValue(Promise.resolve(testMessage));
 
-      channel.waitForMessage(testFn)
-          .then(() => {
-            assert(<boolean> channel['waitForMessage_'].calls.argsFor(0)[0](testMessage))
-                .to.beFalse();
-            done();
-          }, done.fail);
+      await channel.waitForMessage(testFn);
+      assert(<boolean> channel['waitForMessage_'].calls.argsFor(0)[0](testMessage))
+          .to.beFalse();
     });
   });
 
@@ -203,7 +194,7 @@ describe('ui.PostMessageChannel', () => {
   });
 
   describe('open', () => {
-    it('should return the channel object when established', (done: any) => {
+    it('should return the channel object when established', async (done: any) => {
       let id = 123;
       let intervalId = 456;
       let mockChannel = jasmine.createSpyObj('Channel', ['post_', 'waitForMessage_']);
@@ -215,34 +206,30 @@ describe('ui.PostMessageChannel', () => {
       let setIntervalSpy = spyOn(window, 'setInterval').and.returnValue(intervalId);
       spyOn(window, 'clearInterval');
 
-      PostMessageChannel
-          .open(mockSrcWindow, mockDestWindow)
-          .then((channel: PostMessageChannel) => {
-            assert(channel).to.equal(mockChannel);
-            assert(PostMessageChannel['newInstance_'])
-                .to.haveBeenCalledWith(mockSrcWindow, mockDestWindow);
+      let channel = await PostMessageChannel.open(mockSrcWindow, mockDestWindow);
+      assert(channel).to.equal(mockChannel);
+      assert(PostMessageChannel['newInstance_'])
+          .to.haveBeenCalledWith(mockSrcWindow, mockDestWindow);
 
-            let message = new Message(MessageType.ACK, { 'id': id });
-            assert(<boolean> mockChannel['waitForMessage_'].calls.argsFor(0)[0](message))
-                .to.beTrue();
+      let message = new Message(MessageType.ACK, { 'id': id });
+      assert(<boolean> mockChannel['waitForMessage_'].calls.argsFor(0)[0](message))
+          .to.beTrue();
 
-            assert(window.setInterval)
-                .to.haveBeenCalledWith(Matchers.any(Function), Matchers.any(Number));
+      assert(window.setInterval)
+          .to.haveBeenCalledWith(Matchers.any(Function), Matchers.any(Number));
 
-            setIntervalSpy.calls.argsFor(0)[0]();
-            assert(mockChannel.post_).to.haveBeenCalledWith(Matchers.any(Message));
+      setIntervalSpy.calls.argsFor(0)[0]();
+      assert(mockChannel.post_).to.haveBeenCalledWith(Matchers.any(Message));
 
-            let postMessage = mockChannel.post_.calls.argsFor(0)[0];
-            assert(postMessage.getType()).to.equal(MessageType.PING);
-            assert(postMessage.getPayload()).to.equal({ 'id': id });
+      let postMessage = mockChannel.post_.calls.argsFor(0)[0];
+      assert(postMessage.getType()).to.equal(MessageType.PING);
+      assert(postMessage.getPayload()).to.equal({ 'id': id });
 
-            // Check that the interval is cleared.
-            assert(window.clearInterval).to.haveBeenCalledWith(intervalId);
-            done();
-          }, done.fail);
+      // Check that the interval is cleared.
+      assert(window.clearInterval).to.haveBeenCalledWith(intervalId);
     });
 
-    it('should ignore message if the ID does not match', (done: any) => {
+    it('should ignore message if the ID does not match', async (done: any) => {
       let id = 123;
       let mockChannel = jasmine.createSpyObj('Channel', ['post', 'waitForMessage_']);
       mockChannel['waitForMessage_'].and.returnValue(Promise.resolve());
@@ -251,17 +238,13 @@ describe('ui.PostMessageChannel', () => {
 
       spyOn(Math, 'random').and.returnValue(id);
 
-      PostMessageChannel
-          .open(mockSrcWindow, mockDestWindow)
-          .then((channel: PostMessageChannel) => {
-            let message = new Message(MessageType.ACK, { 'id': 456 });
-            assert(<boolean> mockChannel['waitForMessage_'].calls.argsFor(0)[0](message))
-                .to.beFalse();
-            done();
-          }, done.fail);
+      await PostMessageChannel.open(mockSrcWindow, mockDestWindow);
+      let message = new Message(MessageType.ACK, { 'id': 456 });
+      assert(<boolean> mockChannel['waitForMessage_'].calls.argsFor(0)[0](message))
+          .to.beFalse();
     });
 
-    it('should ignore message if the message type is not ACK', (done: any) => {
+    it('should ignore message if the message type is not ACK', async (done: any) => {
       let id = 123;
       let mockChannel = jasmine.createSpyObj('Channel', ['post', 'waitForMessage_']);
       mockChannel['waitForMessage_'].and.returnValue(Promise.resolve());
@@ -270,14 +253,9 @@ describe('ui.PostMessageChannel', () => {
 
       spyOn(Math, 'random').and.returnValue(id);
 
-      PostMessageChannel
-          .open(mockSrcWindow, mockDestWindow)
-          .then((channel: PostMessageChannel) => {
-            let message = new Message(MessageType.PING, { 'id': id });
-            assert(<boolean> mockChannel['waitForMessage_'].calls.argsFor(0)[0](message))
-                .to.beFalse();
-            done();
-          }, done.fail);
+      await PostMessageChannel.open(mockSrcWindow, mockDestWindow);
+      let message = new Message(MessageType.PING, { 'id': id });
+      assert(<boolean> mockChannel['waitForMessage_'].calls.argsFor(0)[0](message)).to.beFalse();
     });
   });
 

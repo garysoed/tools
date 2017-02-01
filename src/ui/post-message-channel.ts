@@ -143,13 +143,11 @@ class PostMessageChannel extends BaseDisposable {
    *     function takes in the message object and should return true iff it is the message searched.
    * @return Promise that will be resolved with the message object after it is found.
    */
-  waitForMessage(testFn: (message: gs.IJson) => boolean): Promise<gs.IJson> {
-    return this.waitForMessage_((message: Message) => {
+  async waitForMessage(testFn: (message: gs.IJson) => boolean): Promise<gs.IJson> {
+    let message = await this.waitForMessage_((message: Message) => {
       return (message.getType() === MessageType.DATA) && testFn(message.getPayload());
-    })
-    .then((message: Message) => {
-      return message.getPayload();
     });
+    return message.getPayload();
   }
 
   private static newInstance_(srcWindow: Window, destWindow: Window): PostMessageChannel {
@@ -174,7 +172,7 @@ class PostMessageChannel extends BaseDisposable {
    * @return Promise that will be resolved with the channel object once the connection is
    *     established.
    */
-  static open(srcWindow: Window, destWindow: Window): Promise<PostMessageChannel> {
+  static async open(srcWindow: Window, destWindow: Window): Promise<PostMessageChannel> {
     let id = Math.random();
     let channel = PostMessageChannel.newInstance_(srcWindow, destWindow);
 
@@ -182,14 +180,11 @@ class PostMessageChannel extends BaseDisposable {
       channel.post_(new Message(MessageType.PING, { id: id }));
     }, 1000);
 
-    return channel
-        .waitForMessage_((message: Message) => {
-          return message.getPayload()['id'] === id && message.getType() === MessageType.ACK;
-        })
-        .then(() => {
-          window.clearInterval(intervalId);
-          return channel;
-        });
+    await channel.waitForMessage_((message: Message) => {
+      return message.getPayload()['id'] === id && message.getType() === MessageType.ACK;
+    });
+    window.clearInterval(intervalId);
+    return channel;
   }
 
   /**

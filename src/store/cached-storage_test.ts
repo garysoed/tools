@@ -26,7 +26,7 @@ describe('store.CachedStorage', () => {
   });
 
   describe('delete', () => {
-    it('should delete the item in the cache and in the inner storage', (done: any) => {
+    it('should delete the item in the cache and in the inner storage', async (done: any) => {
       let mockItem = jasmine.createSpyObj('Item', ['dispose']);
       Object.setPrototypeOf(mockItem, BaseDisposable.prototype);
 
@@ -35,40 +35,31 @@ describe('store.CachedStorage', () => {
 
       mockInnerStorage.delete.and.returnValue(Promise.resolve());
 
-      storage.delete(id)
-          .then(() => {
-            assert(mockInnerStorage.delete).to.haveBeenCalledWith(id);
-            assert(storage['cache_']).to.haveEntries([]);
-            assert(mockItem.dispose).to.haveBeenCalledWith();
-            done();
-          }, done.fail);
+      await storage.delete(id);
+      assert(mockInnerStorage.delete).to.haveBeenCalledWith(id);
+      assert(storage['cache_']).to.haveEntries([]);
+      assert(mockItem.dispose).to.haveBeenCalledWith();
     });
 
-    it('should not throw error if the deleted item is not disposable', (done: any) => {
+    it('should not throw error if the deleted item is not disposable', async (done: any) => {
       let item = Mocks.object('item');
       let id = 'id';
       storage['cache_'].set(id, item);
 
       mockInnerStorage.delete.and.returnValue(Promise.resolve());
 
-      storage.delete(id)
-          .then(() => {
-            assert(mockInnerStorage.delete).to.haveBeenCalledWith(id);
-            assert(storage['cache_']).to.haveEntries([]);
-            done();
-          }, done.fail);
+      await storage.delete(id);
+      assert(mockInnerStorage.delete).to.haveBeenCalledWith(id);
+      assert(storage['cache_']).to.haveEntries([]);
     });
 
-    it('should not throw error if the item does not exist', (done: any) => {
+    it('should not throw error if the item does not exist', async (done: any) => {
       let id = 'id';
       mockInnerStorage.delete.and.returnValue(Promise.resolve());
 
-      storage.delete('id')
-          .then(() => {
-            assert(mockInnerStorage.delete).to.haveBeenCalledWith(id);
-            assert(storage['cache_']).to.haveEntries([]);
-            done();
-          }, done.fail);
+      await storage.delete('id');
+      assert(mockInnerStorage.delete).to.haveBeenCalledWith(id);
+      assert(storage['cache_']).to.haveEntries([]);
     });
   });
 
@@ -96,34 +87,26 @@ describe('store.CachedStorage', () => {
   });
 
   describe('generateId', () => {
-    it('should return the correct ID from the inner storage', (done: any) => {
+    it('should return the correct ID from the inner storage', async (done: any) => {
       let newId = 'newId';
       mockInnerStorage.generateId.and.returnValue(Promise.resolve(newId));
-      storage.generateId()
-          .then((id: string) => {
-            assert(id).to.equal(newId);
-            done();
-          }, done.fail);
+      let id = await storage.generateId();
+      assert(id).to.equal(newId);
     });
   });
 
   describe('has', () => {
-    it('should return the values from the inner storage and cache them', (done: any) => {
+    it('should return the values from the inner storage and cache them', async (done: any) => {
       let id = 'id';
-      let result = Mocks.object('result');
-      mockInnerStorage.has.and.returnValue(Promise.resolve(result));
-      storage
-          .has(id)
-          .then((actualResult: any) => {
-            assert(actualResult).to.equal(result);
-            assert(mockInnerStorage.has).to.haveBeenCalledWith(id);
-            done();
-          }, done.fail);
+      mockInnerStorage.has.and.returnValue(Promise.resolve(true));
+      let actualResult = await storage.has(id);
+      assert(actualResult).to.beTrue();
+      assert(mockInnerStorage.has).to.haveBeenCalledWith(id);
     });
   });
 
   describe('list', () => {
-    it('should return all the items and cache them', (done: any) => {
+    it('should return all the items and cache them', async (done: any) => {
       let id1 = 'id1';
       let id2 = 'id2';
       let id3 = 'id3';
@@ -143,82 +126,65 @@ describe('store.CachedStorage', () => {
         }
       });
 
-      storage.list()
-          .then((items: any[]) => {
-            assert(items).to.equal([item1, item2, item3]);
-            assert(storage['cache_']).to.haveEntries([
-              [id1, item1],
-              [id2, item2],
-              [id3, item3],
-            ]);
-            done();
-          }, done.fail);
+      let items = await storage.list();
+      assert(items).to.equal([item1, item2, item3]);
+      assert(storage['cache_']).to.haveEntries([
+        [id1, item1],
+        [id2, item2],
+        [id3, item3],
+      ]);
     });
   });
 
   describe('listIds', () => {
-    it('should return the correct list of IDs', (done: any) => {
+    it('should return the correct list of IDs', async (done: any) => {
       let ids = Mocks.object('ids');
       mockInnerStorage.listIds.and.returnValue(Promise.resolve(ids));
-      storage.listIds()
-          .then((actualIds: any) => {
-            assert(actualIds).to.equal(ids);
-            done();
-          }, done.fail);
+
+      let actualIds = await storage.listIds();
+      assert(actualIds).to.equal(ids);
     });
   });
 
   describe('read', () => {
-    it('should get the item from the inner storage and cache them', (done: any) => {
+    it('should get the item from the inner storage and cache them', async (done: any) => {
       let id = 'id';
       let item = Mocks.object('item');
       mockInnerStorage.read.and.returnValue(Promise.resolve(item));
-      storage.read(id)
-          .then((actualItem: any) => {
-            assert(actualItem).to.equal(item);
-            assert(storage['cache_']).to.haveEntries([[id, item]]);
-            assert(mockInnerStorage.read).to.haveBeenCalledWith(id);
-            done();
-          }, done.fail);
+      let actualItem = await storage.read(id);
+      assert(actualItem).to.equal(item);
+      assert(storage['cache_']).to.haveEntries([[id, item]]);
+      assert(mockInnerStorage.read).to.haveBeenCalledWith(id);
     });
 
-    it('should not cache the value if null', (done: any) => {
+    it('should not cache the value if null', async (done: any) => {
       mockInnerStorage.read.and.returnValue(Promise.resolve(null));
-      storage.read('id')
-          .then((actualItem: any) => {
-            assert(actualItem).to.beNull();
-            assert(storage['cache_']).to.haveEntries([]);
-            done();
-          }, done.fail);
+      let actualItem = await storage.read('id');
+      assert(actualItem).to.beNull();
+      assert(storage['cache_']).to.haveEntries([]);
     });
 
-    it('should return the cached value if available', (done: any) => {
+    it('should return the cached value if available', async (done: any) => {
       let id = 'id';
       let item = Mocks.object('item');
       storage['cache_'].set(id, item);
-      storage.read(id)
-          .then((actualItem: any) => {
-            assert(actualItem).to.equal(item);
-            assert(mockInnerStorage.read).toNot.haveBeenCalled();
-            done();
-          }, done.fail);
+      let actualItem = await storage.read(id);
+      assert(actualItem).to.equal(item);
+      assert(mockInnerStorage.read).toNot.haveBeenCalled();
     });
   });
 
   describe('update', () => {
-    it('should update the inner storage and the cache with the new value', (done: any) => {
+    it('should update the inner storage and the cache with the new value', async (done: any) => {
       let id = 'id';
       let oldItem = Mocks.object('oldItem');
       storage['cache_'].set(id, oldItem);
 
       let newItem = Mocks.object('newItem');
       mockInnerStorage.update.and.returnValue(Promise.resolve());
-      storage.update(id, newItem)
-          .then(() => {
-            assert(storage['cache_']).to.haveEntries([[id, newItem]]);
-            assert(mockInnerStorage.update).to.haveBeenCalledWith(id, newItem);
-            done();
-          }, done.fail);
+      await storage.update(id, newItem);
+      assert(storage['cache_']).to.haveEntries([[id, newItem]]);
+      assert(mockInnerStorage.update).to.haveBeenCalledWith(id, newItem);
     });
   });
 });

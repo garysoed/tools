@@ -41,6 +41,10 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
     return this.asIterable()[Symbol.iterator]();
   }
 
+  castElements<T2 extends T>(): FluentIndexable<T2> {
+    return <FluentIndexable<T2>> <any> this;
+  }
+
   equalsTo(other: T[]): boolean {
     if (this.getData().length !== other.length) {
       return false;

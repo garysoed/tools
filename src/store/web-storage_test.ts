@@ -62,71 +62,61 @@ describe('store.WebStorage', () => {
   });
 
   describe('delete', () => {
-    it('should remove the correct object', (done: any) => {
+    it('should remove the correct object', async (done: any) => {
       let id = 'id';
       let path = 'path';
       spyOn(storage, 'getPath_').and.returnValue(path);
       spyOn(storage, 'getIndexes_').and.returnValue(new Set([id]));
       spyOn(storage, 'updateIndexes_');
-      storage
-          .delete(id)
-          .then(() => {
-            assert(mockStorage.removeItem).to.haveBeenCalledWith(path);
-            assert(storage['getPath_']).to.haveBeenCalledWith(id);
-            assert(storage['updateIndexes_']).to.haveBeenCalledWith(Matchers.any(Set));
-            assert(storage['updateIndexes_']['calls'].argsFor(0)[0].size).to.equal(0);
-            done();
-          }, done.fail);
+
+      await storage.delete(id);
+
+      assert(mockStorage.removeItem).to.haveBeenCalledWith(path);
+      assert(storage['getPath_']).to.haveBeenCalledWith(id);
+      assert(storage['updateIndexes_']).to.haveBeenCalledWith(Matchers.any(Set));
+      assert(storage['updateIndexes_']['calls'].argsFor(0)[0].size).to.equal(0);
     });
 
-    it('should reject if the ID does not exist', (done: any) => {
+    it('should reject if the ID does not exist', async (done: any) => {
       let id = 'id';
       let path = 'path';
       spyOn(storage, 'getPath_').and.returnValue(path);
       spyOn(storage, 'getIndexes_').and.returnValue(new Set());
       spyOn(storage, 'updateIndexes_');
-      storage
-          .delete(id)
-          .then(
-              done.fail,
-              (error: Error) => {
-                assert(error.message).to.match(/does not exist/);
-                assert(mockStorage.removeItem).toNot.haveBeenCalled();
-                assert(storage['updateIndexes_']).toNot.haveBeenCalled();
-                done();
-              });
+
+      try {
+        await storage.delete(id);
+        done.fail();
+      } catch (error) {
+        const err: Error = error;
+        assert(err.message).to.match(/does not exist/);
+        assert(mockStorage.removeItem).toNot.haveBeenCalled();
+        assert(storage['updateIndexes_']).toNot.haveBeenCalled();
+      }
     });
   });
 
   describe('has', () => {
-    it('should resolve with true if the object is in the storage', (done: any) => {
+    it('should resolve with true if the object is in the storage', async (done: any) => {
       let id = 'id';
       spyOn(storage, 'getIndexes_').and.returnValue(new Set([id]));
 
-      storage
-          .has(id)
-          .then((result: boolean) => {
-            assert(result).to.beTrue();
-            done();
-          }, done.fail);
+      let result = await storage.has(id);
+      assert(result).to.beTrue();
     });
 
-    it('should resolve with false if the object is in the storage', (done: any) => {
+    it('should resolve with false if the object is in the storage', async (done: any) => {
       let id = 'id';
 
       spyOn(storage, 'getIndexes_').and.returnValue(new Set());
 
-      storage
-          .has(id)
-          .then((result: boolean) => {
-            assert(result).to.beFalse();
-            done();
-          }, done.fail);
+      let result = await storage.has(id);
+      assert(result).to.beFalse();
     });
   });
 
   describe('list', () => {
-    it('should return the correct indexes', (done: any) => {
+    it('should return the correct indexes', async (done: any) => {
       let id1 = 'id1';
       let id2 = 'id2';
       let item1 = Mocks.object('item1');
@@ -140,43 +130,33 @@ describe('store.WebStorage', () => {
             return Promise.resolve(item2);
         }
       });
-      storage
-          .list()
-          .then((values: any) => {
-            assert(values).to.equal([item1, item2]);
-            assert(storage.read).to.haveBeenCalledWith(id1);
-            assert(storage.read).to.haveBeenCalledWith(id2);
-            done();
-          }, done.fail);
+
+      let values = await storage.list();
+      assert(values).to.equal([item1, item2]);
+      assert(storage.read).to.haveBeenCalledWith(id1);
+      assert(storage.read).to.haveBeenCalledWith(id2);
     });
 
-    it('should filter out null items', (done: any) => {
+    it('should filter out null items', async (done: any) => {
       let id = 'id';
       spyOn(storage, 'listIds').and.returnValue(Promise.resolve([id]));
       spyOn(storage, 'read').and.returnValue(Promise.resolve(null)); ;
-      storage
-          .list()
-          .then((values: any) => {
-            assert(values).to.equal([]);
-            done();
-          }, done.fail);
+      let values = await storage.list();
+      assert(values).to.equal([]);
     });
   });
 
   describe('listIds', () => {
-    it('should return the indexes', (done: any) => {
+    it('should return the indexes', async (done: any) => {
       let indexes = Mocks.object('indexes');
       spyOn(storage, 'getIndexes_').and.returnValue(indexes);
-      storage.listIds()
-          .then((ids: any) => {
-            assert(ids).to.equal(indexes);
-            done();
-          }, done.fail);
+      let ids = await storage.listIds();
+      assert(ids).to.equal(indexes);
     });
   });
 
   describe('read', () => {
-    it('should resolve with the object', (done: any) => {
+    it('should resolve with the object', async (done: any) => {
       let id = 'id';
       let path = 'path';
       let stringValue = 'stringValue';
@@ -188,45 +168,39 @@ describe('store.WebStorage', () => {
       spyOn(JSON, 'parse').and.returnValue(json);
       spyOn(Serializer, 'fromJSON').and.returnValue(object);
 
-      storage.read(id)
-          .then((result: any) => {
-            assert(result).to.equal(object);
-            assert(Serializer.fromJSON).to.haveBeenCalledWith(json);
-            assert(JSON.parse).to.haveBeenCalledWith(stringValue);
-            assert(mockStorage.getItem).to.haveBeenCalledWith(path);
-            assert(storage['getPath_']).to.haveBeenCalledWith(id);
-            done();
-          }, done.fail);
+      let result = await storage.read(id);
+      assert(result).to.equal(object);
+      assert(Serializer.fromJSON).to.haveBeenCalledWith(json);
+      assert(JSON.parse).to.haveBeenCalledWith(stringValue);
+      assert(mockStorage.getItem).to.haveBeenCalledWith(path);
+      assert(storage['getPath_']).to.haveBeenCalledWith(id);
     });
 
-    it('should resolve with null if the object does not exist', (done: any) => {
+    it('should resolve with null if the object does not exist', async (done: any) => {
       mockStorage.getItem.and.returnValue(null);
       spyOn(storage, 'getPath_').and.returnValue('path');
 
-      storage.read('id')
-          .then((result: any) => {
-            assert(result).to.beNull();
-            done();
-          }, done.fail);
+      let result = await storage.read('id');
+      assert(result).to.beNull();
     });
 
-    it('should reject if there was an error', (done: any) => {
+    it('should reject if there was an error', async (done: any) => {
       let errorMsg = 'errorMsg';
       mockStorage.getItem.and.throwError(errorMsg);
       spyOn(storage, 'getPath_').and.returnValue('path');
 
-      storage.read('id')
-          .then(
-              done.fail,
-              (error: Error) => {
-                assert(error.message).to.equal(errorMsg);
-                done();
-              });
+      try {
+        await storage.read('id');
+        done.fail();
+      } catch (e) {
+        const error: Error = e;
+        assert(error.message).to.equal(errorMsg);
+      }
     });
   });
 
   describe('reserve', () => {
-    it('should reserve a new ID correctly', (done: any) => {
+    it('should reserve a new ID correctly', async (done: any) => {
       let initialId = 'initialId';
       let id1 = 'id1';
       let id2 = 'id2';
@@ -235,20 +209,17 @@ describe('store.WebStorage', () => {
       spyOn(storage['idGenerator_'], 'resolveConflict').and.returnValues(id1, id2, id3);
       spyOn(storage, 'getIndexes_').and.returnValue(new Set([initialId, id1, id2]));
 
-      storage.generateId()
-          .then((id: string) => {
-            assert(id).to.equal(id3);
-            assert(storage['idGenerator_'].resolveConflict).to.haveBeenCalledWith(initialId);
-            assert(storage['idGenerator_'].resolveConflict).to.haveBeenCalledWith(id1);
-            assert(storage['idGenerator_'].resolveConflict).to.haveBeenCalledWith(id2);
-            assert(storage['idGenerator_'].resolveConflict).toNot.haveBeenCalledWith(id3);
-            done();
-          });
+      let id = await storage.generateId();
+      assert(id).to.equal(id3);
+      assert(storage['idGenerator_'].resolveConflict).to.haveBeenCalledWith(initialId);
+      assert(storage['idGenerator_'].resolveConflict).to.haveBeenCalledWith(id1);
+      assert(storage['idGenerator_'].resolveConflict).to.haveBeenCalledWith(id2);
+      assert(storage['idGenerator_'].resolveConflict).toNot.haveBeenCalledWith(id3);
     });
   });
 
   describe('update', () => {
-    it('should store the correct object in the storage', (done: any) => {
+    it('should store the correct object in the storage', async (done: any) => {
       let id = 'id';
       let path = 'path';
       let object = Mocks.object('object');
@@ -263,33 +234,28 @@ describe('store.WebStorage', () => {
       spyOn(Serializer, 'toJSON').and.returnValue(json);
       spyOn(JSON, 'stringify').and.returnValue(stringValue);
 
-      storage
-          .update(id, object)
-          .then(() => {
-            assert(mockStorage.setItem).to.haveBeenCalledWith(path, stringValue);
-            assert(JSON.stringify).to.haveBeenCalledWith(json);
-            assert(Serializer.toJSON).to.haveBeenCalledWith(object);
-            assert(storage['updateIndexes_']).to.haveBeenCalledWith(Matchers.any(Set));
-            assert(Arrays.fromIterable(storage['updateIndexes_']['calls'].argsFor(0)[0]).asArray())
-                .to.equal([oldId, id]);
-            done();
-          }, done.fail);
+      await storage.update(id, object);
+      assert(mockStorage.setItem).to.haveBeenCalledWith(path, stringValue);
+      assert(JSON.stringify).to.haveBeenCalledWith(json);
+      assert(Serializer.toJSON).to.haveBeenCalledWith(object);
+      assert(storage['updateIndexes_']).to.haveBeenCalledWith(Matchers.any(Set));
+      assert(Arrays.fromIterable(storage['updateIndexes_']['calls'].argsFor(0)[0]).asArray())
+          .to.equal([oldId, id]);
     });
 
-    it('should reject if there was an error', (done: any) => {
+    it('should reject if there was an error', async (done: any) => {
       let errorMsg = 'errorMsg';
 
       spyOn(Serializer, 'toJSON').and.throwError(errorMsg);
       spyOn(storage, 'getIndexes_').and.returnValue(new Set());
 
-      storage
-          .update('id', Mocks.object('object'))
-          .then(
-              done.fail,
-              (error: Error) => {
-                assert(error.message).to.equal(errorMsg);
-                done();
-              });
+      try {
+        await storage.update('id', Mocks.object('object'));
+        done.fail();
+      } catch (e) {
+        const error: Error = e;
+        assert(error.message).to.equal(errorMsg);
+      }
     });
   });
 });

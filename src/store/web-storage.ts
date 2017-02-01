@@ -90,28 +90,22 @@ export class WebStorage<T> implements GsStorage<T> {
   /**
    * @override
    */
-  list(): Promise<T[]> {
-    return this
-        .listIds()
-        .then((ids: Set<string>) => {
-          return Arrays
-              .fromIterable(ids)
-              .map((id: string) => {
-                return this.read(id);
-              })
-              .asArray();
+  async list(): Promise<T[]> {
+    let ids = await this.listIds();
+    let promises = Arrays
+        .fromIterable(ids)
+        .map((id: string) => {
+          return this.read(id);
         })
-        .then((promises: Promise<T | null>[]) => {
-          return Promise.all(promises);
+        .asArray();
+    let items = await Promise.all(promises);
+    return Arrays
+        .of(items)
+        .filter((item: T | null) => {
+          return item !== null;
         })
-        .then((items: (T | null)[]) => {
-          return Arrays
-              .of(items)
-              .filter((item: T | null) => {
-                return item !== null;
-              })
-              .asArray();
-        });
+        .castElements<T>()
+        .asArray();
   }
 
   /**
