@@ -10,7 +10,7 @@ import {Validate} from '../valid/validate';
 import {BaseElement} from './base-element';
 import {ANNOTATIONS as BindAnnotations} from './bind';
 import {CustomElementUtil} from './custom-element-util';
-import {DomBridge} from './dom-bridge';
+import {DomHook} from './dom-hook';
 import {Handler} from './handle';
 import {IAttributeParser, IDomBinder} from './interfaces';
 import {Templates} from './templates';
@@ -79,9 +79,9 @@ export class ElementRegistrar extends BaseDisposable {
                 return;
               }
 
-              let bridge = instance[key];
-              Validate.any(bridge).to.beAnInstanceOf(DomBridge).assertValid();
-              (<DomBridge<any>> bridge).open(factory(this, instance));
+              let hook = instance[key];
+              Validate.any(hook).to.beAnInstanceOf(DomHook).assertValid();
+              (<DomHook<any>> hook).open(factory(this, instance));
             });
 
         instance.onCreated(this);

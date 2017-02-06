@@ -4,9 +4,9 @@ import {IDomBinder} from './interfaces';
 
 
 /**
- * Bridges JS code with a location in the DOM.
+ * Hooks JS code with a location in the DOM.
  */
-export class DomBridge<T> {
+export class DomHook<T> {
   private deleteOnFalsy_: boolean;
   private binder_: IDomBinder<T> | null = null;
 
@@ -66,11 +66,11 @@ export class DomBridge<T> {
   }
 
   /**
-   * Creates a new instance of DomBridge.
+   * Creates a new instance of DomHook.
    *
    * @param deleteOnFalsy True iff the DOM location should be deleted when the value is falsy.
    */
-  static of<T>(deleteOnFalsy: boolean = false): DomBridge<T> {
-    return new DomBridge<T>(deleteOnFalsy);
+  static of<T>(deleteOnFalsy: boolean = false): DomHook<T> {
+    return new DomHook<T>(deleteOnFalsy);
   }
 }

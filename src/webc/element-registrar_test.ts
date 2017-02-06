@@ -8,7 +8,7 @@ import {Log} from '../util/log';
 import {BaseElement} from './base-element';
 import {ANNOTATIONS as BindAnnotations} from './bind';
 import {CustomElementUtil} from './custom-element-util';
-import {DomBridge} from './dom-bridge';
+import {DomHook} from './dom-hook';
 import {ElementRegistrar} from './element-registrar';
 
 
@@ -79,12 +79,12 @@ describe('webc.ElementRegistrar', () => {
 
       let key1 = 'key1';
       let mockBridge1 = jasmine.createSpyObj('Bridge1', ['open']);
-      Object.setPrototypeOf(mockBridge1, DomBridge.prototype);
+      Object.setPrototypeOf(mockBridge1, DomHook.prototype);
       mockElement[key1] = mockBridge1;
 
       let key2 = 'key2';
       let mockBridge2 = jasmine.createSpyObj('Bridge2', ['open']);
-      Object.setPrototypeOf(mockBridge2, DomBridge.prototype);
+      Object.setPrototypeOf(mockBridge2, DomHook.prototype);
       mockElement[key2] = mockBridge2;
 
       let binderMap = new Map();

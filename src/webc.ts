@@ -5,7 +5,7 @@ export {BaseElement} from './webc/base-element';
 export {bind} from './webc/bind';
 export {BooleanParser} from './webc/boolean-parser';
 export {customElement} from './webc/custom-element';
-export {DomBridge} from './webc/dom-bridge';
+export {DomHook} from './webc/dom-hook';
 export {ElementRegistrar} from './webc/element-registrar';
 export {EnumParser} from './webc/enum-parser';
 export {FloatParser} from './webc/float-parser';
