@@ -84,10 +84,10 @@ describe('data.AnnotationsHandler', () => {
       let key2 = 'key2';
       let value1 = 789;
       let value2 = 12;
+      handler = new AnnotationsHandler<number>(__SYMBOL, null);
       handler['propertyValues_'].set(key1, new Set([value1]));
       handler['propertyValues_'].set(key2, new Set([value2]));
 
-      handler['parent_'] = null;
 
       let values = Maps.of(handler.getAttachedValues()).asRecord();
       assert(values).to.equal(Matchers.objectContaining({

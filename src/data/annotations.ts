@@ -7,9 +7,9 @@ import {Maps} from '../collection/maps';
  * @param <T> The type of value associated with the annotation.
  */
 export class AnnotationsHandler<T> {
-  private annotation_: symbol;
-  private propertyValues_: Map<string | symbol, Set<T>>;
-  private parent_: any;
+  private readonly annotation_: symbol;
+  private readonly propertyValues_: Map<string | symbol, Set<T>>;
+  private readonly parent_: any;
 
   /**
    * @param annotation The symbol to identify the annotation.
@@ -24,7 +24,6 @@ export class AnnotationsHandler<T> {
   /**
    * Adds the given value to the given property identifier.
    *
-   * TODO: Support multiple annotations on the same key.
    * @param key Identifier of the property to attach the value to.
    * @param value The value to attach to the given property.
    */
@@ -50,7 +49,7 @@ export class AnnotationsHandler<T> {
   getAttachedValues(): Map<string | symbol, Set<T>> {
     let fluentMappable = Maps.of(this.propertyValues_);
     if (this.parent_ !== null) {
-      let parentAnnotationValues = AnnotationsHandler
+      const parentAnnotationValues = AnnotationsHandler
           .of<T>(this.annotation_, this.parent_)
           .getAttachedValues();
       fluentMappable = fluentMappable.addAllMap(parentAnnotationValues);
@@ -73,8 +72,8 @@ export class AnnotationsHandler<T> {
    * @param parent Pointer to the parent class to follow the annotation.
    */
   static of<T>(annotation: symbol, ctor: any): AnnotationsHandler<T> {
-    let parentProto = Object.getPrototypeOf(ctor.prototype);
-    let parent = parentProto === null ? null : parentProto.constructor;
+    const parentProto = Object.getPrototypeOf(ctor.prototype);
+    const parent = parentProto === null ? null : parentProto.constructor;
     if (!AnnotationsHandler.hasAnnotation(ctor, annotation)) {
       ctor[annotation] = new AnnotationsHandler<T>(annotation, parent);
     }

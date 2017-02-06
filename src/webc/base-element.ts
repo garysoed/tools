@@ -12,15 +12,6 @@ export class BaseElement extends BaseDisposable {
     super();
   }
 
-  // TODO: Add parser
-  getAttribute(attrName: string): string {
-    if (this.element_ === null) {
-      return '';
-    } else {
-      return this.element_.getEventTarget()[attrName];
-    }
-  }
-
   getElement(): ListenableDom<HTMLElement> | null {
     return this.element_;
   }
@@ -57,11 +48,4 @@ export class BaseElement extends BaseDisposable {
    * @param element Reference to the element.
    */
   onRemoved(element: HTMLElement): void { }
-
-  // TODO: add parser
-  setAttribute(attrName: string, value: string): void {
-    if (this.element_ !== null) {
-      this.element_.getEventTarget()[attrName] = value;
-    }
-  }
 }

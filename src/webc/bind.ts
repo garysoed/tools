@@ -15,7 +15,7 @@ export const ANNOTATIONS: Annotations<BinderFactory> =
     Annotations.of<BinderFactory>(Symbol('bind'));
 
 export class Bind {
-  private selector_: string | null;
+  private readonly selector_: string | null;
 
   /**
    * @param selector Selector query to find the element to bind to, or null if the root
@@ -33,13 +33,16 @@ export class Bind {
    */
   private createDecorator_(
       binderFactory: (element: Element, instance: any) => IDomBinder<any>): PropertyDecorator {
-    let self = this;
+    const self = this;
     return function(target: Object, propertyKey: string | symbol): void {
-      // TODO: Warn that targetEl is null.
       ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
           propertyKey,
           (parentEl: HTMLElement, instance: any): IDomBinder<any> => {
-            return binderFactory(Util.resolveSelector(self.selector_, parentEl)!, instance);
+            const element = Util.resolveSelector(self.selector_, parentEl);
+            if (element === null) {
+              throw new Error(`Cannot resolve selector ${self.selector_}`);
+            }
+            return binderFactory(element, instance);
           });
     };
   }
