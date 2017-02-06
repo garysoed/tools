@@ -42,3 +42,8 @@ import {Sequencer} from './sequencer';
     1.  Alphabetical order.
 -   All private and protected properties must end with `_`
 -   Annotated properties must be public, but end with `_`.
+-   Functions must be in alphabetical order. Don't pay attention to the `_` suffix.
+
+# General
+-   Prefer `const` and `readonly`. Use them as much as possible.
+-   Avoid using `then` as much as possible. Use `async` / `await` instead.

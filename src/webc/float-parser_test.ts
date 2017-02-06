@@ -10,14 +10,18 @@ describe('webc.FloatParser', () => {
       assert(FloatParser.parse('1.23')).to.equal(1.23);
     });
 
-    it('should return NaN if the input is null', () => {
-      assert(FloatParser.parse(null)).to.equal(NaN);
+    it('should return null if the input is null', () => {
+      assert(FloatParser.parse(null)).to.beNull();
     });
   });
 
   describe('stringify', () => {
     it('should return the string representation of the number', () => {
       assert(FloatParser.stringify(1.23)).to.equal('1.23');
+    });
+
+    it('should return empty string if the input is null', () => {
+      assert(FloatParser.stringify(null)).to.equal('');
     });
   });
 });

@@ -10,6 +10,7 @@ export {ElementRegistrar} from './webc/element-registrar';
 export {EnumParser} from './webc/enum-parser';
 export {FloatParser} from './webc/float-parser';
 export {handle} from './webc/handle';
+export {IntegerParser} from './webc/integer-parser';
 export {IAttributeParser, IDomBinder} from './webc/interfaces';
 export {StringParser} from './webc/string-parser';
 export {Templates} from './webc/templates';

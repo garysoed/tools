@@ -11,11 +11,12 @@ export const FloatParser: IAttributeParser<number> = {
    * @param input The input string.
    * @return The parsed float value, or NaN if it cannot be parsed.
    */
-  parse(input: string | null): number {
+  parse(input: string | null): number | null {
     if (input === null) {
-      return NaN;
+      return null;
     } else {
-      return Number.parseFloat(input);
+      let result = Number.parseFloat(input);
+      return Number.isNaN(result) ? null : result;
     }
   },
 
@@ -25,7 +26,10 @@ export const FloatParser: IAttributeParser<number> = {
    * @param value The number to be converted to string.
    * @return The string representation of the given number.
    */
-  stringify(value: number): string {
+  stringify(value: number | null): string {
+    if (value === null) {
+      return '';
+    }
     return value.toString(10);
   },
 };
