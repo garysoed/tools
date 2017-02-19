@@ -8,6 +8,7 @@ export const __SEQUENCER: symbol = Symbol('sequencer');
 
 /**
  * Annotates a method to add it to a [Sequencer] when called.
+ * TODO: Rename to atomic.
  */
 export function sequenced(): MethodDecorator {
   return function(

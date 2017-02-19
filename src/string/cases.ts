@@ -1,5 +1,4 @@
 import {Arrays} from '../collection/arrays';
-import {Validate} from '../valid/validate';
 
 
 /**
@@ -97,7 +96,12 @@ export class Cases {
           })
           .asArray();
     } else {
-      Validate.fail(`The string "${input}" uses an unsupported case"`);
+      words = Arrays
+          .of(input.split(' '))
+          .map((word: string) => {
+            return word.toLowerCase();
+          })
+          .asArray();
     }
     return new Cases(words);
   }

@@ -10,7 +10,7 @@ import {IAttributeParser, IHandler} from './interfaces';
 export type AttributeChangeHandlerConfig = {
   attributeName: string,
   handlerKey: string | symbol,
-  parser: IAttributeParser<any>,
+  parser: IAttributeParser<any> | null,
   selector: string | null,
 };
 
@@ -46,7 +46,7 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
       records: MutationRecord[]): void {
     Arrays.of(records)
         .forEach((record: MutationRecord) => {
-          let attributeName = record.attributeName;
+          const attributeName = record.attributeName;
           if (attributeName === null) {
             return;
           }
@@ -55,14 +55,18 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
             Arrays
                 .of(configs.get(attributeName)!)
                 .forEach(((attributeName: string, config: AttributeChangeHandlerConfig) => {
-                  let {handlerKey, parser} = config;
-                  let handler = instance[handlerKey];
+                  const {handlerKey, parser} = config;
+                  const handler = instance[handlerKey];
                   if (!!handler) {
-                    let targetNode = record.target;
-                    if (targetNode instanceof Element) {
-                      let oldValue = parser.parse(record.oldValue);
-                      let newValue = parser.parse(targetNode.getAttribute(attributeName));
-                      handler.call(instance, newValue, oldValue);
+                    if (parser !== null) {
+                      const targetNode = record.target;
+                      if (targetNode instanceof Element) {
+                        const oldValue = parser.parse(record.oldValue);
+                        const newValue = parser.parse(targetNode.getAttribute(attributeName));
+                        handler.call(instance, newValue, oldValue);
+                      }
+                    } else {
+                      handler.call(instance);
                     }
                   }
                 }).bind(this, attributeName));
@@ -78,18 +82,18 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
       instance: BaseDisposable,
       configs: AttributeChangeHandlerConfig[]): void {
     // Group the configs together.
-    let configEntries: [string, AttributeChangeHandlerConfig][] = Arrays
+    const configEntries: [string, AttributeChangeHandlerConfig][] = Arrays
         .of(configs)
         .map((config: AttributeChangeHandlerConfig):
             [string, AttributeChangeHandlerConfig] => {
           return [config.attributeName, config];
         })
         .asArray();
-    let groupedConfig: Map<string, AttributeChangeHandlerConfig[]> =
+    const groupedConfig: Map<string, AttributeChangeHandlerConfig[]> =
         Maps.group(configEntries).asMap();
-    let observer = this.createMutationObserver_(instance, groupedConfig);
+    const observer = this.createMutationObserver_(instance, groupedConfig);
 
-    let attributeFilter = Arrays
+    const attributeFilter = Arrays
         .of(configs)
         .map((config: AttributeChangeHandlerConfig) => {
           return config.attributeName;
@@ -135,7 +139,7 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
    */
   createDecorator(
       attributeName: string,
-      parser: IAttributeParser<any>,
+      parser: IAttributeParser<any> | null,
       selector: string | null): MethodDecorator {
     return function(
         target: Object,

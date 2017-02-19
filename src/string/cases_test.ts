@@ -50,10 +50,8 @@ describe('string.Cases', () => {
       assert(Cases.of('UPPER_CASE')['words_']).to.equal(['upper', 'case']);
     });
 
-    it('should throw error if the format is unsupported', () => {
-      assert(() => {
-        Cases.of('unsupported Case');
-      }).to.throwError(/unsupported case/);
+    it('should parse unknown format correctly', () => {
+      assert(Cases.of('Unknown format')['words_']).to.equal(['unknown', 'format']);
     });
   });
 });

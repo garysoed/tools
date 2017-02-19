@@ -7,6 +7,10 @@ export class Matchers {
     return <T> <any> jasmine.any(obj.constructor);
   }
 
+  static arrayContaining<T>(obj: T[]): T[] {
+    return <T[]> <any> jasmine.arrayContaining(obj);
+  }
+
   static objectContaining(obj: any): any {
     return jasmine.objectContaining(obj);
   }

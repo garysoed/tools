@@ -44,7 +44,7 @@ export class Handler {
    */
   attributeChange(
       attributeName: string,
-      parser: IAttributeParser<any>): MethodDecorator {
+      parser: IAttributeParser<any> | null = null): MethodDecorator {
     return ATTRIBUTE_CHANGE_HANDLER.createDecorator(attributeName, parser, this.selector_);
   }
 
@@ -74,15 +74,15 @@ export class Handler {
    * @param instance The handler for events on the given element.
    */
   static configure(element: HTMLElement, instance: BaseDisposable): void {
-    let unresolvedSelectorIterable = Sets
+    const unresolvedSelectorIterable = Sets
         .of(new Set<string | null>())
         .addAll(Handler.configure_(element, instance, ATTRIBUTE_CHANGE_HANDLER))
         .addAll(Handler.configure_(element, instance, EVENT_HANDLER))
         .addAll(Handler.configure_(element, instance, CHILD_LIST_CHANGE_HANDLER))
         .asIterable();
 
-    let unresolvedSelectors = Arrays.fromIterable(unresolvedSelectorIterable).asArray();
-    let selectorsString = unresolvedSelectors.join(', ');
+    const unresolvedSelectors = Arrays.fromIterable(unresolvedSelectorIterable).asArray();
+    const selectorsString = unresolvedSelectors.join(', ');
     Validate.set(new Set(unresolvedSelectors))
         .to.beEmpty()
         .orThrows(`The following selectors cannot be resolved for handle: ${selectorsString}`)
@@ -93,16 +93,16 @@ export class Handler {
       parentElement: HTMLElement,
       instance: BaseDisposable,
       handler: IHandler<T>): Set<string | null> {
-    let unresolvedSelectors = new Set<string | null>();
-    let configEntries = Maps
+    const unresolvedSelectors = new Set<string | null>();
+    const configEntries = Maps
         .of(handler.getConfigs(instance))
         .values()
         .map((configs: Set<T>): [Element | null, T][] => {
           return Sets
               .of(configs)
               .map((config: T): [Element | null, T] => {
-                let selector = config.selector;
-                let element = Util.resolveSelector(selector, parentElement);
+                const selector = config.selector;
+                const element = Util.resolveSelector(selector, parentElement);
                 if (element === null) {
                   unresolvedSelectors.add(selector);
                 }

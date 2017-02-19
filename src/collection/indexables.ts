@@ -154,6 +154,6 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
 
 export class Indexables {
   static of<T>(data: T[]): FluentIndexable<T> {
-    return new FluentIndexable<T>(data);
+    return new FluentIndexable<T>(data.slice(0));
   }
 }

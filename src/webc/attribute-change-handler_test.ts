@@ -19,16 +19,16 @@ describe('webc.AttributeChangeHandler', () => {
 
   describe('onMutation_', () => {
     it('should call the handler correctly', () => {
-      let newValue1 = 'newValue1';
-      let newValue2 = 'newValue2';
-      let oldValue1 = 'oldValue1';
-      let oldValue2 = 'oldValue2';
-      let parsedNewValue1 = 'parsedNewValue1';
-      let parsedOldValue1 = 'parsedOldValue1';
-      let parsedNewValue2 = 'parsedNewValue2';
-      let parsedOldValue2 = 'parsedOldValue2';
+      const newValue1 = 'newValue1';
+      const newValue2 = 'newValue2';
+      const oldValue1 = 'oldValue1';
+      const oldValue2 = 'oldValue2';
+      const parsedNewValue1 = 'parsedNewValue1';
+      const parsedOldValue1 = 'parsedOldValue1';
+      const parsedNewValue2 = 'parsedNewValue2';
+      const parsedOldValue2 = 'parsedOldValue2';
 
-      let mockParser = jasmine.createSpyObj('Parser', ['parse']);
+      const mockParser = jasmine.createSpyObj('Parser', ['parse']);
       mockParser.parse.and.callFake((value: any) => {
         switch (value) {
           case newValue1:
@@ -42,29 +42,29 @@ describe('webc.AttributeChangeHandler', () => {
         }
       });
 
-      let handlerKey1 = 'handlerKey1';
-      let handlerKey2 = 'handlerKey2';
+      const handlerKey1 = 'handlerKey1';
+      const handlerKey2 = 'handlerKey2';
 
-      let mockHandler1 = jasmine.createSpy('Handler1');
-      let mockHandler2 = jasmine.createSpy('Handler2');
-      let instance = Mocks.object('instance');
+      const mockHandler1 = jasmine.createSpy('Handler1');
+      const mockHandler2 = jasmine.createSpy('Handler2');
+      const instance = Mocks.object('instance');
       instance[handlerKey1] = mockHandler1;
       instance[handlerKey2] = mockHandler2;
 
-      let attributeName1 = 'attributeName1';
-      let attributeName2 = 'attributeName2';
-      let configs = new Map();
+      const attributeName1 = 'attributeName1';
+      const attributeName2 = 'attributeName2';
+      const configs = new Map();
       configs.set(attributeName1, [{handlerKey: handlerKey1, parser: mockParser}]);
       configs.set(attributeName2, [{handlerKey: handlerKey2, parser: mockParser}]);
 
-      let mockTargetEl1 = jasmine.createSpyObj('TargetEl1', ['getAttribute']);
+      const mockTargetEl1 = jasmine.createSpyObj('TargetEl1', ['getAttribute']);
       mockTargetEl1.getAttribute.and.returnValue(newValue1);
       Object.setPrototypeOf(mockTargetEl1, Element.prototype);
-      let mockTargetEl2 = jasmine.createSpyObj('TargetEl2', ['getAttribute']);
+      const mockTargetEl2 = jasmine.createSpyObj('TargetEl2', ['getAttribute']);
       mockTargetEl2.getAttribute.and.returnValue(newValue2);
       Object.setPrototypeOf(mockTargetEl2, Element.prototype);
 
-      let records: any[] = [
+      const records: any[] = [
         {
           attributeName: attributeName1,
           oldValue: oldValue1,
@@ -89,20 +89,38 @@ describe('webc.AttributeChangeHandler', () => {
       assert(mockTargetEl2.getAttribute).to.haveBeenCalledWith(attributeName2);
     });
 
-    it('should not call the handler if the target node is not Element', () => {
-      let handlerKey = 'handlerKey';
-      let mockHandler = jasmine.createSpy('Handler');
-      let instance = Mocks.object('instance');
+    it('should call the handler without any values if the parser was not given', () => {
+      const handlerKey = 'handlerKey';
+
+      const mockHandler = jasmine.createSpy('Handler');
+      const instance = Mocks.object('instance');
       instance[handlerKey] = mockHandler;
 
-      let attributeName = 'attributeName';
-      let configs = new Map();
+      const attributeName = 'attributeName';
+      const configs = new Map();
+      configs.set(attributeName, [{handlerKey: handlerKey, parser: null}]);
+
+      const records: any[] = [{attributeName}];
+
+      handler['onMutation_'](instance, configs, records);
+
+      assert(mockHandler).to.haveBeenCalledWith();
+    });
+
+    it('should not call the handler if the target node is not Element', () => {
+      const handlerKey = 'handlerKey';
+      const mockHandler = jasmine.createSpy('Handler');
+      const instance = Mocks.object('instance');
+      instance[handlerKey] = mockHandler;
+
+      const attributeName = 'attributeName';
+      const configs = new Map();
       configs.set(attributeName, [{handlerKey: handlerKey, parser: Mocks.object('parser')}]);
 
-      let mockTargetEl = jasmine.createSpyObj('TargetEl', ['getAttribute']);
+      const mockTargetEl = jasmine.createSpyObj('TargetEl', ['getAttribute']);
       mockTargetEl.getAttribute.and.returnValue('newValue');
 
-      let records: any[] = [
+      const records: any[] = [
         {
           attributeName: attributeName,
           oldValue: 'oldValue',
@@ -116,18 +134,18 @@ describe('webc.AttributeChangeHandler', () => {
     });
 
     it('should not throw error if the handler does not exist', () => {
-      let mockHandler = jasmine.createSpy('Handler');
-      let instance = Mocks.object('instance');
+      const mockHandler = jasmine.createSpy('Handler');
+      const instance = Mocks.object('instance');
       instance['otherHandlerKey'] = mockHandler;
 
-      let attributeName = 'attributeName';
-      let configs = new Map();
+      const attributeName = 'attributeName';
+      const configs = new Map();
       configs.set(attributeName, [{handlerKey: 'handlerKey', parser: Mocks.object('parser')}]);
 
-      let mockTargetEl = jasmine.createSpyObj('TargetEl', ['getAttribute']);
+      const mockTargetEl = jasmine.createSpyObj('TargetEl', ['getAttribute']);
       mockTargetEl.getAttribute.and.returnValue('newValue');
 
-      let records: any[] = [
+      const records: any[] = [
         {
           attributeName: attributeName,
           oldValue: 'oldValue',
@@ -142,19 +160,19 @@ describe('webc.AttributeChangeHandler', () => {
     });
 
     it('should not throw error if the attribute name is not listened to', () => {
-      let mockHandler = jasmine.createSpy('Handler');
-      let instance = Mocks.object('instance');
+      const mockHandler = jasmine.createSpy('Handler');
+      const instance = Mocks.object('instance');
       instance['handlerKey'] = mockHandler;
 
-      let configs = new Map();
+      const configs = new Map();
       configs.set(
           'otherAttributeName',
           [{handlerKey: 'handlerKey', parser: Mocks.object('parser')}]);
 
-      let mockTargetEl = jasmine.createSpyObj('TargetEl', ['getAttribute']);
+      const mockTargetEl = jasmine.createSpyObj('TargetEl', ['getAttribute']);
       mockTargetEl.getAttribute.and.returnValue('newValue');
 
-      let records: any[] = [
+      const records: any[] = [
         {
           attributeName: 'attributeName',
           oldValue: 'oldValue',
@@ -169,19 +187,19 @@ describe('webc.AttributeChangeHandler', () => {
     });
 
     it('should not throw error if the record has no attribute names', () => {
-      let mockHandler = jasmine.createSpy('Handler');
-      let instance = Mocks.object('instance');
+      const mockHandler = jasmine.createSpy('Handler');
+      const instance = Mocks.object('instance');
       instance['handlerKey'] = mockHandler;
 
-      let configs = new Map();
+      const configs = new Map();
       configs.set(
           'attributeName',
           [{handlerKey: 'handlerKey', parser: Mocks.object('parser')}]);
 
-      let mockTargetEl = jasmine.createSpyObj('TargetEl', ['getAttribute']);
+      const mockTargetEl = jasmine.createSpyObj('TargetEl', ['getAttribute']);
       mockTargetEl.getAttribute.and.returnValue('newValue');
 
-      let records: any[] = [
+      const records: any[] = [
         {
           attributeName: null,
           oldValue: 'oldValue',
@@ -198,32 +216,32 @@ describe('webc.AttributeChangeHandler', () => {
 
   describe('configure', () => {
     it('should start the mutation observer correctly and call the initial mutation', () => {
-      let proto = Mocks.object('proto');
-      let mockInstance = jasmine.createSpyObj('Instance', ['addDisposable']);
+      const proto = Mocks.object('proto');
+      const mockInstance = jasmine.createSpyObj('Instance', ['addDisposable']);
       mockInstance.constructor = {prototype: proto};
-      let element = Mocks.object('element');
+      const element = Mocks.object('element');
 
-      let attributeName1 = 'attributeName1';
-      let config1 = Mocks.object('config1');
+      const attributeName1 = 'attributeName1';
+      const config1 = Mocks.object('config1');
       config1.attributeName = attributeName1;
 
-      let attributeName2 = 'attributeName2';
-      let config2 = Mocks.object('config2');
+      const attributeName2 = 'attributeName2';
+      const config2 = Mocks.object('config2');
       config2.attributeName = attributeName2;
 
-      let configMap: Map<string, Config> = new Map();
+      const configMap: Map<string, Config> = new Map();
       configMap.set('propertyKey1', config1);
       configMap.set('propertyKey2', config2);
 
       spyOn(handler, 'onMutation_');
 
-      let mockObserver = jasmine.createSpyObj('Observer', ['disconnect', 'observe']);
+      const mockObserver = jasmine.createSpyObj('Observer', ['disconnect', 'observe']);
       spyOn(handler, 'createMutationObserver_').and.returnValue(mockObserver);
 
-      let disposableFunction = Mocks.object('disposableFunction');
+      const disposableFunction = Mocks.object('disposableFunction');
       spyOn(DisposableFunction, 'of').and.returnValue(disposableFunction);
 
-      let targetEl = Mocks.object('targetEl');
+      const targetEl = Mocks.object('targetEl');
       handler.configure(targetEl, mockInstance, [config1, config2]);
 
       assert(mockInstance.addDisposable).to.haveBeenCalledWith(disposableFunction);
@@ -261,7 +279,7 @@ describe('webc.AttributeChangeHandler', () => {
             type: 'attributes',
           }]);
 
-      let map: Map<string, Config[]> =
+      const map: Map<string, Config[]> =
           (<any> handler['onMutation_']).calls.argsFor(0)[1];
       assert(map).to.haveEntries([
         [attributeName1, [config1]],
@@ -284,20 +302,20 @@ describe('webc.AttributeChangeHandler', () => {
 
   describe('createDecorator', () => {
     it('should add the value to annotations correctly', () => {
-      let attributeName = 'attributeName';
-      let parser = Mocks.object('parser');
-      let selector = 'selector';
-      let ctor = Mocks.object('proto');
-      let target = Mocks.object('target');
+      const attributeName = 'attributeName';
+      const parser = Mocks.object('parser');
+      const selector = 'selector';
+      const ctor = Mocks.object('proto');
+      const target = Mocks.object('target');
       target.constructor = ctor;
-      let propertyKey = 'propertyKey';
-      let descriptor = Mocks.object('descriptor');
+      const propertyKey = 'propertyKey';
+      const descriptor = Mocks.object('descriptor');
 
-      let mockAnnotationsHandler =
+      const mockAnnotationsHandler =
           jasmine.createSpyObj('AnnotationsHandler', ['attachValueToProperty']);
       spyOn(ATTR_CHANGE_ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationsHandler);
 
-      let decorator = handler.createDecorator(attributeName, parser, selector);
+      const decorator = handler.createDecorator(attributeName, parser, selector);
       assert(decorator(target, propertyKey, descriptor)).to.equal(descriptor);
       assert(ATTR_CHANGE_ANNOTATIONS.forCtor).to.haveBeenCalledWith(ctor);
       assert(mockAnnotationsHandler.attachValueToProperty).to.haveBeenCalledWith(
@@ -313,13 +331,13 @@ describe('webc.AttributeChangeHandler', () => {
 
   describe('getConfigs', () => {
     it('should return the correct configurations', () => {
-      let constructor = Mocks.object('constructor');
-      let instance = Mocks.object('instance');
+      const constructor = Mocks.object('constructor');
+      const instance = Mocks.object('instance');
       instance.constructor = constructor;
 
-      let attachedValues = Mocks.object('attachedValues');
+      const attachedValues = Mocks.object('attachedValues');
 
-      let mockAnnotationsHandler =
+      const mockAnnotationsHandler =
           jasmine.createSpyObj('AnnotationsHandler', ['getAttachedValues']);
       mockAnnotationsHandler.getAttachedValues.and.returnValue(attachedValues);
       spyOn(ATTR_CHANGE_ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationsHandler);
