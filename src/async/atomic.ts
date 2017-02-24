@@ -7,10 +7,9 @@ export const __SEQUENCER: symbol = Symbol('sequencer');
 
 
 /**
- * Annotates a method to add it to a [Sequencer] when called.
- * TODO: Rename to atomic.
+ * Annotates a method to indicate that only one instance of the method can be ran at a time.
  */
-export function sequenced(): MethodDecorator {
+export function atomic(): MethodDecorator {
   return function(
       target: gs.ICtor<any>,
       property: string | symbol,

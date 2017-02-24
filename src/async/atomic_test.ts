@@ -4,7 +4,7 @@ TestBase.setup();
 import {BaseDisposable} from '../dispose/base-disposable';
 import {Mocks} from '../mock/mocks';
 
-import {__SEQUENCER, sequenced} from './sequenced';
+import {__SEQUENCER, atomic} from './atomic';
 import {Sequencer} from './sequencer';
 
 
@@ -12,7 +12,7 @@ describe('async.sequenced', () => {
   let decorator;
 
   beforeEach(() => {
-    decorator = sequenced();
+    decorator = atomic();
   });
 
   it('should replace the descriptor with a function that sequence the annotated function',

@@ -15,6 +15,13 @@ describe('typescript.Enums', () => {
     });
   });
 
+  describe('getAllValues_', () => {
+    it('should return the correct set of values', () => {
+      enum Enum {A, B, C}
+      assert(Enums.getAllValues<Enum>(Enum)).to.equal([Enum.A, Enum.B, Enum.C]);
+    });
+  });
+
   describe('toLowerCaseString', () => {
     it('should return the correct string', () => {
       assert(Enums.toLowerCaseString(TestEnum.VALUE_A, TestEnum)).to.equal('value_a');

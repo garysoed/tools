@@ -26,6 +26,23 @@ export class Enums {
   }
 
   /**
+   * Returns all values of the given enum.
+   *
+   * @param enumSet Enum whose values should be returned.
+   * @return Array of enum values.
+   */
+  static getAllValues<E>(enumSet: gs.IEnum): E[] {
+    const values: E[] = [];
+    let index = 0;
+    while (enumSet[index] !== undefined) {
+      values.push(<E> <any> index);
+      index++;
+    }
+
+    return values;
+  }
+
+  /**
    * Converts the given enum value to lower case version of its name.
    *
    * @param enumValue The enum value to convert.
