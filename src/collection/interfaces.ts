@@ -309,6 +309,8 @@ export interface IFluentMappable<K, V> extends IFluentIterable<[K, V]> {
  * @param <T> Type of value in the indexable.
  */
 export interface IFluentIndexable<T> extends IFluentIterable<T> {
+  any(checkFn: (value: T, index: number) => boolean): boolean;
+
   /**
    * Returns the indexable as an array.
    *

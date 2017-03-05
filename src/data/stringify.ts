@@ -1,8 +1,10 @@
+import { NativeType } from '../check/native-type';
+import { StringType } from '../check/string-type';
+import { SymbolType } from '../check/symbol-type';
 import {Arrays} from '../collection/arrays';
 import {Maps} from '../collection/maps';
-import {Natives} from '../typescript/natives';
+import { Annotations } from '../data/annotations';
 
-import {Annotations} from './annotations';
 
 
 export const ANNOTATIONS = Annotations.of(Symbol('stringify'));
@@ -42,9 +44,9 @@ export class Stringify {
       pad: string = '  ',
       indent: string = ''): string {
     let lines: string[] = [];
-    if (Natives.isString(field)) {
+    if (StringType.check(field)) {
       lines.push(`"${field}"`);
-    } else if (Natives.isNative(field)) {
+    } else if (NativeType.check(field)) {
       lines.push(String(field));
     } else if (field instanceof Date) {
       lines.push(field.toLocaleString());
@@ -102,7 +104,7 @@ export class Stringify {
       Arrays
           .of(ANNOTATIONS.forCtor(instance.constructor).getAnnotatedProperties())
           .forEach((field: string | symbol): void => {
-            let stringifiedField = Natives.isSymbol(field) ? `[${field.toString()}]` : field;
+            let stringifiedField = SymbolType.check(field) ? `[${field.toString()}]` : field;
             let value = Stringify.grabFields_(instance[field]);
             record[stringifiedField] = value;
           });

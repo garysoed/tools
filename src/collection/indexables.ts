@@ -28,6 +28,10 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
     return this;
   }
 
+  any(checkFn: (value: T, index: number) => boolean): boolean {
+    return this.find(checkFn) !== null;
+  }
+
   asArray(): Array<T> {
     return this.getData();
   }

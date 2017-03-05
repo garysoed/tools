@@ -1,16 +1,17 @@
-import {Natives} from '../typescript/natives';
-
-import {AnyAssert} from './any-assert';
-import {ArrayAssert} from './array-assert';
-import {AssertFactory} from './assert-factory';
-import {BaseAssert} from './base-assert';
-import {BooleanAssert} from './boolean-assert';
-import {ElementAssert} from './element-assert';
-import {FunctionAssert} from './function-assert';
-import {MapAssert} from './map-assert';
-import {NumberAssert} from './number-assert';
-import {SetAssert} from './set-assert';
-import {StringAssert} from './string-assert';
+import { BooleanType } from '../check/boolean-type';
+import { NumberType } from '../check/number-type';
+import { StringType } from '../check/string-type';
+import {AnyAssert} from '../jasmine/any-assert';
+import {ArrayAssert} from '../jasmine/array-assert';
+import {AssertFactory} from '../jasmine/assert-factory';
+import {BaseAssert} from '../jasmine/base-assert';
+import {BooleanAssert} from '../jasmine/boolean-assert';
+import {ElementAssert} from '../jasmine/element-assert';
+import {FunctionAssert} from '../jasmine/function-assert';
+import {MapAssert} from '../jasmine/map-assert';
+import {NumberAssert} from '../jasmine/number-assert';
+import {SetAssert} from '../jasmine/set-assert';
+import { StringAssert } from '../jasmine/string-assert';
 
 
 /**
@@ -27,15 +28,15 @@ export function assert<K, V>(value: Map<K, V>): AssertFactory<MapAssert<K, V>>;
 export function assert<T>(value: Set<T>): AssertFactory<SetAssert<T>>;
 export function assert(value: any): AssertFactory<AnyAssert<any>>;
 export function assert(value: any): AssertFactory<BaseAssert> {
-  if (Natives.isBoolean(value)) {
+  if (BooleanType.check(value)) {
     return new AssertFactory((reversed: boolean): BooleanAssert => {
       return new BooleanAssert(value, reversed, expect);
     });
-  } else if (Natives.isString(value)) {
+  } else if (StringType.check(value)) {
     return new AssertFactory((reversed: boolean): StringAssert => {
       return new StringAssert(value, reversed, expect);
     });
-  } else if (Natives.isNumber(value)) {
+  } else if (NumberType.check(value)) {
     return new AssertFactory((reversed: boolean): NumberAssert => {
       return new NumberAssert(value, reversed, expect);
     });

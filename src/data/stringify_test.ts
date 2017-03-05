@@ -1,10 +1,9 @@
 import {assert, TestBase} from '../test-base';
 TestBase.setup();
 
+import { NativeType } from '../check/native-type';
+import { ANNOTATIONS, Stringify } from '../data/stringify';
 import {Mocks} from '../mock/mocks';
-import {Natives} from '../typescript/natives';
-
-import {ANNOTATIONS, Stringify} from './stringify';
 
 
 describe('data.Stringify', () => {
@@ -15,9 +14,9 @@ describe('data.Stringify', () => {
 
     it('should stringify native values correctly', () => {
       let field = 123;
-      spyOn(Natives, 'isNative').and.returnValue(true);
+      spyOn(NativeType, 'check').and.returnValue(true);
       assert(Stringify['formatField_'](field, '|', '--', '>>')).to.equal(`${field}`);
-      assert(Natives.isNative).to.haveBeenCalledWith(field);
+      assert(NativeType.check).to.haveBeenCalledWith(field);
     });
 
     it('should stringify Dates correctly', () => {
