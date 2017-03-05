@@ -1,8 +1,8 @@
-import {Asyncs} from '../async/asyncs';
-import {Field, Serializable, Serializer} from '../data/a-serializable';
-import {BaseDisposable} from '../dispose/base-disposable';
-import {DomEvent} from '../event/dom-event';
-import {ListenableDom} from '../event/listenable-dom';
+import { Asyncs } from 'src/async/asyncs';
+import { Field, Serializable, Serializer } from 'src/data/a-serializable';
+import { BaseDisposable } from 'src/dispose/base-disposable';
+import { DomEvent } from 'src/event/dom-event';
+import { ListenableDom } from 'src/event/listenable-dom';
 
 
 /**
@@ -77,9 +77,9 @@ export class Message {
  *     });
  * ```
  */
-class PostMessageChannel extends BaseDisposable {
-  private destWindow_: ListenableDom<Window>;
-  private srcWindow_: ListenableDom<Window>;
+export class PostMessageChannel extends BaseDisposable {
+  private readonly destWindow_: ListenableDom<Window>;
+  private readonly srcWindow_: ListenableDom<Window>;
 
   /**
    * @param srcWindow The source window for the postMessage channel.
@@ -102,16 +102,16 @@ class PostMessageChannel extends BaseDisposable {
   }
 
   private waitForMessage_(testFn: (message: Message) => boolean): Promise<Message> {
-    let destWindowOrigin = PostMessageChannel.getOrigin(this.destWindow_.getEventTarget());
+    const destWindowOrigin = PostMessageChannel.getOrigin(this.destWindow_.getEventTarget());
     return new Promise((resolve: Function) => {
-      let unlistenFn = this.srcWindow_.on(
+      const unlistenFn = this.srcWindow_.on(
           DomEvent.MESSAGE,
           (event: any) => {
             if (event.origin !== destWindowOrigin) {
               return;
             }
 
-            let message = Serializer.fromJSON(event.data);
+            const message = Serializer.fromJSON(event.data);
             if (testFn(message)) {
               unlistenFn.dispose();
               resolve(message);
@@ -144,7 +144,7 @@ class PostMessageChannel extends BaseDisposable {
    * @return Promise that will be resolved with the message object after it is found.
    */
   async waitForMessage(testFn: (message: gs.IJson) => boolean): Promise<gs.IJson> {
-    let message = await this.waitForMessage_((message: Message) => {
+    const message = await this.waitForMessage_((message: Message) => {
       return (message.getType() === MessageType.DATA) && testFn(message.getPayload());
     });
     return message.getPayload();
@@ -173,10 +173,10 @@ class PostMessageChannel extends BaseDisposable {
    *     established.
    */
   static async open(srcWindow: Window, destWindow: Window): Promise<PostMessageChannel> {
-    let id = Math.random();
-    let channel = PostMessageChannel.newInstance_(srcWindow, destWindow);
+    const id = Math.random();
+    const channel = PostMessageChannel.newInstance_(srcWindow, destWindow);
 
-    let intervalId = window.setInterval(() => {
+    const intervalId = window.setInterval(() => {
       channel.post_(new Message(MessageType.PING, { id: id }));
     }, 1000);
 
@@ -197,10 +197,10 @@ class PostMessageChannel extends BaseDisposable {
    *     established.
    */
   static listen(srcWindow: Window, expectedOrigin: string): Promise<PostMessageChannel> {
-    let srcWindowListenable = new ListenableDom<Window>(srcWindow);
+    const srcWindowListenable = new ListenableDom<Window>(srcWindow);
     return new Promise((resolve: Function, reject: Function) => {
       let unlistenFn: (BaseDisposable|null) = null;
-      let timeoutId = window.setTimeout(() => {
+      const timeoutId = window.setTimeout(() => {
         srcWindowListenable.dispose();
         unlistenFn!.dispose();
         reject('Timed out listening for channel initiation message');
@@ -213,10 +213,10 @@ class PostMessageChannel extends BaseDisposable {
             return;
           }
 
-          let message = Serializer.fromJSON(event.data);
+          const message = Serializer.fromJSON(event.data);
 
           if (message.getType() === MessageType.PING) {
-            let channel = PostMessageChannel.newInstance_(srcWindow, event.source);
+            const channel = PostMessageChannel.newInstance_(srcWindow, event.source);
             channel.post_(new Message(MessageType.ACK, message.getPayload()));
             srcWindowListenable.dispose();
             unlistenFn!.dispose();
@@ -228,5 +228,3 @@ class PostMessageChannel extends BaseDisposable {
     });
   }
 }
-
-export default PostMessageChannel;

@@ -1,10 +1,9 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import { assert, Matchers, TestBase } from 'src/test-base';
 TestBase.setup();
 
-import {Mocks} from '../mock/mocks';
-
-import {Maps} from '../collection/maps';
-import {Annotations, AnnotationsHandler} from './annotations';
+import { Maps } from 'src/collection/maps';
+import { Annotations, AnnotationsHandler } from 'src/data/annotations';
+import { Mocks } from 'src/mock/mocks';
 
 
 describe('data.AnnotationsHandler', () => {
@@ -15,15 +14,16 @@ describe('data.AnnotationsHandler', () => {
   beforeEach(() => {
     parent = Mocks.object('parent');
     handler = new AnnotationsHandler<number>(__SYMBOL, parent);
+    AnnotationsHandler['REGISTERED_ANNOTATIONS_'].clear();
   });
 
   describe('attachValueToProperty', () => {
     it('should add the field value correctly', () => {
-      let key = 'key';
-      let value = 123;
+      const key = 'key';
+      const value = 123;
       handler.attachValueToProperty(key, value);
 
-      let values = Maps.of(handler['propertyValues_']).asRecord();
+      const values = Maps.of(handler['propertyValues_']).asRecord();
       assert(values).to.equal(Matchers.objectContaining({
         [key]: Matchers.any(Set),
       }));
@@ -33,9 +33,9 @@ describe('data.AnnotationsHandler', () => {
 
   describe('getAnnotatedProperties', () => {
     it('should return the correct field names', () => {
-      let key1 = 'key1';
-      let key2 = 'key2';
-      let map = new Map<string, number>();
+      const key1 = 'key1';
+      const key2 = 'key2';
+      const map = new Map<string, number>();
       map.set(key1, 123);
       map.set(key2, 456);
 
@@ -47,27 +47,27 @@ describe('data.AnnotationsHandler', () => {
 
   describe('getAttachedValues', () => {
     it('should return the correct map', () => {
-      let key1 = 'key1';
-      let key2 = 'key2';
-      let value1 = 789;
-      let value2 = 12;
+      const key1 = 'key1';
+      const key2 = 'key2';
+      const value1 = 789;
+      const value2 = 12;
       handler['propertyValues_'].set(key1, new Set([value1]));
       handler['propertyValues_'].set(key2, new Set([value2]));
 
-      let parent1 = 'parent1';
-      let parent2 = 'parent2';
-      let parentValues1 = Mocks.object('parentValues1');
-      let parentValues2 = Mocks.object('parentValues2');
-      let parentMap = new Map<string, number>();
+      const parent1 = 'parent1';
+      const parent2 = 'parent2';
+      const parentValues1 = Mocks.object('parentValues1');
+      const parentValues2 = Mocks.object('parentValues2');
+      const parentMap = new Map<string, number>();
       parentMap.set(parent1, parentValues1);
       parentMap.set(parent2, parentValues2);
 
-      let mockParentHandler = jasmine.createSpyObj('ParentHandler', ['getAttachedValues']);
+      const mockParentHandler = jasmine.createSpyObj('ParentHandler', ['getAttachedValues']);
       mockParentHandler.getAttachedValues.and.returnValue(parentMap);
 
       spyOn(AnnotationsHandler, 'of').and.returnValue(mockParentHandler);
 
-      let values = Maps.of(handler.getAttachedValues()).asRecord();
+      const values = Maps.of(handler.getAttachedValues()).asRecord();
       assert(values).to.equal(Matchers.objectContaining({
         [key1]: Matchers.any(Set),
         [key2]: Matchers.any(Set),
@@ -80,16 +80,16 @@ describe('data.AnnotationsHandler', () => {
     });
 
     it('should work if there are no parent class', () => {
-      let key1 = 'key1';
-      let key2 = 'key2';
-      let value1 = 789;
-      let value2 = 12;
+      const key1 = 'key1';
+      const key2 = 'key2';
+      const value1 = 789;
+      const value2 = 12;
       handler = new AnnotationsHandler<number>(__SYMBOL, null);
       handler['propertyValues_'].set(key1, new Set([value1]));
       handler['propertyValues_'].set(key2, new Set([value2]));
 
 
-      let values = Maps.of(handler.getAttachedValues()).asRecord();
+      const values = Maps.of(handler.getAttachedValues()).asRecord();
       assert(values).to.equal(Matchers.objectContaining({
         [key1]: Matchers.any(Set),
         [key2]: Matchers.any(Set),
@@ -99,22 +99,33 @@ describe('data.AnnotationsHandler', () => {
     });
   });
 
+  describe('createHash_', () => {
+    it('should create the hash value correctly', () => {
+      const ctor = Mocks.object('ctor');
+      const annotation = Symbol('annotation');
+      assert(AnnotationsHandler['createHash_'](ctor, annotation))
+          .to.equal(`${ctor}_${String(annotation)}`);
+    });
+  });
+
   describe('hasAnnotation', () => {
-    let proto;
-    let annotation;
+    it('should return true if the constructor has the given annotation', () => {
+      const hash = 'hash';
+      spyOn(AnnotationsHandler, 'createHash_').and.returnValue(hash);
 
-    beforeEach(() => {
-      proto = Mocks.object('proto');
-      annotation = Symbol('annotation');
+      const annotationHandler = Mocks.object('annotationHandler');
+      AnnotationsHandler['REGISTERED_ANNOTATIONS_'].set(hash, annotationHandler);
+
+      const ctor = Mocks.object('ctor');
+      const annotation = Mocks.object('annotation');
+      assert(AnnotationsHandler.hasAnnotation(ctor, annotation)).to.beTrue();
+      assert(AnnotationsHandler['createHash_']).to.haveBeenCalledWith(ctor, annotation);
     });
 
-    it('should return true if the prototype has the given annotation', () => {
-      proto[annotation] = Mocks.object('annotationHandler');
-      assert(AnnotationsHandler.hasAnnotation(proto, annotation)).to.beTrue();
-    });
-
-    it('should return false if the prototype does not have the given annotation', () => {
-      assert(AnnotationsHandler.hasAnnotation(proto, annotation)).to.beFalse();
+    it('should return false if the constructor does not have the given annotation', () => {
+      const ctor = Mocks.object('ctor');
+      const annotation = Mocks.object('annotation');
+      assert(AnnotationsHandler.hasAnnotation(ctor, annotation)).to.beFalse();
     });
   });
 
@@ -128,41 +139,49 @@ describe('data.AnnotationsHandler', () => {
     });
 
     it('should create a new handler if one does not exist', () => {
-      let parentCtor = Mocks.object('parentCtor');
-      let parentProto = Mocks.object('parentProto');
+      const parentCtor = Mocks.object('parentCtor');
+      const parentProto = Mocks.object('parentProto');
       parentProto.constructor = parentCtor;
+
+      const hash = 'hash';
+      spyOn(AnnotationsHandler, 'createHash_').and.returnValue(hash);
 
       spyOn(Object, 'getPrototypeOf').and.returnValue(parentProto);
       spyOn(AnnotationsHandler, 'hasAnnotation').and.returnValue(false);
 
-      let handler = AnnotationsHandler.of(annotation, ctor);
-      assert(ctor[annotation]).to.be(handler);
-      assert(AnnotationsHandler.hasAnnotation).to.haveBeenCalledWith(ctor, annotation);
+      const handler = AnnotationsHandler.of(annotation, ctor);
+      assert(AnnotationsHandler['REGISTERED_ANNOTATIONS_'].get(hash)).to.be(handler);
+      assert(AnnotationsHandler['createHash_']).to.haveBeenCalledWith(ctor, annotation);
       assert(handler['parent_']).to.equal(parentCtor);
       assert(handler['annotation_']).to.equal(annotation);
       assert(Object.getPrototypeOf).to.haveBeenCalledWith(ctor.prototype);
     });
 
-    it('should add the parent constructor if there is any', () => {
+    it('should not add the parent constructor if there is none', () => {
+      const hash = 'hash';
+      spyOn(AnnotationsHandler, 'createHash_').and.returnValue(hash);
+
       spyOn(Object, 'getPrototypeOf').and.returnValue(null);
       spyOn(AnnotationsHandler, 'hasAnnotation').and.returnValue(false);
 
-      let handler = AnnotationsHandler.of(annotation, ctor);
-      assert(ctor[annotation]).to.be(handler);
-      assert(AnnotationsHandler.hasAnnotation).to.haveBeenCalledWith(ctor, annotation);
+      const handler = AnnotationsHandler.of(annotation, ctor);
+      assert(AnnotationsHandler['REGISTERED_ANNOTATIONS_'].get(hash)).to.be(handler);
+      assert(AnnotationsHandler['createHash_']).to.haveBeenCalledWith(ctor, annotation);
       assert(handler['parent_']).to.equal(null);
       assert(handler['annotation_']).to.equal(annotation);
       assert(Object.getPrototypeOf).to.haveBeenCalledWith(ctor.prototype);
     });
 
     it('should reuse an existing annotations handler', () => {
-      spyOn(Object, 'getPrototypeOf').and.returnValue(null);
-      spyOn(AnnotationsHandler, 'hasAnnotation').and.returnValue(true);
+      const hash = 'hash';
+      spyOn(AnnotationsHandler, 'createHash_').and.returnValue(hash);
 
-      let handler = Mocks.object('handler');
-      ctor[annotation] = handler;
+      const cachedHandler = Mocks.object('cachedHandler');
+      AnnotationsHandler['REGISTERED_ANNOTATIONS_'].set(hash, cachedHandler);
 
-      assert(AnnotationsHandler.of(annotation, ctor)).to.be(handler);
+      assert(AnnotationsHandler.of(annotation, ctor)).to.be(cachedHandler);
+      assert(AnnotationsHandler['REGISTERED_ANNOTATIONS_'].get(hash)).to.be(cachedHandler);
+      assert(AnnotationsHandler['createHash_']).to.haveBeenCalledWith(ctor, annotation);
     });
   });
 });
@@ -181,7 +200,7 @@ describe('data.Annotations', () => {
     class SubClass extends BaseClass {}
 
     it('should create a correct instance of annotations handler', () => {
-      let handler = Mocks.object('handler');
+      const handler = Mocks.object('handler');
       spyOn(AnnotationsHandler, 'of').and.returnValue(handler);
 
       assert(annotations.forCtor(BaseClass)).to.equal(handler);
@@ -189,7 +208,7 @@ describe('data.Annotations', () => {
     });
 
     it('should specify the parent class correctly', () => {
-      let handler = Mocks.object('handler');
+      const handler = Mocks.object('handler');
       spyOn(AnnotationsHandler, 'of').and.returnValue(handler);
 
       assert(annotations.forCtor(SubClass)).to.equal(handler);
@@ -199,7 +218,7 @@ describe('data.Annotations', () => {
 
   describe('hasAnnotation', () => {
     it('should return true if the prototype has the given annotation', () => {
-      let proto = Mocks.object('proto');
+      const proto = Mocks.object('proto');
       spyOn(AnnotationsHandler, 'hasAnnotation').and.returnValue(true);
 
       assert(annotations.hasAnnotation(proto)).to.beTrue();
@@ -207,7 +226,7 @@ describe('data.Annotations', () => {
     });
 
     it('should return false if the prototype does not have the given annotation', () => {
-      let proto = Mocks.object('proto');
+      const proto = Mocks.object('proto');
       spyOn(AnnotationsHandler, 'hasAnnotation').and.returnValue(false);
 
       assert(annotations.hasAnnotation(proto)).to.beFalse();

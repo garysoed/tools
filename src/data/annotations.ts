@@ -1,5 +1,5 @@
-import {Arrays} from '../collection/arrays';
-import {Maps} from '../collection/maps';
+import { Arrays } from 'src/collection/arrays';
+import { Maps } from 'src/collection/maps';
 
 
 /**
@@ -7,6 +7,7 @@ import {Maps} from '../collection/maps';
  * @param <T> The type of value associated with the annotation.
  */
 export class AnnotationsHandler<T> {
+  private static readonly REGISTERED_ANNOTATIONS_: Map<string, AnnotationsHandler<any>> = new Map();
   private readonly annotation_: symbol;
   private readonly propertyValues_: Map<string | symbol, Set<T>>;
   private readonly parent_: any;
@@ -58,12 +59,21 @@ export class AnnotationsHandler<T> {
   }
 
   /**
-   * @param proto The prototype to be checked.
-   * @param annotation The identifier of the annotation checked.
-   * @return True iff the given prototype has the given annotation identifier.
+   * @param ctor The constructor to create the hash for.
+   * @param annotation The annotation symbol to create the hash for.
    */
-  static hasAnnotation(proto: any, annotation: symbol): boolean {
-    return proto[annotation] !== undefined;
+  private static createHash_(ctor: any, annotation: symbol): string {
+    return `${ctor}_${String(annotation)}`;
+  }
+
+  /**
+   * @param ctor The constructor to be checked.
+   * @param annotation The identifier of the annotation checked.
+   * @return True iff the given constructor has the given annotation identifier.
+   */
+  static hasAnnotation(ctor: any, annotation: symbol): boolean {
+    return AnnotationsHandler.REGISTERED_ANNOTATIONS_.has(
+        AnnotationsHandler.createHash_(ctor, annotation));
   }
 
   /**
@@ -72,12 +82,17 @@ export class AnnotationsHandler<T> {
    * @param parent Pointer to the parent class to follow the annotation.
    */
   static of<T>(annotation: symbol, ctor: any): AnnotationsHandler<T> {
+    const hash = AnnotationsHandler.createHash_(ctor, annotation);
+    const handler = AnnotationsHandler.REGISTERED_ANNOTATIONS_.get(hash);
+    if (handler !== undefined) {
+      return handler;
+    }
+
     const parentProto = Object.getPrototypeOf(ctor.prototype);
     const parent = parentProto === null ? null : parentProto.constructor;
-    if (!AnnotationsHandler.hasAnnotation(ctor, annotation)) {
-      ctor[annotation] = new AnnotationsHandler<T>(annotation, parent);
-    }
-    return ctor[annotation];
+    const newHandler = new AnnotationsHandler<T>(annotation, parent);
+    AnnotationsHandler.REGISTERED_ANNOTATIONS_.set(hash, newHandler);
+    return newHandler;
   }
 }
 

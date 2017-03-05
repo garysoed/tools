@@ -362,6 +362,17 @@ export interface IFluentIndexable<T> extends IFluentIterable<T> {
   findIndex(fn: (value: T, index: number) => boolean): (number|null);
 
   /**
+   * Performs reduce.
+   *
+   * @param fn Function that takes 3 arguments: The value at the current iteration, the index of the
+   *    element, and the previous result. This function should return the result.
+   * @param initResult Initial result of the reduction.
+   * @param <T> Type of the reduction result.
+   * @return The result of reduction.
+   */
+  reduce<R>(fn: (value: T, index: number, previousResult: R) => R, initResult: R): R;
+
+  /**
    * Calls the given function for every element in the indexable.
    *
    * @param fn Function to call for every element in the indexable. This function takes in the value

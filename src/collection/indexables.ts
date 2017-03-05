@@ -1,9 +1,8 @@
-import {Validate} from '../valid/validate';
-
-import {ArrayIterable} from './array-iterable';
-import {BaseFluent} from './base-fluent';
-import {IFluentIndexable} from './interfaces';
-import {FluentIterable, Iterables} from './iterables';
+import { ArrayIterable } from 'src/collection/array-iterable';
+import { BaseFluent } from 'src/collection/base-fluent';
+import { IFluentIndexable } from 'src/collection/interfaces';
+import { FluentIterable, Iterables } from 'src/collection/iterables';
+import { Validate } from 'src/valid/validate';
 
 
 export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexable<T> {
@@ -68,7 +67,7 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
   }
 
   filterElement(fn: (value: T, index: number) => boolean): FluentIndexable<T> {
-    let newArray: T[] = [];
+    const newArray: T[] = [];
     this.forEach((value: T, index: number) => {
       if (fn(value, index)) {
         newArray.push(value);
@@ -78,7 +77,7 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
   }
 
   find(fn: (value: T, index: number) => boolean): (T|null) {
-    let index = this.findIndex(fn);
+    const index = this.findIndex(fn);
     return index !== null ? this.getData()[index] : null;
   }
 
@@ -89,6 +88,14 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
       }
     }
     return null;
+  }
+
+  reduce<R>(fn: (value: T, index: number, previousResult: R) => R, initResult: R): R {
+    let result = initResult;
+    this.forEach((value: T, index: number) => {
+      result = fn(value, index, result);
+    });
+    return result;
   }
 
   forEach(fn: (value: T, index: number) => void): FluentIndexable<T> {
@@ -119,7 +126,7 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
   }
 
   mapElement<T2>(fn: (value: T, index: number) => T2): FluentIndexable<T2> {
-    let newArray: T2[] = [];
+    const newArray: T2[] = [];
     this.forEach((value: T, index: number) => {
       newArray.push(fn(value, index));
     });
@@ -127,7 +134,7 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
   }
 
   removeAll(toRemove: Set<T>): IFluentIndexable<T> {
-    let newArray: T[] = [];
+    const newArray: T[] = [];
     this.forEach((value: T) => {
       if (!toRemove.has(value)) {
         newArray.push(value);
@@ -141,7 +148,7 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
   }
 
   zip<T2>(other: T2[]): IFluentIndexable<[T, T2]> {
-    let thisData = this.getData();
+    const thisData = this.getData();
     Validate.any(other.length).to.beEqualTo(thisData.length)
         .orThrows(`Other array has a length of ${other.length}, expected ${thisData.length}`);
 

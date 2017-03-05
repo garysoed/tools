@@ -1,19 +1,19 @@
-import {Maps} from '../collection/maps';
-import {Sets} from '../collection/sets';
-import {BaseDisposable} from '../dispose/base-disposable';
-import {Injector} from '../inject/injector';
-import {Cases} from '../string/cases';
-import {Checks} from '../util/checks';
-import {Log} from '../util/log';
-import {Validate} from '../valid/validate';
+import { Maps } from 'src/collection/maps';
+import { Sets } from 'src/collection/sets';
+import { BaseDisposable } from 'src/dispose/base-disposable';
+import { Injector } from 'src/inject/injector';
+import { Cases } from 'src/string/cases';
+import { Checks } from 'src/util/checks';
+import { Log } from 'src/util/log';
+import { Validate } from 'src/valid/validate';
+import { BaseElement} from 'src/webc/base-element';
+import { ANNOTATIONS as BindAnnotations} from 'src/webc/bind';
+import { CustomElementUtil} from 'src/webc/custom-element-util';
+import { DomHook} from 'src/webc/dom-hook';
+import { Handler} from 'src/webc/handle';
+import { IAttributeParser, IDomBinder} from 'src/webc/interfaces';
+import { Templates} from 'src/webc/templates';
 
-import {BaseElement} from './base-element';
-import {ANNOTATIONS as BindAnnotations} from './bind';
-import {CustomElementUtil} from './custom-element-util';
-import {DomHook} from './dom-hook';
-import {Handler} from './handle';
-import {IAttributeParser, IDomBinder} from './interfaces';
-import {Templates} from './templates';
 
 /**
  * @hidden
@@ -43,11 +43,11 @@ export class ElementRegistrar extends BaseDisposable {
       attributes: {[name: string]: IAttributeParser<any>},
       elementProvider: () => BaseElement,
       content: string): xtag.ILifecycleConfig {
-    let addDisposable = this.addDisposable.bind(this);
+    const addDisposable = this.addDisposable.bind(this);
     // TODO: Log error for every one of these methods.
     return {
       attributeChanged: function(attrName: string, oldValue: string, newValue: string): void {
-        let propertyName = Cases.of(attrName).toCamelCase();
+        const propertyName = Cases.of(attrName).toCamelCase();
         if (attributes[propertyName]) {
           this[propertyName] = attributes[propertyName].parse(newValue);
         }
@@ -56,17 +56,17 @@ export class ElementRegistrar extends BaseDisposable {
         });
       },
       created: function(): void {
-        let instance = elementProvider();
+        const instance = elementProvider();
         addDisposable(instance);
 
         this[ElementRegistrar.__instance] = instance;
-        let shadow = this.createShadowRoot();
+        const shadow = this.createShadowRoot();
         shadow.innerHTML = content;
 
         CustomElementUtil.addAttributes(this, attributes);
         CustomElementUtil.setElement(instance, this);
 
-        let instancePrototype = instance.constructor;
+        const instancePrototype = instance.constructor;
         Maps.of(BindAnnotations.forCtor(instancePrototype).getAttachedValues())
             .forEach((
                 factories: Set<(element: HTMLElement, instance: any) => IDomBinder<any>>,
@@ -74,14 +74,16 @@ export class ElementRegistrar extends BaseDisposable {
               if (factories.size > 1) {
                 throw Validate.fail(`Key ${key} can only have 1 Bind annotation`);
               }
-              let factory = Sets.of(factories).anyValue();
+              const factory = Sets.of(factories).anyValue();
               if (factory === null) {
                 return;
               }
 
-              let hook = instance[key];
-              Validate.any(hook).to.beAnInstanceOf(DomHook).assertValid();
-              (<DomHook<any>> hook).open(factory(this, instance));
+              const hook = instance[key];
+              if (!(hook instanceof DomHook)) {
+                throw Validate.fail(`Key ${key} should be an instance of DomHook`);
+              }
+              hook.open(factory(this, instance));
             });
 
         instance.onCreated(this);
@@ -106,20 +108,20 @@ export class ElementRegistrar extends BaseDisposable {
    * @return Promise that will be resolved when the registration process is done.
    */
   async register(ctor: gs.ICtor<BaseElement>): Promise<void> {
-    let config = CustomElementUtil.getConfig(ctor);
+    const config = CustomElementUtil.getConfig(ctor);
     if (!config) {
       return Promise.resolve();
     }
 
-    let dependencies = config.dependencies || [];
-    let promises = dependencies.map((dependency: gs.ICtor<BaseElement>) => {
+    const dependencies = config.dependencies || [];
+    const promises = dependencies.map((dependency: gs.ICtor<BaseElement>) => {
       return this.register(dependency);
     });
 
     try {
       await Promise.all(promises);
       if (!this.registeredCtors_.has(ctor)) {
-        let template = this.templates_.getTemplate(config.templateKey);
+        const template = this.templates_.getTemplate(config.templateKey);
         Validate.any(template).toNot.beNull()
             .orThrows(`No templates found for key ${config.templateKey}`)
             .assertValid();
@@ -151,7 +153,7 @@ export class ElementRegistrar extends BaseDisposable {
    * @param callback The function to run on the instance.
    */
   private static runOnInstance_(el: any, callback: (component: BaseElement) => void): any {
-    let instance = el[ElementRegistrar.__instance];
+    const instance = el[ElementRegistrar.__instance];
     if (Checks.isInstanceOf(instance, BaseElement)) {
       return callback(instance);
     } else {

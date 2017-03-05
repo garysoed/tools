@@ -1,23 +1,23 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import { assert, Matchers, TestBase } from 'src/test-base';
 TestBase.setup();
 
-import {ArrayIterable} from './array-iterable';
-import {Arrays} from './arrays';
-import {GeneratorIterable} from './generator-iterable';
-import {Indexables} from './indexables';
+import { ArrayIterable } from 'src/collection/array-iterable';
+import { Arrays } from 'src/collection/arrays';
+import { GeneratorIterable } from 'src/collection/generator-iterable';
+import { Indexables } from 'src/collection/indexables';
 
 
 describe('collection.Indexables', () => {
   describe('addAll', () => {
     it('should add all the given elements', () => {
-      let iterable = Indexables.of([1, 2, 3])
+      const iterable = Indexables.of([1, 2, 3])
           .addAll(ArrayIterable.newInstance([4, 5, 6]))
           .asIterable();
       assert(Arrays.fromIterable(iterable).asArray()).to.equal([1, 2, 3, 4, 5, 6]);
     });
 
     it('should work with infinite iterable', () => {
-      let infiniteIterable = GeneratorIterable.newInstance(() => {
+      const infiniteIterable = GeneratorIterable.newInstance(() => {
         return {done: false, value: 0};
       });
       Indexables.of<number>([]).addAll(infiniteIterable);
@@ -26,7 +26,7 @@ describe('collection.Indexables', () => {
 
   describe('addAllArray', () => {
     it('should add all the given elements', () => {
-      let resultArray = Indexables.of([1, 2, 3])
+      const resultArray = Indexables.of([1, 2, 3])
           .addAllArray([4, 5, 6])
           .asArray();
       assert(resultArray).to.equal([1, 2, 3, 4, 5, 6]);
@@ -35,14 +35,14 @@ describe('collection.Indexables', () => {
 
   describe('asIterable', () => {
     it('should return iterable that iterates the content', () => {
-      let iterable = Indexables.of([1, 2, 3]).asIterable();
+      const iterable = Indexables.of([1, 2, 3]).asIterable();
       assert(Arrays.fromIterable(iterable).asArray()).to.equal([1, 2, 3]);
     });
   });
 
   describe('asIterator', () => {
     it('should return iterator instance that iterates the iterable', () => {
-      let iterator = Indexables.of([1, 2, 3]).asIterator();
+      const iterator = Indexables.of([1, 2, 3]).asIterator();
       assert(Arrays.fromIterator(iterator).asArray()).to.equal([1, 2, 3]);
     });
   });
@@ -63,8 +63,8 @@ describe('collection.Indexables', () => {
 
   describe('every', () => {
     it('should return true if the filter function returns true for every element', () => {
-      let filterFn = jasmine.createSpy('FilterFn').and.returnValue(true);
-      let result = Indexables.of([1, 2, 3]).every(filterFn);
+      const filterFn = jasmine.createSpy('FilterFn').and.returnValue(true);
+      const result = Indexables.of([1, 2, 3]).every(filterFn);
 
       assert(result).to.beTrue();
       assert(filterFn).to.haveBeenCalledWith(1, 0);
@@ -73,7 +73,7 @@ describe('collection.Indexables', () => {
     });
 
     it('should return false if the filter function returns a false for one element', () => {
-      let result = Indexables.of([1, 2, 3])
+      const result = Indexables.of([1, 2, 3])
           .every((value: number) => {
             return value !== 2;
           });
@@ -84,7 +84,7 @@ describe('collection.Indexables', () => {
 
   describe('filter', () => {
     it('should filter the indexable using the given filter function', () => {
-      let result = Indexables.of([1, 2, 3])
+      const result = Indexables.of([1, 2, 3])
           .filter((value: number) => {
             return value % 2 === 0;
           })
@@ -95,7 +95,7 @@ describe('collection.Indexables', () => {
 
   describe('filterElement', () => {
     it('should filter the indexable using the given filter function', () => {
-      let result = Indexables.of([1, 2, 3])
+      const result = Indexables.of([1, 2, 3])
           .filterElement((value: number, index: number) => {
             return (value + index) % 2 === 0;
           })
@@ -106,7 +106,7 @@ describe('collection.Indexables', () => {
 
   describe('find', () => {
     it('should return the element if found', () => {
-      let result = Indexables.of([1, 2, 3, 4])
+      const result = Indexables.of([1, 2, 3, 4])
           .find((value: number, index: number) => {
             return (value + index) % 2 === 1;
           });
@@ -114,7 +114,7 @@ describe('collection.Indexables', () => {
     });
 
     it('should return null if the element is not found', () => {
-      let result = Indexables.of([1, 2, 3, 4])
+      const result = Indexables.of([1, 2, 3, 4])
           .find((value: number) => {
             return false;
           });
@@ -124,7 +124,7 @@ describe('collection.Indexables', () => {
 
   describe('findIndex', () => {
     it('should return the index if found', () => {
-      let result = Indexables.of([1, 2, 3, 4])
+      const result = Indexables.of([1, 2, 3, 4])
           .findIndex((value: number, index: number) => {
             return (value + index) % 2 === 1;
           });
@@ -132,7 +132,7 @@ describe('collection.Indexables', () => {
     });
 
     it('should return null if the element is not found', () => {
-      let result = Indexables.of([1, 2, 3, 4])
+      const result = Indexables.of([1, 2, 3, 4])
           .findIndex((value: number) => {
             return false;
           });
@@ -142,7 +142,7 @@ describe('collection.Indexables', () => {
 
   describe('forEach', () => {
     it('should go through all the elements', () => {
-      let mockHandler = jasmine.createSpy('Handler');
+      const mockHandler = jasmine.createSpy('Handler');
       Indexables.of([1, 2, 3, 4]).forEach(mockHandler);
 
       assert(mockHandler).to.haveBeenCalledWith(1, 0);
@@ -154,7 +154,7 @@ describe('collection.Indexables', () => {
 
   describe('forOf', () => {
     it('should go through all the elements', () => {
-      let mockHandler = jasmine.createSpy('Handler');
+      const mockHandler = jasmine.createSpy('Handler');
       Indexables.of([1, 2, 3, 4]).forOf(mockHandler);
 
       assert(mockHandler).to.haveBeenCalledWith(1, 0, Matchers.any(Function));
@@ -164,7 +164,7 @@ describe('collection.Indexables', () => {
     });
 
     it('should stop the iteration when the break function is called', () => {
-      let mockHandler = jasmine.createSpy('Handler').and
+      const mockHandler = jasmine.createSpy('Handler').and
           .callFake((value: number, index: number, breakFn: () => void) => {
             if (value === 2) {
               breakFn();
@@ -181,7 +181,7 @@ describe('collection.Indexables', () => {
 
   describe('iterate', () => {
     it('should iterate through all the elements', () => {
-      let mockHandler = jasmine.createSpy('Handler');
+      const mockHandler = jasmine.createSpy('Handler');
       Indexables.of([1, 2, 3, 4]).iterate(mockHandler);
 
       assert(mockHandler).to.haveBeenCalledWith(1, Matchers.any(Function));
@@ -191,7 +191,7 @@ describe('collection.Indexables', () => {
     });
 
     it('should stop the iteration when the break function is called', () => {
-      let mockHandler = jasmine.createSpy('Handler').and
+      const mockHandler = jasmine.createSpy('Handler').and
           .callFake((value: number, breakFn: () => void) => {
             if (value === 2) {
               breakFn();
@@ -208,7 +208,7 @@ describe('collection.Indexables', () => {
 
   describe('map', () => {
     it('should apply the mapping function to the indexable', () => {
-      let result = Indexables.of([1, 2, 3, 4])
+      const result = Indexables.of([1, 2, 3, 4])
           .map((value: number) => {
             return value + 1;
           })
@@ -219,7 +219,7 @@ describe('collection.Indexables', () => {
 
   describe('mapElement', () => {
     it('should apply the mapping function to the indexable', () => {
-      let result = Indexables.of([1, 2, 3, 4])
+      const result = Indexables.of([1, 2, 3, 4])
           .mapElement((value: number, index: number) => {
             return value + index;
           })
@@ -228,9 +228,22 @@ describe('collection.Indexables', () => {
     });
   });
 
+  describe('reduce', () => {
+    it('should reduce correctly', () => {
+      const result = Indexables
+          .of(['a', 'b', 'c', 'd'])
+          .reduce<string>(
+              (value: string, index: number, previousResult: string) => {
+                return `${previousResult};${value}${index}`;
+              },
+              '^');
+      assert(result).to.equal('^;a0;b1;c2;d3');
+    });
+  });
+
   describe('removeAll', () => {
     it('should remove all elements in the given set', () => {
-      let result = Indexables.of([1, 2, 3, 4])
+      const result = Indexables.of([1, 2, 3, 4])
           .removeAll(new Set([2, 3]))
           .asArray();
       assert(result).to.equal([1, 4]);

@@ -1,10 +1,9 @@
-import {Arrays} from '../collection/arrays';
-import {Sets} from '../collection/sets';
-import {Annotations} from '../data/annotations';
-import {BaseDisposable} from '../dispose/base-disposable';
-import {DisposableFunction} from '../dispose/disposable-function';
-
-import {IHandler} from './interfaces';
+import { Arrays } from 'src/collection/arrays';
+import { Sets } from 'src/collection/sets';
+import { Annotations } from 'src/data/annotations';
+import { BaseDisposable } from 'src/dispose/base-disposable';
+import { DisposableFunction } from 'src/dispose/disposable-function';
+import { IHandler } from 'src/webc/interfaces';
 
 
 export type ChildListChangeConfig = {
@@ -13,7 +12,7 @@ export type ChildListChangeConfig = {
 };
 
 export const CHILD_LIST_CHANGE_ANNOTATIONS: Annotations<ChildListChangeConfig> =
-    Annotations.of<ChildListChangeConfig>(Symbol('attributeChangeHandler'));
+    Annotations.of<ChildListChangeConfig>(Symbol('childListChangeHandler'));
 
 
 /**
@@ -67,7 +66,7 @@ export class ChildListChangeHandler implements IHandler<ChildListChangeConfig> {
         .forEach((record: MutationRecord) => {
           Sets.of(handlerKeys)
               .forEach((handlerKey: string | symbol) => {
-                let handler = instance[handlerKey];
+                const handler = instance[handlerKey];
                 if (!!handler) {
                   handler.call(instance, record.addedNodes, record.removedNodes);
                 }
@@ -82,14 +81,14 @@ export class ChildListChangeHandler implements IHandler<ChildListChangeConfig> {
       targetEl: Element,
       instance: BaseDisposable,
       configs: ChildListChangeConfig[]): void {
-    let handlerKeys = Arrays
+    const handlerKeys = Arrays
         .of(configs)
         .map((config: ChildListChangeConfig) => {
           return config.handlerKey;
         })
         .asArray();
-    let handlerKeySet = new Set(handlerKeys);
-    let observer = this.createMutationObserver_(instance, handlerKeySet);
+    const handlerKeySet = new Set(handlerKeys);
+    const observer = this.createMutationObserver_(instance, handlerKeySet);
     observer.observe(targetEl, {childList: true});
 
     // Calls the initial "change".

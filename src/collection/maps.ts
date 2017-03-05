@@ -1,4 +1,4 @@
-import {FluentMappable, Mappables} from './mappables';
+import { FluentMappable, Mappables } from 'src/collection/mappables';
 
 
 /**
@@ -11,7 +11,7 @@ import {FluentMappable, Mappables} from './mappables';
  * Example:
  *
  * ```typescript
- * let map = new Map<number, number>([[1, 2], [3, 4]]);
+ * const map = new Map<number, number>([[1, 2], [3, 4]]);
  * Maps
  *     .of(map)
  *     .forEach((value: number, key: number) => {
@@ -30,9 +30,9 @@ export class Maps {
    * @param array Array whose elements should be used as the map's values.
    */
   static fromArray<V>(array: V[]): FluentMappable<number, V> {
-    let entries: [number, V][] = [];
+    const entries: [number, V][] = [];
     for (let i = 0; i < array.length; i++) {
-      let element = array[i];
+      const element = array[i];
       if (element !== undefined) {
         entries.push([i, element]);
       }
@@ -49,8 +49,8 @@ export class Maps {
    * @return Map wrapper object to do operations on.
    */
   static fromNumericalIndexed<V>(struct: { [index: number]: V }): FluentMappable<number, V> {
-    let entries: [number, V][] = [];
-    for (let key in struct) {
+    const entries: [number, V][] = [];
+    for (const key in struct) {
       entries.push([Number(key), struct[key]]);
     }
 
@@ -66,8 +66,8 @@ export class Maps {
    * @return Map wrapper object to do operations on.
    */
   static fromRecord<V>(record: { [key: string]: V }): FluentMappable<string, V> {
-    let entries: [string, V][] = [];
-    for (let key in record) {
+    const entries: [string, V][] = [];
+    for (const key in record) {
       entries.push([key, record[key]]);
     }
 
@@ -87,6 +87,6 @@ export class Maps {
    * @return Map wrapper object to do operations on.
    */
   static of<K, V>(data: Map<K, V>): FluentMappable<K, V> {
-    return Mappables.of<K, V>(data);
+    return Mappables.of<K, V>(new Map(data));
   }
 };
