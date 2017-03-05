@@ -5,11 +5,11 @@ import { Asyncs } from '../async/asyncs';
 import { Serializer } from '../data/a-serializable';
 import { DomEvent } from '../event/dom-event';
 import { Mocks } from '../mock/mocks';
+import { Message, MessageType, PostMessageChannel } from '../rpc/post-message-channel';
 import { TestDispose } from '../testing/test-dispose';
-import { Message, MessageType, PostMessageChannel } from '../ui/post-message-channel';
 
 
-describe('ui.PostMessageChannel', () => {
+describe('rpc.PostMessageChannel', () => {
   let mockDestWindow;
   let mockSrcWindow;
   let channel;
@@ -199,7 +199,7 @@ describe('ui.PostMessageChannel', () => {
       const mockChannel = jasmine.createSpyObj('Channel', ['post_', 'waitForMessage_']);
       mockChannel['waitForMessage_'].and.returnValue(Promise.resolve());
 
-      spyOn(PostMessageChannel, 'newInstance_').and.returnValue(mockChannel);
+      spyOn(PostMessageChannel, 'of_').and.returnValue(mockChannel);
       spyOn(Math, 'random').and.returnValue(id);
 
       const setIntervalSpy = spyOn(window, 'setInterval').and.returnValue(intervalId);
@@ -207,7 +207,7 @@ describe('ui.PostMessageChannel', () => {
 
       const channel = await PostMessageChannel.open(mockSrcWindow, mockDestWindow);
       assert(channel).to.equal(mockChannel);
-      assert(PostMessageChannel['newInstance_'])
+      assert(PostMessageChannel['of_'])
           .to.haveBeenCalledWith(mockSrcWindow, mockDestWindow);
 
       const message = new Message(MessageType.ACK, { 'id': id });
@@ -233,7 +233,7 @@ describe('ui.PostMessageChannel', () => {
       const mockChannel = jasmine.createSpyObj('Channel', ['post', 'waitForMessage_']);
       mockChannel['waitForMessage_'].and.returnValue(Promise.resolve());
 
-      spyOn(PostMessageChannel, 'newInstance_').and.returnValue(mockChannel);
+      spyOn(PostMessageChannel, 'of_').and.returnValue(mockChannel);
 
       spyOn(Math, 'random').and.returnValue(id);
 
@@ -248,7 +248,7 @@ describe('ui.PostMessageChannel', () => {
       const mockChannel = jasmine.createSpyObj('Channel', ['post', 'waitForMessage_']);
       mockChannel['waitForMessage_'].and.returnValue(Promise.resolve());
 
-      spyOn(PostMessageChannel, 'newInstance_').and.returnValue(mockChannel);
+      spyOn(PostMessageChannel, 'of_').and.returnValue(mockChannel);
 
       spyOn(Math, 'random').and.returnValue(id);
 
@@ -266,7 +266,7 @@ describe('ui.PostMessageChannel', () => {
       const mockChannel = jasmine.createSpyObj('Channel', ['post_']);
 
       spyOn(mockSrcWindow, 'addEventListener');
-      spyOn(PostMessageChannel, 'newInstance_').and.returnValue(mockChannel);
+      spyOn(PostMessageChannel, 'of_').and.returnValue(mockChannel);
       spyOn(window, 'clearTimeout');
       spyOn(window, 'setTimeout').and.returnValue(timeoutId);
 
@@ -280,7 +280,7 @@ describe('ui.PostMessageChannel', () => {
             assert(postMessage.getType()).to.equal(MessageType.ACK);
             assert(postMessage.getPayload()).to.equal({ 'id': id });
 
-            assert(PostMessageChannel['newInstance_'])
+            assert(PostMessageChannel['of_'])
                 .to.haveBeenCalledWith(mockSrcWindow, mockDestWindow);
 
             assert(window.setTimeout)
@@ -304,7 +304,7 @@ describe('ui.PostMessageChannel', () => {
       const mockChannel = jasmine.createSpyObj('Channel', ['post']);
 
       spyOn(mockSrcWindow, 'addEventListener');
-      spyOn(PostMessageChannel, 'newInstance_').and.returnValue(mockChannel);
+      spyOn(PostMessageChannel, 'of_').and.returnValue(mockChannel);
 
       PostMessageChannel
           .listen(mockSrcWindow, expectedOrigin)
@@ -326,7 +326,7 @@ describe('ui.PostMessageChannel', () => {
       const mockChannel = jasmine.createSpyObj('Channel', ['post']);
 
       spyOn(mockSrcWindow, 'addEventListener');
-      spyOn(PostMessageChannel, 'newInstance_').and.returnValue(mockChannel);
+      spyOn(PostMessageChannel, 'of_').and.returnValue(mockChannel);
 
       PostMessageChannel
           .listen(mockSrcWindow, expectedOrigin)

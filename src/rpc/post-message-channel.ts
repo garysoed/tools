@@ -93,12 +93,46 @@ export class PostMessageChannel extends BaseDisposable {
     this.addDisposable(this.destWindow_, this.srcWindow_);
   }
 
+  private static of_(srcWindow: Window, destWindow: Window): PostMessageChannel {
+    return new PostMessageChannel(srcWindow, destWindow);
+  }
+
+  /**
+   * Posts message to the destination window.
+   *
+   * @param message The message JSON to be sent to the destination window.
+   * @return The promise that will be resolved when the message has been sent to the destination
+   *     window.
+   */
+  post(message: gs.IJson): Promise<void> {
+    return this.post_(new Message(MessageType.DATA, message));
+  }
+
   private post_(message: Message): Promise<void> {
     return Asyncs.run(() => {
       this.destWindow_.getEventTarget().postMessage(
           Serializer.toJSON(message),
           PostMessageChannel.getOrigin(this.srcWindow_.getEventTarget()));
     });
+  }
+
+  /**
+   * Waits for a message from the destination window.
+   *
+   * This method takes in a testFn which determines if the message received is the message that the
+   * caller is waiting for. Once the caller has determined that the message is the one it wants,
+   * this method will resolve the promise it returns.
+   *
+   * @param testFn Function to determine if the message is the one that the caller wants. This
+   *    function takes in the message object and should return true iff it is the message searched.
+   *    If this returns true, the code will stop waiting for messages.
+   * @return Promise that will be resolved with the message object after it is found.
+   */
+  async waitForMessage(testFn: (message: gs.IJson) => boolean): Promise<gs.IJson> {
+    const message = await this.waitForMessage_((message: Message) => {
+      return (message.getType() === MessageType.DATA) && testFn(message.getPayload());
+    });
+    return message.getPayload();
   }
 
   private waitForMessage_(testFn: (message: Message) => boolean): Promise<Message> {
@@ -122,39 +156,6 @@ export class PostMessageChannel extends BaseDisposable {
   }
 
   /**
-   * Posts message to the destination window.
-   *
-   * @param message The message JSON to be sent to the destination window.
-   * @return The promise that will be resolved when the message has been sent to the destination
-   *     window.
-   */
-  post(message: gs.IJson): Promise<void> {
-    return this.post_(new Message(MessageType.DATA, message));
-  }
-
-  /**
-   * Waits for a message from the destination window.
-   *
-   * This method takes in a testFn which determines if the message received is the message that the
-   * caller is waiting for. Once the caller has determined that the message is the one it wants,
-   * this method will resolve the promise it returns.
-   *
-   * @param testFn Function to determine if the message is the one that the caller wants. This
-   *     function takes in the message object and should return true iff it is the message searched.
-   * @return Promise that will be resolved with the message object after it is found.
-   */
-  async waitForMessage(testFn: (message: gs.IJson) => boolean): Promise<gs.IJson> {
-    const message = await this.waitForMessage_((message: Message) => {
-      return (message.getType() === MessageType.DATA) && testFn(message.getPayload());
-    });
-    return message.getPayload();
-  }
-
-  private static newInstance_(srcWindow: Window, destWindow: Window): PostMessageChannel {
-    return new PostMessageChannel(srcWindow, destWindow);
-  }
-
-  /**
    * Generates the origin URL of the given window.
    *
    * @param window Window object to generate the origin URL for.
@@ -174,7 +175,7 @@ export class PostMessageChannel extends BaseDisposable {
    */
   static async open(srcWindow: Window, destWindow: Window): Promise<PostMessageChannel> {
     const id = Math.random();
-    const channel = PostMessageChannel.newInstance_(srcWindow, destWindow);
+    const channel = PostMessageChannel.of_(srcWindow, destWindow);
 
     const intervalId = window.setInterval(() => {
       channel.post_(new Message(MessageType.PING, { id: id }));
@@ -216,7 +217,7 @@ export class PostMessageChannel extends BaseDisposable {
           const message = Serializer.fromJSON(event.data);
 
           if (message.getType() === MessageType.PING) {
-            const channel = PostMessageChannel.newInstance_(srcWindow, event.source);
+            const channel = PostMessageChannel.of_(srcWindow, event.source);
             channel.post_(new Message(MessageType.ACK, message.getPayload()));
             srcWindowListenable.dispose();
             unlistenFn!.dispose();

@@ -104,6 +104,6 @@ export class Arrays {
    * @return Array wrapper object to do operations on.
    */
   static of<T>(data: T[]): FluentIndexable<T> {
-    return new FluentIndexable<T>(data);
+    return new FluentIndexable<T>(data.slice());
   }
 };
