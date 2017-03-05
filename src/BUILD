@@ -13,6 +13,7 @@ gs_tools(
       "//src/mock",
       "//src/net",
       "//src/random",
+      "//src/rpc",
       "//src/secure",
       "//src/solver",
       "//src/store",
