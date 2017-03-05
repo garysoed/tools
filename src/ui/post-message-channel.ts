@@ -1,8 +1,8 @@
-import { Asyncs } from 'src/async/asyncs';
-import { Field, Serializable, Serializer } from 'src/data/a-serializable';
-import { BaseDisposable } from 'src/dispose/base-disposable';
-import { DomEvent } from 'src/event/dom-event';
-import { ListenableDom } from 'src/event/listenable-dom';
+import { Asyncs } from '../async/asyncs';
+import { Field, Serializable, Serializer } from '../data/a-serializable';
+import { BaseDisposable } from '../dispose/base-disposable';
+import { DomEvent } from '../event/dom-event';
+import { ListenableDom } from '../event/listenable-dom';
 
 
 /**

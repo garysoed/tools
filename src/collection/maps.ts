@@ -1,4 +1,4 @@
-import { FluentMappable, Mappables } from 'src/collection/mappables';
+import { FluentMappable, Mappables } from '../collection/mappables';
 
 
 /**

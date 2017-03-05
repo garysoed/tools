@@ -1,12 +1,12 @@
-import { assert, Matchers, TestBase } from 'src/test-base';
+import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import { Asyncs } from 'src/async/asyncs';
-import { Serializer } from 'src/data/a-serializable';
-import { DomEvent } from 'src/event/dom-event';
-import { Mocks } from 'src/mock/mocks';
-import { TestDispose } from 'src/testing/test-dispose';
-import { Message, MessageType, PostMessageChannel } from 'src/ui/post-message-channel';
+import { Asyncs } from '../async/asyncs';
+import { Serializer } from '../data/a-serializable';
+import { DomEvent } from '../event/dom-event';
+import { Mocks } from '../mock/mocks';
+import { TestDispose } from '../testing/test-dispose';
+import { Message, MessageType, PostMessageChannel } from '../ui/post-message-channel';
 
 
 describe('ui.PostMessageChannel', () => {

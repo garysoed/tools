@@ -1,9 +1,9 @@
-import { assert, Matchers, TestBase } from 'src/test-base';
+import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import { Maps } from 'src/collection/maps';
-import { Annotations, AnnotationsHandler } from 'src/data/annotations';
-import { Mocks } from 'src/mock/mocks';
+import { Maps } from '../collection/maps';
+import { Annotations, AnnotationsHandler } from '../data/annotations';
+import { Mocks } from '../mock/mocks';
 
 
 describe('data.AnnotationsHandler', () => {

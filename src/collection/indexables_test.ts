@@ -1,10 +1,10 @@
-import { assert, Matchers, TestBase } from 'src/test-base';
+import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import { ArrayIterable } from 'src/collection/array-iterable';
-import { Arrays } from 'src/collection/arrays';
-import { GeneratorIterable } from 'src/collection/generator-iterable';
-import { Indexables } from 'src/collection/indexables';
+import { ArrayIterable } from '../collection/array-iterable';
+import { Arrays } from '../collection/arrays';
+import { GeneratorIterable } from '../collection/generator-iterable';
+import { Indexables } from '../collection/indexables';
 
 
 describe('collection.Indexables', () => {

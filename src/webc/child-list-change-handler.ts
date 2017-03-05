@@ -1,9 +1,9 @@
-import { Arrays } from 'src/collection/arrays';
-import { Sets } from 'src/collection/sets';
-import { Annotations } from 'src/data/annotations';
-import { BaseDisposable } from 'src/dispose/base-disposable';
-import { DisposableFunction } from 'src/dispose/disposable-function';
-import { IHandler } from 'src/webc/interfaces';
+import { Arrays } from '../collection/arrays';
+import { Sets } from '../collection/sets';
+import { Annotations } from '../data/annotations';
+import { BaseDisposable } from '../dispose/base-disposable';
+import { DisposableFunction } from '../dispose/disposable-function';
+import { IHandler } from '../webc/interfaces';
 
 
 export type ChildListChangeConfig = {

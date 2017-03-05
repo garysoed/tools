@@ -1,8 +1,8 @@
-import { ArrayIterable } from 'src/collection/array-iterable';
-import { BaseFluent } from 'src/collection/base-fluent';
-import { IFluentIndexable } from 'src/collection/interfaces';
-import { FluentIterable, Iterables } from 'src/collection/iterables';
-import { Validate } from 'src/valid/validate';
+import { ArrayIterable } from '../collection/array-iterable';
+import { BaseFluent } from '../collection/base-fluent';
+import { IFluentIndexable } from '../collection/interfaces';
+import { FluentIterable, Iterables } from '../collection/iterables';
+import { Validate } from '../valid/validate';
 
 
 export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexable<T> {

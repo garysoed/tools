@@ -1,18 +1,18 @@
-import { Maps } from 'src/collection/maps';
-import { Sets } from 'src/collection/sets';
-import { BaseDisposable } from 'src/dispose/base-disposable';
-import { Injector } from 'src/inject/injector';
-import { Cases } from 'src/string/cases';
-import { Checks } from 'src/util/checks';
-import { Log } from 'src/util/log';
-import { Validate } from 'src/valid/validate';
-import { BaseElement} from 'src/webc/base-element';
-import { ANNOTATIONS as BindAnnotations} from 'src/webc/bind';
-import { CustomElementUtil} from 'src/webc/custom-element-util';
-import { DomHook} from 'src/webc/dom-hook';
-import { Handler} from 'src/webc/handle';
-import { IAttributeParser, IDomBinder} from 'src/webc/interfaces';
-import { Templates} from 'src/webc/templates';
+import { Maps } from '../collection/maps';
+import { Sets } from '../collection/sets';
+import { BaseDisposable } from '../dispose/base-disposable';
+import { Injector } from '../inject/injector';
+import { Cases } from '../string/cases';
+import { Checks } from '../util/checks';
+import { Log } from '../util/log';
+import { Validate } from '../valid/validate';
+import { BaseElement} from '../webc/base-element';
+import { ANNOTATIONS as BindAnnotations} from '../webc/bind';
+import { CustomElementUtil} from '../webc/custom-element-util';
+import { DomHook} from '../webc/dom-hook';
+import { Handler} from '../webc/handle';
+import { IAttributeParser, IDomBinder} from '../webc/interfaces';
+import { Templates} from '../webc/templates';
 
 
 /**
