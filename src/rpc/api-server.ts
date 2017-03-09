@@ -9,12 +9,12 @@ import { PostMessageChannel } from '../rpc/post-message-channel';
  */
 export class ApiServer<Q, P extends gs.IJson> {
   private readonly channel_: PostMessageChannel;
-  private readonly processRequest_: (request: Q) => P;
+  private readonly processRequest_: (request: Q) => Promise<P>;
   private readonly requestType_: IType<Q>;
 
   constructor(
       channel: PostMessageChannel,
-      processRequest: (request: Q) => P,
+      processRequest: (request: Q) => Promise<P>,
       requestType: IType<Q>) {
     this.channel_ = channel;
     this.processRequest_ = processRequest;
@@ -23,7 +23,10 @@ export class ApiServer<Q, P extends gs.IJson> {
 
   private onMessage_(message: gs.IJson): boolean {
     if (this.requestType_.check(message)) {
-      this.channel_.post(this.processRequest_(message));
+      this.processRequest_(message)
+          .then((response: P) => {
+            this.channel_.post(response);
+          });
     }
     return false;
   }
@@ -38,13 +41,14 @@ export class ApiServer<Q, P extends gs.IJson> {
   /**
    * Creates a new instance of the ApiServer.
    * @param channel Channel to communicate the API through.
-   * @param processRequest Function that takes the request and returns its corresponding response.
+   * @param processRequest Function that takes the request and returns promise that will be resolved
+   *    with the corresponding response..
    * @param requestType Type check for the request.
    * @return New instance of the ApiServer.
    */
   static of<Q, P extends gs.IJson>(
       channel: PostMessageChannel,
-      processRequest: (request: Q) => P,
+      processRequest: (request: Q) => Promise<P>,
       requestType: IType<Q>): ApiServer<Q, P> {
     return new ApiServer<Q, P>(channel, processRequest, requestType);
   }

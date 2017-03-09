@@ -24,12 +24,16 @@ describe('rpc.ApiServer', () => {
       mockRequestType.check.and.returnValue(true);
 
       const response = Mocks.object('response');
-      mockProcessRequest.and.returnValue(response);
+      const mockPromise = jasmine.createSpyObj('Promise', ['then']);
+      mockProcessRequest.and.returnValue(mockPromise);
 
       assert(server['onMessage_'](message)).to.beFalse();
-      assert(mockChannel.post).to.haveBeenCalledWith(response);
       assert(mockProcessRequest).to.haveBeenCalledWith(message);
       assert(mockRequestType.check).to.haveBeenCalledWith(message);
+
+      assert(mockPromise.then).to.haveBeenCalledWith(Matchers.any(Function));
+      mockPromise.then.calls.argsFor(0)[0](response);
+      assert(mockChannel.post).to.haveBeenCalledWith(response);
     });
 
     it('should do nothing if the message is the wrong type', () => {
