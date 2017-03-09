@@ -2,13 +2,14 @@ import {Arrays} from '../collection/arrays';
 import {Serializer} from '../data/a-serializable';
 import {Validate} from '../valid/validate';
 
-import {IdGenerator} from '../random/interfaces';
+import { Sets } from '../collection/sets';
+import { BaseIdGenerator } from '../random/base-id-generator';
 import {SimpleIdGenerator} from '../random/simple-id-generator';
-import {Storage as GsStorage} from './interfaces';
+import { Storage as GsStorage } from '../store/interfaces';
 
 
 export class WebStorage<T> implements GsStorage<T> {
-  private readonly idGenerator_: IdGenerator;
+  private readonly idGenerator_: BaseIdGenerator;
   private readonly prefix_: string;
   private readonly storage_: Storage;
 
@@ -71,12 +72,7 @@ export class WebStorage<T> implements GsStorage<T> {
    * @override
    */
   generateId(): Promise<string> {
-    let id = this.idGenerator_.generate();
-    let indexes = new Set(this.getIndexes_());
-    while (indexes.has(id)) {
-      id = this.idGenerator_.resolveConflict(id);
-    }
-    return Promise.resolve(id);
+    return Promise.resolve(this.idGenerator_.generate(Sets.of(this.getIndexes_()).asArray()));
   }
 
   /**

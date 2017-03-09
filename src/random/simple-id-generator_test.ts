@@ -11,11 +11,11 @@ describe('random.SimpleIdGenerator', () => {
     generator = new SimpleIdGenerator();
   });
 
-  describe('generate', () => {
+  describe('newId_', () => {
     it('should generate an ID correctly', () => {
       let id = 'id';
       spyOn(generator['random_'], 'shortId').and.returnValue(id);
-      assert(generator.generate()).to.equal(id);
+      assert(generator['newId_']()).to.equal(id);
     });
   });
 
@@ -26,7 +26,7 @@ describe('random.SimpleIdGenerator', () => {
 
       spyOn(generator['random_'], 'shortId').and.returnValue(newId);
 
-      assert(generator.resolveConflict(conflictingId)).to.equal(`${conflictingId}-${newId}`);
+      assert(generator.resolveConflict_(conflictingId)).to.equal(`${conflictingId}-${newId}`);
     });
   });
 });

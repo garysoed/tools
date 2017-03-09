@@ -205,16 +205,12 @@ describe('store.WebStorage', () => {
       let id1 = 'id1';
       let id2 = 'id2';
       let id3 = 'id3';
-      spyOn(storage['idGenerator_'], 'generate').and.returnValue(initialId);
-      spyOn(storage['idGenerator_'], 'resolveConflict').and.returnValues(id1, id2, id3);
+      spyOn(storage['idGenerator_'], 'generate').and.returnValue(id3);
       spyOn(storage, 'getIndexes_').and.returnValue(new Set([initialId, id1, id2]));
 
       let id = await storage.generateId();
       assert(id).to.equal(id3);
-      assert(storage['idGenerator_'].resolveConflict).to.haveBeenCalledWith(initialId);
-      assert(storage['idGenerator_'].resolveConflict).to.haveBeenCalledWith(id1);
-      assert(storage['idGenerator_'].resolveConflict).to.haveBeenCalledWith(id2);
-      assert(storage['idGenerator_'].resolveConflict).toNot.haveBeenCalledWith(id3);
+      assert(storage['idGenerator_'].generate).to.haveBeenCalledWith([initialId, id1, id2]);
     });
   });
 
