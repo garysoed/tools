@@ -1,12 +1,11 @@
-import {Annotations} from '../data/annotations';
-
-import {AttributeBinder} from './attribute-binder';
-import {ChildrenElementsBinder} from './children-elements-binder';
-import {ClassListBinder} from './class-list-binder';
-import {ElementSwitchBinder} from './element-switch-binder';
-import {IAttributeParser, IDomBinder} from './interfaces';
-import {PropertyBinder} from './property-binder';
-import {Util} from './util';
+import { Annotations } from '../data/annotations';
+import { AttributeBinder } from '../webc/attribute-binder';
+import { ChildrenElementsBinder } from '../webc/children-elements-binder';
+import { ClassListBinder } from '../webc/class-list-binder';
+import { ElementSwitchBinder } from '../webc/element-switch-binder';
+import { IAttributeParser, IDomBinder } from '../webc/interfaces';
+import { PropertyBinder } from '../webc/property-binder';
+import { Util } from '../webc/util';
 
 
 type BinderFactory = (element: HTMLElement, instance: any) => IDomBinder<any>;
@@ -70,12 +69,14 @@ export class Bind {
    */
   childrenElements<T>(
       elementGenerator: (document: Document, instance: any) => Element,
+      dataGetter: (element: Element) => T | null,
       dataSetter: (data: T, element: Element, instance: any) => void,
       insertionIndex: number = 0): PropertyDecorator {
     return this.createDecorator_(
         (element: Element, instance: any): IDomBinder<any> => {
           return ChildrenElementsBinder.of<T>(
               element,
+              dataGetter,
               dataSetter,
               elementGenerator,
               insertionIndex,

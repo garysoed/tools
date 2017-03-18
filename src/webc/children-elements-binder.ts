@@ -1,13 +1,12 @@
-import {Arrays} from '../collection/arrays';
-import {Sets} from '../collection/sets';
-
-import {IDomBinder} from './interfaces';
-
-
-export const __data = Symbol('data');
+import { ArrayOfType } from '../check/array-of-type';
+import { NonNullType } from '../check/non-null-type';
+import { Arrays } from '../collection/arrays';
+import { Sets } from '../collection/sets';
+import { IDomBinder } from '../webc/interfaces';
 
 
 export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
+  private readonly dataGetter_: (element: Element) => T | null;
   private readonly dataSetter_: (data: T, element: Element, instance: any) => void;
   private readonly elementPool_: Set<Element>;
   private readonly generator_: (document: Document, instance: any) => Element;
@@ -17,10 +16,12 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
 
   constructor(
       parentEl: Element,
+      dataGetter: (element: Element) => T | null,
       dataSetter: (data: T, element: Element, instance: any) => void,
       generator: (document: Document, instance: any) => Element,
       insertionIndex: number,
       instance: any) {
+    this.dataGetter_ = dataGetter;
     this.dataSetter_ = dataSetter;
     this.elementPool_ = new Set();
     this.generator_ = generator;
@@ -36,17 +37,9 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
     return Arrays
         .fromItemList(this.parentEl_.children)
         .filterElement((element: Element, index: number) => {
-          return index >= this.insertionIndex_ && this.getData_(element) !== undefined;
+          return index >= this.insertionIndex_ && this.dataGetter_(element) !== undefined;
         })
         .asArray();
-  }
-
-  /**
-   * @param element The element whose embedded data should be returned.
-   * @return The data embedded in the given element.
-   */
-  private getData_(element: Element): T {
-    return element[__data];
   }
 
   /**
@@ -63,15 +56,6 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
   }
 
   /**
-   * Embeds the given data into the given element.
-   * @param element The element to embed the data in.
-   * @param data The data to embed.
-   */
-  private setData_(element: Element, data: T): void {
-    element[__data] = data;
-  }
-
-  /**
    * @override
    */
   delete(): void {
@@ -85,13 +69,18 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
   /**
    * @override
    */
-  get(): T[] {
-    return Arrays
+  get(): T[] | null {
+    const data = Arrays
         .of(this.getChildElements_())
         .map((child: Element) => {
-          return this.getData_(child);
+          return this.dataGetter_(child);
         })
         .asArray();
+    if (ArrayOfType(NonNullType<T>()).check(data)) {
+      return data;
+    } else {
+      return null;
+    }
   }
 
   /**
@@ -118,7 +107,6 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
         .forEach((value: T, index: number) => {
           let element = this.parentEl_.children.item(this.insertionIndex_ + index);
           this.dataSetter_(value, element, this.instance_);
-          this.setData_(element, value);
         });
   }
 
@@ -132,10 +120,12 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
    */
   static of<T>(
       parentEl: Element,
+      dataGetter: (element: Element) => T | null,
       dataSetter: (data: T, element: Element, instance: any) => void,
       generator: (document: Document, instance: any) => Element,
       insertionIndex: number,
       instance: any): ChildrenElementsBinder<T> {
-    return new ChildrenElementsBinder(parentEl, dataSetter, generator, insertionIndex, instance);
+    return new ChildrenElementsBinder(
+        parentEl, dataGetter, dataSetter, generator, insertionIndex, instance);
   }
 }
