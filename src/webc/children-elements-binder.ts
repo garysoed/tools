@@ -5,26 +5,27 @@ import { Sets } from '../collection/sets';
 import { IDomBinder } from '../webc/interfaces';
 
 
+export interface IDataHelper<T> {
+  create: (document: Document, instance: any) => Element;
+  get: (element: Element) => T | null;
+  set: (data: T, element: Element, instance: any) => void;
+}
+
+
 export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
-  private readonly dataGetter_: (element: Element) => T | null;
-  private readonly dataSetter_: (data: T, element: Element, instance: any) => void;
+  private readonly dataHelper_: IDataHelper<T>;
   private readonly elementPool_: Set<Element>;
-  private readonly generator_: (document: Document, instance: any) => Element;
   private readonly instance_: any;
   private readonly parentEl_: Element;
   private insertionIndex_: number;
 
   constructor(
       parentEl: Element,
-      dataGetter: (element: Element) => T | null,
-      dataSetter: (data: T, element: Element, instance: any) => void,
-      generator: (document: Document, instance: any) => Element,
+      helper: IDataHelper<T>,
       insertionIndex: number,
       instance: any) {
-    this.dataGetter_ = dataGetter;
-    this.dataSetter_ = dataSetter;
+    this.dataHelper_ = helper;
     this.elementPool_ = new Set();
-    this.generator_ = generator;
     this.insertionIndex_ = insertionIndex;
     this.instance_ = instance;
     this.parentEl_ = parentEl;
@@ -37,7 +38,8 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
     return Arrays
         .fromItemList(this.parentEl_.children)
         .filterElement((element: Element, index: number) => {
-          return index >= this.insertionIndex_ && this.dataGetter_(element) !== undefined;
+          return index >= this.insertionIndex_
+              && this.dataHelper_.get(element) !== undefined;
         })
         .asArray();
   }
@@ -48,7 +50,7 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
   private getElement_(): Element {
     let element = Sets.of(this.elementPool_).anyValue();
     if (element === null) {
-      return this.generator_(this.parentEl_.ownerDocument, this.instance_);
+      return this.dataHelper_.create(this.parentEl_.ownerDocument, this.instance_);
     } else {
       this.elementPool_.delete(element);
       return element;
@@ -73,7 +75,7 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
     const data = Arrays
         .of(this.getChildElements_())
         .map((child: Element) => {
-          return this.dataGetter_(child);
+          return this.dataHelper_.get(child);
         })
         .asArray();
     if (ArrayOfType(NonNullType<T>()).check(data)) {
@@ -106,7 +108,7 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
         .of(valueArray)
         .forEach((value: T, index: number) => {
           let element = this.parentEl_.children.item(this.insertionIndex_ + index);
-          this.dataSetter_(value, element, this.instance_);
+          this.dataHelper_.set(value, element, this.instance_);
         });
   }
 
@@ -120,12 +122,9 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
    */
   static of<T>(
       parentEl: Element,
-      dataGetter: (element: Element) => T | null,
-      dataSetter: (data: T, element: Element, instance: any) => void,
-      generator: (document: Document, instance: any) => Element,
+      dataHelper: IDataHelper<T>,
       insertionIndex: number,
       instance: any): ChildrenElementsBinder<T> {
-    return new ChildrenElementsBinder(
-        parentEl, dataGetter, dataSetter, generator, insertionIndex, instance);
+    return new ChildrenElementsBinder(parentEl, dataHelper, insertionIndex, instance);
   }
 }

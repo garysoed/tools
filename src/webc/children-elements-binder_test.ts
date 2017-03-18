@@ -7,24 +7,18 @@ import { ChildrenElementsBinder } from '../webc/children-elements-binder';
 
 
 describe('webc.ChildrenElementsBinder', () => {
+  let mockDataHelper;
   let binder: ChildrenElementsBinder<number>;
   let instance;
   let parentEl: Element;
-  let mockDataGetter;
-  let mockDataSetter;
-  let mockGenerator;
 
   beforeEach(() => {
     instance = Mocks.object('instance');
     parentEl = document.createElement('div');
-    mockDataGetter = jasmine.createSpy('DataGetter');
-    mockDataSetter = jasmine.createSpy('DataSetter');
-    mockGenerator = jasmine.createSpy('Generator');
+    mockDataHelper = jasmine.createSpyObj('DataHelper', ['create', 'get', 'set']);
     binder = new ChildrenElementsBinder<number>(
         parentEl,
-        mockDataGetter,
-        mockDataSetter,
-        mockGenerator,
+        mockDataHelper,
         0,
         instance);
   });
@@ -40,7 +34,7 @@ describe('webc.ChildrenElementsBinder', () => {
       parentEl.appendChild(child3);
       parentEl.appendChild(child4);
 
-      mockDataGetter.and.callFake((element: any) => {
+      mockDataHelper.get.and.callFake((element: any) => {
         return element === child4 ? undefined : {};
       });
 
@@ -52,11 +46,11 @@ describe('webc.ChildrenElementsBinder', () => {
   describe('getElement_', () => {
     it('should create an element using the generator if the pool is empty', () => {
       const element = Mocks.object('element');
-      mockGenerator.and.returnValue(element);
+      mockDataHelper.create.and.returnValue(element);
 
       assert(binder['getElement_']()).to.equal(element);
       assert(binder['elementPool_']).to.haveElements([]);
-      assert(mockGenerator).to.haveBeenCalledWith(document, instance);
+      assert(mockDataHelper.create).to.haveBeenCalledWith(document, instance);
     });
 
     it('should reuse an element from the pool', () => {
@@ -66,7 +60,7 @@ describe('webc.ChildrenElementsBinder', () => {
 
       assert(binder['getElement_']()).to.equal(element);
       assert(binder['elementPool_']).to.haveElements([]);
-      assert(mockGenerator).toNot.haveBeenCalled();
+      assert(mockDataHelper.create).toNot.haveBeenCalled();
     });
   });
 
@@ -95,7 +89,7 @@ describe('webc.ChildrenElementsBinder', () => {
 
       const data1 = Mocks.object('data1');
       const data2 = Mocks.object('data2');
-      mockDataGetter.and.callFake((element: any) => {
+      mockDataHelper.get.and.callFake((element: any) => {
         switch (element) {
           case child1:
             return data1;
@@ -105,8 +99,8 @@ describe('webc.ChildrenElementsBinder', () => {
       });
 
       assert(binder.get()).to.equal([data1, data2]);
-      assert(mockDataGetter).to.haveBeenCalledWith(child1);
-      assert(mockDataGetter).to.haveBeenCalledWith(child2);
+      assert(mockDataHelper.get).to.haveBeenCalledWith(child1);
+      assert(mockDataHelper.get).to.haveBeenCalledWith(child2);
     });
   });
 
@@ -128,8 +122,8 @@ describe('webc.ChildrenElementsBinder', () => {
       binder['insertionIndex_'] = 1;
       binder.set([value1, value2]);
 
-      assert(mockDataSetter).to.haveBeenCalledWith(value1, element1, instance);
-      assert(mockDataSetter).to.haveBeenCalledWith(value2, element2, instance);
+      assert(mockDataHelper.set).to.haveBeenCalledWith(value1, element1, instance);
+      assert(mockDataHelper.set).to.haveBeenCalledWith(value2, element2, instance);
       assert(parentEl).to.haveChildren([existingChild1, element1, element2, existingChild2]);
     });
 
@@ -138,7 +132,7 @@ describe('webc.ChildrenElementsBinder', () => {
       const child2 = document.createElement('div2');
       const data1 = Mocks.object('data1');
       const data2 = Mocks.object('data2');
-      mockDataGetter.and.callFake((element: any) => {
+      mockDataHelper.get.and.callFake((element: any) => {
         switch (element) {
           case child1:
             return data1;
@@ -168,7 +162,7 @@ describe('webc.ChildrenElementsBinder', () => {
       const child2 = document.createElement('div2');
       const data1 = Mocks.object('data1');
       const data2 = Mocks.object('data2');
-      mockDataGetter.and.callFake((element: any) => {
+      mockDataHelper.get.and.callFake((element: any) => {
         switch (element) {
           case child1:
             return data1;
@@ -188,8 +182,8 @@ describe('webc.ChildrenElementsBinder', () => {
       binder.set([newData1, newData2]);
 
       assert(Arrays.fromItemList(parentEl.children).asArray()).to.equal([child1, child2]);
-      assert(mockDataSetter).to.haveBeenCalledWith(newData1, child1, instance);
-      assert(mockDataSetter).to.haveBeenCalledWith(newData2, child2, instance);
+      assert(mockDataHelper.set).to.haveBeenCalledWith(newData1, child1, instance);
+      assert(mockDataHelper.set).to.haveBeenCalledWith(newData2, child2, instance);
     });
   });
 });

@@ -91,9 +91,7 @@ describe('webc.Bind', () => {
 
   describe('childrenElement', () => {
     it('should attach the correct factory to the property', () => {
-      const elementGenerator = Mocks.object('elementGenerator');
-      const dataGetter = Mocks.object('dataGetter');
-      const dataSetter = Mocks.object('dataSetter');
+      const dataHelper = Mocks.object('dataHelper');
       const ctor = Mocks.object('ctor');
       const target = Mocks.object('target');
       const insertionIndex = 12;
@@ -111,11 +109,7 @@ describe('webc.Bind', () => {
       const binder = Mocks.object('binder');
       spyOn(ChildrenElementsBinder, 'of').and.returnValue(binder);
 
-      bind.childrenElements(
-          elementGenerator,
-          dataGetter,
-          dataSetter,
-          insertionIndex)(target, propertyKey);
+      bind.childrenElements(dataHelper, insertionIndex)(target, propertyKey);
       assert(ANNOTATIONS.forCtor).to.haveBeenCalledWith(ctor);
       assert(mockAnnotationsHandler.attachValueToProperty).to.haveBeenCalledWith(
           propertyKey,
@@ -128,9 +122,7 @@ describe('webc.Bind', () => {
       assert(Util.resolveSelector).to.haveBeenCalledWith(SELECTOR, element);
       assert(ChildrenElementsBinder.of).to.haveBeenCalledWith(
           targetEl,
-          dataGetter,
-          dataSetter,
-          elementGenerator,
+          dataHelper,
           insertionIndex,
           instance);
     });

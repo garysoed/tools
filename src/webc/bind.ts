@@ -1,6 +1,6 @@
 import { Annotations } from '../data/annotations';
 import { AttributeBinder } from '../webc/attribute-binder';
-import { ChildrenElementsBinder } from '../webc/children-elements-binder';
+import { ChildrenElementsBinder, IDataHelper } from '../webc/children-elements-binder';
 import { ClassListBinder } from '../webc/class-list-binder';
 import { ElementSwitchBinder } from '../webc/element-switch-binder';
 import { IAttributeParser, IDomBinder } from '../webc/interfaces';
@@ -63,24 +63,15 @@ export class Bind {
   /**
    * Binds the annotated [IDomBinder] to control the children of DOM elements.
    * $annotates DOM Binders of type DomBinder<T[]>
-   * @param elementGenerator Function to generate new elements to use for the children.
-   * @param dataSetter Function to add data to the generated element.
+   * @param dataHelper Helper to generate the child elements and bind the data to the element.
    * @return Property descriptor
    */
   childrenElements<T>(
-      elementGenerator: (document: Document, instance: any) => Element,
-      dataGetter: (element: Element) => T | null,
-      dataSetter: (data: T, element: Element, instance: any) => void,
+      dataHelper: IDataHelper<T>,
       insertionIndex: number = 0): PropertyDecorator {
     return this.createDecorator_(
         (element: Element, instance: any): IDomBinder<any> => {
-          return ChildrenElementsBinder.of<T>(
-              element,
-              dataGetter,
-              dataSetter,
-              elementGenerator,
-              insertionIndex,
-              instance);
+          return ChildrenElementsBinder.of<T>(element, dataHelper, insertionIndex, instance);
         });
   }
 
