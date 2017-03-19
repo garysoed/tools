@@ -1,5 +1,5 @@
-import {BaseDisposable} from '../dispose/base-disposable';
-import {DisposableFunction} from '../dispose/disposable-function';
+import { BaseDisposable } from '../dispose/base-disposable';
+import { DisposableFunction } from '../dispose/disposable-function';
 
 import MockElement from './mock-element';
 
@@ -60,6 +60,19 @@ export class Mocks {
   }
 
   /**
+   * @param items Content of the list.
+   * @return The mock element object.
+   */
+  static itemList<T>(items: T[]): {length: number, item: (index: number) => T} {
+    return {
+      length: items.length,
+      item(index: number): T {
+        return items[index];
+      },
+    };
+  }
+
+  /**
    * Creates a mock listenable.
    *
    * @param name Name to identify the mock object.
@@ -82,6 +95,6 @@ export class Mocks {
    * @return The mock object instance.
    */
   static object(name: string): any {
-    return { [__id]: name };
+    return {[__id]: name};
   }
 };
