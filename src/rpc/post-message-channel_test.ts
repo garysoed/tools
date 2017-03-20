@@ -4,6 +4,7 @@ TestBase.setup();
 import { Asyncs } from '../async/asyncs';
 import { Serializer } from '../data/a-serializable';
 import { DomEvent } from '../event/dom-event';
+import { Fakes } from '../mock/fakes';
 import { Mocks } from '../mock/mocks';
 import { Message, MessageType, PostMessageChannel } from '../rpc/post-message-channel';
 import { TestDispose } from '../testing/test-dispose';
@@ -45,25 +46,18 @@ describe('rpc.PostMessageChannel', () => {
     it('should keep waiting for the test function to return true before resolving',
         (done: any) => {
           const origin = 'origin';
-          const testFn = jasmine.createSpy('testFn').and.callFake((data: gs.IJson) => {
-            return data['value'];
-          });
+          const testFn = Fakes.build(jasmine.createSpy('testFn'))
+              .call((data: gs.IJson) => data['value']);
           const message1 = { 'value': false };
           const message2 = { 'value': true };
           const json1 = Mocks.object('json1');
           const json2 = Mocks.object('json2');
 
           spyOn(PostMessageChannel, 'getOrigin').and.returnValue(origin);
-          spyOn(Serializer, 'fromJSON').and.callFake((json: any) => {
-            switch (json) {
-              case json1:
-                return message1;
-              case json2:
-                return message2;
-              default:
-                return null;
-            }
-          });
+          Fakes.build(spyOn(Serializer, 'fromJSON'))
+              .when(json1).return(message1)
+              .when(json2).return(message2)
+              .else().return(null);
 
           const mockDisposableFunction = jasmine.createSpyObj('DisposableFunction', ['dispose']);
           spyOn(channel['srcWindow_'], 'on').and.returnValue(mockDisposableFunction);
@@ -89,25 +83,18 @@ describe('rpc.PostMessageChannel', () => {
     it('should ignore messages with non matching origin',
         (done: any) => {
           const origin = 'origin';
-          const testFn = jasmine.createSpy('testFn').and.callFake((data: gs.IJson) => {
-            return data['value'];
-          });
+          const testFn = Fakes.build(jasmine.createSpy('testFn'))
+              .call((data: gs.IJson) => data['value']);
           const message1 = { 'value': false };
           const message2 = { 'value': true };
           const json1 = Mocks.object('json1');
           const json2 = Mocks.object('json2');
 
           spyOn(PostMessageChannel, 'getOrigin').and.returnValue(origin);
-          spyOn(Serializer, 'fromJSON').and.callFake((json: any) => {
-            switch (json) {
-              case json1:
-                return message1;
-              case json2:
-                return message2;
-              default:
-                return null;
-            }
-          });
+          Fakes.build(spyOn(Serializer, 'fromJSON'))
+              .when(json1).return(message1)
+              .when(json2).return(message2)
+              .else().return(null);
 
           const mockDisposableFunction = jasmine.createSpyObj('DisposableFunction', ['dispose']);
           spyOn(channel['srcWindow_'], 'on').and.returnValue(mockDisposableFunction);

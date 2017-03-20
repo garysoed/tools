@@ -1,23 +1,24 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import {ArrayIterable} from './array-iterable';
-import {Arrays} from './arrays';
-import {GeneratorIterable} from './generator-iterable';
-import {Iterables} from './iterables';
+import { ArrayIterable } from '../collection/array-iterable';
+import { Arrays } from '../collection/arrays';
+import { GeneratorIterable } from '../collection/generator-iterable';
+import { Iterables } from '../collection/iterables';
+import { Fakes } from '../mock/fakes';
 
 
 describe('collection.Iterables', () => {
   describe('addAll', () => {
     it('should append all the given elements after the current iterable elements', () => {
-      let firstIterable = ArrayIterable.newInstance([1, 2, 3]);
-      let secondIterable = ArrayIterable.newInstance([4, 5, 6]);
-      let result = Iterables.of(firstIterable).addAll(secondIterable).asIterable();
+      const firstIterable = ArrayIterable.newInstance([1, 2, 3]);
+      const secondIterable = ArrayIterable.newInstance([4, 5, 6]);
+      const result = Iterables.of(firstIterable).addAll(secondIterable).asIterable();
       assert(Arrays.fromIterable(result).asArray()).to.equal([1, 2, 3, 4, 5, 6]);
     });
 
     it('should work with infinite iterable', () => {
-      let infiniteIterable = GeneratorIterable.newInstance(() => {
+      const infiniteIterable = GeneratorIterable.newInstance(() => {
         return {done: false, value: 0};
       });
       Iterables.of<number>(ArrayIterable.newInstance([])).addAll(infiniteIterable);
@@ -26,32 +27,32 @@ describe('collection.Iterables', () => {
 
   describe('addAllArray', () => {
     it('should append all the given elements after the current iterable elements', () => {
-      let iterable = ArrayIterable.newInstance([1, 2, 3]);
-      let array = [4, 5, 6];
-      let result = Iterables.of(iterable).addAllArray(array).asIterable();
+      const iterable = ArrayIterable.newInstance([1, 2, 3]);
+      const array = [4, 5, 6];
+      const result = Iterables.of(iterable).addAllArray(array).asIterable();
       assert(Arrays.fromIterable(result).asArray()).to.equal([1, 2, 3, 4, 5, 6]);
     });
   });
 
   describe('asIterable', () => {
     it('should return iterable that iterates the content', () => {
-      let array = [1, 2, 3];
-      let iterable = Iterables.of(ArrayIterable.newInstance(array)).asIterable();
+      const array = [1, 2, 3];
+      const iterable = Iterables.of(ArrayIterable.newInstance(array)).asIterable();
       assert(Arrays.fromIterable(iterable).asArray()).to.equal(array);
     });
   });
 
   describe('asIterator', () => {
     it('should return iterator instance that iterates the iterable', () => {
-      let array = [1, 2, 3];
-      let iterator = Iterables.of(ArrayIterable.newInstance(array)).asIterator();
+      const array = [1, 2, 3];
+      const iterator = Iterables.of(ArrayIterable.newInstance(array)).asIterator();
       assert(Arrays.fromIterator(iterator).asArray()).to.equal(array);
     });
   });
 
   describe('filter', () => {
     it('should filter the iterable using the given filter function', () => {
-      let iterable = Iterables.of(ArrayIterable.newInstance([1, 2, 3]))
+      const iterable = Iterables.of(ArrayIterable.newInstance([1, 2, 3]))
           .filter((value: number) => {
             return value % 2 === 1;
           })
@@ -62,7 +63,7 @@ describe('collection.Iterables', () => {
 
   describe('iterate', () => {
     it('should iterate through all the elements', () => {
-      let mockHandler = jasmine.createSpy('Handler');
+      const mockHandler = jasmine.createSpy('Handler');
       Iterables.of(ArrayIterable.newInstance([1, 2, 3, 4])).iterate(mockHandler);
 
       assert(mockHandler).to.haveBeenCalledWith(1, Matchers.any(Function));
@@ -72,8 +73,8 @@ describe('collection.Iterables', () => {
     });
 
     it('should stop the iteration when the break function is called', () => {
-      let mockHandler = jasmine.createSpy('Handler').and
-          .callFake((value: number, breakFn: () => void) => {
+      const mockHandler = Fakes.build(jasmine.createSpy('Handler'))
+          .call((value: number, breakFn: () => void) => {
             if (value === 2) {
               breakFn();
             }
@@ -89,7 +90,7 @@ describe('collection.Iterables', () => {
 
   describe('map', () => {
     it('should apply the mapping function to the iterable', () => {
-      let iterable = Iterables.of(ArrayIterable.newInstance([1, 2, 3]))
+      const iterable = Iterables.of(ArrayIterable.newInstance([1, 2, 3]))
           .map((value: number) => {
             return value + 1;
           })

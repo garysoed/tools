@@ -1,8 +1,9 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import {DisposableFunction} from '../dispose/disposable-function';
-import {Mocks} from '../mock/mocks';
+import { DisposableFunction } from '../dispose/disposable-function';
+import { Fakes } from '../mock/fakes';
+import { Mocks } from '../mock/mocks';
 
 import {
   ATTR_CHANGE_ANNOTATIONS,
@@ -29,18 +30,12 @@ describe('webc.AttributeChangeHandler', () => {
       const parsedOldValue2 = 'parsedOldValue2';
 
       const mockParser = jasmine.createSpyObj('Parser', ['parse']);
-      mockParser.parse.and.callFake((value: any) => {
-        switch (value) {
-          case newValue1:
-            return parsedNewValue1;
-          case newValue2:
-            return parsedNewValue2;
-          case oldValue1:
-            return parsedOldValue1;
-          case oldValue2:
-            return parsedOldValue2;
-        }
-      });
+
+      Fakes.build(mockParser.parse)
+          .when(newValue1).return(parsedNewValue1)
+          .when(newValue2).return(parsedNewValue2)
+          .when(oldValue1).return(parsedOldValue1)
+          .when(oldValue2).return(parsedOldValue2);
 
       const handlerKey1 = 'handlerKey1';
       const handlerKey2 = 'handlerKey2';

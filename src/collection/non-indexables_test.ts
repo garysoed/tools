@@ -1,10 +1,11 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import {ArrayIterable} from './array-iterable';
-import {GeneratorIterable} from './generator-iterable';
-import {Iterables} from './iterables';
-import {NonIndexables} from './non-indexables';
+import { ArrayIterable } from '../collection/array-iterable';
+import { GeneratorIterable } from '../collection/generator-iterable';
+import { Iterables } from '../collection/iterables';
+import { NonIndexables } from '../collection/non-indexables';
+import { Fakes } from '../mock/fakes';
 
 
 describe('collection.NonIndexables', () => {
@@ -145,8 +146,8 @@ describe('collection.NonIndexables', () => {
     });
 
     it('should stop the iteration when the break function is called', () => {
-      let mockHandler = jasmine.createSpy('Handler').and
-          .callFake((value: number, breakFn: () => void) => {
+      let mockHandler = Fakes.build(jasmine.createSpy('Handler'))
+          .call((value: number, breakFn: () => void) => {
             if (value === 2) {
               breakFn();
             }
@@ -172,8 +173,8 @@ describe('collection.NonIndexables', () => {
     });
 
     it('should stop the iteration when the break function is called', () => {
-      let mockHandler = jasmine.createSpy('Handler').and
-          .callFake((value: number, breakFn: () => void) => {
+      let mockHandler = Fakes.build(jasmine.createSpy('Handler'))
+          .call((value: number, breakFn: () => void) => {
             if (value === 2) {
               breakFn();
             }

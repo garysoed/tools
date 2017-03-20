@@ -1,9 +1,10 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
 import { NativeType } from '../check/native-type';
 import { ANNOTATIONS, Stringify } from '../data/stringify';
-import {Mocks} from '../mock/mocks';
+import { Fakes } from '../mock/fakes';
+import { Mocks } from '../mock/mocks';
 
 
 describe('data.Stringify', () => {
@@ -13,79 +14,64 @@ describe('data.Stringify', () => {
     });
 
     it('should stringify native values correctly', () => {
-      let field = 123;
+      const field = 123;
       spyOn(NativeType, 'check').and.returnValue(true);
       assert(Stringify['formatField_'](field, '|', '--', '>>')).to.equal(`${field}`);
       assert(NativeType.check).to.haveBeenCalledWith(field);
     });
 
     it('should stringify Dates correctly', () => {
-      let date = new Date(123);
+      const date = new Date(123);
       assert(Stringify['formatField_'](date, '|', '--')).to.equal(date.toLocaleString());
     });
 
     it('should stringify Functions correctly', () => {
-      let f = function a(a: any, b: any, c: any): any {};
+      const f = function a(a: any, b: any, c: any): any {};
       assert(Stringify['formatField_'](f, '|', '--', '>>')).to.equal('function a(a, b, c)');
     });
 
     it('should stringify objects correctly without padding', () => {
-      let key1 = 'key1';
-      let value1 = Mocks.object('value1');
-      let key2 = 'key2';
-      let value2 = Mocks.object('value2');
+      const key1 = 'key1';
+      const value1 = Mocks.object('value1');
+      const key2 = 'key2';
+      const value2 = Mocks.object('value2');
 
-      let instance = {[key1]: value1, [key2]: value2};
+      const instance = {[key1]: value1, [key2]: value2};
 
-      let stringifiedValue1 = 'stringifiedValue1';
-      let stringifiedValue2 = 'stringifiedValue2';
-      let originalFormatField_ = Stringify['formatField_'];
-      spyOn(Stringify, 'formatField_').and.callFake((
-          field: any,
-          delimiter: string,
-          pad: string,
-          indent: string) => {
-        switch (field) {
-          case value1:
-            return stringifiedValue1;
-          case value2:
-            return stringifiedValue2;
-          default:
+      const stringifiedValue1 = 'stringifiedValue1';
+      const stringifiedValue2 = 'stringifiedValue2';
+      const originalFormatField_ = Stringify['formatField_'];
+      Fakes.build(spyOn(Stringify, 'formatField_'))
+          .when(value1).return(stringifiedValue1)
+          .when(value2).return(stringifiedValue2)
+          .else().call((field: any, delimiter: string, pad: string, indent: string) => {
             return originalFormatField_(field, delimiter, pad, indent);
-        }
-      });
+          });
 
-      let result = Stringify['formatField_'](instance, '|', '', '>>');
+      const result = Stringify['formatField_'](instance, '|', '', '>>');
       assert(result).to.equal(`{${key1}: ${stringifiedValue1}|${key2}: ${stringifiedValue2}}`);
     });
 
     it('should stringify objects correctly with padding', () => {
-      let key1 = 'key1';
-      let value1 = Mocks.object('value1');
-      let key2 = 'key2';
-      let value2 = Mocks.object('value2');
+      const key1 = 'key1';
+      const value1 = Mocks.object('value1');
+      const key2 = 'key2';
+      const value2 = Mocks.object('value2');
 
-      let instance = {[key1]: value1, [key2]: value2};
+      const instance = {[key1]: value1, [key2]: value2};
 
-      let stringifiedValue1 = 'stringifiedValue1';
-      let stringifiedValue2 = 'stringifiedValue2';
-      let originalFormatField_ = Stringify['formatField_'];
-      spyOn(Stringify, 'formatField_').and.callFake((
-          field: any,
-          delimiter: string,
-          pad: string,
-          indent: string) => {
-        switch (field) {
-          case value1:
-            return stringifiedValue1;
-          case value2:
-            return stringifiedValue2;
-          default:
+      const stringifiedValue1 = 'stringifiedValue1';
+      const stringifiedValue2 = 'stringifiedValue2';
+      const originalFormatField_ = Stringify['formatField_'];
+
+      Fakes.build(spyOn(Stringify, 'formatField_'))
+          .when(value1).return(stringifiedValue1)
+          .when(value2).return(stringifiedValue2)
+          .else().call((field: any, delimiter: string, pad: string, indent: string) => {
             return originalFormatField_(field, delimiter, pad, indent);
-        }
-      });
+          });
 
-      let result = Stringify['formatField_'](instance, '|', '--', '>>');
+      const result = Stringify['formatField_'](instance, '|', '--', '>>');
       assert(result).to.equal([
         '{',
         `-->>${key1}: ${stringifiedValue1}|`,
@@ -97,34 +83,28 @@ describe('data.Stringify', () => {
 
   describe('grabFields_', () => {
     it('should grab all the fields with stringify annotation', () => {
-      let ctor = Mocks.object('ctor');
-      let key1 = 'key1';
-      let value1 = Mocks.object('value1');
-      let normalizedValue1 = Mocks.object('normalizedValue1');
-      let key2 = 'key2';
-      let value2 = Mocks.object('value2');
-      let normalizedValue2 = Mocks.object('normalizedValue2');
+      const ctor = Mocks.object('ctor');
+      const key1 = 'key1';
+      const value1 = Mocks.object('value1');
+      const normalizedValue1 = Mocks.object('normalizedValue1');
+      const key2 = 'key2';
+      const value2 = Mocks.object('value2');
+      const normalizedValue2 = Mocks.object('normalizedValue2');
 
-      let instance = {[key1]: value1, [key2]: value2, constructor: ctor};
+      const instance = {[key1]: value1, [key2]: value2, constructor: ctor};
 
-      let mockAnnotationHandler =
+      const mockAnnotationHandler =
           jasmine.createSpyObj('AnnotationHandler', ['getAnnotatedProperties']);
       mockAnnotationHandler.getAnnotatedProperties.and.returnValue([key1, key2]);
 
       spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationHandler);
       spyOn(ANNOTATIONS, 'hasAnnotation').and.returnValue(true);
 
-      let originalGrabFields = Stringify['grabFields_'];
-      spyOn(Stringify, 'grabFields_').and.callFake((instance: any): any => {
-        switch (instance) {
-          case value1:
-            return normalizedValue1;
-          case value2:
-            return normalizedValue2;
-          default:
-            return originalGrabFields(instance);
-        }
-      });
+      const originalGrabFields = Stringify['grabFields_'];
+      Fakes.build(spyOn(Stringify, 'grabFields_'))
+          .when(value1).return(normalizedValue1)
+          .when(value2).return(normalizedValue2)
+          .else().call((instance: any): any => originalGrabFields(instance));
 
       assert(Stringify['grabFields_'](instance)).to.equal({
         [key1]: normalizedValue1,
@@ -137,34 +117,29 @@ describe('data.Stringify', () => {
     });
 
     it('should normalize symbol keys correctly', () => {
-      let ctor = Mocks.object('prototype');
-      let key1 = Symbol('key1');
-      let value1 = Mocks.object('value1');
-      let normalizedValue1 = Mocks.object('normalizedValue1');
-      let key2 = Symbol('key2');
-      let value2 = Mocks.object('value2');
-      let normalizedValue2 = Mocks.object('normalizedValue2');
+      const ctor = Mocks.object('prototype');
+      const key1 = Symbol('key1');
+      const value1 = Mocks.object('value1');
+      const normalizedValue1 = Mocks.object('normalizedValue1');
+      const key2 = Symbol('key2');
+      const value2 = Mocks.object('value2');
+      const normalizedValue2 = Mocks.object('normalizedValue2');
 
-      let instance = {[key1]: value1, [key2]: value2, constructor: ctor};
+      const instance = {[key1]: value1, [key2]: value2, constructor: ctor};
 
-      let mockAnnotationHandler =
+      const mockAnnotationHandler =
           jasmine.createSpyObj('AnnotationHandler', ['getAnnotatedProperties']);
       mockAnnotationHandler.getAnnotatedProperties.and.returnValue([key1, key2]);
 
       spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationHandler);
       spyOn(ANNOTATIONS, 'hasAnnotation').and.returnValue(true);
 
-      let originalGrabFields = Stringify['grabFields_'];
-      spyOn(Stringify, 'grabFields_').and.callFake((instance: any): any => {
-        switch (instance) {
-          case value1:
-            return normalizedValue1;
-          case value2:
-            return normalizedValue2;
-          default:
-            return originalGrabFields(instance);
-        }
-      });
+      const originalGrabFields = Stringify['grabFields_'];
+
+      Fakes.build(spyOn(Stringify, 'grabFields_'))
+          .when(value1).return(normalizedValue1)
+          .when(value2).return(normalizedValue2)
+          .else().call((instance: any): any => originalGrabFields(instance));
 
       assert(Stringify['grabFields_'](instance)).to.equal({
         [`[${key1.toString()}]`]: normalizedValue1,
@@ -177,13 +152,13 @@ describe('data.Stringify', () => {
     });
 
     it('should return the instance if it is not an object', () => {
-      let instance = 'instance';
+      const instance = 'instance';
       assert(Stringify['grabFields_'](instance)).to.equal(instance);
     });
 
     it('should return the instance if it does not have the annotation', () => {
-      let ctor = Mocks.object('ctor');
-      let instance = {constructor: ctor};
+      const ctor = Mocks.object('ctor');
+      const instance = {constructor: ctor};
       spyOn(ANNOTATIONS, 'hasAnnotation').and.returnValue(false);
 
       assert(Stringify['grabFields_'](instance)).to.equal(instance);
@@ -193,10 +168,10 @@ describe('data.Stringify', () => {
 
   describe('Property', () => {
     it('should add the field to the annotations', () => {
-      let mockAnnotationHandler =
+      const mockAnnotationHandler =
           jasmine.createSpyObj('AnnotationHandler', ['attachValueToProperty']);
-      let ctor = Mocks.object('ctor');
-      let key = 'key';
+      const ctor = Mocks.object('ctor');
+      const key = 'key';
 
       spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationHandler);
 
@@ -209,15 +184,15 @@ describe('data.Stringify', () => {
 
   describe('toString', () => {
     it('should call toStringHelper_ correctly', () => {
-      let delimiter = 'delimiter';
-      let pad = 'pad';
-      let field = Mocks.object('field');
+      const delimiter = 'delimiter';
+      const pad = 'pad';
+      const field = Mocks.object('field');
       spyOn(Stringify, 'grabFields_').and.returnValue(field);
 
-      let result = 'result';
+      const result = 'result';
       spyOn(Stringify, 'formatField_').and.returnValue(result);
 
-      let instance = Mocks.object('instance');
+      const instance = Mocks.object('instance');
 
       assert(Stringify.toString(instance, {delimiter, pad})).to.equal(result);
       assert(Stringify['formatField_']).to.haveBeenCalledWith(field, delimiter, pad);

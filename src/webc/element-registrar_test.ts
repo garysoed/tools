@@ -1,15 +1,15 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Mocks} from '../mock/mocks';
-import {TestDispose} from '../testing/test-dispose';
-import {Log} from '../util/log';
-
-import {BaseElement} from './base-element';
-import {ANNOTATIONS as BindAnnotations} from './bind';
-import {CustomElementUtil} from './custom-element-util';
-import {DomHook} from './dom-hook';
-import {ElementRegistrar} from './element-registrar';
+import { Fakes } from '../mock/fakes';
+import { Mocks } from '../mock/mocks';
+import { TestDispose } from '../testing/test-dispose';
+import { Log } from '../util/log';
+import { BaseElement } from '../webc/base-element';
+import { ANNOTATIONS as BindAnnotations } from '../webc/bind';
+import { CustomElementUtil } from '../webc/custom-element-util';
+import { DomHook } from '../webc/dom-hook';
+import { ElementRegistrar } from '../webc/element-registrar';
 
 
 describe('webc.ElementRegistrar', () => {
@@ -34,17 +34,17 @@ describe('webc.ElementRegistrar', () => {
     });
 
     it('should return config with correct attributeChanged handler', () => {
-      let attrName = 'attrName';
-      let oldValue = 'oldValue';
-      let newValue = 'newValue';
-      let mockHTMLElement = Mocks.object('HTMLElement');
-      let mockElement = jasmine.createSpyObj('Element', ['onAttributeChanged']);
+      const attrName = 'attrName';
+      const oldValue = 'oldValue';
+      const newValue = 'newValue';
+      const mockHTMLElement = Mocks.object('HTMLElement');
+      const mockElement = jasmine.createSpyObj('Element', ['onAttributeChanged']);
 
-      let parsedValue = Mocks.object('parsedValue');
-      let mockAttributeParser = jasmine.createSpyObj('AttributeParser', ['parse']);
+      const parsedValue = Mocks.object('parsedValue');
+      const mockAttributeParser = jasmine.createSpyObj('AttributeParser', ['parse']);
       mockAttributeParser.parse.and.returnValue(parsedValue);
 
-      let runOnInstanceSpy = spyOn(ElementRegistrar, 'runOnInstance_');
+      const runOnInstanceSpy = spyOn(ElementRegistrar, 'runOnInstance_');
 
       registrar['getLifecycleConfig_']({[attrName]: mockAttributeParser}, mockProvider, 'content')
           .attributeChanged.call(mockHTMLElement, 'attr-name', oldValue, newValue);
@@ -60,37 +60,37 @@ describe('webc.ElementRegistrar', () => {
     });
 
     it('should return config with correct created handler', () => {
-      let content = 'content';
-      let mockShadowRoot = Mocks.object('ShadowRoot');
-      let mockHTMLElement = jasmine.createSpyObj('HTMLElement', ['createShadowRoot']);
-      let mockElement = Mocks.disposable('Element');
+      const content = 'content';
+      const mockShadowRoot = Mocks.object('ShadowRoot');
+      const mockHTMLElement = jasmine.createSpyObj('HTMLElement', ['createShadowRoot']);
+      const mockElement = Mocks.disposable('Element');
       mockElement.onCreated = jasmine.createSpy('onCreated');
       mockProvider.and.returnValue(mockElement);
 
-      let attributes = Mocks.object('attributes');
+      const attributes = Mocks.object('attributes');
 
       mockHTMLElement.createShadowRoot.and.returnValue(mockShadowRoot);
 
-      let binder1 = Mocks.object('binder1');
-      let binder2 = Mocks.object('binder2');
+      const binder1 = Mocks.object('binder1');
+      const binder2 = Mocks.object('binder2');
 
-      let mockBinderFactory1 = jasmine.createSpy('BinderFactory1').and.returnValue(binder1);
-      let mockBinderFactory2 = jasmine.createSpy('BinderFactory2').and.returnValue(binder2);
+      const mockBinderFactory1 = jasmine.createSpy('BinderFactory1').and.returnValue(binder1);
+      const mockBinderFactory2 = jasmine.createSpy('BinderFactory2').and.returnValue(binder2);
 
-      let key1 = 'key1';
-      let mockBridge1 = jasmine.createSpyObj('Bridge1', ['open']);
+      const key1 = 'key1';
+      const mockBridge1 = jasmine.createSpyObj('Bridge1', ['open']);
       Object.setPrototypeOf(mockBridge1, DomHook.prototype);
       mockElement[key1] = mockBridge1;
 
-      let key2 = 'key2';
-      let mockBridge2 = jasmine.createSpyObj('Bridge2', ['open']);
+      const key2 = 'key2';
+      const mockBridge2 = jasmine.createSpyObj('Bridge2', ['open']);
       Object.setPrototypeOf(mockBridge2, DomHook.prototype);
       mockElement[key2] = mockBridge2;
 
-      let binderMap = new Map();
+      const binderMap = new Map();
       binderMap.set(key1, new Set([mockBinderFactory1]));
       binderMap.set(key2, new Set([mockBinderFactory2]));
-      let mockBindAnnotations = jasmine.createSpyObj('BindAnnotations', ['getAttachedValues']);
+      const mockBindAnnotations = jasmine.createSpyObj('BindAnnotations', ['getAttachedValues']);
       mockBindAnnotations.getAttachedValues.and.returnValue(binderMap);
       spyOn(BindAnnotations, 'forCtor').and.returnValue(mockBindAnnotations);
 
@@ -113,10 +113,10 @@ describe('webc.ElementRegistrar', () => {
     });
 
     it('should return config with correct inserted handler', () => {
-      let mockHtmlElement = Mocks.object('HTMLElement');
-      let mockElement = jasmine.createSpyObj('Component', ['onInserted']);
+      const mockHtmlElement = Mocks.object('HTMLElement');
+      const mockElement = jasmine.createSpyObj('Component', ['onInserted']);
 
-      let runOnInstanceSpy = spyOn(ElementRegistrar, 'runOnInstance_');
+      const runOnInstanceSpy = spyOn(ElementRegistrar, 'runOnInstance_');
 
       registrar['getLifecycleConfig_']({}, mockProvider, 'content').inserted.call(mockHtmlElement);
 
@@ -128,10 +128,10 @@ describe('webc.ElementRegistrar', () => {
     });
 
     it('should return config with correct removed handler', () => {
-      let mockHtmlElement = Mocks.object('HTMLElement');
-      let mockElement = jasmine.createSpyObj('Element', ['onRemoved']);
+      const mockHtmlElement = Mocks.object('HTMLElement');
+      const mockElement = jasmine.createSpyObj('Element', ['onRemoved']);
 
-      let runOnInstanceSpy = spyOn(ElementRegistrar, 'runOnInstance_');
+      const runOnInstanceSpy = spyOn(ElementRegistrar, 'runOnInstance_');
 
       registrar['getLifecycleConfig_']({}, mockProvider, 'content').removed.call(mockHtmlElement);
 
@@ -151,22 +151,17 @@ describe('webc.ElementRegistrar', () => {
     });
 
     it('should return promise that registers the element correctly', async (done: any) => {
-      let mockDependency = Mocks.object('Dependency');
-      let name = 'name';
-      let templateKey = 'templateKey';
-      let attributes = Mocks.object('attributes');
+      const mockDependency = Mocks.object('Dependency');
+      const name = 'name';
+      const templateKey = 'templateKey';
+      const attributes = Mocks.object('attributes');
 
-      let originalRegister = registrar.register.bind(registrar);
-      spyOn(registrar, 'register').and.callFake((inputCtor: any) => {
-        switch (inputCtor) {
-          case mockDependency:
-            return Promise.resolve();
-          default:
-            return originalRegister(ctor);
-        }
-      });
+      const originalRegister = registrar.register.bind(registrar);
+      Fakes.build(spyOn(registrar, 'register'))
+          .when(mockDependency).resolve(1)
+          .else().call((inputCtor: any) => originalRegister(ctor));
 
-      let mockConfig = {
+      const mockConfig = {
         attributes: attributes,
         dependencies: [mockDependency],
         tag: name,
@@ -174,13 +169,13 @@ describe('webc.ElementRegistrar', () => {
       };
       spyOn(CustomElementUtil, 'getConfig').and.returnValue(mockConfig);
 
-      let templateContent = 'templateContent';
+      const templateContent = 'templateContent';
       mockTemplates.getTemplate.and.returnValue(templateContent);
 
-      let mockLifecycleConfig = Mocks.object('LifecycleConfig');
+      const mockLifecycleConfig = Mocks.object('LifecycleConfig');
       spyOn(registrar, 'getLifecycleConfig_').and.returnValue(mockLifecycleConfig);
 
-      let instance = Mocks.object('instance');
+      const instance = Mocks.object('instance');
       mockInjector.instantiate.and.returnValue(instance);
 
       await registrar.register(mockConfig);
@@ -236,9 +231,9 @@ describe('webc.ElementRegistrar', () => {
 
   describe('runOnInstance_', () => {
     it('should call the callback correctly', () => {
-      let mockCallback = jasmine.createSpy('Callback');
-      let mockElement = Mocks.object('Element');
-      let mockInstance = Mocks.object('Instance');
+      const mockCallback = jasmine.createSpy('Callback');
+      const mockElement = Mocks.object('Element');
+      const mockInstance = Mocks.object('Instance');
       Object.setPrototypeOf(mockInstance, BaseElement.prototype);
 
       mockElement[ElementRegistrar['__instance']] = mockInstance;
@@ -249,9 +244,9 @@ describe('webc.ElementRegistrar', () => {
     });
 
     it('should throw error if the instance is not an instance of BaseElement', () => {
-      let mockCallback = jasmine.createSpy('Callback');
-      let mockElement = Mocks.object('Element');
-      let mockInstance = Mocks.object('Instance');
+      const mockCallback = jasmine.createSpy('Callback');
+      const mockElement = Mocks.object('Element');
+      const mockInstance = Mocks.object('Instance');
 
       mockElement[ElementRegistrar['__instance']] = mockInstance;
 

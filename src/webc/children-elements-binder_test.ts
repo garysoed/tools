@@ -2,6 +2,7 @@ import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
 import { Arrays } from '../collection/arrays';
+import { Fakes } from '../mock/fakes';
 import { Mocks } from '../mock/mocks';
 import { ChildrenElementsBinder } from '../webc/children-elements-binder';
 
@@ -34,9 +35,9 @@ describe('webc.ChildrenElementsBinder', () => {
       parentEl.appendChild(child3);
       parentEl.appendChild(child4);
 
-      mockDataHelper.get.and.callFake((element: any) => {
-        return element === child4 ? undefined : {};
-      });
+      Fakes.build(mockDataHelper.get)
+          .when(child4).return()
+          .else().return({});
 
       binder['insertionIndex_'] = 1;
       assert(binder['getChildElements_']()).to.equal([child2, child3]);
@@ -89,14 +90,9 @@ describe('webc.ChildrenElementsBinder', () => {
 
       const data1 = Mocks.object('data1');
       const data2 = Mocks.object('data2');
-      mockDataHelper.get.and.callFake((element: any) => {
-        switch (element) {
-          case child1:
-            return data1;
-          case child2:
-            return data2;
-        }
-      });
+      Fakes.build(mockDataHelper.get)
+          .when(child1).return(data1)
+          .when(child2).return(data2);
 
       assert(binder.get()).to.equal([data1, data2]);
       assert(mockDataHelper.get).to.haveBeenCalledWith(child1);
@@ -132,14 +128,10 @@ describe('webc.ChildrenElementsBinder', () => {
       const child2 = document.createElement('div2');
       const data1 = Mocks.object('data1');
       const data2 = Mocks.object('data2');
-      mockDataHelper.get.and.callFake((element: any) => {
-        switch (element) {
-          case child1:
-            return data1;
-          case child2:
-            return data2;
-        }
-      });
+
+      Fakes.build(mockDataHelper.get)
+          .when(child1).return(data1)
+          .when(child2).return(data2);
 
       const existingChild1 = document.createElement('div3');
       const existingChild2 = document.createElement('div4');
@@ -162,14 +154,9 @@ describe('webc.ChildrenElementsBinder', () => {
       const child2 = document.createElement('div2');
       const data1 = Mocks.object('data1');
       const data2 = Mocks.object('data2');
-      mockDataHelper.get.and.callFake((element: any) => {
-        switch (element) {
-          case child1:
-            return data1;
-          case child2:
-            return data2;
-        }
-      });
+      Fakes.build(mockDataHelper.get)
+          .when(child1).return(data1)
+          .when(child2).return(data2);
 
       parentEl.appendChild(child1);
       parentEl.appendChild(child2);

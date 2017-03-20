@@ -5,6 +5,7 @@ import { ArrayIterable } from '../collection/array-iterable';
 import { Arrays } from '../collection/arrays';
 import { GeneratorIterable } from '../collection/generator-iterable';
 import { Indexables } from '../collection/indexables';
+import { Fakes } from '../mock/fakes';
 
 
 describe('collection.Indexables', () => {
@@ -164,8 +165,8 @@ describe('collection.Indexables', () => {
     });
 
     it('should stop the iteration when the break function is called', () => {
-      const mockHandler = jasmine.createSpy('Handler').and
-          .callFake((value: number, index: number, breakFn: () => void) => {
+      const mockHandler = Fakes.build(jasmine.createSpy('Handler'))
+          .call((value: number, index: number, breakFn: () => void) => {
             if (value === 2) {
               breakFn();
             }
@@ -191,8 +192,8 @@ describe('collection.Indexables', () => {
     });
 
     it('should stop the iteration when the break function is called', () => {
-      const mockHandler = jasmine.createSpy('Handler').and
-          .callFake((value: number, breakFn: () => void) => {
+      const mockHandler = Fakes.build(jasmine.createSpy('Handler'))
+          .call((value: number, breakFn: () => void) => {
             if (value === 2) {
               breakFn();
             }

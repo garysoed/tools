@@ -1,18 +1,19 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import {ArrayIterable} from './array-iterable';
-import {GeneratorIterable} from './generator-iterable';
-import {Iterables} from './iterables';
-import {Mappables} from './mappables';
+import { ArrayIterable } from '../collection/array-iterable';
+import { GeneratorIterable } from '../collection/generator-iterable';
+import { Iterables } from '../collection/iterables';
+import { Mappables } from '../collection/mappables';
+import { Fakes } from '../mock/fakes';
 
 
 describe('collection.Mappables', () => {
   describe('addAll', () => {
     it('should append all the given elements in the current mappable', () => {
-      let iterable = ArrayIterable.newInstance(<[string, number][]> [['c', 3], ['d', 4]]);
-      let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2]]);
-      let result = {};
+      const iterable = ArrayIterable.newInstance(<[string, number][]> [['c', 3], ['d', 4]]);
+      const map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2]]);
+      const result = {};
       Mappables.of<string, number>(map)
           .addAll(iterable)
           .iterate((entry: [string, number]) => {
@@ -27,7 +28,7 @@ describe('collection.Mappables', () => {
     });
 
     it('should work with infinite iterable', () => {
-      let infiniteIterable = GeneratorIterable.newInstance<[string, number]>(() => {
+      const infiniteIterable = GeneratorIterable.newInstance<[string, number]>(() => {
         return {done: false, value: ['a', 0]};
       });
       Mappables.of(new Map()).addAll(infiniteIterable);
@@ -36,9 +37,9 @@ describe('collection.Mappables', () => {
 
   describe('addAllArray', () => {
     it('should append all the given elements in the current mappable', () => {
-      let array = <[string, number][]> [['c', 3], ['d', 4]];
-      let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2]]);
-      let result = Mappables.of<string, number>(map)
+      const array = <[string, number][]> [['c', 3], ['d', 4]];
+      const map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2]]);
+      const result = Mappables.of<string, number>(map)
           .addAllArray(array)
           .asRecord();
       assert(result).to.equal({
@@ -52,9 +53,9 @@ describe('collection.Mappables', () => {
 
   describe('addAllMap', () => {
     it('should append all the given elements in the map in the current mappable', () => {
-      let addedMap = new Map<string, number>(<[string, number][]> [['c', 3], ['d', 4]]);
-      let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2]]);
-      let result = Mappables.of<string, number>(map)
+      const addedMap = new Map<string, number>(<[string, number][]> [['c', 3], ['d', 4]]);
+      const map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2]]);
+      const result = Mappables.of<string, number>(map)
           .addAllMap(addedMap)
           .asRecord();
       assert(result).to.equal({
@@ -68,10 +69,10 @@ describe('collection.Mappables', () => {
 
   describe('all', () => {
      it('should return true if all the entries passes the check function', () => {
-       let checkFn = jasmine.createSpy('CheckFn');
+       const checkFn = jasmine.createSpy('CheckFn');
        checkFn.and.returnValue(true);
 
-       let map = new Map<string, number>(<[string, number][]> [
+       const map = new Map<string, number>(<[string, number][]> [
          ['a', 1],
          ['b', 2],
          ['c', 3],
@@ -84,12 +85,11 @@ describe('collection.Mappables', () => {
      });
 
      it('should return false if one of the entries does not pass the check function', () => {
-       let checkFn = jasmine.createSpy('CheckFn');
-       checkFn.and.callFake((value: number) => {
+       const checkFn = Fakes.build(jasmine.createSpy('CheckFn')).call((value: number) => {
          return value <= 2;
        });
 
-       let map = new Map<string, number>(<[string, number][]> [
+       const map = new Map<string, number>(<[string, number][]> [
          ['a', 1],
          ['b', 2],
          ['c', 3],
@@ -106,17 +106,17 @@ describe('collection.Mappables', () => {
 
   describe('anyEntry', () => {
     it('should return an entry in the map', () => {
-      let map = new Map([[1, 'a'], [2, 'b']]);
-      let [key, value] = Mappables.of(map).anyEntry()!;
+      const map = new Map([[1, 'a'], [2, 'b']]);
+      const [key, value] = Mappables.of(map).anyEntry()!;
       assert(map.get(key)).to.equal(value);
     });
   });
 
   describe('asIterable', () => {
     it('should return iterable that iterates the content', () => {
-      let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2]]);
-      let iterable = Mappables.of(map).asIterable();
-      let result = {};
+      const map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2]]);
+      const iterable = Mappables.of(map).asIterable();
+      const result = {};
       Iterables.of(iterable).iterate((entry: [string, number]) => {
         result[entry[0]] = entry[1];
       });
@@ -126,9 +126,9 @@ describe('collection.Mappables', () => {
 
   describe('asIterator', () => {
     it('should return iterator instance that iterates the mappable', () => {
-      let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2]]);
-      let iterator = Mappables.of(map).asIterator();
-      let resultRecord = {};
+      const map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2]]);
+      const iterator = Mappables.of(map).asIterator();
+      const resultRecord = {};
 
       for (let result = iterator.next(); !result.done; result = iterator.next()) {
         resultRecord[result.value[0]] = result.value[1];
@@ -139,9 +139,9 @@ describe('collection.Mappables', () => {
 
   describe('asMap', () => {
     it('should return the correct map', () => {
-      let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2]]);
-      let resultMap = Mappables.of(map).asMap();
-      let resultRecord = {};
+      const map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2]]);
+      const resultMap = Mappables.of(map).asMap();
+      const resultRecord = {};
 
       resultMap.forEach((value: number, key: string) => {
         resultRecord[key] = value;
@@ -153,8 +153,8 @@ describe('collection.Mappables', () => {
 
   describe('asRecord', () => {
     it('should return the correct record', () => {
-      let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2]]);
-      let resultRecord = Mappables.of(map).asRecord((key: string) => {
+      const map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2]]);
+      const resultRecord = Mappables.of(map).asRecord((key: string) => {
         return key + '$';
       });
 
@@ -162,8 +162,8 @@ describe('collection.Mappables', () => {
     });
 
     it('should use the default string function if not specified', () => {
-      let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2]]);
-      let resultRecord = Mappables.of(map).asRecord();
+      const map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2]]);
+      const resultRecord = Mappables.of(map).asRecord();
 
       assert(resultRecord).to.equal({'a': 1, 'b': 2});
     });
@@ -171,8 +171,8 @@ describe('collection.Mappables', () => {
 
   describe('filter', () => {
     it('should filter the mappable using the given filter function', () => {
-      let map = new Map<string, number>(<[string, number][]> [['a', 1], ['c', 1], ['c', 3]]);
-      let record = Mappables.of(map)
+      const map = new Map<string, number>(<[string, number][]> [['a', 1], ['c', 1], ['c', 3]]);
+      const record = Mappables.of(map)
           .filter((entry: [string, number]) => {
             return entry[1] !== 1 && entry[0] !== 'a';
           })
@@ -183,8 +183,8 @@ describe('collection.Mappables', () => {
 
   describe('filterEntry', () => {
     it('should filter the mappable using the given filter function', () => {
-      let map = new Map<string, number>(<[string, number][]> [['a', 1], ['c', 1], ['c', 3]]);
-      let record = Mappables.of(map)
+      const map = new Map<string, number>(<[string, number][]> [['a', 1], ['c', 1], ['c', 3]]);
+      const record = Mappables.of(map)
           .filterEntry((value: number, key: string) => {
             return value !== 1 && key !== 'a';
           })
@@ -195,13 +195,13 @@ describe('collection.Mappables', () => {
 
   describe('findEntry', () => {
     it('should find the first entry that matches the given filter function', () => {
-      let map = new Map<string, number>(<[string, number][]> [
+      const map = new Map<string, number>(<[string, number][]> [
         ['a', 1],
         ['c', 1],
         ['c', 3],
         ['d', 4],
       ]);
-      let entry = Mappables.of(map)
+      const entry = Mappables.of(map)
           .findEntry((value: number, key: string) => {
             return value !== 1 && key !== 'a';
           });
@@ -211,13 +211,13 @@ describe('collection.Mappables', () => {
 
   describe('findKey', () => {
     it('should find the first entry\'s key that matches the given filter function', () => {
-      let map = new Map<string, number>(<[string, number][]> [
+      const map = new Map<string, number>(<[string, number][]> [
         ['a', 1],
         ['c', 1],
         ['c', 3],
         ['d', 4],
       ]);
-      let key = Mappables.of(map)
+      const key = Mappables.of(map)
           .findKey((value: number, key: string) => {
             return value !== 1 && key !== 'a';
           });
@@ -227,13 +227,13 @@ describe('collection.Mappables', () => {
 
   describe('findValue', () => {
     it('should find the first entry\'s value that matches the given filter function', () => {
-      let map = new Map<string, number>(<[string, number][]> [
+      const map = new Map<string, number>(<[string, number][]> [
         ['a', 1],
         ['c', 1],
         ['c', 3],
         ['d', 4],
       ]);
-      let value = Mappables.of(map)
+      const value = Mappables.of(map)
           .findValue((value: number, key: string) => {
             return value !== 1 && key !== 'a';
           });
@@ -243,8 +243,8 @@ describe('collection.Mappables', () => {
 
   describe('forEach', () => {
     it('should call the callback for every entry in the map', () => {
-      let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
-      let callback = jasmine.createSpy('Callback');
+      const map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
+      const callback = jasmine.createSpy('Callback');
 
       Mappables.of(map).forEach(callback);
       assert(callback).to.haveBeenCalledWith(1, 'a');
@@ -255,8 +255,8 @@ describe('collection.Mappables', () => {
 
   describe('forOf', () => {
     it('should call the callback for all the elements', () => {
-      let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
-      let callback = jasmine.createSpy('Callback');
+      const map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
+      const callback = jasmine.createSpy('Callback');
 
       Mappables.of(map).forOf(callback);
       assert(callback).to.haveBeenCalledWith(1, 'a', Matchers.any(Function));
@@ -265,9 +265,9 @@ describe('collection.Mappables', () => {
     });
 
     it('should stop the iteration when the break function is called', () => {
-      let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
-      let callback = jasmine.createSpy('Callback').and
-          .callFake((value: number, key: string, breakFn: () => void) => {
+      const map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
+      const callback = Fakes.build(jasmine.createSpy('Callback'))
+          .call((value: number, key: string, breakFn: () => void) => {
             if (key === 'b') {
               breakFn();
             }
@@ -282,8 +282,8 @@ describe('collection.Mappables', () => {
 
   describe('iterate', () => {
     it('should iterate through for all the elements', () => {
-      let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
-      let callback = jasmine.createSpy('Callback');
+      const map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
+      const callback = jasmine.createSpy('Callback');
 
       Mappables.of(map).iterate(callback);
       assert(callback).to.haveBeenCalledWith(['a', 1], Matchers.any(Function));
@@ -292,9 +292,9 @@ describe('collection.Mappables', () => {
     });
 
     it('should stop the iteration when the break function is called', () => {
-      let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
-      let callback = jasmine.createSpy('Callback').and
-          .callFake((entry: [string, number], breakFn: () => void) => {
+      const map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
+      const callback = Fakes.build(jasmine.createSpy('Callback'))
+          .call((entry: [string, number], breakFn: () => void) => {
             if (entry[0] === 'b') {
               breakFn();
             }
@@ -309,15 +309,15 @@ describe('collection.Mappables', () => {
 
   describe('keys', () => {
     it('should return the correct set of keys', () => {
-      let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
+      const map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
       assert(Mappables.of(map).keys().asArray()).to.equal(['a', 'b', 'c']);
     });
   });
 
   describe('map', () => {
     it('should apply the mapping function to the mappable', () => {
-      let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
-      let result = Mappables.of(map)
+      const map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
+      const result = Mappables.of(map)
           .map((entry: [string, number]) => {
             return [
               entry[0] + '$',
@@ -331,8 +331,8 @@ describe('collection.Mappables', () => {
 
   describe('mapKey', () => {
     it('should apply the mapping function to the mappable', () => {
-      let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
-      let result = Mappables.of(map)
+      const map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
+      const result = Mappables.of(map)
           .mapKey((value: number, key: string) => {
             return key + value;
           })
@@ -343,8 +343,8 @@ describe('collection.Mappables', () => {
 
   describe('mapValue', () => {
     it('should apply the mapping function to the mappable', () => {
-      let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
-      let result = Mappables.of(map)
+      const map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
+      const result = Mappables.of(map)
           .mapValue<string>((value: number, key: string) => {
             return key + value;
           })
@@ -355,8 +355,8 @@ describe('collection.Mappables', () => {
 
   describe('removeAllKeys', () => {
     it('should remove all entries with keys in the given set', () => {
-      let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
-      let result = Mappables.of(map)
+      const map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
+      const result = Mappables.of(map)
           .removeAllKeys(new Set<string>(['a', 'c']))
           .asRecord();
       assert(result).to.equal({'b': 2});
@@ -365,12 +365,11 @@ describe('collection.Mappables', () => {
 
   describe('some', () => {
     it('should return true if one of the entries passes the check function', () => {
-       let checkFn = jasmine.createSpy('CheckFn');
-       checkFn.and.callFake((value: number) => {
+       const checkFn = Fakes.build(jasmine.createSpy('CheckFn')).call((value: number) => {
          return value >= 3;
        });
 
-       let map = new Map<string, number>(<[string, number][]> [
+       const map = new Map<string, number>(<[string, number][]> [
          ['a', 1],
          ['b', 2],
          ['c', 3],
@@ -385,10 +384,10 @@ describe('collection.Mappables', () => {
       });
 
     it('should return false if none of the entries passes the check function', () => {
-       let checkFn = jasmine.createSpy('CheckFn');
+       const checkFn = jasmine.createSpy('CheckFn');
        checkFn.and.returnValue(false);
 
-       let map = new Map<string, number>(<[string, number][]> [
+       const map = new Map<string, number>(<[string, number][]> [
          ['a', 1],
          ['b', 2],
          ['c', 3],
@@ -403,14 +402,14 @@ describe('collection.Mappables', () => {
 
   describe('values', () => {
     it('should return the correct set of values', () => {
-      let map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
+      const map = new Map<string, number>(<[string, number][]> [['a', 1], ['b', 2], ['c', 3]]);
       assert(Mappables.of(map).values().asArray()).to.equal([1, 2, 3]);
     });
   });
 
   describe('group', () => {
     it('should create the correct grouped map', () => {
-      let entries: [string, number][] = [
+      const entries: [string, number][] = [
         ['a', 1],
         ['b', 2],
         ['a', 2],

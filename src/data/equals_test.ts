@@ -1,52 +1,46 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Mocks} from '../mock/mocks';
-
-import {ANNOTATIONS, Equals} from './equals';
+import { ANNOTATIONS, Equals } from '../data/equals';
+import { Fakes } from '../mock/fakes';
+import { Mocks } from '../mock/mocks';
 
 
 describe('data.Equals', () => {
   describe('equals', () => {
     it('should recursively check the fields', () => {
-      let ctor = Mocks.object('ctor');
+      const ctor = Mocks.object('ctor');
 
-      let key1 = 'key1';
-      let key2 = 'key2';
+      const key1 = 'key1';
+      const key2 = 'key2';
 
-      let value1A = Mocks.object('value1A');
-      let value2A = Mocks.object('value2A');
-      let a = {
+      const value1A = Mocks.object('value1A');
+      const value2A = Mocks.object('value2A');
+      const a = {
         [key1]: value1A,
         [key2]: value2A,
         constructor: ctor,
       };
 
-      let value1B = Mocks.object('value1B');
-      let value2B = Mocks.object('value2B');
-      let b = {
+      const value1B = Mocks.object('value1B');
+      const value2B = Mocks.object('value2B');
+      const b = {
         [key1]: value1B,
         [key2]: value2B,
       };
 
-      let mockAnnotationHandler = jasmine
+      const mockAnnotationHandler = jasmine
           .createSpyObj('AnnotationHandler', ['getAnnotatedProperties']);
       mockAnnotationHandler.getAnnotatedProperties.and.returnValue([key1, key2]);
 
       spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationHandler);
       spyOn(ANNOTATIONS, 'hasAnnotation').and.returnValue(true);
 
-      let originalEquals = Equals.equals;
-      spyOn(Equals, 'equals').and.callFake((a: any, b: any): boolean => {
-        switch (a) {
-          case value1A:
-            return true;
-          case value2A:
-            return true;
-          default:
-            return originalEquals(a, b);
-        }
-      });
+      const originalEquals = Equals.equals;
+      Fakes.build(spyOn(Equals, 'equals'))
+          .when(value1A).return(true)
+          .when(value2A).return(true)
+          .else().call((a: any, b: any): boolean => originalEquals(a, b));
 
       assert(Equals.equals(a, b)).to.beTrue();
       assert(Equals.equals).to.haveBeenCalledWith(value1A, value1B);
@@ -56,53 +50,47 @@ describe('data.Equals', () => {
     });
 
     it('should return false if one of the recursive fields is different', () => {
-      let ctor = Mocks.object('ctor');
+      const ctor = Mocks.object('ctor');
 
-      let key1 = 'key1';
-      let key2 = 'key2';
+      const key1 = 'key1';
+      const key2 = 'key2';
 
-      let value1A = Mocks.object('value1A');
-      let value2A = Mocks.object('value2A');
-      let a = {
+      const value1A = Mocks.object('value1A');
+      const value2A = Mocks.object('value2A');
+      const a = {
         [key1]: value1A,
         [key2]: value2A,
         constructor: ctor,
       };
 
-      let value1B = Mocks.object('value1B');
-      let value2B = Mocks.object('value2B');
-      let b = {
+      const value1B = Mocks.object('value1B');
+      const value2B = Mocks.object('value2B');
+      const b = {
         [key1]: value1B,
         [key2]: value2B,
       };
 
-      let mockAnnotationHandler = jasmine
+      const mockAnnotationHandler = jasmine
           .createSpyObj('AnnotationHandler', ['getAnnotatedProperties']);
       mockAnnotationHandler.getAnnotatedProperties.and.returnValue([key1, key2]);
 
       spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationHandler);
       spyOn(ANNOTATIONS, 'hasAnnotation').and.returnValue(true);
 
-      let originalEquals = Equals.equals;
-      spyOn(Equals, 'equals').and.callFake((a: any, b: any): boolean => {
-        switch (a) {
-          case value1A:
-            return false;
-          case value2A:
-            return true;
-          default:
-            return originalEquals(a, b);
-        }
-      });
+      const originalEquals = Equals.equals;
+      Fakes.build(spyOn(Equals, 'equals'))
+          .when(value1A).return(false)
+          .when(value2A).return(true)
+          .else().call((a: any, b: any): boolean => originalEquals(a, b));
 
       assert(Equals.equals(a, b)).to.beFalse();
     });
 
     it('should use === for values with no annotations', () => {
-      let object = Mocks.object('object');
-      let a = object;
-      let b = object;
-      let other = Mocks.object('object');
+      const object = Mocks.object('object');
+      const a = object;
+      const b = object;
+      const other = Mocks.object('object');
 
       spyOn(ANNOTATIONS, 'hasAnnotation').and.returnValue(false);
 
@@ -111,9 +99,9 @@ describe('data.Equals', () => {
     });
 
     it('should use === for values that are not Objects', () => {
-      let a = 123;
-      let b = 123;
-      let other = 456;
+      const a = 123;
+      const b = 123;
+      const other = 456;
 
       assert(Equals.equals(a, b)).to.beTrue();
       assert(Equals.equals(a, other)).to.beFalse();
@@ -122,13 +110,13 @@ describe('data.Equals', () => {
 
   describe('Property', () => {
     it('should add the field correctly', () => {
-      let mockAnnotationHandler =
+      const mockAnnotationHandler =
           jasmine.createSpyObj('AnnotationHandler', ['attachValueToProperty']);
 
       spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationHandler);
 
-      let ctor = Mocks.object('ctor');
-      let key = 'key';
+      const ctor = Mocks.object('ctor');
+      const key = 'key';
 
       Equals.Property()({constructor: ctor}, key);
 

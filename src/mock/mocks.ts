@@ -1,7 +1,7 @@
 import { BaseDisposable } from '../dispose/base-disposable';
 import { DisposableFunction } from '../dispose/disposable-function';
 
-import MockElement from './mock-element';
+import MockElement from '../mock/mock-element';
 
 
 /**

@@ -1,10 +1,10 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Mocks} from '../mock/mocks';
-
-import {ATTRIBUTE_CHANGE_HANDLER, EVENT_HANDLER, Handler} from './handle';
-import {Util} from './util';
+import { Fakes } from '../mock/fakes';
+import { Mocks } from '../mock/mocks';
+import { ATTRIBUTE_CHANGE_HANDLER, EVENT_HANDLER, Handler } from '../webc/handle';
+import { Util } from '../webc/util';
 
 
 describe('webc.Handler', () => {
@@ -17,8 +17,8 @@ describe('webc.Handler', () => {
 
   describe('configure', () => {
     it('should configure the handlers correctly', () => {
-      let element = Mocks.object('element');
-      let instance = Mocks.object('instance');
+      const element = Mocks.object('element');
+      const instance = Mocks.object('instance');
       spyOn(Handler, 'configure_').and.returnValue(new Set());
 
       Handler.configure(element, instance);
@@ -30,9 +30,9 @@ describe('webc.Handler', () => {
     });
 
     it('should throw error if there are unresolved electors', () => {
-      let selector = 'selector';
-      let element = Mocks.object('element');
-      let instance = Mocks.object('instance');
+      const selector = 'selector';
+      const element = Mocks.object('element');
+      const instance = Mocks.object('instance');
       spyOn(Handler, 'configure_').and.returnValue(new Set(selector));
 
       assert(() => {
@@ -43,44 +43,39 @@ describe('webc.Handler', () => {
 
   describe('configure_', () => {
     it('should configure the element and handler correctly', () => {
-      let parentElement = Mocks.object('parentElement');
-      let instance = Mocks.object('instance');
-      let mockHandler = jasmine.createSpyObj('Handler', ['configure', 'getConfigs']);
+      const parentElement = Mocks.object('parentElement');
+      const instance = Mocks.object('instance');
+      const mockHandler = jasmine.createSpyObj('Handler', ['configure', 'getConfigs']);
 
-      let selector1_1 = Mocks.object('selector1_1');
-      let configs1_1 = Mocks.object('configs1_1');
+      const selector1_1 = Mocks.object('selector1_1');
+      const configs1_1 = Mocks.object('configs1_1');
       configs1_1.selector = selector1_1;
 
-      let selector1_2 = Mocks.object('selector1_2');
-      let configs1_2 = Mocks.object('configs1_2');
+      const selector1_2 = Mocks.object('selector1_2');
+      const configs1_2 = Mocks.object('configs1_2');
       configs1_2.selector = selector1_2;
 
-      let selector2_1 = Mocks.object('selector2_1');
-      let configs2_1 = Mocks.object('configs2_1');
+      const selector2_1 = Mocks.object('selector2_1');
+      const configs2_1 = Mocks.object('configs2_1');
       configs2_1.selector = selector2_1;
 
-      let selector2_2 = Mocks.object('selector2_2');
-      let configs2_2 = Mocks.object('configs2_2');
+      const selector2_2 = Mocks.object('selector2_2');
+      const configs2_2 = Mocks.object('configs2_2');
       configs2_2.selector = selector2_2;
 
-      let map = new Map();
+      const map = new Map();
       map.set('propertyKey1', new Set([configs1_1, configs1_2]));
       map.set('propertyKey2', new Set([configs2_1, configs2_2]));
       mockHandler.getConfigs.and.returnValue(map);
 
-      let targetEl1 = Mocks.object('targetEl1');
-      let targetEl2 = Mocks.object('targetEl2');
+      const targetEl1 = Mocks.object('targetEl1');
+      const targetEl2 = Mocks.object('targetEl2');
 
-      spyOn(Util, 'resolveSelector').and.callFake((config: any) => {
-        switch (config) {
-          case selector1_1:
-          case selector1_2:
-            return targetEl1;
-          case selector2_1:
-          case selector2_2:
-            return targetEl2;
-        }
-      });
+      Fakes.build(spyOn(Util, 'resolveSelector'))
+          .when(selector1_1).return(targetEl1)
+          .when(selector1_2).return(targetEl1)
+          .when(selector2_1).return(targetEl2)
+          .when(selector2_2).return(targetEl2);
 
       Handler['configure_'](parentElement, instance, mockHandler);
 
@@ -98,15 +93,15 @@ describe('webc.Handler', () => {
     });
 
     it('should return the unresolved selectors', () => {
-      let parentElement = Mocks.object('parentElement');
-      let instance = Mocks.object('instance');
-      let mockHandler = jasmine.createSpyObj('Handler', ['configure', 'getConfigs']);
+      const parentElement = Mocks.object('parentElement');
+      const instance = Mocks.object('instance');
+      const mockHandler = jasmine.createSpyObj('Handler', ['configure', 'getConfigs']);
 
-      let selector = Mocks.object('selector');
-      let configs = Mocks.object('configs');
+      const selector = Mocks.object('selector');
+      const configs = Mocks.object('configs');
       configs.selector = selector;
 
-      let map = new Map();
+      const map = new Map();
       map.set('propertyKey', new Set([configs]));
       mockHandler.getConfigs.and.returnValue(map);
 

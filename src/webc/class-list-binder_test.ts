@@ -1,7 +1,8 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {ClassListBinder} from './class-list-binder';
+import { Fakes } from '../mock/fakes';
+import { ClassListBinder } from '../webc/class-list-binder';
 
 
 describe('webc.ClassListBinder', () => {
@@ -15,15 +16,13 @@ describe('webc.ClassListBinder', () => {
 
   function setClassNames(classNames: string[]): void {
     mockClassList.length = classNames.length;
-    mockClassList.item.and.callFake((index: number) => {
-      return classNames[index];
-    });
+    Fakes.build(mockClassList.item).call((index: number) => classNames[index]);
   }
 
   describe('delete', () => {
     it('should remove all the class names', () => {
-      let className1 = 'className1';
-      let className2 = 'className2';
+      const className1 = 'className1';
+      const className2 = 'className2';
       setClassNames([className1, className2]);
 
       binder.delete();
@@ -35,8 +34,8 @@ describe('webc.ClassListBinder', () => {
 
   describe('get', () => {
     it('should return the correct class names', () => {
-      let className1 = 'className1';
-      let className2 = 'className2';
+      const className1 = 'className1';
+      const className2 = 'className2';
       setClassNames([className1, className2]);
 
       assert(binder.get()).to.haveElements([className1, className2]);
@@ -45,8 +44,8 @@ describe('webc.ClassListBinder', () => {
 
   describe('set', () => {
     it('should remove all class names that have been removed', () => {
-      let removedClassName = 'removedClassName';
-      let remainingClassName = 'remainingClassName';
+      const removedClassName = 'removedClassName';
+      const remainingClassName = 'remainingClassName';
       setClassNames([removedClassName, remainingClassName]);
 
       binder.set(new Set([remainingClassName, 'otherClassName']));
@@ -56,8 +55,8 @@ describe('webc.ClassListBinder', () => {
     });
 
     it('should add all class names in the given value', () => {
-      let newClassName1 = 'newClassName1';
-      let newClassName2 = 'newClassName2';
+      const newClassName1 = 'newClassName1';
+      const newClassName2 = 'newClassName2';
 
       setClassNames([]);
 

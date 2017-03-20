@@ -1,9 +1,9 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Arrays} from '../collection/arrays';
-
-import {Doms} from './doms';
+import { Arrays } from '../collection/arrays';
+import { Fakes } from '../mock/fakes';
+import { Doms } from '../ui/doms';
 
 
 describe('ui.Doms', () => {
@@ -20,23 +20,15 @@ describe('ui.Doms', () => {
 
   describe('domsIterable', () => {
     it('should return the correct iterable', () => {
-      let element1 = document.createElement('a');
-      let element2 = document.createElement('b');
-      let element3 = document.createElement('div');
+      const element1 = document.createElement('a');
+      const element2 = document.createElement('b');
+      const element3 = document.createElement('div');
 
-      let mockCallback = jasmine.createSpy('Callback').and.callFake(
-          (fromEl: HTMLElement): any => {
-            switch (fromEl) {
-              case element1:
-                return element2;
-              case element2:
-                return element3;
-              case element3:
-                return null;
-              default:
-                return null;
-            }
-          });
+      const mockCallback = Fakes.build(jasmine.createSpy('Callback'))
+          .when(element1).return(element2)
+          .when(element2).return(element3)
+          .when(element3).return(null)
+          .else().return(null);
 
       assert(Arrays.fromIterable(Doms.domIterable(element1, mockCallback)).asArray()).to.equal([
         element1,
@@ -48,16 +40,16 @@ describe('ui.Doms', () => {
 
   describe('getShadowHost', () => {
     it('should return the shadow host', () => {
-      let host = document.createElement('div');
-      let fromEl = document.createElement('div');
-      let shadowRoot = host['createShadowRoot']();
+      const host = document.createElement('div');
+      const fromEl = document.createElement('div');
+      const shadowRoot = host['createShadowRoot']();
       shadowRoot.appendChild(fromEl);
       assert(Doms.getShadowHost(fromEl)).to.equal(host);
     });
 
     it('should return null if the parent node is not a shadow root', () => {
-      let host = document.createElement('div');
-      let fromEl = document.createElement('div');
+      const host = document.createElement('div');
+      const fromEl = document.createElement('div');
       host.appendChild(fromEl);
       assert(Doms.getShadowHost(fromEl)).to.beNull();
     });
@@ -65,11 +57,11 @@ describe('ui.Doms', () => {
 
   describe('offsetParentIterable', () => {
     it('should create the correct iterable', () => {
-      let fromEl = document.createElement('div');
-      let parentEl = document.createElement('div');
+      const fromEl = document.createElement('div');
+      const parentEl = document.createElement('div');
       parentEl.appendChild(fromEl);
       parentEl.style.position = 'relative';
-      let ancestorEl = document.createElement('div');
+      const ancestorEl = document.createElement('div');
       ancestorEl.appendChild(parentEl);
       ancestorEl.style.position = 'relative';
 
@@ -86,10 +78,10 @@ describe('ui.Doms', () => {
 
   describe('parentIterable', () => {
     it('should create the correct iterable', () => {
-      let fromEl = document.createElement('div');
-      let parentEl = document.createElement('div');
+      const fromEl = document.createElement('div');
+      const parentEl = document.createElement('div');
       parentEl.appendChild(fromEl);
-      let ancestorEl = document.createElement('div');
+      const ancestorEl = document.createElement('div');
       ancestorEl.appendChild(parentEl);
 
       rootEl.appendChild(ancestorEl);
@@ -105,10 +97,10 @@ describe('ui.Doms', () => {
     });
 
     it('should iterate through shadow root', () => {
-      let host = document.createElement('div');
-      let parentEl = document.createElement('div');
-      let fromEl = document.createElement('div');
-      let shadowRoot = host['createShadowRoot']();
+      const host = document.createElement('div');
+      const parentEl = document.createElement('div');
+      const fromEl = document.createElement('div');
+      const shadowRoot = host['createShadowRoot']();
       shadowRoot.appendChild(parentEl);
       parentEl.appendChild(fromEl);
       rootEl.appendChild(host);
@@ -126,11 +118,11 @@ describe('ui.Doms', () => {
 
   describe('relativeOffsetTop', () => {
     it('should return the relative top distance between the two given elements', () => {
-      let fromEl = document.createElement('div');
-      let parentEl = document.createElement('div');
+      const fromEl = document.createElement('div');
+      const parentEl = document.createElement('div');
       parentEl.style.paddingTop = '40px';
       parentEl.appendChild(fromEl);
-      let toEl = document.createElement('div');
+      const toEl = document.createElement('div');
       toEl.style.paddingTop = '20px';
       toEl.style.position = 'relative';
       toEl.appendChild(parentEl);
@@ -141,9 +133,9 @@ describe('ui.Doms', () => {
     });
 
     it('should throw error if the to element is statically positioned', () => {
-      let fromEl = document.createElement('div');
-      let parentEl = document.createElement('div');
-      let toEl = document.createElement('div');
+      const fromEl = document.createElement('div');
+      const parentEl = document.createElement('div');
+      const toEl = document.createElement('div');
       toEl.appendChild(parentEl);
 
       rootEl.appendChild(toEl);
@@ -154,8 +146,8 @@ describe('ui.Doms', () => {
     });
 
     it('should throw error if the to element is not an ancestor of the from element', () => {
-      let fromEl = document.createElement('div');
-      let toEl = document.createElement('div');
+      const fromEl = document.createElement('div');
+      const toEl = document.createElement('div');
 
       rootEl.appendChild(toEl);
 
