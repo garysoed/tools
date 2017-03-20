@@ -1,14 +1,14 @@
-import {TestBase} from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
-import {AnyAssert} from './any-assert';
-import {ArrayAssert} from './array-assert';
-import {assert} from './assert';
-import {BooleanAssert} from './boolean-assert';
-import {FunctionAssert} from './function-assert';
-import {MapAssert} from './map-assert';
-import {NumberAssert} from './number-assert';
-import {StringAssert} from './string-assert';
+import { AnyAssert } from './any-assert';
+import { ArrayAssert } from './array-assert';
+import { assert } from './assert';
+import { BooleanAssert } from './boolean-assert';
+import { FunctionAssert } from './function-assert';
+import { MapAssert } from './map-assert';
+import { NumberAssert } from './number-assert';
+import { StringAssert } from './string-assert';
 
 
 describe('jasmine.assert', () => {

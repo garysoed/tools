@@ -1,5 +1,5 @@
-import {AnyValidations} from './any-validations';
-import {ValidationResult} from './validation-result';
+import { AnyValidations } from './any-validations';
+import { ValidationResult } from './validation-result';
 
 
 /**

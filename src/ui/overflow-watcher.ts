@@ -1,8 +1,8 @@
-import {BaseListenable} from '../event/base-listenable';
-import {DomEvent} from '../event/dom-event';
-import {ListenableDom} from '../event/listenable-dom';
+import { BaseListenable } from '../event/base-listenable';
+import { DomEvent } from '../event/dom-event';
+import { ListenableDom } from '../event/listenable-dom';
 
-import {Doms} from './doms';
+import { Doms } from './doms';
 
 
 /**

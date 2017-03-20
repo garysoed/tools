@@ -1,7 +1,7 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {BooleanParser} from './boolean-parser';
+import { BooleanParser } from './boolean-parser';
 
 
 describe('webc.BooleanParser', () => {

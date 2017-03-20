@@ -1,6 +1,6 @@
-import {DisposableFunction} from '../dispose/disposable-function';
+import { DisposableFunction } from '../dispose/disposable-function';
 
-import {BaseListenable} from './base-listenable';
+import { BaseListenable } from './base-listenable';
 
 
 /**

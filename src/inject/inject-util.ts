@@ -1,4 +1,4 @@
-import {InjectMetadata} from './inject-metadata';
+import { InjectMetadata } from './inject-metadata';
 
 
 /**

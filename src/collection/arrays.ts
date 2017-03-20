@@ -1,4 +1,4 @@
-import {FluentIndexable} from './indexables';
+import { FluentIndexable } from './indexables';
 
 
 /**

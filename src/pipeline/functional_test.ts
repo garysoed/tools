@@ -1,10 +1,10 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {External} from './external';
-import {Graph} from './graph';
-import {Internal} from './internal';
-import {Pipe} from './pipe';
+import { External } from './external';
+import { Graph } from './graph';
+import { Internal } from './internal';
+import { Pipe } from './pipe';
 
 
 class TestClass {

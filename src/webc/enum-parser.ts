@@ -1,5 +1,5 @@
-import {Enums} from '../typescript/enums';
-import {IAttributeParser} from './interfaces';
+import { Enums } from '../typescript/enums';
+import { IAttributeParser } from './interfaces';
 
 
 export class EnumParserImpl<E> implements IAttributeParser<E> {

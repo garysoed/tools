@@ -1,11 +1,11 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import {ListenableDom} from '../event/listenable-dom';
-import {Mocks} from '../mock/mocks';
-import {TestDispose} from '../testing/test-dispose';
+import { ListenableDom } from '../event/listenable-dom';
+import { Mocks } from '../mock/mocks';
+import { TestDispose } from '../testing/test-dispose';
 
-import {EVENT_ANNOTATIONS, EventHandler} from './event-handler';
+import { EVENT_ANNOTATIONS, EventHandler } from './event-handler';
 
 
 describe('web.EventHandler', () => {

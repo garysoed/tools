@@ -1,7 +1,7 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {StringType} from '../check/string-type';
+import { StringType } from '../check/string-type';
 
 
 describe('check.StringType', () => {

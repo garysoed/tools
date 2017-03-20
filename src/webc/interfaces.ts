@@ -1,4 +1,4 @@
-import {BaseDisposable} from '../dispose/base-disposable';
+import { BaseDisposable } from '../dispose/base-disposable';
 
 
 export interface IAttributeParser<T> {

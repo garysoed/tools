@@ -1,4 +1,4 @@
-import {FluentNonIndexable, NonIndexables} from './non-indexables';
+import { FluentNonIndexable, NonIndexables } from './non-indexables';
 
 
 /**

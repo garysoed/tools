@@ -1,7 +1,7 @@
-import {Records} from '../collection/records';
+import { Records } from '../collection/records';
 
-import {BaseValidations} from './base-validations';
-import {ValidationResult} from './validation-result';
+import { BaseValidations } from './base-validations';
+import { ValidationResult } from './validation-result';
 
 
 export class BatchValidations extends BaseValidations<{[key: string]: ValidationResult<any>}> {

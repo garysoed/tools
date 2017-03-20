@@ -1,7 +1,7 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Cases} from './cases';
+import { Cases } from './cases';
 
 
 describe('string.Cases', () => {

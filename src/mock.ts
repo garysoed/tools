@@ -1,1 +1,1 @@
-export {Mocks} from './mock/mocks';
+export { Mocks } from './mock/mocks';

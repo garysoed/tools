@@ -1,9 +1,9 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {ArrayIterable} from './array-iterable';
-import {Arrays} from './arrays';
-import {ChainIterable} from './chain-iterable';
+import { ArrayIterable } from './array-iterable';
+import { Arrays } from './arrays';
+import { ChainIterable } from './chain-iterable';
 
 
 describe('collection.ChainIterable', () => {

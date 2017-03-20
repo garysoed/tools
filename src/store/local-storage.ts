@@ -1,4 +1,4 @@
-import {WebStorage} from './web-storage';
+import { WebStorage } from './web-storage';
 
 
 export class LocalStorage<T> extends WebStorage<T> {

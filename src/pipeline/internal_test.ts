@@ -1,11 +1,11 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Mocks} from '../mock/mocks';
+import { Mocks } from '../mock/mocks';
 
-import {ArgMetaData} from './arg-meta-data';
-import {Internal} from './internal';
-import {PipeUtil} from './pipe-util';
+import { ArgMetaData } from './arg-meta-data';
+import { Internal } from './internal';
+import { PipeUtil } from './pipe-util';
 
 
 describe('pipeline.Internal', () => {

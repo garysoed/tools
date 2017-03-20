@@ -1,1 +1,1 @@
-export {EventType as RecaptchaEventType, Recaptcha} from './secure/recaptcha';
+export { EventType as RecaptchaEventType, Recaptcha } from './secure/recaptcha';

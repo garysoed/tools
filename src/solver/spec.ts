@@ -1,4 +1,4 @@
-import {Validate} from '../valid/validate';
+import { Validate } from '../valid/validate';
 
 
 /**

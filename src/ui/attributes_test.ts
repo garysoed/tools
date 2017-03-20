@@ -1,7 +1,7 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Attributes} from './attributes';
+import { Attributes } from './attributes';
 
 describe('ui.Attributes', () => {
   describe('add', () => {

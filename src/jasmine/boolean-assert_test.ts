@@ -1,7 +1,7 @@
-import {TestBase} from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
-import {BooleanAssert} from './boolean-assert';
+import { BooleanAssert } from './boolean-assert';
 
 
 describe('jasmine.BooleanAssert', () => {

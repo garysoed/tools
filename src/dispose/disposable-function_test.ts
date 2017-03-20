@@ -1,9 +1,9 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {TestDispose} from '../testing/test-dispose';
+import { TestDispose } from '../testing/test-dispose';
 
-import {DisposableFunction} from './disposable-function';
+import { DisposableFunction } from './disposable-function';
 
 
 describe('dispose.DisposableFunction', () => {

@@ -1,8 +1,8 @@
-import {Maps} from '../collection/maps';
-import {Records} from '../collection/records';
+import { Maps } from '../collection/maps';
+import { Records } from '../collection/records';
 import Cache from '../data/a-cache';
-import {BaseDisposable} from '../dispose/base-disposable';
-import {DisposableFunction} from '../dispose/disposable-function';
+import { BaseDisposable } from '../dispose/base-disposable';
+import { DisposableFunction } from '../dispose/disposable-function';
 
 
 /**

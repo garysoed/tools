@@ -1,7 +1,7 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {IntegerParser} from './integer-parser';
+import { IntegerParser } from './integer-parser';
 
 
 describe('webc.IntegerParser', () => {

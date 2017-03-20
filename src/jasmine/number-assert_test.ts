@@ -1,7 +1,7 @@
-import {TestBase} from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
-import {NumberAssert} from './number-assert';
+import { NumberAssert } from './number-assert';
 
 
 describe('jasmine.NumberAssert', () => {

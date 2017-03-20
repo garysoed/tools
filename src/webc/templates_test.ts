@@ -1,7 +1,7 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Templates} from './templates';
+import { Templates } from './templates';
 
 
 describe('webc.Templates', () => {

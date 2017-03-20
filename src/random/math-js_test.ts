@@ -1,7 +1,7 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {MathJs} from './math-js';
+import { MathJs } from './math-js';
 
 
 describe('random.MathJs', () => {

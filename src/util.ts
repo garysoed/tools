@@ -1,2 +1,2 @@
-export {Log} from './util/log';
-export {Reflect} from './util/reflect';
+export { Log } from './util/log';
+export { Reflect } from './util/reflect';

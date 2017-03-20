@@ -1,9 +1,9 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Mocks} from '../mock/mocks';
+import { Mocks } from '../mock/mocks';
 
-import {AttributeBinder} from './attribute-binder';
+import { AttributeBinder } from './attribute-binder';
 
 
 describe('webc.AttributeBinder', () => {

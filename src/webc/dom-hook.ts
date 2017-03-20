@@ -1,6 +1,6 @@
-import {Validate} from '../valid/validate';
+import { Validate } from '../valid/validate';
 
-import {IDomBinder} from './interfaces';
+import { IDomBinder } from './interfaces';
 
 
 /**

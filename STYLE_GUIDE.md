@@ -18,18 +18,18 @@
 Example:
 
 ```typescript
-import {assert, Matchers, TestBase} from '../test-base';
+import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Validate} from 'external/gs_tools/src/util';
+import { Validate } from 'external/gs_tools/src/util';
 
-import {BasicButton} from 'external/gs_ui/src/input';
-import {Breadcrumb} from 'external/gs_ui/src/routing';
+import { BasicButton } from 'external/gs_ui/src/input';
+import { Breadcrumb } from 'external/gs_ui/src/routing';
 
-import {Interval} from '../async/interval';
-import {TestDispose} from '../testing/test-dispose';
+import { Interval } from '../async/interval';
+import { TestDispose } from '../testing/test-dispose';
 
-import {Sequencer} from './sequencer';
+import { Sequencer } from './sequencer';
 ```
 
 *DONE projects: `gs_tools`*

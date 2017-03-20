@@ -1,7 +1,7 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Arrays} from './arrays';
+import { Arrays } from './arrays';
 import SortedSet from './sorted-set';
 
 

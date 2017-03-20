@@ -1,4 +1,4 @@
-import {BaseValidations} from './base-validations';
+import { BaseValidations } from './base-validations';
 
 
 /**

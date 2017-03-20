@@ -1,8 +1,8 @@
-import {Maps} from '../collection/maps';
-import {Stringify} from '../data/stringify';
+import { Maps } from '../collection/maps';
+import { Stringify } from '../data/stringify';
 
-import {AnyValidations} from './any-validations';
-import {ValidationResult} from './validation-result';
+import { AnyValidations } from './any-validations';
+import { ValidationResult } from './validation-result';
 
 
 /**

@@ -1,7 +1,7 @@
-import {BaseDisposable} from '../dispose/base-disposable';
-import {Validate} from '../valid/validate';
+import { BaseDisposable } from '../dispose/base-disposable';
+import { Validate } from '../valid/validate';
 
-import {Sequencer} from './sequencer';
+import { Sequencer } from './sequencer';
 
 export const __SEQUENCER: symbol = Symbol('sequencer');
 

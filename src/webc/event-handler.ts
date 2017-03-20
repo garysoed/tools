@@ -1,9 +1,9 @@
-import {Arrays} from '../collection/arrays';
-import {Annotations} from '../data/annotations';
-import {BaseDisposable} from '../dispose/base-disposable';
-import {ListenableDom} from '../event/listenable-dom';
+import { Arrays } from '../collection/arrays';
+import { Annotations } from '../data/annotations';
+import { BaseDisposable } from '../dispose/base-disposable';
+import { ListenableDom } from '../event/listenable-dom';
 
-import {IHandler} from './interfaces';
+import { IHandler } from './interfaces';
 
 
 export type EventHandlerConfig = {

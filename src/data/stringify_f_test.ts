@@ -1,7 +1,7 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Stringify} from './stringify';
+import { Stringify } from './stringify';
 
 
 class SimpleClass {

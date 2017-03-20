@@ -1,11 +1,11 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Mocks} from '../mock/mocks';
+import { Mocks } from '../mock/mocks';
 
-import {Graph} from './graph';
-import {GraphNode} from './graph-node';
-import {PipeUtil} from './pipe-util';
+import { Graph } from './graph';
+import { GraphNode } from './graph-node';
+import { PipeUtil } from './pipe-util';
 
 
 describe('pipeline.Graph', () => {

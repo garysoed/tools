@@ -1,9 +1,9 @@
-import {TestBase} from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
-import {Mocks} from '../mock/mocks';
+import { Mocks } from '../mock/mocks';
 
-import {ElementAssert} from './element-assert';
+import { ElementAssert } from './element-assert';
 
 
 describe('jasmine.ElementAssert', () => {

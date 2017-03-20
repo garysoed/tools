@@ -1,4 +1,4 @@
-import {IDomBinder} from './interfaces';
+import { IDomBinder } from './interfaces';
 
 
 export class PropertyBinder<T> implements IDomBinder<T> {

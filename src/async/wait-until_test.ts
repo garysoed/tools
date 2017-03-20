@@ -1,8 +1,8 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Interval} from '../async/interval';
-import {TestDispose} from '../testing/test-dispose';
+import { Interval } from '../async/interval';
+import { TestDispose } from '../testing/test-dispose';
 
 import WaitUntil from './wait-until';
 

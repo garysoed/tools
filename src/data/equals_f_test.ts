@@ -1,9 +1,9 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Mocks} from '../mock/mocks';
+import { Mocks } from '../mock/mocks';
 
-import {Equals} from './equals';
+import { Equals } from './equals';
 
 
 class SimpleClass {

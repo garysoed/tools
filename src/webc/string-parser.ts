@@ -1,4 +1,4 @@
-import {IAttributeParser} from './interfaces';
+import { IAttributeParser } from './interfaces';
 
 
 /**

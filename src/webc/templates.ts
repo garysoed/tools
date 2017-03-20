@@ -1,8 +1,8 @@
-import {Maps} from '../collection/maps';
-import {External} from '../pipeline/external';
-import {Graph} from '../pipeline/graph';
-import {Pipe} from '../pipeline/pipe';
-import {Validate} from '../valid/validate';
+import { Maps } from '../collection/maps';
+import { External } from '../pipeline/external';
+import { Graph } from '../pipeline/graph';
+import { Pipe } from '../pipeline/pipe';
+import { Validate } from '../valid/validate';
 
 
 /**

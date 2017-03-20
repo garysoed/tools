@@ -1,4 +1,4 @@
-import {IAttributeParser, IDomBinder} from './interfaces';
+import { IAttributeParser, IDomBinder } from './interfaces';
 
 
 /**

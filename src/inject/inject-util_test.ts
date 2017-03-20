@@ -1,7 +1,7 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {InjectUtil} from './inject-util';
+import { InjectUtil } from './inject-util';
 
 
 describe('inject.InjectUtil', () => {

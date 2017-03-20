@@ -1,10 +1,10 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Mocks} from '../mock/mocks';
-import {TestDispose} from '../testing/test-dispose';
+import { Mocks } from '../mock/mocks';
+import { TestDispose } from '../testing/test-dispose';
 
-import {BaseListenable} from './base-listenable';
+import { BaseListenable } from './base-listenable';
 
 
 describe('event.BaseListenable', () => {

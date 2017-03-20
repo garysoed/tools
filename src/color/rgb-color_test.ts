@@ -1,7 +1,7 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {RgbColor} from './rgb-color';
+import { RgbColor } from './rgb-color';
 
 
 describe('color.RgbColor', () => {

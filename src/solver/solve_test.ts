@@ -1,8 +1,8 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Solve} from './solve';
-import {Spec} from './spec';
+import { Solve } from './solve';
+import { Spec } from './spec';
 
 
 describe('solver.Solve', () => {

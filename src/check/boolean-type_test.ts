@@ -1,7 +1,7 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {BooleanType} from '../check/boolean-type';
+import { BooleanType } from '../check/boolean-type';
 
 
 describe('check.BooleanType', () => {

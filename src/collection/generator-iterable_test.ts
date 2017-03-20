@@ -1,9 +1,9 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {ArrayIterable} from './array-iterable';
-import {Arrays} from './arrays';
-import {GeneratorIterable} from './generator-iterable';
+import { ArrayIterable } from './array-iterable';
+import { Arrays } from './arrays';
+import { GeneratorIterable } from './generator-iterable';
 
 
 describe('collection.GeneratorIterable', () => {

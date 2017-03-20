@@ -1,5 +1,5 @@
-import {BaseDisposable} from '../dispose/base-disposable';
-import {DisposableFunction} from '../dispose/disposable-function';
+import { BaseDisposable } from '../dispose/base-disposable';
+import { DisposableFunction } from '../dispose/disposable-function';
 
 
 /**

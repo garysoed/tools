@@ -1,9 +1,9 @@
-import {Arrays} from '../collection/arrays';
-import {Maps} from '../collection/maps';
-import {Sets} from '../collection/sets';
-import {BaseDisposable} from '../dispose/base-disposable';
+import { Arrays } from '../collection/arrays';
+import { Maps } from '../collection/maps';
+import { Sets } from '../collection/sets';
+import { BaseDisposable } from '../dispose/base-disposable';
 
-import {Storage} from './interfaces';
+import { Storage } from './interfaces';
 
 
 export class CachedStorage<T> extends BaseDisposable implements Storage<T> {

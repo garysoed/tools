@@ -1,6 +1,6 @@
-import {Stringify} from '../data/stringify';
+import { Stringify } from '../data/stringify';
 
-import {ValidationResult} from './validation-result';
+import { ValidationResult } from './validation-result';
 
 
 /**

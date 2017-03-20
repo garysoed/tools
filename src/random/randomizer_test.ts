@@ -1,7 +1,7 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Randomizer} from './randomizer';
+import { Randomizer } from './randomizer';
 
 
 describe('random.Randomizer', () => {

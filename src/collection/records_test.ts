@@ -1,7 +1,7 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Records} from './records';
+import { Records } from './records';
 
 
 describe('collection.Records', () => {

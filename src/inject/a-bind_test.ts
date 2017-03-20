@@ -1,8 +1,8 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {bind} from './a-bind';
-import {Injector} from './injector';
+import { bind } from './a-bind';
+import { Injector } from './injector';
 
 
 class TestClass { }

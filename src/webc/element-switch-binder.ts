@@ -1,6 +1,6 @@
-import {Maps} from '../collection/maps';
+import { Maps } from '../collection/maps';
 
-import {IDomBinder} from './interfaces';
+import { IDomBinder } from './interfaces';
 
 export const __enumValue: symbol = Symbol('enumValue');
 

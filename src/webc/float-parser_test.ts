@@ -1,7 +1,7 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {FloatParser} from './float-parser';
+import { FloatParser } from './float-parser';
 
 
 describe('webc.FloatParser', () => {

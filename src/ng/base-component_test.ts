@@ -1,7 +1,7 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import {TestDispose} from '../testing/test-dispose';
+import { TestDispose } from '../testing/test-dispose';
 
 import BaseComponent from './base-component';
 import FakeScope from './fake-scope';

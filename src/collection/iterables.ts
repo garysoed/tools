@@ -1,9 +1,9 @@
-import {ArrayIterable} from './array-iterable';
-import {BaseFluent} from './base-fluent';
-import {ChainIterable} from './chain-iterable';
-import {FilteredIterable} from './filtered-iterable';
-import {IFluentIterable} from './interfaces';
-import {MappedIterable} from './mapped-iterable';
+import { ArrayIterable } from './array-iterable';
+import { BaseFluent } from './base-fluent';
+import { ChainIterable } from './chain-iterable';
+import { FilteredIterable } from './filtered-iterable';
+import { IFluentIterable } from './interfaces';
+import { MappedIterable } from './mapped-iterable';
 
 
 /**

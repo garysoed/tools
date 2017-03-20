@@ -1,6 +1,6 @@
-import {Maps} from '../collection/maps';
+import { Maps } from '../collection/maps';
 
-import {AnyAssert} from './any-assert';
+import { AnyAssert } from './any-assert';
 
 
 /**

@@ -1,4 +1,4 @@
-import {Arrays} from '../collection/arrays';
+import { Arrays } from '../collection/arrays';
 
 
 /**

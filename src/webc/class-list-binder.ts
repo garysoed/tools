@@ -1,6 +1,6 @@
-import {Arrays} from '../collection/arrays';
+import { Arrays } from '../collection/arrays';
 
-import {IDomBinder} from './interfaces';
+import { IDomBinder } from './interfaces';
 
 
 export class ClassListBinder implements IDomBinder<Set<string>> {

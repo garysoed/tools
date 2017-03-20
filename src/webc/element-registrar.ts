@@ -6,13 +6,13 @@ import { Cases } from '../string/cases';
 import { Checks } from '../util/checks';
 import { Log } from '../util/log';
 import { Validate } from '../valid/validate';
-import { BaseElement} from '../webc/base-element';
-import { ANNOTATIONS as BindAnnotations} from '../webc/bind';
-import { CustomElementUtil} from '../webc/custom-element-util';
-import { DomHook} from '../webc/dom-hook';
-import { Handler} from '../webc/handle';
-import { IAttributeParser, IDomBinder} from '../webc/interfaces';
-import { Templates} from '../webc/templates';
+import { BaseElement } from '../webc/base-element';
+import { ANNOTATIONS as BindAnnotations } from '../webc/bind';
+import { CustomElementUtil } from '../webc/custom-element-util';
+import { DomHook } from '../webc/dom-hook';
+import { Handler } from '../webc/handle';
+import { IAttributeParser, IDomBinder } from '../webc/interfaces';
+import { Templates } from '../webc/templates';
 
 
 /**

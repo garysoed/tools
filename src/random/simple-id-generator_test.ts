@@ -1,7 +1,7 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {SimpleIdGenerator} from './simple-id-generator';
+import { SimpleIdGenerator } from './simple-id-generator';
 
 
 describe('random.SimpleIdGenerator', () => {

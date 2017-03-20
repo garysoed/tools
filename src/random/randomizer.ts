@@ -1,5 +1,5 @@
-import {MathJs} from './math-js';
-import {Rng} from './rng';
+import { MathJs } from './math-js';
+import { Rng } from './rng';
 
 const ID_CHARS: string[] = [];
 // Add the numbers.

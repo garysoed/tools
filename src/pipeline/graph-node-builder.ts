@@ -1,7 +1,7 @@
-import {Validate} from '../valid/validate';
+import { Validate } from '../valid/validate';
 
-import {ArgMetaData} from './arg-meta-data';
-import {GraphNode} from './graph-node';
+import { ArgMetaData } from './arg-meta-data';
+import { GraphNode } from './graph-node';
 
 
 /**

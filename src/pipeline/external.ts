@@ -1,5 +1,5 @@
-import {ArgMetaData} from './arg-meta-data';
-import {PipeUtil} from './pipe-util';
+import { ArgMetaData } from './arg-meta-data';
+import { PipeUtil } from './pipe-util';
 
 
 /**

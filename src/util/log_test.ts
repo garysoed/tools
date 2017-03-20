@@ -1,7 +1,7 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Log} from './log';
+import { Log } from './log';
 
 
 describe('util.Log', () => {

@@ -1,10 +1,10 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Maps} from '../collection/maps';
-import {Stringify} from '../data/stringify';
+import { Maps } from '../collection/maps';
+import { Stringify } from '../data/stringify';
 
-import {Validate} from './validate';
+import { Validate } from './validate';
 
 
 describe('valid.MapValidations', () => {

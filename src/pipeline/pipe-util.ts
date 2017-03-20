@@ -1,6 +1,6 @@
-import {ArgMetaData} from './arg-meta-data';
-import {GraphNode} from './graph-node';
-import {GraphNodeBuilder} from './graph-node-builder';
+import { ArgMetaData } from './arg-meta-data';
+import { GraphNode } from './graph-node';
+import { GraphNodeBuilder } from './graph-node-builder';
 
 
 export const __NODE_BUILDER_DATA_MAP = Symbol('nodeBuilderDataMap');

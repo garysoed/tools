@@ -1,7 +1,7 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {BaseValidations} from './base-validations';
+import { BaseValidations } from './base-validations';
 
 
 describe('valid.BaseValidations', () => {

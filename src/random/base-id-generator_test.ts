@@ -1,7 +1,7 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {BaseIdGenerator} from '../random/base-id-generator';
+import { BaseIdGenerator } from '../random/base-id-generator';
 
 
 class TestIdGenerator extends BaseIdGenerator {

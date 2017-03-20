@@ -1,8 +1,8 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {ArrayParser, ArrayParserImpl, DELIMITER_} from './array-parser';
-import {StringParser} from './string-parser';
+import { ArrayParser, ArrayParserImpl, DELIMITER_ } from './array-parser';
+import { StringParser } from './string-parser';
 
 
 describe('webc.ArrayParser', () => {

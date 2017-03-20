@@ -1,9 +1,9 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Mocks} from '../mock/mocks';
+import { Mocks } from '../mock/mocks';
 
-import {CustomElementUtil} from './custom-element-util';
+import { CustomElementUtil } from './custom-element-util';
 
 
 describe('webc.CustomElementUtil', () => {

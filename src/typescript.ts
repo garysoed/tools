@@ -1,1 +1,1 @@
-export {Enums} from './typescript/enums';
+export { Enums } from './typescript/enums';

@@ -1,10 +1,10 @@
-import {Arrays} from '../collection/arrays';
-import {Serializer} from '../data/a-serializable';
-import {Validate} from '../valid/validate';
+import { Arrays } from '../collection/arrays';
+import { Serializer } from '../data/a-serializable';
+import { Validate } from '../valid/validate';
 
 import { Sets } from '../collection/sets';
 import { BaseIdGenerator } from '../random/base-id-generator';
-import {SimpleIdGenerator} from '../random/simple-id-generator';
+import { SimpleIdGenerator } from '../random/simple-id-generator';
 import { Storage as GsStorage } from '../store/interfaces';
 
 

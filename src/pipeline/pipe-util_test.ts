@@ -1,11 +1,11 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Maps} from '../collection/maps';
-import {Mocks} from '../mock/mocks';
+import { Maps } from '../collection/maps';
+import { Mocks } from '../mock/mocks';
 
-import {GraphNodeBuilder} from './graph-node-builder';
-import {__NODE_BUILDER_DATA_MAP, __NODE_DATA_MAP, PipeUtil} from './pipe-util';
+import { GraphNodeBuilder } from './graph-node-builder';
+import { __NODE_BUILDER_DATA_MAP, __NODE_DATA_MAP, PipeUtil } from './pipe-util';
 
 
 describe('pipeline.PipeUtil', () => {

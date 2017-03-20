@@ -1,11 +1,11 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import {BaseDisposable} from '../dispose/base-disposable';
-import {Mocks} from '../mock/mocks';
+import { BaseDisposable } from '../dispose/base-disposable';
+import { Mocks } from '../mock/mocks';
 
-import {__SEQUENCER, atomic} from './atomic';
-import {Sequencer} from './sequencer';
+import { __SEQUENCER, atomic } from './atomic';
+import { Sequencer } from './sequencer';
 
 
 describe('async.sequenced', () => {

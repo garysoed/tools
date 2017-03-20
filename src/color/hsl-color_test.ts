@@ -1,7 +1,7 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {HslColor} from './hsl-color';
+import { HslColor } from './hsl-color';
 
 
 describe('color.HslColor', () => {

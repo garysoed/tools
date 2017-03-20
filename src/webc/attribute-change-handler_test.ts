@@ -8,7 +8,7 @@ import { Mocks } from '../mock/mocks';
 import {
   ATTR_CHANGE_ANNOTATIONS,
   AttributeChangeHandler,
-  AttributeChangeHandlerConfig as Config} from './attribute-change-handler';
+  AttributeChangeHandlerConfig as Config } from './attribute-change-handler';
 
 
 describe('webc.AttributeChangeHandler', () => {

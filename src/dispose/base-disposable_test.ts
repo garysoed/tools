@@ -1,7 +1,7 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {BaseDisposable} from './base-disposable';
+import { BaseDisposable } from './base-disposable';
 
 
 class DisposableClass extends BaseDisposable {

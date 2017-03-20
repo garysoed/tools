@@ -1,6 +1,6 @@
-import {Sets} from '../collection/sets';
+import { Sets } from '../collection/sets';
 
-import {AnyAssert} from './any-assert';
+import { AnyAssert } from './any-assert';
 
 
 /**

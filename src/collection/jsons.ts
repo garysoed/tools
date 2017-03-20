@@ -1,5 +1,5 @@
-import {Maps} from '../collection/maps';
-import {Validate} from '../valid/validate';
+import { Maps } from '../collection/maps';
+import { Validate } from '../valid/validate';
 
 
 /**
@@ -112,7 +112,7 @@ export class Jsons {
    *
    * @param fromObj The source object to do the mixin.
    * @param toObj The destination of the mixin.
-   * @param {gs.IJson} fromObj [description]
+   * @param {gs.IJson } fromObj [description]
    * @param {gs.IJson} toObj [description]
    */
   static mixin<A extends gs.IJson, B extends gs.IJson>(fromObj: A, toObj: B): A & B {

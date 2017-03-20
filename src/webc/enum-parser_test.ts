@@ -1,7 +1,7 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {EnumParser, EnumParserImpl} from './enum-parser';
+import { EnumParser, EnumParserImpl } from './enum-parser';
 
 
 enum Enum {

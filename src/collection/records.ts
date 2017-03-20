@@ -1,4 +1,4 @@
-import {FluentMappable, Mappables} from './mappables';
+import { FluentMappable, Mappables } from './mappables';
 
 
 type Record = {[key: string]: any};

@@ -1,9 +1,9 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {ArrayIterable} from './array-iterable';
-import {Iterables} from './iterables';
-import {MappedIterable} from './mapped-iterable';
+import { ArrayIterable } from './array-iterable';
+import { Iterables } from './iterables';
+import { MappedIterable } from './mapped-iterable';
 
 
 describe('collection.MappedIterable', () => {

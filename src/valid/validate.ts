@@ -1,14 +1,14 @@
-import {AnyValidations} from './any-validations';
-import {ArrayValidations} from './array-validations';
-import {BatchValidations} from './batch-validations';
-import {CtorValidations} from './ctor-validations';
-import {HtmlElementValidations} from './html-element-validations';
-import {MapValidations} from './map-validations';
-import {NumberValidations} from './number-validations';
-import {SetValidations} from './set-validations';
-import {StringValidations} from './string-validations';
-import {ValidationResult} from './validation-result';
-import {ValidationsFactory} from './validations-factory';
+import { AnyValidations } from './any-validations';
+import { ArrayValidations } from './array-validations';
+import { BatchValidations } from './batch-validations';
+import { CtorValidations } from './ctor-validations';
+import { HtmlElementValidations } from './html-element-validations';
+import { MapValidations } from './map-validations';
+import { NumberValidations } from './number-validations';
+import { SetValidations } from './set-validations';
+import { StringValidations } from './string-validations';
+import { ValidationResult } from './validation-result';
+import { ValidationsFactory } from './validations-factory';
 
 
 /**
@@ -21,7 +21,7 @@ import {ValidationsFactory} from './validations-factory';
  * Example usage:
  *
  * ```typescript
- * import {Validate} from 'valid/validate';
+ * import { Validate } from 'valid/validate';
  *
  * Validate
  *     .batch({

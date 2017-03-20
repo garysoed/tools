@@ -1,7 +1,7 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Jsons} from './jsons';
+import { Jsons } from './jsons';
 
 
 describe('collection.Jsons', () => {

@@ -1,7 +1,7 @@
-import {Checks} from '../util/checks';
+import { Checks } from '../util/checks';
 
-import {InjectMetadata} from './inject-metadata';
-import {InjectUtil} from './inject-util';
+import { InjectMetadata } from './inject-metadata';
+import { InjectUtil } from './inject-util';
 
 
 export function inject(name: (string|null) = null, defaultValue?: any): ParameterDecorator {

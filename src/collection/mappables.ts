@@ -1,8 +1,8 @@
-import {BaseFluent} from './base-fluent';
-import {Indexables} from './indexables';
-import {IFluentMappable} from './interfaces';
-import {FluentIterable, Iterables} from './iterables';
-import {FluentNonIndexable, NonIndexables} from './non-indexables';
+import { BaseFluent } from './base-fluent';
+import { Indexables } from './indexables';
+import { IFluentMappable } from './interfaces';
+import { FluentIterable, Iterables } from './iterables';
+import { FluentNonIndexable, NonIndexables } from './non-indexables';
 
 
 export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFluentMappable<K, V> {

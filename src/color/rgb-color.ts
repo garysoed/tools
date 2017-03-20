@@ -1,10 +1,10 @@
-import {Arrays} from '../collection/arrays';
-import {Graph} from '../pipeline/graph';
-import {Internal} from '../pipeline/internal';
-import {Pipe} from '../pipeline/pipe';
-import {Validate} from '../valid/validate';
+import { Arrays } from '../collection/arrays';
+import { Graph } from '../pipeline/graph';
+import { Internal } from '../pipeline/internal';
+import { Pipe } from '../pipeline/pipe';
+import { Validate } from '../valid/validate';
 
-import {IColor} from './interface';
+import { IColor } from './interface';
 
 
 export class RgbColor implements IColor {

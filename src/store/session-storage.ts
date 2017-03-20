@@ -1,4 +1,4 @@
-import {WebStorage} from './web-storage';
+import { WebStorage } from './web-storage';
 
 
 export class SessionStorage<T> extends WebStorage<T> {

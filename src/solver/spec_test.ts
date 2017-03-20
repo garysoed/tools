@@ -1,7 +1,7 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Spec} from './spec';
+import { Spec } from './spec';
 
 
 describe('solver.Spec', () => {

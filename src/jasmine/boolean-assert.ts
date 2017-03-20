@@ -1,4 +1,4 @@
-import {BaseAssert} from './base-assert';
+import { BaseAssert } from './base-assert';
 
 
 /**

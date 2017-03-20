@@ -1,7 +1,7 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import {Reflect} from './reflect';
+import { Reflect } from './reflect';
 
 
 describe('Reflect', () => {

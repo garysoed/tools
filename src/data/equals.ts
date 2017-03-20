@@ -1,6 +1,6 @@
-import {Arrays} from '../collection/arrays';
+import { Arrays } from '../collection/arrays';
 
-import {Annotations} from './annotations';
+import { Annotations } from './annotations';
 
 
 export const ANNOTATIONS: Annotations<any> = Annotations.of<any>(Symbol('equals'));

@@ -1,1 +1,1 @@
-export {Validate} from './valid/validate';
+export { Validate } from './valid/validate';

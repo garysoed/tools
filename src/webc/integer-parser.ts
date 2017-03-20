@@ -1,5 +1,5 @@
-import {FloatParser} from './float-parser';
-import {IAttributeParser} from './interfaces';
+import { FloatParser } from './float-parser';
+import { IAttributeParser } from './interfaces';
 
 export const IntegerParser: IAttributeParser<number> = {
   /**

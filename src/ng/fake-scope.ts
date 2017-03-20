@@ -1,4 +1,4 @@
-import {DisposableFunction} from '../dispose/disposable-function';
+import { DisposableFunction } from '../dispose/disposable-function';
 
 /**
  * Utility class to generate a fake angular `Scope` object.

@@ -1,7 +1,7 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {SymbolType} from '../check/symbol-type';
+import { SymbolType } from '../check/symbol-type';
 
 
 describe('check.SymbolType', () => {

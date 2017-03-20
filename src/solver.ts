@@ -1,2 +1,2 @@
-export {Solve} from './solver/solve';
-export {Spec} from './solver/spec';
+export { Solve } from './solver/solve';
+export { Spec } from './solver/spec';

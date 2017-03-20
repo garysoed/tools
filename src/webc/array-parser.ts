@@ -1,6 +1,6 @@
-import {Arrays} from '../collection/arrays';
+import { Arrays } from '../collection/arrays';
 
-import {IAttributeParser} from './interfaces';
+import { IAttributeParser } from './interfaces';
 
 
 export const DELIMITER_: string = ',';

@@ -1,7 +1,7 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {NumberType} from '../check/number-type';
+import { NumberType } from '../check/number-type';
 
 
 describe('check.NumberType', () => {

@@ -1,12 +1,12 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
 import FakeScope from '../ng/fake-scope';
-import {angular} from '../testing/mock-angular';
-import {TestDispose} from '../testing/test-dispose';
-import {Attributes} from '../ui/attributes';
+import { angular } from '../testing/mock-angular';
+import { TestDispose } from '../testing/test-dispose';
+import { Attributes } from '../ui/attributes';
 
-import {BemClassCtrl} from './bem-class';
+import { BemClassCtrl } from './bem-class';
 
 // Needed just so the linter does not see angular as unused.
 window['angular'] = angular;

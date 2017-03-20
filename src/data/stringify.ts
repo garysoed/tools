@@ -1,8 +1,8 @@
 import { NativeType } from '../check/native-type';
 import { StringType } from '../check/string-type';
 import { SymbolType } from '../check/symbol-type';
-import {Arrays} from '../collection/arrays';
-import {Maps} from '../collection/maps';
+import { Arrays } from '../collection/arrays';
+import { Maps } from '../collection/maps';
 import { Annotations } from '../data/annotations';
 
 

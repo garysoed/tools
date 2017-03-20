@@ -1,7 +1,7 @@
-import {ArrayIterable} from './array-iterable';
-import {BaseFluent} from './base-fluent';
-import {IFluentNonIndexable} from './interfaces';
-import {FluentIterable, Iterables} from './iterables';
+import { ArrayIterable } from './array-iterable';
+import { BaseFluent } from './base-fluent';
+import { IFluentNonIndexable } from './interfaces';
+import { FluentIterable, Iterables } from './iterables';
 
 
 export class FluentNonIndexable<T> extends BaseFluent<T[]> implements IFluentNonIndexable<T> {

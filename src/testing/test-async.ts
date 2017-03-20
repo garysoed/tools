@@ -1,4 +1,4 @@
-import {Asyncs} from '../async/asyncs';
+import { Asyncs } from '../async/asyncs';
 
 
 /**

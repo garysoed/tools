@@ -1,13 +1,13 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import {DisposableFunction} from '../dispose/disposable-function';
-import {Mocks} from '../mock/mocks';
+import { DisposableFunction } from '../dispose/disposable-function';
+import { Mocks } from '../mock/mocks';
 
 import {
   CHILD_LIST_CHANGE_ANNOTATIONS,
   ChildListChangeConfig,
-  ChildListChangeHandler} from './child-list-change-handler';
+  ChildListChangeHandler } from './child-list-change-handler';
 
 
 describe('webc.ChildListChangeHandler', () => {

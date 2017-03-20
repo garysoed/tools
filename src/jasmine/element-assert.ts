@@ -1,4 +1,4 @@
-import {AnyAssert} from './any-assert';
+import { AnyAssert } from './any-assert';
 
 
 export class ElementAssert extends AnyAssert<Element> {

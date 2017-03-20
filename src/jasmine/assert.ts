@@ -1,16 +1,16 @@
 import { BooleanType } from '../check/boolean-type';
 import { NumberType } from '../check/number-type';
 import { StringType } from '../check/string-type';
-import {AnyAssert} from '../jasmine/any-assert';
-import {ArrayAssert} from '../jasmine/array-assert';
-import {AssertFactory} from '../jasmine/assert-factory';
-import {BaseAssert} from '../jasmine/base-assert';
-import {BooleanAssert} from '../jasmine/boolean-assert';
-import {ElementAssert} from '../jasmine/element-assert';
-import {FunctionAssert} from '../jasmine/function-assert';
-import {MapAssert} from '../jasmine/map-assert';
-import {NumberAssert} from '../jasmine/number-assert';
-import {SetAssert} from '../jasmine/set-assert';
+import { AnyAssert } from '../jasmine/any-assert';
+import { ArrayAssert } from '../jasmine/array-assert';
+import { AssertFactory } from '../jasmine/assert-factory';
+import { BaseAssert } from '../jasmine/base-assert';
+import { BooleanAssert } from '../jasmine/boolean-assert';
+import { ElementAssert } from '../jasmine/element-assert';
+import { FunctionAssert } from '../jasmine/function-assert';
+import { MapAssert } from '../jasmine/map-assert';
+import { NumberAssert } from '../jasmine/number-assert';
+import { SetAssert } from '../jasmine/set-assert';
 import { StringAssert } from '../jasmine/string-assert';
 
 

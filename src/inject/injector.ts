@@ -1,7 +1,7 @@
-import {Reflect} from '../util/reflect';
-import {Validate} from '../valid/validate';
+import { Reflect } from '../util/reflect';
+import { Validate } from '../valid/validate';
 
-import {InjectUtil} from './inject-util';
+import { InjectUtil } from './inject-util';
 
 
 /**

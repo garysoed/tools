@@ -1,5 +1,5 @@
-import {BaseDisposable} from '../dispose/base-disposable';
-import {ListenableDom} from '../event/listenable-dom';
+import { BaseDisposable } from '../dispose/base-disposable';
+import { ListenableDom } from '../event/listenable-dom';
 
 
 /**

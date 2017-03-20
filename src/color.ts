@@ -1,3 +1,3 @@
-export {HslColor} from './color/hsl-color';
-export {IColor} from './color/interface';
-export {RgbColor} from './color/rgb-color';
+export { HslColor } from './color/hsl-color';
+export { IColor } from './color/interface';
+export { RgbColor } from './color/rgb-color';

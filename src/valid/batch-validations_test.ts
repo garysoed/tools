@@ -1,8 +1,8 @@
-import {assert, Matchers, TestBase} from '../test-base';
+import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import {BatchValidations} from './batch-validations';
-import {Validate} from './validate';
+import { BatchValidations } from './batch-validations';
+import { Validate } from './validate';
 
 
 describe('valid.BatchValidations', () => {

@@ -1,8 +1,8 @@
-import {Validate} from '../valid/validate';
-import {BaseElement} from '../webc/base-element';
+import { Validate } from '../valid/validate';
+import { BaseElement } from '../webc/base-element';
 
-import {CustomElementUtil} from './custom-element-util';
-import {IElementConfig} from './interfaces';
+import { CustomElementUtil } from './custom-element-util';
+import { IElementConfig } from './interfaces';
 
 
 /**

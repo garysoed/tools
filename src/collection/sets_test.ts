@@ -1,8 +1,8 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {NonIndexables} from './non-indexables';
-import {Sets} from './sets';
+import { NonIndexables } from './non-indexables';
+import { Sets } from './sets';
 
 
 describe('collection.Sets', () => {

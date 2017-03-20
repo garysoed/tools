@@ -1,14 +1,14 @@
-import {assert, TestBase} from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {DomEvent} from '../event/dom-event';
-import {Mocks} from '../mock/mocks';
-import {TestDispose} from '../testing/test-dispose';
-import {Reflect} from '../util/reflect';
+import { DomEvent } from '../event/dom-event';
+import { Mocks } from '../mock/mocks';
+import { TestDispose } from '../testing/test-dispose';
+import { Reflect } from '../util/reflect';
 
-import {LocationService} from './location-service';
-import {LocationServiceEvents} from './location-service-events';
-import {Locations} from './locations';
+import { LocationService } from './location-service';
+import { LocationServiceEvents } from './location-service-events';
+import { Locations } from './locations';
 
 
 describe('ui.LocationService', () => {
