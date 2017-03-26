@@ -103,8 +103,7 @@ describe('data.AnnotationsHandler', () => {
     it('should create the hash value correctly', () => {
       const ctor = Mocks.object('ctor');
       const annotation = Symbol('annotation');
-      assert(AnnotationsHandler['createHash_'](ctor, annotation))
-          .to.equal(`${ctor}_${String(annotation)}`);
+      assert(AnnotationsHandler['createHash_'](ctor, annotation)).to.equal(`0_1`);
     });
   });
 

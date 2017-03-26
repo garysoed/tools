@@ -1,5 +1,6 @@
 import { Arrays } from '../collection/arrays';
 import { Maps } from '../collection/maps';
+import { hash } from '../util/hash';
 
 
 /**
@@ -63,7 +64,7 @@ export class AnnotationsHandler<T> {
    * @param annotation The annotation symbol to create the hash for.
    */
   private static createHash_(ctor: any, annotation: symbol): string {
-    return `${ctor}_${String(annotation)}`;
+    return `${hash(ctor)}_${hash(annotation)}`;
   }
 
   /**
