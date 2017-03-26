@@ -18,6 +18,13 @@ export class Sequencer extends BaseDisposable {
           } else {
             return Promise.resolve();
           }
+        })
+        .catch((error: any) => {
+          if (!this.isDisposed()) {
+            return operation();
+          } else {
+            return Promise.reject(error);
+          }
         });
     this.lastOperation_ = newPromise;
     return newPromise;

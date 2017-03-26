@@ -15,18 +15,21 @@ export interface IDataHelper<T> {
 export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
   private readonly dataHelper_: IDataHelper<T>;
   private readonly elementPool_: Set<Element>;
+  private readonly endPadCount_: number;
   private readonly instance_: any;
+  private readonly startPadCount_: number;
   private readonly parentEl_: Element;
-  private insertionIndex_: number;
 
   constructor(
       parentEl: Element,
       helper: IDataHelper<T>,
-      insertionIndex: number,
+      startPadCount: number,
+      endPadCount: number,
       instance: any) {
     this.dataHelper_ = helper;
+    this.endPadCount_ = endPadCount;
     this.elementPool_ = new Set();
-    this.insertionIndex_ = insertionIndex;
+    this.startPadCount_ = startPadCount;
     this.instance_ = instance;
     this.parentEl_ = parentEl;
   }
@@ -35,10 +38,12 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
    * @return The children elements with the data object.
    */
   private getChildElements_(): Element[] {
+    const lastIndex = this.parentEl_.children.length - this.endPadCount_;
     return Arrays
         .fromItemList(this.parentEl_.children)
         .filterElement((element: Element, index: number) => {
-          return index >= this.insertionIndex_
+          return index >= this.startPadCount_
+              && index < lastIndex
               && this.dataHelper_.get(element) !== undefined;
         })
         .asArray();
@@ -48,7 +53,7 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
    * @return A newly created element, or a reused element from the element pool.
    */
   private getElement_(): Element {
-    let element = Sets.of(this.elementPool_).anyValue();
+    const element = Sets.of(this.elementPool_).anyValue();
     if (element === null) {
       return this.dataHelper_.create(this.parentEl_.ownerDocument, this.instance_);
     } else {
@@ -78,7 +83,7 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
           return this.dataHelper_.get(child);
         })
         .asArray();
-    if (ArrayOfType(NonNullType<T>()).check(data)) {
+    if (ArrayOfType<T>(NonNullType<T>()).check(data)) {
       return data;
     } else {
       return null;
@@ -96,18 +101,18 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
     for (let i = 0; i < valueArray.length - dataChildren.length; i++) {
       this.parentEl_.insertBefore(
           this.getElement_(),
-          this.parentEl_.children.item(this.insertionIndex_ + i) || null);
+          this.parentEl_.children.item(this.startPadCount_ + i) || null);
     }
 
     for (let i = dataChildren.length - valueArray.length - 1; i >= 0; i--) {
-      this.parentEl_.removeChild(this.parentEl_.children.item(this.insertionIndex_ + i));
+      this.parentEl_.removeChild(this.parentEl_.children.item(this.startPadCount_ + i));
     }
 
     // Now set the data.
     Arrays
         .of(valueArray)
         .forEach((value: T, index: number) => {
-          let element = this.parentEl_.children.item(this.insertionIndex_ + index);
+          const element = this.parentEl_.children.item(this.startPadCount_ + index);
           this.dataHelper_.set(value, element, this.instance_);
         });
   }
@@ -123,8 +128,9 @@ export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
   static of<T>(
       parentEl: Element,
       dataHelper: IDataHelper<T>,
-      insertionIndex: number,
+      startPadCount: number,
+      endPadCount: number,
       instance: any): ChildrenElementsBinder<T> {
-    return new ChildrenElementsBinder(parentEl, dataHelper, insertionIndex, instance);
+    return new ChildrenElementsBinder(parentEl, dataHelper, startPadCount, endPadCount, instance);
   }
 }

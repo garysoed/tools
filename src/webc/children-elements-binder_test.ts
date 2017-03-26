@@ -21,6 +21,7 @@ describe('webc.ChildrenElementsBinder', () => {
         parentEl,
         mockDataHelper,
         0,
+        0,
         instance);
   });
 
@@ -39,7 +40,33 @@ describe('webc.ChildrenElementsBinder', () => {
           .when(child4).return()
           .else().return({});
 
-      binder['insertionIndex_'] = 1;
+      binder = new ChildrenElementsBinder<number>(
+          parentEl,
+          mockDataHelper,
+          1,
+          0,
+          instance);
+      assert(binder['getChildElements_']()).to.equal([child2, child3]);
+    });
+
+    it('should not return elements beyond the endPadCount', () => {
+      const child1 = document.createElement('div');
+      const child2 = document.createElement('div');
+      const child3 = document.createElement('div');
+      const child4 = document.createElement('div');
+      parentEl.appendChild(child1);
+      parentEl.appendChild(child2);
+      parentEl.appendChild(child3);
+      parentEl.appendChild(child4);
+
+      mockDataHelper.get.and.returnValue({});
+
+      binder = new ChildrenElementsBinder<number>(
+          parentEl,
+          mockDataHelper,
+          1,
+          1,
+          instance);
       assert(binder['getChildElements_']()).to.equal([child2, child3]);
     });
   });
@@ -105,17 +132,22 @@ describe('webc.ChildrenElementsBinder', () => {
       const value1 = Mocks.object('value1');
       const value2 = Mocks.object('value2');
 
-      const element1 = document.createElement('div1');
-      const element2 = document.createElement('div2');
-      spyOn(binder, 'getElement_').and.returnValues(element1, element2);
-
       const existingChild1 = document.createElement('div3');
       const existingChild2 = document.createElement('div4');
 
       parentEl.appendChild(existingChild1);
       parentEl.appendChild(existingChild2);
 
-      binder['insertionIndex_'] = 1;
+      binder = new ChildrenElementsBinder<number>(
+          parentEl,
+          mockDataHelper,
+          1,
+          0,
+          instance);
+
+      const element1 = document.createElement('div1');
+      const element2 = document.createElement('div2');
+      spyOn(binder, 'getElement_').and.returnValues(element1, element2);
       binder.set([value1, value2]);
 
       assert(mockDataHelper.set).to.haveBeenCalledWith(value1, element1, instance);
@@ -143,7 +175,12 @@ describe('webc.ChildrenElementsBinder', () => {
 
       spyOn(parentEl, 'removeChild').and.callThrough();
 
-      binder['insertionIndex_'] = 1;
+      binder = new ChildrenElementsBinder<number>(
+          parentEl,
+          mockDataHelper,
+          1,
+          0,
+          instance);
       binder.set([]);
 
       assert(parentEl).to.haveChildren([existingChild1, existingChild2]);

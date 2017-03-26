@@ -94,7 +94,8 @@ describe('webc.Bind', () => {
       const dataHelper = Mocks.object('dataHelper');
       const ctor = Mocks.object('ctor');
       const target = Mocks.object('target');
-      const insertionIndex = 12;
+      const startPadCount = 12;
+      const endPadCount = 34;
       target.constructor = ctor;
 
       const propertyKey = 'propertyKey';
@@ -109,7 +110,7 @@ describe('webc.Bind', () => {
       const binder = Mocks.object('binder');
       spyOn(ChildrenElementsBinder, 'of').and.returnValue(binder);
 
-      bind.childrenElements(dataHelper, insertionIndex)(target, propertyKey);
+      bind.childrenElements(dataHelper, startPadCount, endPadCount)(target, propertyKey);
       assert(ANNOTATIONS.forCtor).to.haveBeenCalledWith(ctor);
       assert(mockAnnotationsHandler.attachValueToProperty).to.haveBeenCalledWith(
           propertyKey,
@@ -123,7 +124,8 @@ describe('webc.Bind', () => {
       assert(ChildrenElementsBinder.of).to.haveBeenCalledWith(
           targetEl,
           dataHelper,
-          insertionIndex,
+          startPadCount,
+          endPadCount,
           instance);
     });
   });

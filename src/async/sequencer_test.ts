@@ -3,7 +3,8 @@ TestBase.setup();
 
 import { TestDispose } from '../testing/test-dispose';
 
-import { Sequencer } from './sequencer';
+import { Sequencer } from '../async/sequencer';
+import { Mocks } from '../mock/mocks';
 
 
 describe('async.Sequencer', () => {
@@ -31,6 +32,17 @@ describe('async.Sequencer', () => {
       sequencer.dispose();
       await sequencer.run(mockOperation);
       assert(mockOperation).toNot.haveBeenCalled();
+    });
+
+    it('should return promise that is ran after the operation has rejected', async (done: any) => {
+      const error = Mocks.object('error');
+      mockOperation.and.returnValue(Promise.reject(error));
+      try {
+        await sequencer.run(mockOperation);
+      } catch (e) {
+        assert(e).to.equal(error);
+      }
+      assert(mockOperation).to.haveBeenCalledWith();
     });
   });
 });

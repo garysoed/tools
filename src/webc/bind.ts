@@ -68,10 +68,16 @@ export class Bind {
    */
   childrenElements<T>(
       dataHelper: IDataHelper<T>,
-      insertionIndex: number = 0): PropertyDecorator {
+      startPadCount: number = 0,
+      endPadCount: number = 0): PropertyDecorator {
     return this.createDecorator_(
         (element: Element, instance: any): IDomBinder<any> => {
-          return ChildrenElementsBinder.of<T>(element, dataHelper, insertionIndex, instance);
+          return ChildrenElementsBinder.of<T>(
+              element,
+              dataHelper,
+              startPadCount,
+              endPadCount,
+              instance);
         });
   }
 
