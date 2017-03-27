@@ -55,6 +55,25 @@ export class BaseListenable<T> extends BaseDisposable {
     }
   }
 
+  async dispatchAsync(
+      eventType: T,
+      callback: () => Promise<void> = () => Promise.resolve(),
+      payload: any = null): Promise<void> {
+    if (this.captureCallbacksMap_.has(eventType)) {
+      this.captureCallbacksMap_.get(eventType)!.forEach((handler: (data: any) => void) => {
+        handler(payload);
+      });
+    }
+
+    await callback();
+
+    if (this.bubbleCallbacksMap_.has(eventType)) {
+      this.bubbleCallbacksMap_.get(eventType)!.forEach((handler: (data: any) => void) => {
+        handler(payload);
+      });
+    }
+  }
+
   /**
    * Listens to an event dispatched by this object.
    *

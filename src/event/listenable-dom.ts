@@ -25,7 +25,18 @@ export class ListenableDom<T extends EventTarget> extends BaseListenable<string>
       payload: any = null): void {
     callback();
 
-    let bubbleEvent = new Event(eventType, {bubbles: true});
+    const bubbleEvent = new Event(eventType, {bubbles: true});
+    bubbleEvent['payload'] = payload;
+    this.eventTarget_.dispatchEvent(bubbleEvent);
+  }
+
+  async dispatchAsync(
+      eventType: string,
+      callback: () => Promise<void> = () => Promise.resolve(),
+      payload: any = null): Promise<void> {
+    await callback();
+
+    const bubbleEvent = new Event(eventType, {bubbles: true});
     bubbleEvent['payload'] = payload;
     this.eventTarget_.dispatchEvent(bubbleEvent);
   }
