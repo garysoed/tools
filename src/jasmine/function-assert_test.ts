@@ -27,6 +27,17 @@ describe('jasmine.FunctionAssert', () => {
     });
   });
 
+  describe('haveBeenCalled', () => {
+    it('should call the matchers correctly', () => {
+      let mockMatchers = jasmine.createSpyObj('Matchers', ['toHaveBeenCalledTimes']);
+      spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
+
+      assert.haveBeenCalledTimes(123);
+
+      expect(mockMatchers.toHaveBeenCalledTimes).toHaveBeenCalledWith(123);
+    });
+  });
+
   describe('haveBeenCalledWith', () => {
     it('should return a function which calls the matchers correctly', () => {
       let mockMatchers = jasmine.createSpyObj('Matchers', ['toHaveBeenCalledWith']);

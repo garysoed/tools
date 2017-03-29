@@ -22,6 +22,14 @@ export class FunctionAssert<T extends Function> extends AnyAssert<T> {
   }
 
   /**
+   * Checks that the given function has been called the given number of times.
+   * @param times Expected number of times that the function has been called.
+   */
+  haveBeenCalledTimes(times: number): void {
+    this.getMatchers_().toHaveBeenCalledTimes(times);
+  }
+
+  /**
    * Checks that the given function has been called with the given arguments.
    */
   get haveBeenCalledWith(): T {
