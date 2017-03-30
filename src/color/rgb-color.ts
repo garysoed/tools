@@ -1,40 +1,67 @@
-import { Arrays } from '../collection/arrays';
-import { Graph } from '../pipeline/graph';
-import { Internal } from '../pipeline/internal';
-import { Pipe } from '../pipeline/pipe';
 import { Validate } from '../valid/validate';
 
-import { IColor } from './interface';
+import { BaseColor } from '../color/base-color';
+import { cache } from '../data/cache';
 
 
-export class RgbColor implements IColor {
-  private red_: number;
-  private green_: number;
-  private blue_: number;
+export class RgbColor extends BaseColor {
+  private readonly red_: number;
+  private readonly green_: number;
+  private readonly blue_: number;
 
   constructor(red: number, green: number, blue: number) {
+    super();
     this.red_ = red;
     this.green_ = green;
     this.blue_ = blue;
   }
 
-  @Pipe()
-  private pipeChroma_(
-      @Internal('pipeMax_') max: number,
-      @Internal('pipeMin_') min: number): number {
-    return (max - min) / 255;
+  @cache()
+  private getMax_(): number {
+    return Math.max(this.getRed(), this.getGreen(), this.getBlue());
   }
 
-  @Pipe()
-  private pipeHue_(
-      @Internal('getChroma') chroma: number,
-      @Internal('pipeMax_') max: number,
-      @Internal('getRed') red: number,
-      @Internal('getGreen') green: number,
-      @Internal('getBlue') blue: number): number {
+  @cache()
+  private getMin_(): number {
+    return Math.min(this.getRed(), this.getGreen(), this.getBlue());
+  }
+
+  /**
+   * @override
+   */
+  getBlue(): number {
+    return this.blue_;
+  }
+
+  /**
+   * @override
+   */
+  @cache()
+  getChroma(): number {
+    return (this.getMax_() - this.getMin_()) / 255;
+  }
+
+  /**
+   * @override
+   */
+  getGreen(): number {
+    return this.green_;
+  }
+
+  /**
+   * @override
+   */
+  @cache()
+  getHue(): number {
+    const chroma = this.getChroma();
     if (chroma === 0) {
       return 0;
     }
+
+    const red = this.getRed();
+    const green = this.getGreen();
+    const blue = this.getBlue();
+    const max = this.getMax_();
 
     let h1;
     if (max === red) {
@@ -50,111 +77,19 @@ export class RgbColor implements IColor {
     return h1 * 60;
   }
 
-  @Pipe()
-  private pipeLightness_(
-      @Internal('pipeMax_') max: number,
-      @Internal('pipeMin_') min: number): number {
-    return (max + min) / 2 / 255;
-  }
-
-  @Pipe()
-  private pipeLuminance_(
-      @Internal('getRed') red: number,
-      @Internal('getGreen') green: number,
-      @Internal('getBlue') blue: number): number {
-    let [computedRed, computedGreen, computedBlue] = Arrays.of([red, green, blue])
-        .map((value: number) => {
-          let normalized = value / 255;
-          return normalized <= 0.03928
-              ? normalized / 12.92
-              : Math.pow((normalized + 0.055) / 1.055, 2.4);
-        })
-        .asArray();
-    return 0.2126 * computedRed + 0.7152 * computedGreen + 0.0722 * computedBlue;
-  }
-
-  @Pipe()
-  private pipeMax_(
-      @Internal('getRed') red: number,
-      @Internal('getGreen') green: number,
-      @Internal('getBlue') blue: number): number {
-    return Math.max(red, green, blue);
-  }
-
-  @Pipe()
-  private pipeMin_(
-      @Internal('getRed') red: number,
-      @Internal('getGreen') green: number,
-      @Internal('getBlue') blue: number): number {
-    return Math.min(red, green, blue);
-  }
-
-  @Pipe()
-  private pipeSaturation_(
-      @Internal('getChroma') chroma: number,
-      @Internal('getLightness') lightness: number): number {
-    return chroma / (1 - Math.abs(2 * lightness - 1));
-  }
-
   /**
    * @override
    */
-  @Pipe()
-  getBlue(): number {
-    return this.blue_;
-  }
-
-  /**
-   * @override
-   */
-  @Pipe()
-  getChroma(): number {
-    return Graph.run<number>(this, 'pipeChroma_');
-  }
-
-  /**
-   * @override
-   */
-  @Pipe()
-  getGreen(): number {
-    return this.green_;
-  }
-
-  /**
-   * @override
-   */
-  getHue(): number {
-    return Graph.run<number>(this, 'pipeHue_');
-  }
-
-  /**
-   * @override
-   */
-  @Pipe()
+  @cache()
   getLightness(): number {
-    return Graph.run<number>(this, 'pipeLightness_');
+    return (this.getMax_() + this.getMin_()) / 2 / 255;
   }
 
   /**
    * @override
    */
-  getLuminance(): number {
-    return Graph.run<number>(this, 'pipeLuminance_');
-  }
-
-  /**
-   * @override
-   */
-  @Pipe()
   getRed(): number {
     return this.red_;
-  }
-
-  /**
-   * @override
-   */
-  getSaturation(): number {
-    return Graph.run<number>(this, 'pipeSaturation_');
   }
 
   /**

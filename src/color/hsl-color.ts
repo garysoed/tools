@@ -1,53 +1,72 @@
 import { Arrays } from '../collection/arrays';
-import { Graph } from '../pipeline/graph';
-import { Internal } from '../pipeline/internal';
-import { Pipe } from '../pipeline/pipe';
 import { Validate } from '../valid/validate';
 
-import { IColor } from './interface';
+import { BaseColor } from '../color/base-color';
+import { cache } from '../data/cache';
 
 
-export class HslColor implements IColor {
-  private hue_: number;
-  private saturation_: number;
-  private lightness_: number;
+export class HslColor extends BaseColor {
+  private readonly hue_: number;
+  private readonly saturation_: number;
+  private readonly lightness_: number;
 
   constructor(hue: number, saturation: number, lightness: number) {
+    super();
     this.hue_ = hue;
     this.saturation_ = saturation;
     this.lightness_ = lightness;
   }
 
-  @Pipe()
-  private pipeChroma_(
-      @Internal('getLightness') lightness: number,
-      @Internal('getSaturation') saturation: number): number {
-    return (1 - Math.abs(2 * lightness - 1)) * saturation;
+  /**
+   * @override
+   */
+  @cache()
+  getBlue(): number {
+    return this.getRgb_()[2];
   }
 
-  @Pipe()
-  private pipeLuminance_(
-      @Internal('getRed') red: number,
-      @Internal('getGreen') green: number,
-      @Internal('getBlue') blue: number): number {
-    let [computedRed, computedGreen, computedBlue] = Arrays.of([red, green, blue])
-        .map((value: number) => {
-          let normalized = value / 255;
-          return normalized <= 0.03928
-              ? normalized / 12.92
-              : Math.pow((normalized + 0.055) / 1.055, 2.4);
-        })
-        .asArray();
-    return 0.2126 * computedRed + 0.7152 * computedGreen + 0.0722 * computedBlue;
+  /**
+   * @override
+   */
+  @cache()
+  getChroma(): number {
+    return (1 - Math.abs(2 * this.getLightness() - 1)) * this.getSaturation();
   }
 
-  @Pipe()
-  private pipeRgb_(
-      @Internal('getChroma') chroma: number,
-      @Internal('getHue') hue: number,
-      @Internal('getLightness') lightness: number): [number, number, number] {
-    let h1 = hue / 60;
-    let x = chroma * (1 - Math.abs((h1 % 2) - 1));
+  /**
+   * @override
+   */
+  @cache()
+  getGreen(): number {
+    return this.getRgb_()[1];
+  }
+
+  /**
+   * @override
+   */
+  getHue(): number {
+    return this.hue_;
+  }
+
+  /**
+   * @override
+   */
+  getLightness(): number {
+    return this.lightness_;
+  }
+
+  /**
+   * @override
+   */
+  getRed(): number {
+    return this.getRgb_()[0];
+  }
+
+  @cache()
+  private getRgb_(): [number, number, number] {
+    const chroma = this.getChroma();
+    const h1 = this.getHue() / 60;
+    const x = chroma * (1 - Math.abs((h1 % 2) - 1));
     let r1;
     let g1;
     let b1;
@@ -66,8 +85,8 @@ export class HslColor implements IColor {
       [r1, g1, b1] = [chroma, 0, x];
     }
 
-    let min = lightness - chroma / 2;
-    let [r, g, b] = Arrays.of([r1, g1, b1])
+    const min = this.getLightness() - chroma / 2;
+    const [r, g, b] = Arrays.of([r1, g1, b1])
         .map((value: number) => {
           return Math.round((value + min) * 255);
         })
@@ -78,62 +97,6 @@ export class HslColor implements IColor {
   /**
    * @override
    */
-  @Pipe()
-  getBlue(): number {
-    return Graph.run(this, 'pipeRgb_')[2];
-  }
-
-  /**
-   * @override
-   */
-  @Pipe()
-  getChroma(): number {
-    return Graph.run<number>(this, 'pipeChroma_');
-  }
-
-  /**
-   * @override
-   */
-  @Pipe()
-  getGreen(): number {
-    return Graph.run(this, 'pipeRgb_')[1];
-  }
-
-  /**
-   * @override
-   */
-  @Pipe()
-  getHue(): number {
-    return this.hue_;
-  }
-
-  /**
-   * @override
-   */
-  @Pipe()
-  getLightness(): number {
-    return this.lightness_;
-  }
-
-  /**
-   * @override
-   */
-  getLuminance(): number {
-    return Graph.run<number>(this, 'pipeLuminance_');
-  }
-
-  /**
-   * @override
-   */
-  @Pipe()
-  getRed(): number {
-    return Graph.run(this, 'pipeRgb_')[0];
-  }
-
-  /**
-   * @override
-   */
-  @Pipe()
   getSaturation(): number {
     return this.saturation_;
   }
