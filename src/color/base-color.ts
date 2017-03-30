@@ -47,15 +47,12 @@ export abstract class BaseColor implements Color {
   }
 
   /**
-   * Red component of the color.
+   * @override
    */
   abstract getRed(): number;
 
   /**
-   * Saturation component of the color.
+   * @override
    */
-  @cache()
-  getSaturation(): number {
-    return this.getChroma() / (1 - Math.abs(2 * this.getLightness() - 1));
-  }
+  abstract getSaturation(): number;
 }

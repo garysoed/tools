@@ -23,3 +23,6 @@ export class Matchers {
     return <string> <any> jasmine.stringMatching(regexp);
   }
 }
+
+// TODO: anyTypeof
+// TODO: anyNumberCloseTo

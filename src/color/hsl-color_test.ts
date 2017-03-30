@@ -23,12 +23,6 @@ describe('color.HslColor', () => {
     });
   });
 
-  describe('luminance', () => {
-    it('should return the correct value of luminance', () => {
-      assert(HslColor.newInstance(240.5, 0.29, 0.607).getLuminance()).to.beCloseTo(0.23, 2);
-    });
-  });
-
   describe('red', () => {
     it('should return the correct value of red', () => {
       assert(HslColor.newInstance(240.5, 0.29, 0.607).getRed()).to.equal(126);

@@ -23,15 +23,13 @@ describe('color.RgbColor', () => {
     });
   });
 
-  describe('luminance', () => {
-    it('should return the correct value of luminance', () => {
-      assert(RgbColor.newInstance(126, 126, 184).getLuminance()).to.beCloseTo(0.23, 2);
-    });
-  });
-
   describe('saturation', () => {
     it('should return the correct value of saturation', () => {
       assert(RgbColor.newInstance(126, 126, 184).getSaturation()).to.beCloseTo(0.290, 3);
+    });
+
+    it('should return 0 if the color is grey', () => {
+      assert(RgbColor.newInstance(12, 12, 12).getSaturation()).to.equal(0);
     });
   });
 

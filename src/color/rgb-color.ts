@@ -93,6 +93,15 @@ export class RgbColor extends BaseColor {
   }
 
   /**
+   * @override
+   */
+  @cache()
+  getSaturation(): number {
+    const denominator = (1 - Math.abs(2 * this.getLightness() - 1));
+    return denominator === 0 ? 0 : this.getChroma() / denominator;
+  }
+
+  /**
    * Creates an instance of the class.
    * @param red The red component of the color.
    * @param green The green component of the color.
