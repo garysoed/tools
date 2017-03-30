@@ -43,4 +43,22 @@ describe('data.Caches', () => {
       assert(spy).to.haveBeenCalledWith();
     });
   });
+
+  describe('clearAll', () => {
+    it('should clear all the cache', () => {
+      const value = 'value';
+      spy.and.returnValue(value);
+
+      assert(test.method()).to.equal(value);
+
+      const newValue = 'newValue';
+      spy.calls.reset();
+      spy.and.returnValue(newValue);
+
+      Caches.clearAll(test);
+      assert(spy).toNot.haveBeenCalled();
+      assert(test.method()).to.equal(newValue);
+      assert(spy).to.haveBeenCalledWith();
+    });
+  });
 });

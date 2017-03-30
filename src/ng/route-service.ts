@@ -1,6 +1,7 @@
 import { Maps } from '../collection/maps';
 import { Records } from '../collection/records';
-import Cache from '../data/a-cache';
+import { cache } from '../data/cache';
+import { Caches } from '../data/caches';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { DisposableFunction } from '../dispose/disposable-function';
 
@@ -27,13 +28,13 @@ export class RouteService extends BaseDisposable {
   }
 
   private onRouteChangeSuccess_(): void {
-    Cache.clear(this);
+    Caches.clearAll(this);
   }
 
   /**
    * Routing parameters, both in memory only and URL search parameters.
    */
-  @Cache()
+  @cache()
   getParams(): gs.IJson {
     let searchParams = Records.of(this.$location_.search())
         .mapValue((value: string) => {

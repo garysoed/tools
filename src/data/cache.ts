@@ -1,5 +1,7 @@
-import { Caches } from 'src/data/caches';
-import { hash } from 'src/util/hash';
+import { CACHE_ANNOTATIONS, Caches } from '../data/caches';
+import { hash } from '../util/hash';
+
+
 
 export function cache(): MethodDecorator {
   return function(
@@ -12,7 +14,7 @@ export function cache(): MethodDecorator {
     }
 
     descriptor.value = function(...args: any[]): any {
-      const cache = Caches.getCache(target, propertyKey);
+      const cache = Caches.getCache(this, propertyKey);
       const argsHash = args
           .map((arg: any) => {
             return hash(arg);
@@ -26,6 +28,8 @@ export function cache(): MethodDecorator {
       cache.set(argsHash, result);
       return result;
     };
+
+    CACHE_ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(propertyKey, {});
 
     return descriptor;
   };

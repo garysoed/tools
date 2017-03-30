@@ -1,7 +1,7 @@
 import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import Cache from '../data/a-cache';
+import { Caches } from '../data/caches';
 import { Mocks } from '../mock/mocks';
 import { TestDispose } from '../testing/test-dispose';
 
@@ -25,15 +25,15 @@ describe('ng.RouteService', () => {
   });
 
   it('should clear the cache when route change success event is received', () => {
-    spyOn(Cache, 'clear');
+    spyOn(Caches, 'clearAll');
 
     assert(mock$scope.$on).to.haveBeenCalledWith('$routeChangeSuccess', Matchers.any(Function));
 
     mock$scope$onSpy.calls.argsFor(0)[1]();
-    assert(Cache.clear).to.haveBeenCalledWith(service);
+    assert(Caches.clearAll).to.haveBeenCalledWith(service);
   });
 
-  describe('get params', () => {
+  describe('getParams', () => {
     it('should return params in the memory and in URL', () => {
       let memoryParams = { 'a': 1 };
       let searchObject = Mocks.object('search');

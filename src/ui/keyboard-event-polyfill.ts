@@ -1,4 +1,4 @@
-import Cache from '../data/a-cache';
+import { cache } from '../data/cache';
 import { Validate } from '../valid/validate';
 
 
@@ -13,7 +13,7 @@ class KeyboardEventPolyfill {
   /**
    * Installs polyfill to the window.
    */
-  @Cache()
+  @cache()
   static polyfill(): void {
     let KeyboardEvent = window['KeyboardEvent'];
     Validate.any(KeyboardEvent)

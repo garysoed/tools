@@ -1,7 +1,7 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import Cache from '../data/a-cache';
+import { Caches } from '../data/caches';
 
 import KeyboardEventPolyfill from './keyboard-event-polyfill';
 
@@ -24,13 +24,13 @@ describe('ui.KeyboardEventPolyfill', () => {
 
     MockKeyboardEvent = KeyboardEvent;
     window['KeyboardEvent'] = MockKeyboardEvent;
-    Cache.clear(KeyboardEventPolyfill);
+    Caches.clearAll(KeyboardEventPolyfill);
     KeyboardEventPolyfill.polyfill();
   });
 
   it('should throw error if the KeyboardEvent cannot be found', () => {
     window['KeyboardEvent'] = undefined;
-    Cache.clear(KeyboardEventPolyfill);
+    Caches.clearAll(KeyboardEventPolyfill);
     assert(() => {
       KeyboardEventPolyfill.polyfill();
     }).to.throwError(/KeyboardEvent not defined/);
