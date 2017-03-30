@@ -32,7 +32,7 @@ import { ValidationsFactory } from './validations-factory';
  *     .orThrows('Something went wrong - this is a custom message')
  *     .assertValid();
  * ```
- * TODO: Improve with type guarding.
+ * TODO: Make this an annotation.
  */
 export class Validate {
   /**
