@@ -13,12 +13,12 @@ export class ElementAssert extends AnyAssert<Element> {
    * Asserts that the element has the specified children.
    */
   haveChildren(expectedChildren: Element[]): void {
-    let children: Element[] = [];
+    const children: Element[] = [];
     for (let i = 0; i < this.elementValue_.children.length; i++) {
       children.push(this.elementValue_.children.item(i));
     }
 
-    let matchers = this.reversed_ ? this.expect_(children).not : this.expect_(children);
+    const matchers = this.reversed_ ? this.expect_(children).not : this.expect_(children);
     matchers.toEqual(expectedChildren);
   }
 }

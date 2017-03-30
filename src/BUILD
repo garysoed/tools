@@ -9,6 +9,7 @@ gs_tools(
       "//src/color",
       "//src/dispose",
       "//src/inject",
+      "//src/interfaces",
       "//src/jasmine",
       "//src/mock",
       "//src/net",

@@ -1,4 +1,4 @@
-import { assert, TestBase } from '../test-base';
+import { assert, assertColor, TestBase } from '../test-base';
 TestBase.setup();
 
 import { RgbColor } from './rgb-color';
@@ -37,10 +37,7 @@ describe('color.RgbColor', () => {
 
   describe('newInstance', () => {
     it('should create the correct color object', () => {
-      let color = RgbColor.newInstance(1, 23, 45);
-      assert(color.getRed()).to.equal(1);
-      assert(color.getGreen()).to.equal(23);
-      assert(color.getBlue()).to.equal(45);
+      assertColor(RgbColor.newInstance(1, 23, 45)).to.haveRgb(1, 23, 45);
     });
 
     it('should throw error if red is not an integer', () => {

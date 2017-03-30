@@ -1,5 +1,5 @@
-import { BaseColor } from 'src/color/base-color';
-import { RgbColor } from 'src/color/rgb-color';
+import { BaseColor } from '../color/base-color';
+import { RgbColor } from '../color/rgb-color';
 
 export const Colors = {
   /**

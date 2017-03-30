@@ -1,4 +1,4 @@
-import { assert, TestBase } from '../test-base';
+import { assert, assertColor, TestBase } from '../test-base';
 TestBase.setup();
 
 import { Colors } from '../color/colors';
@@ -19,9 +19,7 @@ describe('namespace.Colors ', () => {
       const color1 = RgbColor.newInstance(0x12, 0x34, 0x56);
       const color2 = RgbColor.newInstance(0x78, 0x9a, 0xbc);
       const mix = Colors.mix(color1, color2, 0.75);
-      assert(mix.getRed()).to.equal(44);
-      assert(mix.getGreen()).to.equal(78);
-      assert(mix.getBlue()).to.equal(112);
+      assertColor(mix).to.haveRgb(44, 78, 112);
     });
   });
 });

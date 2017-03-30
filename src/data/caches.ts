@@ -1,4 +1,4 @@
-import { Annotations } from 'src/data/annotations';
+import { Annotations } from '../data/annotations';
 
 const __CACHES = Symbol('caches');
 

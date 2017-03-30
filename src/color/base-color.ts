@@ -1,35 +1,36 @@
 import { Arrays } from '../collection/arrays';
 import { cache } from '../data/cache';
+import { Color } from '../interfaces/color';
 
 
-export abstract class BaseColor {
+export abstract class BaseColor implements Color {
   /**
-   * Blue component of the color.
+   * @override
    */
   abstract getBlue(): number;
 
   /**
-   * The chroma of the color.
+   * @override
    */
   abstract getChroma(): number;
 
   /**
-   * Green component of the color.
+   * @override
    */
   abstract getGreen(): number;
 
   /**
-   * Hue component of the color.
+   * @override
    */
   abstract getHue(): number;
 
   /**
-   * Lightness component of the color.
+   * @override
    */
   abstract getLightness(): number;
 
   /**
-   * Luminance of the color.
+   * @override
    */
   @cache()
   getLuminance(): number {

@@ -1,4 +1,4 @@
-import { assert, TestBase } from '../test-base';
+import { assert, assertColor, TestBase } from '../test-base';
 TestBase.setup();
 
 import { HslColor } from './hsl-color';
@@ -37,15 +37,11 @@ describe('color.HslColor', () => {
 
   describe('newInstance', () => {
     it('should return the correct color object', () => {
-      let color = HslColor.newInstance(123, 0.4, 0.5);
-      assert(color.getHue()).to.equal(123);
-      assert(color.getSaturation()).to.equal(0.4);
-      assert(color.getLightness()).to.equal(0.5);
+      assertColor(HslColor.newInstance(123, 0.4, 0.5)).to.haveHsl(123, 0.4, 0.5);
     });
 
     it('should handle hue that are > 360 correctly', () => {
-      let color = HslColor.newInstance(456, 0.4, 0.5);
-      assert(color.getHue()).to.equal(96);
+      assert(HslColor.newInstance(456, 0.4, 0.5).getHue()).to.equal(96);
     });
 
     it('should throw error if the saturation is more than 1', () => {
