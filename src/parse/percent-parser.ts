@@ -1,7 +1,8 @@
-import { FloatParser } from '../webc/float-parser';
-import { IAttributeParser } from '../webc/interfaces';
+import { Parser } from '../interfaces/parser';
+import { FloatParser } from '../parse/float-parser';
 
-export const PercentParser: IAttributeParser<number> = {
+
+export const PercentParser: Parser<number> = {
   /**
    * Parses the given input string.
    *

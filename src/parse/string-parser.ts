@@ -1,10 +1,10 @@
-import { IAttributeParser } from './interfaces';
+import { Parser } from '../interfaces/parser';
 
 
 /**
  * Attribute parser that handles string values. This is basically a noop.
  */
-export const StringParser: IAttributeParser<string> = {
+export const StringParser: Parser<string> = {
   /**
    * Parses the given input string.
    *

@@ -1,31 +1,27 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import { HexParser } from './hex-parser';
+import { FloatParser } from '../parse/float-parser';
 
 
-describe('webc.HexParser', () => {
+describe('parse.FloatParser', () => {
   describe('parse', () => {
     it('should return the parsed value correctly', () => {
-      assert(HexParser.parse('ab')).to.equal(0xab);
-    });
-
-    it('should return null if the value is invalid hex', () => {
-      assert(HexParser.parse('hg')).to.beNull();
+      assert(FloatParser.parse('1.23')).to.equal(1.23);
     });
 
     it('should return null if the input is null', () => {
-      assert(HexParser.parse(null)).to.beNull();
+      assert(FloatParser.parse(null)).to.beNull();
     });
   });
 
   describe('stringify', () => {
     it('should return the string representation of the number', () => {
-      assert(HexParser.stringify(0xbeef)).to.equal('beef');
+      assert(FloatParser.stringify(1.23)).to.equal('1.23');
     });
 
     it('should return empty string if the input is null', () => {
-      assert(HexParser.stringify(null)).to.equal('');
+      assert(FloatParser.stringify(null)).to.equal('');
     });
   });
 });

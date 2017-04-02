@@ -1,7 +1,7 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import { EnumParser, EnumParserImpl } from './enum-parser';
+import { EnumParser, EnumParserImpl } from '../parse/enum-parser';
 
 
 enum Enum {
@@ -9,7 +9,7 @@ enum Enum {
   B,
 }
 
-describe('webc.EnumParser', () => {
+describe('parse.EnumParser', () => {
   let parser: EnumParserImpl<Enum>;
 
   beforeEach(() => {

@@ -2,13 +2,13 @@ import { Arrays } from '../collection/arrays';
 import { Maps } from '../collection/maps';
 import { Sets } from '../collection/sets';
 import { BaseDisposable } from '../dispose/base-disposable';
+import { Parser } from '../interfaces/parser';
 import { Validate } from '../valid/validate';
-
-import { AttributeChangeHandler } from './attribute-change-handler';
-import { ChildListChangeHandler } from './child-list-change-handler';
-import { EventHandler } from './event-handler';
-import { IAttributeParser, IHandler } from './interfaces';
-import { Util } from './util';
+import { AttributeChangeHandler } from '../webc/attribute-change-handler';
+import { ChildListChangeHandler } from '../webc/child-list-change-handler';
+import { EventHandler } from '../webc/event-handler';
+import { IHandler } from '../webc/interfaces';
+import { Util } from '../webc/util';
 
 
 export const ATTRIBUTE_CHANGE_HANDLER = new AttributeChangeHandler();
@@ -44,7 +44,7 @@ export class Handler {
    */
   attributeChange(
       attributeName: string,
-      parser: IAttributeParser<any> | null = null): MethodDecorator {
+      parser: Parser<any> | null = null): MethodDecorator {
     return ATTRIBUTE_CHANGE_HANDLER.createDecorator(attributeName, parser, this.selector_);
   }
 

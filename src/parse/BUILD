@@ -4,7 +4,4 @@ load("//:defs.bzl", "gs_tools")
 
 gs_tools(
     deps = [
-      "//src/parse",
-      "//src/pipeline",
-      "//src/webc",
     ])

@@ -2,6 +2,7 @@ import { Maps } from '../collection/maps';
 import { Sets } from '../collection/sets';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { Injector } from '../inject/injector';
+import { Parser } from '../interfaces/parser';
 import { Cases } from '../string/cases';
 import { Checks } from '../util/checks';
 import { Log } from '../util/log';
@@ -11,7 +12,7 @@ import { ANNOTATIONS as BindAnnotations } from '../webc/bind';
 import { CustomElementUtil } from '../webc/custom-element-util';
 import { DomHook } from '../webc/dom-hook';
 import { Handler } from '../webc/handle';
-import { IAttributeParser, IDomBinder } from '../webc/interfaces';
+import { IDomBinder } from '../webc/interfaces';
 import { Templates } from '../webc/templates';
 
 
@@ -40,7 +41,7 @@ export class ElementRegistrar extends BaseDisposable {
   }
 
   private getLifecycleConfig_(
-      attributes: {[name: string]: IAttributeParser<any>},
+      attributes: {[name: string]: Parser<any>},
       elementProvider: () => BaseElement,
       content: string): xtag.ILifecycleConfig {
     const addDisposable = this.addDisposable.bind(this);

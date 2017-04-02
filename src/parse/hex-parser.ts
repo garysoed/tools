@@ -1,10 +1,10 @@
-import { IAttributeParser } from './interfaces';
+import { Parser } from '../interfaces/parser';
 
 
 /**
  * Attribute parser that handles float values.
  */
-export const HexParser: IAttributeParser<number> = {
+export const HexParser: Parser<number> = {
   /**
    * Parses the given input string.
    *

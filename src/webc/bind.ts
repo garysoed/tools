@@ -1,9 +1,10 @@
 import { Annotations } from '../data/annotations';
+import { Parser } from '../interfaces/parser';
 import { AttributeBinder } from '../webc/attribute-binder';
 import { ChildrenElementsBinder, IDataHelper } from '../webc/children-elements-binder';
 import { ClassListBinder } from '../webc/class-list-binder';
 import { ElementSwitchBinder } from '../webc/element-switch-binder';
-import { IAttributeParser, IDomBinder } from '../webc/interfaces';
+import { IDomBinder } from '../webc/interfaces';
 import { PropertyBinder } from '../webc/property-binder';
 import { Util } from '../webc/util';
 
@@ -53,7 +54,7 @@ export class Bind {
    * @param parser The attribute parser.
    * @return Property descriptor.
    */
-  attribute<T>(attributeName: string, parser: IAttributeParser<T>): PropertyDecorator {
+  attribute<T>(attributeName: string, parser: Parser<T>): PropertyDecorator {
     return this.createDecorator_(
         (element: Element): IDomBinder<any> => {
           return AttributeBinder.of<T>(element, attributeName, parser);

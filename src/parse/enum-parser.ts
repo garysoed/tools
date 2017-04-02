@@ -1,8 +1,8 @@
+import { Parser } from '../interfaces/parser';
 import { Enums } from '../typescript/enums';
-import { IAttributeParser } from './interfaces';
 
 
-export class EnumParserImpl<E> implements IAttributeParser<E> {
+export class EnumParserImpl<E> implements Parser<E> {
   private readonly enumSet_: gs.IEnum;
 
   /**

@@ -1,21 +1,21 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import { ArrayParser, ArrayParserImpl, DELIMITER_ } from './array-parser';
-import { StringParser } from './string-parser';
+import { ArrayParser, ArrayParserImpl, DELIMITER_ } from '../parse/array-parser';
+import { StringParser } from '../parse/string-parser';
 
 
-describe('webc.ArrayParser', () => {
+describe('parse.ArrayParser', () => {
   let parser: ArrayParserImpl<string>;
 
   beforeEach(() => {
-    parser = ArrayParser(StringParser);
+    parser = ArrayParser<string>(StringParser);
   });
 
   describe('parse', () => {
     it('should parse correctly', () => {
-      let item1 = 'item1';
-      let item2 = 'item2';
+      const item1 = 'item1';
+      const item2 = 'item2';
       assert(parser.parse(`${item1}${DELIMITER_}${item2}`)).to.equal([item1, item2]);
     });
 
@@ -26,8 +26,8 @@ describe('webc.ArrayParser', () => {
 
   describe('stringify', () => {
     it('should stringify correctly', () => {
-      let item1 = 'item1';
-      let item2 = 'item2';
+      const item1 = 'item1';
+      const item2 = 'item2';
       assert(parser.stringify([item1, item2])).to.equal(`${item1}${DELIMITER_}${item2}`);
     });
 

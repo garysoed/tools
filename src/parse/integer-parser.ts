@@ -1,7 +1,7 @@
-import { FloatParser } from './float-parser';
-import { IAttributeParser } from './interfaces';
+import { Parser } from '../interfaces/parser';
+import { FloatParser } from '../parse/float-parser';
 
-export const IntegerParser: IAttributeParser<number> = {
+export const IntegerParser: Parser<number> = {
   /**
    * @override
    */

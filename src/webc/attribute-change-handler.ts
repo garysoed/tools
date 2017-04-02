@@ -3,14 +3,14 @@ import { Maps } from '../collection/maps';
 import { Annotations } from '../data/annotations';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { DisposableFunction } from '../dispose/disposable-function';
-
-import { IAttributeParser, IHandler } from './interfaces';
+import { Parser } from '../interfaces/parser';
+import { IHandler } from '../webc/interfaces';
 
 
 export type AttributeChangeHandlerConfig = {
   attributeName: string,
   handlerKey: string | symbol,
-  parser: IAttributeParser<any> | null,
+  parser: Parser<any> | null,
   selector: string | null,
 };
 
@@ -139,7 +139,7 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
    */
   createDecorator(
       attributeName: string,
-      parser: IAttributeParser<any> | null,
+      parser: Parser<any> | null,
       selector: string | null): MethodDecorator {
     return function(
         target: Object,

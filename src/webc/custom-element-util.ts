@@ -1,7 +1,7 @@
 import { Maps } from '../collection/maps';
+import { Parser } from '../interfaces/parser';
 import { Cases } from '../string/cases';
-
-import { IAttributeParser, IElementConfig } from './interfaces';
+import { IElementConfig } from '../webc/interfaces';
 
 
 const __CONFIG: symbol = Symbol('config');
@@ -17,9 +17,9 @@ export class CustomElementUtil {
    *    a getter / setter which will modify the attribute value directly.
    */
   static addAttributes(
-      element: HTMLElement, attributes: {[name: string]: IAttributeParser<any>}): void  {
+      element: HTMLElement, attributes: {[name: string]: Parser<any>}): void  {
     Maps.fromRecord(attributes)
-        .forEach((parser: IAttributeParser<any>, name: string) => {
+        .forEach((parser: Parser<any>, name: string) => {
           let attrName = Cases.of(name).toLowerCase();
           Object.defineProperty(
               element,

@@ -4,10 +4,10 @@ import { Arrays } from '../collection/arrays';
 import { HslColor } from '../color/hsl-color';
 import { RgbColor } from '../color/rgb-color';
 import { Color } from '../interfaces/color';
-import { FloatParser } from '../webc/float-parser';
-import { HexParser } from '../webc/hex-parser';
-import { IntegerParser } from '../webc/integer-parser';
-import { PercentParser } from '../webc/percent-parser';
+import { FloatParser } from '../parse/float-parser';
+import { HexParser } from '../parse/hex-parser';
+import { IntegerParser } from '../parse/integer-parser';
+import { PercentParser } from '../parse/percent-parser';
 
 const RGB_REGEXP = /^rgb\((.*)\)$/;
 const RGBA_REGEXP = /^rgba\((.*)\)$/;

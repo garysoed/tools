@@ -1,10 +1,10 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import { IntegerParser } from './integer-parser';
+import { IntegerParser } from '../parse/integer-parser';
 
 
-describe('webc.IntegerParser', () => {
+describe('parse.IntegerParser', () => {
   describe('parse', () => {
     it('should parse the input string correctly', () => {
       assert(IntegerParser.parse('123')).to.equal(123);

@@ -1,10 +1,10 @@
-import { IAttributeParser } from './interfaces';
+import { Parser } from '../interfaces/parser';
 
 
 /**
  * Attribute parser that handles boolean values.
  */
-export const BooleanParser: IAttributeParser<boolean> = {
+export const BooleanParser: Parser<boolean> = {
   /**
    * Parses the given input string.
    *

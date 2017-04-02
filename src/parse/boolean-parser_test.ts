@@ -1,10 +1,10 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import { BooleanParser } from './boolean-parser';
+import { BooleanParser } from '../parse/boolean-parser';
 
 
-describe('webc.BooleanParser', () => {
+describe('parse.BooleanParser', () => {
   describe('parse', () => {
     it('should parse "true" as true', () => {
       assert(BooleanParser.parse('true')).to.beTrue();

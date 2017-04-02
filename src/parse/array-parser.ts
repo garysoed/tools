@@ -1,14 +1,14 @@
 import { Arrays } from '../collection/arrays';
 
-import { IAttributeParser } from './interfaces';
+import { Parser } from '../interfaces/parser';
 
 
 export const DELIMITER_: string = ',';
 
-export class ArrayParserImpl<T> implements IAttributeParser<(T | null)[]> {
-  private readonly elementParser_: IAttributeParser<T>;
+export class ArrayParserImpl<T> implements Parser<(T | null)[]> {
+  private readonly elementParser_: Parser<T>;
 
-  constructor(elementParser: IAttributeParser<T>) {
+  constructor(elementParser: Parser<T>) {
     this.elementParser_ = elementParser;
   }
 
@@ -41,6 +41,6 @@ export class ArrayParserImpl<T> implements IAttributeParser<(T | null)[]> {
 }
 
 
-export function ArrayParser<T>(elementParser: IAttributeParser<T>): ArrayParserImpl<T> {
+export function ArrayParser<T>(elementParser: Parser<T>): ArrayParserImpl<T> {
   return new ArrayParserImpl(elementParser);
 }

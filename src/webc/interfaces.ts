@@ -1,23 +1,6 @@
 import { BaseDisposable } from '../dispose/base-disposable';
+import { Parser } from '../interfaces/parser';
 
-
-export interface IAttributeParser<T> {
-  /**
-   * Parses the input string.
-   *
-   * @param input The input string to parse.
-   * @return The parsed input string, or null if the parse did not succeed.
-   */
-  parse(input: string | null): T | null;
-
-  /**
-   * Converts the given value to string.
-   *
-   * @param value The value to be converted to string.
-   * @return The string representation of the input value.
-   */
-  stringify(value: T | null): string;
-}
 
 /**
  * Describes a binder to a dom location.
@@ -49,7 +32,7 @@ export interface IElementConfig {
    * lower-case to be used for the attribute on the element. The element will get a getter / setter
    * which will modify the attribute value directly.
    */
-  attributes?: {[name: string]: IAttributeParser<any>};
+  attributes?: {[name: string]: Parser<any>};
 
   /**
    * Element constructor of the dependencies.

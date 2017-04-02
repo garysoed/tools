@@ -13,6 +13,7 @@ gs_tools(
       "//src/jasmine",
       "//src/mock",
       "//src/net",
+      "//src/parse",
       "//src/random",
       "//src/rpc",
       "//src/secure",

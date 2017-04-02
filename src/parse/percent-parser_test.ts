@@ -1,10 +1,10 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import { PercentParser } from '../webc/percent-parser';
+import { PercentParser } from '../parse/percent-parser';
 
 
-describe('webc.PercentParser', () => {
+describe('parse.PercentParser', () => {
   describe('parse', () => {
     it('should return the parsed value correctly', () => {
       assert(PercentParser.parse('123.45%')).to.equal(1.2345);

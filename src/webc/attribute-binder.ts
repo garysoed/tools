@@ -1,4 +1,5 @@
-import { IAttributeParser, IDomBinder } from './interfaces';
+import { Parser } from '../interfaces/parser';
+import { IDomBinder } from '../webc/interfaces';
 
 
 /**
@@ -7,14 +8,14 @@ import { IAttributeParser, IDomBinder } from './interfaces';
 export class AttributeBinder<T> implements IDomBinder<T> {
   private readonly attributeName_: string;
   private readonly element_: Element;
-  private readonly parser_: IAttributeParser<T>;
+  private readonly parser_: Parser<T>;
 
   /**
    * @param element The element to bind to.
    * @param attributeName Name of the attribute on the element to bind to.
    * @param parser The attribute value parser.
    */
-  constructor(element: Element, attributeName: string, parser: IAttributeParser<T>) {
+  constructor(element: Element, attributeName: string, parser: Parser<T>) {
     this.attributeName_ = attributeName;
     this.element_ = element;
     this.parser_ = parser;
@@ -52,7 +53,7 @@ export class AttributeBinder<T> implements IDomBinder<T> {
   static of<T>(
       element: Element,
       attributeName: string,
-      parser: IAttributeParser<T>): AttributeBinder<T> {
+      parser: Parser<T>): AttributeBinder<T> {
     return new AttributeBinder<T>(element, attributeName, parser);
   }
 }
