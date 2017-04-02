@@ -4,7 +4,7 @@ import { IAttributeParser } from './interfaces';
 /**
  * Attribute parser that handles float values.
  */
-export const FloatParser: IAttributeParser<number> = {
+export const HexParser: IAttributeParser<number> = {
   /**
    * Parses the given input string.
    *
@@ -15,7 +15,7 @@ export const FloatParser: IAttributeParser<number> = {
     if (input === null) {
       return null;
     } else {
-      const result = Number.parseFloat(input);
+      const result = Number.parseInt(input, 16);
       return Number.isNaN(result) ? null : result;
     }
   },
@@ -30,6 +30,6 @@ export const FloatParser: IAttributeParser<number> = {
     if (value === null) {
       return '';
     }
-    return value.toString(10);
+    return value.toString(16);
   },
 };

@@ -2,10 +2,10 @@ import { Color } from '../interfaces/color';
 import { AnyAssert } from '../jasmine/any-assert';
 
 
-export class ColorAssert extends AnyAssert<Color> {
-  private readonly colorValue_: Color;
+export class ColorAssert extends AnyAssert<Color | null> {
+  private readonly colorValue_: Color | null;
 
-  constructor(color: Color, reversed: boolean, expect: (actual: any) => jasmine.Matchers) {
+  constructor(color: Color | null, reversed: boolean, expect: (actual: any) => jasmine.Matchers) {
     super(color, reversed, expect);
     this.colorValue_ = color;
   }
@@ -17,6 +17,11 @@ export class ColorAssert extends AnyAssert<Color> {
    * @param lightness The expected lightness component.
    */
   haveHsl(hue: number, saturation: number, lightness: number): void {
+    if (this.colorValue_ === null) {
+      this.getMatchers_().not.toBeNull();
+      return;
+    }
+
     const hslArray = [
       this.colorValue_.getHue(),
       this.colorValue_.getSaturation(),
@@ -34,6 +39,11 @@ export class ColorAssert extends AnyAssert<Color> {
    * @param blue The expected blue component.
    */
   haveRgb(red: number, green: number, blue: number): void {
+    if (this.colorValue_ === null) {
+      this.getMatchers_().not.toBeNull();
+      return;
+    }
+
     const rgbArray = [
       this.colorValue_.getRed(),
       this.colorValue_.getGreen(),

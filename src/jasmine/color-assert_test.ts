@@ -61,6 +61,17 @@ describe('jasmine.ColorAssert', () => {
       expect(mockMatchers.toEqual).toHaveBeenCalledWith([hue, saturation, lightness]);
       expect(mockExpect).toHaveBeenCalledWith([actualHue, actualSaturation, actualLightness]);
     });
+
+    it('should call toBeNull if the value is null', () => {
+      const mockMatchers = jasmine.createSpyObj('Matchers', ['toBeNull', 'toEqual']);
+
+      const assert = new ColorAssert(null, true /* reversed */, mockExpect);
+      spyOn(assert, 'getMatchers_').and.returnValue({not: mockMatchers});
+
+      assert.haveHsl(78, 0.9, 0.12);
+      expect(mockMatchers.toBeNull).toHaveBeenCalledWith();
+      expect(mockMatchers.toEqual).not.toHaveBeenCalled();
+    });
   });
 
   describe('haveRgb', () => {
@@ -102,6 +113,17 @@ describe('jasmine.ColorAssert', () => {
       assert.haveRgb(red, green, blue);
       expect(mockMatchers.toEqual).toHaveBeenCalledWith([red, green, blue]);
       expect(mockExpect).toHaveBeenCalledWith([actualRed, actualGreen, actualBlue]);
+    });
+
+    it('should call toBeNull if the value is null', () => {
+      const mockMatchers = jasmine.createSpyObj('Matchers', ['toBeNull', 'toEqual']);
+
+      const assert = new ColorAssert(null, true /* reversed */, mockExpect);
+      spyOn(assert, 'getMatchers_').and.returnValue({not: mockMatchers});
+
+      assert.haveRgb(123, 45, 67);
+      expect(mockMatchers.toBeNull).toHaveBeenCalledWith();
+      expect(mockMatchers.toEqual).not.toHaveBeenCalled();
     });
   });
 });

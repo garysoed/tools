@@ -31,7 +31,7 @@ describe('color.BaseColor', () => {
     it('should return the correct value of luminance', () => {
       spyOn(color, 'getRed').and.returnValue(126);
       spyOn(color, 'getGreen').and.returnValue(126);
-      spyOn(color, 'getBlue').and.returnValue(184)
+      spyOn(color, 'getBlue').and.returnValue(184);
       assert(color.getLuminance()).to.beCloseTo(0.23, 2);
     });
   });
