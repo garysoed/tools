@@ -71,7 +71,7 @@ describe('event.BaseListenable', () => {
   });
 
   describe('dispatchAsync', () => {
-    it('should call all the registered callbacks', async (done: any) => {
+    it('should call all the registered callbacks', async () => {
       const event = 'event';
       let i = 0;
       const mockBubbleHandler = jasmine.createSpy('BubbleHandler');

@@ -63,7 +63,7 @@ describe('store.WebStorage', () => {
   });
 
   describe('delete', () => {
-    it('should remove the correct object', async (done: any) => {
+    it('should remove the correct object', async () => {
       const id = 'id';
       const path = 'path';
       spyOn(storage, 'getPath_').and.returnValue(path);
@@ -98,7 +98,7 @@ describe('store.WebStorage', () => {
   });
 
   describe('has', () => {
-    it('should resolve with true if the object is in the storage', async (done: any) => {
+    it('should resolve with true if the object is in the storage', async () => {
       const id = 'id';
       spyOn(storage, 'getIndexes_').and.returnValue(new Set([id]));
 
@@ -106,7 +106,7 @@ describe('store.WebStorage', () => {
       assert(result).to.beTrue();
     });
 
-    it('should resolve with false if the object is in the storage', async (done: any) => {
+    it('should resolve with false if the object is in the storage', async () => {
       const id = 'id';
 
       spyOn(storage, 'getIndexes_').and.returnValue(new Set());
@@ -117,7 +117,7 @@ describe('store.WebStorage', () => {
   });
 
   describe('list', () => {
-    it('should return the correct indexes', async (done: any) => {
+    it('should return the correct indexes', async () => {
       const id1 = 'id1';
       const id2 = 'id2';
       const item1 = Mocks.object('item1');
@@ -133,7 +133,7 @@ describe('store.WebStorage', () => {
       assert(storage.read).to.haveBeenCalledWith(id2);
     });
 
-    it('should filter out null items', async (done: any) => {
+    it('should filter out null items', async () => {
       const id = 'id';
       spyOn(storage, 'listIds').and.returnValue(Promise.resolve([id]));
       spyOn(storage, 'read').and.returnValue(Promise.resolve(null)); ;
@@ -143,7 +143,7 @@ describe('store.WebStorage', () => {
   });
 
   describe('listIds', () => {
-    it('should return the indexes', async (done: any) => {
+    it('should return the indexes', async () => {
       const indexes = Mocks.object('indexes');
       spyOn(storage, 'getIndexes_').and.returnValue(indexes);
       const ids = await storage.listIds();
@@ -152,7 +152,7 @@ describe('store.WebStorage', () => {
   });
 
   describe('read', () => {
-    it('should resolve with the object', async (done: any) => {
+    it('should resolve with the object', async () => {
       const id = 'id';
       const path = 'path';
       const stringValue = 'stringValue';
@@ -196,7 +196,7 @@ describe('store.WebStorage', () => {
   });
 
   describe('reserve', () => {
-    it('should reserve a new ID correctly', async (done: any) => {
+    it('should reserve a new ID correctly', async () => {
       const initialId = 'initialId';
       const id1 = 'id1';
       const id2 = 'id2';
@@ -211,7 +211,7 @@ describe('store.WebStorage', () => {
   });
 
   describe('update', () => {
-    it('should store the correct object in the storage', async (done: any) => {
+    it('should store the correct object in the storage', async () => {
       const id = 'id';
       const path = 'path';
       const object = Mocks.object('object');

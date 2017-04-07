@@ -22,19 +22,19 @@ describe('async.Sequencer', () => {
       mockOperation = jasmine.createSpy('Operation');
     });
 
-    it('should return promise that is ran after the operation has completed', async (done: any) => {
+    it('should return promise that is ran after the operation has completed', async () => {
       mockOperation.and.returnValue(Promise.resolve());
       await sequencer.run(mockOperation);
       assert(mockOperation).to.haveBeenCalledWith();
     });
 
-    it('should not run the operation if the sequencer is disposed', async (done: any) => {
+    it('should not run the operation if the sequencer is disposed', async () => {
       sequencer.dispose();
       await sequencer.run(mockOperation);
       assert(mockOperation).toNot.haveBeenCalled();
     });
 
-    it('should return promise that is ran after the operation has rejected', async (done: any) => {
+    it('should return promise that is ran after the operation has rejected', async () => {
       const error = Mocks.object('error');
       mockOperation.and.returnValue(Promise.reject(error));
       try {

@@ -16,21 +16,15 @@ describe('net.Http', () => {
     spyOn(HttpRequest, 'newRequest').and.returnValue(mockRequest);
   });
 
-  describe('get', () => {
-    it('should handle successful request correctly', (done: any) => {
+  describe('get', async () => {
+    it('should handle successful request correctly', async () => {
       let path = 'path';
       let expectedResponseText = 'responseText';
       let listenableRequest = Mocks.listenable('listenableRequest');
       spyOn(listenableRequest, 'on').and.callThrough();
       spyOn(ListenableDom, 'of').and.returnValue(listenableRequest);
 
-      Http.get(path)
-          .send()
-          .then((responseText: string) => {
-            assert(responseText).to.equal(expectedResponseText);
-            done();
-          }, done.fail);
-
+      const promise = Http.get(path).send();
       assert(mockRequest.open).to.haveBeenCalledWith('GET', path);
 
       assert(mockRequest.send).to.haveBeenCalledWith(null);
@@ -40,33 +34,37 @@ describe('net.Http', () => {
       mockRequest.responseText = expectedResponseText;
       mockRequest.status = 200;
       listenableRequest.on.calls.argsFor(0)[1]();
+
+      const responseText = await promise;
+      assert(responseText).to.equal(expectedResponseText);
     });
 
-    it('should handle unsuccessful request correctly', (done: any) => {
+    it('should handle unsuccessful request correctly', async (done: any) => {
       let status = 400;
       let error = 'error';
       let listenableRequest = Mocks.listenable('listenableRequest', mockRequest);
       spyOn(listenableRequest, 'on').and.callThrough();
 
       spyOn(ListenableDom, 'of').and.returnValue(listenableRequest);
-      Http.get('path')
-          .send()
-          .then(
-              done.fail,
-              (request: XMLHttpRequest) => {
-                assert(request.status).to.equal(status);
-                assert(request.responseText).to.equal(error);
-                done();
-              });
+      const promise = Http.get('path').send();
 
       mockRequest.responseText = error;
       mockRequest.status = status;
       listenableRequest.on.calls.argsFor(0)[1]();
+
+      try {
+        await promise;
+        done.fail();
+      } catch (e) {
+        const request: XMLHttpRequest = e;
+        assert(request.status).to.equal(status);
+        assert(request.responseText).to.equal(error);
+      }
     });
   });
 
   describe('post', () => {
-    it('should handle successful request correctly', (done: any) => {
+    it('should handle successful request correctly', async () => {
       let path = 'path';
       let formData = {
         'a': '1',
@@ -78,13 +76,7 @@ describe('net.Http', () => {
       spyOn(ListenableDom, 'of').and.returnValue(listenableRequest);
 
       let expectedResponseText = 'responseText';
-      Http.post(path)
-          .setFormData(formData)
-          .send()
-          .then((responseText: string) => {
-            assert(responseText).to.equal(expectedResponseText);
-            done();
-          }, done.fail);
+      const promise = Http.post(path).setFormData(formData).send();
 
       assert(mockRequest.open).to.haveBeenCalledWith('POST', path);
       assert(mockRequest.send).to.haveBeenCalledWith('a=1&b=2');
@@ -96,28 +88,31 @@ describe('net.Http', () => {
       mockRequest.responseText = expectedResponseText;
       mockRequest.status = 200;
       listenableRequest.on.calls.argsFor(0)[1]();
+
+      const responseText = await promise;
+      assert(responseText).to.equal(expectedResponseText);
     });
 
-    it('should handle unsuccessful request correctly', (done: any) => {
+    it('should handle unsuccessful request correctly', async (done: any) => {
       let status = 400;
       let error = 'error';
       let listenableRequest = Mocks.listenable('listenableRequest', mockRequest);
       spyOn(listenableRequest, 'on').and.callThrough();
 
       spyOn(ListenableDom, 'of').and.returnValue(listenableRequest);
-      Http.post('path')
-          .send()
-          .then(
-              done.fail,
-              (request: XMLHttpRequest) => {
-                assert(request.status).to.equal(status);
-                assert(request.responseText).to.equal(error);
-                done();
-              });
-
+      const promise = Http.post('path').send();
       mockRequest.responseText = error;
       mockRequest.status = status;
       listenableRequest.on.calls.argsFor(0)[1]();
+
+      try {
+        await promise;
+        done.fail();
+      } catch (e) {
+        const request: XMLHttpRequest = e;
+        assert(request.status).to.equal(status);
+        assert(request.responseText).to.equal(error);
+      }
     });
   });
 });

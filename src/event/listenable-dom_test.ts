@@ -37,7 +37,7 @@ describe('event.ListenableDom', () => {
   });
 
   describe('dispatchAsync', () => {
-    it('should use the event target for dispatching events', async (done: any) => {
+    it('should use the event target for dispatching events', async () => {
       const mockCallback = jasmine.createSpy('Callback');
       mockCallback.and.returnValue(Promise.resolve());
       const eventType = 'eventType';

@@ -150,7 +150,7 @@ describe('webc.ElementRegistrar', () => {
       ctor = Mocks.object('ctor');
     });
 
-    it('should return promise that registers the element correctly', async (done: any) => {
+    it('should return promise that registers the element correctly', async () => {
       const mockDependency = Mocks.object('Dependency');
       const name = 'name';
       const templateKey = 'templateKey';
@@ -215,14 +215,14 @@ describe('webc.ElementRegistrar', () => {
       }
     });
 
-    it('should be noop if the config has been registered', async (done: any) => {
+    it('should be noop if the config has been registered', async () => {
       registrar['registeredCtors_'].add(ctor);
 
       await registrar.register(ctor);
       assert(mockXtag.register).toNot.haveBeenCalled();
     });
 
-    it('should be noop if the ctor has no configs', async (done: any) => {
+    it('should be noop if the ctor has no configs', async () => {
       spyOn(CustomElementUtil, 'getConfig').and.returnValue(null);
       await registrar.register(ctor);
       assert(mockXtag.register).toNot.haveBeenCalled();

@@ -23,13 +23,8 @@ describe('async.WaitUntil', () => {
     TestDispose.add(waitUntil);
   });
 
-  it('should resolve the promise when the check function returns true', (done: any) => {
-    waitUntil.getPromise()
-        .then(() => {
-          assert(Interval.newInstance).to.haveBeenCalledWith(INTERVAL);
-          assert(mockInterval.dispose).to.haveBeenCalledWith();
-          done();
-        }, done.fail);
+  it('should resolve the promise when the check function returns true', async () => {
+    const promise = waitUntil.getPromise();
 
     assert(mockInterval.start).to.haveBeenCalledWith();
     assert(mockInterval.on).to
@@ -37,16 +32,23 @@ describe('async.WaitUntil', () => {
     mockCheckFn.and.returnValue(true);
 
     mockInterval.on.calls.argsFor(0)[1]();
+
+    await promise;
+    assert(Interval.newInstance).to.haveBeenCalledWith(INTERVAL);
+    assert(mockInterval.dispose).to.haveBeenCalledWith();
   });
 
-  it('should reject the promise when the waiter is disposed', (done: any) => {
-    waitUntil.getPromise()
-        .then(done.fail, (error: string) => {
-          assert(error).to.match(/has not returned/);
-          done();
-        });
+  it('should reject the promise when the waiter is disposed', async (done: any) => {
+    const promise = waitUntil.getPromise();
 
     waitUntil.dispose();
     mockInterval.on.calls.argsFor(0)[1]();
+
+    try {
+      await promise;
+      done.fail();
+    } catch (error) {
+      assert(<string> error).to.match(/has not returned/);
+    }
   });
 });

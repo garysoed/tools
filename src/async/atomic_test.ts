@@ -16,7 +16,7 @@ describe('async.sequenced', () => {
   });
 
   it('should replace the descriptor with a function that sequence the annotated function',
-      async (done: any) => {
+      async () => {
         class Class extends BaseDisposable {}
 
         let mockFunction = jasmine.createSpy('Function');
@@ -41,7 +41,7 @@ describe('async.sequenced', () => {
         assert(mockFunction).to.haveBeenCalledWith(1, 2);
       });
 
-  it('should reuse existing sequencer', async (done: any) => {
+  it('should reuse existing sequencer', async () => {
     class Class extends BaseDisposable {}
 
     let descriptor = Mocks.object('descriptor');

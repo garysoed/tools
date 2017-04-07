@@ -26,7 +26,7 @@ describe('store.CachedStorage', () => {
   });
 
   describe('delete', () => {
-    it('should delete the item in the cache and in the inner storage', async (done: any) => {
+    it('should delete the item in the cache and in the inner storage', async () => {
       const mockItem = jasmine.createSpyObj('Item', ['dispose']);
       Object.setPrototypeOf(mockItem, BaseDisposable.prototype);
 
@@ -41,7 +41,7 @@ describe('store.CachedStorage', () => {
       assert(mockItem.dispose).to.haveBeenCalledWith();
     });
 
-    it('should not throw error if the deleted item is not disposable', async (done: any) => {
+    it('should not throw error if the deleted item is not disposable', async () => {
       const item = Mocks.object('item');
       const id = 'id';
       storage['cache_'].set(id, item);
@@ -53,7 +53,7 @@ describe('store.CachedStorage', () => {
       assert(storage['cache_']).to.haveEntries([]);
     });
 
-    it('should not throw error if the item does not exist', async (done: any) => {
+    it('should not throw error if the item does not exist', async () => {
       const id = 'id';
       mockInnerStorage.delete.and.returnValue(Promise.resolve());
 
@@ -87,7 +87,7 @@ describe('store.CachedStorage', () => {
   });
 
   describe('generateId', () => {
-    it('should return the correct ID from the inner storage', async (done: any) => {
+    it('should return the correct ID from the inner storage', async () => {
       const newId = 'newId';
       mockInnerStorage.generateId.and.returnValue(Promise.resolve(newId));
       const id = await storage.generateId();
@@ -96,7 +96,7 @@ describe('store.CachedStorage', () => {
   });
 
   describe('has', () => {
-    it('should return the values from the inner storage and cache them', async (done: any) => {
+    it('should return the values from the inner storage and cache them', async () => {
       const id = 'id';
       mockInnerStorage.has.and.returnValue(Promise.resolve(true));
       const actualResult = await storage.has(id);
@@ -106,7 +106,7 @@ describe('store.CachedStorage', () => {
   });
 
   describe('list', () => {
-    it('should return all the items and cache them', async (done: any) => {
+    it('should return all the items and cache them', async () => {
       const id1 = 'id1';
       const id2 = 'id2';
       const id3 = 'id3';
@@ -131,7 +131,7 @@ describe('store.CachedStorage', () => {
   });
 
   describe('listIds', () => {
-    it('should return the correct list of IDs', async (done: any) => {
+    it('should return the correct list of IDs', async () => {
       const ids = Mocks.object('ids');
       mockInnerStorage.listIds.and.returnValue(Promise.resolve(ids));
 
@@ -141,7 +141,7 @@ describe('store.CachedStorage', () => {
   });
 
   describe('read', () => {
-    it('should get the item from the inner storage and cache them', async (done: any) => {
+    it('should get the item from the inner storage and cache them', async () => {
       const id = 'id';
       const item = Mocks.object('item');
       mockInnerStorage.read.and.returnValue(Promise.resolve(item));
@@ -151,14 +151,14 @@ describe('store.CachedStorage', () => {
       assert(mockInnerStorage.read).to.haveBeenCalledWith(id);
     });
 
-    it('should not cache the value if null', async (done: any) => {
+    it('should not cache the value if null', async () => {
       mockInnerStorage.read.and.returnValue(Promise.resolve(null));
       const actualItem = await storage.read('id');
       assert(actualItem).to.beNull();
       assert(storage['cache_']).to.haveEntries([]);
     });
 
-    it('should return the cached value if available', async (done: any) => {
+    it('should return the cached value if available', async () => {
       const id = 'id';
       const item = Mocks.object('item');
       storage['cache_'].set(id, item);
@@ -169,7 +169,7 @@ describe('store.CachedStorage', () => {
   });
 
   describe('update', () => {
-    it('should update the inner storage and the cache with the new value', async (done: any) => {
+    it('should update the inner storage and the cache with the new value', async () => {
       const id = 'id';
       const oldItem = Mocks.object('oldItem');
       storage['cache_'].set(id, oldItem);

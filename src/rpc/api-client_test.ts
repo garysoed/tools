@@ -57,7 +57,7 @@ describe('rpc.ApiClient', () => {
 
   describe('post', () => {
     it('should post the request, wait for message and return the correct response',
-        async (done: any) => {
+        async () => {
           const request = Mocks.object('request');
           spyOn(client, 'onMessage_');
 
