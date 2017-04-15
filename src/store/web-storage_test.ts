@@ -172,7 +172,7 @@ describe('store.WebStorage', () => {
       assert(storage['getPath_']).to.haveBeenCalledWith(id);
     });
 
-    it('should resolve with null if the object does not exist', async (done: any) => {
+    it('should resolve with null if the object does not exist', async () => {
       mockStorage.getItem.and.returnValue(null);
       spyOn(storage, 'getPath_').and.returnValue('path');
 

@@ -1,4 +1,3 @@
-import { Records } from '../collection/records';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { DomEvent } from '../event/dom-event';
 import { ListenableDom } from '../event/listenable-dom';
@@ -80,7 +79,7 @@ class HttpPostRequest extends HttpRequest {
    */
   constructor(path: string) {
     super('POST', path);
-    this.request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    this.request.setRequestHeader('Content-Type', 'application/json');
   }
 
   /**
@@ -98,16 +97,8 @@ class HttpPostRequest extends HttpRequest {
    * @return This object for chaining.
    */
   setFormData(data: gs.IJson): HttpPostRequest {
-    // Clears all the existing form data
-    this.formData_ = Records.of(data)
-        .mapValue((value: string, key: string) => {
-          return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
-        })
-        .values()
-        .asArray()
-        .join('&')
-        .replace(/%20/g, '+');
-
+    // Replace all the existing form data
+    this.formData_ = JSON.stringify(data);
     return this;
   }
 }

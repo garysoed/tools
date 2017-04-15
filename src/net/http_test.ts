@@ -78,10 +78,10 @@ describe('net.Http', () => {
       let expectedResponseText = 'responseText';
       const promise = Http.post(path).setFormData(formData).send();
 
-      assert(mockRequest.open).to.haveBeenCalledWith('POST', path);
-      assert(mockRequest.send).to.haveBeenCalledWith('a=1&b=2');
+      assert(mockRequest.open).to.haveBeenCalledWith(`POST`, path);
+      assert(mockRequest.send).to.haveBeenCalledWith(`{"a":"1","b":"2"}`);
       assert(mockRequest.setRequestHeader).to
-          .haveBeenCalledWith('Content-Type', 'application/x-www-form-urlencoded');
+          .haveBeenCalledWith('Content-Type', 'application/json');
       assert(listenableRequest.on).to
           .haveBeenCalledWith(DomEvent.LOAD, Matchers.any(Function), Matchers.any(Object));
 

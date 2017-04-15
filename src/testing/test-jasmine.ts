@@ -19,18 +19,19 @@ export const TestJasmine = {
 
   init(): void {
     function runTest(origRun: any, description: string, callback: (done: any) => any): void {
-      // If (callback.length === 1) {
-        origRun(description, (done: any) => {
-          let promise = callback(done);
-          if (promise instanceof Promise) {
-            promise.then(done, done.fail);
-          } else {
-            done();
-          }
-        });
-      // } else {
-      //   OrigRun(description, callback);
-      // }
+      if (!callback) {
+        origRun(description, callback);
+        return;
+      }
+
+      origRun(description, (done: any) => {
+        const promise = callback(done);
+        if (promise instanceof Promise) {
+          promise.then(done, done.fail);
+        } else {
+          done();
+        }
+      });
     };
 
     if (!window['jasminePatched']) {
