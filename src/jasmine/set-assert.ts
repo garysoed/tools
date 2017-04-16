@@ -26,8 +26,7 @@ export class SetAssert<V> extends AnyAssert<Set<V>> {
    * @param elements Elements that the set should have.
    */
   haveElements(elements: V[]): void {
-    let value: V[] = Sets.of(this.setValue_).asArray();
-    let matchers = this.reversed_ ? this.expect_(value).not : this.expect_(value);
-    matchers.toEqual(elements);
+    const value: V[] = Sets.of(this.setValue_).asArray();
+    this.getMatchers_(value).toEqual(elements);
   }
 }

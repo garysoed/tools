@@ -18,7 +18,6 @@ export class ElementAssert extends AnyAssert<Element> {
       children.push(this.elementValue_.children.item(i));
     }
 
-    const matchers = this.reversed_ ? this.expect_(children).not : this.expect_(children);
-    matchers.toEqual(expectedChildren);
+    this.getMatchers_(children).toEqual(expectedChildren);
   }
 }

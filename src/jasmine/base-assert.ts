@@ -1,26 +1,19 @@
 export class BaseAssert {
-  protected readonly anyValue_: any;
-  protected reversed_: boolean;
-  protected readonly expect_: (actual: any) => jasmine.Matchers;
-
   /**
    * @param value_ The value to assert.
    * @param reversed_ True iff the assertion logic should be reversed.
    * @param expect_ Reference to jasmine's expect function.'
    */
   constructor(
-      value: any,
-      reversed: boolean,
-      expect: (actual: any) => jasmine.Matchers) {
-    this.anyValue_ = value;
-    this.reversed_ = reversed;
-    this.expect_ = expect;
+      private readonly anyValue_: any,
+      private readonly reversed_: boolean,
+      private readonly expect_: (actual: any) => jasmine.Matchers) {
   }
 
   /**
    * @return The base matchers object for checking.
    */
-  protected getMatchers_(): jasmine.Matchers {
-    return this.reversed_ ? this.expect_(this.anyValue_).not : this.expect_(this.anyValue_);
+  protected getMatchers_(value = this.anyValue_): jasmine.Matchers {
+    return this.reversed_ ? this.expect_(value).not : this.expect_(value);
   }
 }

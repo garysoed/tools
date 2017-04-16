@@ -16,7 +16,7 @@ describe('webc.ElementRegistrar', () => {
   let mockInjector;
   let mockTemplates;
   let mockXtag;
-  let registrar;
+  let registrar: ElementRegistrar;
 
   beforeEach(() => {
     mockInjector = jasmine.createSpyObj('Injector', ['instantiate']);
@@ -46,8 +46,11 @@ describe('webc.ElementRegistrar', () => {
 
       const runOnInstanceSpy = spyOn(ElementRegistrar, 'runOnInstance_');
 
-      registrar['getLifecycleConfig_']({[attrName]: mockAttributeParser}, mockProvider, 'content')
-          .attributeChanged.call(mockHTMLElement, 'attr-name', oldValue, newValue);
+      const lifecycleConfig = registrar['getLifecycleConfig_'](
+          {[attrName]: mockAttributeParser},
+          mockProvider,
+          'content');
+      lifecycleConfig.attributeChanged!.call(mockHTMLElement, 'attr-name', oldValue, newValue);
 
       mockHTMLElement[attrName] = parsedValue;
       assert(mockAttributeParser.parse).to.haveBeenCalledWith(newValue);
@@ -97,8 +100,8 @@ describe('webc.ElementRegistrar', () => {
       spyOn(CustomElementUtil, 'addAttributes');
       spyOn(CustomElementUtil, 'setElement');
 
-      registrar['getLifecycleConfig_'](attributes, mockProvider, content).created
-          .call(mockHTMLElement);
+      const lifecycleConfig = registrar['getLifecycleConfig_'](attributes, mockProvider, content);
+      lifecycleConfig.created!.call(mockHTMLElement);
 
       assert(mockHTMLElement[ElementRegistrar['__instance']]).to.equal(mockElement);
       assert(mockElement.onCreated).to.haveBeenCalledWith(mockHTMLElement);
@@ -118,7 +121,8 @@ describe('webc.ElementRegistrar', () => {
 
       const runOnInstanceSpy = spyOn(ElementRegistrar, 'runOnInstance_');
 
-      registrar['getLifecycleConfig_']({}, mockProvider, 'content').inserted.call(mockHtmlElement);
+      const lifecycleConfig = registrar['getLifecycleConfig_']({}, mockProvider, 'content');
+      lifecycleConfig.inserted!.call(mockHtmlElement);
 
       assert(ElementRegistrar['runOnInstance_'])
           .to.haveBeenCalledWith(mockHtmlElement, <any> Matchers.any(Function));
@@ -133,7 +137,8 @@ describe('webc.ElementRegistrar', () => {
 
       const runOnInstanceSpy = spyOn(ElementRegistrar, 'runOnInstance_');
 
-      registrar['getLifecycleConfig_']({}, mockProvider, 'content').removed.call(mockHtmlElement);
+      const lifecycleConfig = registrar['getLifecycleConfig_']({}, mockProvider, 'content');
+      lifecycleConfig.removed!.call(mockHtmlElement);
 
       assert(ElementRegistrar['runOnInstance_'])
           .to.haveBeenCalledWith(mockHtmlElement, <any> Matchers.any(Function));
@@ -173,12 +178,12 @@ describe('webc.ElementRegistrar', () => {
       mockTemplates.getTemplate.and.returnValue(templateContent);
 
       const mockLifecycleConfig = Mocks.object('LifecycleConfig');
-      spyOn(registrar, 'getLifecycleConfig_').and.returnValue(mockLifecycleConfig);
+      const spy = spyOn(registrar, 'getLifecycleConfig_').and.returnValue(mockLifecycleConfig);
 
       const instance = Mocks.object('instance');
       mockInjector.instantiate.and.returnValue(instance);
 
-      await registrar.register(mockConfig);
+      await registrar.register(ctor);
       assert(mockXtag.register).to.haveBeenCalledWith(
           name,
           {
@@ -186,8 +191,8 @@ describe('webc.ElementRegistrar', () => {
           });
 
       assert(registrar['getLifecycleConfig_'])
-          .to.haveBeenCalledWith(attributes, Matchers.any(Function), templateContent);
-      assert(registrar['getLifecycleConfig_'].calls.argsFor(0)[1]()).to.equal(instance);
+          .to.haveBeenCalledWith(attributes, Matchers.any(Function) as any, templateContent);
+      assert(spy.calls.argsFor(0)[1]()).to.equal(instance);
       assert(mockInjector.instantiate).to.haveBeenCalledWith(ctor);
 
       assert(<boolean> registrar['registeredCtors_'].has(ctor)).to.beTrue();
@@ -196,7 +201,7 @@ describe('webc.ElementRegistrar', () => {
       assert(mockTemplates.getTemplate).to.haveBeenCalledWith(templateKey);
     });
 
-    it('should log error if the template key does not exist', async (done: any) => {
+    it('should log error if the template key does not exist', async () => {
       spyOn(Log, 'error');
       mockTemplates.getTemplate.and.returnValue(null);
 
@@ -206,13 +211,7 @@ describe('webc.ElementRegistrar', () => {
         templateKey: 'templateKey',
       });
 
-      try {
-        await registrar.register(ctor);
-        done.fail();
-      } catch (e) {
-        const error: Error = e;
-        assert(error.message).to.match(/No templates found for key/);
-      }
+      await assert(registrar.register(ctor)).to.rejectWithError(/No templates found for key/);
     });
 
     it('should be noop if the config has been registered', async () => {

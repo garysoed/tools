@@ -38,17 +38,12 @@ describe('async.WaitUntil', () => {
     assert(mockInterval.dispose).to.haveBeenCalledWith();
   });
 
-  it('should reject the promise when the waiter is disposed', async (done: any) => {
+  it('should reject the promise when the waiter is disposed', async () => {
     const promise = waitUntil.getPromise();
 
     waitUntil.dispose();
     mockInterval.on.calls.argsFor(0)[1]();
 
-    try {
-      await promise;
-      done.fail();
-    } catch (error) {
-      assert(<string> error).to.match(/has not returned/);
-    }
+    await assert(promise).to.rejectWithError(/has not returned/);
   });
 });

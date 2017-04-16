@@ -76,7 +76,7 @@ describe('rpc.ApiClient', () => {
           assert(mockChannel.post).to.haveBeenCalledWith(request);
         });
 
-    it('should reject if the response type is incorrect', async (done: any) => {
+    it('should reject if the response type is incorrect', async () => {
       const request = Mocks.object('request');
       spyOn(client, 'onMessage_');
 
@@ -84,12 +84,7 @@ describe('rpc.ApiClient', () => {
       mockChannel.waitForMessage.and.returnValue(Promise.resolve(response));
       mockResponseType.check.and.returnValue(false);
 
-      try {
-        await client.post(request);
-        done.fail();
-      } catch (e) {
-        assert(e).to.equal(Matchers.stringMatching(/inconsistent type/));
-      }
+      await assert(client.post(request)).to.rejectWithError(/inconsistent type/);
       assert(mockResponseType.check).to.haveBeenCalledWith(response);
     });
   });

@@ -280,7 +280,7 @@ describe('rpc.PostMessageChannel', () => {
       assert(window.clearTimeout).to.haveBeenCalledWith(timeoutId);
     });
 
-    it('should ignore message if the origin does not match', async (done: any) => {
+    it('should ignore message if the origin does not match', async () => {
       const expectedOrigin = 'expectedOrigin';
       const mockChannel = jasmine.createSpyObj('Channel', ['post']);
 
@@ -298,13 +298,10 @@ describe('rpc.PostMessageChannel', () => {
         type: 'message',
       });
 
-      try {
-        await promise;
-        done.fail();
-      } catch (e) { }
+      await assert(promise).to.reject();
     });
 
-    it('should ignore message if the type is not PING', async (done: any) => {
+    it('should ignore message if the type is not PING', async () => {
       const expectedOrigin = 'expectedOrigin';
       const mockChannel = jasmine.createSpyObj('Channel', ['post']);
 
@@ -320,10 +317,7 @@ describe('rpc.PostMessageChannel', () => {
         type: 'message',
       });
 
-      try {
-        await promise;
-        done.fail();
-      } catch (e) { }
+      await assert(promise).to.reject();
     });
   });
 });

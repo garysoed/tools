@@ -33,7 +33,7 @@ class WaitUntil extends BaseDisposable {
             Interval.TICK_EVENT,
             () => {
               if (this.isDisposed()) {
-                reject('Check function has not returned true when waiter is disposed');
+                reject(new Error('Check function has not returned true when waiter is disposed'));
               }
 
               if (this.checkFn_()) {

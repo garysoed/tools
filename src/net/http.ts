@@ -1,6 +1,7 @@
 import { BaseDisposable } from '../dispose/base-disposable';
 import { DomEvent } from '../event/dom-event';
 import { ListenableDom } from '../event/listenable-dom';
+import { HttpError } from '../net/http-error';
 
 /**
  * Base class for all HTTP requests.
@@ -49,7 +50,7 @@ export abstract class HttpRequest extends BaseDisposable {
         if (this.request.status === 200) {
           resolve(this.request.responseText);
         } else {
-          reject(this.request);
+          reject(new HttpError(this.request, 'Request failed'));
         }
         this.dispose();
       }, this));

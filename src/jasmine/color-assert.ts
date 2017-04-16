@@ -28,8 +28,7 @@ export class ColorAssert extends AnyAssert<Color | null> {
       this.colorValue_.getLightness(),
     ];
 
-    const matchers = this.reversed_ ? this.expect_(hslArray).not : this.expect_(hslArray);
-    matchers.toEqual([hue, saturation, lightness]);
+    this.getMatchers_(hslArray).toEqual([hue, saturation, lightness]);
   }
 
   /**
@@ -50,7 +49,6 @@ export class ColorAssert extends AnyAssert<Color | null> {
       this.colorValue_.getBlue(),
     ];
 
-    const matchers = this.reversed_ ? this.expect_(rgbArray).not : this.expect_(rgbArray);
-    matchers.toEqual([red, green, blue]);
+    this.getMatchers_(rgbArray).toEqual([red, green, blue]);
   }
 }

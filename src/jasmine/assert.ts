@@ -12,6 +12,7 @@ import { MapAssert } from '../jasmine/map-assert';
 import { NumberAssert } from '../jasmine/number-assert';
 import { SetAssert } from '../jasmine/set-assert';
 import { StringAssert } from '../jasmine/string-assert';
+import { PromiseAssert } from "../jasmine/promise-assert";
 
 
 /**
@@ -22,6 +23,7 @@ export function assert(value: number | null): AssertFactory<NumberAssert>;
 export function assert(value: string | null): AssertFactory<StringAssert>;
 export function assert(value: Element): AssertFactory<ElementAssert>;
 
+export function assert<T>(value: Promise<T>): AssertFactory<PromiseAssert<T>>;
 export function assert<T extends Function>(value: T | null): AssertFactory<FunctionAssert<T>>;
 export function assert<T>(value: T[] | null): AssertFactory<ArrayAssert<T>>;
 export function assert<K, V>(value: Map<K, V>): AssertFactory<MapAssert<K, V>>;
@@ -59,6 +61,10 @@ export function assert(value: any): AssertFactory<BaseAssert> {
   } else if (value instanceof Set) {
     return new AssertFactory((reversed: boolean): SetAssert<any> => {
       return new SetAssert<any>(value, reversed, expect);
+    });
+  } else if (value instanceof Promise) {
+    return new AssertFactory((reversed: boolean): PromiseAssert<any> => {
+      return new PromiseAssert<any>(value, fail, reversed, expect);
     });
   } else {
     return new AssertFactory((reversed: boolean): AnyAssert<any> => {

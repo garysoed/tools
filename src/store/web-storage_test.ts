@@ -78,22 +78,16 @@ describe('store.WebStorage', () => {
       assert(storage['updateIndexes_']['calls'].argsFor(0)[0].size).to.equal(0);
     });
 
-    it('should reject if the ID does not exist', async (done: any) => {
+    it('should reject if the ID does not exist', async () => {
       const id = 'id';
       const path = 'path';
       spyOn(storage, 'getPath_').and.returnValue(path);
       spyOn(storage, 'getIndexes_').and.returnValue(new Set());
       spyOn(storage, 'updateIndexes_');
 
-      try {
-        await storage.delete(id);
-        done.fail();
-      } catch (error) {
-        const err: Error = error;
-        assert(err.message).to.match(/does not exist/);
-        assert(mockStorage.removeItem).toNot.haveBeenCalled();
-        assert(storage['updateIndexes_']).toNot.haveBeenCalled();
-      }
+      await assert(storage.delete(id)).to.rejectWithError(/does not exist/);
+      assert(mockStorage.removeItem).toNot.haveBeenCalled();
+      assert(storage['updateIndexes_']).toNot.haveBeenCalled();
     });
   });
 
@@ -180,18 +174,12 @@ describe('store.WebStorage', () => {
       assert(result).to.beNull();
     });
 
-    it('should reject if there was an error', async (done: any) => {
+    it('should reject if there was an error', async () => {
       const errorMsg = 'errorMsg';
       mockStorage.getItem.and.throwError(errorMsg);
       spyOn(storage, 'getPath_').and.returnValue('path');
 
-      try {
-        await storage.read('id');
-        done.fail();
-      } catch (e) {
-        const error: Error = e;
-        assert(error.message).to.equal(errorMsg);
-      }
+      await assert(storage.read('id')).to.rejectWithError(new RegExp(errorMsg));
     });
   });
 
@@ -235,19 +223,14 @@ describe('store.WebStorage', () => {
           .to.equal([oldId, id]);
     });
 
-    it('should reject if there was an error', async (done: any) => {
+    it('should reject if there was an error', async () => {
       const errorMsg = 'errorMsg';
 
       spyOn(Serializer, 'toJSON').and.throwError(errorMsg);
       spyOn(storage, 'getIndexes_').and.returnValue(new Set());
 
-      try {
-        await storage.update('id', Mocks.object('object'));
-        done.fail();
-      } catch (e) {
-        const error: Error = e;
-        assert(error.message).to.equal(errorMsg);
-      }
+      await assert(storage.update('id', Mocks.object('object'))).to
+          .rejectWithError(new RegExp(errorMsg));
     });
   });
 });

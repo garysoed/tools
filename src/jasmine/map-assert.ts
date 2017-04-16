@@ -26,8 +26,7 @@ export class MapAssert<K, V> extends AnyAssert<Map<K, V>> {
    * @param entries Entries that the map should have.
    */
   haveEntries(entries: [K, V][]): void {
-    let value: [K, V][] = Maps.of(this.mapValue_).entries().asArray();
-    let matchers = this.reversed_ ? this.expect_(value).not : this.expect_(value);
-    matchers.toEqual(entries);
+    const value: [K, V][] = Maps.of(this.mapValue_).entries().asArray();
+    this.getMatchers_(value).toEqual(entries);
   }
 }
