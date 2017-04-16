@@ -24,6 +24,7 @@ describe('jasmine.SetAssert', () => {
       set.add(element2);
 
       const mockMatcher = jasmine.createSpyObj('Matcher', ['toEqual']);
+      spyOn(assert, 'getMatchers_').and.returnValue(mockMatcher);
       const elements = Mocks.object('elements');
 
       assert.haveElements(elements);

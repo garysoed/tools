@@ -2,8 +2,8 @@ import { TestBase } from '../test-base';
 TestBase.setup();
 
 import { PromiseAssert } from '../jasmine/promise-assert';
+import { Fakes } from '../mock/fakes';
 import { Mocks } from '../mock/mocks';
-import { Fakes } from "../mock/fakes";
 
 
 describe('jasmine.PromiseAssert', () => {

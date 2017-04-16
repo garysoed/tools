@@ -10,9 +10,9 @@ import { ElementAssert } from '../jasmine/element-assert';
 import { FunctionAssert } from '../jasmine/function-assert';
 import { MapAssert } from '../jasmine/map-assert';
 import { NumberAssert } from '../jasmine/number-assert';
+import { PromiseAssert } from '../jasmine/promise-assert';
 import { SetAssert } from '../jasmine/set-assert';
 import { StringAssert } from '../jasmine/string-assert';
-import { PromiseAssert } from "../jasmine/promise-assert";
 
 
 /**

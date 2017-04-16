@@ -26,7 +26,7 @@ describe('jasmine.MapAssert', () => {
       map.set(key2, value2);
 
       const mockMatcher = jasmine.createSpyObj('Matcher', ['toEqual']);
-
+      spyOn(assert, 'getMatchers_').and.returnValue(mockMatcher);
       const entries = Mocks.object('entries');
 
       assert.haveEntries(entries);

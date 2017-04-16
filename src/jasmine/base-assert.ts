@@ -13,7 +13,7 @@ export class BaseAssert {
   /**
    * @return The base matchers object for checking.
    */
-  protected getMatchers_(value = this.anyValue_): jasmine.Matchers {
+  protected getMatchers_(value: any = this.anyValue_): jasmine.Matchers {
     return this.reversed_ ? this.expect_(value).not : this.expect_(value);
   }
 }
