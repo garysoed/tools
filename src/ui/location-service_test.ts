@@ -27,12 +27,12 @@ describe('ui.LocationService', () => {
   describe('[Reflect.__initialize]', () => {
     it('should listen to the hashchange event', () => {
       spyOn(service, 'onHashChange_');
-      spyOn(mockWindow, 'on').and.callThrough();
+      spyOn(service, 'listenTo');
 
       service[Reflect.__initialize]();
 
-      assert(mockWindow.on).to
-          .haveBeenCalledWith(DomEvent.HASHCHANGE, service['onHashChange_'], service);
+      assert(service.listenTo).to
+          .haveBeenCalledWith(mockWindow, DomEvent.HASHCHANGE, service['onHashChange_']);
     });
   });
 
@@ -48,8 +48,8 @@ describe('ui.LocationService', () => {
 
   describe('goTo', () => {
     it('should set the location with the normalized path', () => {
-      let path = 'path';
-      let normalizedPath = 'normalizedPath';
+      const path = 'path';
+      const normalizedPath = 'normalizedPath';
       spyOn(Locations, 'normalizePath').and.returnValue(normalizedPath);
       service.goTo(path);
 
@@ -60,14 +60,14 @@ describe('ui.LocationService', () => {
 
   describe('hasMatch', () => {
     it('should return true if there are matches', () => {
-      let matcher = 'matcher';
+      const matcher = 'matcher';
       spyOn(service, 'getMatches').and.returnValue({});
       assert(service.hasMatch(matcher)).to.beTrue();
       assert(service.getMatches).to.haveBeenCalledWith(matcher);
     });
 
     it('should return false if there are no matches', () => {
-      let matcher = 'matcher';
+      const matcher = 'matcher';
       spyOn(service, 'getMatches').and.returnValue(null);
       assert(service.hasMatch(matcher)).to.beFalse();
       assert(service.getMatches).to.haveBeenCalledWith(matcher);

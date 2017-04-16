@@ -1,5 +1,5 @@
 import { Interval } from '../async/interval';
-import { BaseDisposable } from '../dispose/base-disposable';
+import { BaseListener } from '../event/base-listener';
 
 
 /**
@@ -8,10 +8,10 @@ import { BaseDisposable } from '../dispose/base-disposable';
  * Once the check function returns true, the promise that the waiter keeps will be resolved. If the
  * waiter is disposed before the check function calls true, the promise will be rejected.
  */
-class WaitUntil extends BaseDisposable {
-  private checkFn_: () => boolean;
-  private interval_: number;
-  private promise_: Promise<void>;
+class WaitUntil extends BaseListener {
+  private readonly checkFn_: () => boolean;
+  private readonly interval_: number;
+  private promise_: Promise<void> | null;
 
   /**
    * @param checkFn The function that returns true to tell the waiter to stop waiting and resolve
@@ -22,34 +22,36 @@ class WaitUntil extends BaseDisposable {
     super();
     this.checkFn_ = checkFn;
     this.interval_ = interval;
-    this.promise_ = new Promise<void>(this.promiseHandler_.bind(this));
+    this.promise_ = null;
   }
 
-  private promiseHandler_(resolve: () => void, reject: (error: any) => void): void {
-    let interval = Interval.newInstance(this.interval_);
-    this.addDisposable(interval);
-    interval
-        .on(
-            Interval.TICK_EVENT,
-            () => {
-              if (this.isDisposed()) {
-                reject(new Error('Check function has not returned true when waiter is disposed'));
-              }
-
-              if (this.checkFn_()) {
-                interval.dispose();
-                resolve();
-              }
-            },
-            this);
-    interval.start();
+  private onTick_(interval: Interval, resolve: () => void, reject: (error: Error) => void): void {
+    if (this.isDisposed()) {
+      reject(new Error('Check function has not returned true when waiter is disposed'));
+    } else if (this.checkFn_()) {
+      interval.dispose();
+      resolve();
+    }
   }
 
   /**
    * Promise that will be resolved when the check function has returned true.
    */
   getPromise(): Promise<void> {
-    return this.promise_;
+    if (this.promise_ !== null) {
+      return this.promise_;
+    }
+    const promise = new Promise<void>((resolve: () => void, reject: (error: any) => void) => {
+      const interval = Interval.newInstance(this.interval_);
+      this.addDisposable(interval);
+      this.listenTo(
+          interval,
+          Interval.TICK_EVENT,
+          this.onTick_.bind(this, interval, resolve, reject));
+      interval.start();
+    });
+    this.promise_ = promise;
+    return promise;
   }
 
   /**

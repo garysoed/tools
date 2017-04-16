@@ -1,5 +1,6 @@
 import { BaseDisposable } from '../dispose/base-disposable';
 import { DisposableFunction } from '../dispose/disposable-function';
+import { Listenable } from '../interfaces/listenable';
 
 
 /**
@@ -12,7 +13,7 @@ import { DisposableFunction } from '../dispose/disposable-function';
  *
  * @param <T> Type of event that this class dispatches.
  */
-export class BaseListenable<T> extends BaseDisposable {
+export class BaseListenable<T> extends BaseDisposable implements Listenable<T> {
   private bubbleCallbacksMap_: Map<T, ((data: any) => void)[]> = new Map();
   private captureCallbacksMap_: Map<T, ((data: any) => void)[]> = new Map();
 

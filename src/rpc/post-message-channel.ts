@@ -1,6 +1,7 @@
 import { Asyncs } from '../async/asyncs';
 import { Field, Serializable, Serializer } from '../data/a-serializable';
 import { BaseDisposable } from '../dispose/base-disposable';
+import { BaseListener } from '../event/base-listener';
 import { DomEvent } from '../event/dom-event';
 import { ListenableDom } from '../event/listenable-dom';
 
@@ -77,7 +78,7 @@ export class Message {
  *     });
  * ```
  */
-export class PostMessageChannel extends BaseDisposable {
+export class PostMessageChannel extends BaseListener {
   private readonly destWindow_: ListenableDom<Window>;
   private readonly srcWindow_: ListenableDom<Window>;
 
@@ -138,7 +139,8 @@ export class PostMessageChannel extends BaseDisposable {
   private waitForMessage_(testFn: (message: Message) => boolean): Promise<Message> {
     const destWindowOrigin = PostMessageChannel.getOrigin(this.destWindow_.getEventTarget());
     return new Promise((resolve: Function) => {
-      const unlistenFn = this.srcWindow_.on(
+      const unlistenFn = this.listenTo(
+          this.srcWindow_,
           DomEvent.MESSAGE,
           (event: any) => {
             if (event.origin !== destWindowOrigin) {
@@ -150,8 +152,7 @@ export class PostMessageChannel extends BaseDisposable {
               unlistenFn.dispose();
               resolve(message);
             }
-          },
-          this);
+          });
     });
   }
 

@@ -1,4 +1,4 @@
-import { BaseDisposable } from '../dispose/base-disposable';
+import { BaseListener } from '../event/base-listener';
 import { DomEvent } from '../event/dom-event';
 import { ListenableDom } from '../event/listenable-dom';
 import { HttpError } from '../net/http-error';
@@ -6,7 +6,7 @@ import { HttpError } from '../net/http-error';
 /**
  * Base class for all HTTP requests.
  */
-export abstract class HttpRequest extends BaseDisposable {
+export abstract class HttpRequest extends BaseListener {
   /**
    * The XMLHttpRequest object wrapped as a [[ListenableDom]]
    */
@@ -46,14 +46,17 @@ export abstract class HttpRequest extends BaseDisposable {
    */
   send(): Promise<string> {
     return new Promise<string>((resolve: (param: any) => void, reject: (error: any) => void) => {
-      this.addDisposable(this.listenableRequest.on(DomEvent.LOAD, () => {
-        if (this.request.status === 200) {
-          resolve(this.request.responseText);
-        } else {
-          reject(new HttpError(this.request, 'Request failed'));
-        }
-        this.dispose();
-      }, this));
+      this.listenTo(
+          this.listenableRequest,
+          DomEvent.LOAD,
+          () => {
+            if (this.request.status === 200) {
+              resolve(this.request.responseText);
+            } else {
+              reject(new HttpError(this.request, 'Request failed'));
+            }
+            this.dispose();
+          });
       this.request.send(this.getSentData());
     });
   }

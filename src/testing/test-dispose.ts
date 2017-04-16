@@ -1,4 +1,5 @@
 import { BaseDisposable, Flags, TRACKED_DISPOSABLES } from '../dispose/base-disposable';
+import { Disposable } from '../interfaces/disposable';
 
 
 /**
@@ -19,7 +20,7 @@ export const TestDispose = {
    * Adds the given disposables to be disposed at the end of the test.
    * @param ...disposables Disposables to be disposed at the end of the test.
    */
-  add(...disposables: BaseDisposable[]): void {
+  add(...disposables: Disposable[]): void {
     disposables.forEach((disposable: BaseDisposable) => {
       DISPOSABLES.push(disposable);
     });

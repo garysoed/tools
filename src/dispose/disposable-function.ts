@@ -1,9 +1,10 @@
-import { BaseDisposable } from './base-disposable';
+import { BaseDisposable } from '../dispose/base-disposable';
+import { DisposableFunction as IDisposableFunction } from '../interfaces/disposable-function';
 
 /**
  * Wrapper around a function that executes the function when this object is disposed.
  */
-export class DisposableFunction extends BaseDisposable {
+export class DisposableFunction extends BaseDisposable implements IDisposableFunction {
   private fn_: Function;
 
   /**

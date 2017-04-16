@@ -13,7 +13,7 @@ import { TestDispose } from '../testing/test-dispose';
 describe('rpc.PostMessageChannel', () => {
   let mockDestWindow;
   let mockSrcWindow;
-  let channel;
+  let channel: PostMessageChannel;
 
   beforeEach(() => {
     mockDestWindow = Mocks.element({});
@@ -59,15 +59,15 @@ describe('rpc.PostMessageChannel', () => {
           .else().return(null);
 
       const mockDisposableFunction = jasmine.createSpyObj('DisposableFunction', ['dispose']);
-      spyOn(channel['srcWindow_'], 'on').and.returnValue(mockDisposableFunction);
+      const listenToSpy = spyOn(channel, 'listenTo').and.returnValue(mockDisposableFunction);
 
       const promise = channel['waitForMessage_'](testFn);
 
-      assert(channel['srcWindow_'].on)
-          .to.haveBeenCalledWith(DomEvent.MESSAGE, Matchers.any(Function), channel);
+      assert(channel.listenTo).to.haveBeenCalledWith(
+            channel['srcWindow_'], DomEvent.MESSAGE, Matchers.any(Function) as any);
 
-      channel['srcWindow_'].on.calls.argsFor(0)[1]({data: json1, origin: origin});
-      channel['srcWindow_'].on.calls.argsFor(0)[1]({data: json2, origin: origin});
+      listenToSpy.calls.argsFor(0)[2]({data: json1, origin: origin});
+      listenToSpy.calls.argsFor(0)[2]({data: json2, origin: origin});
 
       const message = await promise;
       assert(message).to.equal(message2);
@@ -94,15 +94,15 @@ describe('rpc.PostMessageChannel', () => {
           .else().return(null);
 
       const mockDisposableFunction = jasmine.createSpyObj('DisposableFunction', ['dispose']);
-      spyOn(channel['srcWindow_'], 'on').and.returnValue(mockDisposableFunction);
+      const listenToSpy = spyOn(channel, 'listenTo').and.returnValue(mockDisposableFunction);
 
       const promise = channel['waitForMessage_'](testFn);
 
-      assert(channel['srcWindow_'].on)
-          .to.haveBeenCalledWith(DomEvent.MESSAGE, Matchers.any(Function), channel);
+      assert(channel.listenTo).to.haveBeenCalledWith(
+          channel['srcWindow_'], DomEvent.MESSAGE, Matchers.any(Function) as any);
 
-      channel['srcWindow_'].on.calls.argsFor(0)[1]({data: json1, origin: 'otherOrigin'});
-      channel['srcWindow_'].on.calls.argsFor(0)[1]({data: json2, origin: origin});
+      listenToSpy.calls.argsFor(0)[2]({data: json1, origin: 'otherOrigin'});
+      listenToSpy.calls.argsFor(0)[2]({data: json2, origin: origin});
 
       await promise;
       assert(testFn).toNot.haveBeenCalledWith(message1);
@@ -113,13 +113,13 @@ describe('rpc.PostMessageChannel', () => {
     it('should call post_ correctly', () => {
       const message = Mocks.object('message');
 
-      spyOn(channel, 'post_');
+      const postSpy = spyOn(channel, 'post_');
 
       channel.post(message);
 
       assert(channel['post_']).to.haveBeenCalledWith(<any> Matchers.any(Message));
 
-      const systemMessage = channel['post_'].calls.argsFor(0)[0];
+      const systemMessage = postSpy.calls.argsFor(0)[0];
       assert(systemMessage.getType()).to.equal(MessageType.DATA);
       assert(systemMessage.getPayload()).to.equal(message);
     });
@@ -142,11 +142,11 @@ describe('rpc.PostMessageChannel', () => {
       const testPayload = Mocks.object('payload');
       const testMessage = new Message(MessageType.DATA, testPayload);
 
-      spyOn(channel, 'waitForMessage_').and.returnValue(Promise.resolve(testMessage));
+      const waitSpy = spyOn(channel, 'waitForMessage_')
+          .and.returnValue(Promise.resolve(testMessage));
 
       await channel.waitForMessage(testFn);
-      assert(<boolean> channel['waitForMessage_'].calls.argsFor(0)[0](testMessage))
-          .to.beTrue();
+      assert(waitSpy.calls.argsFor(0)[0](testMessage) as boolean).to.beTrue();
       assert(testFn).to.haveBeenCalledWith(testPayload);
     });
 
@@ -155,10 +155,11 @@ describe('rpc.PostMessageChannel', () => {
       const testPayload = Mocks.object('payload');
       const testMessage = new Message(MessageType.PING, testPayload);
 
-      spyOn(channel, 'waitForMessage_').and.returnValue(Promise.resolve(testMessage));
+      const waitSpy = spyOn(channel, 'waitForMessage_').and
+          .returnValue(Promise.resolve(testMessage));
 
       await channel.waitForMessage(testFn);
-      assert(<boolean> channel['waitForMessage_'].calls.argsFor(0)[0](testMessage))
+      assert(waitSpy.calls.argsFor(0)[0](testMessage) as boolean)
           .to.beFalse();
     });
   });

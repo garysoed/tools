@@ -1,11 +1,10 @@
 import { Arrays } from '../collection/arrays';
-import { BaseListenable } from '../event/base-listenable';
+import { BaseListenableListener } from '../event/base-listenable-listener';
 import { DomEvent } from '../event/dom-event';
 import { ListenableDom } from '../event/listenable-dom';
+import { LocationServiceEvents } from '../ui/location-service-events';
+import { Locations } from '../ui/locations';
 import { Reflect } from '../util/reflect';
-
-import { LocationServiceEvents } from './location-service-events';
-import { Locations } from './locations';
 
 
 /**
@@ -13,7 +12,7 @@ import { Locations } from './locations';
  *
  * This only uses the location's hash.
  */
-export class LocationService extends BaseListenable<LocationServiceEvents> {
+export class LocationService extends BaseListenableListener<LocationServiceEvents> {
   private location_: Location;
   private window_: ListenableDom<Window>;
 
@@ -34,7 +33,7 @@ export class LocationService extends BaseListenable<LocationServiceEvents> {
    * @param service The service instance to be initialized.
    */
   private [Reflect.__initialize](service: LocationService): void {
-    this.addDisposable(this.window_.on(DomEvent.HASHCHANGE, this.onHashChange_, this));
+    this.listenTo(this.window_, DomEvent.HASHCHANGE, this.onHashChange_);
   }
 
   /**
@@ -87,7 +86,7 @@ export class LocationService extends BaseListenable<LocationServiceEvents> {
    * @return The joined parts.
    */
   static appendParts(parts: string[]): string {
-    let path = Arrays
+    const path = Arrays
         .of(parts)
         .filter((part: string) => {
           return part !== '.';

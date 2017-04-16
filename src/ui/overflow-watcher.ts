@@ -1,8 +1,7 @@
-import { BaseListenable } from '../event/base-listenable';
+import { BaseListenableListener } from '../event/base-listenable-listener';
 import { DomEvent } from '../event/dom-event';
 import { ListenableDom } from '../event/listenable-dom';
-
-import { Doms } from './doms';
+import { Doms } from '../ui/doms';
 
 
 /**
@@ -42,7 +41,7 @@ export enum EventType {
  * [[CHANGED]] event for when the element's state ([[COVERED]], [[PARTIAL]], [[UNCOVERED]]) has
  * changed.
  */
-class OverflowWatcher extends BaseListenable<EventType> {
+class OverflowWatcher extends BaseListenableListener<EventType> {
   private containerEl_: HTMLElement;
   private element_: HTMLElement;
   private state_: (State|null);
@@ -57,17 +56,16 @@ class OverflowWatcher extends BaseListenable<EventType> {
     this.element_ = element;
     this.state_ = null;
 
-    let listenableContainer = new ListenableDom(container);
-    this.addDisposable(
-        listenableContainer,
-        listenableContainer.on(DomEvent.SCROLL, this.onScroll_, this));
+    const listenableContainer = new ListenableDom(container);
+    this.listenTo(listenableContainer, DomEvent.SCROLL, this.onScroll_);
+    this.addDisposable(listenableContainer);
   }
 
   // TODO(gs): Memoize this.
   private getState_(): State {
     // TODO(gs): Support bottom / left / right
-    let scrollTop = this.containerEl_.scrollTop;
-    let relativeOffsetTop = Doms.relativeOffsetTop(this.element_, this.containerEl_);
+    const scrollTop = this.containerEl_.scrollTop;
+    const relativeOffsetTop = Doms.relativeOffsetTop(this.element_, this.containerEl_);
 
     if (scrollTop <= relativeOffsetTop) {
       return State.UNCOVERED;
@@ -80,8 +78,8 @@ class OverflowWatcher extends BaseListenable<EventType> {
   }
 
   private onScroll_(): void {
-    let newState = this.getState_();
-    let oldState = this.state_;
+    const newState = this.getState_();
+    const oldState = this.state_;
     if (newState !== oldState) {
       this.dispatch(
           EventType.CHANGED,

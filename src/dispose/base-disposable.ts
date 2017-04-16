@@ -1,6 +1,8 @@
 /**
  * Contains undisposed objects.
  */
+import { Disposable } from '../interfaces/disposable';
+
 export const TRACKED_DISPOSABLES: BaseDisposable[] = [];
 
 /**
@@ -16,8 +18,8 @@ export const Flags = {
 /**
  * Base class of all disposable objects.
  */
-export class BaseDisposable {
-  private disposables_: BaseDisposable[];
+export class BaseDisposable implements Disposable {
+  private disposables_: Disposable[];
   private isDisposed_: boolean;
 
   constructor() {
@@ -33,8 +35,8 @@ export class BaseDisposable {
    *
    * @param disposables Disposable objects to be disposed when this object is disposed.
    */
-  addDisposable(...disposables: BaseDisposable[]): void {
-    disposables.forEach((disposable: BaseDisposable) => {
+  addDisposable(...disposables: Disposable[]): void {
+    disposables.forEach((disposable: Disposable) => {
       this.disposables_.push(disposable);
     });
   }
@@ -42,7 +44,7 @@ export class BaseDisposable {
   /**
    * Override this method for custom logic that are ran during disposal.
    */
-  disposeInternal(): void { /* noop */ }
+  protected disposeInternal(): void { /* noop */ }
 
   /**
    * Dispose this object.
@@ -53,7 +55,7 @@ export class BaseDisposable {
     }
 
     this.disposeInternal();
-    this.disposables_.forEach((disposable: BaseDisposable) => disposable.dispose());
+    this.disposables_.forEach((disposable: Disposable) => disposable.dispose());
 
     if (Flags.enableTracking) {
       let index = TRACKED_DISPOSABLES.indexOf(this);
