@@ -1,4 +1,4 @@
-import { AnyAssert } from 'src/jasmine/any-assert';
+import { AnyAssert } from '../jasmine/any-assert';
 
 export class PromiseAssert<T> extends AnyAssert<Promise<T>> {
   constructor(

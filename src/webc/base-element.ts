@@ -1,11 +1,11 @@
-import { BaseDisposable } from '../dispose/base-disposable';
+import { BaseListener } from '../event/base-listener';
 import { ListenableDom } from '../event/listenable-dom';
 
 
 /**
  * Base class for all custom elements.
  */
-export class BaseElement extends BaseDisposable {
+export class BaseElement extends BaseListener {
   protected element_: ListenableDom<HTMLElement> | null = null;
 
   constructor() {

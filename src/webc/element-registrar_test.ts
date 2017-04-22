@@ -6,10 +6,10 @@ import { Mocks } from '../mock/mocks';
 import { TestDispose } from '../testing/test-dispose';
 import { Log } from '../util/log';
 import { BaseElement } from '../webc/base-element';
-import { ANNOTATIONS as BindAnnotations } from '../webc/bind';
 import { CustomElementUtil } from '../webc/custom-element-util';
 import { DomHook } from '../webc/dom-hook';
 import { ElementRegistrar } from '../webc/element-registrar';
+import { ANNOTATIONS as HookAnnotations } from '../webc/hook';
 
 
 describe('webc.ElementRegistrar', () => {
@@ -95,7 +95,7 @@ describe('webc.ElementRegistrar', () => {
       binderMap.set(key2, new Set([mockBinderFactory2]));
       const mockBindAnnotations = jasmine.createSpyObj('BindAnnotations', ['getAttachedValues']);
       mockBindAnnotations.getAttachedValues.and.returnValue(binderMap);
-      spyOn(BindAnnotations, 'forCtor').and.returnValue(mockBindAnnotations);
+      spyOn(HookAnnotations, 'forCtor').and.returnValue(mockBindAnnotations);
 
       spyOn(CustomElementUtil, 'addAttributes');
       spyOn(CustomElementUtil, 'setElement');
@@ -112,7 +112,7 @@ describe('webc.ElementRegistrar', () => {
       assert(mockBridge2.open).to.haveBeenCalledWith(binder2);
       assert(mockBinderFactory1).to.haveBeenCalledWith(mockHTMLElement, mockElement);
       assert(mockBinderFactory2).to.haveBeenCalledWith(mockHTMLElement, mockElement);
-      assert(BindAnnotations.forCtor).to.haveBeenCalledWith(mockElement.constructor);
+      assert(HookAnnotations.forCtor).to.haveBeenCalledWith(mockElement.constructor);
     });
 
     it('should return config with correct inserted handler', () => {

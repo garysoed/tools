@@ -8,10 +8,10 @@ import { Checks } from '../util/checks';
 import { Log } from '../util/log';
 import { Validate } from '../valid/validate';
 import { BaseElement } from '../webc/base-element';
-import { ANNOTATIONS as BindAnnotations } from '../webc/bind';
 import { CustomElementUtil } from '../webc/custom-element-util';
 import { DomHook } from '../webc/dom-hook';
 import { Handler } from '../webc/handle';
+import { ANNOTATIONS as HookAnnotations } from '../webc/hook';
 import { IDomBinder } from '../webc/interfaces';
 import { Templates } from '../webc/templates';
 
@@ -68,7 +68,7 @@ export class ElementRegistrar extends BaseDisposable {
         CustomElementUtil.setElement(instance, this);
 
         const instancePrototype = instance.constructor;
-        Maps.of(BindAnnotations.forCtor(instancePrototype).getAttachedValues())
+        Maps.of(HookAnnotations.forCtor(instancePrototype).getAttachedValues())
             .forEach((
                 factories: Set<(element: HTMLElement, instance: any) => IDomBinder<any>>,
                 key: string | symbol) => {
