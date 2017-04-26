@@ -41,56 +41,56 @@ describe('color.RgbColor', () => {
     it('should throw error if red is not an integer', () => {
       assert(() => {
         RgbColor.newInstance(1.23, 23, 45);
-      }).to.throwError(/RED_INT/);
+      }).to.throwError(/be an integer/);
     });
 
     it('should throw error if red is negative', () => {
       assert(() => {
         RgbColor.newInstance(-1, 23, 45);
-      }).to.throwError(/RED_MIN/);
+      }).to.throwError(/be positive/);
     });
 
     it('should throw error if red is > 255', () => {
       assert(() => {
         RgbColor.newInstance(1234, 23, 45);
-      }).to.throwError(/RED_MAX/);
+      }).to.throwError(/be <= 255/);
     });
 
     it('should throw error if green is not an integer', () => {
       assert(() => {
         RgbColor.newInstance(1, 23.45, 45);
-      }).to.throwError(/GREEN_INT/);
+      }).to.throwError(/be an integer/);
 
     });
 
     it('should throw error if green is negative', () => {
       assert(() => {
         RgbColor.newInstance(1, -23, 45);
-      }).to.throwError(/GREEN_MIN/);
+      }).to.throwError(/be positive/);
     });
 
     it('should throw error if green is > 255', () => {
       assert(() => {
         RgbColor.newInstance(1, 2345, 45);
-      }).to.throwError(/GREEN_MAX/);
+      }).to.throwError(/be <= 255/);
     });
 
     it('should throw error if blue is not an integer', () => {
       assert(() => {
         RgbColor.newInstance(1, 23, 4.5);
-      }).to.throwError(/BLUE_INT/);
+      }).to.throwError(/be an integer/);
     });
 
     it('should throw error if blue is negative', () => {
       assert(() => {
         RgbColor.newInstance(1, 23, -45);
-      }).to.throwError(/BLUE_MIN/);
+      }).to.throwError(/be positive/);
     });
 
     it('should throw error if blue is > 255', () => {
       assert(() => {
         RgbColor.newInstance(1, 23, 456);
-      }).to.throwError(/BLUE_MAX/);
+      }).to.throwError(/be <= 255/);
     });
   });
 });

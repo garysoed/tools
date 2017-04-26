@@ -1,5 +1,3 @@
-import { Validate } from '../valid/validate';
-
 import { BaseColor } from '../color/base-color';
 import { cache } from '../data/cache';
 
@@ -71,7 +69,7 @@ export class RgbColor extends BaseColor {
     } else if (max === blue) {
       h1 = ((red - green) / chroma) + 4;
     } else {
-      Validate.fail(`Should not be able to reach here`);
+      throw new Error(`Should not be able to reach here`);
     }
 
     return h1 * 60;
@@ -108,17 +106,41 @@ export class RgbColor extends BaseColor {
    * @param blue The blue component of the color.
    */
   static newInstance(red: number, green: number, blue: number): RgbColor {
-    Validate.batch({
-      'BLUE_INT': Validate.number(blue).to.beAnInteger(),
-      'BLUE_MAX': Validate.number(blue).toNot.beGreaterThan(255),
-      'BLUE_MIN': Validate.number(blue).to.beGreaterThanOrEqualTo(0),
-      'GREEN_INT': Validate.number(green).to.beAnInteger(),
-      'GREEN_MAX': Validate.number(green).toNot.beGreaterThan(255),
-      'GREEN_MIN': Validate.number(green).to.beGreaterThanOrEqualTo(0),
-      'RED_INT': Validate.number(red).to.beAnInteger(),
-      'RED_MAX': Validate.number(red).toNot.beGreaterThan(255),
-      'RED_MIN': Validate.number(red).to.beGreaterThanOrEqualTo(0),
-    }).to.allBeValid().assertValid();
+    if (!Number.isInteger(red)) {
+      throw new Error(`${red} is expected to be an integer`);
+    }
+
+    if (red > 255) {
+      throw new Error(`${red} should be <= 255`);
+    }
+
+    if (red < 0) {
+      throw new Error(`${red} should be positive`);
+    }
+
+    if (!Number.isInteger(blue)) {
+      throw new Error(`${blue} is expected to be an integer`);
+    }
+
+    if (blue > 255) {
+      throw new Error(`${blue} should be <= 255`);
+    }
+
+    if (blue < 0) {
+      throw new Error(`${blue} should be positive`);
+    }
+
+    if (!Number.isInteger(green)) {
+      throw new Error(`${green} is expected to be an integer`);
+    }
+
+    if (green > 255) {
+      throw new Error(`${green} should be <= 255`);
+    }
+
+    if (green < 0) {
+      throw new Error(`${green} should be positive`);
+    }
     return new RgbColor(red, green, blue);
   }
 }

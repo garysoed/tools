@@ -24,7 +24,6 @@ gs_tools(
       "//src/typescript",
       "//src/ui",
       "//src/util",
-      "//src/valid",
       "//src/webc",
     ])
 

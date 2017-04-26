@@ -1,6 +1,5 @@
 import { Arrays } from '../collection/arrays';
 import { Maps } from '../collection/maps';
-import { Validate } from '../valid/validate';
 
 import { ArgMetaData } from './arg-meta-data';
 
@@ -105,7 +104,6 @@ export class GraphNode<T> {
       fn: (...args: any[]) => T,
       argsData: ArgMetaData[]): GraphNode<T> {
     // TODO: Check that the arg data has no holes.
-    Validate.any(fn).to.exist().assertValid();
     return new GraphNode<T>(fn, argsData);
   }
 }

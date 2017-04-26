@@ -1,5 +1,4 @@
 import { Reflect } from '../util/reflect';
-import { Validate } from '../valid/validate';
 
 import { InjectUtil } from './inject-util';
 
@@ -106,15 +105,12 @@ export class Injector {
       return this.instances_.get(bindKey);
     }
 
-    if (!isOptional) {
-      Validate.map(Injector.BINDINGS_)
-          .to.containKey(bindKey)
-          .orThrows(`No value bound to key ${bindKey}`)
-          .assertValid();
+    if (!isOptional && !Injector.BINDINGS_.has(bindKey)) {
+      throw new Error(`No value bound to key ${bindKey}`);
     }
-    let provider = Injector.BINDINGS_.has(bindKey)
+    const provider = Injector.BINDINGS_.has(bindKey)
         ? Injector.BINDINGS_.get(bindKey) : () => undefined;
-    let instance = provider!(this);
+    const instance = provider!(this);
     this.instances_.set(bindKey, instance);
 
     return instance;
@@ -129,20 +125,19 @@ export class Injector {
    * @return Array of resolved parameters of the given constructor.
    */
   getParameters(ctor: gs.ICtor<any>, extraArguments: {[index: number]: any} = {}): any[] {
-    let metadataMap = InjectUtil.getMetadataMap(ctor);
+    const metadataMap = InjectUtil.getMetadataMap(ctor);
 
     // Collects the arguments.
-    let args: any[] = [];
+    const args: any[] = [];
     for (let i = 0; i < ctor.length; i++) {
       if (extraArguments[i] !== undefined) {
         args.push(extraArguments[i]);
       } else {
-        Validate.map(metadataMap)
-            .to.containKey(i)
-            .orThrows(
-                `Cannot find injection candidate for index ${i} for ${ctor} when instantiating`)
-            .assertValid();
-        let metadata = metadataMap.get(i);
+        if (!metadataMap.has(i)) {
+          throw new Error(
+              `Cannot find injection candidate for index ${i} for ${ctor} when instantiating`);
+        }
+        const metadata = metadataMap.get(i);
         args.push(this.getBoundValue(metadata!.getKeyName(), metadata!.isOptional()));
       }
     }
@@ -191,17 +186,13 @@ export class Injector {
   static bindProvider(
       provider: Provider<any>,
       bindKey: BindKey): void {
-    Validate
-        .batch({
-          'boundKey': Validate.map(Injector.BINDINGS_)
-              .toNot.containKey(bindKey)
-              .orThrows(`Binding ${bindKey} is already bound`),
-          'reservedKey': Validate.any(bindKey)
-              .toNot.beEqualTo(INJECTOR_BIND_KEY_)
-              .orThrows(`${INJECTOR_BIND_KEY_} is a reserved key`),
-        })
-        .to.allBeValid()
-        .assertValid();
+    if (Injector.BINDINGS_.has(bindKey)) {
+      throw new Error(`Binding ${bindKey} is already bound`);
+    }
+
+    if (bindKey === INJECTOR_BIND_KEY_) {
+      throw new Error(`${INJECTOR_BIND_KEY_} is a reserved key`);
+    }
     Injector.BINDINGS_.set(bindKey, provider);
   }
 

@@ -22,19 +22,19 @@ describe('solver.Spec', () => {
     it('should throw error if the end is smaller than the start', () => {
       assert(() => {
         Spec.newInstance(2, 1, 0);
-      }).to.throwError(/BOUNDARIES/);
+      }).to.throwError(/should not be greater than/);
     });
 
     it('should throw error if the delta is negative', () => {
       assert(() => {
-        Spec.newInstance(2, -1, 0);
-      }).to.throwError(/DELTA/);
+        Spec.newInstance(0, -1, 2);
+      }).to.throwError(/should be > 0/);
     });
 
     it('should throw error if the delta is zero', () => {
       assert(() => {
-        Spec.newInstance(2, 0, 0);
-      }).to.throwError(/DELTA/);
+        Spec.newInstance(0, 0, 2);
+      }).to.throwError(/should be > 0/);
     });
   });
 });

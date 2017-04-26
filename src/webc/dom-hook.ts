@@ -1,5 +1,3 @@
-import { Validate } from '../valid/validate';
-
 import { IDomBinder } from './interfaces';
 
 
@@ -43,9 +41,9 @@ export class DomHook<T> {
    * @param binder The DOM binder.
    */
   open(binder: IDomBinder<T>): void {
-    Validate.any(this.binder_).toNot.exist()
-        .orThrows('"open" should not have been called')
-        .assertValid();
+    if (this.binder_ !== null) {
+      throw new Error('"open" should not have been called');
+    }
     this.binder_ = binder;
   }
 

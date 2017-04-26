@@ -41,25 +41,25 @@ describe('color.HslColor', () => {
     it('should throw error if the saturation is more than 1', () => {
       assert(() => {
         HslColor.newInstance(123, 1.2, 0.4);
-      }).to.throwError(/SATURATION_MAX/);
+      }).to.throwError(/should be >= 0 and <= 1/);
     });
 
     it('should throw error if the saturation is negative', () => {
       assert(() => {
         HslColor.newInstance(123, -0.2, 0.4);
-      }).to.throwError(/SATURATION_MIN/);
+      }).to.throwError(/should be >= 0 and <= 1/);
     });
 
     it('should throw error if the lightness is more than 1', () => {
       assert(() => {
         HslColor.newInstance(123, 0.2, 1.4);
-      }).to.throwError(/LIGHTNESS_MAX/);
+      }).to.throwError(/should be >= 0 and <= 1/);
     });
 
     it('should throw error if the lightness is negative', () => {
       assert(() => {
         HslColor.newInstance(123, 0.2, -0.4);
-      }).to.throwError(/LIGHTNESS_MIN/);
+      }).to.throwError(/should be >= 0 and <= 1/);
     });
   });
 });

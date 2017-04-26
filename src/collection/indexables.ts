@@ -2,7 +2,6 @@ import { ArrayIterable } from '../collection/array-iterable';
 import { BaseFluent } from '../collection/base-fluent';
 import { IFluentIndexable } from '../collection/interfaces';
 import { FluentIterable, Iterables } from '../collection/iterables';
-import { Validate } from '../valid/validate';
 
 
 export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexable<T> {
@@ -153,8 +152,9 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
 
   zip<T2>(other: T2[]): IFluentIndexable<[T, T2]> {
     const thisData = this.getData();
-    Validate.any(other.length).to.beEqualTo(thisData.length)
-        .orThrows(`Other array has a length of ${other.length}, expected ${thisData.length}`);
+    if (other.length !== thisData.length) {
+      throw new Error(`Other array has a length of ${other.length}, expected ${thisData.length}`);
+    }
 
     return this
         .mapElement((value: T, index: number) => {

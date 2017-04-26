@@ -1,5 +1,3 @@
-import { Validate } from '../valid/validate';
-
 import { GraphNode } from './graph-node';
 import { __NODE_DATA_MAP, PipeUtil } from './pipe-util';
 
@@ -16,24 +14,20 @@ export function Pipe(): MethodDecorator {
       target[__NODE_DATA_MAP] = new Map<string, GraphNode<any>>();
     }
 
-    let map: Map<string, GraphNode<any>> = target[__NODE_DATA_MAP];
-    let fn = descriptor.value || descriptor.get;
+    const map: Map<string, GraphNode<any>> = target[__NODE_DATA_MAP];
+    const fn = descriptor.value || descriptor.get;
 
-    Validate
-        .batch({
-          'propertyKey': Validate.map(map)
-              .toNot.containKey(propertyKey)
-              .orThrows(`Pipe for ${propertyKey} is already registered`),
-          'type': Validate.any(fn)
-              .to.exist()
-              .orThrows(`${propertyKey} must be a method or a getter`),
-        })
-        .to.allBeValid()
-        .assertValid();
-    let builder = PipeUtil.initializeNodeBuilder(target, propertyKey);
+    if (map.has(propertyKey)) {
+      throw new Error(`Pipe for ${propertyKey} is already registered`);
+    }
+
+    if (!(fn instanceof Function)) {
+      throw new Error(`${propertyKey} must be a method or a getter`);
+    }
+    const builder = PipeUtil.initializeNodeBuilder(target, propertyKey);
     builder.fn = fn;
 
-    let graphNode = builder.build();
+    const graphNode = builder.build();
 
     if (descriptor.set) {
       descriptor.set = PipeUtil.createSetter(descriptor.set, graphNode);

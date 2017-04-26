@@ -1,5 +1,3 @@
-import { Validate } from '../valid/validate';
-
 import { ArgMetaData } from './arg-meta-data';
 import { GraphNode } from './graph-node';
 
@@ -22,7 +20,9 @@ export class GraphNodeBuilder<T> {
    * @return The graph node.
    */
   build(): GraphNode<T> {
-    Validate.any(this.fn).to.exist().assertValid();
-    return GraphNode.newInstance(this.fn!, this.argMetaData);
+    if (this.fn === null) {
+      throw new Error('Required function does not exist');
+    }
+    return GraphNode.newInstance(this.fn, this.argMetaData);
   }
 }

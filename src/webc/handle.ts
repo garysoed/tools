@@ -3,7 +3,6 @@ import { Maps } from '../collection/maps';
 import { Sets } from '../collection/sets';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { Parser } from '../interfaces/parser';
-import { Validate } from '../valid/validate';
 import { AttributeChangeHandler } from '../webc/attribute-change-handler';
 import { ChildListChangeHandler } from '../webc/child-list-change-handler';
 import { EventHandler } from '../webc/event-handler';
@@ -83,10 +82,10 @@ export class Handler {
 
     const unresolvedSelectors = Arrays.fromIterable(unresolvedSelectorIterable).asArray();
     const selectorsString = unresolvedSelectors.join(', ');
-    Validate.set(new Set(unresolvedSelectors))
-        .to.beEmpty()
-        .orThrows(`The following selectors cannot be resolved for handle: ${selectorsString}`)
-        .assertValid();
+
+    if (unresolvedSelectors.length > 0) {
+      throw new Error(`The following selectors cannot be resolved for handle: ${selectorsString}`);
+    }
   }
 
   private static configure_<T extends {selector: string | null}>(

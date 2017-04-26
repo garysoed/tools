@@ -1,6 +1,3 @@
-import { Validate } from '../valid/validate';
-
-
 /**
  * Specification to generate a bunch of numbers.
  */
@@ -48,10 +45,13 @@ export class Spec {
   }
 
   static newInstance(start: number, delta: number, end: number): Spec {
-    Validate.batch({
-      'BOUNDARIES': Validate.number(start).toNot.beGreaterThan(end),
-      'DELTA': Validate.number(delta).to.beGreaterThan(0),
-    }).to.allBeValid().assertValid();
+    if (start > end) {
+      throw new Error(`${start} should not be greater than ${end}`);
+    }
+
+    if (delta <= 0) {
+      throw new Error(`${delta} should be > 0`);
+    }
     return new Spec(start, delta, end);
   }
 }

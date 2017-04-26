@@ -1,5 +1,4 @@
 import { Maps } from '../collection/maps';
-import { Validate } from '../valid/validate';
 
 
 /**
@@ -85,10 +84,9 @@ export class Jsons {
    * @param value The value to set.
    */
   static setValue(json: gs.IJson, path: string, value: any): void {
-    Validate.string(path)
-        .toNot.beEmpty()
-        .orThrows(`Expected ${path} to not be empty`)
-        .assertValid();
+    if (path === '') {
+      throw new Error(`Expected ${path} to not be empty`);
+    }
 
     let object = json;
     let parts = path.split('.');

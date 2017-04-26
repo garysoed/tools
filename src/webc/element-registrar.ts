@@ -6,7 +6,6 @@ import { Parser } from '../interfaces/parser';
 import { Cases } from '../string/cases';
 import { Checks } from '../util/checks';
 import { Log } from '../util/log';
-import { Validate } from '../valid/validate';
 import { BaseElement } from '../webc/base-element';
 import { CustomElementUtil } from '../webc/custom-element-util';
 import { DomHook } from '../webc/dom-hook';
@@ -73,7 +72,7 @@ export class ElementRegistrar extends BaseDisposable {
                 factories: Set<(element: HTMLElement, instance: any) => IDomBinder<any>>,
                 key: string | symbol) => {
               if (factories.size > 1) {
-                throw Validate.fail(`Key ${key} can only have 1 Bind annotation`);
+                throw new Error(`Key ${key} can only have 1 Bind annotation`);
               }
               const factory = Sets.of(factories).anyValue();
               if (factory === null) {
@@ -82,7 +81,7 @@ export class ElementRegistrar extends BaseDisposable {
 
               const hook = instance[key];
               if (!(hook instanceof DomHook)) {
-                throw Validate.fail(`Key ${key} should be an instance of DomHook`);
+                throw new Error(`Key ${key} should be an instance of DomHook`);
               }
               hook.open(factory(this, instance));
             });
@@ -123,9 +122,9 @@ export class ElementRegistrar extends BaseDisposable {
       await Promise.all(promises);
       if (!this.registeredCtors_.has(ctor)) {
         const template = this.templates_.getTemplate(config.templateKey);
-        Validate.any(template).toNot.beNull()
-            .orThrows(`No templates found for key ${config.templateKey}`)
-            .assertValid();
+        if (template === null) {
+          throw new Error(`No templates found for key ${config.templateKey}`);
+        }
 
         this.xtag_.register(
             config.tag,
@@ -166,10 +165,10 @@ export class ElementRegistrar extends BaseDisposable {
    * @return A new instance of the registrar.
    */
   static newInstance(injector: Injector, templates: Templates): ElementRegistrar {
-    Validate.any(window['xtag'])
-        .to.beDefined()
-        .orThrows(`Required x-tag library not found`)
-        .assertValid();
-    return new ElementRegistrar(injector, templates, window['xtag']);
+    const xtag = window['xtag'];
+    if (xtag === undefined) {
+      throw new Error(`Required x-tag library not found`);
+    }
+    return new ElementRegistrar(injector, templates, xtag);
   }
 }

@@ -1,6 +1,4 @@
 import { Arrays } from '../collection/arrays';
-import { Validate } from '../valid/validate';
-
 import { BaseColor } from '../color/base-color';
 import { cache } from '../data/cache';
 
@@ -108,12 +106,13 @@ export class HslColor extends BaseColor {
    * @param lightness The lightness component of the color.
    */
   static newInstance(hue: number, saturation: number, lightness: number): HslColor {
-    Validate.batch({
-      'LIGHTNESS_MAX': Validate.number(lightness).toNot.beGreaterThan(1),
-      'LIGHTNESS_MIN': Validate.number(lightness).to.beGreaterThanOrEqualTo(0),
-      'SATURATION_MAX': Validate.number(saturation).toNot.beGreaterThan(1),
-      'SATURATION_MIN': Validate.number(saturation).to.beGreaterThanOrEqualTo(0),
-    }).to.allBeValid().assertValid();
+    if (lightness > 1 || lightness < 0) {
+      throw new Error(`${lightness} should be >= 0 and <= 1`);
+    }
+
+    if (saturation > 1 || saturation < 0) {
+      throw new Error(`${saturation} should be >= 0 and <= 1`);
+    }
     return new HslColor(hue % 360, saturation, lightness);
   }
 }

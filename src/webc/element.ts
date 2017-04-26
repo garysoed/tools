@@ -1,4 +1,3 @@
-import { Validate } from '../valid/validate';
 import { BaseElement } from '../webc/base-element';
 
 
@@ -103,12 +102,17 @@ interface IElement {
  */
 export const Element: IElement = <any> function(config: IElementConfig): ClassDecorator {
   return function<C extends gs.ICtor<any>>(ctor: C): void {
-    Validate.ctor(ctor).to.extend(BaseElement)
-        .orThrows(`${ctor.name} should extend BaseElement`);
-    Validate.string(config.tag).toNot.beEmpty()
-        .orThrows(`Configuration for ${ctor.name} should have a non empty tag name`);
-    Validate.string(config.templateUrl).toNot.beEmpty()
-        .orThrows(`Configuration for ${ctor.name} should have a non empty template URL`);
+    if (!(ctor.prototype instanceof BaseElement)) {
+      throw new Error(`${ctor.name} should extend BaseElement`);
+    }
+
+    if (config.tag === '') {
+      throw new Error(`Configuration for ${ctor.name} should have a non empty tag name`);
+    }
+
+    if (config.templateUrl === '') {
+      throw new Error(`Configuration for ${ctor.name} should have a non empty template URL`);
+    }
     ctor[__CONFIG] = config;
   };
 };

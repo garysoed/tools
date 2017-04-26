@@ -1,8 +1,6 @@
 import { Arrays } from '../collection/arrays';
-import { Serializer } from '../data/a-serializable';
-import { Validate } from '../valid/validate';
-
 import { Sets } from '../collection/sets';
+import { Serializer } from '../data/a-serializable';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { SimpleIdGenerator } from '../random/simple-id-generator';
 import { Storage as GsStorage } from '../store/interfaces';
@@ -59,7 +57,7 @@ export class WebStorage<T> implements GsStorage<T> {
    */
   delete(id: string): Promise<void> {
     let indexes = this.getIndexes_();
-    if (!Validate.set(indexes).to.contain(id).isValid()) {
+    if (!indexes.has(id)) {
       return Promise.reject(new Error(`Index [${id}] does not exist`));
     }
     indexes.delete(id);

@@ -39,7 +39,6 @@ karma_run(
         "//src/typescript:test_src",
         "//src/ui:test_src",
         "//src/util:test_src",
-        "//src/valid:test_src",
         "//src/webc:test_src",
     ]
 )
@@ -70,7 +69,6 @@ test_suite(
       "//src/typescript:lint",
       "//src/ui:lint",
       "//src/util:lint",
-      "//src/valid:lint",
       "//src/webc:lint",
     ]
 )

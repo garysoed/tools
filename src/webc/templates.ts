@@ -2,7 +2,6 @@ import { Maps } from '../collection/maps';
 import { External } from '../pipeline/external';
 import { Graph } from '../pipeline/graph';
 import { Pipe } from '../pipeline/pipe';
-import { Validate } from '../valid/validate';
 
 
 /**
@@ -43,10 +42,9 @@ export class Templates {
    * @param templateStr The template string to register.
    */
   static register(key: string, templateStr: string): void {
-    Validate.map(Templates.templates_)
-        .toNot.containKey(key)
-        .orThrows(`Key ${key} is already registered`)
-        .assertValid();
+    if (Templates.templates_.has(key)) {
+      throw new Error(`Key ${key} is already registered`);
+    }
     Templates.templates_.set(key, templateStr);
   }
 

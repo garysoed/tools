@@ -1,8 +1,6 @@
-import { Validate } from '../valid/validate';
 import { BaseElement } from '../webc/base-element';
-
-import { CustomElementUtil } from './custom-element-util';
-import { IElementConfig } from './interfaces';
+import { CustomElementUtil } from '../webc/custom-element-util';
+import { IElementConfig } from '../webc/interfaces';
 
 
 /**
@@ -50,18 +48,17 @@ import { IElementConfig } from './interfaces';
  */
 export function customElement(config: IElementConfig): ClassDecorator {
   return function<C extends gs.ICtor<any>>(ctor: C): void {
-    Validate
-        .batch({
-          'extend': Validate.ctor(ctor).to.extend(BaseElement),
-          'hasTagName': Validate.string(config.tag)
-              .toNot.beEmpty()
-              .orThrows(`Configuration for ${ctor.name} should have a non empty tag name`),
-          'hasTemplateKey': Validate.string(config.templateKey)
-              .toNot.beEmpty()
-              .orThrows(`Configuration for ${ctor.name} should have a non empty template key`),
-        })
-        .to.allBeValid()
-        .assertValid();
+    if (!(ctor.prototype instanceof BaseElement)) {
+      throw new Error(`${ctor} needs to extend BaseElement`);
+    }
+
+    if (config.tag === '') {
+      throw new Error(`Configuration for ${ctor.name} should have a non empty tag name`);
+    }
+
+    if (config.templateKey === '') {
+      throw new Error(`Configuration for ${ctor.name} should have a non empty template key`);
+    }
     CustomElementUtil.setConfig(ctor, config);
   };
 };

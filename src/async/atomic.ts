@@ -1,5 +1,4 @@
 import { BaseDisposable } from '../dispose/base-disposable';
-import { Validate } from '../valid/validate';
 
 import { Sequencer } from './sequencer';
 
@@ -15,7 +14,9 @@ export function atomic(): MethodDecorator {
       property: string | symbol,
       descriptor: TypedPropertyDescriptor<(...args: any[]) => any>):
       TypedPropertyDescriptor<(...args: any[]) => any> {
-    Validate.any(target).to.beAnInstanceOf(BaseDisposable).assertValid();
+    if (!(target instanceof BaseDisposable)) {
+      throw new Error(`${target} should be an instance of BaseDisposable`);
+    }
 
     let originalFn = descriptor.value;
     if (originalFn !== undefined) {

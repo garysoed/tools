@@ -1,9 +1,7 @@
 import { Arrays } from '../collection/arrays';
 import { Maps } from '../collection/maps';
-import { Validate } from '../valid/validate';
-
-import { ArgMetaData } from './arg-meta-data';
-import { PipeUtil } from './pipe-util';
+import { ArgMetaData } from '../pipeline/arg-meta-data';
+import { PipeUtil } from '../pipeline/pipe-util';
 
 
 /**
@@ -19,28 +17,25 @@ export class Graph {
       argMetaData: ArgMetaData,
       context: any,
       externalArgs: {[key: string]: any}): T {
-    let argKey = argMetaData.getKey();
+    const argKey = argMetaData.getKey();
     if (argMetaData.isExternal()) {
       // Use external value.
-      let externalValue = externalArgs[argKey];
-      Validate.any(externalValue).to.beDefined()
-          .orThrows(`Cannot resolve external argument ${argKey}`)
-          .assertValid();
+      const externalValue = externalArgs[argKey];
+      if (externalValue === undefined) {
+        throw new Error(`Cannot resolve external argument ${argKey}`);
+      }
       return externalValue;
     } else {
-      let validations: {[key: string]: any} = {};
-
       // Use other pipes.
-      let forwardedArgs = Maps.fromRecord(argMetaData.getForwardedArguments())
+      const forwardedArgs = Maps.fromRecord(argMetaData.getForwardedArguments())
           .mapValue((forwardedArgKey: string) => {
-            let forwardedValue = externalArgs[forwardedArgKey];
-            validations[forwardedArgKey] = Validate.any(forwardedValue)
-                .to.beDefined()
-                .orThrows(`Cannot resolve forwarded argument ${forwardedArgKey}`);
+            const forwardedValue = externalArgs[forwardedArgKey];
+            if (forwardedValue === undefined) {
+              throw new Error((`Cannot resolve forwarded argument ${forwardedArgKey}`));
+            }
             return forwardedValue;
           })
           .asRecord();
-      Validate.batch(validations).to.allBeValid().assertValid();
       return Graph.run<T>(context, argKey, forwardedArgs);
     }
   }
@@ -52,12 +47,12 @@ export class Graph {
    * @param externalArgs A mapping of key to value for resolving external arguments.
    */
   static run<T>(context: any, key: string, opt_externalArgs: {[key: string]: any} = {}): T {
-    let graphNode = PipeUtil.getNode<T>(context.constructor.prototype, key);
-    Validate.any(graphNode).to.exist()
-        .orThrows(`No nodes found for key "${key}" at object ${context}`)
-        .assertValid();
+    const graphNode = PipeUtil.getNode<T>(context.constructor.prototype, key);
+    if (graphNode === null) {
+      throw new Error(`No nodes found for key "${key}" at object ${context}`);
+    }
 
-    let args = Arrays.of(graphNode!.getArgs())
+    const args = Arrays.of(graphNode.getArgs())
         .map((argData: ArgMetaData) => {
           return Graph.resolveArgument_(argData, context, opt_externalArgs);
         })

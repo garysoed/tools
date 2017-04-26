@@ -67,6 +67,6 @@ describe('async.sequenced', () => {
     class Class {}
     assert(() => {
       decorator(Class.prototype, 'property', {});
-    }).to.throwError(/to be an instance of BaseDisposable/);
+    }).to.throwError(/be an instance of BaseDisposable/);
   });
 });
