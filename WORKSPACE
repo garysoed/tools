@@ -15,7 +15,7 @@ new_local_repository(
 new_local_repository(
     name = "typescript",
     path = "./node_modules/typescript",
-    build_file = "bazel/ts/typescript.BUILD",
+    build_file = "bazel/ts/ts.BUILD",
 )
 
 new_local_repository(
