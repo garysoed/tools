@@ -1,7 +1,7 @@
 package(default_visibility = ["//visibility:public"])
 
 load("//:defs.bzl", "gs_tools")
-load("//bazel/ts:defs.bzl", "ts_library")
+load("//bazel/typescript:defs.bzl", "ts_library")
 
 gs_tools(
     deps = [

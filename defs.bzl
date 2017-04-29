@@ -1,5 +1,5 @@
 load("//bazel/karma:defs.bzl", "karma_run")
-load("//bazel/ts:defs.bzl", "ts_binary", "ts_library")
+load("//bazel/typescript:defs.bzl", "ts_binary", "ts_library")
 load("//bazel/tslint:defs.bzl", "tslint_test")
 load("//bazel/webpack:defs.bzl", "webpack_binary")
 
