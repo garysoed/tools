@@ -91,7 +91,7 @@ describe('jasmine.PromiseAssert', () => {
     });
 
     it('should fail if the promise resolves', async () => {
-      const assert = new PromiseAssert<string>(Promise.resolve(), mockFail, false, mockExpect);
+      const assert = new PromiseAssert<string>(Promise.resolve(''), mockFail, false, mockExpect);
       await assert.rejectWithErrorType(Mocks.object('errorType'), Mocks.object('errorRegexp'));
       expect(mockFail).toHaveBeenCalledWith(jasmine.stringMatching(/Expected to reject/));
     });
@@ -126,7 +126,7 @@ describe('jasmine.PromiseAssert', () => {
     });
 
     it('should fail if the promise resolves', async () => {
-      const assert = new PromiseAssert<string>(Promise.resolve(), mockFail, false, mockExpect);
+      const assert = new PromiseAssert<string>(Promise.resolve(''), mockFail, false, mockExpect);
       await assert.rejectWithError(Mocks.object('errorRegexp'));
       expect(mockFail).toHaveBeenCalledWith(jasmine.stringMatching(/Expected to reject/));
     });

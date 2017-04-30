@@ -8,7 +8,7 @@ export const Util = {
    */
   resolveSelector(
       selector: string | null, parentElement: HTMLElement): Element | null {
-    if (selector === null) {
+    if (selector === null || parentElement.shadowRoot === null) {
       return parentElement;
     } else {
       return parentElement.shadowRoot.querySelector(selector);

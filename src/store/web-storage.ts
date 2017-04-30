@@ -138,7 +138,7 @@ export class WebStorage<T> implements GsStorage<T> {
     indexes.add(id);
     this.updateIndexes_(indexes);
 
-    return new Promise((resolve: () => void, reject: (cause: Error) => void) => {
+    return new Promise<void>((resolve: () => void, reject: (cause: Error) => void) => {
       try {
         let json = Serializer.toJSON(instance);
         this.storage_.setItem(path, JSON.stringify(json));

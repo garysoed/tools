@@ -12,15 +12,15 @@ export class Doms {
    * @return Iterable object that starts with the seed value and continuously steps through it.
    * @TODO Move to iterables.
    */
-  static domIterable(start: HTMLElement, stepper: (fromEl: HTMLElement) => HTMLElement):
+  static domIterable(start: HTMLElement, stepper: (fromEl: HTMLElement) => HTMLElement | null):
       Iterable<HTMLElement> {
     return {
       [Symbol.iterator](): Iterator<HTMLElement> {
-        let currentEl = start;
+        let currentEl: HTMLElement | null = start;
         return {
           next(value?: any): IteratorResult<HTMLElement> {
             let done = currentEl === null;
-            let nextValue = currentEl;
+            const nextValue = currentEl;
 
             if (currentEl !== null) {
               currentEl = stepper(currentEl);
@@ -28,7 +28,7 @@ export class Doms {
 
             return {
               done: done,
-              value: nextValue,
+              value: nextValue!,
             };
           },
         };
@@ -45,8 +45,11 @@ export class Doms {
    * @return The shadow host, or null if not found, or if the element's parent node is not the
    *    shadow root.
    */
-  static getShadowHost(element: HTMLElement): HTMLElement {
-    let shadowRoot = element.parentNode;
+  static getShadowHost(element: HTMLElement): HTMLElement | null {
+    const shadowRoot = element.parentNode;
+    if (shadowRoot === null) {
+      return null;
+    }
     return shadowRoot.nodeType === 11 ? shadowRoot['host'] : null;
   }
 
@@ -70,7 +73,7 @@ export class Doms {
    */
   static parentIterable(start: HTMLElement, bustShadow: boolean = false): Iterable<HTMLElement> {
     return Doms.domIterable(start, (fromEl: HTMLElement) => {
-      let parent = fromEl.parentElement;
+      const parent = fromEl.parentElement;
       return (parent === null && bustShadow) ? Doms.getShadowHost(fromEl) : parent;
     });
   }
