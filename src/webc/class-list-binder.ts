@@ -1,9 +1,9 @@
 import { Arrays } from '../collection/arrays';
 
-import { IDomBinder } from './interfaces';
+import { DomBinder } from './interfaces';
 
 
-export class ClassListBinder implements IDomBinder<Set<string>> {
+export class ClassListBinder implements DomBinder<Set<string>> {
   private readonly classList_: DOMTokenList;
 
   /**

@@ -5,7 +5,7 @@ import { Parser } from '../interfaces/parser';
 /**
  * Describes a binder to a dom location.
  */
-export interface IDomBinder<T> {
+export interface DomBinder<T> {
   /**
    * Deletes the value.
    */

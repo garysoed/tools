@@ -2,7 +2,7 @@ import { ArrayOfType } from '../check/array-of-type';
 import { NonNullType } from '../check/non-null-type';
 import { Arrays } from '../collection/arrays';
 import { Sets } from '../collection/sets';
-import { IDomBinder } from '../webc/interfaces';
+import { DomBinder } from '../webc/interfaces';
 
 
 export interface IDataHelper<T> {
@@ -12,7 +12,7 @@ export interface IDataHelper<T> {
 }
 
 
-export class ChildrenElementsBinder<T> implements IDomBinder<T[]> {
+export class ChildrenElementsBinder<T> implements DomBinder<T[]> {
   private readonly dataHelper_: IDataHelper<T>;
   private readonly elementPool_: Set<Element>;
   private readonly endPadCount_: number;

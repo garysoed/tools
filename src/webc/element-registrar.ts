@@ -11,7 +11,7 @@ import { CustomElementUtil } from '../webc/custom-element-util';
 import { DomHook } from '../webc/dom-hook';
 import { Handler } from '../webc/handle';
 import { ANNOTATIONS as HookAnnotations } from '../webc/hook';
-import { IDomBinder } from '../webc/interfaces';
+import { DomBinder } from '../webc/interfaces';
 import { Templates } from '../webc/templates';
 
 
@@ -69,7 +69,7 @@ export class ElementRegistrar extends BaseDisposable {
         const instancePrototype = instance.constructor;
         Maps.of(HookAnnotations.forCtor(instancePrototype).getAttachedValues())
             .forEach((
-                factories: Set<(element: HTMLElement, instance: any) => IDomBinder<any>>,
+                factories: Set<(element: HTMLElement, instance: any) => DomBinder<any>>,
                 key: string | symbol) => {
               if (factories.size > 1) {
                 throw new Error(`Key ${key} can only have 1 Bind annotation`);

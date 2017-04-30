@@ -54,6 +54,7 @@ test_suite(
       "//src/dispose:lint",
       "//src/event:lint",
       "//src/inject:lint",
+      "//src/interfaces:lint",
       "//src/jasmine:lint",
       "//src/mock:lint",
       "//src/net:lint",

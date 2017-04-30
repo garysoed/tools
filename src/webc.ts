@@ -7,5 +7,5 @@ export { customElement } from './webc/custom-element';
 export { DomHook } from './webc/dom-hook';
 export { ElementRegistrar } from './webc/element-registrar';
 export { handle } from './webc/handle';
-export { IDomBinder } from './webc/interfaces';
+export { DomBinder } from './webc/interfaces';
 export { Templates } from './webc/templates';

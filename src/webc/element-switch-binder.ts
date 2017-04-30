@@ -1,15 +1,15 @@
 import { Maps } from '../collection/maps';
 
-import { IDomBinder } from './interfaces';
+import { DomBinder } from './interfaces';
 
 export const __enumValue: symbol = Symbol('enumValue');
 
 
 /**
- * Binder to swiitch visibility of children of the given parent element.
+ * Binder to switch visibility of children of the given parent element.
  * @param <T> The enum type of the values.
  */
-export class ElementSwitchBinder<T> implements IDomBinder<T> {
+export class ElementSwitchBinder<T> implements DomBinder<T> {
   private readonly mapping_: Map<T, string>;
   private readonly parentEl_: Element;
 

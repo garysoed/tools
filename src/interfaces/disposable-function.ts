@@ -1,4 +1,4 @@
-import { Disposable } from "../interfaces/disposable";
+import { Disposable } from '../interfaces/disposable';
 
 export interface DisposableFunction extends Disposable {
   /**

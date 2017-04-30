@@ -1,15 +1,17 @@
+import { InstanceofType } from '../check/instanceof-type';
 import { Annotations } from '../data/annotations';
 import { Parser } from '../interfaces/parser';
 import { AttributeBinder } from '../webc/attribute-binder';
 import { ChildrenElementsBinder, IDataHelper } from '../webc/children-elements-binder';
 import { ClassListBinder } from '../webc/class-list-binder';
+import { ElementBinder } from '../webc/element-binder';
 import { ElementSwitchBinder } from '../webc/element-switch-binder';
-import { IDomBinder } from '../webc/interfaces';
+import { DomBinder } from '../webc/interfaces';
 import { PropertyBinder } from '../webc/property-binder';
 import { Util } from '../webc/util';
 
 
-type BinderFactory = (element: HTMLElement, instance: any) => IDomBinder<any>;
+type BinderFactory = (element: HTMLElement, instance: any) => DomBinder<any>;
 
 export const ANNOTATIONS: Annotations<BinderFactory> =
     Annotations.of<BinderFactory>(Symbol('bind'));
@@ -32,12 +34,12 @@ export class Hook {
    * @return The property decorator.
    */
   private createDecorator_(
-      binderFactory: (element: Element, instance: any) => IDomBinder<any>): PropertyDecorator {
+      binderFactory: (element: Element, instance: any) => DomBinder<any>): PropertyDecorator {
     const self = this;
     return function(target: Object, propertyKey: string | symbol): void {
       ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
           propertyKey,
-          (parentEl: HTMLElement, instance: any): IDomBinder<any> => {
+          (parentEl: HTMLElement, instance: any): DomBinder<any> => {
             const element = Util.resolveSelector(self.selector_, parentEl);
             if (element === null) {
               throw new Error(`Cannot resolve selector ${self.selector_}`);
@@ -56,7 +58,7 @@ export class Hook {
    */
   attribute<T>(attributeName: string, parser: Parser<T>): PropertyDecorator {
     return this.createDecorator_(
-        (element: Element): IDomBinder<any> => {
+        (element: Element): DomBinder<any> => {
           return AttributeBinder.of<T>(element, attributeName, parser);
         });
   }
@@ -72,7 +74,7 @@ export class Hook {
       startPadCount: number = 0,
       endPadCount: number = 0): PropertyDecorator {
     return this.createDecorator_(
-        (element: Element, instance: any): IDomBinder<any> => {
+        (element: Element, instance: any): DomBinder<any> => {
           return ChildrenElementsBinder.of<T>(
               element,
               dataHelper,
@@ -89,8 +91,19 @@ export class Hook {
    */
   classList(): PropertyDecorator {
     return this.createDecorator_(
-        (element: Element): IDomBinder<any> => {
+        (element: Element): DomBinder<any> => {
           return ClassListBinder.of(element);
+        });
+  }
+
+  element<T extends Element>(type: gs.ICtor<T>): PropertyDecorator {
+    return this.createDecorator_(
+        (element: Element): DomBinder<any> => {
+          if (!InstanceofType(type).check(element)) {
+            throw new Error(`${element} is not of type ${type}`);
+          }
+
+          return ElementBinder.of<T>(element);
         });
   }
 
@@ -102,7 +115,7 @@ export class Hook {
    */
   elementSwitch<T>(mapping: Map<T, string>): PropertyDecorator {
     return this.createDecorator_(
-        (element: Element): IDomBinder<any> => {
+        (element: Element): DomBinder<any> => {
           return ElementSwitchBinder.of(element, mapping);
         });
   }
@@ -122,7 +135,7 @@ export class Hook {
    */
   property(propertyName: string): PropertyDecorator {
     return this.createDecorator_(
-        (element: HTMLElement): IDomBinder<any> => {
+        (element: HTMLElement): DomBinder<any> => {
           return PropertyBinder.of<any>(element, propertyName);
         });
   }

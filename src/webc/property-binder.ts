@@ -1,7 +1,7 @@
-import { IDomBinder } from './interfaces';
+import { DomBinder } from './interfaces';
 
 
-export class PropertyBinder<T> implements IDomBinder<T> {
+export class PropertyBinder<T> implements DomBinder<T> {
   private readonly propertyName_: string;
   private readonly element_: Element;
 

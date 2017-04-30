@@ -1,4 +1,4 @@
-import { IDomBinder } from './interfaces';
+import { DomBinder } from './interfaces';
 
 
 /**
@@ -6,7 +6,7 @@ import { IDomBinder } from './interfaces';
  */
 export class DomHook<T> {
   private deleteOnFalsy_: boolean;
-  private binder_: IDomBinder<T> | null = null;
+  private binder_: DomBinder<T> | null = null;
 
   /**
    * @param parser Parser for parsing the value at the DOM location.
@@ -40,7 +40,7 @@ export class DomHook<T> {
    * Opens the bridge.
    * @param binder The DOM binder.
    */
-  open(binder: IDomBinder<T>): void {
+  open(binder: DomBinder<T>): void {
     if (this.binder_ !== null) {
       throw new Error('"open" should not have been called');
     }
