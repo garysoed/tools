@@ -16,4 +16,4 @@ export function External(key: string): ParameterDecorator {
         parameterIndex,
         ArgMetaData.newInstance(key, {}, true));
   };
-};
+}

@@ -33,4 +33,4 @@ export function atomic(): MethodDecorator {
     }
     return descriptor;
   };
-};
+}

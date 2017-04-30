@@ -73,4 +73,4 @@ export class BaseDisposable implements Disposable {
   isDisposed(): boolean {
     return this.isDisposed_;
   }
-};
+}

@@ -10,4 +10,4 @@ export function HasPropertyType<T>(name: string, type: IType<any>): IType<T> {
       return value !== undefined && type.check(value);
     },
   };
-};
+}

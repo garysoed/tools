@@ -144,4 +144,4 @@ export class ChildListChangeHandler implements IHandler<ChildListChangeConfig> {
         .forCtor(instance.constructor)
         .getAttachedValues();
   }
-};
+}

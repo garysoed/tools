@@ -48,7 +48,7 @@ export interface IElementConfig {
    * Key of template to load from [Templates].
    */
   templateKey: string;
-};
+}
 
 export interface IHandler<T> {
   /**

@@ -85,4 +85,4 @@ export class Checks {
 
     return true;
   }
-};
+}

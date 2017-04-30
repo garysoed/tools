@@ -97,4 +97,4 @@ export class Mocks {
   static object(name: string): any {
     return {[__id]: name};
   }
-};
+}

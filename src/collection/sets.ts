@@ -40,4 +40,4 @@ export class Sets {
   static of<T>(set: Set<T>): FluentNonIndexable<T> {
     return NonIndexables.fromIterable<T>(set);
   }
-};
+}

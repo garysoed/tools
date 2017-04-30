@@ -41,7 +41,7 @@ describe('webc.ElementSwitchBinder', () => {
       mapping.set(Enum.B, 'otherId');
 
       assert(binder['getEnumValue_'](element)).to.beNull();
-      assert(element[__enumValue]).toNot.beDefined(); ;
+      assert(element[__enumValue]).toNot.beDefined();
     });
 
     it('should reuse the existing enum value', () => {

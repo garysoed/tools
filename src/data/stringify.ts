@@ -139,4 +139,4 @@ export class Stringify {
         config.delimiter,
         config.pad);
   }
-};
+}

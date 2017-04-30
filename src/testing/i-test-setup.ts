@@ -16,6 +16,6 @@ interface ITestSetup {
    * Runs before any of jasmine's logic is called.
    */
   init(): void;
-};
+}
 
 export default ITestSetup;

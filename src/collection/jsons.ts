@@ -126,4 +126,4 @@ export class Jsons {
     }
     return <A & B> toObj;
   }
-};
+}

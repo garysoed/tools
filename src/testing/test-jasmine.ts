@@ -32,7 +32,7 @@ export const TestJasmine = {
           done();
         }
       });
-    };
+    }
 
     if (!window['jasminePatched']) {
       window['fit'] = runTest.bind(window, fit);

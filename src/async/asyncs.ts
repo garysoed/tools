@@ -16,4 +16,4 @@ export class Asyncs {
       }, 0);
     });
   }
-};
+}

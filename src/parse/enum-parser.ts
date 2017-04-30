@@ -40,4 +40,4 @@ export class EnumParserImpl<E> implements Parser<E> {
  */
 export function EnumParser<E>(enumType: gs.IEnum): EnumParserImpl<E> {
   return new EnumParserImpl<E>(enumType);
-};
+}

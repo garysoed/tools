@@ -27,4 +27,4 @@ export class Attributes {
     }
     return attributesRecord;
   }
-};
+}

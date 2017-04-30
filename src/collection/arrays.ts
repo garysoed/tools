@@ -106,4 +106,4 @@ export class Arrays {
   static of<T>(data: T[]): FluentIndexable<T> {
     return new FluentIndexable<T>(data.slice());
   }
-};
+}

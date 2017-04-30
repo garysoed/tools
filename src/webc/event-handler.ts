@@ -69,4 +69,4 @@ export class EventHandler implements IHandler<EventHandlerConfig> {
         .forCtor(instance.constructor)
         .getAttachedValues();
   }
-};
+}

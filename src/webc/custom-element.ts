@@ -61,4 +61,4 @@ export function customElement(config: IElementConfig): ClassDecorator {
     }
     CustomElementUtil.setConfig(ctor, config);
   };
-};
+}

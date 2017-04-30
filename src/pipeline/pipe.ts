@@ -35,5 +35,4 @@ export function Pipe(): MethodDecorator {
     map.set(propertyKey, graphNode);
     return descriptor;
   };
-};
-
+}

@@ -14,4 +14,4 @@ export function inject(name: (string|null) = null, defaultValue?: any): Paramete
       throw Error(`Target ${target} is not a constructor`);
     }
   };
-};
+}

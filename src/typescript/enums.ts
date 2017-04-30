@@ -52,4 +52,4 @@ export class Enums {
   static toLowerCaseString(enumValue: any, enumSet: gs.IEnum): string {
     return enumSet[enumValue].toLowerCase();
   }
-};
+}

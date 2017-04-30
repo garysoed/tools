@@ -149,7 +149,7 @@ export class Serializer {
       return json;
     }
   }
-};
+}
 
 /**
  * Annotates a class and marks it as serializable.
@@ -167,7 +167,7 @@ export function Serializable(name: string, parent: any = null): ClassDecorator {
       ctor.prototype[__PARENT] = parent;
     }
   };
-};
+}
 
 /**
  * Annotates a property in a [[Serializable]] class and marks it to be exported when converted to

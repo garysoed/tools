@@ -66,4 +66,4 @@ export class Locations {
     path = path[0] === '/' ? path : '/' + path;
     return path[path.length - 1] === '/' ? path.substr(0, path.length - 1) : path;
   }
-};
+}

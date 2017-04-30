@@ -57,4 +57,4 @@ export class Records {
     });
     return Mappables.of(map);
   }
-};
+}

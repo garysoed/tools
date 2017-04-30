@@ -165,4 +165,4 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
         .forCtor(instance.constructor)
         .getAttachedValues();
   }
-};
+}

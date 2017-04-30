@@ -28,28 +28,6 @@ export class Hook {
   }
 
   /**
-   * Creates the decorator.
-   *
-   * @param binderFactory Factory that generates the binder.
-   * @return The property decorator.
-   */
-  private createDecorator_(
-      binderFactory: (element: Element, instance: any) => DomBinder<any>): PropertyDecorator {
-    const self = this;
-    return function(target: Object, propertyKey: string | symbol): void {
-      ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
-          propertyKey,
-          (parentEl: HTMLElement, instance: any): DomBinder<any> => {
-            const element = Util.resolveSelector(self.selector_, parentEl);
-            if (element === null) {
-              throw new Error(`Cannot resolve selector ${self.selector_}`);
-            }
-            return binderFactory(element, instance);
-          });
-    };
-  }
-
-  /**
    * Binds the annotated [IDomBinder] to an annotation in the DOM.
    *
    * @param attributeName Name of the attribute to bind to.
@@ -139,6 +117,28 @@ export class Hook {
           return PropertyBinder.of<any>(element, propertyName);
         });
   }
+
+  /**
+   * Creates the decorator.
+   *
+   * @param binderFactory Factory that generates the binder.
+   * @return The property decorator.
+   */
+  private createDecorator_(
+      binderFactory: (element: Element, instance: any) => DomBinder<any>): PropertyDecorator {
+    const self = this;
+    return function(target: Object, propertyKey: string | symbol): void {
+      ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
+          propertyKey,
+          (parentEl: HTMLElement, instance: any): DomBinder<any> => {
+            const element = Util.resolveSelector(self.selector_, parentEl);
+            if (element === null) {
+              throw new Error(`Cannot resolve selector ${self.selector_}`);
+            }
+            return binderFactory(element, instance);
+          });
+    };
+  }
 }
 
 /**
@@ -146,4 +146,4 @@ export class Hook {
  */
 export function hook(selector: string | null): Hook {
   return new Hook(selector);
-};
+}

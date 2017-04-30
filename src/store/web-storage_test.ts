@@ -130,7 +130,7 @@ describe('store.WebStorage', () => {
     it('should filter out null items', async () => {
       const id = 'id';
       spyOn(storage, 'listIds').and.returnValue(Promise.resolve([id]));
-      spyOn(storage, 'read').and.returnValue(Promise.resolve(null)); ;
+      spyOn(storage, 'read').and.returnValue(Promise.resolve(null));
       const values = await storage.list();
       assert(values).to.equal([]);
     });

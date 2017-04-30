@@ -32,7 +32,7 @@ export enum EventType {
    * The state of the element has changed.
    */
   CHANGED,
-};
+}
 
 /**
  * Watches an element in the given container to see if the element is scrolled off the container.
@@ -99,6 +99,6 @@ class OverflowWatcher extends BaseListenableListener<EventType> {
     }
     return this.state_;
   }
-};
+}
 
 export default OverflowWatcher;

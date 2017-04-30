@@ -16,4 +16,4 @@ export function bind(name: (string|null) = null, dependencies: any[] = []): Clas
     let ctorName = name || ctor['name'];
     Injector.bind(ctor, ctorName);
   };
-};
+}

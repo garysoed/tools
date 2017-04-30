@@ -89,4 +89,4 @@ export class Maps {
   static of<K, V>(data: Map<K, V>): FluentMappable<K, V> {
     return Mappables.of<K, V>(new Map(data));
   }
-};
+}
