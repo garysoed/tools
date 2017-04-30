@@ -58,7 +58,7 @@ export class BaseDisposable implements Disposable {
     this.disposables_.forEach((disposable: Disposable) => disposable.dispose());
 
     if (Flags.enableTracking) {
-      let index = TRACKED_DISPOSABLES.indexOf(this);
+      const index = TRACKED_DISPOSABLES.indexOf(this);
       if (index >= 0) {
         TRACKED_DISPOSABLES.splice(index, 1);
       }

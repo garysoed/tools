@@ -21,7 +21,7 @@ describe('data.Stringify - Functional', () => {
   });
 
   it('should stringify dates correctly', () => {
-    let date = new Date(123);
+    const date = new Date(123);
     assert(Stringify.toString(date)).to.equal(date.toLocaleString());
   });
 
@@ -34,7 +34,7 @@ describe('data.Stringify - Functional', () => {
   });
 
   it('should stringify simple objects correctly with single line', () => {
-    let simple = new SimpleClass();
+    const simple = new SimpleClass();
     simple.a = 123;
     simple.b = 'b';
     assert(Stringify.toString(simple, {delimiter: '|', pad: ''}))
@@ -42,10 +42,10 @@ describe('data.Stringify - Functional', () => {
   });
 
   it('should stringify complex objects correctly with single line', () => {
-    let simple = new SimpleClass();
+    const simple = new SimpleClass();
     simple.a = 5123;
     simple.b = 'sb';
-    let complex = new ComplexClass();
+    const complex = new ComplexClass();
     complex.a = 123;
     complex.b = simple;
     complex.c = 'c';
@@ -54,7 +54,7 @@ describe('data.Stringify - Functional', () => {
   });
 
   it('should stringify simple objects correctly with multiline', () => {
-    let simple = new SimpleClass();
+    const simple = new SimpleClass();
     simple.a = 123;
     simple.b = 'b';
     assert(Stringify.toString(simple, {delimiter: '|', pad: '--'}))
@@ -67,10 +67,10 @@ describe('data.Stringify - Functional', () => {
   });
 
   it('should stringify complex objects correctly with multi line', () => {
-    let simple = new SimpleClass();
+    const simple = new SimpleClass();
     simple.a = 5123;
     simple.b = 'sb';
-    let complex = new ComplexClass();
+    const complex = new ComplexClass();
     complex.a = 123;
     complex.b = simple;
     complex.c = 'c';

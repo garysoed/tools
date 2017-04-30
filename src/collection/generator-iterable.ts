@@ -11,7 +11,7 @@ export class GeneratorIterable<T> implements Iterable<T> {
   }
 
   [Symbol.iterator](): Iterator<T> {
-    let generator = this.generatorFn_;
+    const generator = this.generatorFn_;
     return {
       next(): IteratorResult<T> {
         return generator();

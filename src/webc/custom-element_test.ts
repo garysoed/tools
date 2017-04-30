@@ -19,7 +19,7 @@ describe('webc.customElement', () => {
   it('should bind the constructor correctly', () => {
     class TestElement extends BaseElement { }
 
-    let config = {tag: 'tag', templateKey: 'templateKey'};
+    const config = {tag: 'tag', templateKey: 'templateKey'};
     spyOn(CustomElementUtil, 'setConfig');
 
     customElement(config)(TestElement);

@@ -34,19 +34,19 @@ export class Locations {
       matcher = matcher.substr(0, matcher.length - 1);
       exactMatch = true;
     }
-    let hashParts = Locations.getParts_(path);
-    let matcherParts = Locations.getParts_(matcher);
+    const hashParts = Locations.getParts_(path);
+    const matcherParts = Locations.getParts_(matcher);
 
     if (exactMatch && matcherParts.length !== hashParts.length) {
       return null;
     }
 
-    let matches = {};
+    const matches = {};
     for (let i = 0; i < matcherParts.length; i++) {
-      let matchPart = matcherParts[i];
-      let hashPart = hashParts[i];
+      const matchPart = matcherParts[i];
+      const hashPart = hashParts[i];
 
-      let matcherResult = Locations.MATCHER_REGEXP_.exec(matchPart);
+      const matcherResult = Locations.MATCHER_REGEXP_.exec(matchPart);
 
       if (matcherResult !== null) {
         matches[matcherResult[1]] = hashPart;
@@ -63,7 +63,7 @@ export class Locations {
    *    with a '/'.
    */
   static normalizePath(path: string): string {
-    path = path[0] === '/' ? path : '/' + path;
+    path = path[0] === '/' ? path : `/${path}`;
     return path[path.length - 1] === '/' ? path.substr(0, path.length - 1) : path;
   }
 }

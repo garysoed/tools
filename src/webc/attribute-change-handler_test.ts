@@ -240,22 +240,22 @@ describe('webc.AttributeChangeHandler', () => {
       handler.configure(targetEl, mockInstance, [config1, config2]);
 
       assert(mockInstance.addDisposable).to.haveBeenCalledWith(disposableFunction);
-      assert(DisposableFunction.of).to.haveBeenCalledWith(<any> Matchers.any(Function));
+      assert(DisposableFunction.of).to.haveBeenCalledWith(Matchers.any(Function) as any);
 
-      (<any> DisposableFunction.of).calls.argsFor(0)[0]();
+      (DisposableFunction.of as any).calls.argsFor(0)[0]();
       assert(mockObserver.disconnect).to.haveBeenCalledWith();
 
       assert(handler['onMutation_']).to.haveBeenCalledWith(
           mockInstance,
           Matchers.any(Map),
           [{
-            addedNodes: <NodeList> <any> {length: 0},
+            addedNodes: {length: 0} as any as NodeList,
             attributeName: attributeName1,
             attributeNamespace: null,
             nextSibling: null,
             oldValue: null,
             previousSibling: null,
-            removedNodes: <NodeList> <any> {length: 0},
+            removedNodes: {length: 0} as any as NodeList,
             target: element,
             type: 'attributes',
           }]);
@@ -263,24 +263,24 @@ describe('webc.AttributeChangeHandler', () => {
           mockInstance,
           Matchers.any(Map),
           [{
-            addedNodes: <NodeList> <any> {length: 0},
+            addedNodes: {length: 0} as NodeList as any,
             attributeName: attributeName2,
             attributeNamespace: null,
             nextSibling: null,
             oldValue: null,
             previousSibling: null,
-            removedNodes: <NodeList> <any> {length: 0},
+            removedNodes: {length: 0} as any as NodeList,
             target: element,
             type: 'attributes',
           }]);
 
       const map: Map<string, Config[]> =
-          (<any> handler['onMutation_']).calls.argsFor(0)[1];
+          (handler['onMutation_'] as any).calls.argsFor(0)[1];
       assert(map).to.haveEntries([
         [attributeName1, [config1]],
         [attributeName2, [config2]],
       ]);
-      assert((<any> handler['onMutation_']).calls.argsFor(1)[1]).to.be(map);
+      assert((handler['onMutation_'] as any).calls.argsFor(1)[1]).to.be(map);
 
       assert(mockObserver.observe).to
           .haveBeenCalledWith(

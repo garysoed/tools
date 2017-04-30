@@ -25,9 +25,9 @@ describe('async.Interval', () => {
 
   describe('start', () => {
     it('should start the interval and dispatch TICK events', () => {
-      let callback = jasmine.createSpy('callback');
-      let intervalId = 123;
-      let spy = spyOn(window, 'setInterval').and.returnValue(intervalId);
+      const callback = jasmine.createSpy('callback');
+      const intervalId = 123;
+      const spy = spyOn(window, 'setInterval').and.returnValue(intervalId);
 
       TestDispose.add(interval.on(Interval.TICK_EVENT, callback, this));
       interval.start();
@@ -50,7 +50,7 @@ describe('async.Interval', () => {
 
   describe('stop', () => {
     it('should clear the interval', () => {
-      let intervalId = 123;
+      const intervalId = 123;
       interval['intervalId_'] = intervalId;
 
       spyOn(window, 'clearInterval');

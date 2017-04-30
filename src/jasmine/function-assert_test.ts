@@ -18,7 +18,7 @@ describe('jasmine.FunctionAssert', () => {
 
   describe('haveBeenCalled', () => {
     it('should call the matchers correctly', () => {
-      let mockMatchers = jasmine.createSpyObj('Matchers', ['toHaveBeenCalled']);
+      const mockMatchers = jasmine.createSpyObj('Matchers', ['toHaveBeenCalled']);
       spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
 
       assert.haveBeenCalled();
@@ -29,7 +29,7 @@ describe('jasmine.FunctionAssert', () => {
 
   describe('haveBeenCalled', () => {
     it('should call the matchers correctly', () => {
-      let mockMatchers = jasmine.createSpyObj('Matchers', ['toHaveBeenCalledTimes']);
+      const mockMatchers = jasmine.createSpyObj('Matchers', ['toHaveBeenCalledTimes']);
       spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
 
       assert.haveBeenCalledTimes(123);
@@ -40,7 +40,7 @@ describe('jasmine.FunctionAssert', () => {
 
   describe('haveBeenCalledWith', () => {
     it('should return a function which calls the matchers correctly', () => {
-      let mockMatchers = jasmine.createSpyObj('Matchers', ['toHaveBeenCalledWith']);
+      const mockMatchers = jasmine.createSpyObj('Matchers', ['toHaveBeenCalledWith']);
       spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
 
       assert.haveBeenCalledWith(1, 2, 3, 4);
@@ -51,7 +51,7 @@ describe('jasmine.FunctionAssert', () => {
 
   describe('throw', () => {
     it('should call the matchers correctly', () => {
-      let mockMatchers = jasmine.createSpyObj('Matchers', ['toThrow']);
+      const mockMatchers = jasmine.createSpyObj('Matchers', ['toThrow']);
       spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
 
       assert.throw();
@@ -62,10 +62,10 @@ describe('jasmine.FunctionAssert', () => {
 
   describe('throwError', () => {
     it('should call the matchers correctly', () => {
-      let mockMatchers = jasmine.createSpyObj('Matchers', ['toThrowError']);
+      const mockMatchers = jasmine.createSpyObj('Matchers', ['toThrowError']);
       spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
 
-      let regexp = Mocks.object('regexp');
+      const regexp = Mocks.object('regexp');
       assert.throwError(regexp);
 
       expect(mockMatchers.toThrowError).toHaveBeenCalledWith(regexp);

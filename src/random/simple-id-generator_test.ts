@@ -13,7 +13,7 @@ describe('random.SimpleIdGenerator', () => {
 
   describe('newId_', () => {
     it('should generate an ID correctly', () => {
-      let id = 'id';
+      const id = 'id';
       spyOn(generator['random_'], 'shortId').and.returnValue(id);
       assert(generator['newId_']()).to.equal(id);
     });
@@ -21,8 +21,8 @@ describe('random.SimpleIdGenerator', () => {
 
   describe('resolveConflict', () => {
     it('should resolve the conflicting ID correctly', () => {
-      let conflictingId = 'conflictingId';
-      let newId = 'newId';
+      const conflictingId = 'conflictingId';
+      const newId = 'newId';
 
       spyOn(generator['random_'], 'shortId').and.returnValue(newId);
 

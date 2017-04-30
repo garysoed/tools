@@ -13,7 +13,7 @@ import { Injector } from './injector';
  */
 export function bind(name: (string|null) = null, dependencies: any[] = []): ClassDecorator {
   return function<C extends gs.ICtor<any>>(ctor: C): void {
-    let ctorName = name || ctor['name'];
+    const ctorName = name || ctor['name'];
     Injector.bind(ctor, ctorName);
   };
 }

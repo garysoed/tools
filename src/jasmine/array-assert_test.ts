@@ -19,8 +19,8 @@ describe('jasmine.ArrayAssert', () => {
 
   describe('contain', () => {
     it('should call the matcher correctly', () => {
-      let other = Mocks.object('other');
-      let mockMatchers = jasmine.createSpyObj('Matcher', ['toContain']);
+      const other = Mocks.object('other');
+      const mockMatchers = jasmine.createSpyObj('Matcher', ['toContain']);
       spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
 
       assert.contain(other);

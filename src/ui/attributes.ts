@@ -12,17 +12,17 @@ export class Attributes {
    * @return The newly added attribute.
    */
   static add(name: string, value: string, element: HTMLElement, document: Document): Attr {
-    let attr = document.createAttribute(name);
+    const attr = document.createAttribute(name);
     attr.value = value;
     element.setAttributeNode(attr);
     return attr;
   }
 
   static get(element: HTMLElement): {[key: string]: string} {
-    let attributesRecord: {[key: string]: string} = {};
-    let attributes = element.attributes;
+    const attributesRecord: {[key: string]: string} = {};
+    const attributes = element.attributes;
     for (let i = 0; i < attributes.length; i++) {
-      let item = attributes.item(i);
+      const item = attributes.item(i);
       attributesRecord[item.name] = item.value;
     }
     return attributesRecord;

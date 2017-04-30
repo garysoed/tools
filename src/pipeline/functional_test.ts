@@ -80,13 +80,13 @@ describe('pipeline', () => {
   });
 
   it('should handle getter setters', () => {
-    let value = 'value';
+    const value = 'value';
     instance.getterSetter = value;
     assert(Graph.run(instance, 'getterSetter')).to.equal('value');
   });
 
   it('should handle dependency pipeline', () => {
-    let value = 'value';
+    const value = 'value';
     instance.getterSetter = value;
     assert(Graph.run(instance, 'combine')).to.equal(`noArg getter ${value}`);
   });
@@ -151,7 +151,7 @@ describe('pipeline', () => {
 
   it('should not clear the cache if the dependency is updated to a value that is the same',
       () => {
-        let value = 'value';
+        const value = 'value';
 
         instance.getterSetter = value;
         Graph.run(instance, 'combine');

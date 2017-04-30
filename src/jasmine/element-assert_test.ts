@@ -22,15 +22,15 @@ describe('jasmine.ElementAssert', () => {
 
   describe('haveChildren', () => {
     it('should call the matchers correctly', () => {
-      let mockMatcher = jasmine.createSpyObj('Matcher', ['toEqual']);
+      const mockMatcher = jasmine.createSpyObj('Matcher', ['toEqual']);
       mockExpect.and.returnValue(mockMatcher);
 
-      let child1 = document.createElement('div');
-      let child2 = document.createElement('div');
+      const child1 = document.createElement('div');
+      const child2 = document.createElement('div');
       parentEl.appendChild(child1);
       parentEl.appendChild(child2);
 
-      let expectedChildren = Mocks.object('expectedChildren');
+      const expectedChildren = Mocks.object('expectedChildren');
 
       assert.haveChildren(expectedChildren);
 
@@ -39,15 +39,15 @@ describe('jasmine.ElementAssert', () => {
     });
 
     it('should call the matchers correctly when reversed', () => {
-      let mockMatcher = jasmine.createSpyObj('Matcher', ['toEqual']);
+      const mockMatcher = jasmine.createSpyObj('Matcher', ['toEqual']);
       mockExpect.and.returnValue({not: mockMatcher});
 
-      let child1 = document.createElement('div');
-      let child2 = document.createElement('div');
+      const child1 = document.createElement('div');
+      const child2 = document.createElement('div');
       parentEl.appendChild(child1);
       parentEl.appendChild(child2);
 
-      let expectedChildren = Mocks.object('expectedChildren');
+      const expectedChildren = Mocks.object('expectedChildren');
 
       assert['reversed_'] = true;
       assert.haveChildren(expectedChildren);

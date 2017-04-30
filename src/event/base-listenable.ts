@@ -89,7 +89,7 @@ export class BaseListenable<T> extends BaseDisposable implements Listenable<T> {
       callback: (payload?: any) => void,
       context: Object,
       useCapture: boolean = false): DisposableFunction {
-    let map = useCapture ? this.captureCallbacksMap_ : this.bubbleCallbacksMap_;
+    const map = useCapture ? this.captureCallbacksMap_ : this.bubbleCallbacksMap_;
     if (!map.has(eventType)) {
       map.set(eventType, []);
     }
@@ -97,7 +97,7 @@ export class BaseListenable<T> extends BaseDisposable implements Listenable<T> {
     const boundCallback = callback.bind(context);
     callbacks!.push(boundCallback);
     return new DisposableFunction(() => {
-      let index = callbacks!.indexOf(boundCallback);
+      const index = callbacks!.indexOf(boundCallback);
       if (index >= 0) {
         callbacks!.splice(index, 1);
       }
@@ -118,7 +118,7 @@ export class BaseListenable<T> extends BaseDisposable implements Listenable<T> {
       callback: (payload?: any) => void,
       context: Object,
       useCapture: boolean = false): DisposableFunction {
-    let disposableFunction = this.on(
+    const disposableFunction = this.on(
         eventType,
         (payload: any) => {
           callback.call(context, payload);

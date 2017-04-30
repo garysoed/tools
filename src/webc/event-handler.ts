@@ -24,7 +24,7 @@ export class EventHandler implements IHandler<EventHandlerConfig> {
    * @override
    */
   configure(targetEl: Element, instance: BaseDisposable, configs: EventHandlerConfig[]): void {
-    let listenable = ListenableDom.of(targetEl);
+    const listenable = ListenableDom.of(targetEl);
     instance.addDisposable(listenable);
 
     Arrays

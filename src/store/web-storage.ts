@@ -31,7 +31,7 @@ export class WebStorage<T> implements GsStorage<T> {
       this.updateIndexes_(new Set());
       indexes = JSON.stringify([]);
     }
-    return new Set(<string[]> JSON.parse(indexes));
+    return new Set(JSON.parse(indexes) as string[]);
   }
 
   /**
@@ -56,7 +56,7 @@ export class WebStorage<T> implements GsStorage<T> {
    * @override
    */
   delete(id: string): Promise<void> {
-    let indexes = this.getIndexes_();
+    const indexes = this.getIndexes_();
     if (!indexes.has(id)) {
       return Promise.reject(new Error(`Index [${id}] does not exist`));
     }
@@ -77,7 +77,7 @@ export class WebStorage<T> implements GsStorage<T> {
    * @override
    */
   has(id: string): Promise<boolean> {
-    let indexes = this.getIndexes_();
+    const indexes = this.getIndexes_();
     return Promise.resolve(indexes.has(id));
   }
 
@@ -85,14 +85,14 @@ export class WebStorage<T> implements GsStorage<T> {
    * @override
    */
   async list(): Promise<T[]> {
-    let ids = await this.listIds();
-    let promises = Arrays
+    const ids = await this.listIds();
+    const promises = Arrays
         .fromIterable(ids)
         .map((id: string) => {
           return this.read(id);
         })
         .asArray();
-    let items = await Promise.all(promises);
+    const items = await Promise.all(promises);
     return Arrays
         .of(items)
         .filter((item: T | null) => {
@@ -113,14 +113,14 @@ export class WebStorage<T> implements GsStorage<T> {
    * @override
    */
   read(id: string): Promise<T | null> {
-    let path = this.getPath_(id);
+    const path = this.getPath_(id);
     return new Promise((resolve: (value: T | null) => void, reject: (cause: Error) => void) => {
       try {
-        let stringValue = this.storage_.getItem(path);
+        const stringValue = this.storage_.getItem(path);
         if (stringValue === null) {
           resolve(null);
         } else {
-          let json = JSON.parse(stringValue);
+          const json = JSON.parse(stringValue);
           resolve(Serializer.fromJSON(json));
         }
       } catch (e) {
@@ -133,14 +133,14 @@ export class WebStorage<T> implements GsStorage<T> {
    * @override
    */
   update(id: string, instance: T): Promise<void> {
-    let path = this.getPath_(id);
-    let indexes = this.getIndexes_();
+    const path = this.getPath_(id);
+    const indexes = this.getIndexes_();
     indexes.add(id);
     this.updateIndexes_(indexes);
 
     return new Promise<void>((resolve: () => void, reject: (cause: Error) => void) => {
       try {
-        let json = Serializer.toJSON(instance);
+        const json = Serializer.toJSON(instance);
         this.storage_.setItem(path, JSON.stringify(json));
         resolve();
       } catch (e) {

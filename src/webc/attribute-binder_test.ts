@@ -20,7 +20,8 @@ describe('webc.AttributeBinder', () => {
 
   describe('delete', () => {
     it('should delete the attribute', () => {
-      let mockAttributes = jasmine.createSpyObj('Attributes', ['getNamedItem', 'removeNamedItem']);
+      const mockAttributes =
+          jasmine.createSpyObj('Attributes', ['getNamedItem', 'removeNamedItem']);
       mockAttributes.getNamedItem.and.returnValue({});
       mockElement.attributes = mockAttributes;
 
@@ -31,7 +32,8 @@ describe('webc.AttributeBinder', () => {
     });
 
     it('should do nothing if the attribute does not exist', () => {
-      let mockAttributes = jasmine.createSpyObj('Attributes', ['getNamedItem', 'removeNamedItem']);
+      const mockAttributes =
+          jasmine.createSpyObj('Attributes', ['getNamedItem', 'removeNamedItem']);
       mockAttributes.getNamedItem.and.returnValue(null);
       mockElement.attributes = mockAttributes;
 
@@ -44,8 +46,8 @@ describe('webc.AttributeBinder', () => {
 
   describe('get', () => {
     it('should return the correct attribute', () => {
-      let parsedValue = Mocks.object('parsedValue');
-      let value = 'value';
+      const parsedValue = Mocks.object('parsedValue');
+      const value = 'value';
       mockElement.getAttribute.and.returnValue(value);
 
       mockParser.parse.and.returnValue(parsedValue);
@@ -58,8 +60,8 @@ describe('webc.AttributeBinder', () => {
 
   describe('set', () => {
     it('should set the new attribute value', () => {
-      let value = Mocks.object('value');
-      let stringifiedValue = 'stringifiedValue';
+      const value = Mocks.object('value');
+      const stringifiedValue = 'stringifiedValue';
       mockParser.stringify.and.returnValue(stringifiedValue);
       binder.set(value);
       assert(mockElement.setAttribute).to.haveBeenCalledWith(ATTRIBUTE_NAME, stringifiedValue);
@@ -67,7 +69,7 @@ describe('webc.AttributeBinder', () => {
     });
 
     it('should set the value to empty string if null', () => {
-      let value = Mocks.object('value');
+      const value = Mocks.object('value');
       mockParser.stringify.and.returnValue(null);
       binder.set(value);
       assert(mockElement.setAttribute).to.haveBeenCalledWith(ATTRIBUTE_NAME, '');

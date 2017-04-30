@@ -7,10 +7,10 @@ import { Jsons } from './jsons';
 describe('collection.Jsons', () => {
   describe('deepClone', () => {
     it('should clone the given object', () => {
-      let original = {
+      const original = {
         a: { b: 2 },
       };
-      let clone = Jsons.deepClone(original);
+      const clone = Jsons.deepClone(original);
       assert(clone).to.equal(original);
       assert(clone).toNot.be(original);
     });
@@ -18,28 +18,28 @@ describe('collection.Jsons', () => {
 
   describe('getValue', () => {
     it('should retrieve the value correctly', () => {
-      let json = {a: {b: {c: 123}}};
+      const json = {a: {b: {c: 123}}};
       assert(Jsons.getValue(json, 'a.b')).to.equal({c: 123});
     });
 
     it('should return undefined if the path does not exist', () => {
-      let json = {a: {b: {c: 123}}};
+      const json = {a: {b: {c: 123}}};
       assert(Jsons.getValue(json, 'a.b.d')).to.equal(undefined);
     });
   });
 
   describe('mixin', () => {
     it('should copy the source keys to the destination object', () => {
-      let dest = { a: 1 };
-      let source = { b: 2, c: 3 };
+      const dest = { a: 1 };
+      const source = { b: 2, c: 3 };
       Jsons.mixin(source, dest);
 
       assert(dest).to.equal({ a: 1, b: 2, c: 3 });
     });
 
     it('should recursively mixin the values', () => {
-      let dest = { a: { ab: 1 } };
-      let source = { a: { cd: 2 } };
+      const dest = { a: { ab: 1 } };
+      const source = { a: { cd: 2 } };
       Jsons.mixin(source, dest);
       assert(dest).to.equal({
         a: {
@@ -50,8 +50,8 @@ describe('collection.Jsons', () => {
     });
 
     it('should ignore if keys conflict for non objects', () => {
-      let dest = { a: 2 };
-      let source = { a: 1 };
+      const dest = { a: 2 };
+      const source = { a: 1 };
       Jsons.mixin(source, dest);
       assert(dest.a).to.equal(2);
     });
@@ -59,8 +59,8 @@ describe('collection.Jsons', () => {
 
   describe('setTemporaryValue', () => {
     it('should run the callback with the values set temporarily', () => {
-      let json = {a: 1};
-      let callback = jasmine.createSpy('callback');
+      const json = {a: 1};
+      const callback = jasmine.createSpy('callback');
       Jsons.setTemporaryValue(
           json,
           {a: 'one', b: 'two'},
@@ -75,15 +75,15 @@ describe('collection.Jsons', () => {
 
   describe('setValue', () => {
     it('should set the value at the correct location', () => {
-      let innerObj = { };
-      let obj = { 'a': innerObj };
+      const innerObj = { };
+      const obj = { 'a': innerObj };
       Jsons.setValue(obj, 'a.b.c', 123);
       assert(obj).to.equal({ 'a': innerObj });
       assert(innerObj).to.equal({ 'b': { 'c': 123 } });
     });
 
     it('should handle a single value', () => {
-      let obj = { };
+      const obj = { };
       Jsons.setValue(obj, 'abc', 123);
       assert(obj).to.equal({ 'abc': 123 });
     });

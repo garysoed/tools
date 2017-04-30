@@ -22,7 +22,7 @@ export class Mocks {
    * @return The mock builder object.
    */
   static builder(name: string, methods: string[]): any {
-    let baseObj = Mocks.object(name);
+    const baseObj = Mocks.object(name);
     methods.forEach((method: string) => {
       baseObj[method] = () => {
         return baseObj;
@@ -37,7 +37,7 @@ export class Mocks {
    * @return The mock disposable object.
    */
   static disposable(name: string): any {
-    let mock = new BaseDisposable();
+    const mock = new BaseDisposable();
     mock[__id] = name;
     return mock;
   }
@@ -78,8 +78,8 @@ export class Mocks {
    * @param name Name to identify the mock object.
    * @return The mock listenable object.
    */
-  static listenable(name: string, target: any = undefined): any {
-    let mock = Mocks.disposable(name);
+  static listenable(name: string, target?: any): any {
+    const mock = Mocks.disposable(name);
     mock.on = () => {
       return new DisposableFunction(() => undefined);
     };

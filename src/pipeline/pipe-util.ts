@@ -23,7 +23,7 @@ export const PipeUtil = {
       propertyKey: string | symbol,
       parameterIndex: number,
       argMetaData: ArgMetaData): void {
-    let builder = PipeUtil.initializeNodeBuilder(target, propertyKey);
+    const builder = PipeUtil.initializeNodeBuilder(target, propertyKey);
     builder.argMetaData[parameterIndex] = argMetaData;
   },
 
@@ -50,7 +50,7 @@ export const PipeUtil = {
    * @return The node corresponding to the given property, or null if none exists.
    */
   getNode<T>(context: any, key: string | symbol): (GraphNode<T>|null) {
-    let nodeMap: Map<string | symbol, GraphNode<any>> = context[__NODE_DATA_MAP];
+    const nodeMap: Map<string | symbol, GraphNode<any>> = context[__NODE_DATA_MAP];
 
     return nodeMap ?
         nodeMap.get(key) || null :
@@ -71,7 +71,8 @@ export const PipeUtil = {
       context[__NODE_BUILDER_DATA_MAP] = new Map<string | symbol, GraphNodeBuilder<any>>();
     }
 
-    let builderMap: Map<string | symbol, GraphNodeBuilder<any>> = context[__NODE_BUILDER_DATA_MAP];
+    const builderMap: Map<string | symbol, GraphNodeBuilder<any>> =
+        context[__NODE_BUILDER_DATA_MAP];
 
     if (!builderMap.has(key)) {
       builderMap.set(key, new GraphNodeBuilder<any>());

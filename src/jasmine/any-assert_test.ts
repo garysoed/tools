@@ -19,8 +19,8 @@ describe('jasmine.AnyAssert', () => {
 
   describe('be', () => {
     it('should call the matcher correctly', () => {
-      let other = Mocks.object('other');
-      let mockMatchers = jasmine.createSpyObj('Matcher', ['toBe']);
+      const other = Mocks.object('other');
+      const mockMatchers = jasmine.createSpyObj('Matcher', ['toBe']);
       spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
 
       assert.be(other);
@@ -31,11 +31,11 @@ describe('jasmine.AnyAssert', () => {
 
   describe('beAnInstanceOf', () => {
     it('should call the matcher correctly', () => {
-      let clazz = Mocks.object('clazz');
-      let anyMatcher = Mocks.object('any');
+      const clazz = Mocks.object('clazz');
+      const anyMatcher = Mocks.object('any');
       spyOn(jasmine, 'any').and.returnValue(anyMatcher);
 
-      let mockMatchers = jasmine.createSpyObj('Matcher', ['toEqual']);
+      const mockMatchers = jasmine.createSpyObj('Matcher', ['toEqual']);
       spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
 
       assert.beAnInstanceOf(clazz);
@@ -47,7 +47,7 @@ describe('jasmine.AnyAssert', () => {
 
   describe('beDefined', () => {
     it('should call the matcher correctly', () => {
-      let mockMatchers = jasmine.createSpyObj('Matcher', ['toBeDefined']);
+      const mockMatchers = jasmine.createSpyObj('Matcher', ['toBeDefined']);
       spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
 
       assert.beDefined();
@@ -58,7 +58,7 @@ describe('jasmine.AnyAssert', () => {
 
   describe('beFalsy', () => {
     it('should call the matcher correctly', () => {
-      let mockMatchers = jasmine.createSpyObj('Matcher', ['toBeFalsy']);
+      const mockMatchers = jasmine.createSpyObj('Matcher', ['toBeFalsy']);
       spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
 
       assert.beFalsy();
@@ -69,7 +69,7 @@ describe('jasmine.AnyAssert', () => {
 
   describe('beNull', () => {
     it('should call the matcher correctly', () => {
-      let mockMatchers = jasmine.createSpyObj('Matcher', ['toBeNull']);
+      const mockMatchers = jasmine.createSpyObj('Matcher', ['toBeNull']);
       spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
 
       assert.beNull();
@@ -80,7 +80,7 @@ describe('jasmine.AnyAssert', () => {
 
   describe('beTruthy', () => {
     it('should call the matcher correctly', () => {
-      let mockMatchers = jasmine.createSpyObj('Matcher', ['toBeTruthy']);
+      const mockMatchers = jasmine.createSpyObj('Matcher', ['toBeTruthy']);
       spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
 
       assert.beTruthy();
@@ -91,8 +91,8 @@ describe('jasmine.AnyAssert', () => {
 
   describe('equal', () => {
     it('should call the matcher correctly', () => {
-      let other = Mocks.object('other');
-      let mockMatchers = jasmine.createSpyObj('Matcher', ['toEqual']);
+      const other = Mocks.object('other');
+      const mockMatchers = jasmine.createSpyObj('Matcher', ['toEqual']);
       spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
 
       assert.equal(other);

@@ -20,7 +20,7 @@ export class EnumParserImpl<E> implements Parser<E> {
       return null;
     }
 
-    let result = Enums.fromLowerCaseString<E>(input, this.enumSet_);
+    const result = Enums.fromLowerCaseString<E>(input, this.enumSet_);
     return result === undefined ? null : result;
   }
 

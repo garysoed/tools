@@ -27,12 +27,12 @@ describe('Reflect', () => {
     }
 
     it('should construct a new instance of the constructor', () => {
-      let a = 123;
-      let b = 'b';
+      const a = 123;
+      const b = 'b';
 
       TestClass.prototype[Reflect.__initialize] = jasmine.createSpy('initialize');
 
-      let instance: TestClass = Reflect.construct(TestClass, [a, b]);
+      const instance: TestClass = Reflect.construct(TestClass, [a, b]);
       assert(instance).to.equal(Matchers.any(TestClass));
       assert(instance.a).to.equal(a);
       assert(instance.b).to.equal(b);
@@ -48,8 +48,8 @@ describe('Reflect', () => {
     }
 
     it('should override the getter property', () => {
-      let newValue = 123;
-      let object = new TestClass();
+      const newValue = 123;
+      const object = new TestClass();
       Reflect.overrideGetter(object, 'a', newValue);
       assert(object.a).to.equal(newValue);
     });

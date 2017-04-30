@@ -8,7 +8,7 @@ import { Sets } from './sets';
 describe('collection.Sets', () => {
   describe('fromArray', () => {
     it('should return the correct FluentNonIndexable', () => {
-      let data = [1, 1, 2, 2, 3];
+      const data = [1, 1, 2, 2, 3];
       spyOn(NonIndexables, 'fromIterable').and.callThrough();
 
       assert(Sets.fromArray(data).asArray()).to.equal([1, 2, 3]);
@@ -18,7 +18,7 @@ describe('collection.Sets', () => {
 
   describe('of', () => {
     it('should return the correct FluentNonIndexable', () => {
-      let data = new Set([1, 2, 3]);
+      const data = new Set([1, 2, 3]);
       spyOn(NonIndexables, 'fromIterable').and.callThrough();
 
       assert(Sets.of(data).asArray()).to.equal([1, 2, 3]);

@@ -20,7 +20,7 @@ export class CachedStorage<T> extends BaseDisposable implements Storage<T> {
    * @override
    */
   delete(id: string): Promise<void> {
-    let item = this.cache_.get(id);
+    const item = this.cache_.get(id);
     if (item !== undefined && item instanceof BaseDisposable) {
       item.dispose();
     }
@@ -60,14 +60,14 @@ export class CachedStorage<T> extends BaseDisposable implements Storage<T> {
    * @override
    */
   async list(): Promise<T[]> {
-    let ids = await this.listIds();
-    let promises = Sets
+    const ids = await this.listIds();
+    const promises = Sets
         .of(ids)
         .map((id: string) => {
           return this.read(id);
         })
         .asArray();
-    let items = await Promise.all(promises);
+    const items = await Promise.all(promises);
     return Arrays
         .of(items)
         .filter((item: T | null) => {
@@ -92,7 +92,7 @@ export class CachedStorage<T> extends BaseDisposable implements Storage<T> {
       return this.cache_.get(id) || null;
     }
 
-    let item = await this.innerStorage_.read(id);
+    const item = await this.innerStorage_.read(id);
     if (item !== null) {
       this.cache_.set(id, item);
     }

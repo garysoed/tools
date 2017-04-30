@@ -11,7 +11,7 @@ import { Fakes } from '../mock/fakes';
 describe('collection.NonIndexables', () => {
   describe('addAll', () => {
     it('should add all the given elements', () => {
-      let resultArray: number[] = [];
+      const resultArray: number[] = [];
       NonIndexables.of([1, 2, 3])
           .addAll(ArrayIterable.newInstance([4, 5, 6]))
           .iterate((value: number) => {
@@ -21,7 +21,7 @@ describe('collection.NonIndexables', () => {
     });
 
     it('should work with infinite iterable', () => {
-      let infiniteIterable = GeneratorIterable.newInstance(() => {
+      const infiniteIterable = GeneratorIterable.newInstance(() => {
         return {done: false, value: 0};
       });
       NonIndexables.of<number>([]).addAll(infiniteIterable);
@@ -30,7 +30,7 @@ describe('collection.NonIndexables', () => {
 
   describe('addAllArray', () => {
     it('should add all the given elements', () => {
-      let resultArray = NonIndexables.of([1, 2, 3])
+      const resultArray = NonIndexables.of([1, 2, 3])
           .addAllArray([4, 5, 6])
           .asArray();
       assert(resultArray).to.equal([1, 2, 3, 4, 5, 6]);
@@ -39,8 +39,8 @@ describe('collection.NonIndexables', () => {
 
   describe('anyValue', () => {
     it('should return a value in the collection', () => {
-      let collection = [1, 2, 3];
-      let value = NonIndexables.of(collection).anyValue();
+      const collection = [1, 2, 3];
+      const value = NonIndexables.of(collection).anyValue();
 
       assert(collection).to.contain(value!);
     });
@@ -52,8 +52,8 @@ describe('collection.NonIndexables', () => {
 
   describe('asIterable', () => {
     it('should return iterable that iterates the content', () => {
-      let iterable = NonIndexables.of([1, 2, 3]).asIterable();
-      let array: number[] = [];
+      const iterable = NonIndexables.of([1, 2, 3]).asIterable();
+      const array: number[] = [];
       Iterables.of(iterable)
           .iterate((value: number) => {
             array.push(value);
@@ -64,8 +64,8 @@ describe('collection.NonIndexables', () => {
 
   describe('asIterator', () => {
     it('should return iterator instance that iterates the iterable', () => {
-      let iterator = NonIndexables.of([1, 2, 3]).asIterator();
-      let array: number[] = [];
+      const iterator = NonIndexables.of([1, 2, 3]).asIterator();
+      const array: number[] = [];
       for (let result = iterator.next(); !result.done; result = iterator.next()) {
         array.push(result.value);
       }
@@ -75,7 +75,7 @@ describe('collection.NonIndexables', () => {
 
   describe('asSet', () => {
     it('should return set with all the elements', () => {
-      let set = NonIndexables.of([1, 2, 3]).asSet();
+      const set = NonIndexables.of([1, 2, 3]).asSet();
 
       assert(set.size).to.equal(3);
       assert(set.has(1)).to.beTrue();
@@ -86,7 +86,9 @@ describe('collection.NonIndexables', () => {
 
   describe('diff', () => {
     it('should return the correct diff sets', () => {
-      let {added, removed, same} = NonIndexables.of([1, 2, 3, 4, 5, 6]).diff(new Set([1, 3, 5, 7]));
+      const {added, removed, same} = NonIndexables
+          .of([1, 2, 3, 4, 5, 6])
+          .diff(new Set([1, 3, 5, 7]));
       assert(added).to.haveElements([7]);
       assert(removed).to.haveElements([2, 4, 6]);
       assert(same).to.haveElements([1, 3, 5]);
@@ -95,7 +97,7 @@ describe('collection.NonIndexables', () => {
 
   describe('filter', () => {
     it('should filter the non indexable using the given filter function', () => {
-      let result = NonIndexables.of([1, 2, 3])
+      const result = NonIndexables.of([1, 2, 3])
           .filter((value: number) => {
             return value % 2 === 0;
           })
@@ -106,7 +108,7 @@ describe('collection.NonIndexables', () => {
 
   describe('find', () => {
     it('should return the element if found', () => {
-      let result = NonIndexables.of([1, 2, 3, 4])
+      const result = NonIndexables.of([1, 2, 3, 4])
           .find((value: number) => {
             return value % 2 === 0;
           });
@@ -114,7 +116,7 @@ describe('collection.NonIndexables', () => {
     });
 
     it('should return null if the element is not found', () => {
-      let result = NonIndexables.of([1, 2, 3, 4])
+      const result = NonIndexables.of([1, 2, 3, 4])
           .find((value: number) => {
             return false;
           });
@@ -124,7 +126,7 @@ describe('collection.NonIndexables', () => {
 
   describe('forEach', () => {
     it('should go through all the elements', () => {
-      let mockHandler = jasmine.createSpy('Handler');
+      const mockHandler = jasmine.createSpy('Handler');
       NonIndexables.of([1, 2, 3, 4]).forEach(mockHandler);
 
       assert(mockHandler).to.haveBeenCalledWith(1);
@@ -136,7 +138,7 @@ describe('collection.NonIndexables', () => {
 
   describe('forOf', () => {
     it('should go through all the elements', () => {
-      let mockHandler = jasmine.createSpy('Handler');
+      const mockHandler = jasmine.createSpy('Handler');
       NonIndexables.of([1, 2, 3, 4]).forOf(mockHandler);
 
       assert(mockHandler).to.haveBeenCalledWith(1, Matchers.any(Function));
@@ -146,7 +148,7 @@ describe('collection.NonIndexables', () => {
     });
 
     it('should stop the iteration when the break function is called', () => {
-      let mockHandler = Fakes.build(jasmine.createSpy('Handler'))
+      const mockHandler = Fakes.build(jasmine.createSpy('Handler'))
           .call((value: number, breakFn: () => void) => {
             if (value === 2) {
               breakFn();
@@ -163,7 +165,7 @@ describe('collection.NonIndexables', () => {
 
   describe('iterate', () => {
     it('should iterate through all the elements', () => {
-      let mockHandler = jasmine.createSpy('Handler');
+      const mockHandler = jasmine.createSpy('Handler');
       NonIndexables.of([1, 2, 3, 4]).iterate(mockHandler);
 
       assert(mockHandler).to.haveBeenCalledWith(1, Matchers.any(Function));
@@ -173,7 +175,7 @@ describe('collection.NonIndexables', () => {
     });
 
     it('should stop the iteration when the break function is called', () => {
-      let mockHandler = Fakes.build(jasmine.createSpy('Handler'))
+      const mockHandler = Fakes.build(jasmine.createSpy('Handler'))
           .call((value: number, breakFn: () => void) => {
             if (value === 2) {
               breakFn();
@@ -190,7 +192,7 @@ describe('collection.NonIndexables', () => {
 
   describe('map', () => {
     it('should apply the mapping function to the iterable', () => {
-      let result = NonIndexables.of([1, 2, 3, 4])
+      const result = NonIndexables.of([1, 2, 3, 4])
           .map((value: number) => {
             return value + 1;
           })
@@ -201,7 +203,7 @@ describe('collection.NonIndexables', () => {
 
   describe('removeAll', () => {
     it('should remove all elements in the given set', () => {
-      let result = NonIndexables.of([1, 2, 3, 4])
+      const result = NonIndexables.of([1, 2, 3, 4])
           .removeAll(new Set([2, 3]))
           .asArray();
       assert(result).to.equal([1, 4]);

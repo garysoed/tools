@@ -11,12 +11,12 @@ import { __NODE_BUILDER_DATA_MAP, __NODE_DATA_MAP, PipeUtil } from './pipe-util'
 describe('pipeline.PipeUtil', () => {
   describe('addArgument', () => {
     it('should add the metadata correctly', () => {
-      let target = Mocks.object('target');
-      let propertyKey = 'propertyKey';
-      let parameterIndex = 2;
-      let argMetaData = Mocks.object('argMetaData');
+      const target = Mocks.object('target');
+      const propertyKey = 'propertyKey';
+      const parameterIndex = 2;
+      const argMetaData = Mocks.object('argMetaData');
 
-      let nodeBuilder = Mocks.object('nodeBuilder');
+      const nodeBuilder = Mocks.object('nodeBuilder');
       nodeBuilder.argMetaData = [];
 
       spyOn(PipeUtil, 'initializeNodeBuilder').and.returnValue(nodeBuilder);
@@ -30,13 +30,13 @@ describe('pipeline.PipeUtil', () => {
 
   describe('createSetter', () => {
     it('should create the setter correctly', () => {
-      let mockSetter = jasmine.createSpy('Setter');
+      const mockSetter = jasmine.createSpy('Setter');
 
-      let mockGraphNode = jasmine.createSpyObj('GraphNode', ['clearCache']);
-      let value = 'value';
-      let context = Mocks.object('context');
+      const mockGraphNode = jasmine.createSpyObj('GraphNode', ['clearCache']);
+      const value = 'value';
+      const context = Mocks.object('context');
 
-      let newSetter = PipeUtil.createSetter(mockSetter, mockGraphNode);
+      const newSetter = PipeUtil.createSetter(mockSetter, mockGraphNode);
       newSetter.call(context, value);
 
       assert(mockGraphNode.clearCache).to.haveBeenCalledWith(context, []);
@@ -46,12 +46,12 @@ describe('pipeline.PipeUtil', () => {
 
   describe('getNode', () => {
     it('should return the correct node', () => {
-      let map = new Map<any, any>();
-      let context = Mocks.object('context');
+      const map = new Map<any, any>();
+      const context = Mocks.object('context');
       context[__NODE_DATA_MAP] = map;
 
-      let key = 'key';
-      let graphNode = Mocks.object('graphNode');
+      const key = 'key';
+      const graphNode = Mocks.object('graphNode');
       map.set(key, graphNode);
 
       assert(PipeUtil.getNode<any>(context, key)).to.equal(graphNode);
@@ -62,8 +62,8 @@ describe('pipeline.PipeUtil', () => {
     });
 
     it('should return null if the map does not have the key', () => {
-      let map = new Map<any, any>();
-      let context = Mocks.object('context');
+      const map = new Map<any, any>();
+      const context = Mocks.object('context');
       context[__NODE_DATA_MAP] = map;
 
       assert(PipeUtil.getNode<any>(context, 'key')).to.equal(null);
@@ -72,10 +72,10 @@ describe('pipeline.PipeUtil', () => {
 
   describe('initializeNodeBuilder', () => {
     it('should create a data map and populate it correctly', () => {
-      let context = Mocks.object('context');
-      let key = 'key';
+      const context = Mocks.object('context');
+      const key = 'key';
 
-      let builder = PipeUtil.initializeNodeBuilder(context, key);
+      const builder = PipeUtil.initializeNodeBuilder(context, key);
       assert(builder).to.equal(Matchers.any(GraphNodeBuilder));
       assert(Maps.of(context[__NODE_BUILDER_DATA_MAP]).asRecord()).to.equal({
         [key]: builder,
@@ -83,13 +83,13 @@ describe('pipeline.PipeUtil', () => {
     });
 
     it('should reuse existing data map if exist', () => {
-      let map = new Map<any, any>();
-      let context = Mocks.object('context');
+      const map = new Map<any, any>();
+      const context = Mocks.object('context');
       context[__NODE_BUILDER_DATA_MAP] = map;
 
-      let key = 'key';
+      const key = 'key';
 
-      let builder = PipeUtil.initializeNodeBuilder(context, key);
+      const builder = PipeUtil.initializeNodeBuilder(context, key);
       assert(builder).to.equal(Matchers.any(GraphNodeBuilder));
       assert(Maps.of(context[__NODE_BUILDER_DATA_MAP]).asRecord()).to.equal({
         [key]: builder,
@@ -98,12 +98,12 @@ describe('pipeline.PipeUtil', () => {
     });
 
     it('should return the existing node builder', () => {
-      let key = 'key';
-      let builder = Mocks.object('builder');
-      let map = new Map<any, any>();
+      const key = 'key';
+      const builder = Mocks.object('builder');
+      const map = new Map<any, any>();
       map.set(key, builder);
 
-      let context = Mocks.object('context');
+      const context = Mocks.object('context');
       context[__NODE_BUILDER_DATA_MAP] = map;
 
       assert(PipeUtil.initializeNodeBuilder(context, key)).to.equal(builder);

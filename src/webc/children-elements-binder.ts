@@ -94,8 +94,8 @@ export class ChildrenElementsBinder<T> implements DomBinder<T[]> {
    * @override
    */
   set(value: T[] | null): void {
-    let valueArray = value || [];
-    let dataChildren = this.getChildElements_();
+    const valueArray = value || [];
+    const dataChildren = this.getChildElements_();
 
     // Make sure that there are equal number of children.
     for (let i = 0; i < valueArray.length - dataChildren.length; i++) {

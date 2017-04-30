@@ -52,10 +52,10 @@ export class Checks {
    * @return `True` iff the value is an instance of the given constructor.
    */
   static isInstanceOf<T>(value: any, checkedType: gs.ICtor<T>): value is T {
-    if (checkedType === (<any> String) && typeof value === 'string') {
+    if (checkedType === (String as any) && typeof value === 'string') {
       return true;
     }
-    if (checkedType === (<any> Boolean) && typeof value === 'boolean') {
+    if (checkedType === (Boolean as any) && typeof value === 'boolean') {
       return true;
     }
     return value instanceof checkedType;
@@ -77,7 +77,7 @@ export class Checks {
       return false;
     }
 
-    for (let key in value) {
+    for (const key in value) {
       if (!Checks.isInstanceOf(value[key], checkedType)) {
         return false;
       }

@@ -13,8 +13,8 @@ export class ChainIterable<T> implements Iterable<T> {
   }
 
   [Symbol.iterator](): Iterator<T> {
-    let firstIterator = this.first_[Symbol.iterator]();
-    let secondIterator = this.second_[Symbol.iterator]();
+    const firstIterator = this.first_[Symbol.iterator]();
+    const secondIterator = this.second_[Symbol.iterator]();
     let firstIteratorDone = false;
     return {
       next(): IteratorResult<T> {

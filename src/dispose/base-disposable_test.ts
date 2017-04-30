@@ -20,9 +20,9 @@ class DisposableClass extends BaseDisposable {
 describe('dispose.BaseDisposable', () => {
   describe('dispose', () => {
     it('should call dispose internal and dispose added disposables', () => {
-      let mockDisposable = jasmine.createSpyObj('Disposable', ['dispose']);
-      let callback = jasmine.createSpy('callback');
-      let disposable = new DisposableClass(callback);
+      const mockDisposable = jasmine.createSpyObj('Disposable', ['dispose']);
+      const callback = jasmine.createSpy('callback');
+      const disposable = new DisposableClass(callback);
 
       disposable.addDisposable(mockDisposable);
       disposable.dispose();
@@ -34,8 +34,8 @@ describe('dispose.BaseDisposable', () => {
   });
 
   it('should be noop if already disposed', () => {
-    let callback = jasmine.createSpy('callback');
-    let disposable = new DisposableClass(callback);
+    const callback = jasmine.createSpy('callback');
+    const disposable = new DisposableClass(callback);
 
     disposable.dispose();
     callback.calls.reset();

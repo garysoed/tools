@@ -14,7 +14,7 @@ class KeyboardEventPolyfill {
    */
   @cache()
   static polyfill(): void {
-    let KeyboardEvent = window['KeyboardEvent'];
+    const KeyboardEvent = window['KeyboardEvent'];
     if (!KeyboardEvent) {
       throw new Error('KeyboardEvent not defined');
     }

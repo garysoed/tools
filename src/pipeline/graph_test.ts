@@ -11,9 +11,9 @@ import { PipeUtil } from './pipe-util';
 describe('pipeline.Graph', () => {
   describe('resolveArgument_', () => {
     it('should correctly resolve external argument', () => {
-      let key = 'key';
-      let value = 'value';
-      let argMetaData = jasmine.createSpyObj('argMetaData', ['isExternal', 'getKey']);
+      const key = 'key';
+      const value = 'value';
+      const argMetaData = jasmine.createSpyObj('argMetaData', ['isExternal', 'getKey']);
       argMetaData.isExternal.and.returnValue(true);
       argMetaData.getKey.and.returnValue(key);
 
@@ -22,12 +22,12 @@ describe('pipeline.Graph', () => {
     });
 
     it('should correctly resolve internal argument', () => {
-      let forwardedKey = 'forwardedKey';
-      let key = 'key';
-      let externalKey = 'externalKey';
-      let externalValue = 'externalValue';
-      let value = 'value';
-      let argMetaData = jasmine.createSpyObj(
+      const forwardedKey = 'forwardedKey';
+      const key = 'key';
+      const externalKey = 'externalKey';
+      const externalValue = 'externalValue';
+      const value = 'value';
+      const argMetaData = jasmine.createSpyObj(
           'argMetaData',
           ['isExternal', 'getForwardedArguments', 'getKey']);
       argMetaData.isExternal.and.returnValue(false);
@@ -35,7 +35,7 @@ describe('pipeline.Graph', () => {
         [forwardedKey]: externalKey,
       });
       argMetaData.getKey.and.returnValue(key);
-      let context = Mocks.object('context');
+      const context = Mocks.object('context');
 
       spyOn(Graph, 'run').and.returnValue(value);
 
@@ -45,7 +45,7 @@ describe('pipeline.Graph', () => {
     });
 
     it('should throw error if the external argument cannot be resolved', () => {
-      let argMetaData = jasmine.createSpyObj('argMetaData', ['isExternal', 'getKey']);
+      const argMetaData = jasmine.createSpyObj('argMetaData', ['isExternal', 'getKey']);
       argMetaData.isExternal.and.returnValue(true);
       argMetaData.getKey.and.returnValue('key');
 
@@ -55,14 +55,14 @@ describe('pipeline.Graph', () => {
     });
 
     it('should throw error if a forwarded argument cannot be resolved', () => {
-      let argMetaData = jasmine.createSpyObj(
+      const argMetaData = jasmine.createSpyObj(
           'argMetaData', ['isExternal', 'getForwardedArguments', 'getKey']);
       argMetaData.isExternal.and.returnValue(false);
       argMetaData.getForwardedArguments.and.returnValue({
         'forwardedKey': 'externalKey',
       });
       argMetaData.getKey.and.returnValue('key');
-      let context = Mocks.object('context');
+      const context = Mocks.object('context');
 
       assert(() => {
         Graph['resolveArgument_'](argMetaData, context, {});
@@ -72,29 +72,29 @@ describe('pipeline.Graph', () => {
 
   describe('run', () => {
     it('should run the node correctly', () => {
-      let key = 'key';
-      let externalArgs = Mocks.object('externalArgs');
-      let prototype = Mocks.object('prototype');
-      let context = {'constructor': {'prototype': prototype}};
+      const key = 'key';
+      const externalArgs = Mocks.object('externalArgs');
+      const prototype = Mocks.object('prototype');
+      const context = {'constructor': {'prototype': prototype}};
 
-      let argData = Mocks.object('argData');
-      let runResult = Mocks.object('runResult');
-      let mockGraphNode = jasmine.createSpyObj('GraphNode', ['getArgs', 'run']);
+      const argData = Mocks.object('argData');
+      const runResult = Mocks.object('runResult');
+      const mockGraphNode = jasmine.createSpyObj('GraphNode', ['getArgs', 'run']);
       mockGraphNode.getArgs.and.returnValue([argData]);
       mockGraphNode.run.and.returnValue(runResult);
       spyOn(PipeUtil, 'getNode').and.returnValue(mockGraphNode);
 
-      let resolvedArg = Mocks.object('resolvedArg');
+      const resolvedArg = Mocks.object('resolvedArg');
       spyOn(Graph, 'resolveArgument_').and.returnValue(resolvedArg);
 
       assert(Graph.run(context, key, externalArgs)).to.equal(runResult);
-      assert((<GraphNode<any>> mockGraphNode).run).to.haveBeenCalledWith(context, [resolvedArg]);
+      assert((mockGraphNode as GraphNode<any>).run).to.haveBeenCalledWith(context, [resolvedArg]);
       assert(Graph['resolveArgument_']).to.haveBeenCalledWith(argData, context, externalArgs);
       assert(PipeUtil.getNode).to.haveBeenCalledWith(prototype, key);
     });
 
     it('should throw error if the node cannot be found', () => {
-      let context = {'constructor': {'prototype': Mocks.object('prototype')}};
+      const context = {'constructor': {'prototype': Mocks.object('prototype')}};
       spyOn(PipeUtil, 'getNode').and.returnValue(null);
 
       assert(() => {

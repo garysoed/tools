@@ -25,7 +25,7 @@ export class Jsons {
    * @return The value at the given location, or undefined if none exists.
    */
   static getValue(json: gs.IJson, path: string): any {
-    let parts = path.split('.');
+    const parts = path.split('.');
     let object = json;
     for (let i = 0; i < parts.length && !!object; i++) {
       object = object[parts[i]];
@@ -46,7 +46,7 @@ export class Jsons {
       json: gs.IJson,
       substitutions: {[path: string]: any},
       callback: () => void): void {
-    let oldValues = Maps.fromRecord(substitutions)
+    const oldValues = Maps.fromRecord(substitutions)
         .mapValue((value: any, path: string) => {
           return Jsons.getValue(json, path);
         })
@@ -89,8 +89,8 @@ export class Jsons {
     }
 
     let object = json;
-    let parts = path.split('.');
-    let propertyName: string = parts.pop()!;
+    const parts = path.split('.');
+    const propertyName: string = parts.pop()!;
 
     parts.forEach((part: string) => {
       if (object[part] === undefined) {
@@ -114,16 +114,16 @@ export class Jsons {
    * @param {gs.IJson} toObj [description]
    */
   static mixin<A extends gs.IJson, B extends gs.IJson>(fromObj: A, toObj: B): A & B {
-    for (let key in fromObj) {
-      let value = fromObj[key];
+    for (const key in fromObj) {
+      const value = fromObj[key];
       if (toObj[key] !== undefined) {
         if (typeof toObj[key] === 'object') {
-          this.mixin(<any> value, <any> toObj[key]);
+          this.mixin(value as any, toObj[key] as any);
         }
       } else {
-        toObj[key] = <any> this.deepClone(<any> value);
+        toObj[key] = this.deepClone(value as any) as any;
       }
     }
-    return <A & B> toObj;
+    return toObj as A & B;
   }
 }

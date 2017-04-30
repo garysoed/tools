@@ -1,10 +1,10 @@
 export class Matchers {
   static any<T>(ctor: (new (...args: any[]) => T)): T {
-    return <T> <any> jasmine.any(ctor);
+    return jasmine.any(ctor) as any as T;
   }
 
   static anyInstanceOf<T>(obj: T): T {
-    return <T> <any> jasmine.any(obj.constructor);
+    return jasmine.any(obj.constructor) as any as T;
   }
 
   static anyThing(): any {
@@ -12,7 +12,7 @@ export class Matchers {
   }
 
   static arrayContaining<T>(obj: T[]): T[] {
-    return <T[]> <any> jasmine.arrayContaining(obj);
+    return jasmine.arrayContaining(obj) as any as T[];
   }
 
   static objectContaining(obj: any): any {
@@ -20,7 +20,7 @@ export class Matchers {
   }
 
   static stringMatching(regexp: RegExp): string {
-    return <string> <any> jasmine.stringMatching(regexp);
+    return jasmine.stringMatching(regexp) as any as string;
   }
 }
 

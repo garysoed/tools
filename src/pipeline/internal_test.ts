@@ -10,13 +10,13 @@ import { PipeUtil } from './pipe-util';
 
 describe('pipeline.Internal', () => {
   it('should return a decorator that adds the argument metadata correctly', () => {
-    let key = 'key';
-    let forwardedArguments = Mocks.object('forwardedArguments');
-    let target = Mocks.object('target');
-    let propertyKey = 'propertyKey';
-    let parameterIndex = 123;
+    const key = 'key';
+    const forwardedArguments = Mocks.object('forwardedArguments');
+    const target = Mocks.object('target');
+    const propertyKey = 'propertyKey';
+    const parameterIndex = 123;
 
-    let argMetaData = Mocks.object('argMetaData');
+    const argMetaData = Mocks.object('argMetaData');
     spyOn(ArgMetaData, 'newInstance').and.returnValue(argMetaData);
 
     spyOn(PipeUtil, 'addArgument');

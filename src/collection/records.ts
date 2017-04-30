@@ -35,8 +35,8 @@ export class Records {
    * @return Record wrapper object to do operations on.
    */
   static of(data: Record): FluentMappable<string, any> {
-    let map = new Map<string, any>();
-    for (let key in data) {
+    const map = new Map<string, any>();
+    for (const key in data) {
       map.set(key, data[key]);
     }
     return Mappables.of(map);
@@ -51,7 +51,7 @@ export class Records {
    * @return Record wrapper object to do operations on.
    */
   static fromKeys(keys: string[], fn: (key: string) => any): FluentMappable<string, any> {
-    let map = new Map<string, any>();
+    const map = new Map<string, any>();
     keys.forEach((key: string) => {
       map.set(key, fn(key));
     });

@@ -56,7 +56,7 @@ export class ListenableDom<T extends EventTarget> extends BaseListenable<string>
       handler: (event: Event) => void,
       context: Object,
       useCapture: boolean = false): DisposableFunction {
-    let boundHandler = handler.bind(context);
+    const boundHandler = handler.bind(context);
     this.eventTarget_.addEventListener(eventType, boundHandler, useCapture);
     return new DisposableFunction(() => {
       this.eventTarget_.removeEventListener(eventType, boundHandler, useCapture);

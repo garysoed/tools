@@ -25,7 +25,7 @@ export class FluentNonIndexable<T> extends BaseFluent<T[]> implements IFluentNon
    * @override
    */
   anyValue(): T | null {
-    let data = this.getData();
+    const data = this.getData();
     if (data.length > 0) {
       return data[0];
     } else {
@@ -53,9 +53,9 @@ export class FluentNonIndexable<T> extends BaseFluent<T[]> implements IFluentNon
    * @override
    */
   diff(other: Set<T>): {added: Set<T>, removed: Set<T>, same: Set<T>} {
-    let addedSet = new Set();
-    let removedSet = new Set();
-    let sameSet = new Set();
+    const addedSet = new Set();
+    const removedSet = new Set();
+    const sameSet = new Set();
 
     this.forEach((value: T) => {
       if (other.has(value)) {
@@ -65,7 +65,7 @@ export class FluentNonIndexable<T> extends BaseFluent<T[]> implements IFluentNon
       }
     });
 
-    let thisSet = new Set(this.getData());
+    const thisSet = new Set(this.getData());
     NonIndexables
         .fromIterable(other)
         .forEach((value: T) => {
@@ -81,7 +81,7 @@ export class FluentNonIndexable<T> extends BaseFluent<T[]> implements IFluentNon
   }
 
   filter(filterFn: (value: T) => boolean): FluentNonIndexable<T> {
-    let filteredData: T[] = [];
+    const filteredData: T[] = [];
     this.forEach((value: T) => {
       if (filterFn(value)) {
         filteredData.push(value);
@@ -118,7 +118,7 @@ export class FluentNonIndexable<T> extends BaseFluent<T[]> implements IFluentNon
   }
 
   map<T2>(fn: (value: T) => T2): FluentNonIndexable<T2> {
-    let newArray: T2[] = [];
+    const newArray: T2[] = [];
     this.forEach((value: T) => {
       newArray.push(fn(value));
     });
@@ -126,7 +126,7 @@ export class FluentNonIndexable<T> extends BaseFluent<T[]> implements IFluentNon
   }
 
   removeAll(toRemove: Set<T>): FluentNonIndexable<T> {
-    let newData: T[] = [];
+    const newData: T[] = [];
     this.forEach((value: T) => {
       if (!toRemove.has(value)) {
         newData.push(value);
@@ -142,7 +142,7 @@ export class NonIndexables {
   }
 
   static fromIterable<T>(iterable: Iterable<T>): FluentNonIndexable<T> {
-    let data: T[] = [];
+    const data: T[] = [];
     Iterables.of(iterable)
         .iterate((value: T) => {
           data.push(value);

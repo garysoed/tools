@@ -13,8 +13,8 @@ export class FilteredIterable<T> implements Iterable<T> {
   }
 
   [Symbol.iterator](): Iterator<T> {
-    let iterator = this.iterable_[Symbol.iterator]();
-    let filter = this.filter_;
+    const iterator = this.iterable_[Symbol.iterator]();
+    const filter = this.filter_;
     return {
       next(): IteratorResult<T> {
         let result = iterator.next();

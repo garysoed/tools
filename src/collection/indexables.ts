@@ -44,7 +44,7 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
   }
 
   castElements<T2 extends T>(): FluentIndexable<T2> {
-    return <FluentIndexable<T2>> <any> this;
+    return this as any as FluentIndexable<T2>;
   }
 
   equalsTo(other: T[]): boolean {
@@ -158,7 +158,7 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
 
     return this
         .mapElement((value: T, index: number) => {
-          return <[T, T2]> [value, other[index]];
+          return [value, other[index]] as [T, T2];
         });
   }
 }

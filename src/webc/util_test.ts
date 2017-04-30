@@ -9,12 +9,12 @@ import { Util } from './util';
 describe('webc.Util', () => {
   describe('resolveSelector', () => {
     it('should return the correct element if selector is specified', () => {
-      let targetEl = Mocks.object('targetEl');
-      let mockShadowRoot = jasmine.createSpyObj('ShadowRoot', ['querySelector']);
+      const targetEl = Mocks.object('targetEl');
+      const mockShadowRoot = jasmine.createSpyObj('ShadowRoot', ['querySelector']);
       mockShadowRoot.querySelector.and.returnValue(targetEl);
 
-      let selector = 'selector';
-      let element = Mocks.object('element');
+      const selector = 'selector';
+      const element = Mocks.object('element');
       element.shadowRoot = mockShadowRoot;
 
       assert(Util.resolveSelector(selector, element)).to.equal(targetEl);
@@ -22,7 +22,7 @@ describe('webc.Util', () => {
     });
 
     it('should create the root element when the selector is null', () => {
-      let element = Mocks.object('element');
+      const element = Mocks.object('element');
 
       assert(Util.resolveSelector(null, element)).to.equal(element);
     });

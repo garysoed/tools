@@ -11,7 +11,7 @@ export class Sequencer extends BaseDisposable {
    * Runs the given operation after the previous one has finished running.
    */
   run<T>(operation: () => Promise<T>): Promise<T> {
-    let newPromise = this.lastOperation_
+    const newPromise = this.lastOperation_
         .then<never>(() => {
           if (!this.isDisposed()) {
             return operation();

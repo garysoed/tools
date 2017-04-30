@@ -18,11 +18,11 @@ export function atomic(): MethodDecorator {
       throw new Error(`${target} should be an instance of BaseDisposable`);
     }
 
-    let originalFn = descriptor.value;
+    const originalFn = descriptor.value;
     if (originalFn !== undefined) {
       descriptor.value = function(...args: any[]): any {
         if (!this[__SEQUENCER]) {
-          let sequencer = Sequencer.newInstance();
+          const sequencer = Sequencer.newInstance();
           this[__SEQUENCER] = sequencer;
           this.addDisposable(sequencer);
         }

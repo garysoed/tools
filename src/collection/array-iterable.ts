@@ -8,8 +8,8 @@ export class ArrayIterator<T> implements Iterator<T> {
   }
 
   next(): IteratorResult<T> {
-    let value = this.array_[this.index_];
-    let done = this.array_.length <= this.index_;
+    const value = this.array_[this.index_];
+    const done = this.array_.length <= this.index_;
     this.index_++;
     return {
       done: done,

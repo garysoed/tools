@@ -100,7 +100,7 @@ interface IElement {
  *
  * @param config The configuration object.
  */
-export const Element: IElement = <any> function(config: IElementConfig): ClassDecorator {
+export const Element: IElement = function(config: IElementConfig): ClassDecorator {
   return function<C extends gs.ICtor<any>>(ctor: C): void {
     if (!(ctor.prototype instanceof BaseElement)) {
       throw new Error(`${ctor.name} should extend BaseElement`);
@@ -115,7 +115,7 @@ export const Element: IElement = <any> function(config: IElementConfig): ClassDe
     }
     ctor[__CONFIG] = config;
   };
-};
+} as any;
 
 Element.getConfig = function(ctor: gs.ICtor<BaseElement>): IElementConfig {
   return ctor[__CONFIG];

@@ -76,7 +76,7 @@ export class Serializer {
    * Retrieves the fields for the given constructor.
    */
   private static getFields_(ctor: any): Map<string, string> {
-    let fluentFields = Maps.of(new Map<string, string>());
+    const fluentFields = Maps.of(new Map<string, string>());
     if (!!ctor.prototype[__PARENT]) {
       fluentFields.addAllMap(Serializer.getFields_(ctor.prototype[__PARENT]));
     }
@@ -96,12 +96,12 @@ export class Serializer {
       return json;
     }
 
-    let ctor = CTORS.get(json[TYPE_FIELD]);
+    const ctor = CTORS.get(json[TYPE_FIELD]);
     if (!!ctor) {
-      let defaultInstance = new ctor();
+      const defaultInstance = new ctor();
 
       Serializer.getFields_(ctor).forEach((jsonKey: string, key: string) => {
-        let jsonValue = json[jsonKey];
+        const jsonValue = json[jsonKey];
         if (jsonValue !== undefined) {
           defaultInstance[key] = this.fromJSON(jsonValue);
         }
@@ -111,8 +111,8 @@ export class Serializer {
     } else if (json instanceof Array) {
       return json.map((value: any) => this.fromJSON(value));
     } else if (json instanceof Object) {
-      let obj = {};
-      for (let key in json) {
+      const obj = {};
+      for (const key in json) {
         obj[key] = this.fromJSON(json[key]);
       }
       return obj;
@@ -132,9 +132,9 @@ export class Serializer {
       return obj;
     }
 
-    let ctor = obj.constructor;
+    const ctor = obj.constructor;
     if (!!ctor.prototype[__NAME]) {
-      let json = {[TYPE_FIELD]: ctor.prototype[__NAME]};
+      const json = {[TYPE_FIELD]: ctor.prototype[__NAME]};
       Serializer.getFields_(ctor).forEach((jsonKey: string, key: string) => {
         json[jsonKey] = this.toJSON(obj[key]);
       });
@@ -142,8 +142,8 @@ export class Serializer {
     } else if (obj instanceof Array) {
       return obj.map((value: any) => this.toJSON(value));
     } else {
-      let json = {};
-      for (let key in obj) {
+      const json = {};
+      for (const key in obj) {
         json[key] = this.toJSON(obj[key]);
       }
       return json;

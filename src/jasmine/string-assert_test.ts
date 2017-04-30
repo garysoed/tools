@@ -18,11 +18,11 @@ describe('jasmine.StringAssert', () => {
 
   describe('match', () => {
     it('should call the matchers correctly', () => {
-      let regexp = Mocks.object('regexp');
-      let stringMatching = Mocks.object('stringMatching');
+      const regexp = Mocks.object('regexp');
+      const stringMatching = Mocks.object('stringMatching');
       spyOn(jasmine, 'stringMatching').and.returnValue(stringMatching);
 
-      let mockMatchers = jasmine.createSpyObj('Matchers', ['toEqual']);
+      const mockMatchers = jasmine.createSpyObj('Matchers', ['toEqual']);
       spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
 
       assert.match(regexp);

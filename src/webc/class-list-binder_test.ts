@@ -11,7 +11,7 @@ describe('webc.ClassListBinder', () => {
 
   beforeEach(() => {
     mockClassList = jasmine.createSpyObj('ClassList', ['add', 'item', 'remove']);
-    binder = new ClassListBinder(<any> {classList: mockClassList});
+    binder = new ClassListBinder({classList: mockClassList} as any);
   });
 
   function setClassNames(classNames: string[]): void {

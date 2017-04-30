@@ -9,7 +9,7 @@ class TestClass { }
 
 describe('inject.Bind', () => {
   it('should bind the constructor correctly', () => {
-    let name = 'name';
+    const name = 'name';
 
     spyOn(Injector, 'bind');
 

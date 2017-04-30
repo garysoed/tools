@@ -15,7 +15,7 @@ describe('webc.DomHook', () => {
 
   describe('delete', () => {
     it('should delete the DOM location', () => {
-      let mockBinder = jasmine.createSpyObj('Binder', ['delete']);
+      const mockBinder = jasmine.createSpyObj('Binder', ['delete']);
       hook['binder_'] = mockBinder;
       hook.delete();
       assert(mockBinder.delete).to.haveBeenCalledWith();
@@ -31,8 +31,8 @@ describe('webc.DomHook', () => {
 
   describe('get', () => {
     it('should return the correct value', () => {
-      let value = 'value';
-      let mockBinder = jasmine.createSpyObj('Binder', ['get']);
+      const value = 'value';
+      const mockBinder = jasmine.createSpyObj('Binder', ['get']);
       mockBinder.get.and.returnValue(value);
       hook['binder_'] = mockBinder;
 
@@ -49,7 +49,7 @@ describe('webc.DomHook', () => {
 
   describe('open', () => {
     it('should set the binder correctly', () => {
-      let binder = Mocks.object('binder');
+      const binder = Mocks.object('binder');
       hook['binder_'] = null;
       hook.open(binder);
       assert(hook['binder_']).to.equal(binder);
@@ -65,16 +65,16 @@ describe('webc.DomHook', () => {
 
   describe('set', () => {
     it('should set the value correctly', () => {
-      let mockBinder = jasmine.createSpyObj('Binder', ['set']);
+      const mockBinder = jasmine.createSpyObj('Binder', ['set']);
       hook['binder_'] = mockBinder;
 
-      let value = Mocks.object('value');
+      const value = Mocks.object('value');
       hook.set(value);
       assert(mockBinder.set).to.haveBeenCalledWith(value);
     });
 
     it('should delete the DOM location if the value is falsy and deleteOnFalsy is set', () => {
-      let mockBinder = jasmine.createSpyObj('Binder', ['set']);
+      const mockBinder = jasmine.createSpyObj('Binder', ['set']);
       hook['binder_'] = mockBinder;
       hook['deleteOnFalsy_'] = true;
 
@@ -87,7 +87,7 @@ describe('webc.DomHook', () => {
 
     it('should not delete the DOM location if the value is falsy and deleteOnFalsy is not set',
         () => {
-          let mockBinder = jasmine.createSpyObj('Binder', ['set']);
+          const mockBinder = jasmine.createSpyObj('Binder', ['set']);
           hook['binder_'] = mockBinder;
           hook['deleteOnFalsy_'] = false;
 
@@ -99,7 +99,7 @@ describe('webc.DomHook', () => {
 
     it('should not delete the DOM location if the value is truthy and deleteOnFalsy is set',
         () => {
-          let mockBinder = jasmine.createSpyObj('Binder', ['set']);
+          const mockBinder = jasmine.createSpyObj('Binder', ['set']);
           hook['binder_'] = mockBinder;
           hook['deleteOnFalsy_'] = true;
 

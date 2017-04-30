@@ -14,11 +14,11 @@ export class MappedIterable<T, T2> implements Iterable<T2> {
   }
 
   [Symbol.iterator](): Iterator<T2> {
-    let iterator = this.iterable_[Symbol.iterator]();
-    let mapFn = this.mapFn_;
+    const iterator = this.iterable_[Symbol.iterator]();
+    const mapFn = this.mapFn_;
     return {
       next(): IteratorResult<T2> {
-        let result = iterator.next();
+        const result = iterator.next();
         return {done: result.done, value: mapFn(result.value)};
       },
     };

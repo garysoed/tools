@@ -13,11 +13,11 @@ class TestClass {}
 
 describe('inject.Inject', () => {
   it('should register the parameter correctly', () => {
-    let name = 'name';
-    let index = 12;
-    let fakeMetadata = new Map<number, string>();
-    let injectMetadata = Mocks.object('injectMetadata');
-    let defaultValue = Mocks.object('defaultValue');
+    const name = 'name';
+    const index = 12;
+    const fakeMetadata = new Map<number, string>();
+    const injectMetadata = Mocks.object('injectMetadata');
+    const defaultValue = Mocks.object('defaultValue');
 
     spyOn(InjectUtil, 'getMetadataMap').and.returnValue(fakeMetadata);
     spyOn(InjectMetadata, 'newInstance').and.returnValue(injectMetadata);
@@ -29,10 +29,10 @@ describe('inject.Inject', () => {
   });
 
   it('should use the parameter name if not specified', () => {
-    let propertyName = 'propertyName';
-    let index = 12;
-    let fakeMetadata = new Map<number, string>();
-    let injectMetadata = Mocks.object('injectMetadata');
+    const propertyName = 'propertyName';
+    const index = 12;
+    const fakeMetadata = new Map<number, string>();
+    const injectMetadata = Mocks.object('injectMetadata');
 
     spyOn(InjectUtil, 'getMetadataMap').and.returnValue(fakeMetadata);
     spyOn(InjectMetadata, 'newInstance').and.returnValue(injectMetadata);

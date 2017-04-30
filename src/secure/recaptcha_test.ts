@@ -24,7 +24,7 @@ describe('secure.Recaptcha', () => {
   });
 
   it('should call render correctly', () => {
-    let callback = jasmine.createSpy('Callback');
+    const callback = jasmine.createSpy('Callback');
 
     assert(mockGrecaptcha.render).to.haveBeenCalledWith(mockElement, {
       callback: Matchers.any(Function),
@@ -46,7 +46,7 @@ describe('secure.Recaptcha', () => {
 
   describe('response', () => {
     it('should return the response from the widget', () => {
-      let response = 'response';
+      const response = 'response';
       mockGrecaptcha.getResponse.and.returnValue(response);
       assert(recaptcha.getResponse()).to.equal(response);
       assert(mockGrecaptcha.getResponse).to.haveBeenCalledWith(WIDGET_ID);

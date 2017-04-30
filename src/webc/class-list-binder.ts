@@ -28,7 +28,7 @@ export class ClassListBinder implements DomBinder<Set<string>> {
    * @override
    */
   get(): Set<string> {
-    let classNames = Arrays
+    const classNames = Arrays
         .fromItemList(this.classList_)
         .asArray();
     return new Set(classNames);
@@ -38,7 +38,7 @@ export class ClassListBinder implements DomBinder<Set<string>> {
    * @override
    */
   set(value: Set<string> | null): void {
-    let classNames = value || new Set();
+    const classNames = value || new Set();
 
     // Remove the ones that are removed.
     Arrays

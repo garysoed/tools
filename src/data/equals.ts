@@ -14,7 +14,7 @@ export class Equals {
   static equals<T>(a: T, b: T): boolean {
     if (a instanceof Object &&
         ANNOTATIONS.hasAnnotation(a.constructor)) {
-      let fields = ANNOTATIONS.forCtor(a.constructor).getAnnotatedProperties();
+      const fields = ANNOTATIONS.forCtor(a.constructor).getAnnotatedProperties();
       return Arrays.of(fields)
           .every((field: symbol | string) => {
             return Equals.equals(a[field], b[field]);

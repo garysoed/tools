@@ -10,17 +10,17 @@ import { __NODE_DATA_MAP, PipeUtil } from './pipe-util';
 
 describe('pipeline.Pipe', () => {
   it('should add the node for method correctly', () => {
-    let map = new Map<any, any>();
-    let target = Mocks.object('target');
+    const map = new Map<any, any>();
+    const target = Mocks.object('target');
     target[__NODE_DATA_MAP] = map;
 
-    let propertyKey = 'propertyKey';
-    let fn = () => {};
-    let descriptor = Mocks.object('descriptor');
+    const propertyKey = 'propertyKey';
+    const fn = () => {};
+    const descriptor = Mocks.object('descriptor');
     descriptor.value = fn;
 
-    let graphNode = Mocks.object('graphNode');
-    let mockNodeBuilder = jasmine.createSpyObj('NodeBuilder', ['build']);
+    const graphNode = Mocks.object('graphNode');
+    const mockNodeBuilder = jasmine.createSpyObj('NodeBuilder', ['build']);
     mockNodeBuilder.build.and.returnValue(graphNode);
     spyOn(PipeUtil, 'initializeNodeBuilder').and.returnValue(mockNodeBuilder);
 
@@ -31,23 +31,23 @@ describe('pipeline.Pipe', () => {
   });
 
   it('should add the node for getter-setters correctly', () => {
-    let map = new Map<any, any>();
-    let target = Mocks.object('target');
+    const map = new Map<any, any>();
+    const target = Mocks.object('target');
     target[__NODE_DATA_MAP] = map;
 
-    let propertyKey = 'propertyKey';
-    let getter = () => {};
-    let setter = () => {};
-    let descriptor = Mocks.object('descriptor');
+    const propertyKey = 'propertyKey';
+    const getter = () => {};
+    const setter = () => {};
+    const descriptor = Mocks.object('descriptor');
     descriptor.get = getter;
     descriptor.set = setter;
 
-    let graphNode = Mocks.object('graphNode');
-    let mockNodeBuilder = jasmine.createSpyObj('NodeBuilder', ['build']);
+    const graphNode = Mocks.object('graphNode');
+    const mockNodeBuilder = jasmine.createSpyObj('NodeBuilder', ['build']);
     mockNodeBuilder.build.and.returnValue(graphNode);
     spyOn(PipeUtil, 'initializeNodeBuilder').and.returnValue(mockNodeBuilder);
 
-    let newSetter = Mocks.object('newSetter');
+    const newSetter = Mocks.object('newSetter');
     spyOn(PipeUtil, 'createSetter').and.returnValue(newSetter);
 
     assert(Pipe()(target, propertyKey, descriptor)).to.equal(descriptor);
@@ -59,13 +59,13 @@ describe('pipeline.Pipe', () => {
   });
 
   it('should work if there are no node data map in the target', () => {
-    let target = Mocks.object('target');
+    const target = Mocks.object('target');
 
-    let propertyKey = 'propertyKey';
-    let descriptor = Mocks.object('descriptor');
+    const propertyKey = 'propertyKey';
+    const descriptor = Mocks.object('descriptor');
     descriptor.value = () => {};
 
-    let mockNodeBuilder = jasmine.createSpyObj('NodeBuilder', ['build']);
+    const mockNodeBuilder = jasmine.createSpyObj('NodeBuilder', ['build']);
     mockNodeBuilder.build.and.returnValue(Mocks.object('graphNode'));
     spyOn(PipeUtil, 'initializeNodeBuilder').and.returnValue(mockNodeBuilder);
 
@@ -74,14 +74,14 @@ describe('pipeline.Pipe', () => {
   });
 
   it('should throw error if the same property key is already registered', () => {
-    let propertyKey = 'propertyKey';
-    let map = new Map<any, any>();
+    const propertyKey = 'propertyKey';
+    const map = new Map<any, any>();
     map.set(propertyKey, Mocks.object('graphNode'));
 
-    let target = Mocks.object('target');
+    const target = Mocks.object('target');
     target[__NODE_DATA_MAP] = map;
 
-    let descriptor = Mocks.object('descriptor');
+    const descriptor = Mocks.object('descriptor');
     descriptor.value = () => {};
 
     assert(() => {
@@ -90,7 +90,7 @@ describe('pipeline.Pipe', () => {
   });
 
   it('should throw error if the property is not a method or a getter', () => {
-    let descriptor = Mocks.object('descriptor');
+    const descriptor = Mocks.object('descriptor');
 
     assert(() => {
       Pipe()(Mocks.object('target'), 'propertyKey', descriptor);

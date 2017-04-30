@@ -8,10 +8,11 @@ import { FilteredIterable } from './filtered-iterable';
 
 describe('collection.FilteredIterable', () => {
   it('should return the correct iterable', () => {
-    let filterFn = (value: number) => {
+    const filterFn = (value: number) => {
       return value % 2 === 0;
     };
-    let iterable = FilteredIterable.newInstance(ArrayIterable.newInstance([1, 2, 3, 4]), filterFn);
+    const iterable = FilteredIterable
+        .newInstance(ArrayIterable.newInstance([1, 2, 3, 4]), filterFn);
     assert(Arrays.fromIterable(iterable).asArray()).to.equal([2, 4]);
   });
 });

@@ -40,9 +40,11 @@
         ]
       }
     ],
+    "no-angle-bracket-type-assertion": true,
     "no-any": false,
     "no-arg": true,
     "no-bitwise": true,
+    //"no-boolean-literal-compare": true,
     "no-conditional-assignment": true,
     "no-consecutive-blank-lines": false,
     "no-console": true,
@@ -57,7 +59,9 @@
     "no-require-imports": true,
     "no-shadowed-variable": false,
     "no-string-literal": false,
+    "no-string-throw": true,
     "no-trailing-whitespace": true,
+    "no-unnecessary-initializer": true,
     "no-unused-expression": false,
     "no-unused-variable": [
       true,
@@ -78,6 +82,8 @@
       "check-whitespace"
     ],
     "ordered-imports": true,
+    "prefer-const": true,
+    "prefer-template": true,
     "quotemark": [
       true,
       "single"
@@ -110,6 +116,7 @@
         "variable-declaration": "nospace"
       }
     ],
+    "use-isnan": true,
     "variable-name": [
       true,
       "allow-trailing-underscore",

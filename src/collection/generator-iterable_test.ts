@@ -8,12 +8,12 @@ import { GeneratorIterable } from './generator-iterable';
 
 describe('collection.GeneratorIterable', () => {
   it('should generate the correct elements', () => {
-    let expectedElements = [1, 2, 3, 4];
-    let iterator = ArrayIterable.newInstance(expectedElements)[Symbol.iterator]();
-    let generator = () => {
+    const expectedElements = [1, 2, 3, 4];
+    const iterator = ArrayIterable.newInstance(expectedElements)[Symbol.iterator]();
+    const generator = () => {
       return iterator.next();
     };
-    let generatorIterable = GeneratorIterable.newInstance(generator);
+    const generatorIterable = GeneratorIterable.newInstance(generator);
 
     assert(Arrays.fromIterable(generatorIterable).asArray()).to.equal(expectedElements);
   });

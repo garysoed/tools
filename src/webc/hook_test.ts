@@ -139,7 +139,7 @@ describe('webc.hook', () => {
       const createDecoratorSpy = spyOn(hook, 'createDecorator_').and.returnValue(decorator);
 
       assert(hook.classList()).to.equal(decorator);
-      assert(hook['createDecorator_']).to.haveBeenCalledWith(<any> Matchers.any((Function)));
+      assert(hook['createDecorator_']).to.haveBeenCalledWith(Matchers.any((Function)) as any);
 
       const element = Mocks.object('element');
       assert(createDecoratorSpy.calls.argsFor(0)[0](element)).to.equal(binder);
@@ -157,7 +157,7 @@ describe('webc.hook', () => {
       const createDecoratorSpy = spyOn(hook, 'createDecorator_').and.returnValue(decorator);
 
       assert(hook.elementSwitch<number>(map)).to.equal(decorator);
-      assert(hook['createDecorator_']).to.haveBeenCalledWith(<any> Matchers.any((Function)));
+      assert(hook['createDecorator_']).to.haveBeenCalledWith(Matchers.any((Function)) as any);
 
       const element = Mocks.object('element');
       assert(createDecoratorSpy.calls.argsFor(0)[0](element)).to.equal(binder);

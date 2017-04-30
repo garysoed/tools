@@ -23,7 +23,7 @@ describe('parse.BooleanParser', () => {
     });
 
     it('should parse null as null', () => {
-      assert(<any> BooleanParser.parse(null)).to.beNull();
+      assert(BooleanParser.parse(null) as any).to.beNull();
     });
   });
 

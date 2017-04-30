@@ -25,7 +25,7 @@ export class AttributeBinder<T> implements DomBinder<T> {
    * @override
    */
   delete(): void {
-    let attributes = this.element_.attributes;
+    const attributes = this.element_.attributes;
     if (attributes.getNamedItem(this.attributeName_) !== null) {
       attributes.removeNamedItem(this.attributeName_);
     }

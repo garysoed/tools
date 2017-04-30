@@ -31,7 +31,7 @@ describe('data.@Cache', () => {
   });
 
   it('should cache the getter', () => {
-    let value = 'value';
+    const value = 'value';
     spy.and.returnValue(value);
 
     assert(test.getProperty()).to.equal(value);
@@ -42,7 +42,7 @@ describe('data.@Cache', () => {
   });
 
   it('should cache the method', () => {
-    let value = 'value';
+    const value = 'value';
     spy.and.returnValue(value);
 
     assert(test.method()).to.equal(value);
@@ -53,7 +53,7 @@ describe('data.@Cache', () => {
   });
 
   it('should throw error on non getter properties', () => {
-    let descriptor = <TypedPropertyDescriptor<any>> {};
+    const descriptor = {} as TypedPropertyDescriptor<any>;
     assert(() => {
       Cache()({}, 'property', descriptor);
     }).to.throwError(/has to be a getter or a function/);
@@ -61,13 +61,13 @@ describe('data.@Cache', () => {
 
   describe('clear', () => {
     it('should clear all the cache if no key is specified', () => {
-      let value = 'value';
+      const value = 'value';
       spy.and.returnValue(value);
 
       assert(test.getProperty()).to.equal(value);
       assert(test.method()).to.equal(value);
 
-      let newValue = 'newValue';
+      const newValue = 'newValue';
       spy.calls.reset();
       spy.and.returnValue(newValue);
 
@@ -81,13 +81,13 @@ describe('data.@Cache', () => {
     });
 
     it('should clear only cache with the specified key', () => {
-      let value = 'value';
+      const value = 'value';
       spy.and.returnValue(value);
 
       assert(test.getProperty()).to.equal(value);
       assert(test.method()).to.equal(value);
 
-      let newValue = 'newValue';
+      const newValue = 'newValue';
       spy.calls.reset();
       spy.and.returnValue(newValue);
 

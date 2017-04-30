@@ -13,7 +13,7 @@ describe('random.MathJs', () => {
 
   describe('next', () => {
     it('should return the value returned from Math.random', () => {
-      let value = 123;
+      const value = 123;
       spyOn(Math, 'random').and.returnValue(value);
 
       assert(mathJs.next()).to.equal(value);

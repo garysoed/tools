@@ -25,13 +25,13 @@ export class Solve {
       spec: Spec,
       fn: (value: number) => boolean,
       trueAtLowerValues: boolean): (number|null) {
-    let values = spec.generateValues();
+    const values = spec.generateValues();
     let startIndex = 0;
     let endIndex = values.length - 1;
     let bestIndex: (number|null) = null;
     while (startIndex <= endIndex) {
-      let guessIndex = Math.floor((startIndex + endIndex) / 2);
-      let result = fn(values[guessIndex]) ;
+      const guessIndex = Math.floor((startIndex + endIndex) / 2);
+      const result = fn(values[guessIndex]) ;
 
       if (result) {
         if (bestIndex === null) {

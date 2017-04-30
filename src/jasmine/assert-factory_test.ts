@@ -17,7 +17,7 @@ describe('jasmine.AssertFactory', () => {
 
   describe('to', () => {
     it('should return the provided object without reversal', () => {
-      let object = Mocks.object('object');
+      const object = Mocks.object('object');
       mockProvider.and.returnValue(object);
 
       expect(factory.to).toEqual(object);
@@ -27,7 +27,7 @@ describe('jasmine.AssertFactory', () => {
 
   describe('toNot', () => {
     it('should return the provided object with reversal', () => {
-      let object = Mocks.object('object');
+      const object = Mocks.object('object');
       mockProvider.and.returnValue(object);
 
       expect(factory.toNot).toEqual(object);

@@ -70,10 +70,10 @@ describe('ui.OverflowWatcher', () => {
 
   describe('onScroll_', () => {
     it('should dispatch changed event if the new state is different from the old state', () => {
-      let oldState = State.COVERED;
-      let newState = State.PARTIAL;
+      const oldState = State.COVERED;
+      const newState = State.PARTIAL;
 
-      let spyGetState_ = spyOn(watcher, 'getState_');
+      const spyGetState_ = spyOn(watcher, 'getState_');
       spyGetState_.and.returnValue(oldState);
       watcher.getState();
 
@@ -86,10 +86,10 @@ describe('ui.OverflowWatcher', () => {
     });
 
     it('should do nothing if the new state is the same as the old state', () => {
-      let oldState = State.COVERED;
-      let newState = State.COVERED;
+      const oldState = State.COVERED;
+      const newState = State.COVERED;
 
-      let spyGetState_ = spyOn(watcher, 'getState_');
+      const spyGetState_ = spyOn(watcher, 'getState_');
       spyGetState_.and.returnValue(oldState);
       watcher.getState();
 
@@ -104,7 +104,7 @@ describe('ui.OverflowWatcher', () => {
 
   describe('getState', () => {
     it('should call getState_ if the state is unknown', () => {
-      let state = State.COVERED;
+      const state = State.COVERED;
       spyOn(watcher, 'getState_').and.returnValue(state);
 
       assert(watcher.getState()).to.equal(state);
@@ -112,8 +112,8 @@ describe('ui.OverflowWatcher', () => {
     });
 
     it('should cache the output of getState_', () => {
-      let state = State.COVERED;
-      let spyGetState_ = spyOn(watcher, 'getState_');
+      const state = State.COVERED;
+      const spyGetState_ = spyOn(watcher, 'getState_');
       spyGetState_.and.returnValue(state);
       watcher.getState();
 

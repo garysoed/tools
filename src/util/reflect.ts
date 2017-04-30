@@ -21,7 +21,7 @@ export class Reflect {
    * @return The new instance created from the constructor.
    */
   static construct(ctor: gs.ICtor<any>, args: any[]): any {
-    let instance = new (ctor.bind.apply(ctor, [null].concat(args)));
+    const instance = new (ctor.bind.apply(ctor, [null].concat(args)));
     if (instance[Reflect.__initialize] instanceof Function) {
       instance[Reflect.__initialize](instance);
     }

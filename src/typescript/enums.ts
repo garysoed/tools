@@ -10,7 +10,7 @@ export class Enums {
    * @return The enum value corresponding to the enum number.
    */
   static fromNumberString<E>(stringValue: string, enumSet: gs.IEnum): E {
-    let nameString: string = enumSet[stringValue];
+    const nameString: string = enumSet[stringValue];
     return enumSet[nameString];
   }
 
@@ -35,7 +35,7 @@ export class Enums {
     const values: E[] = [];
     let index = 0;
     while (enumSet[index] !== undefined) {
-      values.push(<E> <any> index);
+      values.push(index as any as E);
       index++;
     }
 

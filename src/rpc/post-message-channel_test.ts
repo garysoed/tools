@@ -35,7 +35,7 @@ describe('rpc.PostMessageChannel', () => {
 
       channel['post_'](message);
 
-      assert(Asyncs.run).to.haveBeenCalledWith(<any> Matchers.any(Function));
+      assert(Asyncs.run).to.haveBeenCalledWith(Matchers.any(Function) as any);
       assert(mockDestWindow.postMessage).to.haveBeenCalledWith(json, origin);
       assert(PostMessageChannel.getOrigin).to.haveBeenCalledWith(mockSrcWindow);
       assert(Serializer.toJSON).to.haveBeenCalledWith(message);
@@ -117,7 +117,7 @@ describe('rpc.PostMessageChannel', () => {
 
       channel.post(message);
 
-      assert(channel['post_']).to.haveBeenCalledWith(<any> Matchers.any(Message));
+      assert(channel['post_']).to.haveBeenCalledWith(Matchers.any(Message) as any);
 
       const systemMessage = postSpy.calls.argsFor(0)[0];
       assert(systemMessage.getType()).to.equal(MessageType.DATA);
@@ -195,7 +195,7 @@ describe('rpc.PostMessageChannel', () => {
           .to.haveBeenCalledWith(mockSrcWindow, mockDestWindow);
 
       const message = new Message(MessageType.ACK, { 'id': id });
-      assert(<boolean> mockChannel['waitForMessage_'].calls.argsFor(0)[0](message))
+      assert(mockChannel['waitForMessage_'].calls.argsFor(0)[0](message) as boolean)
           .to.beTrue();
 
       assert(window.setInterval)
@@ -223,7 +223,7 @@ describe('rpc.PostMessageChannel', () => {
 
       await PostMessageChannel.open(mockSrcWindow, mockDestWindow);
       const message = new Message(MessageType.ACK, { 'id': 456 });
-      assert(<boolean> mockChannel['waitForMessage_'].calls.argsFor(0)[0](message))
+      assert(mockChannel['waitForMessage_'].calls.argsFor(0)[0](message) as boolean)
           .to.beFalse();
     });
 
@@ -238,7 +238,7 @@ describe('rpc.PostMessageChannel', () => {
 
       await PostMessageChannel.open(mockSrcWindow, mockDestWindow);
       const message = new Message(MessageType.PING, { 'id': id });
-      assert(<boolean> mockChannel['waitForMessage_'].calls.argsFor(0)[0](message)).to.beFalse();
+      assert(mockChannel['waitForMessage_'].calls.argsFor(0)[0](message) as boolean).to.beFalse();
     });
   });
 

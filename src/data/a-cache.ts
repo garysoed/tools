@@ -165,7 +165,7 @@ interface ICacheFunc {
  *
  * @param key Cache group to associate the cache with.
  */
-const ACache: ICacheFunc = <any> function(key?: string): MethodDecorator {
+const ACache: ICacheFunc = function(key?: string): MethodDecorator {
   return (
       target: Object,
       propertyKey: string,
@@ -186,7 +186,7 @@ const ACache: ICacheFunc = <any> function(key?: string): MethodDecorator {
 
     return descriptor;
   };
-};
+} as any;
 
 /**
  * Clears all cached values in the given object that correspond to the given cache group name.

@@ -26,7 +26,7 @@ describe('webc.PropertyBinder', () => {
 
   describe('get', () => {
     it('should return the property value', () => {
-      let value = 123;
+      const value = 123;
       element[PROPERTY_NAME] = value;
       assert(binder.get()).to.equal(value);
     });
@@ -34,7 +34,7 @@ describe('webc.PropertyBinder', () => {
 
   describe('set', () => {
     it('should set the property value', () => {
-      let value = 123;
+      const value = 123;
       binder.set(value);
       assert(element[PROPERTY_NAME]).to.equal(value);
     });

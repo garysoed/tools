@@ -81,7 +81,7 @@ export class Cases {
           })
           .asArray();
     } else if (Cases.PASCAL_CASE_REGEX_.test(input)) {
-      let normalizedInput = `${input[0].toLowerCase()}${input.substring(1)}`;
+      const normalizedInput = `${input[0].toLowerCase()}${input.substring(1)}`;
       words = Arrays.of(normalizedInput.replace(/([A-Z])/g, ' $1').split(' '))
           .map((word: string) => {
             return word.toLowerCase();

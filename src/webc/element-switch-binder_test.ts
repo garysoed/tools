@@ -24,8 +24,8 @@ describe('webc.ElementSwitchBinder', () => {
 
   describe('getEnumValue_', () => {
     it('should set the enum value if it does not exist and return it', () => {
-      let id = 'id';
-      let element = Mocks.object('element');
+      const id = 'id';
+      const element = Mocks.object('element');
       element.id = id;
 
       mapping.set(Enum.B, id);
@@ -35,7 +35,7 @@ describe('webc.ElementSwitchBinder', () => {
     });
 
     it('should not set the enum value if it is invalid', () => {
-      let element = Mocks.object('element');
+      const element = Mocks.object('element');
       element.id = 'id';
 
       mapping.set(Enum.B, 'otherId');
@@ -45,7 +45,7 @@ describe('webc.ElementSwitchBinder', () => {
     });
 
     it('should reuse the existing enum value', () => {
-      let element = Mocks.object('element');
+      const element = Mocks.object('element');
       element.id = 'id';
       element[__enumValue] = Enum.A;
 
@@ -57,14 +57,14 @@ describe('webc.ElementSwitchBinder', () => {
 
   describe('setActive_', () => {
     it('should remove the display if set to active', () => {
-      let element = Mocks.object('element');
+      const element = Mocks.object('element');
       element.style = {};
       binder['setActive_'](element, true);
       assert(element.style.display).to.equal('');
     });
 
     it('should set the display to none if set to inactive', () => {
-      let element = Mocks.object('element');
+      const element = Mocks.object('element');
       element.style = {};
       binder['setActive_'](element, false);
       assert(element.style.display).to.equal('none');
@@ -73,7 +73,7 @@ describe('webc.ElementSwitchBinder', () => {
 
   describe('delete', () => {
     it('should set the currently active element as inactive', () => {
-      let activeEl = Mocks.object('activeEl');
+      const activeEl = Mocks.object('activeEl');
       binder['currentActiveEl_'] = activeEl;
 
       spyOn(binder, 'setActive_');
@@ -95,10 +95,10 @@ describe('webc.ElementSwitchBinder', () => {
 
   describe('get', () => {
     it('should return the correct enum value if there is an active element', () => {
-      let activeEl = Mocks.object('activeEl');
+      const activeEl = Mocks.object('activeEl');
       binder['currentActiveEl_'] = activeEl;
 
-      let enumValue = Enum.B;
+      const enumValue = Enum.B;
       spyOn(binder, 'getEnumValue_').and.returnValue(enumValue);
 
       assert(binder.get()).to.equal(enumValue);
@@ -116,12 +116,12 @@ describe('webc.ElementSwitchBinder', () => {
 
   describe('set', () => {
     it('should delete the old value, cache the element enum value and set it to active', () => {
-      let element = Mocks.object('element');
+      const element = Mocks.object('element');
       Object.setPrototypeOf(element, HTMLElement.prototype);
       mockParentEl.querySelector.and.returnValue(element);
 
-      let id = 'id';
-      let enumValue = Enum.B;
+      const id = 'id';
+      const enumValue = Enum.B;
       mapping.set(enumValue, id);
 
       spyOn(binder, 'delete');
@@ -136,11 +136,11 @@ describe('webc.ElementSwitchBinder', () => {
     });
 
     it('should do nothing if the element is not an HTMLElement', () => {
-      let element = Mocks.object('element');
+      const element = Mocks.object('element');
       mockParentEl.querySelector.and.returnValue(element);
 
-      let id = 'id';
-      let enumValue = Enum.B;
+      const id = 'id';
+      const enumValue = Enum.B;
       mapping.set(enumValue, id);
 
       spyOn(binder, 'delete');
@@ -157,8 +157,8 @@ describe('webc.ElementSwitchBinder', () => {
     it('should not throw error if the element cannot be found', () => {
       mockParentEl.querySelector.and.returnValue(null);
 
-      let id = 'id';
-      let enumValue = Enum.B;
+      const id = 'id';
+      const enumValue = Enum.B;
       mapping.set(enumValue, id);
 
       spyOn(binder, 'delete');

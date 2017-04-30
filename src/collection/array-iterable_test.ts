@@ -7,8 +7,8 @@ import { Arrays } from './arrays';
 
 describe('collection.ArrayIterable', () => {
   it('should iterate with the correct elements', () => {
-    let expectedArray = [1, 2, 3, 4];
-    let iterable = ArrayIterable.newInstance(expectedArray);
+    const expectedArray = [1, 2, 3, 4];
+    const iterable = ArrayIterable.newInstance(expectedArray);
     assert(Arrays.fromIterable(iterable).asArray()).to.equal(expectedArray);
   });
 });

@@ -50,8 +50,8 @@ export class GraphNode<T> {
    * @param args The where the corresponding cached values should be cleared.
    */
   clearCache(context: any, args: any[]): void {
-    let cache = this.getCache(context);
-    let cacheKey = Maps.of(cache)
+    const cache = this.getCache(context);
+    const cacheKey = Maps.of(cache)
         .findKey((value: T, key: any[]) => {
           return Arrays.of(key).equalsTo(args);
         });
@@ -74,7 +74,7 @@ export class GraphNode<T> {
       this.clearCache(context, args);
     }
 
-    let cache = this.getCache(context);
+    const cache = this.getCache(context);
 
     // Find the corresponding entry in the cache.
     let cacheKey = Maps.of(cache)

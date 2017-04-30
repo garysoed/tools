@@ -27,7 +27,7 @@ export class Arrays {
    * @return Array wrapper object to do operations on.
    */
   static flatten<T>(items: T[][]): FluentIndexable<T> {
-    let array: T[] = [];
+    const array: T[] = [];
     Arrays
         .of(items)
         .forEach((values: T[]) => {
@@ -48,7 +48,7 @@ export class Arrays {
    * @return Array wrapper object to do operations on.
    */
   static fromItemList<T>(list: {length: number, item: (index: number) => T}): FluentIndexable<T> {
-    let array: T[] = [];
+    const array: T[] = [];
     for (let i = 0; i < list.length; i++) {
       array.push(list.item(i));
     }
@@ -74,7 +74,7 @@ export class Arrays {
    * @return Array wrapper object to do operations on.
    */
   static fromIterator<T>(iterator: Iterator<T>): FluentIndexable<T> {
-    let array: T[] = [];
+    const array: T[] = [];
     for (let entry = iterator.next(); !entry.done; entry = iterator.next()) {
       array.push(entry.value);
     }
@@ -89,7 +89,7 @@ export class Arrays {
    * @return Array wrapper object to do operations on.
    */
   static fromNumericIndexable<T>(list: {[index: number]: T, length: number}): FluentIndexable<T> {
-    let array: T[] = [];
+    const array: T[] = [];
     for (let i = 0; i < list.length; i++) {
       array.push(list[i]);
     }

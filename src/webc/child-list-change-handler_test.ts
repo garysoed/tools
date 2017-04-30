@@ -19,10 +19,10 @@ describe('webc.ChildListChangeHandler', () => {
 
   describe('createNodeList_', () => {
     it('should create the correct node list', () => {
-      let node1 = Mocks.object('node1');
-      let node2 = Mocks.object('node2');
-      let node3 = Mocks.object('node3');
-      let collection = <HTMLCollection> {
+      const node1 = Mocks.object('node1');
+      const node2 = Mocks.object('node2');
+      const node3 = Mocks.object('node3');
+      const collection = {
         item(index: number): any {
           switch (index) {
             case 0:
@@ -34,8 +34,8 @@ describe('webc.ChildListChangeHandler', () => {
           }
         },
         length: 3,
-      };
-      let nodeList = handler['createNodeList_'](collection);
+      } as HTMLCollection;
+      const nodeList = handler['createNodeList_'](collection);
 
       assert(nodeList.length).to.equal(3);
       assert(nodeList[0]).to.equal(node1);
@@ -49,17 +49,17 @@ describe('webc.ChildListChangeHandler', () => {
 
   describe('onMutation_', () => {
     it('should call the handler correctly', () => {
-      let mockHandler1 = jasmine.createSpy('Handler1');
-      let mockHandler2 = jasmine.createSpy('Handler2');
-      let handlerKey1 = 'handlerKey1';
-      let handlerKey2 = 'handlerKey2';
-      let instance = {[handlerKey1]: mockHandler1, [handlerKey2]: mockHandler2};
+      const mockHandler1 = jasmine.createSpy('Handler1');
+      const mockHandler2 = jasmine.createSpy('Handler2');
+      const handlerKey1 = 'handlerKey1';
+      const handlerKey2 = 'handlerKey2';
+      const instance = {[handlerKey1]: mockHandler1, [handlerKey2]: mockHandler2};
 
-      let addedNodes1 = Mocks.object('addedNodes1');
-      let removedNodes1 = Mocks.object('removedNodes1');
-      let addedNodes2 = Mocks.object('addedNodes2');
-      let removedNodes2 = Mocks.object('removedNodes2');
-      let records: any[] = [
+      const addedNodes1 = Mocks.object('addedNodes1');
+      const removedNodes1 = Mocks.object('removedNodes1');
+      const addedNodes2 = Mocks.object('addedNodes2');
+      const removedNodes2 = Mocks.object('removedNodes2');
+      const records: any[] = [
         {addedNodes: addedNodes1, removedNodes: removedNodes1},
         {addedNodes: addedNodes2, removedNodes: removedNodes2},
       ];
@@ -73,10 +73,10 @@ describe('webc.ChildListChangeHandler', () => {
     });
 
     it('should do nothing if the handler cannot be found', () => {
-      let handlerKey = 'handlerKey';
-      let instance = {};
+      const handlerKey = 'handlerKey';
+      const instance = {};
 
-      let records: any[] = [{}];
+      const records: any[] = [{}];
 
       assert(() => {
         handler['onMutation_'](instance, new Set([handlerKey]), records);
@@ -88,25 +88,25 @@ describe('webc.ChildListChangeHandler', () => {
     it('should create the mutation observer correctly, call the initial mutation and ' +
         'disconnects on dispose',
         () => {
-          let mockInstance = jasmine.createSpyObj('Instance', ['addDisposable']);
-          let mockObserver = jasmine.createSpyObj('Observer', ['disconnect', 'observe']);
-          let createObserverSpy =
+          const mockInstance = jasmine.createSpyObj('Instance', ['addDisposable']);
+          const mockObserver = jasmine.createSpyObj('Observer', ['disconnect', 'observe']);
+          const createObserverSpy =
               spyOn(handler, 'createMutationObserver_').and.returnValue(mockObserver);
 
-          let onMutationSpy = spyOn(handler, 'onMutation_');
+          const onMutationSpy = spyOn(handler, 'onMutation_');
 
-          let nodeList = Mocks.object('nodeList');
+          const nodeList = Mocks.object('nodeList');
           spyOn(handler, 'createNodeList_').and.returnValue(nodeList);
 
-          let handlerKey1 = 'handlerKey1';
-          let handlerKey2 = 'handlerKey2';
-          let configs = <ChildListChangeConfig[]> [
+          const handlerKey1 = 'handlerKey1';
+          const handlerKey2 = 'handlerKey2';
+          const configs = [
             {handlerKey: handlerKey1},
             {handlerKey: handlerKey2},
-          ];
+          ] as ChildListChangeConfig[];
 
-          let children = Mocks.object('children');
-          let targetEl = Mocks.object('targetEl');
+          const children = Mocks.object('children');
+          const targetEl = Mocks.object('targetEl');
           targetEl.children = children;
 
           handler.configure(targetEl, mockInstance, configs);
@@ -126,7 +126,7 @@ describe('webc.ChildListChangeHandler', () => {
                 type: 'childList',
               })],
           );
-          assert(<Set<string>> onMutationSpy.calls.argsFor(0)[1]).to
+          assert(onMutationSpy.calls.argsFor(0)[1] as Set<string>).to
               .haveElements([handlerKey1, handlerKey2]);
 
           assert(handler['createNodeList_']).to.haveBeenCalledWith(children);
@@ -134,23 +134,23 @@ describe('webc.ChildListChangeHandler', () => {
 
           assert(handler['createMutationObserver_']).to
               .haveBeenCalledWith(mockInstance, Matchers.any(Set));
-          assert(<Set<string>> createObserverSpy.calls.argsFor(0)[1]).to
+          assert(createObserverSpy.calls.argsFor(0)[1] as Set<string>).to
               .haveElements([handlerKey1, handlerKey2]);
         });
   });
 
   describe('createDecorator', () => {
     it('should create the correct decorator', () => {
-      let constructor = Mocks.object('constructor');
-      let target = Mocks.object('target');
+      const constructor = Mocks.object('constructor');
+      const target = Mocks.object('target');
       target.constructor = constructor;
 
-      let mockAnnotations = jasmine.createSpyObj('Annotations', ['attachValueToProperty']);
+      const mockAnnotations = jasmine.createSpyObj('Annotations', ['attachValueToProperty']);
       spyOn(CHILD_LIST_CHANGE_ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotations);
 
-      let selector = 'selector';
-      let propertyKey = 'propertyKey';
-      let descriptor = Mocks.object('descriptor');
+      const selector = 'selector';
+      const propertyKey = 'propertyKey';
+      const descriptor = Mocks.object('descriptor');
 
       assert(handler.createDecorator(selector)(target, propertyKey, descriptor))
           .to.equal(descriptor);
@@ -166,14 +166,14 @@ describe('webc.ChildListChangeHandler', () => {
 
   describe('getConfigs', () => {
     it('should return the correct configs', () => {
-      let attachedValues = Mocks.object('attachedValues');
-      let mockAnnotations = jasmine.createSpyObj('Annotations', ['getAttachedValues']);
+      const attachedValues = Mocks.object('attachedValues');
+      const mockAnnotations = jasmine.createSpyObj('Annotations', ['getAttachedValues']);
       mockAnnotations.getAttachedValues.and.returnValue(attachedValues);
 
       spyOn(CHILD_LIST_CHANGE_ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotations);
 
-      let constructor = Mocks.object('constructor');
-      let instance = Mocks.object('instance');
+      const constructor = Mocks.object('constructor');
+      const instance = Mocks.object('instance');
       instance.constructor = constructor;
 
       assert(handler.getConfigs(instance)).to.equal(attachedValues);

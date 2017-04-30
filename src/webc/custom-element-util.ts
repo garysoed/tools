@@ -20,7 +20,7 @@ export class CustomElementUtil {
       element: HTMLElement, attributes: {[name: string]: Parser<any>}): void  {
     Maps.fromRecord(attributes)
         .forEach((parser: Parser<any>, name: string) => {
-          let attrName = Cases.of(name).toLowerCase();
+          const attrName = Cases.of(name).toLowerCase();
           Object.defineProperty(
               element,
               name,

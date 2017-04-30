@@ -7,28 +7,28 @@ import { Cases } from './cases';
 describe('string.Cases', () => {
   describe('toCamelCase', () => {
     it('should format to camelCase correctly', () => {
-      let cases = new Cases(['camel', 'case']);
+      const cases = new Cases(['camel', 'case']);
       assert(cases.toCamelCase()).to.equal('camelCase');
     });
   });
 
   describe('toLowerCase', () => {
     it('should format as lower-case correctly', () => {
-      let cases = new Cases(['lower', 'case']);
+      const cases = new Cases(['lower', 'case']);
       assert(cases.toLowerCase()).to.equal('lower-case');
     });
   });
 
   describe('toPascalCase', () => {
     it('should format as PascalCase correctly', () => {
-      let cases = new Cases(['pascal', 'case']);
+      const cases = new Cases(['pascal', 'case']);
       assert(cases.toPascalCase()).to.equal('PascalCase');
     });
   });
 
   describe('toUpperCase', () => {
     it('should format as UPPER_CASE correctly', () => {
-      let cases = new Cases(['upper', 'case']);
+      const cases = new Cases(['upper', 'case']);
       assert(cases.toUpperCase()).to.equal('UPPER_CASE');
     });
   });

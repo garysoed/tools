@@ -56,7 +56,7 @@ describe('webc.ElementRegistrar', () => {
       assert(mockAttributeParser.parse).to.haveBeenCalledWith(newValue);
 
       assert(ElementRegistrar['runOnInstance_'])
-          .to.haveBeenCalledWith(mockHTMLElement, <any> Matchers.any(Function));
+          .to.haveBeenCalledWith(mockHTMLElement, Matchers.any(Function) as any);
 
       runOnInstanceSpy.calls.argsFor(0)[1](mockElement);
       assert(mockElement.onAttributeChanged).to.haveBeenCalledWith('attr-name', oldValue, newValue);
@@ -125,7 +125,7 @@ describe('webc.ElementRegistrar', () => {
       lifecycleConfig.inserted!.call(mockHtmlElement);
 
       assert(ElementRegistrar['runOnInstance_'])
-          .to.haveBeenCalledWith(mockHtmlElement, <any> Matchers.any(Function));
+          .to.haveBeenCalledWith(mockHtmlElement, Matchers.any(Function) as any);
 
       runOnInstanceSpy.calls.argsFor(0)[1](mockElement);
       assert(mockElement.onInserted).to.haveBeenCalledWith(mockHtmlElement);
@@ -141,7 +141,7 @@ describe('webc.ElementRegistrar', () => {
       lifecycleConfig.removed!.call(mockHtmlElement);
 
       assert(ElementRegistrar['runOnInstance_'])
-          .to.haveBeenCalledWith(mockHtmlElement, <any> Matchers.any(Function));
+          .to.haveBeenCalledWith(mockHtmlElement, Matchers.any(Function) as any);
 
       runOnInstanceSpy.calls.argsFor(0)[1](mockElement);
       assert(mockElement.onRemoved).to.haveBeenCalledWith(mockHtmlElement);
@@ -195,7 +195,7 @@ describe('webc.ElementRegistrar', () => {
       assert(spy.calls.argsFor(0)[1]()).to.equal(instance);
       assert(mockInjector.instantiate).to.haveBeenCalledWith(ctor);
 
-      assert(<boolean> registrar['registeredCtors_'].has(ctor)).to.beTrue();
+      assert(registrar['registeredCtors_'].has(ctor) as boolean).to.beTrue();
       assert(registrar.register).to.haveBeenCalledWith(mockDependency);
 
       assert(mockTemplates.getTemplate).to.haveBeenCalledWith(templateKey);

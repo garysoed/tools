@@ -17,7 +17,7 @@ describe('webc.Templates', () => {
 
   describe('getTemplate', () => {
     it('should use the replacement map to replace the strings in the template', () => {
-      let key = 'key';
+      const key = 'key';
       Templates.register(key, '123234');
       replacementMap.set(/2/g, 'two');
       replacementMap.set(/3/, 'three');
@@ -32,17 +32,17 @@ describe('webc.Templates', () => {
 
   describe('register', () => {
     it('should register the template', () => {
-      let key = 'key';
-      let templateString = 'templateString';
+      const key = 'key';
+      const templateString = 'templateString';
 
       Templates.register(key, templateString);
 
-      let templates = Templates.newInstance();
+      const templates = Templates.newInstance();
       assert(templates.getTemplate(key)).to.equal(templateString);
     });
 
     it('should throw error if the key has already been registered', () => {
-      let key = 'key';
+      const key = 'key';
 
       Templates.register(key, 'templateString1');
 

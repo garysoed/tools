@@ -33,10 +33,10 @@ export class FunctionAssert<T extends Function> extends AnyAssert<T> {
    * Checks that the given function has been called with the given arguments.
    */
   get haveBeenCalledWith(): T {
-    return <T> <any> ((...args: any[]) => {
-      let matchers = this.getMatchers_();
+    return ((...args: any[]) => {
+      const matchers = this.getMatchers_();
       matchers.toHaveBeenCalledWith.apply(matchers, args);
-    });
+    }) as any as T;
   }
 
   /**

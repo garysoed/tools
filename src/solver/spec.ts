@@ -23,7 +23,7 @@ export class Spec {
    * Generates the values specified.
    */
   generateValues(): number[] {
-    let values: number[] = [];
+    const values: number[] = [];
     for (let value = this.start_; value < this.end_; value += this.delta_) {
       values.push(value);
     }

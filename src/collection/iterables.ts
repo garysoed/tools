@@ -45,7 +45,7 @@ export class FluentIterable<T>
   }
 
   iterate(fn: (value: T, breakFn: () => void) => void): FluentIterable<T> {
-    let iterator = this.getData()[Symbol.iterator]();
+    const iterator = this.getData()[Symbol.iterator]();
     let shouldBreak = false;
     for (let entry = iterator.next(); !entry.done && !shouldBreak; entry = iterator.next()) {
       fn(entry.value, () => {

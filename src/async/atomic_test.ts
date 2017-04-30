@@ -19,20 +19,20 @@ describe('async.sequenced', () => {
       async () => {
         class Class extends BaseDisposable {}
 
-        let mockFunction = jasmine.createSpy('Function');
+        const mockFunction = jasmine.createSpy('Function');
 
-        let property = 'property';
-        let descriptor = Mocks.object('descriptor');
+        const property = 'property';
+        const descriptor = Mocks.object('descriptor');
         descriptor.value = mockFunction;
 
-        let mockSequencer = jasmine.createSpyObj('Sequencer', ['dispose', 'run']);
+        const mockSequencer = jasmine.createSpyObj('Sequencer', ['dispose', 'run']);
         mockSequencer.run.and.returnValue(Promise.resolve());
         spyOn(Sequencer, 'newInstance').and.returnValue(mockSequencer);
 
-        let newDescriptor = decorator(Class.prototype, property, descriptor);
+        const newDescriptor = decorator(Class.prototype, property, descriptor);
         assert(newDescriptor).to.equal(descriptor);
 
-        let mockInstance = jasmine.createSpyObj('Instance', ['addDisposable']);
+        const mockInstance = jasmine.createSpyObj('Instance', ['addDisposable']);
         await descriptor.value.call(mockInstance, 1, 2);
 
         assert(mockSequencer.run).to.haveBeenCalledWith(Matchers.any(Function));
@@ -44,13 +44,13 @@ describe('async.sequenced', () => {
   it('should reuse existing sequencer', async () => {
     class Class extends BaseDisposable {}
 
-    let descriptor = Mocks.object('descriptor');
+    const descriptor = Mocks.object('descriptor');
     descriptor.value = () => {};
 
-    let mockSequencer = jasmine.createSpyObj('Sequencer', ['run']);
+    const mockSequencer = jasmine.createSpyObj('Sequencer', ['run']);
     mockSequencer.run.and.returnValue(Promise.resolve());
 
-    let instance = Mocks.object('instance');
+    const instance = Mocks.object('instance');
     instance[__SEQUENCER] = mockSequencer;
     await decorator(Class.prototype, 'property', descriptor).value.call(instance, 1, 2);
     assert(mockSequencer.run).to.haveBeenCalledWith(Matchers.any(Function));
@@ -59,7 +59,7 @@ describe('async.sequenced', () => {
   it('should not throw error if the descriptor has no values', () => {
     class Class extends BaseDisposable {}
 
-    let descriptor = Mocks.object('descriptor');
+    const descriptor = Mocks.object('descriptor');
     assert(decorator(Class.prototype, 'property', descriptor)).to.equal(descriptor);
   });
 

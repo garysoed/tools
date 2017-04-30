@@ -10,16 +10,16 @@ import { PipeUtil } from './pipe-util';
 
 describe('pipeline.External', () => {
   it('should return decorator that adds the correct argument', () => {
-    let argMetaData = Mocks.object('ArgMetaData');
-    let key = 'key';
-    let target = Mocks.object('target');
-    let propertyKey = 'propertyKey';
-    let parameterIndex = 123;
+    const argMetaData = Mocks.object('ArgMetaData');
+    const key = 'key';
+    const target = Mocks.object('target');
+    const propertyKey = 'propertyKey';
+    const parameterIndex = 123;
 
     spyOn(PipeUtil, 'addArgument');
     spyOn(ArgMetaData, 'newInstance').and.returnValue(argMetaData);
 
-    let decorator = External(key);
+    const decorator = External(key);
     decorator(target, propertyKey, parameterIndex);
 
     assert(PipeUtil.addArgument).to

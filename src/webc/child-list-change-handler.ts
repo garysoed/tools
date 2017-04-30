@@ -36,12 +36,12 @@ export class ChildListChangeHandler implements IHandler<ChildListChangeConfig> {
    * @return The newly created nodelist object.
    */
   createNodeList_(collection: HTMLCollection): NodeList {
-    const nodeList = <NodeList> {
+    const nodeList = {
       length: collection.length,
       item(index: number): Node {
         return collection.item(index);
       },
-    };
+    } as NodeList;
 
     Arrays
         .fromItemList(collection)
@@ -103,7 +103,7 @@ export class ChildListChangeHandler implements IHandler<ChildListChangeConfig> {
           nextSibling: null,
           oldValue: null,
           previousSibling: null,
-          removedNodes: <NodeList> <any> {length: 0},
+          removedNodes: {length: 0} as any as NodeList,
           target: targetEl,
           type: 'childList',
         }]);

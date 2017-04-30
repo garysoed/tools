@@ -126,7 +126,7 @@ describe('inject.Injector', () => {
       const bindProviderSpy = spyOn(Injector, 'bindProvider');
 
       Injector.bind(TestClass, bindKey);
-      assert(Injector.bindProvider).to.haveBeenCalledWith(<any> Matchers.any(Function), bindKey);
+      assert(Injector.bindProvider).to.haveBeenCalledWith(Matchers.any(Function) as any, bindKey);
 
       assert(bindProviderSpy.calls.argsFor(0)[0](mockInjector)).to.equal(mockInstance);
       assert(mockInjector.instantiate).to.haveBeenCalledWith(TestClass);

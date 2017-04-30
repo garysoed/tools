@@ -13,7 +13,7 @@ describe('jasmine.BooleanAssert', () => {
 
   describe('beFalse', () => {
     it('should call the matchers correctly', () => {
-      let mockMatchers = jasmine.createSpyObj('Matcher', ['toBe']);
+      const mockMatchers = jasmine.createSpyObj('Matcher', ['toBe']);
       spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
 
       assert.beFalse();
@@ -24,7 +24,7 @@ describe('jasmine.BooleanAssert', () => {
 
   describe('beTrue', () => {
     it('should call the matchers correctly', () => {
-      let mockMatchers = jasmine.createSpyObj('Matcher', ['toBe']);
+      const mockMatchers = jasmine.createSpyObj('Matcher', ['toBe']);
       spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
 
       assert.beTrue();

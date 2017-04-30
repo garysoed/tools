@@ -43,7 +43,7 @@ export class Stringify {
       delimiter: string = ',',
       pad: string = '  ',
       indent: string = ''): string {
-    let lines: string[] = [];
+    const lines: string[] = [];
     if (StringType.check(field)) {
       lines.push(`"${field}"`);
     } else if (NativeType.check(field)) {
@@ -54,11 +54,11 @@ export class Stringify {
       return String(field).match(/^function [^\(]*\([^\)]*\)/)![0];
     } else {
       lines.push('{');
-      let subArray = Maps
+      const subArray = Maps
           .fromRecord(field)
           .entries()
           .map(([key, value]: [string, any]): string => {
-            let stringifiedValue = Stringify.formatField_(
+            const stringifiedValue = Stringify.formatField_(
                 value,
                 delimiter,
                 pad,
@@ -82,7 +82,7 @@ export class Stringify {
             lines.push(line);
           });
       if (!!pad) {
-        lines.push(indent + '}');
+        lines.push(`${indent}}`);
       } else {
         lines.push('}');
       }
@@ -100,12 +100,12 @@ export class Stringify {
   private static grabFields_(instance: any): Stringifiable {
     if (instance instanceof Object
         && ANNOTATIONS.hasAnnotation(instance.constructor)) {
-      let record = {};
+      const record = {};
       Arrays
           .of(ANNOTATIONS.forCtor(instance.constructor).getAnnotatedProperties())
           .forEach((field: string | symbol): void => {
-            let stringifiedField = SymbolType.check(field) ? `[${field.toString()}]` : field;
-            let value = Stringify.grabFields_(instance[field]);
+            const stringifiedField = SymbolType.check(field) ? `[${field.toString()}]` : field;
+            const value = Stringify.grabFields_(instance[field]);
             record[stringifiedField] = value;
           });
       return record;

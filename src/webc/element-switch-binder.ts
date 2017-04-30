@@ -80,12 +80,12 @@ export class ElementSwitchBinder<T> implements DomBinder<T> {
     if (value === null) {
       return;
     }
-    let id = this.mapping_.get(value);
+    const id = this.mapping_.get(value);
     if (id === undefined) {
       return;
     }
 
-    let element = this.parentEl_.querySelector(`#${id}`);
+    const element = this.parentEl_.querySelector(`#${id}`);
     if (element === null) {
       return;
     }

@@ -58,7 +58,7 @@ export class Randomizer {
    * @return A randomly generated short ID.
    */
   shortId(): string {
-    let id: string[] = [];
+    const id: string[] = [];
     for (let i = 0; i < 7; i++) {
       id.push(this.list(ID_CHARS));
     }

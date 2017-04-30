@@ -19,7 +19,7 @@ export class Doms {
         let currentEl: HTMLElement | null = start;
         return {
           next(value?: any): IteratorResult<HTMLElement> {
-            let done = currentEl === null;
+            const done = currentEl === null;
             const nextValue = currentEl;
 
             if (currentEl !== null) {
@@ -61,7 +61,7 @@ export class Doms {
    */
   static offsetParentIterable(start: HTMLElement): Iterable<HTMLElement> {
     return Doms.domIterable(start, (fromEl: HTMLElement) => {
-      return <HTMLElement> fromEl.offsetParent;
+      return fromEl.offsetParent as HTMLElement;
     });
   }
 

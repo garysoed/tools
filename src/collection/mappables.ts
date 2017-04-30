@@ -54,7 +54,7 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
   }
 
   asRecord(toString: (key: K) => string = (key: K) => String(key)): {[key: string]: V} {
-    let record = <{[key: string]: V}> {};
+    const record = {} as {[key: string]: V};
     this.forEach((value: V, key: K) => {
       record[toString(key)] = value;
     });
@@ -62,7 +62,7 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
   }
 
   entries(): FluentNonIndexable<[K, V]> {
-    let entries: [K, V][] = [];
+    const entries: [K, V][] = [];
     this.forEach((value: V, key: K) => {
       entries.push([key, value]);
     });
@@ -70,7 +70,7 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
   }
 
   filter(fn: (value: [K, V]) => boolean): FluentMappable<K, V> {
-    let filteredMap = new Map<K, V>();
+    const filteredMap = new Map<K, V>();
     this.forEach((value: V, key: K) => {
       if (fn([key, value])) {
         filteredMap.set(key, value);
@@ -86,7 +86,7 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
   }
 
   findEntry(fn: (value: V, key: K) => boolean): ([K, V]|null) {
-    let iterator = this.asIterator();
+    const iterator = this.asIterator();
     for (let entry = iterator.next(); !entry.done; entry = iterator.next()) {
       if (fn(entry.value[1], entry.value[0])) {
         return entry.value;
@@ -96,12 +96,12 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
   }
 
   findKey(fn: (value: V, key: K) => boolean): (K|null) {
-    let entry = this.findEntry(fn);
+    const entry = this.findEntry(fn);
     return entry === null ? null : entry[0];
   }
 
   findValue(fn: (value: V, key: K) => boolean): (V|null) {
-    let entry = this.findEntry(fn);
+    const entry = this.findEntry(fn);
     return entry === null ? null : entry[1];
   }
 
@@ -125,7 +125,7 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
   }
 
   keys(): FluentNonIndexable<K> {
-    let keys: K[] = [];
+    const keys: K[] = [];
     this.forEach((value: V, key: K) => {
       keys.push(key);
     });
@@ -133,9 +133,9 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
   }
 
   map<K2, V2>(fn: (value: [K, V]) => [K2, V2]): FluentMappable<K2, V2> {
-    let transformedMap = new Map<K2, V2>();
+    const transformedMap = new Map<K2, V2>();
     this.forEach((value: V, key: K) => {
-      let transformedEntry = fn([key, value]);
+      const transformedEntry = fn([key, value]);
       transformedMap.set(transformedEntry[0], transformedEntry[1]);
     });
     return new FluentMappable<K2, V2>(transformedMap);
@@ -172,7 +172,7 @@ export class FluentMappable<K, V> extends BaseFluent<Map<K, V>> implements IFlue
   }
 
   values(): FluentNonIndexable<V> {
-    let values: V[] = [];
+    const values: V[] = [];
     this.forEach((value: V, key: K) => {
       values.push(value);
     });
@@ -188,7 +188,7 @@ export class Mappables {
    * @return Map wrapper object with values of the same key grouped together into one array.
    */
   static group<K, V>(entries: [K, V][]): FluentMappable<K, V[]> {
-    let map: Map<K, V[]> = new Map();
+    const map: Map<K, V[]> = new Map();
     Indexables.of(entries)
         .forEach(([key, value]: [K, V]) => {
           if (!map.has(key)) {

@@ -8,12 +8,12 @@ import { MappedIterable } from './mapped-iterable';
 
 describe('collection.MappedIterable', () => {
   it('should create the correct iterable', () => {
-    let iterable = MappedIterable.newInstance(
+    const iterable = MappedIterable.newInstance(
         ArrayIterable.newInstance([1, 2, 3, 4]),
         (value: number) => {
           return value + 1;
         });
-    let result: number[] = [];
+    const result: number[] = [];
 
     Iterables.of(iterable).iterate((value: number) => {
       result.push(value);

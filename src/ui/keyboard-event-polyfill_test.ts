@@ -38,12 +38,12 @@ describe('ui.KeyboardEventPolyfill', () => {
 
   describe('polyfill key', () => {
     it('should return the value correctly', () => {
-      let event = new MockKeyboardEvent(97);
+      const event = new MockKeyboardEvent(97);
       assert(event['key']).to.equal('a');
     });
 
     it('should throw error if the event has no charCode', () => {
-      let event = new MockKeyboardEvent(undefined);
+      const event = new MockKeyboardEvent(undefined);
       assert(() => {
         event['key'];
       }).to.throwError(/Unhandled KeyboardEvent platform/);

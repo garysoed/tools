@@ -13,7 +13,7 @@ export class Animation {
    * @return The new instance of Animation with the appended keyframe.
    */
   appendKeyframe(keyframe: AnimationKeyframe): Animation {
-    let newKeyframes = this.keyframes_.slice(0);
+    const newKeyframes = this.keyframes_.slice(0);
     newKeyframes.push(keyframe);
     return Animation.newInstance(newKeyframes, this.options_);
   }

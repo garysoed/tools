@@ -112,13 +112,13 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
               instance,
               groupedConfig,
               [{
-                addedNodes: <NodeList> <any> {length: 0},
+                addedNodes: {length: 0} as any as NodeList,
                 attributeName: attributeName,
                 attributeNamespace: null,
                 nextSibling: null,
                 oldValue: null,
                 previousSibling: null,
-                removedNodes: <NodeList> <any> {length: 0},
+                removedNodes: {length: 0} as any as NodeList,
                 target: targetEl,
                 type: 'attributes',
               }]);

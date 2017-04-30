@@ -30,7 +30,7 @@ describe('event.ListenableDom', () => {
       assert(mockEventTarget.dispatchEvent).to.haveBeenCalledWith(Matchers.any(Event));
       const event = mockEventTarget.dispatchEvent.calls.argsFor(0)[0];
       assert(event['payload']).to.equal(payload);
-      assert(<boolean> event.bubbles).to.beTrue();
+      assert(event.bubbles as boolean).to.beTrue();
 
       assert(mockCallback).to.haveBeenCalledWith();
     });
@@ -51,7 +51,7 @@ describe('event.ListenableDom', () => {
       assert(mockEventTarget.dispatchEvent).to.haveBeenCalledWith(Matchers.any(Event));
       const event = mockEventTarget.dispatchEvent.calls.argsFor(0)[0];
       assert(event['payload']).to.equal(payload);
-      assert(<boolean> event.bubbles).to.beTrue();
+      assert(event.bubbles as boolean).to.beTrue();
 
       assert(mockCallback).to.haveBeenCalledWith();
     });
