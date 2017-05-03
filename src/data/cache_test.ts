@@ -13,6 +13,11 @@ describe('data.cache', () => {
     }
 
     @cache()
+    add(a: any, b: any): number {
+      return this.spy_(a, b);
+    }
+
+    @cache()
     getProperty(): any {
       return this.spy_();
     }
@@ -20,11 +25,6 @@ describe('data.cache', () => {
     @cache()
     method(): void {
       return this.spy_();
-    }
-
-    @cache()
-    add(a: any, b: any): number {
-      return this.spy_(a, b);
     }
   }
 

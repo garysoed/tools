@@ -22,58 +22,6 @@ export const ATTR_CHANGE_ANNOTATIONS: Annotations<AttributeChangeHandlerConfig> 
  * Handles attribute changes.
  */
 export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerConfig> {
-
-  /**
-   * @param callback
-   * @return New instance of mutation observer.
-   */
-  createMutationObserver_(
-      instance: BaseDisposable,
-      groupedConfig: Map<string, AttributeChangeHandlerConfig[]>): MutationObserver {
-    return new MutationObserver(this.onMutation_.bind(this, instance, groupedConfig));
-  }
-
-  /**
-   * Handles event when there is a mutation on the mutation observer.
-   *
-   * @param instance Instance to call the handler on.
-   * @param configs Array of attribute change configurations.
-   * @param records Records collected by the mutation observer.
-   */
-  onMutation_(
-      instance: any,
-      configs: Map<string, AttributeChangeHandlerConfig[]>,
-      records: MutationRecord[]): void {
-    Arrays.of(records)
-        .forEach((record: MutationRecord) => {
-          const attributeName = record.attributeName;
-          if (attributeName === null) {
-            return;
-          }
-
-          if (configs.has(attributeName)) {
-            Arrays
-                .of(configs.get(attributeName)!)
-                .forEach(((attributeName: string, config: AttributeChangeHandlerConfig) => {
-                  const {handlerKey, parser} = config;
-                  const handler = instance[handlerKey];
-                  if (!!handler) {
-                    if (parser !== null) {
-                      const targetNode = record.target;
-                      if (targetNode instanceof Element) {
-                        const oldValue = parser.parse(record.oldValue);
-                        const newValue = parser.parse(targetNode.getAttribute(attributeName));
-                        handler.call(instance, newValue, oldValue);
-                      }
-                    } else {
-                      handler.call(instance);
-                    }
-                  }
-                }).bind(this, attributeName));
-          }
-        });
-  }
-
   /**
    * @override
    */
@@ -158,11 +106,62 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
   }
 
   /**
+   * @param callback
+   * @return New instance of mutation observer.
+   */
+  createMutationObserver_(
+      instance: BaseDisposable,
+      groupedConfig: Map<string, AttributeChangeHandlerConfig[]>): MutationObserver {
+    return new MutationObserver(this.onMutation_.bind(this, instance, groupedConfig));
+  }
+
+  /**
    * @override
    */
   getConfigs(instance: BaseDisposable): Map<string | symbol, Set<AttributeChangeHandlerConfig>> {
     return ATTR_CHANGE_ANNOTATIONS
         .forCtor(instance.constructor)
         .getAttachedValues();
+  }
+
+  /**
+   * Handles event when there is a mutation on the mutation observer.
+   *
+   * @param instance Instance to call the handler on.
+   * @param configs Array of attribute change configurations.
+   * @param records Records collected by the mutation observer.
+   */
+  onMutation_(
+      instance: any,
+      configs: Map<string, AttributeChangeHandlerConfig[]>,
+      records: MutationRecord[]): void {
+    Arrays.of(records)
+        .forEach((record: MutationRecord) => {
+          const attributeName = record.attributeName;
+          if (attributeName === null) {
+            return;
+          }
+
+          if (configs.has(attributeName)) {
+            Arrays
+                .of(configs.get(attributeName)!)
+                .forEach(((attributeName: string, config: AttributeChangeHandlerConfig) => {
+                  const {handlerKey, parser} = config;
+                  const handler = instance[handlerKey];
+                  if (!!handler) {
+                    if (parser !== null) {
+                      const targetNode = record.target;
+                      if (targetNode instanceof Element) {
+                        const oldValue = parser.parse(record.oldValue);
+                        const newValue = parser.parse(targetNode.getAttribute(attributeName));
+                        handler.call(instance, newValue, oldValue);
+                      }
+                    } else {
+                      handler.call(instance);
+                    }
+                  }
+                }).bind(this, attributeName));
+          }
+        });
   }
 }

@@ -42,12 +42,6 @@ export class Mocks {
     return mock;
   }
 
-  static getter(target: any, name: string, value: any): void {
-    Object.defineProperty(target, name, {
-      get: () => value,
-    });
-  }
-
   /**
    * Creates a mock element.
    *
@@ -59,11 +53,17 @@ export class Mocks {
     return new MockElement(queries);
   }
 
+  static getter(target: any, name: string, value: any): void {
+    Object.defineProperty(target, name, {
+      get: () => value,
+    });
+  }
+
   /**
    * @param items Content of the list.
    * @return The mock element object.
    */
-  static itemList<T>(items: T[]): {length: number, item: (index: number) => T} {
+  static itemList<T>(items: T[]): {item: (index: number) => T, length: number} {
     return {
       length: items.length,
       item(index: number): T {

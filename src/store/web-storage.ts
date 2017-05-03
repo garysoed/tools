@@ -35,6 +35,14 @@ export class WebStorage<T> implements GsStorage<T> {
   }
 
   /**
+   * @param key Key to base the path from.
+   * @return The key with the specified prefix appended.
+   */
+  private getPath_(key: string): string {
+    return `${this.prefix_}/${key}`;
+  }
+
+  /**
    * Updates the indexes with the given values.
    *
    * @param indexes Indexes to update.
@@ -42,14 +50,6 @@ export class WebStorage<T> implements GsStorage<T> {
    */
   private updateIndexes_(indexes: Set<string>): void {
     this.storage_.setItem(this.prefix_, JSON.stringify(Arrays.fromIterable(indexes).asArray()));
-  }
-
-  /**
-   * @param key Key to base the path from.
-   * @return The key with the specified prefix appended.
-   */
-  private getPath_(key: string): string {
-    return `${this.prefix_}/${key}`;
   }
 
   /**

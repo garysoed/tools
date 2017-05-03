@@ -137,9 +137,6 @@ export class FluentNonIndexable<T> extends BaseFluent<T[]> implements IFluentNon
 }
 
 export class NonIndexables {
-  static of<T>(data: T[]): FluentNonIndexable<T> {
-    return new FluentNonIndexable<T>(data);
-  }
 
   static fromIterable<T>(iterable: Iterable<T>): FluentNonIndexable<T> {
     const data: T[] = [];
@@ -148,6 +145,10 @@ export class NonIndexables {
           data.push(value);
         });
 
+    return new FluentNonIndexable<T>(data);
+  }
+
+  static of<T>(data: T[]): FluentNonIndexable<T> {
     return new FluentNonIndexable<T>(data);
   }
 }

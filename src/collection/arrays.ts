@@ -47,7 +47,7 @@ export class Arrays {
    * @param <T> Type of element in the collection.
    * @return Array wrapper object to do operations on.
    */
-  static fromItemList<T>(list: {length: number, item: (index: number) => T}): FluentIndexable<T> {
+  static fromItemList<T>(list: {item: (index: number) => T, length: number}): FluentIndexable<T> {
     const array: T[] = [];
     for (let i = 0; i < list.length; i++) {
       array.push(list.item(i));

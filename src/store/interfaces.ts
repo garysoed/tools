@@ -9,6 +9,12 @@ export interface Storage<T> {
   delete(id: string): Promise<void>;
 
   /**
+   * Reserves a new ID in the storage.
+   * @return Promise that will be resolved with the new ID.
+   */
+  generateId(): Promise<string>;
+
+  /**
    * Checks if the object corresponding to the given ID exists in the storage.
    *
    * @param id ID of the object to be checked.
@@ -34,12 +40,6 @@ export interface Storage<T> {
    *    the object does not exist.
    */
   read(id: string): Promise<T | null>;
-
-  /**
-   * Reserves a new ID in the storage.
-   * @return Promise that will be resolved with the new ID.
-   */
-  generateId(): Promise<string>;
 
   /**
    * Updates the given object.

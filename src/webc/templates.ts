@@ -36,6 +36,10 @@ export class Templates {
     return Graph.run<string | null>(this, 'pipeTemplate_', {'key': key});
   }
 
+  static newInstance(replacementMap: Map<RegExp, string> = new Map()): Templates {
+    return new Templates(replacementMap);
+  }
+
   /**
    * Registers the given template string to the given key.
    * @param key The key to register to.
@@ -46,9 +50,5 @@ export class Templates {
       throw new Error(`Key ${key} is already registered`);
     }
     Templates.templates_.set(key, templateStr);
-  }
-
-  static newInstance(replacementMap: Map<RegExp, string> = new Map()): Templates {
-    return new Templates(replacementMap);
   }
 }

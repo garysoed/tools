@@ -10,8 +10,8 @@ import { hash } from '../util/hash';
 export class AnnotationsHandler<T> {
   private static readonly REGISTERED_ANNOTATIONS_: Map<string, AnnotationsHandler<any>> = new Map();
   private readonly annotation_: symbol;
-  private readonly propertyValues_: Map<string | symbol, Set<T>>;
   private readonly parent_: any;
+  private readonly propertyValues_: Map<string | symbol, Set<T>>;
 
   /**
    * @param annotation The symbol to identify the annotation.

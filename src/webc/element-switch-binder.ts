@@ -10,10 +10,9 @@ export const __enumValue: symbol = Symbol('enumValue');
  * @param <T> The enum type of the values.
  */
 export class ElementSwitchBinder<T> implements DomBinder<T> {
+  private currentActiveEl_: HTMLElement | null;
   private readonly mapping_: Map<T, string>;
   private readonly parentEl_: Element;
-
-  private currentActiveEl_: HTMLElement | null;
 
   constructor(parentEl: Element, mapping: Map<T, string>) {
     this.currentActiveEl_ = null;

@@ -2,17 +2,6 @@
  * Utility methods to work with typescript's enums.
  */
 export class Enums {
-  /**
-   * Converts enum number (as string) to the corresponding enum value.
-   *
-   * @param stringValue The number to convert to enum value.
-   * @param enumSet The set of enum values.
-   * @return The enum value corresponding to the enum number.
-   */
-  static fromNumberString<E>(stringValue: string, enumSet: gs.IEnum): E {
-    const nameString: string = enumSet[stringValue];
-    return enumSet[nameString];
-  }
 
   /**
    * Converts enum name (as lower case string) to the corresponding enum value.
@@ -23,6 +12,18 @@ export class Enums {
    */
   static fromLowerCaseString<E>(stringValue: string, enumSet: gs.IEnum): E {
     return enumSet[stringValue.toUpperCase()];
+  }
+
+  /**
+   * Converts enum number (as string) to the corresponding enum value.
+   *
+   * @param stringValue The number to convert to enum value.
+   * @param enumSet The set of enum values.
+   * @return The enum value corresponding to the enum number.
+   */
+  static fromNumberString<E>(stringValue: string, enumSet: gs.IEnum): E {
+    const nameString: string = enumSet[stringValue];
+    return enumSet[nameString];
   }
 
   /**

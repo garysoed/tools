@@ -4,8 +4,8 @@ export const GLOBALS = {lastHash: 0};
 
 
 type MapLike<K, V> = {
-  has(key: K): boolean;
   get(key: K): V | undefined;
+  has(key: K): boolean;
   set(key: K, value: V): void;
 };
 

@@ -2,8 +2,8 @@ import { DomBinder } from './interfaces';
 
 
 export class PropertyBinder<T> implements DomBinder<T> {
-  private readonly propertyName_: string;
   private readonly element_: Element;
+  private readonly propertyName_: string;
 
   /**
    * @param element The element to bind the property to.

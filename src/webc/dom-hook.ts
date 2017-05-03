@@ -5,8 +5,8 @@ import { DomBinder } from './interfaces';
  * Hooks JS code with a location in the DOM.
  */
 export class DomHook<T> {
-  private deleteOnFalsy_: boolean;
   private binder_: DomBinder<T> | null = null;
+  private deleteOnFalsy_: boolean;
 
   /**
    * @param parser Parser for parsing the value at the DOM location.

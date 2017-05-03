@@ -66,28 +66,6 @@ export class Handler {
     return EVENT_HANDLER.createDecorator(event, this.selector_, boundArgs);
   }
 
-  /**
-   * Configures the given instance to handle events from the given element.
-   *
-   * @param element The element that the given instance is listening to.
-   * @param instance The handler for events on the given element.
-   */
-  static configure(element: HTMLElement, instance: BaseDisposable): void {
-    const unresolvedSelectorIterable = Sets
-        .of(new Set<string | null>())
-        .addAll(Handler.configure_(element, instance, ATTRIBUTE_CHANGE_HANDLER))
-        .addAll(Handler.configure_(element, instance, EVENT_HANDLER))
-        .addAll(Handler.configure_(element, instance, CHILD_LIST_CHANGE_HANDLER))
-        .asIterable();
-
-    const unresolvedSelectors = Arrays.fromIterable(unresolvedSelectorIterable).asArray();
-    const selectorsString = unresolvedSelectors.join(', ');
-
-    if (unresolvedSelectors.length > 0) {
-      throw new Error(`The following selectors cannot be resolved for handle: ${selectorsString}`);
-    }
-  }
-
   private static configure_<T extends {selector: string | null}>(
       parentElement: HTMLElement,
       instance: BaseDisposable,
@@ -122,6 +100,28 @@ export class Handler {
         });
 
     return unresolvedSelectors;
+  }
+
+  /**
+   * Configures the given instance to handle events from the given element.
+   *
+   * @param element The element that the given instance is listening to.
+   * @param instance The handler for events on the given element.
+   */
+  static configure(element: HTMLElement, instance: BaseDisposable): void {
+    const unresolvedSelectorIterable = Sets
+        .of(new Set<string | null>())
+        .addAll(Handler.configure_(element, instance, ATTRIBUTE_CHANGE_HANDLER))
+        .addAll(Handler.configure_(element, instance, EVENT_HANDLER))
+        .addAll(Handler.configure_(element, instance, CHILD_LIST_CHANGE_HANDLER))
+        .asIterable();
+
+    const unresolvedSelectors = Arrays.fromIterable(unresolvedSelectorIterable).asArray();
+    const selectorsString = unresolvedSelectors.join(', ');
+
+    if (unresolvedSelectors.length > 0) {
+      throw new Error(`The following selectors cannot be resolved for handle: ${selectorsString}`);
+    }
   }
 }
 

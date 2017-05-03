@@ -32,6 +32,13 @@ class SortedSet<T> implements Iterable<T> {
   }
 
   /**
+   * Number of elements in the set.
+   */
+  getSize(): number {
+    return this.array_.length;
+  }
+
+  /**
    * Inserts the given element at the given position.
    *
    * @param value The element to insert.
@@ -62,13 +69,6 @@ class SortedSet<T> implements Iterable<T> {
       this.array_.splice(this.positions_.get(value)!, 1);
       this.positions_.delete(value);
     }
-  }
-
-  /**
-   * Number of elements in the set.
-   */
-  getSize(): number {
-    return this.array_.length;
   }
 }
 

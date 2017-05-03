@@ -17,8 +17,8 @@ export class ChildrenElementsBinder<T> implements DomBinder<T[]> {
   private readonly elementPool_: Set<Element>;
   private readonly endPadCount_: number;
   private readonly instance_: any;
-  private readonly startPadCount_: number;
   private readonly parentEl_: Element;
+  private readonly startPadCount_: number;
 
   constructor(
       parentEl: Element,

@@ -37,13 +37,6 @@ export class GraphNode<T> {
   }
 
   /**
-   * The argument metadata for this node.
-   */
-  getArgs(): ArgMetaData[] {
-    return this.argsMetaData_;
-  }
-
-  /**
    * Clears the cache for the given context and call arguments.
    *
    * @param context The context to clear the cache.
@@ -58,6 +51,13 @@ export class GraphNode<T> {
     if (!!cacheKey) {
       cache.delete(cacheKey);
     }
+  }
+
+  /**
+   * The argument metadata for this node.
+   */
+  getArgs(): ArgMetaData[] {
+    return this.argsMetaData_;
   }
 
   /**

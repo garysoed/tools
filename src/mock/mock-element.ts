@@ -37,13 +37,6 @@ class MockElement {
   }
 
   /**
-   * Stub implementation.
-   */
-  removeEventListener(): void {
-    // Noop
-  }
-
-  /**
    * Fake implementation of HTMLElement's query selector, based on the mapping provided in the
    * constructor.
    *
@@ -52,6 +45,13 @@ class MockElement {
    */
   querySelector(query: string): any {
     return this.queries_[query];
+  }
+
+  /**
+   * Stub implementation.
+   */
+  removeEventListener(): void {
+    // Noop
   }
 }
 

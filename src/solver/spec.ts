@@ -13,13 +13,6 @@ export class Spec {
   }
 
   /**
-   * The delta of the numbers.
-   */
-  getDelta(): number {
-    return this.delta_;
-  }
-
-  /**
    * Generates the values specified.
    */
   generateValues(): number[] {
@@ -28,6 +21,13 @@ export class Spec {
       values.push(value);
     }
     return values;
+  }
+
+  /**
+   * The delta of the numbers.
+   */
+  getDelta(): number {
+    return this.delta_;
   }
 
   /**

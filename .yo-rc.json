@@ -4,6 +4,7 @@
     "languages": [
       "typescript"
     ],
-    "name": "Unnamed project"
+    "name": "Unnamed project",
+    "mainBazelTarget": "gs_tools"
   }
 }

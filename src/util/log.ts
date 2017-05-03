@@ -53,6 +53,15 @@ export class Log {
   }
 
   /**
+   * Enables / disables logging.
+   *
+   * @param enabled True iff logging should be enabled.
+   */
+  static setEnabled(enabled: boolean): void {
+    Log.ENABLED_ = enabled;
+  }
+
+  /**
    * Logs warning message.
    *
    * @param log The log object.
@@ -60,14 +69,5 @@ export class Log {
    */
   static warn(log: Log, message: string): void {
     log.callIfEnabled_(console.warn.bind(console), message);
-  }
-
-  /**
-   * Enables / disables logging.
-   *
-   * @param enabled True iff logging should be enabled.
-   */
-  static setEnabled(enabled: boolean): void {
-    Log.ENABLED_ = enabled;
   }
 }

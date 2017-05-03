@@ -15,19 +15,19 @@ export class BaseListener extends BaseDisposable implements Listener {
     this.deregisterFns_ = new Map<string, DisposableFunction>();
   }
 
-  disposeInternal(): void {
-    Maps.of(this.deregisterFns_).forEach((value: DisposableFunction) => {
-      value.dispose();
-    });
-    super.disposeInternal();
-  }
-
   private getHash_<E>(
       listenable: BaseListenable<E>,
       eventType: E,
       callback: (payload?: any) => void,
       useCapture: boolean): string {
     return`${hash(listenable)}_${hash(eventType)}_${hash(callback)}_${hash(useCapture)}`;
+  }
+
+  disposeInternal(): void {
+    Maps.of(this.deregisterFns_).forEach((value: DisposableFunction) => {
+      value.dispose();
+    });
+    super.disposeInternal();
   }
 
   listenTo<E>(

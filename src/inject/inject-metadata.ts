@@ -11,17 +11,17 @@ export class InjectMetadata {
       private isOptional_: boolean) { }
 
   /**
-   * True iff the injection parameter is optional.
-   */
-  isOptional(): boolean {
-    return this.isOptional_;
-  }
-
-  /**
    * The injection key of the parameter.
    */
   getKeyName(): string | symbol {
     return this.keyName_;
+  }
+
+  /**
+   * True iff the injection parameter is optional.
+   */
+  isOptional(): boolean {
+    return this.isOptional_;
   }
 
   /**

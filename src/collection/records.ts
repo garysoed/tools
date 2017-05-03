@@ -27,20 +27,6 @@ type Record = {[key: string]: any};
  * Note that every value in the record must be of the same type.
  */
 export class Records {
-  /**
-   * Starts by using a record.
-   *
-   * @param <T> Type of the record's value.
-   * @param data The record object to start with.
-   * @return Record wrapper object to do operations on.
-   */
-  static of(data: Record): FluentMappable<string, any> {
-    const map = new Map<string, any>();
-    for (const key in data) {
-      map.set(key, data[key]);
-    }
-    return Mappables.of(map);
-  }
 
   /**
    * Starts by using an array of keys.
@@ -55,6 +41,21 @@ export class Records {
     keys.forEach((key: string) => {
       map.set(key, fn(key));
     });
+    return Mappables.of(map);
+  }
+
+  /**
+   * Starts by using a record.
+   *
+   * @param <T> Type of the record's value.
+   * @param data The record object to start with.
+   * @return Record wrapper object to do operations on.
+   */
+  static of(data: Record): FluentMappable<string, any> {
+    const map = new Map<string, any>();
+    for (const key in data) {
+      map.set(key, data[key]);
+    }
     return Mappables.of(map);
   }
 }

@@ -21,60 +21,6 @@ export const CHILD_LIST_CHANGE_ANNOTATIONS: Annotations<ChildListChangeConfig> =
 export class ChildListChangeHandler implements IHandler<ChildListChangeConfig> {
 
   /**
-   * @param callback
-   * @return New instance of mutation observer.
-   */
-  createMutationObserver_(
-      instance: BaseDisposable,
-      handlerKeys: Set<string | symbol>): MutationObserver {
-    return new MutationObserver(this.onMutation_.bind(this, instance, handlerKeys));
-  }
-
-  /**
-   * Creates a node list object from the given HTMLCollection object.
-   * @param collection HTMLCollection object to create the node list from.
-   * @return The newly created nodelist object.
-   */
-  createNodeList_(collection: HTMLCollection): NodeList {
-    const nodeList = {
-      length: collection.length,
-      item(index: number): Node {
-        return collection.item(index);
-      },
-    } as NodeList;
-
-    Arrays
-        .fromItemList(collection)
-        .forEach((node: Element, index: number) => {
-          nodeList[index] = node;
-        });
-    return nodeList;
-  }
-
-  /**
-   * Handles event when there is a mutation on the mutation observer.
-   *
-   * @param instance Instance to call the handler on.
-   * @param handlerKeys Set of handler keys.
-   * @param records Records collected by the mutation observer.
-   */
-  onMutation_(
-      instance: any,
-      handlerKeys: Set<string | symbol>,
-      records: MutationRecord[]): void {
-    Arrays.of(records)
-        .forEach((record: MutationRecord) => {
-          Sets.of(handlerKeys)
-              .forEach((handlerKey: string | symbol) => {
-                const handler = instance[handlerKey];
-                if (!!handler) {
-                  handler.call(instance, record.addedNodes, record.removedNodes);
-                }
-              });
-        });
-  }
-
-  /**
    * @override
    */
   configure(
@@ -137,11 +83,65 @@ export class ChildListChangeHandler implements IHandler<ChildListChangeConfig> {
   }
 
   /**
+   * @param callback
+   * @return New instance of mutation observer.
+   */
+  createMutationObserver_(
+      instance: BaseDisposable,
+      handlerKeys: Set<string | symbol>): MutationObserver {
+    return new MutationObserver(this.onMutation_.bind(this, instance, handlerKeys));
+  }
+
+  /**
+   * Creates a node list object from the given HTMLCollection object.
+   * @param collection HTMLCollection object to create the node list from.
+   * @return The newly created nodelist object.
+   */
+  createNodeList_(collection: HTMLCollection): NodeList {
+    const nodeList = {
+      length: collection.length,
+      item(index: number): Node {
+        return collection.item(index);
+      },
+    } as NodeList;
+
+    Arrays
+        .fromItemList(collection)
+        .forEach((node: Element, index: number) => {
+          nodeList[index] = node;
+        });
+    return nodeList;
+  }
+
+  /**
    * @override
    */
   getConfigs(instance: BaseDisposable): Map<string | symbol, Set<ChildListChangeConfig>> {
     return CHILD_LIST_CHANGE_ANNOTATIONS
         .forCtor(instance.constructor)
         .getAttachedValues();
+  }
+
+  /**
+   * Handles event when there is a mutation on the mutation observer.
+   *
+   * @param instance Instance to call the handler on.
+   * @param handlerKeys Set of handler keys.
+   * @param records Records collected by the mutation observer.
+   */
+  onMutation_(
+      instance: any,
+      handlerKeys: Set<string | symbol>,
+      records: MutationRecord[]): void {
+    Arrays.of(records)
+        .forEach((record: MutationRecord) => {
+          Sets.of(handlerKeys)
+              .forEach((handlerKey: string | symbol) => {
+                const handler = instance[handlerKey];
+                if (!!handler) {
+                  handler.call(instance, record.addedNodes, record.removedNodes);
+                }
+              });
+        });
   }
 }

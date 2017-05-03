@@ -12,12 +12,6 @@ export class PromiseAssert<T> extends AnyAssert<Promise<T>> {
     }
   }
 
-  async resolveWith(expected: T): Promise<T> {
-    const resolveValue = await this.promise_;
-    this.getMatchers_(resolveValue).toEqual(expected);
-    return resolveValue;
-  }
-
   async reject(): Promise<any> {
     try {
       await this.promise_;
@@ -25,6 +19,10 @@ export class PromiseAssert<T> extends AnyAssert<Promise<T>> {
     } catch (e) {
       return e;
     }
+  }
+
+  async rejectWithError(errorMsg: RegExp): Promise<Error> {
+    return this.rejectWithErrorType<Error>(Error, errorMsg);
   }
 
   async rejectWithErrorType<E extends Error>(errorType: gs.ICtor<E>, errorMsg: RegExp): Promise<E> {
@@ -40,7 +38,9 @@ export class PromiseAssert<T> extends AnyAssert<Promise<T>> {
     }
   }
 
-  async rejectWithError(errorMsg: RegExp): Promise<Error> {
-    return this.rejectWithErrorType<Error>(Error, errorMsg);
+  async resolveWith(expected: T): Promise<T> {
+    const resolveValue = await this.promise_;
+    this.getMatchers_(resolveValue).toEqual(expected);
+    return resolveValue;
   }
 }

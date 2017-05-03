@@ -4,8 +4,8 @@
  * @param <T> Type of element in the iterable.
  */
 export class FilteredIterable<T> implements Iterable<T> {
-  private iterable_: Iterable<T>;
   private filter_: (value: T) => boolean;
+  private iterable_: Iterable<T>;
 
   constructor(iterable: Iterable<T>, filter: (value: T) => boolean) {
     this.iterable_ = iterable;

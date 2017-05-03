@@ -34,6 +34,31 @@ export class Jsons {
   }
 
   /**
+   * Mixins the two given JSONs.
+   *
+   * This will deep clone any objects in the fromObj. This will also overwrites any keys in the
+   * toObj with the value in fromObj.
+   *
+   * @param fromObj The source object to do the mixin.
+   * @param toObj The destination of the mixin.
+   * @param {gs.IJson } fromObj [description]
+   * @param {gs.IJson} toObj [description]
+   */
+  static mixin<A extends gs.IJson, B extends gs.IJson>(fromObj: A, toObj: B): A & B {
+    for (const key in fromObj) {
+      const value = fromObj[key];
+      if (toObj[key] !== undefined) {
+        if (typeof toObj[key] === 'object') {
+          this.mixin(value as any, toObj[key] as any);
+        }
+      } else {
+        toObj[key] = this.deepClone(value as any) as any;
+      }
+    }
+    return toObj as A & B;
+  }
+
+  /**
    * Sets the specified values in the given JSON, runs the given callback, and reverts the set
    * values.
    *
@@ -100,30 +125,5 @@ export class Jsons {
     });
 
     object[propertyName] = value;
-  }
-
-  /**
-   * Mixins the two given JSONs.
-   *
-   * This will deep clone any objects in the fromObj. This will also overwrites any keys in the
-   * toObj with the value in fromObj.
-   *
-   * @param fromObj The source object to do the mixin.
-   * @param toObj The destination of the mixin.
-   * @param {gs.IJson } fromObj [description]
-   * @param {gs.IJson} toObj [description]
-   */
-  static mixin<A extends gs.IJson, B extends gs.IJson>(fromObj: A, toObj: B): A & B {
-    for (const key in fromObj) {
-      const value = fromObj[key];
-      if (toObj[key] !== undefined) {
-        if (typeof toObj[key] === 'object') {
-          this.mixin(value as any, toObj[key] as any);
-        }
-      } else {
-        toObj[key] = this.deepClone(value as any) as any;
-      }
-    }
-    return toObj as A & B;
   }
 }

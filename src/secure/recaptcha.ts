@@ -33,17 +33,17 @@ export class Recaptcha extends BaseListenable<EventType> {
   }
 
   /**
-   * Resets the ReCaptcha widget instance.
-   */
-  reset(): void {
-    this.grecaptcha_.reset(this.widgetId_);
-  }
-
-  /**
    * The ReCaptcha response from the widget.
    */
   getResponse(): string {
     return this.grecaptcha_.getResponse(this.widgetId_);
+  }
+
+  /**
+   * Resets the ReCaptcha widget instance.
+   */
+  reset(): void {
+    this.grecaptcha_.reset(this.widgetId_);
   }
 
   /**

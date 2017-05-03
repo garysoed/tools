@@ -29,6 +29,13 @@ class Cache {
   }
 
   /**
+   * Clears all cached values stored.
+   */
+  clearAll(): void {
+    this.data_.clear();
+  }
+
+  /**
    * Gets the value for the given method.
    *
    * If there is a value cached, it returns that value. Otherwise, it will execute the given
@@ -44,13 +51,6 @@ class Cache {
       this.data_.set(methodName, delegate());
     }
     return this.data_.get(methodName);
-  }
-
-  /**
-   * Clears all cached values stored.
-   */
-  clearAll(): void {
-    this.data_.clear();
   }
 
   /**

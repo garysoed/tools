@@ -22,14 +22,6 @@ export class BaseListenable<T> extends BaseDisposable implements Listenable<T> {
   }
 
   /**
-   * @override
-   */
-  disposeInternal(): void {
-    this.bubbleCallbacksMap_.clear();
-    this.captureCallbacksMap_.clear();
-  }
-
-  /**
    * Dispatches the event.
    *
    * This function takes in a callback function. The event will be dispatched twice - once before
@@ -73,6 +65,14 @@ export class BaseListenable<T> extends BaseDisposable implements Listenable<T> {
         handler(payload);
       });
     }
+  }
+
+  /**
+   * @override
+   */
+  disposeInternal(): void {
+    this.bubbleCallbacksMap_.clear();
+    this.captureCallbacksMap_.clear();
   }
 
   /**

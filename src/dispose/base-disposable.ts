@@ -31,6 +31,11 @@ export class BaseDisposable implements Disposable {
   }
 
   /**
+   * Override this method for custom logic that are ran during disposal.
+   */
+  protected disposeInternal(): void { /* noop */ }
+
+  /**
    * Adds the given disposable so they are disposed when this object is disposed.
    *
    * @param disposables Disposable objects to be disposed when this object is disposed.
@@ -40,11 +45,6 @@ export class BaseDisposable implements Disposable {
       this.disposables_.push(disposable);
     });
   }
-
-  /**
-   * Override this method for custom logic that are ran during disposal.
-   */
-  protected disposeInternal(): void { /* noop */ }
 
   /**
    * Dispose this object.

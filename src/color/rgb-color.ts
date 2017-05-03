@@ -3,9 +3,9 @@ import { cache } from '../data/cache';
 
 
 export class RgbColor extends BaseColor {
-  private readonly red_: number;
-  private readonly green_: number;
   private readonly blue_: number;
+  private readonly green_: number;
+  private readonly red_: number;
 
   constructor(red: number, green: number, blue: number) {
     super();

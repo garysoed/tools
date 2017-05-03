@@ -93,14 +93,6 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
     return null;
   }
 
-  reduce<R>(fn: (value: T, index: number, previousResult: R) => R, initResult: R): R {
-    let result = initResult;
-    this.forEach((value: T, index: number) => {
-      result = fn(value, index, result);
-    });
-    return result;
-  }
-
   forEach(fn: (value: T, index: number) => void): FluentIndexable<T> {
     return this.forOf((value: T, index: number) => {
       fn(value, index);
@@ -134,6 +126,14 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
       newArray.push(fn(value, index));
     });
     return Indexables.of(newArray);
+  }
+
+  reduce<R>(fn: (value: T, index: number, previousResult: R) => R, initResult: R): R {
+    let result = initResult;
+    this.forEach((value: T, index: number) => {
+      result = fn(value, index, result);
+    });
+    return result;
   }
 
   removeAll(toRemove: Set<T>): IFluentIndexable<T> {

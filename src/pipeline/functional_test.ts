@@ -17,15 +17,25 @@ class TestClass {
   }
 
   @Pipe()
-  noArg(): string {
-    this.calls.push('noArg');
-    return 'noArg';
+  combine(
+      @Internal('noArg') noArg: string,
+      @Internal('getter') getter: string,
+      @Internal('getterSetter') getterSetter: string): string {
+    this.calls.push('combine');
+    return [noArg, getter, getterSetter].join(' ');
   }
 
   @Pipe()
   externalArg(@External('external') external: string): string {
     this.calls.push('externalArg');
     return external;
+  }
+
+  @Pipe()
+  forwardExternal(
+      @Internal('externalArg', {'external': 'forwardExternal'}) externalArg:  string): string {
+    this.calls.push('forwardExternal');
+    return `forwarded: ${externalArg}`;
   }
 
   @Pipe()
@@ -44,19 +54,9 @@ class TestClass {
   }
 
   @Pipe()
-  combine(
-      @Internal('noArg') noArg: string,
-      @Internal('getter') getter: string,
-      @Internal('getterSetter') getterSetter: string): string {
-    this.calls.push('combine');
-    return [noArg, getter, getterSetter].join(' ');
-  }
-
-  @Pipe()
-  forwardExternal(
-      @Internal('externalArg', {'external': 'forwardExternal'}) externalArg:  string): string {
-    this.calls.push('forwardExternal');
-    return `forwarded: ${externalArg}`;
+  noArg(): string {
+    this.calls.push('noArg');
+    return 'noArg';
   }
 }
 
