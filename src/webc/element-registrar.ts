@@ -1,10 +1,10 @@
+import { InstanceofType } from '../check/instanceof-type';
 import { Maps } from '../collection/maps';
 import { Sets } from '../collection/sets';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { Injector } from '../inject/injector';
 import { Parser } from '../interfaces/parser';
 import { Cases } from '../string/cases';
-import { Checks } from '../util/checks';
 import { Log } from '../util/log';
 import { BaseElement } from '../webc/base-element';
 import { CustomElementUtil } from '../webc/custom-element-util';
@@ -147,21 +147,6 @@ export class ElementRegistrar extends BaseDisposable {
   }
 
   /**
-   * Runs the given function on an instance stored in the given element.
-   *
-   * @param el The element containing the instance to run the function on.
-   * @param callback The function to run on the instance.
-   */
-  private static runOnInstance_(el: any, callback: (component: BaseElement) => void): any {
-    const instance = el[ElementRegistrar.__instance];
-    if (Checks.isInstanceOf(instance, BaseElement)) {
-      return callback(instance);
-    } else {
-      throw Error(`Cannot find valid instance on element ${el.nodeName}`);
-    }
-  }
-
-  /**
    * @return A new instance of the registrar.
    */
   static newInstance(injector: Injector, templates: Templates): ElementRegistrar {
@@ -170,5 +155,20 @@ export class ElementRegistrar extends BaseDisposable {
       throw new Error(`Required x-tag library not found`);
     }
     return new ElementRegistrar(injector, templates, xtag);
+  }
+
+  /**
+   * Runs the given function on an instance stored in the given element.
+   *
+   * @param el The element containing the instance to run the function on.
+   * @param callback The function to run on the instance.
+   */
+  private static runOnInstance_(el: any, callback: (component: BaseElement) => void): any {
+    const instance = el[ElementRegistrar.__instance];
+    if (InstanceofType(BaseElement).check(instance)) {
+      return callback(instance);
+    } else {
+      throw Error(`Cannot find valid instance on element ${el.nodeName}`);
+    }
   }
 }

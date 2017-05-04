@@ -1,12 +1,12 @@
-import { Checks } from '../util/checks';
-
-import { InjectMetadata } from './inject-metadata';
-import { InjectUtil } from './inject-util';
+import { CtorType } from '../check/ctor-type';
+import { InstanceofType } from '../check/instanceof-type';
+import { InjectMetadata } from '../inject/inject-metadata';
+import { InjectUtil } from '../inject/inject-util';
 
 
 export function inject(name: (string|null) = null, defaultValue?: any): ParameterDecorator {
   return function(target: Object, propertyKey: string | symbol, parameterIndex: number): void {
-    if (Checks.isCtor(target)) {
+    if (CtorType().check(target)) {
       const bindKey = name || propertyKey;
       const metadata = InjectUtil.getMetadataMap(target);
       metadata.set(parameterIndex, InjectMetadata.newInstance(bindKey, defaultValue));

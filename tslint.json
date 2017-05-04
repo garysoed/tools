@@ -32,12 +32,22 @@
           "public-constructor",
           "protected-constructor",
           "private-constructor",
-          "private-instance-method",
-          "protected-instance-method",
-          "public-instance-method",
-          "private-static-method",
-          "protected-static-method",
-          "public-static-method"
+          {
+            "name": "instance-methods",
+            "kinds": [
+              "private-instance-method",
+              "protected-instance-method",
+              "public-instance-method"
+            ]
+          },
+          {
+            "name": "static-methods",
+            "kinds": [
+              "private-static-method",
+              "protected-static-method",
+              "public-static-method"
+            ]
+          }
         ]
       }
     ],
