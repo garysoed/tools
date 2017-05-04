@@ -1,7 +1,5 @@
 import { Maps } from '../collection/maps';
-import { External } from '../pipeline/external';
-import { Graph } from '../pipeline/graph';
-import { Pipe } from '../pipeline/pipe';
+import { cache } from '../data/cache';
 
 
 /**
@@ -19,12 +17,8 @@ export class Templates {
    * @param key The key of the registered template to retrieve.
    * @return The registered template, or null if there are none.
    */
+  @cache()
   getTemplate(key: string): string | null {
-    return Graph.run<string | null>(this, 'pipeTemplate_', {'key': key});
-  }
-
-  @Pipe()
-  private pipeTemplate_(@External('key') key: string): string | null {
     if (!Templates.templates_.has(key)) {
       return null;
     }
