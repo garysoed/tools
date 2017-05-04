@@ -26,17 +26,6 @@ export class GraphNode<T> {
   }
 
   /**
-   * @param The context to get the cache mapping from.
-   * @return The cache mapping.
-   */
-  private getCache(context: any): Map<any[], T> {
-    if (!context[this.__cache_]) {
-      context[this.__cache_] = new Map<any[], T>();
-    }
-    return context[this.__cache_];
-  }
-
-  /**
    * Clears the cache for the given context and call arguments.
    *
    * @param context The context to clear the cache.
@@ -58,6 +47,17 @@ export class GraphNode<T> {
    */
   getArgs(): ArgMetaData[] {
     return this.argsMetaData_;
+  }
+
+  /**
+   * @param The context to get the cache mapping from.
+   * @return The cache mapping.
+   */
+  private getCache(context: any): Map<any[], T> {
+    if (!context[this.__cache_]) {
+      context[this.__cache_] = new Map<any[], T>();
+    }
+    return context[this.__cache_];
   }
 
   /**

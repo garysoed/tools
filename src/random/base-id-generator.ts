@@ -1,6 +1,21 @@
 export abstract class BaseIdGenerator {
 
   /**
+   * Generates a new ID that is different from any of the given existing IDs.
+   * @param existingIds IDs that already exist.
+   * @return Newly generated ID.
+   */
+  generate(existingIds: string[]): string {
+    const existingSet = new Set(existingIds);
+    let id = this.newId_();
+    while (existingSet.has(id)) {
+      id = this.resolveConflict_(id);
+    }
+    return id;
+  }
+
+
+  /**
    * Generates a new ID.
    *
    * @return The newly generated ID.
@@ -17,18 +32,4 @@ export abstract class BaseIdGenerator {
    * @return Best effort new ID.
    */
   protected abstract resolveConflict_(id: string): string;
-
-  /**
-   * Generates a new ID that is different from any of the given existing IDs.
-   * @param existingIds IDs that already exist.
-   * @return Newly generated ID.
-   */
-  generate(existingIds: string[]): string {
-    const existingSet = new Set(existingIds);
-    let id = this.newId_();
-    while (existingSet.has(id)) {
-      id = this.resolveConflict_(id);
-    }
-    return id;
-  }
 }

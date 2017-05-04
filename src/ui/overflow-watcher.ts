@@ -61,6 +61,16 @@ class OverflowWatcher extends BaseListenableListener<EventType> {
     this.addDisposable(listenableContainer);
   }
 
+  /**
+   * [[State]] of the element being watched.
+   */
+  getState(): State {
+    if (this.state_ === null) {
+      this.state_ = this.getState_();
+    }
+    return this.state_;
+  }
+
   // TODO(gs): Memoize this.
   private getState_(): State {
     // TODO(gs): Support bottom / left / right
@@ -88,16 +98,6 @@ class OverflowWatcher extends BaseListenableListener<EventType> {
           },
           oldState);
     }
-  }
-
-  /**
-   * [[State]] of the element being watched.
-   */
-  getState(): State {
-    if (this.state_ === null) {
-      this.state_ = this.getState_();
-    }
-    return this.state_;
   }
 }
 

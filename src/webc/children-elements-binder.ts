@@ -35,34 +35,6 @@ export class ChildrenElementsBinder<T> implements DomBinder<T[]> {
   }
 
   /**
-   * @return The children elements with the data object.
-   */
-  private getChildElements_(): Element[] {
-    const lastIndex = this.parentEl_.children.length - this.endPadCount_;
-    return Arrays
-        .fromItemList(this.parentEl_.children)
-        .filterElement((element: Element, index: number) => {
-          return index >= this.startPadCount_
-              && index < lastIndex
-              && this.dataHelper_.get(element) !== undefined;
-        })
-        .asArray();
-  }
-
-  /**
-   * @return A newly created element, or a reused element from the element pool.
-   */
-  private getElement_(): Element {
-    const element = Sets.of(this.elementPool_).anyValue();
-    if (element === null) {
-      return this.dataHelper_.create(this.parentEl_.ownerDocument, this.instance_);
-    } else {
-      this.elementPool_.delete(element);
-      return element;
-    }
-  }
-
-  /**
    * @override
    */
   delete(): void {
@@ -87,6 +59,34 @@ export class ChildrenElementsBinder<T> implements DomBinder<T[]> {
       return data;
     } else {
       return null;
+    }
+  }
+
+  /**
+   * @return The children elements with the data object.
+   */
+  private getChildElements_(): Element[] {
+    const lastIndex = this.parentEl_.children.length - this.endPadCount_;
+    return Arrays
+        .fromItemList(this.parentEl_.children)
+        .filterElement((element: Element, index: number) => {
+          return index >= this.startPadCount_
+              && index < lastIndex
+              && this.dataHelper_.get(element) !== undefined;
+        })
+        .asArray();
+  }
+
+  /**
+   * @return A newly created element, or a reused element from the element pool.
+   */
+  private getElement_(): Element {
+    const element = Sets.of(this.elementPool_).anyValue();
+    if (element === null) {
+      return this.dataHelper_.create(this.parentEl_.ownerDocument, this.instance_);
+    } else {
+      this.elementPool_.delete(element);
+      return element;
     }
   }
 

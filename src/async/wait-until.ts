@@ -25,15 +25,6 @@ class WaitUntil extends BaseListener {
     this.promise_ = null;
   }
 
-  private onTick_(interval: Interval, resolve: () => void, reject: (error: Error) => void): void {
-    if (this.isDisposed()) {
-      reject(new Error('Check function has not returned true when waiter is disposed'));
-    } else if (this.checkFn_()) {
-      interval.dispose();
-      resolve();
-    }
-  }
-
   /**
    * Promise that will be resolved when the check function has returned true.
    */
@@ -52,6 +43,15 @@ class WaitUntil extends BaseListener {
     });
     this.promise_ = promise;
     return promise;
+  }
+
+  private onTick_(interval: Interval, resolve: () => void, reject: (error: Error) => void): void {
+    if (this.isDisposed()) {
+      reject(new Error('Check function has not returned true when waiter is disposed'));
+    } else if (this.checkFn_()) {
+      interval.dispose();
+      resolve();
+    }
   }
 
   /**

@@ -21,6 +21,25 @@ export class ElementSwitchBinder<T> implements DomBinder<T> {
   }
 
   /**
+   * @override
+   */
+  delete(): void {
+    if (this.currentActiveEl_ !== null) {
+      this.setActive_(this.currentActiveEl_, false);
+    }
+  }
+
+  /**
+   * @override
+   */
+  get(): T | null {
+    if (this.currentActiveEl_ === null) {
+      return null;
+    }
+    return this.getEnumValue_(this.currentActiveEl_);
+  }
+
+  /**
    * @param element The element whose enum value should be returned.
    * @return The enum value associated with the given element.
    */
@@ -39,35 +58,6 @@ export class ElementSwitchBinder<T> implements DomBinder<T> {
     }
 
     return enumValue;
-  }
-
-  /**
-   * Sets the current element to be active / inactive.
-   *
-   * @param element The element to set.
-   * @param isActive True iff the element is active.
-   */
-  private setActive_(element: HTMLElement, isActive: boolean): void {
-    element.style.display = isActive ? '' : 'none';
-  }
-
-  /**
-   * @override
-   */
-  delete(): void {
-    if (this.currentActiveEl_ !== null) {
-      this.setActive_(this.currentActiveEl_, false);
-    }
-  }
-
-  /**
-   * @override
-   */
-  get(): T | null {
-    if (this.currentActiveEl_ === null) {
-      return null;
-    }
-    return this.getEnumValue_(this.currentActiveEl_);
   }
 
   /**
@@ -95,6 +85,16 @@ export class ElementSwitchBinder<T> implements DomBinder<T> {
 
     element[__enumValue] = value;
     this.setActive_(element, true);
+  }
+
+  /**
+   * Sets the current element to be active / inactive.
+   *
+   * @param element The element to set.
+   * @param isActive True iff the element is active.
+   */
+  private setActive_(element: HTMLElement, isActive: boolean): void {
+    element.style.display = isActive ? '' : 'none';
   }
 
   /**

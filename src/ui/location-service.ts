@@ -37,13 +37,6 @@ export class LocationService extends BaseListenableListener<LocationServiceEvent
   }
 
   /**
-   * Handles event when the hash has been changed.
-   */
-  private onHashChange_(): void {
-    this.dispatch(LocationServiceEvents.CHANGED);
-  }
-
-  /**
    * Retrieves matches from the current path.
    *
    * This method takes in a matcher, which is a string that looks like a path. If parts of the path
@@ -77,6 +70,13 @@ export class LocationService extends BaseListenableListener<LocationServiceEvent
    */
   hasMatch(matcher: string): boolean {
     return this.getMatches(matcher) !== null;
+  }
+
+  /**
+   * Handles event when the hash has been changed.
+   */
+  private onHashChange_(): void {
+    this.dispatch(LocationServiceEvents.CHANGED);
   }
 
   /**

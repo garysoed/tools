@@ -14,6 +14,15 @@ export class Templates {
 
   constructor(private replacementMap_: Map<RegExp, string>) {  }
 
+  /**
+   * Retrieves the registered template.
+   * @param key The key of the registered template to retrieve.
+   * @return The registered template, or null if there are none.
+   */
+  getTemplate(key: string): string | null {
+    return Graph.run<string | null>(this, 'pipeTemplate_', {'key': key});
+  }
+
   @Pipe()
   private pipeTemplate_(@External('key') key: string): string | null {
     if (!Templates.templates_.has(key)) {
@@ -25,15 +34,6 @@ export class Templates {
           result = result.replace(regexp, replacement);
         });
     return result;
-  }
-
-  /**
-   * Retrieves the registered template.
-   * @param key The key of the registered template to retrieve.
-   * @return The registered template, or null if there are none.
-   */
-  getTemplate(key: string): string | null {
-    return Graph.run<string | null>(this, 'pipeTemplate_', {'key': key});
   }
 
   static newInstance(replacementMap: Map<RegExp, string> = new Map()): Templates {

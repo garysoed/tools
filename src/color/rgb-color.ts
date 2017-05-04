@@ -14,16 +14,6 @@ export class RgbColor extends BaseColor {
     this.blue_ = blue;
   }
 
-  @cache()
-  private getMax_(): number {
-    return Math.max(this.getRed(), this.getGreen(), this.getBlue());
-  }
-
-  @cache()
-  private getMin_(): number {
-    return Math.min(this.getRed(), this.getGreen(), this.getBlue());
-  }
-
   /**
    * @override
    */
@@ -81,6 +71,16 @@ export class RgbColor extends BaseColor {
   @cache()
   getLightness(): number {
     return (this.getMax_() + this.getMin_()) / 2 / 255;
+  }
+
+  @cache()
+  private getMax_(): number {
+    return Math.max(this.getRed(), this.getGreen(), this.getBlue());
+  }
+
+  @cache()
+  private getMin_(): number {
+    return Math.min(this.getRed(), this.getGreen(), this.getBlue());
   }
 
   /**

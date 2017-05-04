@@ -73,19 +73,6 @@ function initField_(obj: Object): void {
 export class Serializer {
 
   /**
-   * Retrieves the fields for the given constructor.
-   */
-  private static getFields_(ctor: any): Map<string, string> {
-    const fluentFields = Maps.of(new Map<string, string>());
-    if (!!ctor.prototype[__PARENT]) {
-      fluentFields.addAllMap(Serializer.getFields_(ctor.prototype[__PARENT]));
-    }
-
-    fluentFields.addAllMap(ctor.prototype[__FIELDS]);
-    return fluentFields.asMap();
-  }
-
-  /**
    * Converts the given JSON object to a known [[Serializable]] object.
    *
    * @param json The JSON object to convert.
@@ -119,6 +106,19 @@ export class Serializer {
     } else {
       return json;
     }
+  }
+
+  /**
+   * Retrieves the fields for the given constructor.
+   */
+  private static getFields_(ctor: any): Map<string, string> {
+    const fluentFields = Maps.of(new Map<string, string>());
+    if (!!ctor.prototype[__PARENT]) {
+      fluentFields.addAllMap(Serializer.getFields_(ctor.prototype[__PARENT]));
+    }
+
+    fluentFields.addAllMap(ctor.prototype[__FIELDS]);
+    return fluentFields.asMap();
   }
 
   /**

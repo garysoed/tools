@@ -28,28 +28,6 @@ export class Hook {
   }
 
   /**
-   * Creates the decorator.
-   *
-   * @param binderFactory Factory that generates the binder.
-   * @return The property decorator.
-   */
-  private createDecorator_(
-      binderFactory: (element: Element, instance: any) => DomBinder<any>): PropertyDecorator {
-    const self = this;
-    return function(target: Object, propertyKey: string | symbol): void {
-      ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
-          propertyKey,
-          (parentEl: HTMLElement, instance: any): DomBinder<any> => {
-            const element = Util.resolveSelector(self.selector_, parentEl);
-            if (element === null) {
-              throw new Error(`Cannot resolve selector ${self.selector_}`);
-            }
-            return binderFactory(element, instance);
-          });
-    };
-  }
-
-  /**
    * Binds the annotated [IDomBinder] to an annotation in the DOM.
    *
    * @param attributeName Name of the attribute to bind to.
@@ -94,6 +72,28 @@ export class Hook {
         (element: Element): DomBinder<any> => {
           return ClassListBinder.of(element);
         });
+  }
+
+  /**
+   * Creates the decorator.
+   *
+   * @param binderFactory Factory that generates the binder.
+   * @return The property decorator.
+   */
+  private createDecorator_(
+      binderFactory: (element: Element, instance: any) => DomBinder<any>): PropertyDecorator {
+    const self = this;
+    return function(target: Object, propertyKey: string | symbol): void {
+      ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
+          propertyKey,
+          (parentEl: HTMLElement, instance: any): DomBinder<any> => {
+            const element = Util.resolveSelector(self.selector_, parentEl);
+            if (element === null) {
+              throw new Error(`Cannot resolve selector ${self.selector_}`);
+            }
+            return binderFactory(element, instance);
+          });
+    };
   }
 
   element<T extends Element>(type: gs.ICtor<T>): PropertyDecorator {

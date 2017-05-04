@@ -2,19 +2,7 @@ import { Arrays } from '../collection/arrays';
 
 
 export class Locations {
-  private static MATCHER_REGEXP_: RegExp = /:([^:\/]+)/;
-
-  /**
-   * @return Parts of the given path.
-   */
-  private static getParts_(path: string): string[] {
-    return Arrays
-        .of(Locations.normalizePath(path).split('/'))
-        .filter((part: string) => {
-          return part !== '.';
-        })
-        .asArray();
-  }
+  private static readonly MATCHER_REGEXP_: RegExp = /:([^:\/]+)/;
 
   /**
    * Retrieves matches from the current path.
@@ -56,6 +44,18 @@ export class Locations {
     }
 
     return matches;
+  }
+
+  /**
+   * @return Parts of the given path.
+   */
+  private static getParts_(path: string): string[] {
+    return Arrays
+        .of(Locations.normalizePath(path).split('/'))
+        .filter((part: string) => {
+          return part !== '.';
+        })
+        .asArray();
   }
 
   /**

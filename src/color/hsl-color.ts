@@ -15,38 +15,6 @@ export class HslColor extends BaseColor {
     this.lightness_ = lightness;
   }
 
-  @cache()
-  private getRgb_(): [number, number, number] {
-    const chroma = this.getChroma();
-    const h1 = this.getHue() / 60;
-    const x = chroma * (1 - Math.abs((h1 % 2) - 1));
-    let r1;
-    let g1;
-    let b1;
-
-    if (h1 < 1) {
-      [r1, g1, b1] = [chroma, x, 0];
-    } else if (h1 < 2) {
-      [r1, g1, b1] = [x, chroma, 0];
-    } else if (h1 < 3) {
-      [r1, g1, b1] = [0, chroma, x];
-    } else if (h1 < 4) {
-      [r1, g1, b1] = [0, x, chroma];
-    } else if (h1 < 5) {
-      [r1, g1, b1] = [x, 0, chroma];
-    } else {
-      [r1, g1, b1] = [chroma, 0, x];
-    }
-
-    const min = this.getLightness() - chroma / 2;
-    const [r, g, b] = Arrays.of([r1, g1, b1])
-        .map((value: number) => {
-          return Math.round((value + min) * 255);
-        })
-        .asArray();
-    return [r, g, b];
-  }
-
   /**
    * @override
    */
@@ -90,6 +58,38 @@ export class HslColor extends BaseColor {
    */
   getRed(): number {
     return this.getRgb_()[0];
+  }
+
+  @cache()
+  private getRgb_(): [number, number, number] {
+    const chroma = this.getChroma();
+    const h1 = this.getHue() / 60;
+    const x = chroma * (1 - Math.abs((h1 % 2) - 1));
+    let r1;
+    let g1;
+    let b1;
+
+    if (h1 < 1) {
+      [r1, g1, b1] = [chroma, x, 0];
+    } else if (h1 < 2) {
+      [r1, g1, b1] = [x, chroma, 0];
+    } else if (h1 < 3) {
+      [r1, g1, b1] = [0, chroma, x];
+    } else if (h1 < 4) {
+      [r1, g1, b1] = [0, x, chroma];
+    } else if (h1 < 5) {
+      [r1, g1, b1] = [x, 0, chroma];
+    } else {
+      [r1, g1, b1] = [chroma, 0, x];
+    }
+
+    const min = this.getLightness() - chroma / 2;
+    const [r, g, b] = Arrays.of([r1, g1, b1])
+        .map((value: number) => {
+          return Math.round((value + min) * 255);
+        })
+        .asArray();
+    return [r, g, b];
   }
 
   /**

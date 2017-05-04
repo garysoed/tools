@@ -94,34 +94,6 @@ export class PostMessageChannel extends BaseListener {
     this.addDisposable(this.destWindow_, this.srcWindow_);
   }
 
-  private post_(message: Message): Promise<void> {
-    return Asyncs.run(() => {
-      this.destWindow_.getEventTarget().postMessage(
-          Serializer.toJSON(message),
-          PostMessageChannel.getOrigin(this.srcWindow_.getEventTarget()));
-    });
-  }
-
-  private waitForMessage_(testFn: (message: Message) => boolean): Promise<Message> {
-    const destWindowOrigin = PostMessageChannel.getOrigin(this.destWindow_.getEventTarget());
-    return new Promise((resolve: Function) => {
-      const unlistenFn = this.listenTo(
-          this.srcWindow_,
-          DomEvent.MESSAGE,
-          (event: any) => {
-            if (event.origin !== destWindowOrigin) {
-              return;
-            }
-
-            const message = Serializer.fromJSON(event.data);
-            if (testFn(message)) {
-              unlistenFn.dispose();
-              resolve(message);
-            }
-          });
-    });
-  }
-
   /**
    * Posts message to the destination window.
    *
@@ -131,6 +103,14 @@ export class PostMessageChannel extends BaseListener {
    */
   post(message: gs.IJson): Promise<void> {
     return this.post_(new Message(MessageType.DATA, message));
+  }
+
+  private post_(message: Message): Promise<void> {
+    return Asyncs.run(() => {
+      this.destWindow_.getEventTarget().postMessage(
+          Serializer.toJSON(message),
+          PostMessageChannel.getOrigin(this.srcWindow_.getEventTarget()));
+    });
   }
 
   /**
@@ -152,8 +132,24 @@ export class PostMessageChannel extends BaseListener {
     return message.getPayload();
   }
 
-  private static of_(srcWindow: Window, destWindow: Window): PostMessageChannel {
-    return new PostMessageChannel(srcWindow, destWindow);
+  private waitForMessage_(testFn: (message: Message) => boolean): Promise<Message> {
+    const destWindowOrigin = PostMessageChannel.getOrigin(this.destWindow_.getEventTarget());
+    return new Promise((resolve: Function) => {
+      const unlistenFn = this.listenTo(
+          this.srcWindow_,
+          DomEvent.MESSAGE,
+          (event: any) => {
+            if (event.origin !== destWindowOrigin) {
+              return;
+            }
+
+            const message = Serializer.fromJSON(event.data);
+            if (testFn(message)) {
+              unlistenFn.dispose();
+              resolve(message);
+            }
+          });
+    });
   }
 
   /**
@@ -205,6 +201,10 @@ export class PostMessageChannel extends BaseListener {
         },
         this);
     });
+  }
+
+  private static of_(srcWindow: Window, destWindow: Window): PostMessageChannel {
+    return new PostMessageChannel(srcWindow, destWindow);
   }
 
   /**

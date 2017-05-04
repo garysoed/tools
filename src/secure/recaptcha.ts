@@ -26,17 +26,17 @@ export class Recaptcha extends BaseListenable<EventType> {
   }
 
   /**
-   * Callback called when the recaptcha has obtained a response.
-   */
-  private onCallback_(): void {
-    this.dispatch(EventType.NEW_RESPONSE, () => {});
-  }
-
-  /**
    * The ReCaptcha response from the widget.
    */
   getResponse(): string {
     return this.grecaptcha_.getResponse(this.widgetId_);
+  }
+
+  /**
+   * Callback called when the recaptcha has obtained a response.
+   */
+  private onCallback_(): void {
+    this.dispatch(EventType.NEW_RESPONSE, () => {});
   }
 
   /**
