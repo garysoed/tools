@@ -1,5 +1,5 @@
-import { Collection } from '../immutable/collection';
 import { Iterables } from '../immutable/iterables';
+import { Collection } from '../interfaces/collection';
 
 export class GeneratedLinkedList<T> implements Collection<T>, Iterable<T> {
   constructor(private readonly iterable_: Iterable<T>) { }

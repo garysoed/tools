@@ -6,6 +6,6 @@ gs_tools(
     deps = [
         "//src/check",
         "//src/collection",
-        "//src/interfaces"
+        "//src/interfaces",
     ]
 )

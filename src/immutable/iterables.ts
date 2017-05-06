@@ -9,6 +9,16 @@ export class Iterables {
   static ITERATOR_TYPE: IType<Iterator<any>> =
       HasPropertyType<Iterator<any>>('next', InstanceofType(Function));
 
+  static clone<T>(iterable: Iterable<T>): Iterable<T> {
+    return {
+      * [Symbol.iterator](): Iterator<T> {
+        for (const value of iterable) {
+          yield value;
+        }
+      },
+    };
+  }
+
   static of<T>(generator: () => Iterator<T>): Iterable<T>;
   static of<T>(iterator: Iterator<T>): Iterable<T>;
   static of<T>(data: Iterator<T> | (() => Iterator<T>)): Iterable<T> {

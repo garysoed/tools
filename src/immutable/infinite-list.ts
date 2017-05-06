@@ -1,7 +1,7 @@
-import { Collection } from '../immutable/collection';
 import { GeneratedLinkedList } from '../immutable/generated-linked-list';
-import { Indexed } from '../immutable/indexed';
 import { Iterables } from '../immutable/iterables';
+import { Collection } from '../interfaces/collection';
+import { Indexed } from '../interfaces/indexed';
 
 export class InfiniteList<T> implements Collection<T>, Indexed<number, T>, Iterable<T> {
   /**

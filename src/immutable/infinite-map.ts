@@ -1,8 +1,8 @@
-import { Collection } from '../immutable/collection';
 import { GeneratedLinkedList } from '../immutable/generated-linked-list';
-import { Indexed } from '../immutable/indexed';
 import { InfiniteList } from '../immutable/infinite-list';
 import { Iterables } from '../immutable/iterables';
+import { Collection } from '../interfaces/collection';
+import { Indexed } from '../interfaces/indexed';
 
 export class InfiniteMap<K, V> implements Collection<[K, V]>, Indexed<K, V>, Iterable<[K, V]> {
 

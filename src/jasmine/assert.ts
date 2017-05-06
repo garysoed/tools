@@ -1,12 +1,17 @@
 import { BooleanType } from '../check/boolean-type';
+import { HasPropertyType } from '../check/has-property-type';
+import { InstanceofType } from '../check/instanceof-type';
+import { IntersectType } from '../check/intersect-type';
 import { NumberType } from '../check/number-type';
 import { StringType } from '../check/string-type';
+import { Finite } from '../interfaces/finite';
 import { AnyAssert } from '../jasmine/any-assert';
 import { ArrayAssert } from '../jasmine/array-assert';
 import { AssertFactory } from '../jasmine/assert-factory';
 import { BaseAssert } from '../jasmine/base-assert';
 import { BooleanAssert } from '../jasmine/boolean-assert';
 import { ElementAssert } from '../jasmine/element-assert';
+import { FiniteIterableAssert } from '../jasmine/finite-iterable-assert';
 import { FunctionAssert } from '../jasmine/function-assert';
 import { IterableAssert } from '../jasmine/iterable-assert';
 import { MapAssert } from '../jasmine/map-assert';
@@ -15,6 +20,12 @@ import { PromiseAssert } from '../jasmine/promise-assert';
 import { SetAssert } from '../jasmine/set-assert';
 import { StringAssert } from '../jasmine/string-assert';
 
+
+const IterableType = HasPropertyType<Iterable<any>>(Symbol.iterator, InstanceofType(Function));
+const FiniteIterableType = IntersectType.builder<Finite<any> & Iterable<any>>()
+    .addType(IterableType)
+    .addType(HasPropertyType<Finite<any>>('size', InstanceofType(Function)))
+    .build();
 
 /**
  * Wraps jasmine's expect to add type safetiness.
@@ -29,6 +40,8 @@ export function assert<T extends Function>(value: T | null): AssertFactory<Funct
 export function assert<T>(value: T[] | null): AssertFactory<ArrayAssert<T>>;
 export function assert<K, V>(value: Map<K, V>): AssertFactory<MapAssert<K, V>>;
 export function assert<T>(value: Set<T>): AssertFactory<SetAssert<T>>;
+export function assert<T>(
+    iterable: Finite<T> & Iterable<T>): AssertFactory<FiniteIterableAssert<T>>;
 export function assert<T>(iterable: Iterable<T>): AssertFactory<IterableAssert<T>>;
 export function assert(value: any): AssertFactory<AnyAssert<any>>;
 export function assert(value: any): AssertFactory<BaseAssert> {
@@ -68,7 +81,11 @@ export function assert(value: any): AssertFactory<BaseAssert> {
     return new AssertFactory((reversed: boolean): PromiseAssert<any> => {
       return new PromiseAssert<any>(value, fail, reversed, expect);
     });
-  } else if (value && value[Symbol.iterator] instanceof Function) {
+  } else if (FiniteIterableType.check(value)) {
+    return new AssertFactory((reversed: boolean): FiniteIterableAssert<any> => {
+      return new FiniteIterableAssert<any>(value, reversed, expect);
+    });
+  } else if (IterableType.check(value)) {
     return new AssertFactory((reversed: boolean): IterableAssert<any> => {
       return new IterableAssert<any>(value, reversed, expect);
     });

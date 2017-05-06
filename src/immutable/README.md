@@ -3,8 +3,8 @@ Available data structures:
 -   Generated LinkedList - **DONE**
 -   Infinite List - **DONE**
 -   Infinite Map - **DONE**
--   Set
--   List
--   Map
+-   ImmutableSet - **DONE**
+-   ImmutableList
+-   ImmutableMap
 -   OrderedSet
 -   OrderedMap
