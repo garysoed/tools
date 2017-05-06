@@ -3,7 +3,7 @@ import { Collection } from '../immutable/collection';
 /**
  * A collection that has a finite size.
  */
-export interface Finite<T> extends Collection<T> {
+export interface Finite<T> {
   /**
    * Adds the given item to the collection.
    * @param item The item to add.

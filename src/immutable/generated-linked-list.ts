@@ -8,7 +8,7 @@ export class GeneratedLinkedList<T> implements Collection<T>, Iterable<T> {
     return this.iterable_[Symbol.iterator]();
   }
 
-  filter(checker: (item: T) => boolean): GeneratedLinkedList<T> {
+  filterItem(checker: (item: T) => boolean): GeneratedLinkedList<T> {
     const iterable = this;
     return new GeneratedLinkedList<T>(Iterables.of(function*(): Iterator<T> {
       for (const value of iterable) {
@@ -19,7 +19,7 @@ export class GeneratedLinkedList<T> implements Collection<T>, Iterable<T> {
     }));
   }
 
-  map<R>(fn: (item: T) => R): GeneratedLinkedList<R> {
+  mapItem<R>(fn: (item: T) => R): GeneratedLinkedList<R> {
     const iterable = this;
     return new GeneratedLinkedList<R>(Iterables.of(function*(): Iterator<R> {
       for (const value of iterable) {

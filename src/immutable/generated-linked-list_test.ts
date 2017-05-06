@@ -14,20 +14,20 @@ describe('immutable.GeneratedLinkedList', () => {
     }
   }
 
-  describe('filter', () => {
+  describe('filterItem', () => {
     it('should exclude items that are excluded by the filter', () => {
       const list = new GeneratedLinkedList(Iterables.of(generateInts))
-          .filter((n: number) => {
+          .filterItem((n: number) => {
             return (n % 2) === 0;
           });
       assert(list).to.startWith([0, 2, 4, 6]);
     });
   });
 
-  describe('map', () => {
+  describe('mapItem', () => {
     it('should map correctly', () => {
       const list = new GeneratedLinkedList(Iterables.of(generateInts))
-          .map((n: number) => {
+          .mapItem((n: number) => {
             return `${n}`;
           });
       assert(list).to.startWith(['0', '1', '2', '3']);

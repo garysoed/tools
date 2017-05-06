@@ -1,6 +1,6 @@
 import { Collection } from '../immutable/collection';
 
-export interface Indexed<I, T> extends Collection<T>, Iterable<T> {
+export interface Indexed<I, T> {
   entries(): Collection<[I, T]> & Iterable<[I, T]>;
 
   filter(checker: (value: T, index: I) => boolean): Indexed<I, T>;

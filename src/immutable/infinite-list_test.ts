@@ -39,6 +39,16 @@ describe('immutable.InfiniteList', () => {
     });
   });
 
+  describe('filterItem', () => {
+    it('should filter elements correctly', () => {
+      const list = new InfiniteList<string>((i: number) => `${i}`)
+          .filterItem((item: string) => {
+            return item !== '2';
+          });
+      assert(list).to.startWith(['0', '1', '3', '4']);
+    });
+  });
+
   describe('get', () => {
     it('should return elements correctly', () => {
       const list = new InfiniteList<string>((i: number) => `${i}`);
@@ -68,6 +78,16 @@ describe('immutable.InfiniteList', () => {
             return `${item}@${index + 1}`;
           });
       assert(list).to.startWith(['0@1', '1@2', '2@3', '3@4']);
+    });
+  });
+
+  describe('mapItem', () => {
+    it('should map the values correctly', () => {
+      const list = new InfiniteList<string>((i: number) => `${i}`)
+          .map((item: string) => {
+            return `${item}mapped`;
+          });
+      assert(list).to.startWith(['0mapped', '1mapped', '2mapped', '3mapped']);
     });
   });
 

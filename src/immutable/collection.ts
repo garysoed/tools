@@ -7,11 +7,11 @@ export interface Collection<T> {
    * @param checker Function that takes in the checked item and return true iff the item should be
    *     in the resulting collection.
    */
-  filter(checker: (item: T) => boolean): Collection<T>;
+  filterItem(checker: (item: T) => boolean): Collection<T>;
 
   /**
    * Transforms the items in the collection to another value.
    * @param fn The transformation function.
    */
-  map<R>(fn: (item: T) => R): Collection<R>;
+  mapItem<R>(fn: (item: T) => R): Collection<R>;
 }

@@ -32,7 +32,7 @@ export class InfiniteList<T> implements Collection<T>, Indexed<number, T>, Itera
     }));
   }
 
-  filter(checker: (item: T, index: number) => boolean): InfiniteList<T> {
+  filter(checker: (value: T, index: number) => boolean): InfiniteList<T> {
     return new InfiniteList<T>(
         (index: number) => {
           const value = this.generator_(index);
@@ -44,15 +44,19 @@ export class InfiniteList<T> implements Collection<T>, Indexed<number, T>, Itera
         });
   }
 
+  filterItem(checker: (item: T) => boolean): InfiniteList<T> {
+    return this.filter(checker);
+  }
+
   get(index: number): T | undefined {
     return this.generator_(index);
   }
 
   keys(): GeneratedLinkedList<number> {
-    return this.entries().map((entry: [number, T]) => entry[0]);
+    return this.entries().mapItem((entry: [number, T]) => entry[0]);
   }
 
-  map<R>(fn: (item: T, index: number) => R): InfiniteList<R> {
+  map<R>(fn: (value: T, index: number) => R): InfiniteList<R> {
     return new InfiniteList<R>(
       (index: number) => {
         const value = this.generator_(index);
@@ -64,6 +68,10 @@ export class InfiniteList<T> implements Collection<T>, Indexed<number, T>, Itera
       });
   }
 
+  mapItem<R>(fn: (item: T) => R): InfiniteList<R> {
+    return this.map(fn);
+  }
+
   set(index: number, item: T): InfiniteList<T> {
     return this.map<T>((mapItem: T, mapIndex: number) => {
       return index === mapIndex ? item : mapItem;
@@ -71,6 +79,6 @@ export class InfiniteList<T> implements Collection<T>, Indexed<number, T>, Itera
   }
 
   values(): GeneratedLinkedList<T> {
-    return this.entries().map((entry: [number, T]) => entry[1]);
+    return this.entries().mapItem((entry: [number, T]) => entry[1]);
   }
 }
