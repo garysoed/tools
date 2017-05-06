@@ -16,8 +16,8 @@ describe('rpc.PostMessageChannel', () => {
   let channel: PostMessageChannel;
 
   beforeEach(() => {
-    mockDestWindow = Mocks.element({});
-    mockSrcWindow = Mocks.element({});
+    mockDestWindow = jasmine.createSpyObj('DestWindow', ['postMessage']);
+    mockSrcWindow = jasmine.createSpyObj('SrcWindow', ['addEventListener', 'removeEventListener']);
     channel = new PostMessageChannel(mockSrcWindow, mockDestWindow);
     TestDispose.add(channel);
   });
@@ -27,8 +27,6 @@ describe('rpc.PostMessageChannel', () => {
       const origin = 'origin';
       const message = new Message(MessageType.PING, { 'id': 123 });
       const json = Mocks.object('json');
-
-      mockDestWindow.postMessage = jasmine.createSpy('postMessage');
 
       spyOn(PostMessageChannel, 'getOrigin').and.returnValue(origin);
       spyOn(Serializer, 'toJSON').and.returnValue(json);
@@ -249,7 +247,6 @@ describe('rpc.PostMessageChannel', () => {
       const expectedOrigin = 'expectedOrigin';
       const mockChannel = jasmine.createSpyObj('Channel', ['post_']);
 
-      spyOn(mockSrcWindow, 'addEventListener');
       spyOn(PostMessageChannel, 'of_').and.returnValue(mockChannel);
       spyOn(window, 'clearTimeout');
       spyOn(window, 'setTimeout').and.returnValue(timeoutId);
@@ -285,7 +282,6 @@ describe('rpc.PostMessageChannel', () => {
       const expectedOrigin = 'expectedOrigin';
       const mockChannel = jasmine.createSpyObj('Channel', ['post']);
 
-      spyOn(mockSrcWindow, 'addEventListener');
       spyOn(PostMessageChannel, 'of_').and.returnValue(mockChannel);
 
       const promise = PostMessageChannel.listen(mockSrcWindow, expectedOrigin);
@@ -306,7 +302,6 @@ describe('rpc.PostMessageChannel', () => {
       const expectedOrigin = 'expectedOrigin';
       const mockChannel = jasmine.createSpyObj('Channel', ['post']);
 
-      spyOn(mockSrcWindow, 'addEventListener');
       spyOn(PostMessageChannel, 'of_').and.returnValue(mockChannel);
 
       const promise = PostMessageChannel.listen(mockSrcWindow, expectedOrigin);

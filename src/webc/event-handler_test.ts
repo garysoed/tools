@@ -28,19 +28,19 @@ describe('web.EventHandler', () => {
       const key1 = 'key1';
       const handler1 = jasmine.createSpy('handler1');
       const config1 = Mocks.object('config1');
-      const boundArgs1 = Mocks.object('boundArgs1');
+      const boundArgs1 = 'args1';
       config1['event'] = event1;
       config1['handlerKey'] = key1;
-      config1['boundArgs'] = boundArgs1;
+      config1['boundArgs'] = [boundArgs1];
 
       const event2 = 'event2';
       const key2 = 'key2';
       const handler2 = jasmine.createSpy('handler2');
       const config2 = Mocks.object('config2');
-      const boundArgs2 = Mocks.object('boundArgs2');
+      const boundArgs2 = 'args2';
       config2['event'] = event2;
       config2['handlerKey'] = key2;
-      config2['boundArgs'] = boundArgs2;
+      config2['boundArgs'] = [boundArgs2];
 
       const mockInstance = Mocks.disposable('instance');
       mockInstance[key1] = handler1;

@@ -1,8 +1,6 @@
 import { BaseDisposable } from '../dispose/base-disposable';
 import { DisposableFunction } from '../dispose/disposable-function';
 
-import MockElement from '../mock/mock-element';
-
 
 /**
  * @hidden
@@ -40,17 +38,6 @@ export class Mocks {
     const mock = new BaseDisposable();
     mock[__id] = name;
     return mock;
-  }
-
-  /**
-   * Creates a mock element.
-   *
-   * @param queries Used to implement [[querySelector]]. The key is the query, and the value is the
-   *    value(s) to return for the query.
-   * @return The mock element object.
-   */
-  static element(queries: {[query: string]: any} = {}): any {
-    return new MockElement(queries);
   }
 
   static getter(target: any, name: string, value: any): void {

@@ -43,7 +43,7 @@ ts_binary = rule(
           non_empty = True,
           providers = ["ts_files"]),
       "ts_target": attr.string(
-          default = "ES5",
+          default = "ES2015",
           values = ["ES3", "ES5", "ES2015"]),
       "_ts_bin": attr.label(
           cfg = "host",
