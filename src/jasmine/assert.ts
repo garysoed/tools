@@ -8,6 +8,7 @@ import { BaseAssert } from '../jasmine/base-assert';
 import { BooleanAssert } from '../jasmine/boolean-assert';
 import { ElementAssert } from '../jasmine/element-assert';
 import { FunctionAssert } from '../jasmine/function-assert';
+import { IterableAssert } from '../jasmine/iterable-assert';
 import { MapAssert } from '../jasmine/map-assert';
 import { NumberAssert } from '../jasmine/number-assert';
 import { PromiseAssert } from '../jasmine/promise-assert';
@@ -28,6 +29,7 @@ export function assert<T extends Function>(value: T | null): AssertFactory<Funct
 export function assert<T>(value: T[] | null): AssertFactory<ArrayAssert<T>>;
 export function assert<K, V>(value: Map<K, V>): AssertFactory<MapAssert<K, V>>;
 export function assert<T>(value: Set<T>): AssertFactory<SetAssert<T>>;
+export function assert<T>(iterable: Iterable<T>): AssertFactory<IterableAssert<T>>;
 export function assert(value: any): AssertFactory<AnyAssert<any>>;
 export function assert(value: any): AssertFactory<BaseAssert> {
   if (BooleanType.check(value)) {
@@ -65,6 +67,10 @@ export function assert(value: any): AssertFactory<BaseAssert> {
   } else if (value instanceof Promise) {
     return new AssertFactory((reversed: boolean): PromiseAssert<any> => {
       return new PromiseAssert<any>(value, fail, reversed, expect);
+    });
+  } else if (value && value[Symbol.iterator] instanceof Function) {
+    return new AssertFactory((reversed: boolean): IterableAssert<any> => {
+      return new IterableAssert<any>(value, reversed, expect);
     });
   } else {
     return new AssertFactory((reversed: boolean): AnyAssert<any> => {

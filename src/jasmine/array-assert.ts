@@ -1,7 +1,7 @@
-import { AnyAssert } from './any-assert';
+import { IterableAssert } from '../jasmine/iterable-assert';
 
 
-export class ArrayAssert<T> extends AnyAssert<T[]> {
+export class ArrayAssert<T> extends IterableAssert<T> {
   /**
    * @param arrayValue_ The value to assert.
    * @param reversed_ True iff the assertion logic should be reversed.

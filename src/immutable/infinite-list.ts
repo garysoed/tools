@@ -1,6 +1,7 @@
 import { Collection } from '../immutable/collection';
 import { GeneratedLinkedList } from '../immutable/generated-linked-list';
 import { Indexed } from '../immutable/indexed';
+import { Iterables } from '../immutable/iterables';
 
 export class InfiniteList<T> implements Collection<T>, Indexed<number, T>, Iterable<T> {
   /**
@@ -17,17 +18,18 @@ export class InfiniteList<T> implements Collection<T>, Indexed<number, T>, Itera
   }
 
   entries(): GeneratedLinkedList<[number, T]> {
-    return new GeneratedLinkedList<[number, T]>(function*(): Iterator<[number, T]> {
+    const generator = this.generator_;
+    return new GeneratedLinkedList<[number, T]>(Iterables.of(function*(): Iterator<[number, T]> {
       let index = -1;
       while (true) {
         let value;
         do {
           index++;
-          value = this.generator_(index);
+          value = generator(index);
         } while (value === undefined);
         yield [index, value];
       }
-    }.bind(this));
+    }));
   }
 
   filter(checker: (item: T, index: number) => boolean): InfiniteList<T> {
@@ -68,7 +70,7 @@ export class InfiniteList<T> implements Collection<T>, Indexed<number, T>, Itera
     });
   }
 
-  values(): Collection<T> & Iterable<T> {
+  values(): GeneratedLinkedList<T> {
     return this.entries().map((entry: [number, T]) => entry[1]);
   }
 }

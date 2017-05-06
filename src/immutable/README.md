@@ -1,6 +1,8 @@
 Available data structures:
--   Infinite LinkedList
--   Infinite List
+
+-   Generated LinkedList - **DONE**
+-   Generated LinkedMap
+-   Infinite List - **DONE**
 -   Infinite Map
 -   Set
 -   List
