@@ -1,7 +1,9 @@
 import { BooleanType } from '../check/boolean-type';
+import { FiniteIterableType } from '../check/finite-iterable-type';
 import { HasPropertyType } from '../check/has-property-type';
 import { InstanceofType } from '../check/instanceof-type';
 import { IntersectType } from '../check/intersect-type';
+import { IterableType } from '../check/iterable-type';
 import { NumberType } from '../check/number-type';
 import { StringType } from '../check/string-type';
 import { Finite } from '../interfaces/finite';
@@ -20,12 +22,6 @@ import { PromiseAssert } from '../jasmine/promise-assert';
 import { SetAssert } from '../jasmine/set-assert';
 import { StringAssert } from '../jasmine/string-assert';
 
-
-const IterableType = HasPropertyType<Iterable<any>>(Symbol.iterator, InstanceofType(Function));
-const FiniteIterableType = IntersectType.builder<Finite<any> & Iterable<any>>()
-    .addType(IterableType)
-    .addType(HasPropertyType<Finite<any>>('size', InstanceofType(Function)))
-    .build();
 
 /**
  * Wraps jasmine's expect to add type safetiness.

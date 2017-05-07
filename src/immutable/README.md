@@ -4,7 +4,7 @@ Available data structures:
 -   Infinite List - **DONE**
 -   Infinite Map - **DONE**
 -   ImmutableSet - **DONE**
--   ImmutableList
--   ImmutableMap
+-   ImmutableList - **DONE**
+-   ImmutableMap - **DONE**
 -   OrderedSet
 -   OrderedMap

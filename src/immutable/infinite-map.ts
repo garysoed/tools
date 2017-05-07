@@ -2,11 +2,12 @@ import { GeneratedLinkedList } from '../immutable/generated-linked-list';
 import { InfiniteList } from '../immutable/infinite-list';
 import { Iterables } from '../immutable/iterables';
 import { Collection } from '../interfaces/collection';
+import { Finite } from '../interfaces/finite';
 import { Indexed } from '../interfaces/indexed';
 
 export class InfiniteMap<K, V> implements Collection<[K, V]>, Indexed<K, V>, Iterable<[K, V]> {
 
-  constructor(
+  private constructor(
       private readonly keys_: Iterable<K>,
       private readonly generator_: (key: K) => V) { }
 
@@ -14,6 +15,18 @@ export class InfiniteMap<K, V> implements Collection<[K, V]>, Indexed<K, V>, Ite
     for (const entry of this.entries()) {
       yield entry;
     }
+  }
+
+  deleteAllKeys(keys: Iterable<K> & Finite<K>): InfiniteMap<K, V> {
+    return this.filterItem(([key]: [K, V]) => {
+      return !keys.has(key);
+    });
+  }
+
+  deleteKey(key: K): InfiniteMap<K, V> {
+    return this.filterItem(([existingKey]: [K, V]) => {
+      return existingKey !== key;
+    });
   }
 
   entries(): GeneratedLinkedList<[K, V]> {
@@ -74,5 +87,9 @@ export class InfiniteMap<K, V> implements Collection<[K, V]>, Indexed<K, V>, Ite
 
   values(): GeneratedLinkedList<V> {
     return this.entries().mapItem((entry: [K, V]) => entry[1]);
+  }
+
+  static of<K, V>(keys: Iterable<K>, generator: (key: K) => V): InfiniteMap<K, V> {
+    return new InfiniteMap(keys, generator);
   }
 }

@@ -1,6 +1,7 @@
 import { GeneratedLinkedList } from '../immutable/generated-linked-list';
 import { Iterables } from '../immutable/iterables';
 import { Collection } from '../interfaces/collection';
+import { Finite } from '../interfaces/finite';
 import { Indexed } from '../interfaces/indexed';
 
 export class InfiniteList<T> implements Collection<T>, Indexed<number, T>, Iterable<T> {
@@ -8,13 +9,25 @@ export class InfiniteList<T> implements Collection<T>, Indexed<number, T>, Itera
    * @param generator_ Function the elements in the list, given a key. If the return value is
    *     undefined, the element should not be added to the list.
    */
-  constructor(
+  private constructor(
       private readonly generator_: (index: number) => T | undefined) { }
 
   * [Symbol.iterator](): Iterator<T> {
     for (const entry of this.entries()) {
       yield entry[1];
     }
+  }
+
+  deleteAllKeys(keys: Iterable<number> & Finite<number>): InfiniteList<T> {
+    return new InfiniteList((index: number) => {
+      return keys.has(index) ? undefined : this.generator_(index);
+    });
+  }
+
+  deleteKey(key: number): InfiniteList<T> {
+    return new InfiniteList((index: number) => {
+      return index === key ? undefined : this.generator_(index);
+    });
   }
 
   entries(): GeneratedLinkedList<[number, T]> {
@@ -80,5 +93,9 @@ export class InfiniteList<T> implements Collection<T>, Indexed<number, T>, Itera
 
   values(): GeneratedLinkedList<T> {
     return this.entries().mapItem((entry: [number, T]) => entry[1]);
+  }
+
+  static of<T>(generator: (index: number) => T | undefined): InfiniteList<T> {
+    return new InfiniteList(generator);
   }
 }
