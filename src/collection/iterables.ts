@@ -1,6 +1,5 @@
 import { BaseFluent } from '../collection/base-fluent';
 import { IFluentIterable } from '../collection/interfaces';
-import { MappedIterable } from '../collection/mapped-iterable';
 import { ImmutableList } from '../immutable/immutable-list';
 import { Iterables as ImmutableIterables } from '../immutable/iterables';
 
@@ -61,7 +60,10 @@ export class FluentIterable<T>
   }
 
   map<T2>(fn: (value: T) => T2): IFluentIterable<T2> {
-    return Iterables.of(MappedIterable.newInstance<T, T2>(this.getData(), fn));
+    const list = ImmutableList
+        .of(ImmutableIterables.unsafeToArray(this.getData()))
+        .mapItem(fn);
+    return Iterables.of<T2>(list);
   }
 }
 
