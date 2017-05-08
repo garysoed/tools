@@ -101,6 +101,16 @@ describe('immutable.ImmutableList', () => {
     });
   });
 
+  describe('getAt', () => {
+    it('should return the correct item', () => {
+      const list = ImmutableList.of([1, 2, 3, 4]);
+      assert(list.getAt(0)).to.equal(1);
+      assert(list.getAt(1)).to.equal(2);
+      assert(list.getAt(2)).to.equal(3);
+      assert(list.getAt(3)).to.equal(4);
+    });
+  });
+
   describe('has', () => {
     it('should return true if the item is in the list', () => {
       assert(ImmutableList.of([1, 2, 3]).has(2)).to.beTrue();
@@ -165,6 +175,12 @@ describe('immutable.ImmutableList', () => {
     });
   });
 
+  describe('setAt', () => {
+    it('should set the item correctly', () => {
+      assert(ImmutableList.of([1, 2, 3, 4]).setAt(1, 5)).to.haveElements([1, 5, 3, 4]);
+    });
+  });
+
   describe('size', () => {
     it('should return the correct length', () => {
       assert(ImmutableList.of([1, 2, 3, 4]).size()).to.equal(4);
@@ -188,7 +204,7 @@ describe('immutable.ImmutableList', () => {
     });
   });
 
-  describe('value', () => {
+  describe('values', () => {
     it('should return the correct data', () => {
       assert(ImmutableList.of([1, 2, 3, 4]).values()).to.haveElements([1, 2, 3, 4]);
     });

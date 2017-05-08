@@ -13,7 +13,7 @@ export interface Finite<T> {
   /**
    * Adds all the given items to the collection.
    */
-  addAll(items: Iterable<T> & Finite<T>): Finite<T>;
+  addAll(items: Collection<T> & Finite<T>): Finite<T>;
 
   /**
    * Deletes the given item from the collection.
@@ -24,7 +24,7 @@ export interface Finite<T> {
   /**
    * Delets all the given items from the collection.
    */
-  deleteAll(items: Iterable<T> & Finite<T>): Finite<T>;
+  deleteAll(items: Collection<T> & Finite<T>): Finite<T>;
 
   /**
    * @return True iff the given item exists in the collection.

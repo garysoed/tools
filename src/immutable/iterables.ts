@@ -4,6 +4,7 @@
 import { HasPropertyType } from '../check/has-property-type';
 import { IType } from '../check/i-type';
 import { InstanceofType } from '../check/instanceof-type';
+import { Finite } from '../interfaces/finite';
 
 export class Iterables {
   static ITERATOR_TYPE: IType<Iterator<any>> =
@@ -31,5 +32,13 @@ export class Iterables {
     } else {
       return Iterables.of<T>(data());
     }
+  }
+
+  static toArray<T>(iterable: Iterable<T> & Finite<T>): T[] {
+    const array: T[] = [];
+    for (const item of iterable) {
+      array.push(item);
+    }
+    return array;
   }
 }

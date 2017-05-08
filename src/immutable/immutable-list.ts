@@ -1,9 +1,12 @@
+import { FiniteIterableType } from '../check/finite-iterable-type';
+import { Iterables } from '../immutable/iterables';
 import { Collection } from '../interfaces/collection';
 import { CompareResult } from '../interfaces/compare-result';
 import { Finite } from '../interfaces/finite';
 import { FiniteIndexed } from '../interfaces/finite-indexed';
 import { Indexed } from '../interfaces/indexed';
 import { Ordered } from '../interfaces/ordered';
+import { assertUnreachable } from '../typescript/assert-unreachable';
 
 export class ImmutableList<T> implements
     Collection<T>,
@@ -109,6 +112,10 @@ export class ImmutableList<T> implements
     return this.data_[index];
   }
 
+  getAt(index: number): T | undefined {
+    return this.get(index);
+  }
+
   has(item: T): boolean {
     return this.data_.indexOf(item) >= 0;
   }
@@ -151,6 +158,10 @@ export class ImmutableList<T> implements
     return new ImmutableList(clone);
   }
 
+  setAt(index: number, item: T): ImmutableList<T> {
+    return this.set(index, item);
+  }
+
   size(): number {
     return this.data_.length;
   }
@@ -160,11 +171,23 @@ export class ImmutableList<T> implements
     return new ImmutableList(clone.sort(compareFn));
   }
 
+  toArray(): T[] {
+    return this.data_.slice(0);
+  }
+
   values(): ImmutableList<T> {
     return this;
   }
 
-  static of<T>(data: T[]): ImmutableList<T> {
-    return new ImmutableList(data);
+  static of<T>(data: Finite<T> & Iterable<T>): ImmutableList<T>;
+  static of<T>(data: T[]): ImmutableList<T>;
+  static of<T>(data: T[] | (Finite<T> & Iterable<T>)): ImmutableList<T> {
+    if (FiniteIterableType.check(data)) {
+      return new ImmutableList(Iterables.toArray(data));
+    } else if (data instanceof Array) {
+      return new ImmutableList(data);
+    } else {
+      throw assertUnreachable(data);
+    }
   }
 }

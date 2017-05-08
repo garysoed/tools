@@ -1,7 +1,7 @@
 /**
  * A collection of stuff. This can be finite or infinite
  */
-export interface Collection<T> {
+export interface Collection<T> extends Iterable<T> {
   /**
    * Filters the items in the collection.
    * @param checker Function that takes in the checked item and return true iff the item should be

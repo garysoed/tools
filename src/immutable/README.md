@@ -6,5 +6,5 @@ Available data structures:
 -   ImmutableSet - **DONE**
 -   ImmutableList - **DONE**
 -   ImmutableMap - **DONE**
--   OrderedSet
--   OrderedMap
+-   OrderedSet - **DONE**
+-   OrderedMap - **DONE**
