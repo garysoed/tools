@@ -1,8 +1,8 @@
-import { BaseFluent } from './base-fluent';
-import { ChainIterable } from './chain-iterable';
-import { FilteredIterable } from './filtered-iterable';
-import { IFluentIterable } from './interfaces';
-import { MappedIterable } from './mapped-iterable';
+import { BaseFluent } from '../collection/base-fluent';
+import { IFluentIterable } from '../collection/interfaces';
+import { MappedIterable } from '../collection/mapped-iterable';
+import { ImmutableList } from '../immutable/immutable-list';
+import { Iterables as ImmutableIterables } from '../immutable/iterables';
 
 
 /**
@@ -24,7 +24,10 @@ export class FluentIterable<T>
   }
 
   addAll(other: Iterable<T>): FluentIterable<T> {
-    return Iterables.of<T>(ChainIterable.newInstance<T>(this.getData(), other));
+    const list = ImmutableList
+        .of(ImmutableIterables.unsafeToArray(this.getData()))
+        .addAll(ImmutableList.of(ImmutableIterables.unsafeToArray(other)));
+    return Iterables.of<T>(list);
   }
 
   addAllArray(array: T[]): FluentIterable<T> {
@@ -40,7 +43,10 @@ export class FluentIterable<T>
   }
 
   filter(fn: (value: T) => boolean): IFluentIterable<T> {
-    return Iterables.of<T>(FilteredIterable.newInstance<T>(this.getData(), fn));
+    const list = ImmutableList
+        .of(ImmutableIterables.unsafeToArray(this.getData()))
+        .filterItem(fn);
+    return Iterables.of<T>(list);
   }
 
   iterate(fn: (value: T, breakFn: () => void) => void): FluentIterable<T> {

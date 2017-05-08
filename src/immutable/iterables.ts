@@ -6,6 +6,10 @@ import { IType } from '../check/i-type';
 import { InstanceofType } from '../check/instanceof-type';
 import { Finite } from '../interfaces/finite';
 import { assertUnreachable } from '../typescript/assert-unreachable';
+import { deprecated } from '../typescript/deprecated';
+import { Log } from '../util/log';
+
+const LOGGER = new Log('gs-tools.immutable.Iterables');
 
 export class Iterables {
   static ITERATOR_TYPE: IType<Iterator<any>> =
@@ -43,5 +47,10 @@ export class Iterables {
       array.push(item);
     }
     return array;
+  }
+
+  @deprecated(LOGGER, 'Remove after gs-tools.collection is removed')
+  static unsafeToArray<T>(iterable: Iterable<T>): T[] {
+    return this.toArray(iterable as Finite<T> & Iterable<T>);
   }
 }
