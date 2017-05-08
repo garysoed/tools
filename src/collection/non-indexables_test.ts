@@ -1,8 +1,6 @@
 import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import { ArrayIterable } from '../collection/array-iterable';
-import { GeneratorIterable } from '../collection/generator-iterable';
 import { Iterables } from '../collection/iterables';
 import { NonIndexables } from '../collection/non-indexables';
 import { Fakes } from '../mock/fakes';
@@ -13,18 +11,11 @@ describe('collection.NonIndexables', () => {
     it('should add all the given elements', () => {
       const resultArray: number[] = [];
       NonIndexables.of([1, 2, 3])
-          .addAll(ArrayIterable.newInstance([4, 5, 6]))
+          .addAll([4, 5, 6])
           .iterate((value: number) => {
             resultArray.push(value);
           });
       assert(resultArray).to.equal([1, 2, 3, 4, 5, 6]);
-    });
-
-    it('should work with infinite iterable', () => {
-      const infiniteIterable = GeneratorIterable.newInstance(() => {
-        return {done: false, value: 0};
-      });
-      NonIndexables.of<number>([]).addAll(infiniteIterable);
     });
   });
 

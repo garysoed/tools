@@ -5,6 +5,7 @@ import { HasPropertyType } from '../check/has-property-type';
 import { IType } from '../check/i-type';
 import { InstanceofType } from '../check/instanceof-type';
 import { Finite } from '../interfaces/finite';
+import { assertUnreachable } from '../typescript/assert-unreachable';
 
 export class Iterables {
   static ITERATOR_TYPE: IType<Iterator<any>> =
@@ -29,8 +30,10 @@ export class Iterables {
           return data;
         },
       };
-    } else {
+    } else if (data instanceof Function) {
       return Iterables.of<T>(data());
+    } else {
+      throw assertUnreachable(data);
     }
   }
 

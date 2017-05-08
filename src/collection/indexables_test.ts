@@ -1,9 +1,7 @@
 import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import { ArrayIterable } from '../collection/array-iterable';
 import { Arrays } from '../collection/arrays';
-import { GeneratorIterable } from '../collection/generator-iterable';
 import { Indexables } from '../collection/indexables';
 import { Fakes } from '../mock/fakes';
 
@@ -12,16 +10,9 @@ describe('collection.Indexables', () => {
   describe('addAll', () => {
     it('should add all the given elements', () => {
       const iterable = Indexables.of([1, 2, 3])
-          .addAll(ArrayIterable.newInstance([4, 5, 6]))
+          .addAll([4, 5, 6])
           .asIterable();
       assert(Arrays.fromIterable(iterable).asArray()).to.equal([1, 2, 3, 4, 5, 6]);
-    });
-
-    it('should work with infinite iterable', () => {
-      const infiniteIterable = GeneratorIterable.newInstance(() => {
-        return {done: false, value: 0};
-      });
-      Indexables.of<number>([]).addAll(infiniteIterable);
     });
   });
 

@@ -1,8 +1,6 @@
 import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import { ArrayIterable } from '../collection/array-iterable';
-import { GeneratorIterable } from '../collection/generator-iterable';
 import { Iterables } from '../collection/iterables';
 import { Mappables } from '../collection/mappables';
 import { Fakes } from '../mock/fakes';
@@ -11,7 +9,7 @@ import { Fakes } from '../mock/fakes';
 describe('collection.Mappables', () => {
   describe('addAll', () => {
     it('should append all the given elements in the current mappable', () => {
-      const iterable = ArrayIterable.newInstance([['c', 3], ['d', 4]] as [string, number][]);
+      const iterable = [['c', 3], ['d', 4]] as [string, number][];
       const map = new Map<string, number>([['a', 1], ['b', 2]] as [string, number][]);
       const result = {};
       Mappables.of<string, number>(map)
@@ -25,13 +23,6 @@ describe('collection.Mappables', () => {
         'c': 3,
         'd': 4,
       });
-    });
-
-    it('should work with infinite iterable', () => {
-      const infiniteIterable = GeneratorIterable.newInstance<[string, number]>(() => {
-        return {done: false, value: ['a', 0]};
-      });
-      Mappables.of(new Map()).addAll(infiniteIterable);
     });
   });
 

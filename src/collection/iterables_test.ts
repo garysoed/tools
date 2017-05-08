@@ -1,9 +1,7 @@
 import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import { ArrayIterable } from '../collection/array-iterable';
 import { Arrays } from '../collection/arrays';
-import { GeneratorIterable } from '../collection/generator-iterable';
 import { Iterables } from '../collection/iterables';
 import { Fakes } from '../mock/fakes';
 
@@ -11,23 +9,16 @@ import { Fakes } from '../mock/fakes';
 describe('collection.Iterables', () => {
   describe('addAll', () => {
     it('should append all the given elements after the current iterable elements', () => {
-      const firstIterable = ArrayIterable.newInstance([1, 2, 3]);
-      const secondIterable = ArrayIterable.newInstance([4, 5, 6]);
+      const firstIterable = [1, 2, 3];
+      const secondIterable = [4, 5, 6];
       const result = Iterables.of(firstIterable).addAll(secondIterable).asIterable();
       assert(Arrays.fromIterable(result).asArray()).to.equal([1, 2, 3, 4, 5, 6]);
-    });
-
-    it('should work with infinite iterable', () => {
-      const infiniteIterable = GeneratorIterable.newInstance(() => {
-        return {done: false, value: 0};
-      });
-      Iterables.of<number>(ArrayIterable.newInstance([])).addAll(infiniteIterable);
     });
   });
 
   describe('addAllArray', () => {
     it('should append all the given elements after the current iterable elements', () => {
-      const iterable = ArrayIterable.newInstance([1, 2, 3]);
+      const iterable = [1, 2, 3];
       const array = [4, 5, 6];
       const result = Iterables.of(iterable).addAllArray(array).asIterable();
       assert(Arrays.fromIterable(result).asArray()).to.equal([1, 2, 3, 4, 5, 6]);
@@ -37,7 +28,7 @@ describe('collection.Iterables', () => {
   describe('asIterable', () => {
     it('should return iterable that iterates the content', () => {
       const array = [1, 2, 3];
-      const iterable = Iterables.of(ArrayIterable.newInstance(array)).asIterable();
+      const iterable = Iterables.of(array).asIterable();
       assert(Arrays.fromIterable(iterable).asArray()).to.equal(array);
     });
   });
@@ -45,14 +36,14 @@ describe('collection.Iterables', () => {
   describe('asIterator', () => {
     it('should return iterator instance that iterates the iterable', () => {
       const array = [1, 2, 3];
-      const iterator = Iterables.of(ArrayIterable.newInstance(array)).asIterator();
+      const iterator = Iterables.of(array).asIterator();
       assert(Arrays.fromIterator(iterator).asArray()).to.equal(array);
     });
   });
 
   describe('filter', () => {
     it('should filter the iterable using the given filter function', () => {
-      const iterable = Iterables.of(ArrayIterable.newInstance([1, 2, 3]))
+      const iterable = Iterables.of([1, 2, 3])
           .filter((value: number) => {
             return value % 2 === 1;
           })
@@ -64,7 +55,7 @@ describe('collection.Iterables', () => {
   describe('iterate', () => {
     it('should iterate through all the elements', () => {
       const mockHandler = jasmine.createSpy('Handler');
-      Iterables.of(ArrayIterable.newInstance([1, 2, 3, 4])).iterate(mockHandler);
+      Iterables.of([1, 2, 3, 4]).iterate(mockHandler);
 
       assert(mockHandler).to.haveBeenCalledWith(1, Matchers.any(Function));
       assert(mockHandler).to.haveBeenCalledWith(2, Matchers.any(Function));
@@ -80,7 +71,7 @@ describe('collection.Iterables', () => {
             }
           });
 
-      Iterables.of(ArrayIterable.newInstance([1, 2, 3, 4])).iterate(mockHandler);
+      Iterables.of([1, 2, 3, 4]).iterate(mockHandler);
       assert(mockHandler).to.haveBeenCalledWith(1, Matchers.any(Function));
       assert(mockHandler).to.haveBeenCalledWith(2, Matchers.any(Function));
       assert(mockHandler).toNot.haveBeenCalledWith(3, Matchers.any(Function));
@@ -90,7 +81,7 @@ describe('collection.Iterables', () => {
 
   describe('map', () => {
     it('should apply the mapping function to the iterable', () => {
-      const iterable = Iterables.of(ArrayIterable.newInstance([1, 2, 3]))
+      const iterable = Iterables.of([1, 2, 3])
           .map((value: number) => {
             return value + 1;
           })

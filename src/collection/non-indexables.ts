@@ -1,4 +1,3 @@
-import { ArrayIterable } from './array-iterable';
 import { BaseFluent } from './base-fluent';
 import { IFluentNonIndexable } from './interfaces';
 import { FluentIterable, Iterables } from './iterables';
@@ -38,7 +37,7 @@ export class FluentNonIndexable<T> extends BaseFluent<T[]> implements IFluentNon
   }
 
   asIterable(): Iterable<T> {
-    return new ArrayIterable(this.getData());
+    return this.getData();
   }
 
   asIterator(): Iterator<T> {
@@ -112,8 +111,7 @@ export class FluentNonIndexable<T> extends BaseFluent<T[]> implements IFluentNon
   }
 
   iterate(fn: (value: T, breakFn: () => void) => void): FluentNonIndexable<T> {
-    Iterables.of(ArrayIterable.newInstance(this.getData()))
-        .iterate(fn);
+    Iterables.of(this.getData()).iterate(fn);
     return this;
   }
 

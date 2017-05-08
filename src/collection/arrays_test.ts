@@ -1,11 +1,10 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
+import { Arrays } from '../collection/arrays';
+import { Iterables } from '../immutable/iterables';
 import { Fakes } from '../mock/fakes';
 import { Mocks } from '../mock/mocks';
-
-import { ArrayIterable } from './array-iterable';
-import { Arrays } from './arrays';
 
 
 describe('collection.Arrays', () => {
@@ -39,15 +38,14 @@ describe('collection.Arrays', () => {
   describe('fromIterable', () => {
     it('should return the correct FluentIndexable', () => {
       const data = [1, 1, 2, 2, 3];
-      assert(Arrays.fromIterable(ArrayIterable.newInstance(data)).asArray()).to.equal(data);
+      assert(Arrays.fromIterable(data).asArray()).to.equal(data);
     });
   });
 
   describe('fromIterator', () => {
     it('should return the correct FluentIndexable', () => {
       const data = [1, 1, 2, 2, 3];
-      const iterator = ArrayIterable.newInstance(data)[Symbol.iterator]();
-      assert(Arrays.fromIterator(iterator).asArray()).to.equal(data);
+      assert(Arrays.fromIterator(data[Symbol.iterator]()).asArray()).to.equal(data);
     });
   });
 

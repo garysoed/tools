@@ -1,4 +1,3 @@
-import { ArrayIterable } from './array-iterable';
 import { BaseFluent } from './base-fluent';
 import { ChainIterable } from './chain-iterable';
 import { FilteredIterable } from './filtered-iterable';
@@ -29,7 +28,7 @@ export class FluentIterable<T>
   }
 
   addAllArray(array: T[]): FluentIterable<T> {
-    return this.addAll(ArrayIterable.newInstance<T>(array));
+    return this.addAll(array);
   }
 
   asIterable(): Iterable<T> {

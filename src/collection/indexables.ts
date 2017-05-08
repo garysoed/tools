@@ -1,4 +1,3 @@
-import { ArrayIterable } from '../collection/array-iterable';
 import { BaseFluent } from '../collection/base-fluent';
 import { IFluentIndexable } from '../collection/interfaces';
 import { FluentIterable, Iterables } from '../collection/iterables';
@@ -16,8 +15,7 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
    * @override
    */
   addAll(other: Iterable<T>): FluentIterable<T> {
-    return Iterables.of(ArrayIterable.newInstance(this.getData()))
-        .addAll(other);
+    return Iterables.of(this.getData()).addAll(other);
   }
 
   addAllArray(array: T[]): FluentIndexable<T> {
@@ -36,7 +34,7 @@ export class FluentIndexable<T> extends BaseFluent<T[]> implements IFluentIndexa
   }
 
   asIterable(): Iterable<T> {
-    return ArrayIterable.newInstance(this.getData());
+    return this.getData();
   }
 
   asIterator(): Iterator<T> {
