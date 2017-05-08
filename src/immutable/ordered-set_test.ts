@@ -131,6 +131,24 @@ describe('immutable.OrderedSet', () => {
     });
   });
 
+  describe('reduceItem', () => {
+    it('should return the correct value', () => {
+      const result = OrderedSet
+          .of([1, 2, 3, 4])
+          .reduceItem((prev: number, item: number) => {
+            return prev + item;
+          }, 2);
+      assert(result).to.equal(12);
+    });
+  });
+
+  describe('reverse', () => {
+    it('should return the correct elements', () => {
+      const entries: number[] = [0, 1, 2];
+      assert(OrderedSet.of(entries).reverse()).to.haveElements([2, 1, 0]);
+    });
+  });
+
   describe('setAt', () => {
     it('should set the item correctly', () => {
       const map = OrderedSet

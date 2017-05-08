@@ -108,6 +108,16 @@ export class OrderedSet<T> implements Collection<T>, Finite<T>, Iterable<T>, Ord
     }));
   }
 
+  reduceItem<R>(fn: (prevItem: R, item: T) => R, init: R): R {
+    return this.data_.reduce((prev: R, curr: T) => {
+      return fn(prev, curr);
+    }, init);
+  }
+
+  reverse(): OrderedSet<T> {
+    return new OrderedSet(this.data_.reverse());
+  }
+
   setAt(index: number, item: T): OrderedSet<T> {
     return this.deleteAt(index).insertAt(index, item);
   }

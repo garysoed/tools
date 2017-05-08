@@ -152,6 +152,20 @@ export class ImmutableList<T> implements
     return this.map<R>((value: T, index: number) => fn(value));
   }
 
+  reduce<R>(fn: (prevValue: R, value: T, key: number) => R, init: R): R {
+    return this.data_.reduce(fn, init);
+  }
+
+  reduceItem<R>(fn: (prevItem: R, item: T) => R, init: R): R {
+    return this.reduce((prev: R, value: T) => {
+      return fn(prev, value);
+    }, init);
+  }
+
+  reverse(): ImmutableList<T> {
+    return new ImmutableList(this.data_.reverse());
+  }
+
   set(index: number, item: T): ImmutableList<T> {
     const clone = this.data_.slice(0);
     clone[index] = item;

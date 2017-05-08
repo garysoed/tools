@@ -68,6 +68,14 @@ export class ImmutableSet<T> implements Collection<T>, Finite<T>, Iterable<T> {
     })));
   }
 
+  reduceItem<R>(fn: (prevItem: R, item: T) => R, init: R): R {
+    let result = init;
+    for (const item of this.data_) {
+      result = fn(result, item);
+    }
+    return result;
+  }
+
   size(): number {
     return this.data_.size;
   }

@@ -229,6 +229,35 @@ describe('immutable.OrderedMap', () => {
     });
   });
 
+  describe('reduce', () => {
+    it('should return the correct value', () => {
+      const result = OrderedMap
+          .of([[0, 'a'], [1, 'b'], [2, 'c']] as [number, string][])
+          .reduce((prev: string, index: string, key: number) => {
+            return `${prev},${key}${index}`;
+          }, '@');
+      assert(result).to.equal(`@,0a,1b,2c`);
+    });
+  });
+
+  describe('reduceItem', () => {
+    it('should return the correct value', () => {
+      const result = OrderedMap
+          .of([[0, 'a'], [1, 'b'], [2, 'c']] as [number, string][])
+          .reduceItem((prev: string, [key, index]: [number, string]) => {
+            return `${prev},${key}${index}`;
+          }, '@');
+      assert(result).to.equal(`@,0a,1b,2c`);
+    });
+  });
+
+  describe('reverse', () => {
+    it('should return the correct value', () => {
+      const entries: [number, string][] = [[0, 'a'], [1, 'b'], [2, 'c']];
+      assert(OrderedMap.of(entries).reverse()).to.haveElements([[2, 'c'], [1, 'b'], [0, 'a']]);
+    });
+  });
+
   describe('set', () => {
     it('should set the item correctly', () => {
       const map = OrderedMap

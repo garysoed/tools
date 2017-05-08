@@ -192,6 +192,24 @@ export class OrderedMap<K, V> implements
     return new OrderedMap(keysClone, mapClone);
   }
 
+  reduce<R>(fn: (prevValue: R, value: V, key: K) => R, init: R): R {
+    let result = init;
+    for (const [key, value] of this) {
+      result = fn(result, value, key);
+    }
+    return result;
+  }
+
+  reduceItem<R>(fn: (prevItem: R, item: [K, V]) => R, init: R): R {
+    return this.reduce((prev: R, value: V, key: K) => {
+      return fn(prev, [key, value]);
+    }, init);
+  }
+
+  reverse(): OrderedMap<K, V> {
+    return new OrderedMap(this.keys_.reverse(), new Map(this.map_));
+  }
+
   set(key: K, value: V): OrderedMap<K, V> {
     const keysClone = this.keys_.slice(0);
     const mapClone = new Map(this.map_);

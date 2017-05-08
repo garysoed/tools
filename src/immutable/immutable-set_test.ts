@@ -73,6 +73,17 @@ describe('immutable.ImmutableSet', () => {
     });
   });
 
+  describe('reduceItem', () => {
+    it('should return the correct value', () => {
+      const result = ImmutableSet
+          .of([1, 2, 3, 4])
+          .reduceItem((prev: number, item: number) => {
+            return prev + item;
+          }, 2);
+      assert(result).to.equal(12);
+    });
+  });
+
   describe('size', () => {
     it('should return the size correctly', () => {
       assert(ImmutableSet.of([1, 3]).size()).to.equal(2);

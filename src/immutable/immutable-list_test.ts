@@ -169,6 +169,30 @@ describe('immutable.ImmutableList', () => {
     });
   });
 
+  describe('reduce', () => {
+    it('should return the correct value', () => {
+      const result = ImmutableList
+          .of([1, 2, 3, 4])
+          .reduce((prev: number, index: number, key: number) => index + prev + key, 2);
+      assert(result).to.equal(18);
+    });
+  });
+
+  describe('reduceItem', () => {
+    it('should return the correct value', () => {
+      const result = ImmutableList
+          .of([1, 2, 3, 4])
+          .reduceItem((prev: number, index: number) => index + prev, 2);
+      assert(result).to.equal(12);
+    });
+  });
+
+  describe('reverse', () => {
+    it('should reverse the items', () => {
+      assert(ImmutableList.of([1, 2, 3, 4]).reverse()).to.haveElements([4, 3, 2, 1]);
+    });
+  });
+
   describe('set', () => {
     it('should set the item correctly', () => {
       assert(ImmutableList.of([1, 2, 3, 4]).set(1, 5)).to.haveElements([1, 5, 3, 4]);

@@ -161,6 +161,28 @@ describe('immutable.ImmutableMap', () => {
     });
   });
 
+  describe('reduce', () => {
+    it('should return the correct value', () => {
+      const result = ImmutableMap
+          .of([[0, 'a'], [1, 'b'], [2, 'c']] as [number, string][])
+          .reduce((prev: string, index: string, key: number) => {
+            return `${prev},${key}${index}`;
+          }, '@');
+      assert(result).to.equal(`@,0a,1b,2c`);
+    });
+  });
+
+  describe('reduceItem', () => {
+    it('should return the correct value', () => {
+      const result = ImmutableMap
+          .of([[0, 'a'], [1, 'b'], [2, 'c']] as [number, string][])
+          .reduceItem((prev: string, [key, index]: [number, string]) => {
+            return `${prev},${key}${index}`;
+          }, '@');
+      assert(result).to.equal(`@,0a,1b,2c`);
+    });
+  });
+
   describe('set', () => {
     it('should set the item correctly', () => {
       const map = ImmutableMap

@@ -106,6 +106,20 @@ export class ImmutableMap<K, V> implements
     return ImmutableMap.of(mappedEntries);
   }
 
+  reduce<R>(fn: (prevValue: R, value: V, key: K) => R, init: R): R {
+    let result: R = init;
+    for (const [key, value] of this.data_) {
+      result = fn(result, value, key);
+    }
+    return result;
+  }
+
+  reduceItem<R>(fn: (prevItem: R, item: [K, V]) => R, init: R): R {
+    return this.reduce((prevValue: R, value: V, key: K) => {
+      return fn(prevValue, [key, value]);
+    }, init);
+  }
+
   set(key: K, item: V): ImmutableMap<K, V> {
     const clone = new Map(this.data_);
     clone.set(key, item);

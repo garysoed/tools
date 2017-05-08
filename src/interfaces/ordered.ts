@@ -11,6 +11,8 @@ export interface Ordered<T> {
 
   insertAt(index: number, item: T): Ordered<T>;
 
+  reverse(): Ordered<T>;
+
   setAt(index: number, item: T): Ordered<T>;
 
   sort(compareFn: (item1: T, item2: T) => CompareResult): Ordered<T>;

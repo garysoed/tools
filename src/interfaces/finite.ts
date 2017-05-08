@@ -31,6 +31,8 @@ export interface Finite<T> {
    */
   has(item: T): boolean;
 
+  reduceItem<R>(fn: (prevItem: R, item: T) => R, init: R): R;
+
   /**
    * The number of items in the collection.
    */
