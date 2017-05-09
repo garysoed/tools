@@ -1,6 +1,5 @@
 import { IType } from '../check/i-type';
 import { InstanceofType } from '../check/instanceof-type';
-import { Arrays } from '../collection/arrays';
 
 /**
  * Checks if the elements of the given array are all of the given type.
@@ -16,11 +15,9 @@ export function ArrayOfType<T>(type: IType<T>): IType<T[]> {
      */
     check(target: any): target is T[] {
       if (InstanceofType(Array).check(target)) {
-        return Arrays
-            .of(target)
-            .every((element: any) => {
-              return type.check(element);
-            });
+        return target.every((element: any) => {
+          return type.check(element);
+        });
       } else {
         return false;
       }

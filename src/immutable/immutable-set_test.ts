@@ -41,6 +41,16 @@ describe('immutable.ImmutableSet', () => {
     });
   });
 
+  describe('everyItem', () => {
+    it('should return true if every element passes the check', () => {
+      assert(ImmutableSet.of([1, 2, 3]).everyItem((i: number) => i > 0)).to.beTrue();
+    });
+
+    it('should return false if one element does not pass the check', () => {
+      assert(ImmutableSet.of([1, 2, 3]).everyItem((i: number) => i !== 2)).to.beFalse();
+    });
+  });
+
   describe('filterItem', () => {
     it('should filter the items correctly', () => {
       const set = ImmutableSet
@@ -87,6 +97,16 @@ describe('immutable.ImmutableSet', () => {
   describe('size', () => {
     it('should return the size correctly', () => {
       assert(ImmutableSet.of([1, 3]).size()).to.equal(2);
+    });
+  });
+
+  describe('someItem', () => {
+    it('should return true if some element passes the check', () => {
+      assert(ImmutableSet.of([1, 2, 3]).someItem((i: number) => i === 2)).to.beTrue();
+    });
+
+    it('should return false if every element does not pass the check', () => {
+      assert(ImmutableSet.of([1, 2, 3]).someItem((i: number) => i < 0)).to.beFalse();
     });
   });
 

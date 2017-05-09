@@ -2,7 +2,6 @@ import { HasPropertyType } from '../check/has-property-type';
 import { IType } from '../check/i-type';
 import { InstanceofType } from '../check/instanceof-type';
 import { NumberType } from '../check/number-type';
-import { Arrays } from '../collection/arrays';
 
 /**
  * Checks if the elements of the given array are all of the given type.

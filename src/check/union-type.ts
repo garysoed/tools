@@ -1,5 +1,5 @@
 import { IType } from '../check/i-type';
-import { Arrays } from '../collection/arrays';
+import { ImmutableList } from '../immutable/immutable-list';
 
 class UnionTypeBuilder<T> {
   private readonly types_: IType<any>[];
@@ -47,9 +47,9 @@ export class UnionType<T> implements IType<T> {
    * @override
    */
   check(target: any): target is T {
-    return Arrays
+    return ImmutableList
         .of(this.types_)
-        .any((type: IType<T>) => {
+        .some((type: IType<T>) => {
           return type.check(target);
         });
   }

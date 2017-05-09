@@ -1,5 +1,5 @@
 import { IType } from '../check/i-type';
-import { Arrays } from '../collection/arrays';
+import { ImmutableList } from '../immutable/immutable-list';
 
 class IntersectTypeBuilder<T> {
   private readonly types_: IType<any>[];
@@ -47,11 +47,9 @@ export class IntersectType<T> implements IType<T> {
    * @override
    */
   check(target: any): target is T {
-    return Arrays
-        .of(this.types_)
-        .every((type: IType<T>) => {
-          return type.check(target);
-        });
+    return this.types_.every((type: IType<T>) => {
+      return type.check(target);
+    });
   }
 
   /**

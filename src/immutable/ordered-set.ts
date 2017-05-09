@@ -67,6 +67,15 @@ export class OrderedSet<T> implements Collection<T>, Finite<T>, Iterable<T>, Ord
     return new OrderedSet(clone);
   }
 
+  everyItem(check: (item: T) => boolean): boolean {
+    for (const item of this) {
+      if (!check(item)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   filterItem(checker: (item: T) => boolean): OrderedSet<T> {
     return new OrderedSet(this.data_.slice(0).filter((item: T) => {
       return checker(item);
@@ -124,6 +133,15 @@ export class OrderedSet<T> implements Collection<T>, Finite<T>, Iterable<T>, Ord
 
   size(): number {
     return this.data_.length;
+  }
+
+  someItem(check: (item: T) => boolean): boolean {
+    for (const item of this) {
+      if (check(item)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   sort(compareFn: (item1: T, item2: T) => CompareResult): OrderedSet<T> {

@@ -44,6 +44,15 @@ export class ImmutableSet<T> implements Collection<T>, Finite<T>, Iterable<T> {
     return new ImmutableSet(clone);
   }
 
+  everyItem(check: (item: T) => boolean): boolean {
+    for (const item of this) {
+      if (!check(item)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   filterItem(checker: (item: T) => boolean): ImmutableSet<T> {
     const iterable = this;
     return new ImmutableSet(new Set(Iterables.of(function* (): IterableIterator<T> {
@@ -78,6 +87,15 @@ export class ImmutableSet<T> implements Collection<T>, Finite<T>, Iterable<T> {
 
   size(): number {
     return this.data_.size;
+  }
+
+  someItem(check: (item: T) => boolean): boolean {
+    for (const item of this) {
+      if (check(item)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   static of<T>(data: Iterable<T> & Finite<T>): ImmutableSet<T>;

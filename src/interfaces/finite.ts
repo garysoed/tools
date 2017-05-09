@@ -26,6 +26,8 @@ export interface Finite<T> {
    */
   deleteAll(items: Collection<T> & Finite<T>): Finite<T>;
 
+  everyItem(check: (item: T) => boolean): boolean;
+
   /**
    * @return True iff the given item exists in the collection.
    */
@@ -37,4 +39,6 @@ export interface Finite<T> {
    * The number of items in the collection.
    */
   size(): number;
+
+  someItem(check: (item: T) => boolean): boolean;
 }

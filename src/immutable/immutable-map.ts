@@ -67,6 +67,21 @@ export class ImmutableMap<K, V> implements
     return ImmutableSet.of<[K, V]>(this);
   }
 
+  every(check: (value: V, key: K) => boolean): boolean {
+    return this.everyItem(([key, value]: [K, V]) => {
+      return check(value, key);
+    });
+  }
+
+  everyItem(check: (item: [K, V]) => boolean): boolean {
+    for (const entry of this) {
+      if (!check(entry)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   filter(checker: (value: V, index: K) => boolean): ImmutableMap<K, V> {
     return this.filterItem(([key, value]: [K, V]) => checker(value, key));
   }
@@ -128,6 +143,21 @@ export class ImmutableMap<K, V> implements
 
   size(): number {
     return this.data_.size;
+  }
+
+  some(check: (value: V, key: K) => boolean): boolean {
+    return this.someItem(([key, value]: [K, V]) => {
+      return check(value, key);
+    });
+  }
+
+  someItem(check: (item: [K, V]) => boolean): boolean {
+    for (const entry of this) {
+      if (check(entry)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   values(): ImmutableSet<V> {

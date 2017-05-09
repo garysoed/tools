@@ -110,6 +110,21 @@ export class OrderedMap<K, V> implements
         });
   }
 
+  every(check: (value: V, key: K) => boolean): boolean {
+    return this.everyItem(([key, value]: [K, V]) => {
+      return check(value, key);
+    });
+  }
+
+  everyItem(check: (item: [K, V]) => boolean): boolean {
+    for (const entry of this) {
+      if (!check(entry)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   filter(checker: (value: V, index: K) => boolean): OrderedMap<K, V> {
     return this.filterItem(([key, value]: [K, V]) => checker(value, key));
   }
@@ -223,6 +238,21 @@ export class OrderedMap<K, V> implements
 
   size(): number {
     return this.keys_.length;
+  }
+
+  some(check: (value: V, key: K) => boolean): boolean {
+    return this.someItem(([key, value]: [K, V]) => {
+      return check(value, key);
+    });
+  }
+
+  someItem(check: (item: [K, V]) => boolean): boolean {
+    for (const entry of this) {
+      if (check(entry)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   sort(compareFn: (item1: [K, V], item2: [K, V]) => CompareResult): OrderedMap<K, V> {

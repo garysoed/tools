@@ -75,6 +75,26 @@ describe('immutable.ImmutableList', () => {
     });
   });
 
+  describe('every', () => {
+    it('should return true if every element passes the check', () => {
+      assert(ImmutableList.of([1, 2, 3]).every((i: number) => i > 0)).to.beTrue();
+    });
+
+    it('should return false if one element does not pass the check', () => {
+      assert(ImmutableList.of([1, 2, 3]).every((i: number) => i !== 2)).to.beFalse();
+    });
+  });
+
+  describe('everyItem', () => {
+    it('should return true if every element passes the check', () => {
+      assert(ImmutableList.of([1, 2, 3]).everyItem((i: number) => i > 0)).to.beTrue();
+    });
+
+    it('should return false if one element does not pass the check', () => {
+      assert(ImmutableList.of([1, 2, 3]).everyItem((i: number) => i !== 2)).to.beFalse();
+    });
+  });
+
   describe('filter', () => {
     it('should filter the items correctly', () => {
       const list = ImmutableList.of([1, 2, 3, 4])
@@ -208,6 +228,26 @@ describe('immutable.ImmutableList', () => {
   describe('size', () => {
     it('should return the correct length', () => {
       assert(ImmutableList.of([1, 2, 3, 4]).size()).to.equal(4);
+    });
+  });
+
+  describe('some', () => {
+    it('should return true if some element passes the check', () => {
+      assert(ImmutableList.of([1, 2, 3]).some((i: number) => i === 2)).to.beTrue();
+    });
+
+    it('should return false if every element does not pass the check', () => {
+      assert(ImmutableList.of([1, 2, 3]).some((i: number) => i < 0)).to.beFalse();
+    });
+  });
+
+  describe('someItem', () => {
+    it('should return true if some element passes the check', () => {
+      assert(ImmutableList.of([1, 2, 3]).someItem((i: number) => i === 2)).to.beTrue();
+    });
+
+    it('should return false if every element does not pass the check', () => {
+      assert(ImmutableList.of([1, 2, 3]).someItem((i: number) => i < 0)).to.beFalse();
     });
   });
 

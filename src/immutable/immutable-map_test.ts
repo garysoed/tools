@@ -84,6 +84,30 @@ describe('immutable.ImmutableMap', () => {
     });
   });
 
+  describe('every', () => {
+    it('should return true if every entry passes the check', () => {
+      const map = ImmutableMap.of([[1, 'a'], [2, 'b'], [3, 'c']]);
+      assert(map.every((value: string, key: number) => key > 0)).to.beTrue();
+    });
+
+    it('should return false if one entry does not pass the check', () => {
+      const map = ImmutableMap.of([[1, 'a'], [2, 'b'], [3, 'c']]);
+      assert(map.every((value: string, key: number) => key !== 2)).to.beFalse();
+    });
+  });
+
+  describe('everyItem', () => {
+    it('should return true if every entry passes the check', () => {
+      const map = ImmutableMap.of([[1, 'a'], [2, 'b'], [3, 'c']]);
+      assert(map.everyItem(([key, value]: [number, string]) => key > 0)).to.beTrue();
+    });
+
+    it('should return false if one entry does not pass the check', () => {
+      const map = ImmutableMap.of([[1, 'a'], [2, 'b'], [3, 'c']]);
+      assert(map.everyItem(([key, value]: [number, string]) => key !== 2)).to.beFalse();
+    });
+  });
+
   describe('filter', () => {
     it('should filter the items correctly', () => {
       const map = ImmutableMap
@@ -195,6 +219,30 @@ describe('immutable.ImmutableMap', () => {
   describe('size', () => {
     it('should return the correct length', () => {
       assert(ImmutableMap.of([[0, 'a'], [1, 'b'], [2, 'c']]).size()).to.equal(3);
+    });
+  });
+
+  describe('some', () => {
+    it('should return true if some element passes the check', () => {
+      const map = ImmutableMap.of([[1, 'a'], [2, 'b'], [3, 'c']]);
+      assert(map.some((value: string, key: number) => key === 2)).to.beTrue();
+    });
+
+    it('should return false if every element does not pass the check', () => {
+      const map = ImmutableMap.of([[1, 'a'], [2, 'b'], [3, 'c']]);
+      assert(map.some((value: string, key: number) => key < 0)).to.beFalse();
+    });
+  });
+
+  describe('someItem', () => {
+    it('should return true if some element passes the check', () => {
+      const map = ImmutableMap.of([[1, 'a'], [2, 'b'], [3, 'c']]);
+      assert(map.someItem(([key, value]: [number, string]) => key === 2)).to.beTrue();
+    });
+
+    it('should return false if every element does not pass the check', () => {
+      const map = ImmutableMap.of([[1, 'a'], [2, 'b'], [3, 'c']]);
+      assert(map.someItem(([key, value]: [number, string]) => key < 0)).to.beFalse();
     });
   });
 

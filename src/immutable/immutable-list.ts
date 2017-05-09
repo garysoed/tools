@@ -100,6 +100,21 @@ export class ImmutableList<T> implements
     return new ImmutableList(clone);
   }
 
+  every(check: (value: T, key: number) => boolean): boolean {
+    for (const [key, value] of this.entries()) {
+      if (!check(value, key)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  everyItem(check: (item: T) => boolean): boolean {
+    return this.every((value: T) => {
+      return check(value);
+    });
+  }
+
   filter(checker: (value: T, index: number) => boolean): ImmutableList<T> {
     return new ImmutableList(this.data_.filter(checker));
   }
@@ -178,6 +193,21 @@ export class ImmutableList<T> implements
 
   size(): number {
     return this.data_.length;
+  }
+
+  some(check: (value: T, key: number) => boolean): boolean {
+    for (const [key, value] of this.entries()) {
+      if (check(value, key)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  someItem(check: (item: T) => boolean): boolean {
+    return this.some((value: T) => {
+      return check(value);
+    });
   }
 
   sort(compareFn: (item1: T, item2: T) => CompareResult): ImmutableList<T> {
