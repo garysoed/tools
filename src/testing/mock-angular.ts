@@ -24,3 +24,4 @@ angular['service'] = function(): any {
 };
 
 window['angular'] = angular;
+// TODO: Mutable

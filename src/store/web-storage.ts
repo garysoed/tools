@@ -149,3 +149,4 @@ export class WebStorage<T> implements GsStorage<T> {
     this.storage_.setItem(this.prefix_, JSON.stringify(Arrays.fromIterable(indexes).asArray()));
   }
 }
+// TODO: Mutable

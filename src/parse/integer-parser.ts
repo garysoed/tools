@@ -21,3 +21,4 @@ export const IntegerParser: Parser<number> = {
     return FloatParser.stringify(Math.round(value));
   },
 };
+// TODO: Mutable

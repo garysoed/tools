@@ -144,3 +144,4 @@ export class RgbColor extends BaseColor {
     return new RgbColor(red, green, blue);
   }
 }
+// TODO: Mutable

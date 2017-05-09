@@ -17,3 +17,4 @@ export function bind(name: (string|null) = null, dependencies: any[] = []): Clas
     Injector.bind(ctor, ctorName);
   };
 }
+// TODO: Mutable

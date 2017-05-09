@@ -8,3 +8,4 @@ export const NumberType: IType<number> = {
     return typeof target === 'number' || target instanceof Number;
   },
 };
+// TODO: Mutable

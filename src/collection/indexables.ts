@@ -166,3 +166,4 @@ export class Indexables {
     return new FluentIndexable<T>(data.slice(0));
   }
 }
+// TODO: Mutable

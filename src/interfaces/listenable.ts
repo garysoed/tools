@@ -46,3 +46,4 @@ export interface Listenable<T> {
       context: Object,
       useCapture: boolean): DisposableFunction;
 }
+// TODO: Mutable

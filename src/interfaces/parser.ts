@@ -15,3 +15,4 @@ export interface Parser<T> {
    */
   stringify(value: T | null): string;
 }
+// TODO: Mutable

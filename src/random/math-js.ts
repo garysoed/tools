@@ -6,3 +6,4 @@ export class MathJs implements Rng {
     return Math.random();
   }
 }
+// TODO: Mutable

@@ -23,3 +23,4 @@ export const StringParser: Parser<string> = {
     return value;
   },
 };
+// TODO: Mutable

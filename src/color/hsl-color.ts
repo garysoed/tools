@@ -116,3 +116,4 @@ export class HslColor extends BaseColor {
     return new HslColor(hue % 360, saturation, lightness);
   }
 }
+// TODO: Mutable

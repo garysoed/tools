@@ -128,3 +128,4 @@ export class Handler {
 export function handle(selector: string | null): Handler {
   return new Handler(selector);
 }
+// TODO: Mutable

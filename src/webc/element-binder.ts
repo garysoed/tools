@@ -39,3 +39,4 @@ export class ElementBinder<T extends Element> implements DomBinder<T> {
     return new ElementBinder<T>(element);
   }
 }
+// TODO: Mutable

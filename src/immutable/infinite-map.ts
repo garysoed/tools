@@ -93,3 +93,4 @@ export class InfiniteMap<K, V> implements Collection<[K, V]>, Indexed<K, V>, Ite
     return new InfiniteMap(keys, generator);
   }
 }
+// TODO: Mutable

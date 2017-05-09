@@ -150,3 +150,4 @@ export class NonIndexables {
     return new FluentNonIndexable<T>(data);
   }
 }
+// TODO: Mutable

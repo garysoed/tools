@@ -44,3 +44,4 @@ export class PromiseAssert<T> extends AnyAssert<Promise<T>> {
     return resolveValue;
   }
 }
+// TODO: Mutable

@@ -64,3 +64,4 @@ export interface IHandler<T> {
    */
   getConfigs(instance: BaseDisposable): Map<string | symbol, Set<T>>;
 }
+// TODO: Mutable

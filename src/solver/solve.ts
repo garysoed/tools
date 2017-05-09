@@ -55,3 +55,4 @@ export class Solve {
     return bestIndex === null ? null : values[bestIndex];
   }
 }
+// TODO: Mutable

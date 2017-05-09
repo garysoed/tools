@@ -136,3 +136,4 @@ export class Annotations<T> {
     return new Annotations<T>(annotation);
   }
 }
+// TODO: Mutable

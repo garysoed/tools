@@ -24,3 +24,4 @@ export function ArrayOfType<T>(type: IType<T>): IType<T[]> {
     },
   };
 }
+// TODO: Mutable

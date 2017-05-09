@@ -166,3 +166,4 @@ export const Colors = {
         Math.round(color1.getBlue() * amount + color2.getBlue() * (1 - amount)));
   },
 };
+// TODO: Mutable

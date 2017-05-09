@@ -18,3 +18,4 @@ export function hash(object: any): string {
   }
   return `${mapLike.get(object)}`;
 }
+// TODO: Mutable

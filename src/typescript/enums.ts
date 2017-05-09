@@ -54,3 +54,4 @@ export class Enums {
     return enumSet[enumValue].toLowerCase();
   }
 }
+// TODO: Mutable

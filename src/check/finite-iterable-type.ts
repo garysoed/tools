@@ -8,3 +8,4 @@ export const FiniteIterableType = IntersectType.builder<Finite<any> & Iterable<a
     .addType(IterableType)
     .addType(HasPropertyType<Finite<any>>('size', InstanceofType(Function)))
     .build();
+// TODO: Mutable

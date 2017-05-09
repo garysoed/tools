@@ -77,3 +77,4 @@ export class Interval extends BaseListenable<EventType> {
     return new Interval(interval);
   }
 }
+// TODO: Mutable

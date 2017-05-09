@@ -33,3 +33,4 @@ export const FloatParser: Parser<number> = {
     return value.toString(10);
   },
 };
+// TODO: Mutable

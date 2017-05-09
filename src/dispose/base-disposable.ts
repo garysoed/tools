@@ -74,3 +74,4 @@ export class BaseDisposable implements Disposable {
     return this.isDisposed_;
   }
 }
+// TODO: Mutable

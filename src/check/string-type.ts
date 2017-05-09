@@ -8,3 +8,4 @@ export const StringType: IType<string> = {
     return typeof target === 'string' || target instanceof String;
   },
 };
+// TODO: Mutable

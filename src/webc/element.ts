@@ -120,3 +120,4 @@ export const Element: IElement = function(config: IElementConfig): ClassDecorato
 Element.getConfig = function(ctor: gs.ICtor<BaseElement>): IElementConfig {
   return ctor[__CONFIG];
 };
+// TODO: Mutable

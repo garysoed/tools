@@ -140,3 +140,4 @@ export class Stringify {
         config.pad);
   }
 }
+// TODO: Mutable

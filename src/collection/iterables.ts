@@ -98,3 +98,4 @@ export class Iterables {
     return new FluentIterable<T>(data);
   }
 }
+// TODO: Mutable

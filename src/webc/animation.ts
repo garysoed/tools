@@ -41,3 +41,4 @@ export class Animation {
     return new Animation(keyframes, options);
   }
 }
+// TODO: Mutable

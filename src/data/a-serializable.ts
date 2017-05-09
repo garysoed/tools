@@ -183,3 +183,4 @@ export function Field(name: string): PropertyDecorator {
     target[__FIELDS].set(propertyKey, name);
   };
 }
+// TODO: Mutable

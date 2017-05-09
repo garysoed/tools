@@ -73,3 +73,4 @@ export class ListenableDom<T extends EventTarget> extends BaseListenable<string>
     return new ListenableDom<T>(element);
   }
 }
+// TODO: Mutable

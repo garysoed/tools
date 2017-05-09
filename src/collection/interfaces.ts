@@ -424,3 +424,4 @@ export interface IFluentIndexable<T> extends IFluentIterable<T> {
    */
   zip<T2>(others: T2[]): IFluentIndexable<[T, T2]>;
 }
+// TODO: Mutable

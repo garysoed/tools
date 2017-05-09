@@ -54,3 +54,4 @@ export class ApiClient<Q extends gs.IJson, P> {
     return new ApiClient<Q, P>(channel, responseCheck, responseType);
   }
 }
+// TODO: Mutable

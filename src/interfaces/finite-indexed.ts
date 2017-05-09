@@ -10,3 +10,4 @@ export interface FiniteIndexed<K, V> {
 
   some(check: (value: V, key: K) => boolean): boolean;
 }
+// TODO: Mutable

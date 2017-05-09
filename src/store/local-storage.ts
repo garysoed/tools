@@ -10,3 +10,4 @@ export class LocalStorage<T> extends WebStorage<T> {
     return new LocalStorage(window, prefix);
   }
 }
+// TODO: Mutable

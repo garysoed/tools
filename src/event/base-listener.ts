@@ -59,3 +59,4 @@ export class BaseListener extends BaseDisposable implements Listener {
     }
   }
 }
+// TODO: Mutable

@@ -39,3 +39,4 @@ export class Reflect {
     Object.defineProperty(object, propertyName, { get: (): any => newValue });
   }
 }
+// TODO: Mutable

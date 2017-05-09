@@ -56,3 +56,4 @@ export abstract class BaseColor implements Color {
    */
   abstract getSaturation(): number;
 }
+// TODO: Mutable

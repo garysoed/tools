@@ -179,3 +179,4 @@ export class ImmutableMap<K, V> implements
     }
   }
 }
+// TODO: Mutable

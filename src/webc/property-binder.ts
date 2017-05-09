@@ -44,3 +44,4 @@ export class PropertyBinder<T> implements DomBinder<T> {
     return new PropertyBinder<T>(element, propertyName);
   }
 }
+// TODO: Mutable

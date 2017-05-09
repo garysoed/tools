@@ -41,3 +41,4 @@ export class Sets {
     return NonIndexables.fromIterable<T>(set);
   }
 }
+// TODO: Mutable

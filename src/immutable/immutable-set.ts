@@ -113,3 +113,4 @@ export class ImmutableSet<T> implements Collection<T>, Finite<T>, Iterable<T> {
     }
   }
 }
+// TODO: Mutable

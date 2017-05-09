@@ -17,3 +17,4 @@ export class BaseAssert {
     return this.reversed_ ? this.expect_(value).not : this.expect_(value);
   }
 }
+// TODO: Mutable

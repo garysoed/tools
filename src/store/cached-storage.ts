@@ -115,3 +115,4 @@ export class CachedStorage<T> extends BaseDisposable implements Storage<T> {
     return new CachedStorage(innerStorage);
   }
 }
+// TODO: Mutable

@@ -37,3 +37,4 @@ export class Sequencer extends BaseDisposable {
     return new Sequencer();
   }
 }
+// TODO: Mutable

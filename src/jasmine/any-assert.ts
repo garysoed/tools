@@ -54,3 +54,4 @@ export class AnyAssert<T> extends BaseAssert {
     this.getMatchers_().toEqual(other);
   }
 }
+// TODO: Mutable

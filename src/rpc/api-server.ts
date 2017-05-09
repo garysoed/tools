@@ -53,3 +53,4 @@ export class ApiServer<Q, P extends gs.IJson> {
     return new ApiServer<Q, P>(channel, processRequest, requestType);
   }
 }
+// TODO: Mutable

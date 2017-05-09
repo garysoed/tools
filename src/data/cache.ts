@@ -34,3 +34,4 @@ export function cache(): MethodDecorator {
     return descriptor;
   };
 }
+// TODO: Mutable

@@ -42,3 +42,4 @@ export interface Finite<T> {
 
   someItem(check: (item: T) => boolean): boolean;
 }
+// TODO: Mutable

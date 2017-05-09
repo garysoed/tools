@@ -10,3 +10,4 @@ export interface IType<T> {
    */
   check(target: any): target is T;
 }
+// TODO: Mutable

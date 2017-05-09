@@ -134,3 +134,4 @@ export class ChildrenElementsBinder<T> implements DomBinder<T[]> {
     return new ChildrenElementsBinder(parentEl, dataHelper, startPadCount, endPadCount, instance);
   }
 }
+// TODO: Mutable

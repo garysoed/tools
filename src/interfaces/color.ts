@@ -40,3 +40,4 @@ export interface Color {
   getSaturation(): number;
 }
 // TODO: Move all interfaces to this directory.
+// TODO: Mutable

@@ -56,3 +56,4 @@ export class FunctionAssert<T extends Function> extends AnyAssert<T> {
     this.getMatchers_().toThrowError(regexp);
   }
 }
+// TODO: Mutable

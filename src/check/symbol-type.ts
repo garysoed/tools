@@ -8,3 +8,4 @@ export const SymbolType: IType<symbol> = {
     return typeof target === 'symbol';
   },
 };
+// TODO: Mutable

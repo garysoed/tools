@@ -8,3 +8,4 @@ export const BooleanType: IType<boolean> = {
     return typeof target === 'boolean' || target instanceof Boolean;
   },
 };
+// TODO: Mutable

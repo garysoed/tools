@@ -15,3 +15,4 @@ export function NonNullType<T>(): IType<T> {
     },
   };
 }
+// TODO: Mutable

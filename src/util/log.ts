@@ -71,3 +71,4 @@ export class Log {
     log.callIfEnabled_(console.warn.bind(console), message);
   }
 }
+// TODO: Mutable

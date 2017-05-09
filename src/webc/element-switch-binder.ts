@@ -105,3 +105,4 @@ export class ElementSwitchBinder<T> implements DomBinder<T> {
     return new ElementSwitchBinder(parentEl, mapping);
   }
 }
+// TODO: Mutable

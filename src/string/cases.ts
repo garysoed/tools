@@ -106,3 +106,4 @@ export class Cases {
     return new Cases(words);
   }
 }
+// TODO: Mutable

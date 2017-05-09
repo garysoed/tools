@@ -20,3 +20,4 @@ export interface Indexed<I, T> {
 
   values(): Collection<T> & Iterable<T>;
 }
+// TODO: Mutable

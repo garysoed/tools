@@ -72,3 +72,4 @@ export class DomHook<T> {
     return new DomHook<T>(deleteOnFalsy);
   }
 }
+// TODO: Mutable

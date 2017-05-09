@@ -24,3 +24,4 @@ export class StringAssert extends AnyAssert<string> {
     this.getMatchers_().toEqual(jasmine.stringMatching(regexp));
   }
 }
+// TODO: Mutable

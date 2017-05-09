@@ -75,3 +75,4 @@ export class CustomElementUtil {
     instance[__ELEMENT] = element;
   }
 }
+// TODO: Mutable

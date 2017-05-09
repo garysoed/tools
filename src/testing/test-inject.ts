@@ -44,3 +44,4 @@ export const TestInject = {
   init(): void { },
 };
 
+// TODO: Mutable

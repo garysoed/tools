@@ -21,3 +21,4 @@ export function CtorType<T = any>(): IType<gs.ICtor<T>> {
     },
   };
 }
+// TODO: Mutable

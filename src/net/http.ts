@@ -148,3 +148,4 @@ export class Http {
     return new HttpPostRequest(path);
   }
 }
+// TODO: Mutable

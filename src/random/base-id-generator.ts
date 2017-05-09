@@ -33,3 +33,4 @@ export abstract class BaseIdGenerator {
    */
   protected abstract resolveConflict_(id: string): string;
 }
+// TODO: Mutable

@@ -50,3 +50,4 @@ export interface Storage<T> {
    */
   update(id: string, instance: T): Promise<void>;
 }
+// TODO: Mutable

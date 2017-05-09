@@ -55,3 +55,4 @@ export class Spec {
     return new Spec(start, delta, end);
   }
 }
+// TODO: Mutable

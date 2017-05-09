@@ -127,3 +127,4 @@ export class Jsons {
     object[propertyName] = value;
   }
 }
+// TODO: Mutable

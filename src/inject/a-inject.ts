@@ -15,3 +15,4 @@ export function inject(name: (string|null) = null, defaultValue?: any): Paramete
     }
   };
 }
+// TODO: Mutable

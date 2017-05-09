@@ -16,3 +16,4 @@ export function InstanceofType<T>(ctor: gs.ICtor<T>): IType<T> {
     },
   };
 }
+// TODO: Mutable

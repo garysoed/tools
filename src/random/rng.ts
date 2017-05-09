@@ -9,3 +9,4 @@ export interface Rng {
    */
   next(): number;
 }
+// TODO: Mutable

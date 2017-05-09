@@ -129,3 +129,4 @@ export class BaseListenable<T> extends BaseDisposable implements Listenable<T> {
     return disposableFunction;
   }
 }
+// TODO: Mutable

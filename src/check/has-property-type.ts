@@ -15,3 +15,4 @@ export function HasPropertyType<T>(name: string | symbol, type: IType<any>): ITy
     },
   };
 }
+// TODO: Mutable

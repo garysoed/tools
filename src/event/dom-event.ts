@@ -22,3 +22,4 @@ export let DomEvent = {
   RESIZE: 'resize',
   SCROLL: 'scroll',
 };
+// TODO: Mutable

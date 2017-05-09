@@ -63,3 +63,4 @@ export class UnionType<T> implements IType<T> {
     return new UnionTypeBuilder<T>();
   }
 }
+// TODO: Mutable

@@ -172,3 +172,4 @@ export class ElementRegistrar extends BaseDisposable {
     }
   }
 }
+// TODO: Mutable

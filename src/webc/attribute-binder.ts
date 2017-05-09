@@ -57,3 +57,4 @@ export class AttributeBinder<T> implements DomBinder<T> {
     return new AttributeBinder<T>(element, attributeName, parser);
   }
 }
+// TODO: Mutable

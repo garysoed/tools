@@ -12,3 +12,4 @@ export const NativeType: IType<boolean | number | string | symbol> = UnionType
     .addType(StringType)
     .addType(SymbolType)
     .build();
+// TODO: Mutable

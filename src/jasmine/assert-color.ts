@@ -8,3 +8,4 @@ export function assertColor(value: Color | null): AssertFactory<ColorAssert> {
     return new ColorAssert(value, reversed, expect);
   });
 }
+// TODO: Mutable

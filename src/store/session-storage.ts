@@ -6,3 +6,4 @@ export class SessionStorage<T> extends WebStorage<T> {
     super(window.sessionStorage, prefix);
   }
 }
+// TODO: Mutable

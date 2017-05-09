@@ -15,3 +15,4 @@ export interface Listener extends Disposable {
       callback: (payload?: any) => void,
       useCapture: boolean): void;
 }
+// TODO: Mutable

@@ -91,3 +91,4 @@ export function assert(value: any): AssertFactory<BaseAssert> {
     });
   }
 }
+// TODO: Mutable

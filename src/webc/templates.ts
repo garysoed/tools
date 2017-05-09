@@ -46,3 +46,4 @@ export class Templates {
     Templates.templates_.set(key, templateStr);
   }
 }
+// TODO: Mutable

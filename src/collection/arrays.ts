@@ -107,3 +107,4 @@ export class Arrays {
     return new FluentIndexable<T>(data.slice());
   }
 }
+// TODO: Mutable

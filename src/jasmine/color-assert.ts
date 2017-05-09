@@ -52,3 +52,4 @@ export class ColorAssert extends AnyAssert<Color | null> {
     this.getMatchers_(rgbArray).toEqual([red, green, blue]);
   }
 }
+// TODO: Mutable

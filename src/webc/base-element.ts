@@ -49,3 +49,4 @@ export class BaseElement extends BaseListener {
    */
   onRemoved(element: HTMLElement): void { }
 }
+// TODO: Mutable

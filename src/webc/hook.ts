@@ -147,3 +147,4 @@ export class Hook {
 export function hook(selector: string | null): Hook {
   return new Hook(selector);
 }
+// TODO: Mutable

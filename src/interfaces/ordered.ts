@@ -17,3 +17,4 @@ export interface Ordered<T> {
 
   sort(compareFn: (item1: T, item2: T) => CompareResult): Ordered<T>;
 }
+// TODO: Mutable

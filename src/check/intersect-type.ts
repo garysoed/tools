@@ -61,3 +61,4 @@ export class IntersectType<T> implements IType<T> {
     return new IntersectTypeBuilder<T>();
   }
 }
+// TODO: Mutable

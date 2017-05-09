@@ -12,3 +12,4 @@ export class HttpError extends Error {
     Object.setPrototypeOf(this, HttpError.prototype);
   }
 }
+// TODO: Mutable

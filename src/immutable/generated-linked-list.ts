@@ -28,3 +28,4 @@ export class GeneratedLinkedList<T> implements Collection<T>, Iterable<T> {
     }));
   }
 }
+// TODO: Mutable

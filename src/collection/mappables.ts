@@ -211,3 +211,4 @@ export class Mappables {
     return new FluentMappable<K, V>(map);
   }
 }
+// TODO: Mutable

@@ -25,3 +25,4 @@ export const TestAsync = {
 
   init(): void { },
 };
+// TODO: Mutable

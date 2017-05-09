@@ -69,3 +69,4 @@ export class Randomizer {
 export function Random(rng: Rng = new MathJs()): Randomizer {
   return new Randomizer(rng);
 }
+// TODO: Mutable

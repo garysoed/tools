@@ -9,3 +9,4 @@ export class NumberAssert extends AnyAssert<number> {
     this.getMatchers_().toBeCloseTo(other, precision);
   }
 }
+// TODO: Mutable

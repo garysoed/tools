@@ -31,3 +31,4 @@ export class IterableAssert<T> extends AnyAssert<Iterable<T>> {
     this.getMatchers_(toCheck).toEqual(expected);
   }
 }
+// TODO: Mutable

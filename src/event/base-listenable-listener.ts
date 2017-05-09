@@ -28,3 +28,4 @@ export class BaseListenableListener<E> extends BaseListenable<E> implements List
     this.eventHandler_.unlistenFrom(listenable, eventType, callback, useCapture);
   }
 }
+// TODO: Mutable

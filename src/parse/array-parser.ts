@@ -44,3 +44,4 @@ export class ArrayParserImpl<T> implements Parser<(T | null)[]> {
 export function ArrayParser<T>(elementParser: Parser<T>): ArrayParserImpl<T> {
   return new ArrayParserImpl(elementParser);
 }
+// TODO: Mutable

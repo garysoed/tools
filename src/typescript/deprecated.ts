@@ -13,3 +13,4 @@ export function deprecated(log: Log, message: string): MethodDecorator {
     return descriptor;
   };
 }
+// TODO: Mutable

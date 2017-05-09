@@ -99,3 +99,4 @@ export class LocationService extends BaseListenableListener<LocationServiceEvent
     return path === '' ? '/' : path;
   }
 }
+// TODO: Mutable
