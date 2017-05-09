@@ -290,4 +290,3 @@ export class OrderedMap<K, V> implements
     return new OrderedMap(keys, map);
   }
 }
-// TODO: Mutable

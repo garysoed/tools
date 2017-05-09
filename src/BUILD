@@ -8,6 +8,7 @@ gs_tools(
       "//src/collection",
       "//src/color",
       "//src/dispose",
+      "//src/immutable",
       "//src/inject",
       "//src/interfaces",
       "//src/jasmine",

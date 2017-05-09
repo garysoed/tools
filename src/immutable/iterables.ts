@@ -54,4 +54,3 @@ export class Iterables {
     return this.toArray(iterable as Finite<T> & Iterable<T>);
   }
 }
-// TODO: Mutable

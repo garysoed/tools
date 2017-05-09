@@ -166,4 +166,3 @@ export class OrderedSet<T> implements Collection<T>, Finite<T>, Iterable<T>, Ord
     return new OrderedSet(uniques);
   }
 }
-// TODO: Mutable

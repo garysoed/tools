@@ -99,4 +99,3 @@ export class InfiniteList<T> implements Collection<T>, Indexed<number, T>, Itera
     return new InfiniteList(generator);
   }
 }
-// TODO: Mutable
