@@ -1,6 +1,6 @@
-import { Arrays } from '../collection/arrays';
 import { BaseColor } from '../color/base-color';
 import { cache } from '../data/cache';
+import { ImmutableList } from '../immutable/immutable-list';
 
 
 export class HslColor extends BaseColor {
@@ -84,11 +84,11 @@ export class HslColor extends BaseColor {
     }
 
     const min = this.getLightness() - chroma / 2;
-    const [r, g, b] = Arrays.of([r1, g1, b1])
+    const [r, g, b] = ImmutableList.of([r1, g1, b1])
         .map((value: number) => {
           return Math.round((value + min) * 255);
         })
-        .asArray();
+        .toArray();
     return [r, g, b];
   }
 
