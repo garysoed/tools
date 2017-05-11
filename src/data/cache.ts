@@ -20,12 +20,13 @@ export function cache(): MethodDecorator {
             return hash(arg);
           })
           .join('_');
-      if (cache.has(argsHash)) {
-        return cache.get(argsHash);
+      const cachedValue = cache.get(argsHash);
+      if (cachedValue !== undefined) {
+        return cachedValue;
       }
 
       const result = value.apply(this, args);
-      cache.set(argsHash, result);
+      Caches.setCacheValue(this, propertyKey, argsHash, result);
       return result;
     };
 
@@ -34,4 +35,3 @@ export function cache(): MethodDecorator {
     return descriptor;
   };
 }
-// TODO: Mutable

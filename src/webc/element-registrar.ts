@@ -2,6 +2,7 @@ import { InstanceofType } from '../check/instanceof-type';
 import { Maps } from '../collection/maps';
 import { Sets } from '../collection/sets';
 import { BaseDisposable } from '../dispose/base-disposable';
+import { Iterables } from '../immutable/iterables';
 import { Injector } from '../inject/injector';
 import { Parser } from '../interfaces/parser';
 import { Cases } from '../string/cases';
@@ -10,7 +11,7 @@ import { BaseElement } from '../webc/base-element';
 import { CustomElementUtil } from '../webc/custom-element-util';
 import { DomHook } from '../webc/dom-hook';
 import { Handler } from '../webc/handle';
-import { ANNOTATIONS as HookAnnotations } from '../webc/hook';
+import { ANNOTATIONS as HookAnnotations, BinderFactory as HookBinderFactory } from '../webc/hook';
 import { DomBinder } from '../webc/interfaces';
 import { Templates } from '../webc/templates';
 
@@ -67,24 +68,24 @@ export class ElementRegistrar extends BaseDisposable {
         CustomElementUtil.setElement(instance, this);
 
         const instancePrototype = instance.constructor;
-        Maps.of(HookAnnotations.forCtor(instancePrototype).getAttachedValues())
-            .forEach((
-                factories: Set<(element: HTMLElement, instance: any) => DomBinder<any>>,
-                key: string | symbol) => {
-              if (factories.size > 1) {
-                throw new Error(`Key ${key} can only have 1 Bind annotation`);
-              }
-              const factory = Sets.of(factories).anyValue();
-              if (factory === null) {
-                return;
-              }
+        for (const [key, factories] of
+            HookAnnotations.forCtor(instancePrototype).getAttachedValues()) {
+          if (factories.size() > 1) {
+            throw new Error(`Key ${key} can only have 1 Bind annotation`);
+          }
+          const factory = Sets
+              .of<HookBinderFactory>(new Set(Iterables.toArray(factories)))
+              .anyValue();
+          if (factory === null) {
+            return;
+          }
 
-              const hook = instance[key];
-              if (!(hook instanceof DomHook)) {
-                throw new Error(`Key ${key} should be an instance of DomHook`);
-              }
-              hook.open(factory(this, instance));
-            });
+          const hook = instance[key];
+          if (!(hook instanceof DomHook)) {
+            throw new Error(`Key ${key} should be an instance of DomHook`);
+          }
+          hook.open(factory(this, instance));
+        }
 
         instance.onCreated(this);
         Handler.configure(this, instance);

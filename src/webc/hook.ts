@@ -11,7 +11,7 @@ import { PropertyBinder } from '../webc/property-binder';
 import { Util } from '../webc/util';
 
 
-type BinderFactory = (element: HTMLElement, instance: any) => DomBinder<any>;
+export type BinderFactory = (element: HTMLElement, instance: any) => DomBinder<any>;
 
 export const ANNOTATIONS: Annotations<BinderFactory> =
     Annotations.of<BinderFactory>(Symbol('bind'));

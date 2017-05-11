@@ -263,5 +263,14 @@ describe('immutable.ImmutableMap', () => {
       const entries: [number, string][] = [[0, 'a'], [1, 'b'], [2, 'c']];
       assert(ImmutableMap.of(entries)).to.haveElements(entries);
     });
+
+    it('should create the map correctly from map', () => {
+      const entries: [number, string][] = [[0, 'a'], [1, 'b'], [2, 'c']];
+      assert(ImmutableMap.of(new Map(entries))).to.haveElements(entries);
+    });
+
+    it('should create the map correctly from JSON', () => {
+      assert(ImmutableMap.of({a: 1, b: 2, c: 3})).to.haveElements([['a', 1], ['b', 2], ['c', 3]]);
+    });
   });
 });

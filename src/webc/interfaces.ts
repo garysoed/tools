@@ -1,4 +1,6 @@
 import { BaseDisposable } from '../dispose/base-disposable';
+import { ImmutableMap } from '../immutable/immutable-map';
+import { ImmutableSet } from '../immutable/immutable-set';
 import { Parser } from '../interfaces/parser';
 
 
@@ -62,6 +64,6 @@ export interface IHandler<T> {
   /**
    * @return Configuration objects registered for the given instance.
    */
-  getConfigs(instance: BaseDisposable): Map<string | symbol, Set<T>>;
+  getConfigs(instance: BaseDisposable): ImmutableMap<string | symbol, ImmutableSet<T>>;
 }
 // TODO: Mutable

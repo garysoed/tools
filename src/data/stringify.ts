@@ -1,9 +1,9 @@
 import { NativeType } from '../check/native-type';
 import { StringType } from '../check/string-type';
 import { SymbolType } from '../check/symbol-type';
-import { Arrays } from '../collection/arrays';
-import { Maps } from '../collection/maps';
 import { Annotations } from '../data/annotations';
+import { ImmutableList } from '../immutable/immutable-list';
+import { ImmutableMap } from '../immutable/immutable-map';
 
 
 
@@ -54,10 +54,10 @@ export class Stringify {
       return String(field).match(/^function [^\(]*\([^\)]*\)/)![0];
     } else {
       lines.push('{');
-      const subArray = Maps
-          .fromRecord(field)
+      const entriesString = ImmutableMap
+          .of(field)
           .entries()
-          .map(([key, value]: [string, any]): string => {
+          .mapItem(([key, value]: [string, any]): string => {
             const stringifiedValue = Stringify.formatField_(
                 value,
                 delimiter,
@@ -65,22 +65,21 @@ export class Stringify {
                 pad + indent);
             return `${key}: ${stringifiedValue}`;
           })
-          .map((line: string): string => {
+          .mapItem((line: string): string => {
             if (!!pad) {
               return (pad || '') + indent + line;
             } else {
               return line;
             }
-          })
-          .asArray();
-      Arrays
-          .of(subArray)
-          .mapElement((line: string, index: number): string => {
-            return (index < subArray.length - 1) ? line + delimiter : line;
-          })
-          .forEach((line: string): void => {
-            lines.push(line);
           });
+      const delimitedLines = ImmutableList
+          .of(entriesString)
+          .map((line: string, index: number): string => {
+            return (index < entriesString.size() - 1) ? line + delimiter : line;
+          });
+      for (const line of delimitedLines) {
+        lines.push(line);
+      }
       if (!!pad) {
         lines.push(`${indent}}`);
       } else {
@@ -101,13 +100,11 @@ export class Stringify {
     if (instance instanceof Object
         && ANNOTATIONS.hasAnnotation(instance.constructor)) {
       const record = {};
-      Arrays
-          .of(ANNOTATIONS.forCtor(instance.constructor).getAnnotatedProperties())
-          .forEach((field: string | symbol): void => {
-            const stringifiedField = SymbolType.check(field) ? `[${field.toString()}]` : field;
-            const value = Stringify.grabFields_(instance[field]);
-            record[stringifiedField] = value;
-          });
+      for (const field of ANNOTATIONS.forCtor(instance.constructor).getAnnotatedProperties()) {
+        const stringifiedField = SymbolType.check(field) ? `[${field.toString()}]` : field;
+        const value = Stringify.grabFields_(instance[field]);
+        record[stringifiedField] = value;
+      }
       return record;
     } else {
       return instance;
@@ -140,4 +137,3 @@ export class Stringify {
         config.pad);
   }
 }
-// TODO: Mutable

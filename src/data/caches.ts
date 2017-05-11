@@ -1,46 +1,51 @@
 import { Annotations } from '../data/annotations';
+import { ImmutableMap } from '../immutable/immutable-map';
 
 const __CACHES = Symbol('caches');
 
 export const CACHE_ANNOTATIONS = Annotations.of(__CACHES);
 
 
-export const Caches = {
+export class Caches {
   /**
    * @param target Object to clear the cache from.
    * @param propertyKey Key of the property whose cache should be cleared.
    */
-  clear(instance: Object, propertyKey: string | symbol): void {
-    Caches.getCache(instance, propertyKey).clear();
-  },
+  static clear(instance: Object, propertyKey: string | symbol): void {
+    Caches.getCache_(instance, propertyKey).clear();
+  }
 
   /**
    * Clears all cache in the given object.
    * @param target Object to clear all the cache from.
    */
-  clearAll(instance: Object): void {
-    CACHE_ANNOTATIONS.forCtor(instance.constructor).getAnnotatedProperties()
-        .forEach((key: string | symbol) => {
-          Caches.clear(instance, key);
-        });
-  },
+  static clearAll(instance: Object): void {
+    for (const key of CACHE_ANNOTATIONS.forCtor(instance.constructor).getAnnotatedProperties()) {
+      Caches.clear(instance, key);
+    }
+  }
 
   /**
    * @param target Object to get the cache of.
    * @param propertyKey Key of the property whose cache should be retrieved.
    */
-  getCache(instance: Object, propertyKey: string | symbol): Map<string, any> {
+  static getCache(instance: Object, propertyKey: string | symbol): ImmutableMap<string, any> {
+    return ImmutableMap.of(Caches.getCache_(instance, propertyKey));
+  }
+
+  private static getCache_(instance: Object, propertyKey: string | symbol): Map<string, any> {
     const caches = Caches.getCaches(instance);
-    if (caches.has(propertyKey)) {
-      return caches.get(propertyKey)!;
+    const value = caches.get(propertyKey);
+    if (value !== undefined) {
+      return value;
     }
 
     const cache = new Map<string, any>();
     caches.set(propertyKey, cache);
     return cache;
-  },
+  }
 
-  getCaches(target: Object): Map<string | symbol, Map<string, any>> {
+  private static getCaches(target: Object): Map<string | symbol, Map<string, any>> {
     if (target[__CACHES] !== undefined) {
       return target[__CACHES];
     } else {
@@ -48,6 +53,13 @@ export const Caches = {
       target[__CACHES] = caches;
       return caches;
     }
-  },
-};
-// TODO: Mutable
+  }
+
+  static setCacheValue(
+      instance: Object,
+      propertyKey: string | symbol,
+      key: string,
+      value: any): void {
+    Caches.getCache_(instance, propertyKey).set(key, value);
+  }
+}

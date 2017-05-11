@@ -3,6 +3,8 @@ import { Sets } from '../collection/sets';
 import { Annotations } from '../data/annotations';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { DisposableFunction } from '../dispose/disposable-function';
+import { ImmutableMap } from "../immutable/immutable-map";
+import { ImmutableSet } from "../immutable/immutable-set";
 import { IHandler } from '../webc/interfaces';
 
 
@@ -116,7 +118,8 @@ export class ChildListChangeHandler implements IHandler<ChildListChangeConfig> {
   /**
    * @override
    */
-  getConfigs(instance: BaseDisposable): Map<string | symbol, Set<ChildListChangeConfig>> {
+  getConfigs(instance: BaseDisposable):
+      ImmutableMap<string | symbol, ImmutableSet<ChildListChangeConfig>> {
     return CHILD_LIST_CHANGE_ANNOTATIONS
         .forCtor(instance.constructor)
         .getAttachedValues();

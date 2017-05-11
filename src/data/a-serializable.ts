@@ -1,6 +1,3 @@
-import { Maps } from '../collection/maps';
-
-
 /**
  * Provides a convenient way to serialize / deserialize objects to / from JSON.
  *
@@ -39,6 +36,8 @@ import { Maps } from '../collection/maps';
 /**
  * @hidden
  */
+import { ImmutableMap } from "src/immutable/immutable-map";
+
 const __FIELDS = Symbol('fields');
 
 /**
@@ -87,12 +86,12 @@ export class Serializer {
     if (!!ctor) {
       const defaultInstance = new ctor();
 
-      Serializer.getFields_(ctor).forEach((jsonKey: string, key: string) => {
+      for (const [key, jsonKey] of Serializer.getFields_(ctor)) {
         const jsonValue = json[jsonKey];
         if (jsonValue !== undefined) {
           defaultInstance[key] = this.fromJSON(jsonValue);
         }
-      });
+      }
 
       return defaultInstance;
     } else if (json instanceof Array) {
@@ -111,15 +110,14 @@ export class Serializer {
   /**
    * Retrieves the fields for the given constructor.
    */
-  private static getFields_(ctor: any): Map<string, string> {
-    const fluentFields = Maps.of(new Map<string, string>());
-    if (!!ctor.prototype[__PARENT]) {
-      fluentFields.addAllMap(Serializer.getFields_(ctor.prototype[__PARENT]));
-    }
+  private static getFields_(ctor: any): ImmutableMap<string, string> {
+    const fields = (ctor.prototype[__PARENT]) ?
+        Serializer.getFields_(ctor.prototype[__PARENT]) :
+        ImmutableMap.of(new Map());
 
-    fluentFields.addAllMap(ctor.prototype[__FIELDS]);
-    return fluentFields.asMap();
+    return fields.addAll(ctor.prototype[__FIELDS]);
   }
+
 
   /**
    * Converts the given [[Serializable]] object to JSON object.
@@ -135,9 +133,9 @@ export class Serializer {
     const ctor = obj.constructor;
     if (!!ctor.prototype[__NAME]) {
       const json = {[TYPE_FIELD]: ctor.prototype[__NAME]};
-      Serializer.getFields_(ctor).forEach((jsonKey: string, key: string) => {
+      for (const [key, jsonKey] of Serializer.getFields_(ctor)) {
         json[jsonKey] = this.toJSON(obj[key]);
-      });
+      }
       return json;
     } else if (obj instanceof Array) {
       return obj.map((value: any) => this.toJSON(value));
@@ -183,4 +181,3 @@ export function Field(name: string): PropertyDecorator {
     target[__FIELDS].set(propertyKey, name);
   };
 }
-// TODO: Mutable

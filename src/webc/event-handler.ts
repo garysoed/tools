@@ -2,8 +2,9 @@ import { Arrays } from '../collection/arrays';
 import { Annotations } from '../data/annotations';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { ListenableDom } from '../event/listenable-dom';
-
-import { IHandler } from './interfaces';
+import { ImmutableMap } from '../immutable/immutable-map';
+import { ImmutableSet } from '../immutable/immutable-set';
+import { IHandler } from '../webc/interfaces';
 
 
 export type EventHandlerConfig = {
@@ -64,7 +65,8 @@ export class EventHandler implements IHandler<EventHandlerConfig> {
   /**
    * @override
    */
-  getConfigs(instance: BaseDisposable): Map<string | symbol, Set<EventHandlerConfig>> {
+  getConfigs(instance: BaseDisposable):
+      ImmutableMap<string | symbol, ImmutableSet<EventHandlerConfig>> {
     return EVENT_ANNOTATIONS
         .forCtor(instance.constructor)
         .getAttachedValues();

@@ -1,6 +1,7 @@
 import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
+import { ImmutableSet } from '../immutable/immutable-set';
 import { Fakes } from '../mock/fakes';
 import { Mocks } from '../mock/mocks';
 import { TestDispose } from '../testing/test-dispose';
@@ -91,8 +92,8 @@ describe('webc.ElementRegistrar', () => {
       mockElement[key2] = mockBridge2;
 
       const binderMap = new Map();
-      binderMap.set(key1, new Set([mockBinderFactory1]));
-      binderMap.set(key2, new Set([mockBinderFactory2]));
+      binderMap.set(key1, ImmutableSet.of([mockBinderFactory1]));
+      binderMap.set(key2, ImmutableSet.of([mockBinderFactory2]));
       const mockBindAnnotations = jasmine.createSpyObj('BindAnnotations', ['getAttachedValues']);
       mockBindAnnotations.getAttachedValues.and.returnValue(binderMap);
       spyOn(HookAnnotations, 'forCtor').and.returnValue(mockBindAnnotations);

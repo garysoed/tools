@@ -1,5 +1,3 @@
-import { Arrays } from '../collection/arrays';
-
 import { Annotations } from './annotations';
 
 
@@ -14,9 +12,10 @@ export class Equals {
   static equals<T>(a: T, b: T): boolean {
     if (a instanceof Object &&
         ANNOTATIONS.hasAnnotation(a.constructor)) {
-      const fields = ANNOTATIONS.forCtor(a.constructor).getAnnotatedProperties();
-      return Arrays.of(fields)
-          .every((field: symbol | string) => {
+      return ANNOTATIONS
+          .forCtor(a.constructor)
+          .getAnnotatedProperties()
+          .everyItem((field: symbol | string) => {
             return Equals.equals(a[field], b[field]);
           });
     } else {
@@ -35,4 +34,3 @@ export class Equals {
     };
   }
 }
-// TODO: Mutable

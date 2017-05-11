@@ -2,6 +2,7 @@ import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
 import { ANNOTATIONS, Equals } from '../data/equals';
+import { ImmutableSet } from '../immutable/immutable-set';
 import { Fakes } from '../mock/fakes';
 import { Mocks } from '../mock/mocks';
 
@@ -31,7 +32,7 @@ describe('data.Equals', () => {
 
       const mockAnnotationHandler = jasmine
           .createSpyObj('AnnotationHandler', ['getAnnotatedProperties']);
-      mockAnnotationHandler.getAnnotatedProperties.and.returnValue([key1, key2]);
+      mockAnnotationHandler.getAnnotatedProperties.and.returnValue(ImmutableSet.of([key1, key2]));
 
       spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationHandler);
       spyOn(ANNOTATIONS, 'hasAnnotation').and.returnValue(true);
@@ -72,7 +73,7 @@ describe('data.Equals', () => {
 
       const mockAnnotationHandler = jasmine
           .createSpyObj('AnnotationHandler', ['getAnnotatedProperties']);
-      mockAnnotationHandler.getAnnotatedProperties.and.returnValue([key1, key2]);
+      mockAnnotationHandler.getAnnotatedProperties.and.returnValue(ImmutableSet.of([key1, key2]));
 
       spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationHandler);
       spyOn(ANNOTATIONS, 'hasAnnotation').and.returnValue(true);

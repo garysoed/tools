@@ -169,13 +169,22 @@ export class ImmutableMap<K, V> implements
 
   static of<K, V>(data: Iterable<[K, V]> & Finite<[K, V]>): ImmutableMap<K, V>;
   static of<K, V>(data: [K, V][]): ImmutableMap<K, V>;
-  static of<K, V>(data: (Iterable<[K, V]> & Finite<[K, V]>) | [K, V][]): ImmutableMap<K, V> {
+  static of<K, V>(data: Map<K, V>): ImmutableMap<K, V>;
+  static of(data: gs.IJson): ImmutableMap<string, any>;
+  static of<K, V>(data: (Iterable<[K, V]> & Finite<[K, V]>) | [K, V][] | gs.IJson | Map<K, V>):
+      ImmutableMap<any, any> {
     if (FiniteIterableType.check(data)) {
       return new ImmutableMap(new Map(data));
     } else if (InstanceofType(Array).check(data)) {
       return new ImmutableMap(new Map(data));
+    } else if (data instanceof Map) {
+      return new ImmutableMap(new Map(data));
     } else {
-      throw assertUnreachable(data);
+      const entries: [string, any][] = [];
+      for (const key in data) {
+        entries.push([key, data[key]]);
+      }
+      return new ImmutableMap(new Map(entries));
     }
   }
 }

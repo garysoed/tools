@@ -8,6 +8,8 @@ import { ChildListChangeHandler } from '../webc/child-list-change-handler';
 import { EventHandler } from '../webc/event-handler';
 import { IHandler } from '../webc/interfaces';
 import { Util } from '../webc/util';
+import { ImmutableSet } from "../immutable/immutable-set";
+import { Iterables } from "../immutable/iterables";
 
 
 export const ATTRIBUTE_CHANGE_HANDLER = new AttributeChangeHandler();
@@ -93,13 +95,12 @@ export class Handler {
       instance: BaseDisposable,
       handler: IHandler<T>): Set<string | null> {
     const unresolvedSelectors = new Set<string | null>();
-    const configEntries = Maps
-        .of(handler.getConfigs(instance))
+    const configEntries = handler
+        .getConfigs(instance)
         .values()
-        .map((configs: Set<T>): [Element | null, T][] => {
-          return Sets
-              .of(configs)
-              .map((config: T): [Element | null, T] => {
+        .mapItem((configs: ImmutableSet<T>): [Element | null, T][] => {
+          const entries = configs
+              .mapItem((config: T): [Element | null, T] => {
                 const selector = config.selector;
                 const element = Util.resolveSelector(selector, parentElement);
                 if (element === null) {
@@ -108,13 +109,12 @@ export class Handler {
 
                 // Element can be null, but keep going to make debugging easier.
                 return [element, config];
-              })
-              .asArray();
-        })
-        .asArray();
+              });
+          return Iterables.toArray(entries);
+        });
 
     Maps
-        .group(Arrays.flatten(configEntries).asArray())
+        .group(Arrays.flatten(Iterables.toArray(configEntries)).asArray())
         .forEach((configs: T[], targetEl: Element | null) => {
           if (targetEl !== null) {
             handler.configure(targetEl, instance, configs);

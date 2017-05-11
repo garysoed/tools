@@ -1,6 +1,8 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
+import { ImmutableMap } from '../immutable/immutable-map';
+import { ImmutableSet } from '../immutable/immutable-set';
 import { Fakes } from '../mock/fakes';
 import { Mocks } from '../mock/mocks';
 import { ATTRIBUTE_CHANGE_HANDLER, EVENT_HANDLER, Handler } from '../webc/handle';
@@ -63,9 +65,10 @@ describe('webc.Handler', () => {
       const configs2_2 = Mocks.object('configs2_2');
       configs2_2.selector = selector2_2;
 
-      const map = new Map();
-      map.set('propertyKey1', new Set([configs1_1, configs1_2]));
-      map.set('propertyKey2', new Set([configs2_1, configs2_2]));
+      const map = ImmutableMap.of([
+        ['propertyKey1', ImmutableSet.of([configs1_1, configs1_2])],
+        ['propertyKey2', ImmutableSet.of([configs2_1, configs2_2])],
+      ]);
       mockHandler.getConfigs.and.returnValue(map);
 
       const targetEl1 = Mocks.object('targetEl1');
@@ -101,8 +104,7 @@ describe('webc.Handler', () => {
       const configs = Mocks.object('configs');
       configs.selector = selector;
 
-      const map = new Map();
-      map.set('propertyKey', new Set([configs]));
+      const map = ImmutableMap.of([['propertyKey', ImmutableSet.of([configs])]]);
       mockHandler.getConfigs.and.returnValue(map);
 
       spyOn(Util, 'resolveSelector').and.returnValue(null);

@@ -3,6 +3,8 @@ import { Maps } from '../collection/maps';
 import { Annotations } from '../data/annotations';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { DisposableFunction } from '../dispose/disposable-function';
+import { ImmutableMap } from '../immutable/immutable-map';
+import { ImmutableSet } from '../immutable/immutable-set';
 import { Parser } from '../interfaces/parser';
 import { IHandler } from '../webc/interfaces';
 
@@ -118,7 +120,8 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
   /**
    * @override
    */
-  getConfigs(instance: BaseDisposable): Map<string | symbol, Set<AttributeChangeHandlerConfig>> {
+  getConfigs(instance: BaseDisposable):
+      ImmutableMap<string | symbol, ImmutableSet<AttributeChangeHandlerConfig>> {
     return ATTR_CHANGE_ANNOTATIONS
         .forCtor(instance.constructor)
         .getAttachedValues();
