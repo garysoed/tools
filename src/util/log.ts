@@ -52,6 +52,10 @@ export class Log {
     log.callIfEnabled_(console.info.bind(console), message);
   }
 
+  static of(namespace: string): Log {
+    return new Log(namespace);
+  }
+
   /**
    * Enables / disables logging.
    *
