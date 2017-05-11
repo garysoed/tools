@@ -36,7 +36,7 @@
 /**
  * @hidden
  */
-import { ImmutableMap } from "src/immutable/immutable-map";
+import { ImmutableMap } from '../immutable/immutable-map';
 
 const __FIELDS = Symbol('fields');
 

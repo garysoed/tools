@@ -3,8 +3,8 @@ import { Sets } from '../collection/sets';
 import { Annotations } from '../data/annotations';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { DisposableFunction } from '../dispose/disposable-function';
-import { ImmutableMap } from "../immutable/immutable-map";
-import { ImmutableSet } from "../immutable/immutable-set";
+import { ImmutableMap } from '../immutable/immutable-map';
+import { ImmutableSet } from '../immutable/immutable-set';
 import { IHandler } from '../webc/interfaces';
 
 

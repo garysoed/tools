@@ -2,14 +2,14 @@ import { Arrays } from '../collection/arrays';
 import { Maps } from '../collection/maps';
 import { Sets } from '../collection/sets';
 import { BaseDisposable } from '../dispose/base-disposable';
+import { ImmutableSet } from '../immutable/immutable-set';
+import { Iterables } from '../immutable/iterables';
 import { Parser } from '../interfaces/parser';
 import { AttributeChangeHandler } from '../webc/attribute-change-handler';
 import { ChildListChangeHandler } from '../webc/child-list-change-handler';
 import { EventHandler } from '../webc/event-handler';
 import { IHandler } from '../webc/interfaces';
 import { Util } from '../webc/util';
-import { ImmutableSet } from "../immutable/immutable-set";
-import { Iterables } from "../immutable/iterables";
 
 
 export const ATTRIBUTE_CHANGE_HANDLER = new AttributeChangeHandler();

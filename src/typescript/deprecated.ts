@@ -7,7 +7,7 @@ export function deprecated(log: Log, message: string): MethodDecorator {
       descriptor: TypedPropertyDescriptor<any>): TypedPropertyDescriptor<any> {
     const origValue = descriptor.value;
     descriptor.value = function(...args: any[]): any {
-      Log.warn(log, message);
+      Log.warn(log, `${propertyKey} is deprecated: ${message}`);
       return origValue.apply(this, args);
     };
     return descriptor;
