@@ -1,6 +1,6 @@
-import { Arrays } from '../collection/arrays';
-import { Sets } from '../collection/sets';
 import { Serializer } from '../data/a-serializable';
+import { ImmutableSet } from '../immutable/immutable-set';
+import { Iterables } from '../immutable/iterables';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { SimpleIdGenerator } from '../random/simple-id-generator';
 import { Storage as GsStorage } from '../store/interfaces';
@@ -29,8 +29,7 @@ export class WebStorage<T> implements GsStorage<T> {
     if (!indexes.has(id)) {
       return Promise.reject(new Error(`Index [${id}] does not exist`));
     }
-    indexes.delete(id);
-    this.updateIndexes_(indexes);
+    this.updateIndexes_(indexes.delete(id));
     this.storage_.removeItem(this.getPath_(id));
     return Promise.resolve();
   }
@@ -39,20 +38,20 @@ export class WebStorage<T> implements GsStorage<T> {
    * @override
    */
   generateId(): Promise<string> {
-    return Promise.resolve(this.idGenerator_.generate(Sets.of(this.getIndexes_()).asArray()));
+    return Promise.resolve(this.idGenerator_.generate(Iterables.toArray(this.getIndexes_())));
   }
 
   /**
    * Returns the indexes in the storage.
    * @private
    */
-  private getIndexes_(): Set<string> {
+  private getIndexes_(): ImmutableSet<string> {
     let indexes = this.storage_.getItem(this.prefix_);
     if (indexes === null) {
-      this.updateIndexes_(new Set());
+      this.updateIndexes_(ImmutableSet.of([]));
       indexes = JSON.stringify([]);
     }
-    return new Set(JSON.parse(indexes) as string[]);
+    return ImmutableSet.of(JSON.parse(indexes) as string[]);
   }
 
   /**
@@ -74,28 +73,24 @@ export class WebStorage<T> implements GsStorage<T> {
   /**
    * @override
    */
-  async list(): Promise<T[]> {
+  async list(): Promise<ImmutableSet<T>> {
     const ids = await this.listIds();
-    const promises = Arrays
-        .fromIterable(ids)
-        .map((id: string) => {
+    const promises = ids
+        .mapItem((id: string) => {
           return this.read(id);
-        })
-        .asArray();
-    const items = await Promise.all(promises);
-    return Arrays
+        });
+    const items = await Promise.all(Iterables.toArray(promises));
+    return ImmutableSet
         .of(items)
-        .filter((item: T | null) => {
+        .filterItem((item: T | null) => {
           return item !== null;
-        })
-        .castElements<T>()
-        .asArray();
+        }) as ImmutableSet<T>;
   }
 
   /**
    * @override
    */
-  listIds(): Promise<Set<string>> {
+  listIds(): Promise<ImmutableSet<string>> {
     return Promise.resolve(this.getIndexes_());
   }
 
@@ -125,8 +120,7 @@ export class WebStorage<T> implements GsStorage<T> {
   update(id: string, instance: T): Promise<void> {
     const path = this.getPath_(id);
     const indexes = this.getIndexes_();
-    indexes.add(id);
-    this.updateIndexes_(indexes);
+    this.updateIndexes_(indexes.add(id));
 
     return new Promise<void>((resolve: () => void, reject: (cause: Error) => void) => {
       try {
@@ -145,8 +139,7 @@ export class WebStorage<T> implements GsStorage<T> {
    * @param indexes Indexes to update.
    * @private
    */
-  private updateIndexes_(indexes: Set<string>): void {
-    this.storage_.setItem(this.prefix_, JSON.stringify(Arrays.fromIterable(indexes).asArray()));
+  private updateIndexes_(indexes: ImmutableSet<string>): void {
+    this.storage_.setItem(this.prefix_, JSON.stringify(Iterables.toArray(indexes)));
   }
 }
-// TODO: Mutable

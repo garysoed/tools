@@ -8,7 +8,7 @@ import { assertUnreachable } from '../typescript/assert-unreachable';
 export class ImmutableSet<T> implements Collection<T>, Finite<T>, Iterable<T> {
   private readonly data_: Set<T>;
 
-  private constructor(data: Set<T>) {
+  constructor(data: Set<T>) {
     this.data_ = new Set(Iterables.clone(data));
   }
 

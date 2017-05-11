@@ -1,3 +1,5 @@
+import { ImmutableSet } from '../immutable/immutable-set';
+
 export interface Storage<T> {
 
   /**
@@ -25,12 +27,12 @@ export interface Storage<T> {
   /**
    * @return Array of data in the storage.
    */
-  list(): Promise<T[]>;
+  list(): Promise<ImmutableSet<T>>;
 
   /**
    * @return IDs of the data in the storage.
    */
-  listIds(): Promise<Set<string>>;
+  listIds(): Promise<ImmutableSet<string>>;
 
   /**
    * Reads the object corresponding to the given ID.
@@ -50,4 +52,3 @@ export interface Storage<T> {
    */
   update(id: string, instance: T): Promise<void>;
 }
-// TODO: Mutable

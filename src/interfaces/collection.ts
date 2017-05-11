@@ -15,4 +15,3 @@ export interface Collection<T> extends Iterable<T> {
    */
   mapItem<R>(fn: (item: T) => R): Collection<R>;
 }
-// TODO: Mutable

@@ -1,8 +1,8 @@
-import { Arrays } from '../collection/arrays';
-import { Maps } from '../collection/maps';
-import { Sets } from '../collection/sets';
 import { BaseDisposable } from '../dispose/base-disposable';
 
+import { ImmutableList } from '../immutable/immutable-list';
+import { ImmutableSet } from '../immutable/immutable-set';
+import { Iterables } from '../immutable/iterables';
 import { Storage } from './interfaces';
 
 
@@ -32,8 +32,7 @@ export class CachedStorage<T> extends BaseDisposable implements Storage<T> {
    * @override
    */
   disposeInternal(): void {
-    Maps
-        .of(this.cache_)
+    this.cache_
         .forEach((value: T) => {
           if (value instanceof BaseDisposable) {
             value.dispose();
@@ -59,28 +58,24 @@ export class CachedStorage<T> extends BaseDisposable implements Storage<T> {
   /**
    * @override
    */
-  async list(): Promise<T[]> {
+  async list(): Promise<ImmutableSet<T>> {
     const ids = await this.listIds();
-    const promises = Sets
-        .of(ids)
-        .map((id: string) => {
+    const promises = ids
+        .mapItem((id: string) => {
           return this.read(id);
-        })
-        .asArray();
-    const items = await Promise.all(promises);
-    return Arrays
+        });
+    const items = await Promise.all(Iterables.toArray(promises));
+    return ImmutableSet
         .of(items)
-        .filter((item: T | null) => {
+        .filterItem((item: T | null) => {
           return item !== null;
-        })
-        .castElements<T>()
-        .asArray();
+        }) as ImmutableSet<T>;
   }
 
   /**
    * @override
    */
-  listIds(): Promise<Set<string>> {
+  listIds(): Promise<ImmutableSet<string>> {
     return this.innerStorage_.listIds();
   }
 
@@ -115,4 +110,3 @@ export class CachedStorage<T> extends BaseDisposable implements Storage<T> {
     return new CachedStorage(innerStorage);
   }
 }
-// TODO: Mutable

@@ -1,12 +1,11 @@
 import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import { Arrays } from '../collection/arrays';
 import { Serializer } from '../data/a-serializable';
+import { ImmutableSet } from '../immutable/immutable-set';
 import { Fakes } from '../mock/fakes';
 import { Mocks } from '../mock/mocks';
-
-import { WebStorage } from './web-storage';
+import { WebStorage } from '../store/web-storage';
 
 
 describe('store.WebStorage', () => {
@@ -27,9 +26,10 @@ describe('store.WebStorage', () => {
 
       const indexes = storage['getIndexes_']();
 
-      assert(Arrays.fromIterable(indexes).asArray()).to.equal([]);
-      assert(storage['updateIndexes_']).to.haveBeenCalledWith(Matchers.any(Set));
-      assert(storage['updateIndexes_']['calls'].argsFor(0)[0].size).to.equal(0);
+      assert(indexes).to.haveElements([]);
+      assert(storage['updateIndexes_']).to.haveBeenCalledWith(Matchers.any(ImmutableSet));
+      assert(storage['updateIndexes_']['calls'].argsFor(0)[0] as ImmutableSet<any>)
+          .to.haveElements([]);
       assert(mockStorage.getItem).to.haveBeenCalledWith(PREFIX);
     });
 
@@ -42,7 +42,7 @@ describe('store.WebStorage', () => {
 
       const indexSet = storage['getIndexes_']();
 
-      assert(Arrays.fromIterable(indexSet).asArray()).to.equal(indexes);
+      assert(indexSet).to.haveElements(indexes);
       assert(storage['updateIndexes_']).toNot.haveBeenCalled();
     });
   });
@@ -57,7 +57,7 @@ describe('store.WebStorage', () => {
   describe('updateIndexes_', () => {
     it('should update the storage correctly', () => {
       const indexes = ['index'];
-      storage['updateIndexes_'](new Set(indexes));
+      storage['updateIndexes_'](ImmutableSet.of(indexes));
       assert(mockStorage.setItem).to.haveBeenCalledWith(PREFIX, JSON.stringify(indexes));
     });
   });
@@ -67,15 +67,16 @@ describe('store.WebStorage', () => {
       const id = 'id';
       const path = 'path';
       spyOn(storage, 'getPath_').and.returnValue(path);
-      spyOn(storage, 'getIndexes_').and.returnValue(new Set([id]));
+      spyOn(storage, 'getIndexes_').and.returnValue(ImmutableSet.of([id]));
       spyOn(storage, 'updateIndexes_');
 
       await storage.delete(id);
 
       assert(mockStorage.removeItem).to.haveBeenCalledWith(path);
       assert(storage['getPath_']).to.haveBeenCalledWith(id);
-      assert(storage['updateIndexes_']).to.haveBeenCalledWith(Matchers.any(Set));
-      assert(storage['updateIndexes_']['calls'].argsFor(0)[0].size).to.equal(0);
+      assert(storage['updateIndexes_']).to.haveBeenCalledWith(Matchers.any(ImmutableSet));
+      assert(storage['updateIndexes_']['calls'].argsFor(0)[0] as ImmutableSet<any>)
+          .to.haveElements([]);
     });
 
     it('should reject if the ID does not exist', async () => {
@@ -116,23 +117,23 @@ describe('store.WebStorage', () => {
       const id2 = 'id2';
       const item1 = Mocks.object('item1');
       const item2 = Mocks.object('item2');
-      spyOn(storage, 'listIds').and.returnValue(Promise.resolve([id1, id2]));
+      spyOn(storage, 'listIds').and.returnValue(Promise.resolve(ImmutableSet.of([id1, id2])));
       Fakes.build(spyOn(storage, 'read'))
           .when(id1).resolve(item1)
           .when(id2).resolve(item2);
 
       const values = await storage.list();
-      assert(values).to.equal([item1, item2]);
+      assert(values).to.haveElements([item1, item2]);
       assert(storage.read).to.haveBeenCalledWith(id1);
       assert(storage.read).to.haveBeenCalledWith(id2);
     });
 
     it('should filter out null items', async () => {
       const id = 'id';
-      spyOn(storage, 'listIds').and.returnValue(Promise.resolve([id]));
+      spyOn(storage, 'listIds').and.returnValue(Promise.resolve(ImmutableSet.of([id])));
       spyOn(storage, 'read').and.returnValue(Promise.resolve(null));
       const values = await storage.list();
-      assert(values).to.equal([]);
+      assert(values).to.haveElements([]);
     });
   });
 
@@ -206,7 +207,7 @@ describe('store.WebStorage', () => {
       const stringValue = 'stringValue';
       const json = Mocks.object('json');
       const oldId = 'oldId';
-      const indexes = new Set([oldId]);
+      const indexes = ImmutableSet.of([oldId]);
 
       spyOn(storage, 'getIndexes_').and.returnValue(indexes);
       spyOn(storage, 'updateIndexes_');
@@ -218,9 +219,9 @@ describe('store.WebStorage', () => {
       assert(mockStorage.setItem).to.haveBeenCalledWith(path, stringValue);
       assert(JSON.stringify).to.haveBeenCalledWith(json);
       assert(Serializer.toJSON).to.haveBeenCalledWith(object);
-      assert(storage['updateIndexes_']).to.haveBeenCalledWith(Matchers.any(Set));
-      assert(Arrays.fromIterable(storage['updateIndexes_']['calls'].argsFor(0)[0]).asArray())
-          .to.equal([oldId, id]);
+      assert(storage['updateIndexes_']).to.haveBeenCalledWith(Matchers.any(ImmutableSet));
+      assert(storage['updateIndexes_']['calls'].argsFor(0)[0] as ImmutableSet<string>)
+          .to.haveElements([oldId, id]);
     });
 
     it('should reject if there was an error', async () => {

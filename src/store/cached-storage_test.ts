@@ -6,6 +6,7 @@ import { Fakes } from '../mock/fakes';
 import { Mocks } from '../mock/mocks';
 import { CachedStorage } from '../store/cached-storage';
 import { TestDispose } from '../testing/test-dispose';
+import { ImmutableSet } from "src/immutable/immutable-set";
 
 
 describe('store.CachedStorage', () => {
@@ -110,7 +111,7 @@ describe('store.CachedStorage', () => {
       const id1 = 'id1';
       const id2 = 'id2';
       const id3 = 'id3';
-      mockInnerStorage.listIds.and.returnValue(Promise.resolve([id1, id2, id3]));
+      mockInnerStorage.listIds.and.returnValue(Promise.resolve(ImmutableSet.of([id1, id2, id3])));
 
       const item1 = Mocks.object('item1');
       const item2 = Mocks.object('item2');
@@ -121,7 +122,7 @@ describe('store.CachedStorage', () => {
           .when(id3).resolve(item3);
 
       const items = await storage.list();
-      assert(items).to.equal([item1, item2, item3]);
+      assert(items).to.haveElements([item1, item2, item3]);
       assert(storage['cache_']).to.haveEntries([
         [id1, item1],
         [id2, item2],
