@@ -1,7 +1,6 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import { Maps } from '../collection/maps';
 import { Mocks } from '../mock/mocks';
 
 import { inject } from './a-inject';
@@ -24,7 +23,7 @@ describe('inject.Inject', () => {
 
     inject(name, defaultValue)(TestClass, 'propertyName', index);
 
-    assert(Maps.of(fakeMetadata).asRecord()).to.equal({[index]: injectMetadata});
+    assert(fakeMetadata).to.haveEntries([[index, injectMetadata]]);
     assert(InjectMetadata.newInstance).to.haveBeenCalledWith(name, defaultValue);
   });
 
@@ -39,7 +38,7 @@ describe('inject.Inject', () => {
 
     inject()(TestClass, propertyName, index);
 
-    assert(Maps.of(fakeMetadata).asRecord()).to.equal({[index]: injectMetadata});
+    assert(fakeMetadata).to.haveEntries([[index, injectMetadata]]);
     assert(InjectMetadata.newInstance).to.haveBeenCalledWith(propertyName, undefined);
   });
 

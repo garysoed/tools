@@ -1,6 +1,6 @@
-import { Sets } from '../collection/sets';
-
-import { AnyAssert } from './any-assert';
+import { ImmutableSet } from '../immutable/immutable-set';
+import { Iterables } from '../immutable/iterables';
+import { AnyAssert } from '../jasmine/any-assert';
 
 
 /**
@@ -26,8 +26,7 @@ export class SetAssert<V> extends AnyAssert<Set<V>> {
    * @param elements Elements that the set should have.
    */
   haveElements(elements: V[]): void {
-    const value: V[] = Sets.of(this.setValue_).asArray();
+    const value: V[] = Iterables.toArray(ImmutableSet.of(this.setValue_));
     this.getMatchers_(value).toEqual(elements);
   }
 }
-// TODO: Mutable

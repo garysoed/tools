@@ -1,6 +1,6 @@
-import { Maps } from '../collection/maps';
-
-import { AnyAssert } from './any-assert';
+import { ImmutableMap } from '../immutable/immutable-map';
+import { Iterables } from '../immutable/iterables';
+import { AnyAssert } from '../jasmine/any-assert';
 
 
 /**
@@ -26,8 +26,7 @@ export class MapAssert<K, V> extends AnyAssert<Map<K, V>> {
    * @param entries Entries that the map should have.
    */
   haveEntries(entries: [K, V][]): void {
-    const value: [K, V][] = Maps.of(this.mapValue_).entries().asArray();
+    const value: [K, V][] = Iterables.toArray(ImmutableMap.of(this.mapValue_).entries());
     this.getMatchers_(value).toEqual(entries);
   }
 }
-// TODO: Mutable

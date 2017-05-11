@@ -1,4 +1,3 @@
-import { Maps } from '../collection/maps';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { DisposableFunction } from '../dispose/disposable-function';
 import { BaseListenable } from '../event/base-listenable';
@@ -16,7 +15,7 @@ export class BaseListener extends BaseDisposable implements Listener {
   }
 
   disposeInternal(): void {
-    Maps.of(this.deregisterFns_).forEach((value: DisposableFunction) => {
+    this.deregisterFns_.forEach((value: DisposableFunction) => {
       value.dispose();
     });
     super.disposeInternal();
