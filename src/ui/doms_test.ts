@@ -1,9 +1,9 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import { Arrays } from '../collection/arrays';
 import { Fakes } from '../mock/fakes';
 import { Doms } from '../ui/doms';
+import { ImmutableList } from "../immutable/immutable-list";
 
 
 describe('ui.Doms', () => {
@@ -30,7 +30,7 @@ describe('ui.Doms', () => {
           .when(element3).return(null)
           .else().return(null);
 
-      assert(Arrays.fromIterable(Doms.domIterable(element1, mockCallback)).asArray()).to.equal([
+      assert(Doms.domIterable(element1, mockCallback)).to.startWith([
         element1,
         element2,
         element3,
@@ -67,7 +67,7 @@ describe('ui.Doms', () => {
 
       rootEl.appendChild(ancestorEl);
 
-      assert(Arrays.fromIterable(Doms.offsetParentIterable(fromEl)).asArray()).to.equal([
+      assert(Doms.offsetParentIterable(fromEl)).to.startWith([
         fromEl,
         parentEl,
         ancestorEl,
@@ -86,7 +86,7 @@ describe('ui.Doms', () => {
 
       rootEl.appendChild(ancestorEl);
 
-      assert(Arrays.fromIterable(Doms.parentIterable(fromEl)).asArray()).to.equal([
+      assert(Doms.parentIterable(fromEl)).to.startWith([
         fromEl,
         parentEl,
         ancestorEl,
@@ -105,7 +105,7 @@ describe('ui.Doms', () => {
       parentEl.appendChild(fromEl);
       rootEl.appendChild(host);
 
-      assert(Arrays.fromIterable(Doms.parentIterable(fromEl, true)).asArray()).to.equal([
+      assert(Doms.parentIterable(fromEl, true)).to.startWith([
         fromEl,
         parentEl,
         host,

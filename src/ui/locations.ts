@@ -1,4 +1,5 @@
-import { Arrays } from '../collection/arrays';
+import { ImmutableList } from '../immutable/immutable-list';
+import { ImmutableMap } from '../immutable/immutable-map';
 
 
 export class Locations {
@@ -16,7 +17,7 @@ export class Locations {
    * @param matcher The matcher string.
    * @return Object containing the matches if it matches, or null otherwise.
    */
-  static getMatches(path: string, matcher: string): {[key: string]: string} | null {
+  static getMatches(path: string, matcher: string): ImmutableMap<string, string> | null {
     let exactMatch = false;
     if (matcher[matcher.length - 1] === '$') {
       matcher = matcher.substr(0, matcher.length - 1);
@@ -25,14 +26,14 @@ export class Locations {
     const hashParts = Locations.getParts_(path);
     const matcherParts = Locations.getParts_(matcher);
 
-    if (exactMatch && matcherParts.length !== hashParts.length) {
+    if (exactMatch && matcherParts.size() !== hashParts.size()) {
       return null;
     }
 
     const matches = {};
-    for (let i = 0; i < matcherParts.length; i++) {
-      const matchPart = matcherParts[i];
-      const hashPart = hashParts[i];
+    for (let i = 0; i < matcherParts.size(); i++) {
+      const matchPart = matcherParts.getAt(i)!;
+      const hashPart = hashParts.getAt(i);
 
       const matcherResult = Locations.MATCHER_REGEXP_.exec(matchPart);
 
@@ -43,19 +44,17 @@ export class Locations {
       }
     }
 
-    return matches;
+    return ImmutableMap.of(matches);
   }
 
   /**
    * @return Parts of the given path.
    */
-  private static getParts_(path: string): string[] {
-    return Arrays
-        .of(Locations.normalizePath(path).split('/'))
+  private static getParts_(path: string): ImmutableList<string> {
+    return ImmutableList.of(Locations.normalizePath(path).split('/'))
         .filter((part: string) => {
           return part !== '.';
-        })
-        .asArray();
+        });
   }
 
   /**
@@ -67,4 +66,3 @@ export class Locations {
     return path[path.length - 1] === '/' ? path.substr(0, path.length - 1) : path;
   }
 }
-// TODO: Mutable

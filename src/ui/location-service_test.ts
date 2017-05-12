@@ -2,13 +2,13 @@ import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
 import { DomEvent } from '../event/dom-event';
+import { ImmutableList } from '../immutable/immutable-list';
 import { Mocks } from '../mock/mocks';
 import { TestDispose } from '../testing/test-dispose';
+import { LocationService } from '../ui/location-service';
+import { LocationServiceEvents } from '../ui/location-service-events';
+import { Locations } from '../ui/locations';
 import { Reflect } from '../util/reflect';
-
-import { LocationService } from './location-service';
-import { LocationServiceEvents } from './location-service-events';
-import { Locations } from './locations';
 
 
 describe('ui.LocationService', () => {
@@ -76,11 +76,12 @@ describe('ui.LocationService', () => {
 
   describe('appendParts', () => {
     it('should combine the parts together', () => {
-      assert(LocationService.appendParts(['a', 'b/', '/c', '.', '/d/e/'])).to.equal('/a/b/c/d/e');
+      assert(LocationService.appendParts(ImmutableList.of(['a', 'b/', '/c', '.', '/d/e/'])))
+          .to.equal('/a/b/c/d/e');
     });
 
     it('should return "/" if there path is empty', () => {
-      assert(LocationService.appendParts(['.', ''])).to.equal('/');
+      assert(LocationService.appendParts(ImmutableList.of(['.', '']))).to.equal('/');
     });
   });
 });

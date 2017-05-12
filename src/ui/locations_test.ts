@@ -3,6 +3,7 @@ TestBase.setup();
 
 import { Fakes } from '../mock/fakes';
 import { Locations } from '../ui/locations';
+import { ImmutableList } from "../immutable/immutable-list";
 
 
 describe('ui.Locations', () => {
@@ -13,7 +14,7 @@ describe('ui.Locations', () => {
 
       spyOn(Locations, 'normalizePath').and.returnValue(normalizedPath);
 
-      assert(Locations['getParts_'](path)).to.equal(['', 'a', 'b', 'c']);
+      assert(Locations['getParts_'](path)).to.haveElements(['', 'a', 'b', 'c']);
       assert(Locations.normalizePath).to.haveBeenCalledWith(path);
     });
   });
@@ -23,13 +24,13 @@ describe('ui.Locations', () => {
       const matcher = 'matcher';
       const hash = 'hash';
       Fakes.build(spyOn(Locations, 'getParts_'))
-          .when(matcher).return([':a', '_', ':b'])
-          .when(hash).return(['hello', '_', 'location']);
+          .when(matcher).return(ImmutableList.of([':a', '_', ':b']))
+          .when(hash).return(ImmutableList.of(['hello', '_', 'location']));
 
-      assert(Locations.getMatches(hash, matcher)).to.equal({
-        'a': 'hello',
-        'b': 'location',
-      });
+      assert(Locations.getMatches(hash, matcher)!).to.haveElements([
+        ['a', 'hello'],
+        ['b', 'location'],
+      ]);
       assert(Locations['getParts_']).to.haveBeenCalledWith(hash);
       assert(Locations['getParts_']).to.haveBeenCalledWith(matcher);
     });
@@ -38,8 +39,8 @@ describe('ui.Locations', () => {
       const matcher = 'matcher';
       const hash = 'hash';
       Fakes.build(spyOn(Locations, 'getParts_'))
-          .when(matcher).return([':a', '_', ':b'])
-          .when(hash).return(['hello', '+']);
+          .when(matcher).return(ImmutableList.of([':a', '_', ':b']))
+          .when(hash).return(ImmutableList.of(['hello', '+']));
 
       assert(Locations.getMatches(hash, matcher)).to.equal(null);
     });
@@ -48,13 +49,13 @@ describe('ui.Locations', () => {
       const matcher = 'matcher';
       const hash = 'hash';
       Fakes.build(spyOn(Locations, 'getParts_'))
-          .when(matcher).return([':a', '_', ':b'])
-          .when(hash).return(['hello', '_', 'location']);
+          .when(matcher).return(ImmutableList.of([':a', '_', ':b']))
+          .when(hash).return(ImmutableList.of(['hello', '_', 'location']));
 
-      assert(Locations.getMatches(hash, `${matcher}$`)).to.equal({
-        'a': 'hello',
-        'b': 'location',
-      });
+      assert(Locations.getMatches(hash, `${matcher}$`)!).to.haveElements([
+        ['a', 'hello'],
+        ['b', 'location'],
+      ]);
       assert(Locations['getParts_']).to.haveBeenCalledWith(hash);
       assert(Locations['getParts_']).to.haveBeenCalledWith(matcher);
     });
@@ -63,8 +64,8 @@ describe('ui.Locations', () => {
       const matcher = 'matcher';
       const hash = 'hash';
       Fakes.build(spyOn(Locations, 'getParts_'))
-          .when(matcher).return([':a', '_', ':b'])
-          .when(hash).return([':a', '_']);
+          .when(matcher).return(ImmutableList.of([':a', '_', ':b']))
+          .when(hash).return(ImmutableList.of([':a', '_']));
 
       assert(Locations.getMatches(hash, `${matcher}$`)).to.beNull();
       assert(Locations['getParts_']).to.haveBeenCalledWith(hash);

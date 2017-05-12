@@ -1,4 +1,4 @@
-import { Iterables } from '../collection/iterables';
+import {Iterables} from '../immutable/iterables';
 
 /**
  * Methods to manipulate DOM objects.
@@ -14,26 +14,13 @@ export class Doms {
    */
   static domIterable(start: HTMLElement, stepper: (fromEl: HTMLElement) => HTMLElement | null):
       Iterable<HTMLElement> {
-    return {
-      [Symbol.iterator](): Iterator<HTMLElement> {
-        let currentEl: HTMLElement | null = start;
-        return {
-          next(value?: any): IteratorResult<HTMLElement> {
-            const done = currentEl === null;
-            const nextValue = currentEl;
-
-            if (currentEl !== null) {
-              currentEl = stepper(currentEl);
-            }
-
-            return {
-              done: done,
-              value: nextValue!,
-            };
-          },
-        };
-      },
-    };
+    return Iterables.of(function*(): IterableIterator<HTMLElement> {
+      let currentEl: HTMLElement | null = start;
+      while (currentEl !== null) {
+        yield currentEl;
+        currentEl = stepper(currentEl);
+      }
+    });
   }
 
   /**
@@ -90,16 +77,15 @@ export class Doms {
     let foundDestination = false;
     let currentEl;
 
-    Iterables.of(Doms.offsetParentIterable(fromEl))
-        .iterate((value: HTMLElement, breakFn: () => void) => {
-          currentEl = value;
-          if (value === toEl) {
-            foundDestination = true;
-            breakFn();
-          } else {
-            distance += currentEl.offsetTop;
-          }
-        });
+    for (const value of Doms.offsetParentIterable(fromEl)) {
+      currentEl = value;
+      if (value === toEl) {
+        foundDestination = true;
+        break;
+      } else {
+        distance += currentEl.offsetTop;
+      }
+    }
 
     if (!foundDestination) {
       throw Error('Cannot find offset ancestor. Check if the toElement has non static position');

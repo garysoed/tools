@@ -1,10 +1,11 @@
-import { Arrays } from '../collection/arrays';
 import { BaseListenableListener } from '../event/base-listenable-listener';
 import { DomEvent } from '../event/dom-event';
 import { ListenableDom } from '../event/listenable-dom';
 import { LocationServiceEvents } from '../ui/location-service-events';
 import { Locations } from '../ui/locations';
 import { Reflect } from '../util/reflect';
+import { ImmutableList } from '../immutable/immutable-list';
+import { ImmutableMap } from '../immutable/immutable-map';
 
 
 /**
@@ -47,7 +48,7 @@ export class LocationService extends BaseListenableListener<LocationServiceEvent
    * @param matcher The matcher string.
    * @return Object containing the matches if it matches, or null otherwise.
    */
-  getMatches(matcher: string): {[key: string]: string} | null {
+  getMatches(matcher: string): ImmutableMap<string, string> | null {
     return Locations.getMatches(this.getPath(), matcher);
   }
 
@@ -85,18 +86,16 @@ export class LocationService extends BaseListenableListener<LocationServiceEvent
    * @param parts Parts to be joined.
    * @return The joined parts.
    */
-  static appendParts(parts: string[]): string {
-    const path = Arrays
-        .of(parts)
+  static appendParts(parts: ImmutableList<string>): string {
+    const path = parts
         .filter((part: string) => {
           return part !== '.';
         })
         .map((part: string) => {
           return Locations.normalizePath(part);
         })
-        .asArray()
+        .toArray()
         .join('');
     return path === '' ? '/' : path;
   }
 }
-// TODO: Mutable
