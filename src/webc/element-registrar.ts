@@ -1,7 +1,6 @@
 import { InstanceofType } from '../check/instanceof-type';
-import { Maps } from '../collection/maps';
-import { Sets } from '../collection/sets';
 import { BaseDisposable } from '../dispose/base-disposable';
+import { ImmutableSet } from '../immutable/immutable-set';
 import { Iterables } from '../immutable/iterables';
 import { Injector } from '../inject/injector';
 import { Parser } from '../interfaces/parser';
@@ -73,9 +72,7 @@ export class ElementRegistrar extends BaseDisposable {
           if (factories.size() > 1) {
             throw new Error(`Key ${key} can only have 1 Bind annotation`);
           }
-          const factory = Sets
-              .of<HookBinderFactory>(new Set(Iterables.toArray(factories)))
-              .anyValue();
+          const factory = Iterables.toArray(factories)[0];
           if (factory === null) {
             return;
           }
@@ -114,8 +111,8 @@ export class ElementRegistrar extends BaseDisposable {
       return Promise.resolve();
     }
 
-    const dependencies = config.dependencies || [];
-    const promises = dependencies.map((dependency: gs.ICtor<BaseElement>) => {
+    const dependencies = config.dependencies || ImmutableSet.of([]);
+    const promises = dependencies.mapItem((dependency: gs.ICtor<BaseElement>) => {
       return this.register(dependency);
     });
 

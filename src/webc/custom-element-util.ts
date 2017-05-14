@@ -1,4 +1,4 @@
-import { Maps } from '../collection/maps';
+import { ImmutableMap } from '../immutable/immutable-map';
 import { Parser } from '../interfaces/parser';
 import { Cases } from '../string/cases';
 import { IElementConfig } from '../webc/interfaces';
@@ -18,21 +18,20 @@ export class CustomElementUtil {
    */
   static addAttributes(
       element: HTMLElement, attributes: {[name: string]: Parser<any>}): void  {
-    Maps.fromRecord(attributes)
-        .forEach((parser: Parser<any>, name: string) => {
-          const attrName = Cases.of(name).toLowerCase();
-          Object.defineProperty(
-              element,
-              name,
-              {
-                get: () => {
-                  return parser.parse(element.getAttribute(attrName));
-                },
-                set: (value: any) => {
-                  element.setAttribute(attrName, parser.stringify(value));
-                },
-              });
-        });
+    for (const [name, parser] of ImmutableMap.of(attributes)) {
+      const attrName = Cases.of(name).toLowerCase();
+      Object.defineProperty(
+          element,
+          name,
+          {
+            get: () => {
+              return parser.parse(element.getAttribute(attrName));
+            },
+            set: (value: any) => {
+              element.setAttribute(attrName, parser.stringify(value));
+            },
+          });
+    }
   }
 
   /**
@@ -75,4 +74,3 @@ export class CustomElementUtil {
     instance[__ELEMENT] = element;
   }
 }
-// TODO: Mutable

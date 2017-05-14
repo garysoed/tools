@@ -1,11 +1,11 @@
 import { BaseListenableListener } from '../event/base-listenable-listener';
 import { DomEvent } from '../event/dom-event';
 import { ListenableDom } from '../event/listenable-dom';
+import { ImmutableList } from '../immutable/immutable-list';
+import { ImmutableMap } from '../immutable/immutable-map';
 import { LocationServiceEvents } from '../ui/location-service-events';
 import { Locations } from '../ui/locations';
 import { Reflect } from '../util/reflect';
-import { ImmutableList } from '../immutable/immutable-list';
-import { ImmutableMap } from '../immutable/immutable-map';
 
 
 /**

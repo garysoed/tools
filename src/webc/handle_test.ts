@@ -83,9 +83,9 @@ describe('webc.Handler', () => {
       Handler['configure_'](parentElement, instance, mockHandler);
 
       assert(mockHandler.configure).to
-          .haveBeenCalledWith(targetEl1, instance, [configs1_1, configs1_2]);
+          .haveBeenCalledWith(targetEl1, instance, ImmutableSet.of([configs1_1, configs1_2]));
       assert(mockHandler.configure).to
-          .haveBeenCalledWith(targetEl2, instance, [configs2_1, configs2_2]);
+          .haveBeenCalledWith(targetEl2, instance, ImmutableSet.of([configs2_1, configs2_2]));
 
       assert(Util.resolveSelector).to.haveBeenCalledWith(selector1_1, parentElement);
       assert(Util.resolveSelector).to.haveBeenCalledWith(selector1_2, parentElement);

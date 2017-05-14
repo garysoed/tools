@@ -2,12 +2,12 @@ import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
 import { DisposableFunction } from '../dispose/disposable-function';
+import { ImmutableSet } from '../immutable/immutable-set';
 import { Mocks } from '../mock/mocks';
-
 import {
   CHILD_LIST_CHANGE_ANNOTATIONS,
   ChildListChangeConfig,
-  ChildListChangeHandler } from './child-list-change-handler';
+  ChildListChangeHandler } from '../webc/child-list-change-handler';
 
 
 describe('webc.ChildListChangeHandler', () => {
@@ -59,12 +59,12 @@ describe('webc.ChildListChangeHandler', () => {
       const removedNodes1 = Mocks.object('removedNodes1');
       const addedNodes2 = Mocks.object('addedNodes2');
       const removedNodes2 = Mocks.object('removedNodes2');
-      const records: any[] = [
+      const records = ImmutableSet.of<any>([
         {addedNodes: addedNodes1, removedNodes: removedNodes1},
         {addedNodes: addedNodes2, removedNodes: removedNodes2},
-      ];
+      ]);
 
-      handler['onMutation_'](instance, new Set([handlerKey1, handlerKey2]), records);
+      handler['onMutation_'](instance, ImmutableSet.of([handlerKey1, handlerKey2]), records);
 
       assert(mockHandler1).to.haveBeenCalledWith(addedNodes1, removedNodes1);
       assert(mockHandler1).to.haveBeenCalledWith(addedNodes2, removedNodes2);
@@ -76,10 +76,10 @@ describe('webc.ChildListChangeHandler', () => {
       const handlerKey = 'handlerKey';
       const instance = {};
 
-      const records: any[] = [{}];
+      const records = ImmutableSet.of<any>([{}]);
 
       assert(() => {
-        handler['onMutation_'](instance, new Set([handlerKey]), records);
+        handler['onMutation_'](instance, ImmutableSet.of([handlerKey]), records);
       }).toNot.throw();
     });
   });
@@ -100,10 +100,10 @@ describe('webc.ChildListChangeHandler', () => {
 
           const handlerKey1 = 'handlerKey1';
           const handlerKey2 = 'handlerKey2';
-          const configs = [
+          const configs = ImmutableSet.of<any>([
             {handlerKey: handlerKey1},
             {handlerKey: handlerKey2},
-          ] as ChildListChangeConfig[];
+          ]);
 
           const children = Mocks.object('children');
           const targetEl = Mocks.object('targetEl');
@@ -118,13 +118,15 @@ describe('webc.ChildListChangeHandler', () => {
 
           assert(handler['onMutation_']).to.haveBeenCalledWith(
               mockInstance,
-              Matchers.any(Set),
-              [Matchers.objectContaining({
-                addedNodes: nodeList,
-                removedNodes: {length: 0},
-                target: targetEl,
-                type: 'childList',
-              })],
+              Matchers.any(ImmutableSet),
+              Matchers.any(ImmutableSet));
+          assert(onMutationSpy.calls.argsFor(0)[2] as ImmutableSet<any>).to.haveElements([
+            Matchers.objectContaining({
+              addedNodes: nodeList,
+              removedNodes: {length: 0},
+              target: targetEl,
+              type: 'childList',
+            })],
           );
           assert(onMutationSpy.calls.argsFor(0)[1] as Set<string>).to
               .haveElements([handlerKey1, handlerKey2]);
@@ -133,7 +135,7 @@ describe('webc.ChildListChangeHandler', () => {
           assert(mockObserver.observe).to.haveBeenCalledWith(targetEl, {childList: true});
 
           assert(handler['createMutationObserver_']).to
-              .haveBeenCalledWith(mockInstance, Matchers.any(Set));
+              .haveBeenCalledWith(mockInstance, Matchers.any(ImmutableSet));
           assert(createObserverSpy.calls.argsFor(0)[1] as Set<string>).to
               .haveElements([handlerKey1, handlerKey2]);
         });

@@ -62,6 +62,16 @@ describe('immutable.ImmutableSet', () => {
     });
   });
 
+  describe('find', () => {
+    it('should return the matching item', () => {
+      assert(ImmutableSet.of([1, 2, 3]).find((n: number) => n >= 2)).to.equal(2);
+    });
+
+    it('should return null if there are no matches', () => {
+      assert(ImmutableSet.of([1, 2, 3]).find((n: number) => false)).to.beNull();
+    });
+  });
+
   describe('has', () => {
     it('should return true if the item is in the set', () => {
       assert(ImmutableSet.of([1, 3]).has(1)).to.beTrue();

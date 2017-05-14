@@ -2,11 +2,11 @@ import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
 import { BaseDisposable } from '../dispose/base-disposable';
+import { ImmutableSet } from '../immutable/immutable-set';
 import { Fakes } from '../mock/fakes';
 import { Mocks } from '../mock/mocks';
 import { CachedStorage } from '../store/cached-storage';
 import { TestDispose } from '../testing/test-dispose';
-import { ImmutableSet } from "src/immutable/immutable-set";
 
 
 describe('store.CachedStorage', () => {

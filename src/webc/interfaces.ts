@@ -39,7 +39,7 @@ export interface IElementConfig {
   /**
    * Element constructor of the dependencies.
    */
-  dependencies?: gs.ICtor<any>[];
+  dependencies?: ImmutableSet<gs.ICtor<any>>;
 
   /**
    * Tag name of the element.
@@ -59,11 +59,10 @@ export interface IHandler<T> {
    * @param element The element that the given instance is listening to.
    * @param instance The handler for events on the given element.
    */
-  configure(targetEl: Element, instance: BaseDisposable, configs: T[]): void;
+  configure(targetEl: Element, instance: BaseDisposable, configs: ImmutableSet<T>): void;
 
   /**
    * @return Configuration objects registered for the given instance.
    */
   getConfigs(instance: BaseDisposable): ImmutableMap<string | symbol, ImmutableSet<T>>;
 }
-// TODO: Mutable

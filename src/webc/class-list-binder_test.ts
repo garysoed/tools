@@ -1,6 +1,7 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
+import { ImmutableSet } from '../immutable/immutable-set';
 import { Fakes } from '../mock/fakes';
 import { ClassListBinder } from '../webc/class-list-binder';
 
@@ -48,7 +49,7 @@ describe('webc.ClassListBinder', () => {
       const remainingClassName = 'remainingClassName';
       setClassNames([removedClassName, remainingClassName]);
 
-      binder.set(new Set([remainingClassName, 'otherClassName']));
+      binder.set(ImmutableSet.of([remainingClassName, 'otherClassName']));
 
       assert(mockClassList.remove).to.haveBeenCalledWith(removedClassName);
       assert(mockClassList.remove).toNot.haveBeenCalledWith(remainingClassName);
@@ -60,7 +61,7 @@ describe('webc.ClassListBinder', () => {
 
       setClassNames([]);
 
-      binder.set(new Set([newClassName1, newClassName2]));
+      binder.set(ImmutableSet.of([newClassName1, newClassName2]));
 
       assert(mockClassList.add).to.haveBeenCalledWith(newClassName1);
       assert(mockClassList.add).to.haveBeenCalledWith(newClassName2);

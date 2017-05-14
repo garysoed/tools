@@ -93,6 +93,16 @@ describe('immutable.OrderedSet', () => {
     });
   });
 
+  describe('find', () => {
+    it('should return the matching item', () => {
+      assert(OrderedSet.of([1, 2, 3]).find((n: number) => n >= 2)).to.equal(2);
+    });
+
+    it('should return null if there are no matches', () => {
+      assert(OrderedSet.of([1, 2, 3]).find((n: number) => false)).to.beNull();
+    });
+  });
+
   describe('getAt', () => {
     it('should return the correct item', () => {
       const set = OrderedSet.of([0, 1, 2]);

@@ -111,6 +111,16 @@ describe('immutable.ImmutableList', () => {
     });
   });
 
+  describe('find', () => {
+    it('should return the first matching item', () => {
+      assert(ImmutableList.of([1, 2, 3]).find((n: number) => n >= 2)).to.equal(2);
+    });
+
+    it('should return null if there are no matches', () => {
+      assert(ImmutableList.of([1, 2, 3]).find((n: number) => false)).to.beNull();
+    });
+  });
+
   describe('get', () => {
     it('should return the correct item', () => {
       const list = ImmutableList.of([1, 2, 3, 4]);
@@ -271,6 +281,29 @@ describe('immutable.ImmutableList', () => {
   describe('values', () => {
     it('should return the correct data', () => {
       assert(ImmutableList.of([1, 2, 3, 4]).values()).to.haveElements([1, 2, 3, 4]);
+    });
+  });
+
+  describe('of', () => {
+    it('should create the list correctly from Finite Iterable', () => {
+      const items = [1, 2, 3, 4];
+      assert(ImmutableList.of(ImmutableSet.of(items))).to.haveElements(items);
+    });
+
+    it('should create the list correctly from arrays', () => {
+      const items = [1, 2, 3, 4];
+      assert(ImmutableList.of(items)).to.haveElements(items);
+    });
+
+    it('should create the list correctly from item list', () => {
+      const items = [1, 2, 3, 4];
+      const itemList = {
+        item(index: number): number {
+          return items[index];
+        },
+        length: 4,
+      };
+      assert(ImmutableList.of(itemList)).to.haveElements(items);
     });
   });
 });

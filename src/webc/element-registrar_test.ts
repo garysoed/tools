@@ -169,7 +169,7 @@ describe('webc.ElementRegistrar', () => {
 
       const mockConfig = {
         attributes: attributes,
-        dependencies: [mockDependency],
+        dependencies: ImmutableSet.of([mockDependency]),
         tag: name,
         templateKey: templateKey,
       };
@@ -207,7 +207,7 @@ describe('webc.ElementRegistrar', () => {
       mockTemplates.getTemplate.and.returnValue(null);
 
       spyOn(CustomElementUtil, 'getConfig').and.returnValue({
-        dependencies: [],
+        dependencies: ImmutableSet.of([]),
         tag: 'name',
         templateKey: 'templateKey',
       });

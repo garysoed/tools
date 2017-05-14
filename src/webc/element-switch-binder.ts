@@ -1,6 +1,5 @@
-import { Maps } from '../collection/maps';
-
-import { DomBinder } from './interfaces';
+import { ImmutableMap } from '../immutable/immutable-map';
+import { DomBinder } from '../webc/interfaces';
 
 export const __enumValue: symbol = Symbol('enumValue');
 
@@ -11,13 +10,11 @@ export const __enumValue: symbol = Symbol('enumValue');
  */
 export class ElementSwitchBinder<T> implements DomBinder<T> {
   private currentActiveEl_: HTMLElement | null;
-  private readonly mapping_: Map<T, string>;
-  private readonly parentEl_: Element;
 
-  constructor(parentEl: Element, mapping: Map<T, string>) {
+  constructor(
+      private readonly parentEl_: Element,
+      private readonly mapping_: ImmutableMap<T, string>) {
     this.currentActiveEl_ = null;
-    this.mapping_ = mapping;
-    this.parentEl_ = parentEl;
   }
 
   /**
@@ -44,20 +41,22 @@ export class ElementSwitchBinder<T> implements DomBinder<T> {
    * @return The enum value associated with the given element.
    */
   private getEnumValue_(element: HTMLElement): T | null {
-    let enumValue: T | null = element[__enumValue];
-    if (enumValue === undefined) {
-      enumValue = Maps
-          .of(this.mapping_)
-          .findKey((id: string) => {
-            return id === element.id;
-          });
-
-      if (enumValue !== null) {
-        element[__enumValue] = enumValue;
-      }
+    const enumValue: T | null = element[__enumValue];
+    if (enumValue !== undefined) {
+      return enumValue;
     }
 
-    return enumValue;
+    const foundEntry = this.mapping_
+        .find(([key, value]: [T, string]) => {
+          return value === element.id;
+        });
+    const foundEnum = foundEntry ? foundEntry[0] : null;
+
+    if (foundEnum !== null) {
+      element[__enumValue] = foundEnum;
+    }
+
+    return foundEnum;
   }
 
   /**
@@ -102,7 +101,7 @@ export class ElementSwitchBinder<T> implements DomBinder<T> {
    * @param mapping Mapping from enum value to ID of the element to associate it with.
    */
   static of<T>(parentEl: Element, mapping: Map<T, string>): ElementSwitchBinder<T> {
-    return new ElementSwitchBinder(parentEl, mapping);
+    return new ElementSwitchBinder(parentEl, ImmutableMap.of(mapping));
   }
 }
 // TODO: Mutable

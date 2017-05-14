@@ -2,10 +2,10 @@ import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
 import { ListenableDom } from '../event/listenable-dom';
+import { ImmutableSet } from '../immutable/immutable-set';
 import { Mocks } from '../mock/mocks';
 import { TestDispose } from '../testing/test-dispose';
-
-import { EVENT_ANNOTATIONS, EventHandler } from './event-handler';
+import { EVENT_ANNOTATIONS, EventHandler } from '../webc/event-handler';
 
 
 describe('web.EventHandler', () => {
@@ -47,7 +47,7 @@ describe('web.EventHandler', () => {
       mockInstance[key2] = handler2;
       TestDispose.add(mockInstance);
 
-      handler.configure(targetEl, mockInstance, [config1, config2]);
+      handler.configure(targetEl, mockInstance, ImmutableSet.of<any>([config1, config2]));
 
       assert(mockListenableDom.on).to
           .haveBeenCalledWith(event1, Matchers.any(Function), mockInstance);

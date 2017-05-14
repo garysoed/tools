@@ -82,6 +82,15 @@ export class OrderedSet<T> implements Collection<T>, Finite<T>, Iterable<T>, Ord
     }));
   }
 
+  find(check: (item: T) => boolean): T | null {
+    for (const item of this.data_) {
+      if (check(item)) {
+        return item;
+      }
+    }
+    return null;
+  }
+
   getAt(index: number): T | undefined {
     return this.data_[index];
   }

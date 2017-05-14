@@ -1,9 +1,9 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
+import { ImmutableMap } from '../immutable/immutable-map';
 import { Mocks } from '../mock/mocks';
-
-import { __enumValue, ElementSwitchBinder } from './element-switch-binder';
+import { __enumValue, ElementSwitchBinder } from '../webc/element-switch-binder';
 
 
 enum Enum {
@@ -12,12 +12,12 @@ enum Enum {
 }
 
 describe('webc.ElementSwitchBinder', () => {
-  let mapping: Map<Enum, string>;
+  let mapping: ImmutableMap<Enum, string>;
   let mockParentEl;
   let binder: ElementSwitchBinder<Enum>;
 
   beforeEach(() => {
-    mapping = new Map();
+    mapping = ImmutableMap.of<Enum, string>([]);
     mockParentEl = jasmine.createSpyObj('ParentEl', ['querySelector']);
     binder = new ElementSwitchBinder<Enum>(mockParentEl, mapping);
   });
@@ -28,7 +28,7 @@ describe('webc.ElementSwitchBinder', () => {
       const element = Mocks.object('element');
       element.id = id;
 
-      mapping.set(Enum.B, id);
+      mapping['setForTest'](Enum.B, id);
 
       assert(binder['getEnumValue_'](element)).to.equal(Enum.B);
       assert(element[__enumValue]).to.equal(Enum.B);
@@ -38,7 +38,7 @@ describe('webc.ElementSwitchBinder', () => {
       const element = Mocks.object('element');
       element.id = 'id';
 
-      mapping.set(Enum.B, 'otherId');
+      mapping['setForTest'](Enum.B, 'otherId');
 
       assert(binder['getEnumValue_'](element)).to.beNull();
       assert(element[__enumValue]).toNot.beDefined();
@@ -49,7 +49,7 @@ describe('webc.ElementSwitchBinder', () => {
       element.id = 'id';
       element[__enumValue] = Enum.A;
 
-      mapping.set(Enum.B, 'otherId');
+      mapping['setForTest'](Enum.B, 'otherId');
 
       assert(binder['getEnumValue_'](element)).to.equal(Enum.A);
     });
@@ -122,7 +122,7 @@ describe('webc.ElementSwitchBinder', () => {
 
       const id = 'id';
       const enumValue = Enum.B;
-      mapping.set(enumValue, id);
+      mapping['setForTest'](enumValue, id);
 
       spyOn(binder, 'delete');
       spyOn(binder, 'setActive_');
@@ -141,7 +141,7 @@ describe('webc.ElementSwitchBinder', () => {
 
       const id = 'id';
       const enumValue = Enum.B;
-      mapping.set(enumValue, id);
+      mapping['setForTest'](enumValue, id);
 
       spyOn(binder, 'delete');
       spyOn(binder, 'setActive_');
@@ -159,7 +159,7 @@ describe('webc.ElementSwitchBinder', () => {
 
       const id = 'id';
       const enumValue = Enum.B;
-      mapping.set(enumValue, id);
+      mapping['setForTest'](enumValue, id);
 
       spyOn(binder, 'delete');
 

@@ -1,4 +1,3 @@
-import { Arrays } from '../collection/arrays';
 import { Annotations } from '../data/annotations';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { ListenableDom } from '../event/listenable-dom';
@@ -24,18 +23,19 @@ export class EventHandler implements IHandler<EventHandlerConfig> {
   /**
    * @override
    */
-  configure(targetEl: Element, instance: BaseDisposable, configs: EventHandlerConfig[]): void {
+  configure(
+      targetEl: Element,
+      instance: BaseDisposable,
+      configs: ImmutableSet<EventHandlerConfig>): void {
     const listenable = ListenableDom.of(targetEl);
     instance.addDisposable(listenable);
 
-    Arrays
-        .of(configs)
-        .forEach((config: EventHandlerConfig) => {
-          instance.addDisposable(listenable.on(
-              config.event,
-              instance[config.handlerKey].bind(instance, ...config.boundArgs),
-              instance));
-        });
+    for (const config of configs) {
+      instance.addDisposable(listenable.on(
+          config.event,
+          instance[config.handlerKey].bind(instance, ...config.boundArgs),
+          instance));
+    }
   }
 
   /**

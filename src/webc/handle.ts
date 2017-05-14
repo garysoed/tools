@@ -1,7 +1,5 @@
-import { Arrays } from '../collection/arrays';
-import { Maps } from '../collection/maps';
-import { Sets } from '../collection/sets';
 import { BaseDisposable } from '../dispose/base-disposable';
+import { ImmutableList } from '../immutable/immutable-list';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Iterables } from '../immutable/iterables';
 import { Parser } from '../interfaces/parser';
@@ -75,17 +73,15 @@ export class Handler {
    * @param instance The handler for events on the given element.
    */
   static configure(element: HTMLElement, instance: BaseDisposable): void {
-    const unresolvedSelectorIterable = Sets
-        .of(new Set<string | null>())
+    const unresolvedSelectors = ImmutableSet
+        .of<string | null>([])
         .addAll(Handler.configure_(element, instance, ATTRIBUTE_CHANGE_HANDLER))
         .addAll(Handler.configure_(element, instance, EVENT_HANDLER))
-        .addAll(Handler.configure_(element, instance, CHILD_LIST_CHANGE_HANDLER))
-        .asIterable();
+        .addAll(Handler.configure_(element, instance, CHILD_LIST_CHANGE_HANDLER));
 
-    const unresolvedSelectors = Arrays.fromIterable(unresolvedSelectorIterable).asArray();
-    const selectorsString = unresolvedSelectors.join(', ');
+    const selectorsString = ImmutableList.of(unresolvedSelectors).toArray().join(', ');
 
-    if (unresolvedSelectors.length > 0) {
+    if (unresolvedSelectors.size() > 0) {
       throw new Error(`The following selectors cannot be resolved for handle: ${selectorsString}`);
     }
   }
@@ -93,7 +89,7 @@ export class Handler {
   private static configure_<T extends {selector: string | null}>(
       parentElement: HTMLElement,
       instance: BaseDisposable,
-      handler: IHandler<T>): Set<string | null> {
+      handler: IHandler<T>): ImmutableSet<string | null> {
     const unresolvedSelectors = new Set<string | null>();
     const configEntries = handler
         .getConfigs(instance)
@@ -113,15 +109,25 @@ export class Handler {
           return Iterables.toArray(entries);
         });
 
-    Maps
-        .group(Arrays.flatten(Iterables.toArray(configEntries)).asArray())
-        .forEach((configs: T[], targetEl: Element | null) => {
-          if (targetEl !== null) {
-            handler.configure(targetEl, instance, configs);
-          }
-        });
+    const entryMap = new Map();
+    for (const configEntry of configEntries) {
+      for (const [element, config] of configEntry) {
+        const existingConfigs = entryMap.get(element);
+        if (existingConfigs === undefined) {
+          entryMap.set(element, ImmutableSet.of([config]));
+        } else {
+          entryMap.set(element, existingConfigs.add(config));
+        }
+      }
+    }
 
-    return unresolvedSelectors;
+    for (const [targetEl, configs] of entryMap) {
+      if (targetEl !== null) {
+        handler.configure(targetEl, instance, configs);
+      }
+    }
+
+    return ImmutableSet.of(unresolvedSelectors);
   }
 }
 

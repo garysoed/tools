@@ -1,9 +1,9 @@
-import { Arrays } from '../collection/arrays';
+import { ImmutableList } from '../immutable/immutable-list';
+import { ImmutableSet } from '../immutable/immutable-set';
+import { DomBinder } from '../webc/interfaces';
 
-import { DomBinder } from './interfaces';
 
-
-export class ClassListBinder implements DomBinder<Set<string>> {
+export class ClassListBinder implements DomBinder<ImmutableSet<string>> {
   private readonly classList_: DOMTokenList;
 
   /**
@@ -17,42 +17,34 @@ export class ClassListBinder implements DomBinder<Set<string>> {
    * @override
    */
   delete(): void {
-    Arrays
-        .fromItemList(this.classList_)
-        .forEach((className: string) => {
-          this.classList_.remove(className);
-        });
+    for (const className of ImmutableList.of(this.classList_)) {
+      this.classList_.remove(className);
+    }
   }
 
   /**
    * @override
    */
-  get(): Set<string> {
-    const classNames = Arrays
-        .fromItemList(this.classList_)
-        .asArray();
-    return new Set(classNames);
+  get(): ImmutableSet<string> {
+    return ImmutableSet.of(ImmutableList.of(this.classList_));
   }
 
   /**
    * @override
    */
-  set(value: Set<string> | null): void {
-    const classNames = value || new Set();
+  set(value: ImmutableSet<string> | null): void {
+    const classNames = value || ImmutableSet.of([]);
 
     // Remove the ones that are removed.
-    Arrays
-        .fromItemList(this.classList_)
-        .forEach((className: string) => {
-          if (!classNames.has(className)) {
-            this.classList_.remove(className);
-          }
-        });
-
+    for (const className of ImmutableList.of(this.classList_)) {
+      if (!classNames.has(className)) {
+        this.classList_.remove(className);
+      }
+    }
     // Add new ones.
-    classNames.forEach((className: string) => {
+    for (const className of classNames) {
       this.classList_.add(className);
-    });
+    }
   }
 
   /**
@@ -65,4 +57,3 @@ export class ClassListBinder implements DomBinder<Set<string>> {
     return new ClassListBinder(element);
   }
 }
-// TODO: Mutable

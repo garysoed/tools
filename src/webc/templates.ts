@@ -1,4 +1,3 @@
-import { Maps } from '../collection/maps';
 import { cache } from '../data/cache';
 
 
@@ -23,10 +22,9 @@ export class Templates {
       return null;
     }
     let result: string = Templates.templates_.get(key)!;
-    Maps.of(this.replacementMap_)
-        .forEach((replacement: string, regexp: RegExp) => {
-          result = result.replace(regexp, replacement);
-        });
+    for (const [regexp, replacement] of this.replacementMap_) {
+      result = result.replace(regexp, replacement);
+    }
     return result;
   }
 

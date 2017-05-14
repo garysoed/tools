@@ -15,7 +15,7 @@ export class ImmutableMap<K, V> implements
     Iterable<[K, V]> {
   private readonly data_: Map<K, V>;
 
-  private constructor(data: Map<K, V>) {
+  constructor(data: Map<K, V>) {
     this.data_ = new Map(data);
   }
 
@@ -90,6 +90,15 @@ export class ImmutableMap<K, V> implements
     return ImmutableMap.of(this.entries().filterItem(checker));
   }
 
+  find(check: (item: [K, V]) => boolean): [K, V] | null {
+    for (const item of this.data_) {
+      if (check(item)) {
+        return item;
+      }
+    }
+    return null;
+  }
+
   get(index: K): V | undefined {
     return this.data_.get(index);
   }
@@ -139,6 +148,10 @@ export class ImmutableMap<K, V> implements
     const clone = new Map(this.data_);
     clone.set(key, item);
     return new ImmutableMap(clone);
+  }
+
+  private setForTest(key: K, value: V): void {
+    this.data_.set(key, value);
   }
 
   size(): number {

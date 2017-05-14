@@ -1,7 +1,9 @@
 import { ArrayOfType } from '../check/array-of-type';
+import { FiniteIterableOfType } from '../check/finite-iterable-of-type';
 import { NonNullType } from '../check/non-null-type';
-import { Arrays } from '../collection/arrays';
-import { Sets } from '../collection/sets';
+import { ImmutableList } from '../immutable/immutable-list';
+import { ImmutableSet } from '../immutable/immutable-set';
+import { Iterables } from '../immutable/iterables';
 import { DomBinder } from '../webc/interfaces';
 
 
@@ -12,7 +14,7 @@ export interface IDataHelper<T> {
 }
 
 
-export class ChildrenElementsBinder<T> implements DomBinder<T[]> {
+export class ChildrenElementsBinder<T> implements DomBinder<ImmutableList<T>> {
   private readonly dataHelper_: IDataHelper<T>;
   private readonly elementPool_: Set<Element>;
   private readonly endPadCount_: number;
@@ -38,24 +40,26 @@ export class ChildrenElementsBinder<T> implements DomBinder<T[]> {
    * @override
    */
   delete(): void {
-    Arrays
-        .fromItemList(this.parentEl_.children)
-        .forEach((child: Element) => {
-          this.parentEl_.removeChild(child);
-        });
+    const children = this.parentEl_.children;
+    const childrenArray: Element[] = [];
+    for (let i = 0; i < children.length; i++) {
+      childrenArray.push(children.item(i));
+    }
+
+    childrenArray.forEach((child: Element) => {
+      this.parentEl_.removeChild(child);
+    });
   }
 
   /**
    * @override
    */
-  get(): T[] | null {
-    const data = Arrays
-        .of(this.getChildElements_())
+  get(): ImmutableList<T> | null {
+    const data = this.getChildElements_()
         .map((child: Element) => {
           return this.dataHelper_.get(child);
-        })
-        .asArray();
-    if (ArrayOfType<T>(NonNullType<T>()).check(data)) {
+        });
+    if (FiniteIterableOfType<T, ImmutableList<T>>(NonNullType<T>()).check(data)) {
       return data;
     } else {
       return null;
@@ -65,24 +69,23 @@ export class ChildrenElementsBinder<T> implements DomBinder<T[]> {
   /**
    * @return The children elements with the data object.
    */
-  private getChildElements_(): Element[] {
+  private getChildElements_(): ImmutableList<Element> {
     const lastIndex = this.parentEl_.children.length - this.endPadCount_;
-    return Arrays
-        .fromItemList(this.parentEl_.children)
-        .filterElement((element: Element, index: number) => {
+    return ImmutableList
+        .of(this.parentEl_.children)
+        .filter((element: Element, index: number) => {
           return index >= this.startPadCount_
               && index < lastIndex
               && this.dataHelper_.get(element) !== undefined;
-        })
-        .asArray();
+        });
   }
 
   /**
    * @return A newly created element, or a reused element from the element pool.
    */
   private getElement_(): Element {
-    const element = Sets.of(this.elementPool_).anyValue();
-    if (element === null) {
+    const element = Iterables.toArray(ImmutableSet.of(this.elementPool_))[0];
+    if (!element) {
       return this.dataHelper_.create(this.parentEl_.ownerDocument, this.instance_);
     } else {
       this.elementPool_.delete(element);
@@ -93,28 +96,26 @@ export class ChildrenElementsBinder<T> implements DomBinder<T[]> {
   /**
    * @override
    */
-  set(value: T[] | null): void {
-    const valueArray = value || [];
+  set(value: ImmutableList<T> | null): void {
+    const valueArray = value || ImmutableList.of([]);
     const dataChildren = this.getChildElements_();
 
     // Make sure that there are equal number of children.
-    for (let i = 0; i < valueArray.length - dataChildren.length; i++) {
+    for (let i = 0; i < valueArray.size() - dataChildren.size(); i++) {
       this.parentEl_.insertBefore(
           this.getElement_(),
           this.parentEl_.children.item(this.startPadCount_ + i) || null);
     }
 
-    for (let i = dataChildren.length - valueArray.length - 1; i >= 0; i--) {
+    for (let i = dataChildren.size() - valueArray.size() - 1; i >= 0; i--) {
       this.parentEl_.removeChild(this.parentEl_.children.item(this.startPadCount_ + i));
     }
 
     // Now set the data.
-    Arrays
-        .of(valueArray)
-        .forEach((value: T, index: number) => {
-          const element = this.parentEl_.children.item(this.startPadCount_ + index);
-          this.dataHelper_.set(value, element, this.instance_);
-        });
+    for (const [index, value] of valueArray.entries()) {
+      const element = this.parentEl_.children.item(this.startPadCount_ + index);
+      this.dataHelper_.set(value, element, this.instance_);
+    }
   }
 
   /**
@@ -134,4 +135,3 @@ export class ChildrenElementsBinder<T> implements DomBinder<T[]> {
     return new ChildrenElementsBinder(parentEl, dataHelper, startPadCount, endPadCount, instance);
   }
 }
-// TODO: Mutable

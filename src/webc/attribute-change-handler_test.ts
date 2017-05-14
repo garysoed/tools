@@ -5,10 +5,13 @@ import { DisposableFunction } from '../dispose/disposable-function';
 import { Fakes } from '../mock/fakes';
 import { Mocks } from '../mock/mocks';
 
+import { ImmutableMap } from 'src/immutable/immutable-map';
+import { ImmutableSet } from 'src/immutable/immutable-set';
 import {
   ATTR_CHANGE_ANNOTATIONS,
   AttributeChangeHandler,
-  AttributeChangeHandlerConfig as Config } from './attribute-change-handler';
+  AttributeChangeHandlerConfig,
+  AttributeChangeHandlerConfig as Config} from '../webc/attribute-change-handler';
 
 
 describe('webc.AttributeChangeHandler', () => {
@@ -48,9 +51,10 @@ describe('webc.AttributeChangeHandler', () => {
 
       const attributeName1 = 'attributeName1';
       const attributeName2 = 'attributeName2';
-      const configs = new Map();
-      configs.set(attributeName1, [{handlerKey: handlerKey1, parser: mockParser}]);
-      configs.set(attributeName2, [{handlerKey: handlerKey2, parser: mockParser}]);
+      const configs = ImmutableMap.of<string, ImmutableSet<any>>([
+        [attributeName1, ImmutableSet.of([{handlerKey: handlerKey1, parser: mockParser}])],
+        [attributeName2, ImmutableSet.of([{handlerKey: handlerKey2, parser: mockParser}])],
+      ]);
 
       const mockTargetEl1 = jasmine.createSpyObj('TargetEl1', ['getAttribute']);
       mockTargetEl1.getAttribute.and.returnValue(newValue1);
@@ -59,18 +63,19 @@ describe('webc.AttributeChangeHandler', () => {
       mockTargetEl2.getAttribute.and.returnValue(newValue2);
       Object.setPrototypeOf(mockTargetEl2, Element.prototype);
 
-      const records: any[] = [
-        {
-          attributeName: attributeName1,
-          oldValue: oldValue1,
-          target: mockTargetEl1,
-        },
-        {
-          attributeName: attributeName2,
-          oldValue: oldValue2,
-          target: mockTargetEl2,
-        },
-      ];
+      const records = ImmutableSet.of<any>(
+        [
+          {
+            attributeName: attributeName1,
+            oldValue: oldValue1,
+            target: mockTargetEl1,
+          },
+          {
+            attributeName: attributeName2,
+            oldValue: oldValue2,
+            target: mockTargetEl2,
+          },
+        ]);
 
       handler['onMutation_'](instance, configs, records);
 
@@ -92,10 +97,11 @@ describe('webc.AttributeChangeHandler', () => {
       instance[handlerKey] = mockHandler;
 
       const attributeName = 'attributeName';
-      const configs = new Map();
-      configs.set(attributeName, [{handlerKey: handlerKey, parser: null}]);
+      const configs = ImmutableMap.of<string, ImmutableSet<any>>([
+        [attributeName, ImmutableSet.of([{handlerKey: handlerKey, parser: null}])],
+      ]);
 
-      const records: any[] = [{attributeName}];
+      const records = ImmutableSet.of<any>([{attributeName}]);
 
       handler['onMutation_'](instance, configs, records);
 
@@ -109,19 +115,23 @@ describe('webc.AttributeChangeHandler', () => {
       instance[handlerKey] = mockHandler;
 
       const attributeName = 'attributeName';
-      const configs = new Map();
-      configs.set(attributeName, [{handlerKey: handlerKey, parser: Mocks.object('parser')}]);
+      const configs = ImmutableMap.of<string, ImmutableSet<any>>([
+        [
+          attributeName,
+          ImmutableSet.of([{handlerKey: handlerKey, parser: Mocks.object('parser')}]),
+        ],
+      ]);
 
       const mockTargetEl = jasmine.createSpyObj('TargetEl', ['getAttribute']);
       mockTargetEl.getAttribute.and.returnValue('newValue');
 
-      const records: any[] = [
+      const records = ImmutableSet.of<any>([
         {
           attributeName: attributeName,
           oldValue: 'oldValue',
           target: mockTargetEl,
         },
-      ];
+      ]);
 
       handler['onMutation_'](instance, configs, records);
 
@@ -134,19 +144,23 @@ describe('webc.AttributeChangeHandler', () => {
       instance['otherHandlerKey'] = mockHandler;
 
       const attributeName = 'attributeName';
-      const configs = new Map();
-      configs.set(attributeName, [{handlerKey: 'handlerKey', parser: Mocks.object('parser')}]);
+      const configs = ImmutableMap.of<string, ImmutableSet<any>>([
+        [
+          attributeName,
+          ImmutableSet.of([{handlerKey: 'handlerKey', parser: Mocks.object('parser')}]),
+        ],
+      ]);
 
       const mockTargetEl = jasmine.createSpyObj('TargetEl', ['getAttribute']);
       mockTargetEl.getAttribute.and.returnValue('newValue');
 
-      const records: any[] = [
+      const records = ImmutableSet.of<any>([
         {
           attributeName: attributeName,
           oldValue: 'oldValue',
           target: mockTargetEl,
         },
-      ];
+      ]);
 
       assert(() => {
         handler['onMutation_'](instance, configs, records);
@@ -159,21 +173,23 @@ describe('webc.AttributeChangeHandler', () => {
       const instance = Mocks.object('instance');
       instance['handlerKey'] = mockHandler;
 
-      const configs = new Map();
-      configs.set(
+      const configs = ImmutableMap.of<string, ImmutableSet<any>>([
+        [
           'otherAttributeName',
-          [{handlerKey: 'handlerKey', parser: Mocks.object('parser')}]);
+          ImmutableSet.of([{handlerKey: 'handlerKey', parser: Mocks.object('parser')}]),
+        ],
+      ]);
 
       const mockTargetEl = jasmine.createSpyObj('TargetEl', ['getAttribute']);
       mockTargetEl.getAttribute.and.returnValue('newValue');
 
-      const records: any[] = [
+      const records = ImmutableSet.of<any>([
         {
           attributeName: 'attributeName',
           oldValue: 'oldValue',
           target: mockTargetEl,
         },
-      ];
+      ]);
 
       assert(() => {
         handler['onMutation_'](instance, configs, records);
@@ -186,21 +202,23 @@ describe('webc.AttributeChangeHandler', () => {
       const instance = Mocks.object('instance');
       instance['handlerKey'] = mockHandler;
 
-      const configs = new Map();
-      configs.set(
+    const configs = ImmutableMap.of<string, ImmutableSet<any>>([
+        [
           'attributeName',
-          [{handlerKey: 'handlerKey', parser: Mocks.object('parser')}]);
+          ImmutableSet.of([{handlerKey: 'handlerKey', parser: Mocks.object('parser')}]),
+        ],
+      ]);
 
       const mockTargetEl = jasmine.createSpyObj('TargetEl', ['getAttribute']);
       mockTargetEl.getAttribute.and.returnValue('newValue');
 
-      const records: any[] = [
+      const records = ImmutableSet.of<any>([
         {
           attributeName: null,
           oldValue: 'oldValue',
           target: mockTargetEl,
         },
-      ];
+      ]);
 
       assert(() => {
         handler['onMutation_'](instance, configs, records);
@@ -237,7 +255,7 @@ describe('webc.AttributeChangeHandler', () => {
       spyOn(DisposableFunction, 'of').and.returnValue(disposableFunction);
 
       const targetEl = Mocks.object('targetEl');
-      handler.configure(targetEl, mockInstance, [config1, config2]);
+      handler.configure(targetEl, mockInstance, ImmutableSet.of([config1, config2]));
 
       assert(mockInstance.addDisposable).to.haveBeenCalledWith(disposableFunction);
       assert(DisposableFunction.of).to.haveBeenCalledWith(Matchers.any(Function) as any);
@@ -247,8 +265,8 @@ describe('webc.AttributeChangeHandler', () => {
 
       assert(handler['onMutation_']).to.haveBeenCalledWith(
           mockInstance,
-          Matchers.any(Map),
-          [{
+          Matchers.any(ImmutableMap),
+          ImmutableSet.of([{
             addedNodes: {length: 0} as any as NodeList,
             attributeName: attributeName1,
             attributeNamespace: null,
@@ -258,11 +276,11 @@ describe('webc.AttributeChangeHandler', () => {
             removedNodes: {length: 0} as any as NodeList,
             target: element,
             type: 'attributes',
-          }]);
+          }]));
       assert(handler['onMutation_']).to.haveBeenCalledWith(
           mockInstance,
-          Matchers.any(Map),
-          [{
+          Matchers.any(ImmutableMap),
+          ImmutableSet.of([{
             addedNodes: {length: 0} as NodeList as any,
             attributeName: attributeName2,
             attributeNamespace: null,
@@ -272,13 +290,13 @@ describe('webc.AttributeChangeHandler', () => {
             removedNodes: {length: 0} as any as NodeList,
             target: element,
             type: 'attributes',
-          }]);
+          }]));
 
-      const map: Map<string, Config[]> =
+      const map: ImmutableMap<string, ImmutableSet<Config>> =
           (handler['onMutation_'] as any).calls.argsFor(0)[1];
-      assert(map).to.haveEntries([
-        [attributeName1, [config1]],
-        [attributeName2, [config2]],
+      assert(map).to.haveElements([
+        [attributeName1, ImmutableSet.of([config1])],
+        [attributeName2, ImmutableSet.of([config2])],
       ]);
       assert((handler['onMutation_'] as any).calls.argsFor(1)[1]).to.be(map);
 

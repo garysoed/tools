@@ -1,4 +1,9 @@
 import { FiniteIterableType } from '../check/finite-iterable-type';
+import { HasPropertyType } from '../check/has-property-type';
+import { IType } from '../check/i-type';
+import { InstanceofType } from '../check/instanceof-type';
+import { IntersectType } from '../check/intersect-type';
+import { NumberType } from '../check/number-type';
 import { Iterables } from '../immutable/iterables';
 import { Collection } from '../interfaces/collection';
 import { CompareResult } from '../interfaces/compare-result';
@@ -7,6 +12,14 @@ import { FiniteIndexed } from '../interfaces/finite-indexed';
 import { Indexed } from '../interfaces/indexed';
 import { Ordered } from '../interfaces/ordered';
 import { assertUnreachable } from '../typescript/assert-unreachable';
+
+type ItemList<T> = {item: (index: number) => T, length: number};
+function ItemListType<T>(): IType<ItemList<T>> {
+  return IntersectType.builder<ItemList<T>>()
+      .addType(HasPropertyType('item', InstanceofType(Function)))
+      .addType(HasPropertyType('length', NumberType))
+      .build();
+}
 
 export class ImmutableList<T> implements
     Collection<T>,
@@ -123,6 +136,15 @@ export class ImmutableList<T> implements
     return this.filter((value: T, index: number) => checker(value));
   }
 
+  find(check: (item: T) => boolean): T | null {
+    for (const data of this.data_) {
+      if (check(data)) {
+        return data;
+      }
+    }
+    return null;
+  }
+
   get(index: number): T | undefined {
     return this.data_[index];
   }
@@ -225,11 +247,18 @@ export class ImmutableList<T> implements
 
   static of<T>(data: Finite<T> & Iterable<T>): ImmutableList<T>;
   static of<T>(data: T[]): ImmutableList<T>;
-  static of<T>(data: T[] | (Finite<T> & Iterable<T>)): ImmutableList<T> {
+  static of<T>(data: ItemList<T>): ImmutableList<T>;
+  static of<T>(data: T[] | (Finite<T> & Iterable<T>) | ItemList<T>): ImmutableList<T> {
     if (FiniteIterableType.check(data)) {
       return new ImmutableList(Iterables.toArray(data));
     } else if (data instanceof Array) {
       return new ImmutableList(data);
+    } else if (ItemListType<T>().check(data)) {
+      const array: T[] = [];
+      for (let i = 0; i < data.length; i++) {
+        array.push(data.item(i));
+      }
+      return new ImmutableList(array);
     } else {
       throw assertUnreachable(data);
     }

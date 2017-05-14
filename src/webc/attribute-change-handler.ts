@@ -1,10 +1,9 @@
-import { Arrays } from '../collection/arrays';
-import { Maps } from '../collection/maps';
 import { Annotations } from '../data/annotations';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { DisposableFunction } from '../dispose/disposable-function';
 import { ImmutableMap } from '../immutable/immutable-map';
 import { ImmutableSet } from '../immutable/immutable-set';
+import { Iterables } from '../immutable/iterables';
 import { Parser } from '../interfaces/parser';
 import { IHandler } from '../webc/interfaces';
 
@@ -15,6 +14,8 @@ export type AttributeChangeHandlerConfig = {
   parser: Parser<any> | null,
   selector: string | null,
 };
+
+type GroupedConfig = ImmutableMap<string, ImmutableSet<AttributeChangeHandlerConfig>>;
 
 export const ATTR_CHANGE_ANNOTATIONS: Annotations<AttributeChangeHandlerConfig> =
     Annotations.of<AttributeChangeHandlerConfig>(Symbol('attributeChangeHandler'));
@@ -30,49 +31,51 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
   configure(
       targetEl: Element,
       instance: BaseDisposable,
-      configs: AttributeChangeHandlerConfig[]): void {
+      configs: ImmutableSet<AttributeChangeHandlerConfig>): void {
     // Group the configs together.
-    const configEntries: [string, AttributeChangeHandlerConfig][] = Arrays
-        .of(configs)
-        .map((config: AttributeChangeHandlerConfig):
+    const configEntries: ImmutableSet<[string, AttributeChangeHandlerConfig]> = configs
+        .mapItem((config: AttributeChangeHandlerConfig):
             [string, AttributeChangeHandlerConfig] => {
           return [config.attributeName, config];
-        })
-        .asArray();
-    const groupedConfig: Map<string, AttributeChangeHandlerConfig[]> =
-        Maps.group(configEntries).asMap();
+        });
+
+    const map: Map<string, ImmutableSet<AttributeChangeHandlerConfig>> = new Map();
+    for (const [attrName, config] of configEntries) {
+      const set = map.get(attrName);
+      if (set === undefined) {
+        map.set(attrName, ImmutableSet.of([config]));
+      } else {
+        map.set(attrName, set.add(config));
+      }
+    }
+    const groupedConfig: GroupedConfig = ImmutableMap.of(map);
     const observer = this.createMutationObserver_(instance, groupedConfig);
 
-    const attributeFilter = Arrays
-        .of(configs)
-        .map((config: AttributeChangeHandlerConfig) => {
+    const attributeFilter = Iterables.toArray(configs
+        .mapItem((config: AttributeChangeHandlerConfig) => {
           return config.attributeName;
-        })
-        .asArray();
+        }));
     observer.observe(
         targetEl,
-        {attributeFilter: attributeFilter, attributeOldValue: true, attributes: true});
+        {attributeFilter, attributeOldValue: true, attributes: true});
 
     // Calls the initial "change".
-    Maps
-        .of(groupedConfig)
-        .keys()
-        .forEach((attributeName: string) => {
-          this.onMutation_(
-              instance,
-              groupedConfig,
-              [{
-                addedNodes: {length: 0} as any as NodeList,
-                attributeName: attributeName,
-                attributeNamespace: null,
-                nextSibling: null,
-                oldValue: null,
-                previousSibling: null,
-                removedNodes: {length: 0} as any as NodeList,
-                target: targetEl,
-                type: 'attributes',
-              }]);
-        });
+    for (const attributeName of groupedConfig.keys()) {
+      this.onMutation_(
+          instance,
+          groupedConfig,
+          ImmutableSet.of([{
+            addedNodes: {length: 0} as any as NodeList,
+            attributeName: attributeName,
+            attributeNamespace: null,
+            nextSibling: null,
+            oldValue: null,
+            previousSibling: null,
+            removedNodes: {length: 0} as any as NodeList,
+            target: targetEl,
+            type: 'attributes',
+          }]));
+    }
     instance.addDisposable(DisposableFunction.of(() => {
       observer.disconnect();
     }));
@@ -113,7 +116,7 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
    */
   createMutationObserver_(
       instance: BaseDisposable,
-      groupedConfig: Map<string, AttributeChangeHandlerConfig[]>): MutationObserver {
+      groupedConfig: GroupedConfig): MutationObserver {
     return new MutationObserver(this.onMutation_.bind(this, instance, groupedConfig));
   }
 
@@ -136,36 +139,32 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
    */
   onMutation_(
       instance: any,
-      configs: Map<string, AttributeChangeHandlerConfig[]>,
-      records: MutationRecord[]): void {
-    Arrays.of(records)
-        .forEach((record: MutationRecord) => {
-          const attributeName = record.attributeName;
-          if (attributeName === null) {
-            return;
-          }
+      configs: GroupedConfig,
+      records: ImmutableSet<MutationRecord>): void {
+    for (const record of records) {
+      const attributeName = record.attributeName;
+      if (attributeName === null) {
+        return;
+      }
 
-          if (configs.has(attributeName)) {
-            Arrays
-                .of(configs.get(attributeName)!)
-                .forEach(((attributeName: string, config: AttributeChangeHandlerConfig) => {
-                  const {handlerKey, parser} = config;
-                  const handler = instance[handlerKey];
-                  if (!!handler) {
-                    if (parser !== null) {
-                      const targetNode = record.target;
-                      if (targetNode instanceof Element) {
-                        const oldValue = parser.parse(record.oldValue);
-                        const newValue = parser.parse(targetNode.getAttribute(attributeName));
-                        handler.call(instance, newValue, oldValue);
-                      }
-                    } else {
-                      handler.call(instance);
-                    }
-                  }
-                }).bind(this, attributeName));
+      const matchingConfigs = configs.get(attributeName);
+      if (matchingConfigs !== undefined) {
+        for (const {handlerKey, parser} of matchingConfigs) {
+          const handler = instance[handlerKey];
+          if (!!handler) {
+            if (parser !== null) {
+              const targetNode = record.target;
+              if (targetNode instanceof Element) {
+                const oldValue = parser.parse(record.oldValue);
+                const newValue = parser.parse(targetNode.getAttribute(attributeName));
+                handler.call(instance, newValue, oldValue);
+              }
+            } else {
+              handler.call(instance);
+            }
           }
-        });
+        }
+      }
+    }
   }
 }
-// TODO: Mutable

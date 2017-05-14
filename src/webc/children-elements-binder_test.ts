@@ -1,7 +1,7 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import { Arrays } from '../collection/arrays';
+import { ImmutableList } from '../immutable/immutable-list';
 import { Fakes } from '../mock/fakes';
 import { Mocks } from '../mock/mocks';
 import { ChildrenElementsBinder } from '../webc/children-elements-binder';
@@ -46,7 +46,7 @@ describe('webc.ChildrenElementsBinder', () => {
           1,
           0,
           instance);
-      assert(binder['getChildElements_']()).to.equal([child2, child3]);
+      assert(binder['getChildElements_']()).to.haveElements([child2, child3]);
     });
 
     it('should not return elements beyond the endPadCount', () => {
@@ -67,7 +67,26 @@ describe('webc.ChildrenElementsBinder', () => {
           1,
           1,
           instance);
-      assert(binder['getChildElements_']()).to.equal([child2, child3]);
+      assert(binder['getChildElements_']()).to.haveElements([child2, child3]);
+    });
+  });
+
+  describe('get', () => {
+    it('should return a map of all the entries', () => {
+      const child1 = document.createElement('div');
+      const child2 = document.createElement('div');
+      parentEl.appendChild(child1);
+      parentEl.appendChild(child2);
+
+      const data1 = Mocks.object('data1');
+      const data2 = Mocks.object('data2');
+      Fakes.build(mockDataHelper.get)
+          .when(child1).return(data1)
+          .when(child2).return(data2);
+
+      assert(binder.get()!).to.haveElements([data1, data2]);
+      assert(mockDataHelper.get).to.haveBeenCalledWith(child1);
+      assert(mockDataHelper.get).to.haveBeenCalledWith(child2);
     });
   });
 
@@ -108,25 +127,6 @@ describe('webc.ChildrenElementsBinder', () => {
     });
   });
 
-  describe('get', () => {
-    it('should return a map of all the entries', () => {
-      const child1 = document.createElement('div');
-      const child2 = document.createElement('div');
-      parentEl.appendChild(child1);
-      parentEl.appendChild(child2);
-
-      const data1 = Mocks.object('data1');
-      const data2 = Mocks.object('data2');
-      Fakes.build(mockDataHelper.get)
-          .when(child1).return(data1)
-          .when(child2).return(data2);
-
-      assert(binder.get()).to.equal([data1, data2]);
-      assert(mockDataHelper.get).to.haveBeenCalledWith(child1);
-      assert(mockDataHelper.get).to.haveBeenCalledWith(child2);
-    });
-  });
-
   describe('set', () => {
     it('should add all new entries', () => {
       const value1 = Mocks.object('value1');
@@ -148,7 +148,7 @@ describe('webc.ChildrenElementsBinder', () => {
       const element1 = document.createElement('div1');
       const element2 = document.createElement('div2');
       spyOn(binder, 'getElement_').and.returnValues(element1, element2);
-      binder.set([value1, value2]);
+      binder.set(ImmutableList.of([value1, value2]));
 
       assert(mockDataHelper.set).to.haveBeenCalledWith(value1, element1, instance);
       assert(mockDataHelper.set).to.haveBeenCalledWith(value2, element2, instance);
@@ -181,7 +181,7 @@ describe('webc.ChildrenElementsBinder', () => {
           1,
           0,
           instance);
-      binder.set([]);
+      binder.set(ImmutableList.of([]));
 
       assert(parentEl).to.haveChildren([existingChild1, existingChild2]);
     });
@@ -203,9 +203,11 @@ describe('webc.ChildrenElementsBinder', () => {
 
       spyOn(parentEl, 'removeChild').and.callThrough();
 
-      binder.set([newData1, newData2]);
+      binder.set(ImmutableList.of([newData1, newData2]));
 
-      assert(Arrays.fromItemList(parentEl.children).asArray()).to.equal([child1, child2]);
+      assert(parentEl.children.length).to.equal(2);
+      assert(parentEl.children.item(0)).to.equal(child1);
+      assert(parentEl.children.item(1)).to.equal(child2);
       assert(mockDataHelper.set).to.haveBeenCalledWith(newData1, child1, instance);
       assert(mockDataHelper.set).to.haveBeenCalledWith(newData2, child2, instance);
     });

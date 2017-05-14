@@ -126,6 +126,24 @@ describe('immutable.ImmutableMap', () => {
     });
   });
 
+  describe('find', () => {
+    it('should return the first matching entry in the map', () => {
+      const entry = ImmutableMap
+          .of([[0, 'a'], [1, 'b'], [2, 'c']])
+          .find(([key, value]: [number, string]) => {
+            return key >= 1;
+          });
+      assert(entry).to.equal([1, 'b']);
+    });
+
+    it('should return null if the entry is not in the map', () => {
+      const entry = ImmutableMap
+          .of([[0, 'a'], [1, 'b'], [2, 'c']])
+          .find(([key, value]: [number, string]) => false);
+      assert(entry).to.beNull();
+    });
+  });
+
   describe('get', () => {
     it('should return the correct item', () => {
       const map = ImmutableMap.of([[0, 'a'], [1, 'b'], [2, 'c']]);
@@ -136,25 +154,25 @@ describe('immutable.ImmutableMap', () => {
   });
 
   describe('has', () => {
-    it('should return true if the item is in the list', () => {
+    it('should return true if the item is in the map', () => {
       const entry: [number, string] = [1, 'b'];
       const map = ImmutableMap.of([[0, 'a'], entry, [2, 'c']]);
       assert(map.has(entry)).to.beTrue();
     });
 
-    it('should return false if the item is not in the list', () => {
+    it('should return false if the item is not in the map', () => {
       const map = ImmutableMap.of([[0, 'a'], [1, 'b'], [2, 'c']]);
       assert(map.has([3, 'd'])).to.beFalse();
     });
   });
 
   describe('hasKey', () => {
-    it('should return true if the item is in the list', () => {
+    it('should return true if the item is in the map', () => {
       const map = ImmutableMap.of([[0, 'a'], [1, 'b'], [2, 'c']]);
       assert(map.hasKey(1)).to.beTrue();
     });
 
-    it('should return false if the item is not in the list', () => {
+    it('should return false if the item is not in the map', () => {
       const map = ImmutableMap.of([[0, 'a'], [1, 'b'], [2, 'c']]);
       assert(map.hasKey(4)).to.beFalse();
     });

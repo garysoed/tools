@@ -167,6 +167,24 @@ describe('immutable.OrderedMap', () => {
     });
   });
 
+  describe('find', () => {
+    it('should return the first matching entry in the map', () => {
+      const entry = OrderedMap
+          .of([[0, 'a'], [1, 'b'], [2, 'c']])
+          .find(([key, value]: [number, string]) => {
+            return key >= 1;
+          });
+      assert(entry).to.equal([1, 'b']);
+    });
+
+    it('should return null if the entry is not in the map', () => {
+      const entry = OrderedMap
+          .of([[0, 'a'], [1, 'b'], [2, 'c']])
+          .find(([key, value]: [number, string]) => false);
+      assert(entry).to.beNull();
+    });
+  });
+
   describe('get', () => {
     it('should return the correct item', () => {
       const map = OrderedMap.of([[0, 'a'], [1, 'b'], [2, 'c']]);

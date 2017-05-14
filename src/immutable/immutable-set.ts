@@ -64,6 +64,15 @@ export class ImmutableSet<T> implements Collection<T>, Finite<T>, Iterable<T> {
     })));
   }
 
+  find(check: (item: T) => boolean): T | null {
+    for (const item of this.data_) {
+      if (check(item)) {
+        return item;
+      }
+    }
+    return null;
+  }
+
   has(item: T): boolean {
     return this.data_.has(item);
   }

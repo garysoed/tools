@@ -1,9 +1,9 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
+import { ImmutableList } from '../immutable/immutable-list';
 import { Fakes } from '../mock/fakes';
 import { Locations } from '../ui/locations';
-import { ImmutableList } from "../immutable/immutable-list";
 
 
 describe('ui.Locations', () => {

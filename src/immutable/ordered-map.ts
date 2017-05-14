@@ -136,6 +136,15 @@ export class OrderedMap<K, V> implements
     return new OrderedMap(keysClone, mapClone);
   }
 
+  find(check: (item: [K, V]) => boolean): [K, V] | null {
+    for (const item of this.map_) {
+      if (check(item)) {
+        return item;
+      }
+    }
+    return null;
+  }
+
   get(key: K): V | undefined {
     return this.map_.get(key);
   }

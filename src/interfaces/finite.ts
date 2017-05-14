@@ -28,6 +28,8 @@ export interface Finite<T> {
 
   everyItem(check: (item: T) => boolean): boolean;
 
+  find(check: (item: T) => boolean): T | null;
+
   /**
    * @return True iff the given item exists in the collection.
    */
@@ -42,4 +44,3 @@ export interface Finite<T> {
 
   someItem(check: (item: T) => boolean): boolean;
 }
-// TODO: Mutable
