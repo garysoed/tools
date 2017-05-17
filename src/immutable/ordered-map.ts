@@ -137,12 +137,28 @@ export class OrderedMap<K, V> implements
   }
 
   find(check: (item: [K, V]) => boolean): [K, V] | null {
-    for (const item of this.map_) {
-      if (check(item)) {
-        return item;
+    return this.findEntry((value: V, index: K) => {
+      return check([index, value]);
+    });
+  }
+
+  findEntry(checker: (value: V, index: K) => boolean): [K, V] | null {
+    for (const [index, value] of this.entries()) {
+      if (checker(value, index)) {
+        return [index, value];
       }
     }
     return null;
+  }
+
+  findKey(checker: (value: V, index: K) => boolean): K | null {
+    const entry = this.findEntry(checker);
+    return entry === null ? null : entry[0];
+  }
+
+  findValue(checker: (value: V, index: K) => boolean): V | null {
+    const entry = this.findEntry(checker);
+    return entry === null ? null : entry[1];
   }
 
   get(key: K): V | undefined {

@@ -137,12 +137,26 @@ export class ImmutableList<T> implements
   }
 
   find(check: (item: T) => boolean): T | null {
-    for (const data of this.data_) {
-      if (check(data)) {
-        return data;
+    return this.findValue(check);
+  }
+
+  findEntry(checker: (value: T, index: number) => boolean): [number, T] | null {
+    for (const [index, value] of this.entries()) {
+      if (checker(value, index)) {
+        return [index, value];
       }
     }
     return null;
+  }
+
+  findKey(checker: (value: T, index: number) => boolean): number | null {
+    const entry = this.findEntry(checker);
+    return entry === null ? null : entry[0];
+  }
+
+  findValue(checker: (value: T, index: number) => boolean): T | null {
+    const entry = this.findEntry(checker);
+    return entry === null ? null : entry[1];
   }
 
   get(index: number): T | undefined {

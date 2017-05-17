@@ -185,6 +185,60 @@ describe('immutable.OrderedMap', () => {
     });
   });
 
+  describe('findEntry', () => {
+    it('should return the first matching entry in the map', () => {
+      const entry = OrderedMap
+          .of([[0, 'a'], [1, 'b'], [2, 'c']])
+          .findEntry((value: string, key: number) => {
+            return key >= 1;
+          });
+      assert(entry).to.equal([1, 'b']);
+    });
+
+    it('should return null if the entry is not in the map', () => {
+      const entry = OrderedMap
+          .of([[0, 'a'], [1, 'b'], [2, 'c']])
+          .findEntry((value: string, key: number) => false);
+      assert(entry).to.beNull();
+    });
+  });
+
+  describe('findKey', () => {
+    it('should return the first matching entry in the map', () => {
+      const entry = OrderedMap
+          .of([[0, 'a'], [1, 'b'], [2, 'c']])
+          .findKey((value: string, key: number) => {
+            return key >= 1;
+          });
+      assert(entry).to.equal(1);
+    });
+
+    it('should return null if the entry is not in the map', () => {
+      const entry = OrderedMap
+          .of([[0, 'a'], [1, 'b'], [2, 'c']])
+          .findKey((value: string, key: number) => false);
+      assert(entry).to.beNull();
+    });
+  });
+
+  describe('findValue', () => {
+    it('should return the first matching entry in the map', () => {
+      const entry = OrderedMap
+          .of([[0, 'a'], [1, 'b'], [2, 'c']])
+          .findValue((value: string, key: number) => {
+            return key >= 1;
+          });
+      assert(entry).to.equal('b');
+    });
+
+    it('should return null if the entry is not in the map', () => {
+      const entry = OrderedMap
+          .of([[0, 'a'], [1, 'b'], [2, 'c']])
+          .findValue((value: string, key: number) => false);
+      assert(entry).to.beNull();
+    });
+  });
+
   describe('get', () => {
     it('should return the correct item', () => {
       const map = OrderedMap.of([[0, 'a'], [1, 'b'], [2, 'c']]);

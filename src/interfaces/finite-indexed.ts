@@ -7,6 +7,12 @@ export interface FiniteIndexed<K, V> {
    */
   every(check: (value: V, key: K) => boolean): boolean;
 
+  findEntry(checker: (value: V, index: K) => boolean): [K, V] | null;
+
+  findKey(checker: (value: V, index: K) => boolean): K | null;
+
+  findValue(checker: (value: V, index: K) => boolean): V | null;
+
   /**
    * @return True iff the collection has the given key.
    */

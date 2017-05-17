@@ -121,6 +121,36 @@ describe('immutable.ImmutableList', () => {
     });
   });
 
+  describe('findEntry', () => {
+    it('should return the first matching entry', () => {
+      assert(ImmutableList.of([1, 2, 3]).findEntry((n: number) => n >= 2)).to.equal([1, 2]);
+    });
+
+    it('should return null if there are no matches', () => {
+      assert(ImmutableList.of([1, 2, 3]).findEntry((n: number) => false)).to.beNull();
+    });
+  });
+
+  describe('findKey', () => {
+    it('should return the first matching key', () => {
+      assert(ImmutableList.of([1, 2, 3]).findKey((n: number) => n >= 2)).to.equal(1);
+    });
+
+    it('should return null if there are no matches', () => {
+      assert(ImmutableList.of([1, 2, 3]).findKey((n: number) => false)).to.beNull();
+    });
+  });
+
+  describe('findValue', () => {
+    it('should return the first matching value', () => {
+      assert(ImmutableList.of([1, 2, 3]).findValue((n: number) => n >= 2)).to.equal(2);
+    });
+
+    it('should return null if there are no matches', () => {
+      assert(ImmutableList.of([1, 2, 3]).findValue((n: number) => false)).to.beNull();
+    });
+  });
+
   describe('get', () => {
     it('should return the correct item', () => {
       const list = ImmutableList.of([1, 2, 3, 4]);

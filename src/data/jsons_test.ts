@@ -4,7 +4,7 @@ TestBase.setup();
 import { Jsons } from './jsons';
 
 
-describe('collection.Jsons', () => {
+describe('data.Jsons', () => {
   describe('deepClone', () => {
     it('should clone the given object', () => {
       const original = {
@@ -54,22 +54,6 @@ describe('collection.Jsons', () => {
       const source = { a: 1 };
       Jsons.mixin(source, dest);
       assert(dest.a).to.equal(2);
-    });
-  });
-
-  describe('setTemporaryValue', () => {
-    it('should run the callback with the values set temporarily', () => {
-      const json = {a: 1};
-      const callback = jasmine.createSpy('callback');
-      Jsons.setTemporaryValue(
-          json,
-          {a: 'one', b: 'two'},
-          () => {
-            callback(json['a'], json['b']);
-          });
-
-      assert(json).to.equal({a: 1, b: undefined});
-      assert(callback).to.haveBeenCalledWith('one', 'two');
     });
   });
 

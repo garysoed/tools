@@ -1,6 +1,3 @@
-import { Maps } from '../collection/maps';
-
-
 /**
  * Various utility methods to work with JSONs.
  *
@@ -59,40 +56,6 @@ export class Jsons {
   }
 
   /**
-   * Sets the specified values in the given JSON, runs the given callback, and reverts the set
-   * values.
-   *
-   * @param json The object to set the value of.
-   * @param substitution A mapping of path to set to the value for each path. The path is a `.`
-   *    separated path to the location of the value to set.
-   * @param callback The callback to be called while the value is substituted.
-   */
-  static setTemporaryValue(
-      json: gs.IJson,
-      substitutions: {[path: string]: any},
-      callback: () => void): void {
-    const oldValues = Maps.fromRecord(substitutions)
-        .mapValue((value: any, path: string) => {
-          return Jsons.getValue(json, path);
-        })
-        .asRecord();
-
-    // Substitutes the values.
-    Maps.fromRecord(substitutions)
-        .forEach((value: any, path: string) => {
-          Jsons.setValue(json, path, value);
-        });
-
-    callback();
-
-    // Puts the values back.
-    Maps.fromRecord(oldValues)
-        .forEach((value: any, path: string) => {
-          Jsons.setValue(json, path, value);
-        });
-  }
-
-  /**
    * Sets the value of the given object at the given path.
    *
    * For example:
@@ -127,4 +90,3 @@ export class Jsons {
     object[propertyName] = value;
   }
 }
-// TODO: Mutable
