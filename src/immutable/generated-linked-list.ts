@@ -1,7 +1,7 @@
 import { Iterables } from '../immutable/iterables';
 import { Collection } from '../interfaces/collection';
 
-export class GeneratedLinkedList<T> implements Collection<T>, Iterable<T> {
+export class GeneratedLinkedList<T> implements Collection<T> {
   constructor(private readonly iterable_: Iterable<T>) { }
 
   [Symbol.iterator](): Iterator<T> {

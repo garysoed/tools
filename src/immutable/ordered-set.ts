@@ -68,6 +68,20 @@ export class OrderedSet<T> implements FiniteCollection<T>, Ordered<T> {
     return new OrderedSet(clone);
   }
 
+  equals(other: Ordered<T>): boolean {
+    if (this.size() !== other.size()) {
+      return false;
+    }
+
+    for (let i = 0; i < this.size(); i++) {
+      if (this.getAt(i) !== other.getAt(i)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   everyItem(check: (item: T) => boolean): boolean {
     for (const item of this) {
       if (!check(item)) {

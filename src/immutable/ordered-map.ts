@@ -108,6 +108,22 @@ export class OrderedMap<K, V> implements
         });
   }
 
+  equals(other: Ordered<[K, V]>): boolean {
+    if (this.size() !== other.size()) {
+      return false;
+    }
+
+    for (let i = 0; i < this.size(); i++) {
+      const [thisKey, thisValue] = this.getAt(i)!;
+      const [otherKey, otherValue] = other.getAt(i)!;
+      if (thisKey !== otherKey || thisValue !== otherValue) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   every(check: (value: V, key: K) => boolean): boolean {
     return this.everyItem(([key, value]: [K, V]) => {
       return check(value, key);

@@ -75,6 +75,24 @@ describe('immutable.ImmutableList', () => {
     });
   });
 
+  describe('equals', () => {
+    it('should return true if the other list is the same', () => {
+      assert(ImmutableList.of([1, 2, 3]).equals(ImmutableList.of([1, 2, 3]))).to.beTrue();
+    });
+
+    it('should return false if the sizes are different', () => {
+      assert(ImmutableList.of([1, 2]).equals(ImmutableList.of([1, 2, 3]))).to.beFalse();
+    });
+
+    it('should return false if one of the elements are different', () => {
+      assert(ImmutableList.of([1, 2, 4]).equals(ImmutableList.of([1, 2, 3]))).to.beFalse();
+    });
+
+    it('should return false if the ordering is different', () => {
+      assert(ImmutableList.of([1, 3, 2]).equals(ImmutableList.of([1, 2, 3]))).to.beFalse();
+    });
+  });
+
   describe('every', () => {
     it('should return true if every element passes the check', () => {
       assert(ImmutableList.of([1, 2, 3]).every((i: number) => i > 0)).to.beTrue();

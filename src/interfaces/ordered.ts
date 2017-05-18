@@ -3,8 +3,10 @@ import { CompareResult } from '../interfaces/compare-result';
 import { Finite } from '../interfaces/finite';
 import { FiniteCollection } from '../interfaces/finite-collection';
 
-export interface Ordered<T> {
+export interface Ordered<T> extends Finite {
   deleteAt(index: number): Ordered<T>;
+
+  equals(other: Ordered<T>): boolean;
 
   getAt(index: number): T | undefined;
 

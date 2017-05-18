@@ -111,6 +111,20 @@ export class ImmutableList<T> implements
     return new ImmutableList(clone);
   }
 
+  equals(other: Ordered<T>): boolean {
+    if (this.size() !== other.size()) {
+      return false;
+    }
+
+    for (let i = 0; i < this.size(); i++) {
+      if (this.getAt(i) !== other.getAt(i)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   every(check: (value: T, key: number) => boolean): boolean {
     for (const [key, value] of this.entries()) {
       if (!check(value, key)) {

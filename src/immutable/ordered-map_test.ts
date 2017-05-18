@@ -125,6 +125,33 @@ describe('immutable.OrderedMap', () => {
     });
   });
 
+  describe('equals', () => {
+    it('should return true if the entries are the same', () => {
+      assert(OrderedMap.of([[1, 'a'], [2, 'b']]).equals(OrderedMap.of([[1, 'a'], [2, 'b']])))
+          .to.beTrue();
+    });
+
+    it('should return false if one of the keys are different', () => {
+      assert(OrderedMap.of([[1, 'a'], [3, 'b']]).equals(OrderedMap.of([[1, 'a'], [2, 'b']])))
+          .to.beFalse();
+    });
+
+    it('should return false if one of the values are different', () => {
+      assert(OrderedMap.of([[1, 'a'], [2, 'c']]).equals(OrderedMap.of([[1, 'a'], [2, 'b']])))
+          .to.beFalse();
+    });
+
+    it('should return false if the ordering are different', () => {
+      assert(OrderedMap.of([[2, 'b'], [1, 'a']]).equals(OrderedMap.of([[1, 'a'], [2, 'b']])))
+          .to.beFalse();
+    });
+
+    it('should return false if the sizes are different', () => {
+      assert(OrderedMap.of([[1, 'a']]).equals(OrderedMap.of([[1, 'a'], [2, 'b']])))
+          .to.beFalse();
+    });
+  });
+
   describe('every', () => {
     it('should return true if every entry passes the check', () => {
       const map = OrderedMap.of([[1, 'a'], [2, 'b'], [3, 'c']]);

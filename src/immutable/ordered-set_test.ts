@@ -74,6 +74,24 @@ describe('immutable.OrderedSet', () => {
     });
   });
 
+  describe('equals', () => {
+    it('should return true if the other list is the same', () => {
+      assert(OrderedSet.of([1, 2, 3]).equals(OrderedSet.of([1, 2, 3]))).to.beTrue();
+    });
+
+    it('should return false if the sizes are different', () => {
+      assert(OrderedSet.of([1, 2]).equals(OrderedSet.of([1, 2, 3]))).to.beFalse();
+    });
+
+    it('should return false if one of the elements are different', () => {
+      assert(OrderedSet.of([1, 2, 4]).equals(OrderedSet.of([1, 2, 3]))).to.beFalse();
+    });
+
+    it('should return false if the ordering is different', () => {
+      assert(OrderedSet.of([1, 3, 2]).equals(OrderedSet.of([1, 2, 3]))).to.beFalse();
+    });
+  });
+
   describe('everyItem', () => {
     it('should return true if every element passes the check', () => {
       assert(OrderedSet.of([1, 2, 3]).everyItem((i: number) => i > 0)).to.beTrue();
