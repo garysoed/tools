@@ -2,7 +2,7 @@ import { FiniteIterableType } from '../check/finite-iterable-type';
 import { IType } from '../check/i-type';
 import { Finite } from '../interfaces/finite';
 
-export function FiniteIterableOfType<T, I extends Finite<T> & Iterable<T>>(type: IType<T>):
+export function FiniteIterableOfType<T, I extends Finite & Iterable<T>>(type: IType<T>):
     IType<I> {
   return {
     check(target: any): target is I {

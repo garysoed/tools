@@ -5,6 +5,7 @@ import { HasPropertyType } from '../check/has-property-type';
 import { IType } from '../check/i-type';
 import { InstanceofType } from '../check/instanceof-type';
 import { Finite } from '../interfaces/finite';
+import { FiniteCollection } from '../interfaces/finite-collection';
 import { assertUnreachable } from '../typescript/assert-unreachable';
 import { deprecated } from '../typescript/deprecated';
 import { Log } from '../util/log';
@@ -41,7 +42,7 @@ export class Iterables {
     }
   }
 
-  static toArray<T>(iterable: Iterable<T> & Finite<T>): T[] {
+  static toArray<T>(iterable: FiniteCollection<T>): T[] {
     const array: T[] = [];
     for (const item of iterable) {
       array.push(item);
@@ -51,6 +52,10 @@ export class Iterables {
 
   @deprecated(LOGGER, 'Remove after gs-tools.collection is removed')
   static unsafeToArray<T>(iterable: Iterable<T>): T[] {
-    return this.toArray(iterable as Finite<T> & Iterable<T>);
+    const array: T[] = [];
+    for (const item of iterable) {
+      array.push(item);
+    }
+    return array;
   }
 }

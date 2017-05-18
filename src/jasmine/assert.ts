@@ -37,7 +37,7 @@ export function assert<T>(value: T[] | null): AssertFactory<ArrayAssert<T>>;
 export function assert<K, V>(value: Map<K, V>): AssertFactory<MapAssert<K, V>>;
 export function assert<T>(value: Set<T>): AssertFactory<SetAssert<T>>;
 export function assert<T>(
-    iterable: Finite<T> & Iterable<T>): AssertFactory<FiniteIterableAssert<T>>;
+    iterable: Finite & Iterable<T>): AssertFactory<FiniteIterableAssert<T>>;
 export function assert<T>(iterable: Iterable<T>): AssertFactory<IterableAssert<T>>;
 export function assert(value: any): AssertFactory<AnyAssert<any>>;
 export function assert(value: any): AssertFactory<BaseAssert> {

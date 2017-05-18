@@ -1,8 +1,9 @@
 import { Collection } from '../interfaces/collection';
 import { Finite } from '../interfaces/finite';
+import { FiniteCollection } from '../interfaces/finite-collection';
 
 export interface Indexed<I, T> {
-  deleteAllKeys(keys: Iterable<I> & Finite<I>): Indexed<I, T>;
+  deleteAllKeys(keys: FiniteCollection<I>): Indexed<I, T>;
 
   deleteKey(key: I): Indexed<I, T>;
 

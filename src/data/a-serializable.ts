@@ -113,7 +113,7 @@ export class Serializer {
   private static getFields_(ctor: any): ImmutableMap<string, string> {
     const fields = (ctor.prototype[__PARENT]) ?
         Serializer.getFields_(ctor.prototype[__PARENT]) :
-        ImmutableMap.of(new Map());
+        ImmutableMap.of<string, string>(new Map());
 
     return fields.addAll(ctor.prototype[__FIELDS]);
   }

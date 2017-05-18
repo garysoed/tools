@@ -3,6 +3,7 @@ import { InfiniteList } from '../immutable/infinite-list';
 import { Iterables } from '../immutable/iterables';
 import { Collection } from '../interfaces/collection';
 import { Finite } from '../interfaces/finite';
+import { FiniteCollection } from '../interfaces/finite-collection';
 import { Indexed } from '../interfaces/indexed';
 
 export class InfiniteMap<K, V> implements Collection<[K, V]>, Indexed<K, V>, Iterable<[K, V]> {
@@ -17,7 +18,7 @@ export class InfiniteMap<K, V> implements Collection<[K, V]>, Indexed<K, V>, Ite
     }
   }
 
-  deleteAllKeys(keys: Iterable<K> & Finite<K>): InfiniteMap<K, V> {
+  deleteAllKeys(keys: FiniteCollection<K>): InfiniteMap<K, V> {
     return this.filterItem(([key]: [K, V]) => {
       return !keys.has(key);
     });

@@ -8,6 +8,7 @@ import { Iterables } from '../immutable/iterables';
 import { Collection } from '../interfaces/collection';
 import { CompareResult } from '../interfaces/compare-result';
 import { Finite } from '../interfaces/finite';
+import { FiniteCollection } from '../interfaces/finite-collection';
 import { FiniteIndexed } from '../interfaces/finite-indexed';
 import { Indexed } from '../interfaces/indexed';
 import { Ordered } from '../interfaces/ordered';
@@ -22,11 +23,8 @@ function ItemListType<T>(): IType<ItemList<T>> {
 }
 
 export class ImmutableList<T> implements
-    Collection<T>,
-    Finite<T>,
+    FiniteCollection<T>,
     FiniteIndexed<number, T>,
-    Indexed<number, T>,
-    Iterable<T>,
     Ordered<T> {
   private readonly data_: T[];
 
@@ -44,7 +42,7 @@ export class ImmutableList<T> implements
     return new ImmutableList(clone);
   }
 
-  addAll(items: Iterable<T> & Finite<T>): ImmutableList<T> {
+  addAll(items: FiniteCollection<T>): ImmutableList<T> {
     const clone = this.data_.slice(0);
     for (const item of items) {
       clone.push(item);
@@ -63,7 +61,7 @@ export class ImmutableList<T> implements
     }
   }
 
-  deleteAll(items: Iterable<T> & Finite<T>): ImmutableList<T> {
+  deleteAll(items: FiniteCollection<T>): ImmutableList<T> {
     const clone = this.data_.slice(0);
     for (const item of items) {
       const index = clone.indexOf(item);
@@ -74,7 +72,7 @@ export class ImmutableList<T> implements
     return new ImmutableList(clone);
   }
 
-  deleteAllKeys(keys: Iterable<number> & Finite<number>): ImmutableList<T> {
+  deleteAllKeys(keys: FiniteCollection<number>): ImmutableList<T> {
     const toDeleteIndexes: number[] = [];
     for (const key of keys) {
       toDeleteIndexes.push(key);
@@ -175,7 +173,7 @@ export class ImmutableList<T> implements
     return this.data_[key] !== undefined;
   }
 
-  insertAllAt(index: number, items: Finite<T> & Iterable<T>): ImmutableList<T> {
+  insertAllAt(index: number, items: FiniteCollection<T>): ImmutableList<T> {
     const toAdds: T[] = [];
     for (const toAdd of items) {
       toAdds.push(toAdd);
@@ -259,20 +257,20 @@ export class ImmutableList<T> implements
     return this;
   }
 
-  static of<T>(data: Finite<T> & Iterable<T>): ImmutableList<T>;
+  static of<T>(data: FiniteCollection<T>): ImmutableList<T>;
   static of<T>(data: T[]): ImmutableList<T>;
   static of<T>(data: ItemList<T>): ImmutableList<T>;
-  static of<T>(data: T[] | (Finite<T> & Iterable<T>) | ItemList<T>): ImmutableList<T> {
+  static of<T>(data: T[] | FiniteCollection<T> | ItemList<T>): ImmutableList<T> {
     if (FiniteIterableType.check(data)) {
-      return new ImmutableList(Iterables.toArray(data));
-    } else if (data instanceof Array) {
-      return new ImmutableList(data);
+      return new ImmutableList<T>(Iterables.toArray(data));
     } else if (ItemListType<T>().check(data)) {
       const array: T[] = [];
       for (let i = 0; i < data.length; i++) {
         array.push(data.item(i));
       }
       return new ImmutableList(array);
+    } else if (data instanceof Array) {
+      return new ImmutableList<T>(data);
     } else {
       throw assertUnreachable(data);
     }

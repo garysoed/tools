@@ -3,16 +3,14 @@ import { InstanceofType } from '../check/instanceof-type';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Collection } from '../interfaces/collection';
 import { Finite } from '../interfaces/finite';
+import { FiniteCollection } from '../interfaces/finite-collection';
 import { FiniteIndexed } from '../interfaces/finite-indexed';
 import { Indexed } from '../interfaces/indexed';
 import { assertUnreachable } from '../typescript/assert-unreachable';
 
 export class ImmutableMap<K, V> implements
-    Collection<[K, V]>,
-    Finite<[K, V]>,
-    FiniteIndexed<K, V>,
-    Indexed<K, V>,
-    Iterable<[K, V]> {
+    FiniteCollection<[K, V]>,
+    FiniteIndexed<K, V> {
   private readonly data_: Map<K, V>;
 
   constructor(data: Map<K, V>) {
@@ -27,7 +25,7 @@ export class ImmutableMap<K, V> implements
     return this.set(key, value);
   }
 
-  addAll(items: Iterable<[K, V]> & Finite<[K, V]>): ImmutableMap<K, V> {
+  addAll(items: FiniteCollection<[K, V]>): ImmutableMap<K, V> {
     const clone = new Map(this.data_);
     for (const [key, value] of items) {
       clone.set(key, value);
@@ -41,7 +39,7 @@ export class ImmutableMap<K, V> implements
     return new ImmutableMap(clone);
   }
 
-  deleteAll(items: Iterable<[K, V]> & Finite<[K, V]>): ImmutableMap<K, V> {
+  deleteAll(items: FiniteCollection<[K, V]>): ImmutableMap<K, V> {
     const clone = new Map(this.data_);
     for (const [key, value] of items) {
       clone.delete(key);
@@ -49,7 +47,7 @@ export class ImmutableMap<K, V> implements
     return new ImmutableMap(clone);
   }
 
-  deleteAllKeys(keys: Iterable<K> & Finite<K>): ImmutableMap<K, V> {
+  deleteAllKeys(keys: FiniteCollection<K>): ImmutableMap<K, V> {
     const clone = new Map(this.data_);
     for (const key of keys) {
       clone.delete(key);
@@ -196,11 +194,11 @@ export class ImmutableMap<K, V> implements
         });
   }
 
-  static of<K, V>(data: Iterable<[K, V]> & Finite<[K, V]>): ImmutableMap<K, V>;
+  static of<K, V>(data: FiniteCollection<[K, V]>): ImmutableMap<K, V>;
   static of<K, V>(data: [K, V][]): ImmutableMap<K, V>;
   static of<K, V>(data: Map<K, V>): ImmutableMap<K, V>;
   static of(data: gs.IJson): ImmutableMap<string, any>;
-  static of<K, V>(data: (Iterable<[K, V]> & Finite<[K, V]>) | [K, V][] | gs.IJson | Map<K, V>):
+  static of<K, V>(data: FiniteCollection<[K, V]> | [K, V][] | gs.IJson | Map<K, V>):
       ImmutableMap<any, any> {
     if (FiniteIterableType.check(data)) {
       return new ImmutableMap(new Map(data));

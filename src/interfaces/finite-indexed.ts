@@ -1,7 +1,7 @@
 import { Finite } from '../interfaces/finite';
 import { Indexed } from '../interfaces/indexed';
 
-export interface FiniteIndexed<K, V> {
+export interface FiniteIndexed<K, V> extends Finite, Indexed<K, V> {
   /**
    * @return True iff every item in the collection matches the given matcher.
    */

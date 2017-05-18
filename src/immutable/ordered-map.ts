@@ -3,16 +3,14 @@ import { ImmutableSet } from '../immutable/immutable-set';
 import { Collection } from '../interfaces/collection';
 import { CompareResult } from '../interfaces/compare-result';
 import { Finite } from '../interfaces/finite';
+import { FiniteCollection } from '../interfaces/finite-collection';
 import { FiniteIndexed } from '../interfaces/finite-indexed';
 import { Indexed } from '../interfaces/indexed';
 import { Ordered } from '../interfaces/ordered';
 
 export class OrderedMap<K, V> implements
-    Collection<[K, V]>,
-    Finite<[K, V]>,
+    FiniteCollection<[K, V]>,
     FiniteIndexed<K, V>,
-    Indexed<K, V>,
-    Iterable<[K, V]>,
     Ordered<[K, V]> {
   private readonly keys_: K[];
   private readonly map_: Map<K, V>;
@@ -38,7 +36,7 @@ export class OrderedMap<K, V> implements
     return new OrderedMap(keysClone, mapClone);
   }
 
-  addAll(items: Finite<[K, V]> & Collection<[K, V]>): OrderedMap<K, V> {
+  addAll(items: FiniteCollection<[K, V]>): OrderedMap<K, V> {
     const keysClone = this.keys_.slice(0);
     const mapClone = new Map(this.map_);
     const entriesToAdd = items.filterItem(([key, value]: [K, V]) => !this.hasKey(key));
@@ -53,7 +51,7 @@ export class OrderedMap<K, V> implements
     return this.deleteAll(ImmutableSet.of([entry]));
   }
 
-  deleteAll(items: Iterable<[K, V]> & Finite<[K, V]>): OrderedMap<K, V> {
+  deleteAll(items: FiniteCollection<[K, V]>): OrderedMap<K, V> {
     const keysClone = this.keys_.slice(0);
     const mapClone = new Map(this.map_);
 
@@ -71,7 +69,7 @@ export class OrderedMap<K, V> implements
     return new OrderedMap(keysClone, mapClone);
   }
 
-  deleteAllKeys(keys: Iterable<K> & Finite<K>): OrderedMap<K, V> {
+  deleteAllKeys(keys: FiniteCollection<K>): OrderedMap<K, V> {
     const keysClone = this.keys_.slice(0);
     const mapClone = new Map(this.map_);
 
@@ -187,7 +185,7 @@ export class OrderedMap<K, V> implements
     return this.map_.has(key);
   }
 
-  insertAllAt(index: number, items: Finite<[K, V]> & Iterable<[K, V]> & Collection<[K, V]>):
+  insertAllAt(index: number, items: FiniteCollection<[K, V]> & Collection<[K, V]>):
       OrderedMap<K, V> {
     // Go through the items to add, and count the number of existing items that come before the
     // insertion index.

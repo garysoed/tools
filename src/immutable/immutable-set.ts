@@ -3,9 +3,10 @@ import { InstanceofType } from '../check/instanceof-type';
 import { Iterables } from '../immutable/iterables';
 import { Collection } from '../interfaces/collection';
 import { Finite } from '../interfaces/finite';
+import { FiniteCollection } from '../interfaces/finite-collection';
 import { assertUnreachable } from '../typescript/assert-unreachable';
 
-export class ImmutableSet<T> implements Collection<T>, Finite<T>, Iterable<T> {
+export class ImmutableSet<T> implements FiniteCollection<T> {
   private readonly data_: Set<T>;
 
   constructor(data: Set<T>) {
@@ -22,7 +23,7 @@ export class ImmutableSet<T> implements Collection<T>, Finite<T>, Iterable<T> {
     return new ImmutableSet(clone);
   }
 
-  addAll(items: Iterable<T> & Finite<T>): ImmutableSet<T> {
+  addAll(items: FiniteCollection<T>): ImmutableSet<T> {
     const clone = new Set(Iterables.clone(this.data_));
     for (const item of items) {
       clone.add(item);
@@ -36,7 +37,7 @@ export class ImmutableSet<T> implements Collection<T>, Finite<T>, Iterable<T> {
     return new ImmutableSet(clone);
   }
 
-  deleteAll(items: Iterable<T> & Finite<T>): ImmutableSet<T> {
+  deleteAll(items: FiniteCollection<T>): ImmutableSet<T> {
     const clone = new Set(Iterables.clone(this.data_));
     for (const item of items) {
       clone.delete(item);
@@ -107,10 +108,10 @@ export class ImmutableSet<T> implements Collection<T>, Finite<T>, Iterable<T> {
     return false;
   }
 
-  static of<T>(data: Iterable<T> & Finite<T>): ImmutableSet<T>;
+  static of<T>(data: FiniteCollection<T>): ImmutableSet<T>;
   static of<T>(data: Set<T>): ImmutableSet<T>;
   static of<T>(data: T[]): ImmutableSet<T>;
-  static of<T>(data: Set<T> | T[] | (Iterable<T> & Finite<T>)): ImmutableSet<T> {
+  static of<T>(data: Set<T> | T[] | FiniteCollection<T>): ImmutableSet<T> {
     if (InstanceofType<Set<T>>(Set).check(data)) {
       return new ImmutableSet(data);
     } else if (InstanceofType<T[]>(Array).check(data)) {

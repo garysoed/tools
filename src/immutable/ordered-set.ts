@@ -4,10 +4,11 @@ import { Iterables } from '../immutable/iterables';
 import { Collection } from '../interfaces/collection';
 import { CompareResult } from '../interfaces/compare-result';
 import { Finite } from '../interfaces/finite';
+import { FiniteCollection } from '../interfaces/finite-collection';
 import { Ordered } from '../interfaces/ordered';
 
 
-export class OrderedSet<T> implements Collection<T>, Finite<T>, Iterable<T>, Ordered<T> {
+export class OrderedSet<T> implements FiniteCollection<T>, Ordered<T> {
   private readonly data_: T[];
   private readonly set_: Set<T>;
 
@@ -30,7 +31,7 @@ export class OrderedSet<T> implements Collection<T>, Finite<T>, Iterable<T>, Ord
     return new OrderedSet(clone);
   }
 
-  addAll(items: Iterable<T> & Finite<T> & Collection<T>): OrderedSet<T> {
+  addAll(items: FiniteCollection<T>): OrderedSet<T> {
     const clone = this.data_.slice(0);
     const itemsToAdd = items.filterItem((item: T) => !this.has(item));
     for (const item of itemsToAdd) {
@@ -50,7 +51,7 @@ export class OrderedSet<T> implements Collection<T>, Finite<T>, Iterable<T>, Ord
     return new OrderedSet(clone);
   }
 
-  deleteAll(items: Collection<T> & Finite<T>): OrderedSet<T> {
+  deleteAll(items: FiniteCollection<T>): OrderedSet<T> {
     const clone = this.data_.slice(0);
     for (const item of items) {
       const index = clone.indexOf(item);
@@ -99,7 +100,7 @@ export class OrderedSet<T> implements Collection<T>, Finite<T>, Iterable<T>, Ord
     return this.set_.has(item);
   }
 
-  insertAllAt(index: number, items: Finite<T> & Iterable<T> & Collection<T>): OrderedSet<T> {
+  insertAllAt(index: number, items: FiniteCollection<T>): OrderedSet<T> {
     // Go through the items to add, and count the number of existing items that come before the
     // insertion index.
     let preInsertionCount = 0;

@@ -4,8 +4,8 @@ import { IntersectType } from '../check/intersect-type';
 import { IterableType } from '../check/iterable-type';
 import { Finite } from '../interfaces/finite';
 
-export const FiniteIterableType = IntersectType.builder<Finite<any> & Iterable<any>>()
+export const FiniteIterableType = IntersectType.builder<Finite & Iterable<any>>()
     .addType(IterableType)
-    .addType(HasPropertyType<Finite<any>>('size', InstanceofType(Function)))
+    .addType(HasPropertyType<Finite>('size', InstanceofType(Function)))
     .build();
 // TODO: Mutable
