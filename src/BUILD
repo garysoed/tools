@@ -5,7 +5,6 @@ load("//bazel/typescript:defs.bzl", "ts_library")
 
 gs_tools(
     deps = [
-      "//src/collection",
       "//src/color",
       "//src/dispose",
       "//src/immutable",

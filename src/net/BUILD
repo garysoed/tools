@@ -4,7 +4,6 @@ load("//:defs.bzl", "gs_tools")
 
 gs_tools(
     deps = [
-      "//src/collection",
       "//src/dispose",
       "//src/event",
     ])

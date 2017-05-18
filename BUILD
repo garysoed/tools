@@ -20,7 +20,6 @@ karma_run(
     srcs = [
         "//src/async:test_src",
         "//src/check:test_src",
-        "//src/collection:test_src",
         "//src/color:test_src",
         "//src/data:test_src",
         "//src/dispose:test_src",
@@ -48,7 +47,6 @@ test_suite(
     tests = [
       "//src/async:lint",
       "//src/check:lint",
-      "//src/collection:lint",
       "//src/color:lint",
       "//src/data:lint",
       "//src/dispose:lint",
