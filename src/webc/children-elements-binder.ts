@@ -14,7 +14,7 @@ export interface IDataHelper<T> {
 }
 
 
-export class ChildrenElementsBinder<T> implements DomBinder<ImmutableList<T>> {
+export class ChildrenElementsBinder<T> implements DomBinder<T[]> {
   private readonly dataHelper_: IDataHelper<T>;
   private readonly elementPool_: Set<Element>;
   private readonly endPadCount_: number;
@@ -54,13 +54,13 @@ export class ChildrenElementsBinder<T> implements DomBinder<ImmutableList<T>> {
   /**
    * @override
    */
-  get(): ImmutableList<T> | null {
+  get(): T[] | null {
     const data = this.getChildElements_()
         .map((child: Element) => {
           return this.dataHelper_.get(child);
         });
     if (FiniteIterableOfType<T, ImmutableList<T>>(NonNullType<T>()).check(data)) {
-      return data;
+      return data.toArray();
     } else {
       return null;
     }
@@ -96,18 +96,18 @@ export class ChildrenElementsBinder<T> implements DomBinder<ImmutableList<T>> {
   /**
    * @override
    */
-  set(value: ImmutableList<T> | null): void {
-    const valueArray = value || ImmutableList.of([]);
-    const dataChildren = this.getChildElements_();
+  set(value: T[] | null): void {
+    const valueArray = value || [];
+    const dataChildren = this.getChildElements_().toArray();
 
     // Make sure that there are equal number of children.
-    for (let i = 0; i < valueArray.size() - dataChildren.size(); i++) {
+    for (let i = 0; i < valueArray.length - dataChildren.length; i++) {
       this.parentEl_.insertBefore(
           this.getElement_(),
           this.parentEl_.children.item(this.startPadCount_ + i) || null);
     }
 
-    for (let i = dataChildren.size() - valueArray.size() - 1; i >= 0; i--) {
+    for (let i = dataChildren.length - valueArray.length - 1; i >= 0; i--) {
       this.parentEl_.removeChild(this.parentEl_.children.item(this.startPadCount_ + i));
     }
 
@@ -135,3 +135,5 @@ export class ChildrenElementsBinder<T> implements DomBinder<ImmutableList<T>> {
     return new ChildrenElementsBinder(parentEl, dataHelper, startPadCount, endPadCount, instance);
   }
 }
+
+// TODO: Mutable

@@ -84,7 +84,7 @@ describe('webc.ChildrenElementsBinder', () => {
           .when(child1).return(data1)
           .when(child2).return(data2);
 
-      assert(binder.get()!).to.haveElements([data1, data2]);
+      assert(binder.get()!).to.equal([data1, data2]);
       assert(mockDataHelper.get).to.haveBeenCalledWith(child1);
       assert(mockDataHelper.get).to.haveBeenCalledWith(child2);
     });
@@ -148,7 +148,7 @@ describe('webc.ChildrenElementsBinder', () => {
       const element1 = document.createElement('div1');
       const element2 = document.createElement('div2');
       spyOn(binder, 'getElement_').and.returnValues(element1, element2);
-      binder.set(ImmutableList.of([value1, value2]));
+      binder.set([value1, value2]);
 
       assert(mockDataHelper.set).to.haveBeenCalledWith(value1, element1, instance);
       assert(mockDataHelper.set).to.haveBeenCalledWith(value2, element2, instance);
@@ -181,7 +181,7 @@ describe('webc.ChildrenElementsBinder', () => {
           1,
           0,
           instance);
-      binder.set(ImmutableList.of([]));
+      binder.set([]);
 
       assert(parentEl).to.haveChildren([existingChild1, existingChild2]);
     });
@@ -203,7 +203,7 @@ describe('webc.ChildrenElementsBinder', () => {
 
       spyOn(parentEl, 'removeChild').and.callThrough();
 
-      binder.set(ImmutableList.of([newData1, newData2]));
+      binder.set([newData1, newData2]);
 
       assert(parentEl.children.length).to.equal(2);
       assert(parentEl.children.item(0)).to.equal(child1);
