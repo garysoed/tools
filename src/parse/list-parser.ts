@@ -1,6 +1,5 @@
 import { ImmutableList } from '../immutable/immutable-list';
 import { Parser } from '../interfaces/parser';
-import { deprecated } from '../typescript/deprecated';
 import { Log } from '../util/log';
 
 const LOGGER = Log.of('parse.ArrayParser');

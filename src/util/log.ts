@@ -15,6 +15,7 @@
  * ```
  */
 export class Log {
+  private static COLOR_ENABLED_: boolean = true;
   private static ENABLED_: boolean = true;
 
   private namespace_: string;
@@ -26,9 +27,16 @@ export class Log {
     this.namespace_ = namespace;
   }
 
-  private callIfEnabled_(fn: (message: string) => void, message: string): void {
+  private callIfEnabled_(fn: (message: string, ...args: string[]) => void, message: string): void {
     if (Log.ENABLED_) {
-      fn(`[${this.namespace_}] ${message}`);
+      const matches = message.replace(/%%/g, 'a').match(/%c/g);
+      const colorCount = matches ? matches.length : 0;
+      const colors: string[] = [];
+      for (let i = 0; i < colorCount; i++) {
+        const isDefault = (i % 2) === 0;
+        colors.push(isDefault ? 'font-weight: normal;' : 'font-weight: bold;');
+      }
+      fn(`[${this.namespace_}] ${message}`, ...colors);
     }
   }
 
@@ -40,6 +48,18 @@ export class Log {
    */
   static error(log: Log, message: string): void {
     log.callIfEnabled_(console.error.bind(console), message);
+  }
+
+  static highlight(literals: TemplateStringsArray, ...placeholders: string[]): string {
+    let out = Log.COLOR_ENABLED_ ? '%c' : '';
+    for (let i = 0; i < placeholders.length; i++) {
+      if (Log.COLOR_ENABLED_) {
+        out += `${literals[i].replace(/%c/g, '%%c')}%c${placeholders[i].replace(/%c/g, '%%c')}%c`;
+      } else {
+        out += `${literals[i]}${placeholders[i]}`;
+      }
+    }
+    return out;
   }
 
   /**
@@ -54,6 +74,10 @@ export class Log {
 
   static of(namespace: string): Log {
     return new Log(namespace);
+  }
+
+  static setColorEnabled(enabled: boolean): void {
+    Log.COLOR_ENABLED_ = enabled;
   }
 
   /**
@@ -75,4 +99,3 @@ export class Log {
     log.callIfEnabled_(console.warn.bind(console), message);
   }
 }
-// TODO: Mutable

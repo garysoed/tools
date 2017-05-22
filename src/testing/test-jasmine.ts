@@ -6,6 +6,8 @@
  * -   `calls.firstArgsMatching`: The input parameters are exactly the same as
  *     `toHaveBeenCalledWith`. This returns the first arguments that matches the input parameters.
  */
+import { Log } from '../util/log';
+
 export const TestJasmine = {
   /**
    * Runs the code in jasmine's `afterEach` logic.
@@ -15,7 +17,9 @@ export const TestJasmine = {
   /**
    * Runs the code in jasmine's `beforeEach` logic.
    */
-  beforeEach(): void {},
+  beforeEach(): void {
+    Log.setColorEnabled(false);
+  },
 
   init(): void {
     function runTest(origRun: any, description: string, callback: (done: any) => any): void {
@@ -41,4 +45,3 @@ export const TestJasmine = {
     }
   },
 };
-// TODO: Mutable
