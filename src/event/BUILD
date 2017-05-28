@@ -7,5 +7,6 @@ gs_tools(
       "//src/data",
       "//src/dispose",
       "//src/mock",
+      "//src/random",
       "//src/typescript",
     ])

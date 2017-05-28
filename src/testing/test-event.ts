@@ -13,6 +13,21 @@ const LOGGER = Log.of('testing.TestEvent');
 
 
 export class TestEvent {
+
+  /**
+   * Runs the code in jasmine's `afterEach` logic.
+   */
+  static afterEach(): void {
+    // Noop
+  }
+
+  /**
+   * Runs the code in jasmine's `beforeEach` logic.
+   */
+  static beforeEach(): void {
+    // Noop
+  }
+
   @deprecated(LOGGER, `Use 'spyOn dispatchEvent'`)
   static getPayloads<E>(target: BaseListenable<E>, eventType: E): any[] {
     if (!target[__calls]) {
@@ -21,6 +36,8 @@ export class TestEvent {
 
     return target[__calls].get(eventType) || [];
   }
+
+  static init(): void { }
 
   @deprecated(LOGGER, `Use 'spyOn dispatchEvent'`)
   static spyOn<E>(target: BaseListenable<E>, eventTypes: E[]): any {
@@ -38,21 +55,5 @@ export class TestEvent {
       }, this));
     });
   }
-
-  /**
-   * Runs the code in jasmine's `afterEach` logic.
-   */
-  static afterEach(): void {
-    // Noop
-  }
-
-  /**
-   * Runs the code in jasmine's `beforeEach` logic.
-   */
-  static beforeEach(): void {
-    // Noop
-  }
-
-  static init(): void { }
 }
 // TODO: Mutable

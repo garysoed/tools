@@ -27,8 +27,6 @@ def gs_tools(deps = [], test_deps = []):
           `.tar` file.
       {test}_pack: A `webpack_binary` target that packs `test.js` and all its dependencies into a
           single `.js` file.
-      {test}_test: A `karma_run` target that runs a continuously running server on tests defined by
-          `test.ts`.
   """
 
   lib_name = PACKAGE_NAME.split("/")[-1]
@@ -75,12 +73,6 @@ def gs_tools(deps = [], test_deps = []):
         name = test_src_pack_name,
         package = ":" + test_src_bin_name,
         entry = "%s/%s.js" % (PACKAGE_NAME, test_src[:-3]),
-    )
-
-    karma_run(
-        name = test_src_name,
-        srcs = [test_src_pack_label],
-        deps = test_deps,
     )
 
     test_src_pack_labels.append(test_src_pack_label)

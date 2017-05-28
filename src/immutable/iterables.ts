@@ -50,7 +50,6 @@ export class Iterables {
     return array;
   }
 
-  @deprecated(LOGGER, 'Remove after gs-tools.collection is removed')
   static unsafeToArray<T>(iterable: Iterable<T>): T[] {
     const array: T[] = [];
     for (const item of iterable) {

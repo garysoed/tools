@@ -1,5 +1,5 @@
 import { DisposableFunction } from '../dispose/disposable-function';
-import { Event } from '../event/Event';
+import { Event } from '../interfaces/event';
 import { Log } from '../util/log';
 
 type Callback<T, E extends Event<T>> = (event: E) => void;

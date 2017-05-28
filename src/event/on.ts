@@ -1,6 +1,6 @@
 import { Annotations } from '../data/annotations';
 import { Bus } from '../event/bus';
-import { Event } from '../event/event';
+import { Event } from '../interfaces/event';
 
 
 type OnConfig<T, E extends Event<T>> = {
