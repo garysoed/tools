@@ -8,13 +8,13 @@ import { Parser } from '../interfaces/parser';
 import { Cases } from '../string/cases';
 import { Log } from '../util/log';
 import { BaseElement } from '../webc/base-element';
-import { CustomElementUtil } from '../webc/custom-element-util';
 import { DomHook } from '../webc/dom-hook';
 import { Handler } from '../webc/handle';
 import { ANNOTATIONS as HookAnnotations, BinderFactory as HookBinderFactory } from '../webc/hook';
 import { DomBinder } from '../webc/interfaces';
 import { ANNOTATIONS as LIFECYCLE_ANNOTATIONS } from '../webc/on-lifecycle';
 import { Templates } from '../webc/templates';
+import { Util } from '../webc/util';
 
 
 /**
@@ -92,8 +92,8 @@ export class ElementRegistrar extends BaseDisposable {
         const shadow = this.attachShadow({mode: 'open'});
         shadow.innerHTML = content;
 
-        CustomElementUtil.addAttributes(this, attributes);
-        CustomElementUtil.setElement(instance, this);
+        Util.addAttributes(this, attributes);
+        Util.setElement(instance, this);
 
         if (instance instanceof BaseElement) {
           registrar.configureLegacy_(instance, this);
@@ -148,7 +148,7 @@ export class ElementRegistrar extends BaseDisposable {
    * @return Promise that will be resolved when the registration process is done.
    */
   async register(ctor: gs.ICtor<BaseElement>): Promise<void> {
-    const config = CustomElementUtil.getConfig(ctor);
+    const config = Util.getConfig(ctor);
     if (!config) {
       return Promise.resolve();
     }

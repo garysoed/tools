@@ -4,7 +4,7 @@ TestBase.setup();
 import { BaseDisposable } from '../dispose/base-disposable';
 import { Mocks } from '../mock/mocks';
 import { customElement } from '../webc/custom-element';
-import { CustomElementUtil } from '../webc/custom-element-util';
+import { Util } from '../webc/util';
 
 
 describe('webc.customElement', () => {
@@ -19,10 +19,10 @@ describe('webc.customElement', () => {
     class TestElement extends BaseDisposable { }
 
     const config = {tag: 'tag', templateKey: 'templateKey'};
-    spyOn(CustomElementUtil, 'setConfig');
+    spyOn(Util, 'setConfig');
 
     customElement(config)(TestElement);
-    assert(CustomElementUtil.setConfig).to.haveBeenCalledWith(TestElement, config);
+    assert(Util.setConfig).to.haveBeenCalledWith(TestElement, config);
   });
 
   it('should throw exception if the constructor does not extend BaseDisposable', () => {

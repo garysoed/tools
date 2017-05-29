@@ -4,7 +4,6 @@ TestBase.setup();
 import { Matchers } from '../jasmine/matchers';
 import { Mocks } from '../mock/mocks';
 import { AttributeBinder } from '../webc/attribute-binder';
-import { CustomElementUtil } from '../webc/custom-element-util';
 import { Dom } from '../webc/dom';
 import { Util } from '../webc/util';
 
@@ -48,11 +47,11 @@ describe('webc.Dom', () => {
       spyOn(Util, 'resolveSelector').and.returnValue(target);
 
       const root = Mocks.object('root');
-      spyOn(CustomElementUtil, 'getElement').and.returnValue(root);
+      spyOn(Util, 'getElement').and.returnValue(root);
 
       assert(Dom['requireTargetElement_'](selector, instance)).to.equal(target);
       assert(Util.resolveSelector).to.haveBeenCalledWith(selector, root);
-      assert(CustomElementUtil.getElement).to.haveBeenCalledWith(instance);
+      assert(Util.getElement).to.haveBeenCalledWith(instance);
     });
 
     it('should throw error if the target element cannot be found', () => {
@@ -61,7 +60,7 @@ describe('webc.Dom', () => {
       spyOn(Util, 'resolveSelector').and.returnValue(null);
 
       const root = Mocks.object('root');
-      spyOn(CustomElementUtil, 'getElement').and.returnValue(root);
+      spyOn(Util, 'getElement').and.returnValue(root);
 
       assert(() => {
         Dom['requireTargetElement_'](selector, instance);
@@ -71,7 +70,7 @@ describe('webc.Dom', () => {
     it('should throw error if root element cannot be found', () => {
       const selector = 'selector';
       const instance = Mocks.object('instance');
-      spyOn(CustomElementUtil, 'getElement').and.returnValue(null);
+      spyOn(Util, 'getElement').and.returnValue(null);
 
       assert(() => {
         Dom['requireTargetElement_'](selector, instance);

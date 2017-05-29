@@ -1,7 +1,7 @@
 import { BaseDisposable } from '../dispose/base-disposable';
 import { BaseElement } from '../webc/base-element';
-import { CustomElementUtil } from '../webc/custom-element-util';
 import { IElementConfig } from '../webc/interfaces';
+import { Util } from '../webc/util';
 
 
 /**
@@ -60,6 +60,6 @@ export function customElement(config: IElementConfig): ClassDecorator {
     if (config.templateKey === '') {
       throw new Error(`Configuration for ${ctor.name} should have a non empty template key`);
     }
-    CustomElementUtil.setConfig(ctor, config);
+    Util.setConfig(ctor, config);
   };
 }

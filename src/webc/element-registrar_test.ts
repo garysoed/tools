@@ -9,11 +9,11 @@ import { Mocks } from '../mock/mocks';
 import { TestDispose } from '../testing/test-dispose';
 import { Log } from '../util/log';
 import { BaseElement } from '../webc/base-element';
-import { CustomElementUtil } from '../webc/custom-element-util';
 import { DomHook } from '../webc/dom-hook';
 import { ElementRegistrar } from '../webc/element-registrar';
 import { ANNOTATIONS as HookAnnotations } from '../webc/hook';
 import { ANNOTATIONS as LIFECYCLE_ANNOTATIONS } from '../webc/on-lifecycle';
+import { Util } from '../webc/util';
 
 
 describe('webc.ElementRegistrar', () => {
@@ -77,8 +77,8 @@ describe('webc.ElementRegistrar', () => {
       mockHTMLElement.attachShadow.and.returnValue(mockShadowRoot);
 
       spyOn(MonadUtil, 'callFunction');
-      spyOn(CustomElementUtil, 'addAttributes');
-      spyOn(CustomElementUtil, 'setElement');
+      spyOn(Util, 'addAttributes');
+      spyOn(Util, 'setElement');
 
       const key1 = 'key1';
       const key2 = 'key2';
@@ -92,8 +92,8 @@ describe('webc.ElementRegistrar', () => {
       assert(MonadUtil.callFunction).to
           .haveBeenCalledWith({type: 'create'}, mockInstance, key2);
       assert(registrar['getMethodsWithLifecycle_']).to.haveBeenCalledWith('create', mockInstance);
-      assert(CustomElementUtil.setElement).to.haveBeenCalledWith(mockInstance, mockHTMLElement);
-      assert(CustomElementUtil.addAttributes).to.haveBeenCalledWith(mockHTMLElement, attributes);
+      assert(Util.setElement).to.haveBeenCalledWith(mockInstance, mockHTMLElement);
+      assert(Util.addAttributes).to.haveBeenCalledWith(mockHTMLElement, attributes);
       assert(mockShadowRoot.innerHTML).to.equal(content);
       assert(mockHTMLElement.attachShadow).to.haveBeenCalledWith({mode: 'open'});
       assert(mockHTMLElement[ElementRegistrar['__instance']]).to.equal(mockInstance);
@@ -197,7 +197,7 @@ describe('webc.ElementRegistrar', () => {
         tag: name,
         templateKey: templateKey,
       };
-      spyOn(CustomElementUtil, 'getConfig').and.returnValue(mockConfig);
+      spyOn(Util, 'getConfig').and.returnValue(mockConfig);
 
       const templateContent = 'templateContent';
       mockTemplates.getTemplate.and.returnValue(templateContent);
@@ -230,7 +230,7 @@ describe('webc.ElementRegistrar', () => {
       spyOn(Log, 'error');
       mockTemplates.getTemplate.and.returnValue(null);
 
-      spyOn(CustomElementUtil, 'getConfig').and.returnValue({
+      spyOn(Util, 'getConfig').and.returnValue({
         dependencies: ImmutableSet.of([]),
         tag: 'name',
         templateKey: 'templateKey',
@@ -247,7 +247,7 @@ describe('webc.ElementRegistrar', () => {
     });
 
     it('should be noop if the ctor has no configs', async () => {
-      spyOn(CustomElementUtil, 'getConfig').and.returnValue(null);
+      spyOn(Util, 'getConfig').and.returnValue(null);
       await registrar.register(ctor);
       assert(mockXtag.register).toNot.haveBeenCalled();
     });

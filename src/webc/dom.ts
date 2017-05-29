@@ -2,7 +2,6 @@ import { monad } from '../event/monad';
 import { MonadFactory } from '../interfaces/monad-factory';
 import { Parser } from '../interfaces/parser';
 import { AttributeBinder } from '../webc/attribute-binder';
-import { CustomElementUtil } from '../webc/custom-element-util';
 import { Util } from '../webc/util';
 
 type AttributeConfig = {name: string, parser: Parser<any>, selector: string | null};
@@ -23,7 +22,7 @@ export class Dom {
   }
 
   private static requireTargetElement_(selector: string | null, instance: Object): Element {
-    const root = CustomElementUtil.getElement(instance);
+    const root = Util.getElement(instance);
     if (!root) {
       throw new Error(`Element not found for ${instance}`);
     }
