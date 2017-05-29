@@ -12,8 +12,8 @@ import { MonadFactory } from '../interfaces/monad-factory';
 type MonadData = {factory: MonadFactory<any>, id: any, index: number};
 
 export class MonadUtil {
-  static async callFunction(
-      event: Event<any>,
+  static async callFunction<E extends Event<any>>(
+      event: E,
       context: any,
       key: string | symbol): Promise<void> {
     const fn = context[key];

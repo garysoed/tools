@@ -111,6 +111,7 @@ describe('webc.AttributeChangeHandler', () => {
   describe('createDecorator', () => {
     it('should add the value to annotations correctly', () => {
       const attributeName = 'attributeName';
+      const parser = Mocks.object('parser');
       const selector = 'selector';
       const ctor = Mocks.object('proto');
       const target = Mocks.object('target');
@@ -122,7 +123,7 @@ describe('webc.AttributeChangeHandler', () => {
           jasmine.createSpyObj('AnnotationsHandler', ['attachValueToProperty']);
       spyOn(ATTR_CHANGE_ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationsHandler);
 
-      const decorator = handler.createDecorator(attributeName, selector);
+      const decorator = handler.createDecorator(attributeName, parser, selector);
       assert(decorator(target, propertyKey, descriptor)).to.equal(descriptor);
       assert(ATTR_CHANGE_ANNOTATIONS.forCtor).to.haveBeenCalledWith(ctor);
       assert(mockAnnotationsHandler.attachValueToProperty).to.haveBeenCalledWith(
@@ -130,6 +131,7 @@ describe('webc.AttributeChangeHandler', () => {
           {
             attributeName: attributeName,
             handlerKey: propertyKey,
+            parser,
             selector: selector,
           });
     });
@@ -164,29 +166,46 @@ describe('webc.AttributeChangeHandler', () => {
       instance[handlerKey1] = mockHandler1;
       instance[handlerKey2] = mockHandler2;
 
+      const parsedValue1 = Mocks.object('parsedValue1');
+      const parsedValue2 = Mocks.object('parsedValue2');
+      const mockParser1 = jasmine.createSpyObj('Parser1', ['parse']);
+      mockParser1.parse.and.returnValue(parsedValue1);
+      const mockParser2 = jasmine.createSpyObj('Parser2', ['parse']);
+      mockParser2.parse.and.returnValue(parsedValue2);
+
       const attributeName1 = 'attributeName1';
       const attributeName2 = 'attributeName2';
       const configs = ImmutableMap.of<string, ImmutableSet<any>>([
-        [attributeName1, ImmutableSet.of([{handlerKey: handlerKey1}])],
-        [attributeName2, ImmutableSet.of([{handlerKey: handlerKey2}])],
-      ]);
+        [
+          attributeName1,
+          ImmutableSet.of([{handlerKey: handlerKey1, parser: mockParser1}])],
+        [
+          attributeName2,
+          ImmutableSet.of([{handlerKey: handlerKey2, parser: mockParser2}])],
+        ]);
 
+      const oldValue1 = Mocks.object('oldValue1');
+      const oldValue2 = Mocks.object('oldValue2');
       const records = ImmutableSet.of<any>(
         [
           {
             attributeName: attributeName1,
+            oldValue: oldValue1,
           },
           {
             attributeName: attributeName2,
+            oldValue: oldValue2,
           },
         ]);
       spyOn(MonadUtil, 'callFunction');
 
       handler['onMutation_'](instance, configs, records);
-      assert(MonadUtil.callFunction).to
-          .haveBeenCalledWith({type: 'gse-attributechanged'}, instance, handlerKey1);
-      assert(MonadUtil.callFunction).to
-          .haveBeenCalledWith({type: 'gse-attributechanged'}, instance, handlerKey2);
+      assert(MonadUtil.callFunction).to.haveBeenCalledWith(
+          {type: 'gse-attributechanged', oldValue: parsedValue1}, instance, handlerKey1);
+      assert(MonadUtil.callFunction).to.haveBeenCalledWith(
+          {type: 'gse-attributechanged', oldValue: parsedValue2}, instance, handlerKey2);
+      assert(mockParser1.parse).to.haveBeenCalledWith(oldValue1);
+      assert(mockParser2.parse).to.haveBeenCalledWith(oldValue2);
     });
 
     it('should not throw error if the record has no attribute names', () => {

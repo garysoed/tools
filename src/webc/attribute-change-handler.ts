@@ -12,6 +12,7 @@ import { IHandler } from '../webc/interfaces';
 export type AttributeChangeHandlerConfig = {
   attributeName: string,
   handlerKey: string | symbol,
+  parser: Parser<any>,
   selector: string | null,
 };
 
@@ -91,6 +92,7 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
    */
   createDecorator(
       attributeName: string,
+      parser: Parser<any>,
       selector: string | null): MethodDecorator {
     return function(
         target: Object,
@@ -101,6 +103,7 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
           {
             attributeName: attributeName,
             handlerKey: propertyKey,
+            parser,
             selector: selector,
           });
       return descriptor;
@@ -146,8 +149,14 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
 
       const matchingConfigs = configs.get(attributeName);
       if (matchingConfigs !== undefined) {
-        for (const {handlerKey} of matchingConfigs) {
-          MonadUtil.callFunction({type: 'gse-attributechanged'}, instance, handlerKey);
+        for (const {handlerKey, parser} of matchingConfigs) {
+          MonadUtil.callFunction(
+            {
+              oldValue: parser.parse(record.oldValue),
+              type: 'gse-attributechanged',
+            },
+            instance,
+            handlerKey);
         }
       }
     }

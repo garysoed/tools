@@ -6,6 +6,7 @@ gs_tools(
     deps = [
       "//src/data",
       "//src/inject",
+      "//src/parse",
       "//src/string",
       "//src/util",
     ])

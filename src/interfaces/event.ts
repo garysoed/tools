@@ -1,3 +1,3 @@
 export type Event<T> = {
-  type: T,
+  type: T;
 };
