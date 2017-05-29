@@ -41,10 +41,8 @@ export class Handler {
    * @param parser Parser to parse the attribute value.
    * @return The method decorator.
    */
-  attributeChange(
-      attributeName: string,
-      parser: Parser<any> | null = null): MethodDecorator {
-    return ATTRIBUTE_CHANGE_HANDLER.createDecorator(attributeName, parser, this.selector_);
+  attributeChange(attributeName: string): MethodDecorator {
+    return ATTRIBUTE_CHANGE_HANDLER.createDecorator(attributeName, this.selector_);
   }
 
   /**

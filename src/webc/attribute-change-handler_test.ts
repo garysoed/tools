@@ -5,8 +5,9 @@ import { DisposableFunction } from '../dispose/disposable-function';
 import { Fakes } from '../mock/fakes';
 import { Mocks } from '../mock/mocks';
 
-import { ImmutableMap } from 'src/immutable/immutable-map';
-import { ImmutableSet } from 'src/immutable/immutable-set';
+import { MonadUtil } from '../event/monad-util';
+import { ImmutableMap } from '../immutable/immutable-map';
+import { ImmutableSet } from '../immutable/immutable-set';
 import {
   ATTR_CHANGE_ANNOTATIONS,
   AttributeChangeHandler,
@@ -19,212 +20,6 @@ describe('webc.AttributeChangeHandler', () => {
 
   beforeEach(() => {
     handler = new AttributeChangeHandler();
-  });
-
-  describe('onMutation_', () => {
-    it('should call the handler correctly', () => {
-      const newValue1 = 'newValue1';
-      const newValue2 = 'newValue2';
-      const oldValue1 = 'oldValue1';
-      const oldValue2 = 'oldValue2';
-      const parsedNewValue1 = 'parsedNewValue1';
-      const parsedOldValue1 = 'parsedOldValue1';
-      const parsedNewValue2 = 'parsedNewValue2';
-      const parsedOldValue2 = 'parsedOldValue2';
-
-      const mockParser = jasmine.createSpyObj('Parser', ['parse']);
-
-      Fakes.build(mockParser.parse)
-          .when(newValue1).return(parsedNewValue1)
-          .when(newValue2).return(parsedNewValue2)
-          .when(oldValue1).return(parsedOldValue1)
-          .when(oldValue2).return(parsedOldValue2);
-
-      const handlerKey1 = 'handlerKey1';
-      const handlerKey2 = 'handlerKey2';
-
-      const mockHandler1 = jasmine.createSpy('Handler1');
-      const mockHandler2 = jasmine.createSpy('Handler2');
-      const instance = Mocks.object('instance');
-      instance[handlerKey1] = mockHandler1;
-      instance[handlerKey2] = mockHandler2;
-
-      const attributeName1 = 'attributeName1';
-      const attributeName2 = 'attributeName2';
-      const configs = ImmutableMap.of<string, ImmutableSet<any>>([
-        [attributeName1, ImmutableSet.of([{handlerKey: handlerKey1, parser: mockParser}])],
-        [attributeName2, ImmutableSet.of([{handlerKey: handlerKey2, parser: mockParser}])],
-      ]);
-
-      const mockTargetEl1 = jasmine.createSpyObj('TargetEl1', ['getAttribute']);
-      mockTargetEl1.getAttribute.and.returnValue(newValue1);
-      Object.setPrototypeOf(mockTargetEl1, Element.prototype);
-      const mockTargetEl2 = jasmine.createSpyObj('TargetEl2', ['getAttribute']);
-      mockTargetEl2.getAttribute.and.returnValue(newValue2);
-      Object.setPrototypeOf(mockTargetEl2, Element.prototype);
-
-      const records = ImmutableSet.of<any>(
-        [
-          {
-            attributeName: attributeName1,
-            oldValue: oldValue1,
-            target: mockTargetEl1,
-          },
-          {
-            attributeName: attributeName2,
-            oldValue: oldValue2,
-            target: mockTargetEl2,
-          },
-        ]);
-
-      handler['onMutation_'](instance, configs, records);
-
-      assert(mockHandler1).to.haveBeenCalledWith(parsedNewValue1, parsedOldValue1);
-      assert(mockHandler2).to.haveBeenCalledWith(parsedNewValue2, parsedOldValue2);
-      assert(mockParser.parse).to.haveBeenCalledWith(newValue1);
-      assert(mockParser.parse).to.haveBeenCalledWith(newValue2);
-      assert(mockParser.parse).to.haveBeenCalledWith(oldValue1);
-      assert(mockParser.parse).to.haveBeenCalledWith(oldValue2);
-      assert(mockTargetEl1.getAttribute).to.haveBeenCalledWith(attributeName1);
-      assert(mockTargetEl2.getAttribute).to.haveBeenCalledWith(attributeName2);
-    });
-
-    it('should call the handler without any values if the parser was not given', () => {
-      const handlerKey = 'handlerKey';
-
-      const mockHandler = jasmine.createSpy('Handler');
-      const instance = Mocks.object('instance');
-      instance[handlerKey] = mockHandler;
-
-      const attributeName = 'attributeName';
-      const configs = ImmutableMap.of<string, ImmutableSet<any>>([
-        [attributeName, ImmutableSet.of([{handlerKey: handlerKey, parser: null}])],
-      ]);
-
-      const records = ImmutableSet.of<any>([{attributeName}]);
-
-      handler['onMutation_'](instance, configs, records);
-
-      assert(mockHandler).to.haveBeenCalledWith();
-    });
-
-    it('should not call the handler if the target node is not Element', () => {
-      const handlerKey = 'handlerKey';
-      const mockHandler = jasmine.createSpy('Handler');
-      const instance = Mocks.object('instance');
-      instance[handlerKey] = mockHandler;
-
-      const attributeName = 'attributeName';
-      const configs = ImmutableMap.of<string, ImmutableSet<any>>([
-        [
-          attributeName,
-          ImmutableSet.of([{handlerKey: handlerKey, parser: Mocks.object('parser')}]),
-        ],
-      ]);
-
-      const mockTargetEl = jasmine.createSpyObj('TargetEl', ['getAttribute']);
-      mockTargetEl.getAttribute.and.returnValue('newValue');
-
-      const records = ImmutableSet.of<any>([
-        {
-          attributeName: attributeName,
-          oldValue: 'oldValue',
-          target: mockTargetEl,
-        },
-      ]);
-
-      handler['onMutation_'](instance, configs, records);
-
-      assert(mockHandler).toNot.haveBeenCalled();
-    });
-
-    it('should not throw error if the handler does not exist', () => {
-      const mockHandler = jasmine.createSpy('Handler');
-      const instance = Mocks.object('instance');
-      instance['otherHandlerKey'] = mockHandler;
-
-      const attributeName = 'attributeName';
-      const configs = ImmutableMap.of<string, ImmutableSet<any>>([
-        [
-          attributeName,
-          ImmutableSet.of([{handlerKey: 'handlerKey', parser: Mocks.object('parser')}]),
-        ],
-      ]);
-
-      const mockTargetEl = jasmine.createSpyObj('TargetEl', ['getAttribute']);
-      mockTargetEl.getAttribute.and.returnValue('newValue');
-
-      const records = ImmutableSet.of<any>([
-        {
-          attributeName: attributeName,
-          oldValue: 'oldValue',
-          target: mockTargetEl,
-        },
-      ]);
-
-      assert(() => {
-        handler['onMutation_'](instance, configs, records);
-      }).toNot.throw();
-      assert(mockHandler).toNot.haveBeenCalled();
-    });
-
-    it('should not throw error if the attribute name is not listened to', () => {
-      const mockHandler = jasmine.createSpy('Handler');
-      const instance = Mocks.object('instance');
-      instance['handlerKey'] = mockHandler;
-
-      const configs = ImmutableMap.of<string, ImmutableSet<any>>([
-        [
-          'otherAttributeName',
-          ImmutableSet.of([{handlerKey: 'handlerKey', parser: Mocks.object('parser')}]),
-        ],
-      ]);
-
-      const mockTargetEl = jasmine.createSpyObj('TargetEl', ['getAttribute']);
-      mockTargetEl.getAttribute.and.returnValue('newValue');
-
-      const records = ImmutableSet.of<any>([
-        {
-          attributeName: 'attributeName',
-          oldValue: 'oldValue',
-          target: mockTargetEl,
-        },
-      ]);
-
-      assert(() => {
-        handler['onMutation_'](instance, configs, records);
-      }).toNot.throw();
-      assert(mockHandler).toNot.haveBeenCalled();
-    });
-
-    it('should not throw error if the record has no attribute names', () => {
-      const mockHandler = jasmine.createSpy('Handler');
-      const instance = Mocks.object('instance');
-      instance['handlerKey'] = mockHandler;
-
-    const configs = ImmutableMap.of<string, ImmutableSet<any>>([
-        [
-          'attributeName',
-          ImmutableSet.of([{handlerKey: 'handlerKey', parser: Mocks.object('parser')}]),
-        ],
-      ]);
-
-      const mockTargetEl = jasmine.createSpyObj('TargetEl', ['getAttribute']);
-      mockTargetEl.getAttribute.and.returnValue('newValue');
-
-      const records = ImmutableSet.of<any>([
-        {
-          attributeName: null,
-          oldValue: 'oldValue',
-          target: mockTargetEl,
-        },
-      ]);
-
-      assert(() => {
-        handler['onMutation_'](instance, configs, records);
-      }).toNot.throw();
-      assert(mockHandler).toNot.haveBeenCalled();
-    });
   });
 
   describe('configure', () => {
@@ -316,7 +111,6 @@ describe('webc.AttributeChangeHandler', () => {
   describe('createDecorator', () => {
     it('should add the value to annotations correctly', () => {
       const attributeName = 'attributeName';
-      const parser = Mocks.object('parser');
       const selector = 'selector';
       const ctor = Mocks.object('proto');
       const target = Mocks.object('target');
@@ -328,7 +122,7 @@ describe('webc.AttributeChangeHandler', () => {
           jasmine.createSpyObj('AnnotationsHandler', ['attachValueToProperty']);
       spyOn(ATTR_CHANGE_ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotationsHandler);
 
-      const decorator = handler.createDecorator(attributeName, parser, selector);
+      const decorator = handler.createDecorator(attributeName, selector);
       assert(decorator(target, propertyKey, descriptor)).to.equal(descriptor);
       assert(ATTR_CHANGE_ANNOTATIONS.forCtor).to.haveBeenCalledWith(ctor);
       assert(mockAnnotationsHandler.attachValueToProperty).to.haveBeenCalledWith(
@@ -336,7 +130,6 @@ describe('webc.AttributeChangeHandler', () => {
           {
             attributeName: attributeName,
             handlerKey: propertyKey,
-            parser: parser,
             selector: selector,
           });
     });
@@ -357,6 +150,72 @@ describe('webc.AttributeChangeHandler', () => {
 
       assert(handler.getConfigs(instance)).to.equal(attachedValues);
       assert(ATTR_CHANGE_ANNOTATIONS.forCtor).to.haveBeenCalledWith(constructor);
+    });
+  });
+
+  describe('onMutation_', () => {
+    it('should call the handler correctly', () => {
+      const handlerKey1 = 'handlerKey1';
+      const handlerKey2 = 'handlerKey2';
+
+      const mockHandler1 = jasmine.createSpy('Handler1');
+      const mockHandler2 = jasmine.createSpy('Handler2');
+      const instance = Mocks.object('instance');
+      instance[handlerKey1] = mockHandler1;
+      instance[handlerKey2] = mockHandler2;
+
+      const attributeName1 = 'attributeName1';
+      const attributeName2 = 'attributeName2';
+      const configs = ImmutableMap.of<string, ImmutableSet<any>>([
+        [attributeName1, ImmutableSet.of([{handlerKey: handlerKey1}])],
+        [attributeName2, ImmutableSet.of([{handlerKey: handlerKey2}])],
+      ]);
+
+      const records = ImmutableSet.of<any>(
+        [
+          {
+            attributeName: attributeName1,
+          },
+          {
+            attributeName: attributeName2,
+          },
+        ]);
+      spyOn(MonadUtil, 'callFunction');
+
+      handler['onMutation_'](instance, configs, records);
+      assert(MonadUtil.callFunction).to
+          .haveBeenCalledWith({type: 'gse-attributechanged'}, instance, handlerKey1);
+      assert(MonadUtil.callFunction).to
+          .haveBeenCalledWith({type: 'gse-attributechanged'}, instance, handlerKey2);
+    });
+
+    it('should not throw error if the record has no attribute names', () => {
+      const mockHandler = jasmine.createSpy('Handler');
+      const instance = Mocks.object('instance');
+      instance['handlerKey'] = mockHandler;
+
+      const configs = ImmutableMap.of<string, ImmutableSet<any>>([
+        [
+          'attributeName',
+          ImmutableSet.of([{handlerKey: 'handlerKey', parser: Mocks.object('parser')}]),
+        ],
+      ]);
+
+      const mockTargetEl = jasmine.createSpyObj('TargetEl', ['getAttribute']);
+      mockTargetEl.getAttribute.and.returnValue('newValue');
+
+      const records = ImmutableSet.of<any>([
+        {
+          attributeName: null,
+          oldValue: 'oldValue',
+          target: mockTargetEl,
+        },
+      ]);
+
+      assert(() => {
+        handler['onMutation_'](instance, configs, records);
+      }).toNot.throw();
+      assert(mockHandler).toNot.haveBeenCalled();
     });
   });
 });

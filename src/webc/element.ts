@@ -121,3 +121,4 @@ Element.getConfig = function(ctor: gs.ICtor<BaseElement>): IElementConfig {
   return ctor[__CONFIG];
 };
 // TODO: Mutable
+// TODO: DELETE

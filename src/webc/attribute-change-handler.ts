@@ -1,6 +1,7 @@
 import { Annotations } from '../data/annotations';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { DisposableFunction } from '../dispose/disposable-function';
+import { MonadUtil } from '../event/monad-util';
 import { ImmutableMap } from '../immutable/immutable-map';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Iterables } from '../immutable/iterables';
@@ -11,7 +12,6 @@ import { IHandler } from '../webc/interfaces';
 export type AttributeChangeHandlerConfig = {
   attributeName: string,
   handlerKey: string | symbol,
-  parser: Parser<any> | null,
   selector: string | null,
 };
 
@@ -85,14 +85,12 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
    * Creates a new decorator.
    *
    * @param attributeName The name of attribute to watch for changes.
-   * @param parser The parser to parse the value of the attribute.
    * @param selector The selector for the element whose attribute changes should be listened to.
    * @return The method decorator. The method take in 2 arguments: the new parsed value of the
    *    attribute and the old parsed value of the attribute.
    */
   createDecorator(
       attributeName: string,
-      parser: Parser<any> | null,
       selector: string | null): MethodDecorator {
     return function(
         target: Object,
@@ -103,7 +101,6 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
           {
             attributeName: attributeName,
             handlerKey: propertyKey,
-            parser: parser,
             selector: selector,
           });
       return descriptor;
@@ -149,20 +146,8 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
 
       const matchingConfigs = configs.get(attributeName);
       if (matchingConfigs !== undefined) {
-        for (const {handlerKey, parser} of matchingConfigs) {
-          const handler = instance[handlerKey];
-          if (!!handler) {
-            if (parser !== null) {
-              const targetNode = record.target;
-              if (targetNode instanceof Element) {
-                const oldValue = parser.parse(record.oldValue);
-                const newValue = parser.parse(targetNode.getAttribute(attributeName));
-                handler.call(instance, newValue, oldValue);
-              }
-            } else {
-              handler.call(instance);
-            }
-          }
+        for (const {handlerKey} of matchingConfigs) {
+          MonadUtil.callFunction({type: 'gse-attributechanged'}, instance, handlerKey);
         }
       }
     }

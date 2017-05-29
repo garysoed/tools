@@ -1,6 +1,8 @@
 import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
+import { MonadUtil } from '../event/monad-util';
+import { ImmutableMap } from '../immutable/immutable-map';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Fakes } from '../mock/fakes';
 import { Mocks } from '../mock/mocks';
@@ -11,6 +13,7 @@ import { CustomElementUtil } from '../webc/custom-element-util';
 import { DomHook } from '../webc/dom-hook';
 import { ElementRegistrar } from '../webc/element-registrar';
 import { ANNOTATIONS as HookAnnotations } from '../webc/hook';
+import { ANNOTATIONS as LIFECYCLE_ANNOTATIONS } from '../webc/on-lifecycle';
 
 
 describe('webc.ElementRegistrar', () => {
@@ -65,87 +68,108 @@ describe('webc.ElementRegistrar', () => {
 
     it('should return config with correct created handler', () => {
       const content = 'content';
-      const mockShadowRoot = Mocks.object('ShadowRoot');
-      const mockHTMLElement = jasmine.createSpyObj('HTMLElement', ['createShadowRoot']);
-      const mockElement = Mocks.disposable('Element');
-      mockElement.onCreated = jasmine.createSpy('onCreated');
-      mockProvider.and.returnValue(mockElement);
-
       const attributes = Mocks.object('attributes');
+      const mockInstance = jasmine.createSpyObj('Instance', ['dispose']);
+      mockProvider.and.returnValue(mockInstance);
 
-      mockHTMLElement.createShadowRoot.and.returnValue(mockShadowRoot);
+      const mockShadowRoot = Mocks.object('ShadowRoot');
+      const mockHTMLElement = jasmine.createSpyObj('HTMLElement', ['attachShadow']);
+      mockHTMLElement.attachShadow.and.returnValue(mockShadowRoot);
 
-      const binder1 = Mocks.object('binder1');
-      const binder2 = Mocks.object('binder2');
-
-      const mockBinderFactory1 = jasmine.createSpy('BinderFactory1').and.returnValue(binder1);
-      const mockBinderFactory2 = jasmine.createSpy('BinderFactory2').and.returnValue(binder2);
-
-      const key1 = 'key1';
-      const mockBridge1 = jasmine.createSpyObj('Bridge1', ['open']);
-      Object.setPrototypeOf(mockBridge1, DomHook.prototype);
-      mockElement[key1] = mockBridge1;
-
-      const key2 = 'key2';
-      const mockBridge2 = jasmine.createSpyObj('Bridge2', ['open']);
-      Object.setPrototypeOf(mockBridge2, DomHook.prototype);
-      mockElement[key2] = mockBridge2;
-
-      const binderMap = new Map();
-      binderMap.set(key1, ImmutableSet.of([mockBinderFactory1]));
-      binderMap.set(key2, ImmutableSet.of([mockBinderFactory2]));
-      const mockBindAnnotations = jasmine.createSpyObj('BindAnnotations', ['getAttachedValues']);
-      mockBindAnnotations.getAttachedValues.and.returnValue(binderMap);
-      spyOn(HookAnnotations, 'forCtor').and.returnValue(mockBindAnnotations);
-
+      spyOn(MonadUtil, 'callFunction');
       spyOn(CustomElementUtil, 'addAttributes');
       spyOn(CustomElementUtil, 'setElement');
+
+      const key1 = 'key1';
+      const key2 = 'key2';
+      spyOn(registrar, 'getMethodsWithLifecycle_').and.returnValue(ImmutableSet.of([key1, key2]));
 
       const lifecycleConfig = registrar['getLifecycleConfig_'](attributes, mockProvider, content);
       lifecycleConfig.created!.call(mockHTMLElement);
 
-      assert(mockHTMLElement[ElementRegistrar['__instance']]).to.equal(mockElement);
-      assert(mockElement.onCreated).to.haveBeenCalledWith(mockHTMLElement);
-      assert(mockShadowRoot.innerHTML).to.equal(content);
+      assert(MonadUtil.callFunction).to
+          .haveBeenCalledWith({type: 'create'}, mockInstance, key1);
+      assert(MonadUtil.callFunction).to
+          .haveBeenCalledWith({type: 'create'}, mockInstance, key2);
+      assert(registrar['getMethodsWithLifecycle_']).to.haveBeenCalledWith('create', mockInstance);
+      assert(CustomElementUtil.setElement).to.haveBeenCalledWith(mockInstance, mockHTMLElement);
       assert(CustomElementUtil.addAttributes).to.haveBeenCalledWith(mockHTMLElement, attributes);
-      assert(CustomElementUtil.setElement).to.haveBeenCalledWith(mockElement, mockHTMLElement);
-      assert(mockBridge1.open).to.haveBeenCalledWith(binder1);
-      assert(mockBridge2.open).to.haveBeenCalledWith(binder2);
-      assert(mockBinderFactory1).to.haveBeenCalledWith(mockHTMLElement, mockElement);
-      assert(mockBinderFactory2).to.haveBeenCalledWith(mockHTMLElement, mockElement);
-      assert(HookAnnotations.forCtor).to.haveBeenCalledWith(mockElement.constructor);
+      assert(mockShadowRoot.innerHTML).to.equal(content);
+      assert(mockHTMLElement.attachShadow).to.haveBeenCalledWith({mode: 'open'});
+      assert(mockHTMLElement[ElementRegistrar['__instance']]).to.equal(mockInstance);
     });
 
     it('should return config with correct inserted handler', () => {
-      const mockHtmlElement = Mocks.object('HTMLElement');
-      const mockElement = jasmine.createSpyObj('Component', ['onInserted']);
+      const instance = Mocks.object('instance');
+      const mockHTMLElement = Mocks.object('HTMLElement');
 
-      const runOnInstanceSpy = spyOn(ElementRegistrar, 'runOnInstance_');
+      Fakes.build(spyOn(ElementRegistrar, 'runOnInstance_'))
+          .call((registrar: any, callback: Function) => callback(instance));
+      const key1 = 'key1';
+      const key2 = 'key2';
+      spyOn(registrar, 'getMethodsWithLifecycle_').and.returnValue(ImmutableSet.of([key1, key2]));
+
+      spyOn(MonadUtil, 'callFunction');
 
       const lifecycleConfig = registrar['getLifecycleConfig_']({}, mockProvider, 'content');
-      lifecycleConfig.inserted!.call(mockHtmlElement);
+      lifecycleConfig.inserted!.call(mockHTMLElement);
 
       assert(ElementRegistrar['runOnInstance_'])
-          .to.haveBeenCalledWith(mockHtmlElement, Matchers.any(Function) as any);
+          .to.haveBeenCalledWith(mockHTMLElement, jasmine.any(Function) as any);
 
-      runOnInstanceSpy.calls.argsFor(0)[1](mockElement);
-      assert(mockElement.onInserted).to.haveBeenCalledWith(mockHtmlElement);
+      assert(MonadUtil.callFunction).to
+          .haveBeenCalledWith({type: 'insert'}, instance, key1);
+      assert(MonadUtil.callFunction).to
+          .haveBeenCalledWith({type: 'insert'}, instance, key2);
+      assert(registrar['getMethodsWithLifecycle_']).to.haveBeenCalledWith('insert', instance);
     });
 
     it('should return config with correct removed handler', () => {
-      const mockHtmlElement = Mocks.object('HTMLElement');
-      const mockElement = jasmine.createSpyObj('Element', ['onRemoved']);
+      const instance = Mocks.object('instance');
+      const mockHTMLElement = Mocks.object('HTMLElement');
 
-      const runOnInstanceSpy = spyOn(ElementRegistrar, 'runOnInstance_');
+      Fakes.build(spyOn(ElementRegistrar, 'runOnInstance_'))
+          .call((registrar: any, callback: Function) => callback(instance));
+      const key1 = 'key1';
+      const key2 = 'key2';
+      spyOn(registrar, 'getMethodsWithLifecycle_').and.returnValue(ImmutableSet.of([key1, key2]));
+
+      spyOn(MonadUtil, 'callFunction');
 
       const lifecycleConfig = registrar['getLifecycleConfig_']({}, mockProvider, 'content');
-      lifecycleConfig.removed!.call(mockHtmlElement);
+      lifecycleConfig.removed!.call(mockHTMLElement);
 
       assert(ElementRegistrar['runOnInstance_'])
-          .to.haveBeenCalledWith(mockHtmlElement, Matchers.any(Function) as any);
+          .to.haveBeenCalledWith(mockHTMLElement, jasmine.any(Function) as any);
 
-      runOnInstanceSpy.calls.argsFor(0)[1](mockElement);
-      assert(mockElement.onRemoved).to.haveBeenCalledWith(mockHtmlElement);
+      assert(MonadUtil.callFunction).to
+          .haveBeenCalledWith({type: 'remove'}, instance, key1);
+      assert(MonadUtil.callFunction).to
+          .haveBeenCalledWith({type: 'remove'}, instance, key2);
+      assert(registrar['getMethodsWithLifecycle_']).to.haveBeenCalledWith('remove', instance);
+    });
+  });
+
+  describe('getMethodsWithLifecycle_', () => {
+    it('should return the correct methods', () => {
+      class TestClass { }
+      const instance = new TestClass();
+      const lifecycle = 'insert';
+
+      const mockLifecycleAnnotations = jasmine
+          .createSpyObj('LifecycleAnnotations', ['getAttachedValues']);
+      const method1 = 'method1';
+      const method2 = 'method2';
+      mockLifecycleAnnotations.getAttachedValues.and.returnValue(ImmutableMap.of([
+        [method1, ImmutableSet.of([lifecycle, 'create'])],
+        [method2, ImmutableSet.of([lifecycle])],
+        ['method3', ImmutableSet.of(['remove'])],
+      ]));
+      spyOn(LIFECYCLE_ANNOTATIONS, 'forCtor').and.returnValue(mockLifecycleAnnotations);
+
+      assert(registrar['getMethodsWithLifecycle_'](lifecycle, instance))
+          .to.haveElements([method1, method2]);
+      assert(LIFECYCLE_ANNOTATIONS.forCtor).to.haveBeenCalledWith(TestClass);
     });
   });
 

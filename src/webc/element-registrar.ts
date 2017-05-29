@@ -1,5 +1,6 @@
 import { InstanceofType } from '../check/instanceof-type';
 import { BaseDisposable } from '../dispose/base-disposable';
+import { MonadUtil } from '../event/monad-util';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Iterables } from '../immutable/iterables';
 import { Injector } from '../inject/injector';
@@ -12,6 +13,7 @@ import { DomHook } from '../webc/dom-hook';
 import { Handler } from '../webc/handle';
 import { ANNOTATIONS as HookAnnotations, BinderFactory as HookBinderFactory } from '../webc/hook';
 import { DomBinder } from '../webc/interfaces';
+import { ANNOTATIONS as LIFECYCLE_ANNOTATIONS } from '../webc/on-lifecycle';
 import { Templates } from '../webc/templates';
 
 
@@ -39,14 +41,41 @@ export class ElementRegistrar extends BaseDisposable {
     super();
   }
 
+  private configureLegacy_(instance: BaseElement, xtagContext: HTMLElement): void {
+    const instancePrototype = instance.constructor;
+    for (const [key, factories] of
+        HookAnnotations.forCtor(instancePrototype).getAttachedValues()) {
+      if (factories.size() > 1) {
+        throw new Error(`Key ${key} can only have 1 Bind annotation`);
+      }
+      const factory = Iterables.toArray(factories)[0];
+      if (factory === null) {
+        return;
+      }
+
+      const hook = instance[key];
+      if (!(hook instanceof DomHook)) {
+        throw new Error(`Key ${key} should be an instance of DomHook`);
+      }
+      hook.open(factory(xtagContext, instance));
+    }
+
+    instance.onCreated(xtagContext);
+    Handler.configure(xtagContext, instance);
+  }
+
   private getLifecycleConfig_(
       attributes: {[name: string]: Parser<any>},
-      elementProvider: () => BaseElement,
+      elementProvider: () => BaseDisposable,
       content: string): xtag.ILifecycleConfig {
-    const addDisposable = this.addDisposable.bind(this);
+    const registrar = this;
     // TODO: Log error for every one of these methods.
     return {
-      attributeChanged: function(attrName: string, oldValue: string, newValue: string): void {
+      attributeChanged: function(
+          this: HTMLElement,
+          attrName: string,
+          oldValue: string,
+          newValue: string): void {
         const propertyName = Cases.of(attrName).toCamelCase();
         if (attributes[propertyName]) {
           this[propertyName] = attributes[propertyName].parse(newValue);
@@ -55,49 +84,62 @@ export class ElementRegistrar extends BaseDisposable {
           element.onAttributeChanged(attrName, oldValue, newValue);
         });
       },
-      created: function(): void {
+      created: function(this: HTMLElement): void {
         const instance = elementProvider();
-        addDisposable(instance);
+        registrar.addDisposable(instance);
 
         this[ElementRegistrar.__instance] = instance;
-        const shadow = this.createShadowRoot();
+        const shadow = this.attachShadow({mode: 'open'});
         shadow.innerHTML = content;
 
         CustomElementUtil.addAttributes(this, attributes);
         CustomElementUtil.setElement(instance, this);
 
-        const instancePrototype = instance.constructor;
-        for (const [key, factories] of
-            HookAnnotations.forCtor(instancePrototype).getAttachedValues()) {
-          if (factories.size() > 1) {
-            throw new Error(`Key ${key} can only have 1 Bind annotation`);
+        if (instance instanceof BaseElement) {
+          registrar.configureLegacy_(instance, this);
+        } else {
+          for (const key of registrar.getMethodsWithLifecycle_('create', instance)) {
+            MonadUtil.callFunction({type: 'create'}, instance, key);
           }
-          const factory = Iterables.toArray(factories)[0];
-          if (factory === null) {
-            return;
-          }
-
-          const hook = instance[key];
-          if (!(hook instanceof DomHook)) {
-            throw new Error(`Key ${key} should be an instance of DomHook`);
-          }
-          hook.open(factory(this, instance));
         }
-
-        instance.onCreated(this);
-        Handler.configure(this, instance);
       },
-      inserted: function(): void {
-        ElementRegistrar.runOnInstance_(this, (element: BaseElement) => {
-          element.onInserted(this);
+      inserted: function(this: HTMLElement): void {
+        ElementRegistrar.runOnInstance_(this, (instance: BaseDisposable) => {
+          if (instance instanceof BaseElement) {
+            instance.onInserted(this);
+          } else {
+            for (const key of registrar.getMethodsWithLifecycle_('insert', instance)) {
+              MonadUtil.callFunction({type: 'insert'}, instance, key);
+            }
+          }
         });
       },
-      removed: function(): void {
-        ElementRegistrar.runOnInstance_(this, (element: BaseElement) => {
-          element.onRemoved(this);
+      removed: function(this: HTMLElement): void {
+        ElementRegistrar.runOnInstance_(this, (instance: BaseDisposable) => {
+          if (instance instanceof BaseElement) {
+            instance.onRemoved(this);
+          } else {
+            for (const key of registrar.getMethodsWithLifecycle_('remove', instance)) {
+              MonadUtil.callFunction({type: 'remove'}, instance, key);
+            }
+          }
         });
       },
     };
+  }
+
+  private getMethodsWithLifecycle_(
+      lifecycle: 'create' | 'insert' | 'remove',
+      instance: Object): ImmutableSet<symbol | string> {
+    return LIFECYCLE_ANNOTATIONS
+        .forCtor(instance.constructor)
+        .getAttachedValues()
+        .filter((
+            annotations: ImmutableSet<'create' | 'insert' | 'remove'>,
+            key: string | symbol) => {
+          return annotations.has(lifecycle);
+        })
+        .keys();
   }
 
   /**

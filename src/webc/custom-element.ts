@@ -1,3 +1,4 @@
+import { BaseDisposable } from '../dispose/base-disposable';
 import { BaseElement } from '../webc/base-element';
 import { CustomElementUtil } from '../webc/custom-element-util';
 import { IElementConfig } from '../webc/interfaces';
@@ -21,7 +22,7 @@ import { IElementConfig } from '../webc/interfaces';
  * import bootstrap from './game/bootstrap';
  * import Element from './util/a-element';
  *
- * \@Element({
+ * \@customElement({
  *   tag: 'custom-element',
  *   templateUrl: 'custom-element.html'
  * })
@@ -48,8 +49,8 @@ import { IElementConfig } from '../webc/interfaces';
  */
 export function customElement(config: IElementConfig): ClassDecorator {
   return function<C extends gs.ICtor<any>>(ctor: C): void {
-    if (!(ctor.prototype instanceof BaseElement)) {
-      throw new Error(`${ctor} needs to extend BaseElement`);
+    if (!(ctor.prototype instanceof BaseDisposable)) {
+      throw new Error(`${ctor} needs to extend BaseDisposable`);
     }
 
     if (config.tag === '') {
@@ -62,4 +63,3 @@ export function customElement(config: IElementConfig): ClassDecorator {
     CustomElementUtil.setConfig(ctor, config);
   };
 }
-// TODO: Mutable

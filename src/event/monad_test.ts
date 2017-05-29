@@ -9,11 +9,12 @@ class TestClass { }
 
 describe('event.Monad', () => {
   it('should add the annotation correctly', () => {
+    const id = Mocks.object('id');
     const factory = Mocks.object('factory');
     const method = 'method';
     const index = 3;
-    monad(factory)(TestClass.prototype, method, index);
+    monad(factory, id)(TestClass.prototype, method, index);
     assert(ANNOTATIONS.forCtor(TestClass).getAttachedValues().get(method)!)
-        .to.haveElements([{factory, index}]);
+        .to.haveElements([{factory, id, index}]);
   });
 });

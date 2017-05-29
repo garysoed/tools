@@ -1,3 +1,4 @@
+import { Monad } from '../interfaces/monad';
 import { Parser } from '../interfaces/parser';
 import { DomBinder } from '../webc/interfaces';
 
@@ -5,7 +6,7 @@ import { DomBinder } from '../webc/interfaces';
 /**
  * Binds to an attribute in the DOM.
  */
-export class AttributeBinder<T> implements DomBinder<T> {
+export class AttributeBinder<T> implements DomBinder<T>, Monad<T | null> {
   private readonly attributeName_: string;
   private readonly element_: Element;
   private readonly parser_: Parser<T>;

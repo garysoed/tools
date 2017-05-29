@@ -1,11 +1,10 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
+import { BaseDisposable } from '../dispose/base-disposable';
 import { Mocks } from '../mock/mocks';
-
-import { BaseElement } from './base-element';
-import { customElement } from './custom-element';
-import { CustomElementUtil } from './custom-element-util';
+import { customElement } from '../webc/custom-element';
+import { CustomElementUtil } from '../webc/custom-element-util';
 
 
 describe('webc.customElement', () => {
@@ -17,7 +16,7 @@ describe('webc.customElement', () => {
   });
 
   it('should bind the constructor correctly', () => {
-    class TestElement extends BaseElement { }
+    class TestElement extends BaseDisposable { }
 
     const config = {tag: 'tag', templateKey: 'templateKey'};
     spyOn(CustomElementUtil, 'setConfig');
@@ -26,16 +25,16 @@ describe('webc.customElement', () => {
     assert(CustomElementUtil.setConfig).to.haveBeenCalledWith(TestElement, config);
   });
 
-  it('should throw exception if the constructor does not extend BaseElement', () => {
+  it('should throw exception if the constructor does not extend BaseDisposable', () => {
     class TestElement { }
 
     assert(() => {
       customElement({tag: 'tag', templateKey: 'templateKey'})(TestElement);
-    }).to.throwError(/extend BaseElement/);
+    }).to.throwError(/extend BaseDisposable/);
   });
 
   it('should throw error if the tag name is empty', () => {
-    class TestElement extends BaseElement { }
+    class TestElement extends BaseDisposable { }
 
     assert(() => {
       customElement({tag: '', templateKey: 'templateKey'})(TestElement);
@@ -43,7 +42,7 @@ describe('webc.customElement', () => {
   });
 
   it('should throw error if the template URL is empty', () => {
-    class TestElement extends BaseElement { }
+    class TestElement extends BaseDisposable { }
 
     assert(() => {
       customElement({tag: 'tag', templateKey: ''})(TestElement);

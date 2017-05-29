@@ -9,3 +9,5 @@ export { ElementRegistrar } from './webc/element-registrar';
 export { handle } from './webc/handle';
 export { DomBinder } from './webc/interfaces';
 export { Templates } from './webc/templates';
+export { onDom } from './webc/on-dom';
+export { dom } from './webc/dom';
