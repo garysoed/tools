@@ -1,10 +1,13 @@
 import { Annotations } from '../data/annotations';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { ListenableDom } from '../event/listenable-dom';
+import { MonadUtil } from '../event/monad-util';
 import { ImmutableMap } from '../immutable/immutable-map';
 import { ImmutableSet } from '../immutable/immutable-set';
+import { Log } from '../util/log';
 import { IHandler } from '../webc/interfaces';
 
+const LOG = Log.of('webc.EventHandler');
 
 export type EventHandlerConfig = {
   boundArgs: any[],
@@ -30,10 +33,21 @@ export class EventHandler implements IHandler<EventHandlerConfig> {
     const listenable = ListenableDom.of(targetEl);
     instance.addDisposable(listenable);
 
-    for (const config of configs) {
+    for (const {boundArgs, event, handlerKey} of configs) {
+      if (boundArgs.length > 0) {
+        Log.warn(LOG, `Deprecated use of boundArgs detected`);
+        Log.trace(LOG);
+      }
       instance.addDisposable(listenable.on(
-          config.event,
-          instance[config.handlerKey].bind(instance, ...config.boundArgs),
+          event,
+          () => {
+            MonadUtil.callFunction(
+              {
+                type: event,
+              },
+              instance,
+              handlerKey);
+          },
           instance));
     }
   }

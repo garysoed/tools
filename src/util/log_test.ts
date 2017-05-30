@@ -69,6 +69,22 @@ describe('util.Log', () => {
     });
   });
 
+  describe('trace', () => {
+    it('should call console.trace', () => {
+      spyOn(console, 'trace');
+
+      const log = new Log('namespace');
+      const spy = spyOn(log, 'callIfEnabled_');
+
+      Log.trace(log);
+
+      assert(log['callIfEnabled_']).to.haveBeenCalledWith(Matchers.any(Function) as any, '');
+
+      spy.calls.argsFor(0)[0]();
+      assert(console.trace).to.haveBeenCalledWith();
+    });
+  });
+
   describe('warn', () => {
     it('should call console.warn', () => {
       const message = 'message';

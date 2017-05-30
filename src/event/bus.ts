@@ -1,4 +1,6 @@
-import { DisposableFunction } from '../dispose/disposable-function';
+import { BaseDisposable } from '../dispose/base-disposable';
+import { DisposableFunction as DisposableFunctionImpl } from '../dispose/disposable-function';
+import { DisposableFunction } from '../interfaces/disposable-function';
 import { Event } from '../interfaces/event';
 import { Log } from '../util/log';
 
@@ -7,11 +9,13 @@ type Callback<T, E extends Event<T>> = (event: E) => void;
 /**
  * Represents an evvent bus.
  */
-export class Bus<T, E extends Event<T>> {
+export class Bus<T, E extends Event<T>> extends BaseDisposable {
   private readonly bubbleCallbacksMap_: Map<T, Callback<T, E>[]> = new Map();
   private readonly captureCallbacksMap_: Map<T, Callback<T, E>[]> = new Map();
 
-  constructor(private readonly log_: Log) { }
+  constructor(private readonly log_: Log) {
+    super();
+  }
 
   dispatch(event: E): undefined;
   dispatch<R>(event: E, callback: () => R): R;
@@ -65,7 +69,7 @@ export class Bus<T, E extends Event<T>> {
     } else {
       callbacks.push(boundCallback);
     }
-    return new DisposableFunction(() => {
+    return new DisposableFunctionImpl(() => {
       const callbacks = map.get(eventType);
       if (callbacks === undefined) {
         return;

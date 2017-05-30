@@ -2,6 +2,7 @@ import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
 import { ListenableDom } from '../event/listenable-dom';
+import { MonadUtil } from '../event/monad-util';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Mocks } from '../mock/mocks';
 import { TestDispose } from '../testing/test-dispose';
@@ -26,7 +27,6 @@ describe('web.EventHandler', () => {
 
       const event1 = 'event1';
       const key1 = 'key1';
-      const handler1 = jasmine.createSpy('handler1');
       const config1 = Mocks.object('config1');
       const boundArgs1 = 'args1';
       config1['event'] = event1;
@@ -35,7 +35,6 @@ describe('web.EventHandler', () => {
 
       const event2 = 'event2';
       const key2 = 'key2';
-      const handler2 = jasmine.createSpy('handler2');
       const config2 = Mocks.object('config2');
       const boundArgs2 = 'args2';
       config2['event'] = event2;
@@ -43,9 +42,9 @@ describe('web.EventHandler', () => {
       config2['boundArgs'] = [boundArgs2];
 
       const mockInstance = Mocks.disposable('instance');
-      mockInstance[key1] = handler1;
-      mockInstance[key2] = handler2;
       TestDispose.add(mockInstance);
+
+      spyOn(MonadUtil, 'callFunction');
 
       handler.configure(targetEl, mockInstance, ImmutableSet.of<any>([config1, config2]));
 
@@ -55,10 +54,10 @@ describe('web.EventHandler', () => {
           .to.haveBeenCalledWith(event2, Matchers.any(Function), mockInstance);
 
       mockListenableDom.on.calls.argsFor(0)[1]();
-      assert(handler1).to.haveBeenCalledWith(boundArgs1);
+      assert(MonadUtil.callFunction).to.haveBeenCalledWith({type: event1}, mockInstance, key1);
 
       mockListenableDom.on.calls.argsFor(1)[1]();
-      assert(handler2).to.haveBeenCalledWith(boundArgs2);
+      assert(MonadUtil.callFunction).to.haveBeenCalledWith({type: event2}, mockInstance, key2);
     });
   });
 

@@ -12,6 +12,7 @@ describe('event.Bus', () => {
 
   beforeEach(() => {
     bus = new Bus<any, any>(Log.of('event.TestBus'));
+    TestDispose.add(bus);
   });
 
   describe('dispatch', () => {

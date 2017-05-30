@@ -89,6 +89,10 @@ export class Log {
     Log.ENABLED_ = enabled;
   }
 
+  static trace(log: Log): void {
+    log.callIfEnabled_(console.trace.bind(console), '');
+  }
+
   /**
    * Logs warning message.
    *
