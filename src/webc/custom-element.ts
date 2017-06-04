@@ -1,4 +1,5 @@
 import { BaseDisposable } from '../dispose/base-disposable';
+import { listener } from '../event/listener';
 import { BaseElement } from '../webc/base-element';
 import { IElementConfig } from '../webc/interfaces';
 import { Util } from '../webc/util';
@@ -61,5 +62,6 @@ export function customElement(config: IElementConfig): ClassDecorator {
       throw new Error(`Configuration for ${ctor.name} should have a non empty template key`);
     }
     Util.setConfig(ctor, config);
+    listener()(ctor);
   };
 }

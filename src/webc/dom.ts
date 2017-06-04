@@ -1,13 +1,15 @@
 import { monad } from '../event/monad';
+import { AttributeConfig } from '../interfaces/attribute-config';
+import { ElementConfig } from '../interfaces/element-config';
 import { MonadFactory } from '../interfaces/monad-factory';
 import { Parser } from '../interfaces/parser';
 import { AttributeBinder } from '../webc/attribute-binder';
+import { ElementBinder } from '../webc/element-binder';
 import { Util } from '../webc/util';
 
-type AttributeConfig = {name: string, parser: Parser<any>, selector: string | null};
 
 export class Dom {
-  static attribute(config: AttributeConfig): ParameterDecorator {
+  static attribute(config: AttributeConfig<any>): ParameterDecorator {
     return Dom.createMonad_(
         (instance: Object) => {
           const {name: attributeName, parser, selector} = config;
@@ -19,6 +21,16 @@ export class Dom {
 
   private static createMonad_(factory: MonadFactory<any>, id: any): ParameterDecorator {
     return monad(factory, id);
+  }
+
+  static element(config: ElementConfig): ParameterDecorator {
+    return Dom.createMonad_(
+        (instance: Object) => {
+          const {selector} = config;
+          const targetElement = Dom.requireTargetElement_(selector, instance);
+          return ElementBinder.of(targetElement);
+        },
+        config);
   }
 
   private static requireTargetElement_(selector: string | null, instance: Object): Element {

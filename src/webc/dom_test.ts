@@ -5,6 +5,7 @@ import { Matchers } from '../jasmine/matchers';
 import { Mocks } from '../mock/mocks';
 import { AttributeBinder } from '../webc/attribute-binder';
 import { Dom } from '../webc/dom';
+import { ElementBinder } from '../webc/element-binder';
 import { Util } from '../webc/util';
 
 
@@ -35,6 +36,30 @@ describe('webc.Dom', () => {
       const instance = Mocks.object('instance');
       assert(createMonadSpy.calls.argsFor(0)[0](instance)).to.equal(binder);
       assert(AttributeBinder.of).to.haveBeenCalledWith(target, attributeName, parser);
+      assert(Dom['requireTargetElement_']).to.haveBeenCalledWith(selector, instance);
+    });
+  });
+
+  describe('element', () => {
+    it('should create the monad correctly', () => {
+      const selector = 'selector';
+      const config = {selector};
+
+      const monad = Mocks.object('monad');
+      const createMonadSpy = spyOn(Dom, 'createMonad_').and.returnValue(monad);
+
+      const binder = Mocks.object('binder');
+      spyOn(ElementBinder, 'of').and.returnValue(binder);
+
+      const target = Mocks.object('target');
+      spyOn(Dom, 'requireTargetElement_').and.returnValue(target);
+
+      assert(Dom.element(config)).to.equal(monad);
+      assert(Dom['createMonad_']).to.haveBeenCalledWith(Matchers.any(Function) as any, config);
+
+      const instance = Mocks.object('instance');
+      assert(createMonadSpy.calls.argsFor(0)[0](instance)).to.equal(binder);
+      assert(ElementBinder.of).to.haveBeenCalledWith(target);
       assert(Dom['requireTargetElement_']).to.haveBeenCalledWith(selector, instance);
     });
   });
