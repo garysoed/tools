@@ -3,11 +3,14 @@ import { Bus } from '../event/bus';
 import { event } from '../event/event';
 import { listener } from '../event/listener';
 import { monad } from '../event/monad';
+import { monadOut } from '../event/monad-out';
 import { on } from '../event/on';
 import { SimpleMonad } from '../event/simple-monad';
 import { ImmutableMap } from '../immutable/immutable-map';
 import { MonadFactory } from '../interfaces/monad-factory';
-import { assert, TestBase } from '../test-base';
+import { MonadSetter } from '../interfaces/monad-setter';
+import { Fakes } from '../mock/fakes';
+import { assert, Matchers, TestBase } from '../test-base';
 import { TestDispose } from '../testing/test-dispose';
 import { Log } from '../util/log';
 
@@ -52,8 +55,10 @@ class TestClass extends BaseDisposable {
   }
 
   @on(TEST_EVENT_BUS, 'eventB')
-  onMonad(@monad(TEST_MONAD_FACTORY) value: number): ImmutableMap<MonadFactory<any>, any> {
-    return this.spy_.onMonad(value);
+  onMonad(
+      @monadOut(TEST_MONAD_FACTORY) {id, value}: MonadSetter<number>):
+      ImmutableMap<MonadFactory<any>, any> {
+    return this.spy_.onMonad(id, value);
   }
 }
 
@@ -83,13 +88,14 @@ describe('event functional test', () => {
 
   it('should process the monad correctly', () => {
     const newValue = 123;
-    mockSpy.onMonad.and.returnValue(ImmutableMap.of([[TEST_MONAD_FACTORY, newValue]]));
+    Fakes.build(mockSpy.onMonad)
+        .call((id: any, value: any) => ImmutableMap.of([[id, newValue]]));
 
     const event: TestEventB = {payload: 123, type: 'eventB'};
     TEST_EVENT_BUS.dispatch(event);
-    assert(mockSpy.onMonad).to.haveBeenCalledWith(1);
+    assert(mockSpy.onMonad).to.haveBeenCalledWith(Matchers.anyThing(), 1);
 
     TEST_EVENT_BUS.dispatch(event);
-    assert(mockSpy.onMonad).to.haveBeenCalledWith(newValue);
+    assert(mockSpy.onMonad).to.haveBeenCalledWith(Matchers.anyThing(), newValue);
   });
 });

@@ -31,7 +31,7 @@ describe('webc.Dom', () => {
       spyOn(Dom, 'requireTargetElement_').and.returnValue(target);
 
       assert(Dom.attribute(config)).to.equal(monad);
-      assert(Dom['createMonad_']).to.haveBeenCalledWith(Matchers.any(Function) as any, config);
+      assert(Dom['createMonad_']).to.haveBeenCalledWith(Matchers.any(Function) as any);
 
       const instance = Mocks.object('instance');
       assert(createMonadSpy.calls.argsFor(0)[0](instance)).to.equal(binder);
@@ -55,7 +55,7 @@ describe('webc.Dom', () => {
       spyOn(Dom, 'requireTargetElement_').and.returnValue(target);
 
       assert(Dom.element(config)).to.equal(monad);
-      assert(Dom['createMonad_']).to.haveBeenCalledWith(Matchers.any(Function) as any, config);
+      assert(Dom['createMonad_']).to.haveBeenCalledWith(Matchers.any(Function) as any);
 
       const instance = Mocks.object('instance');
       assert(createMonadSpy.calls.argsFor(0)[0](instance)).to.equal(binder);

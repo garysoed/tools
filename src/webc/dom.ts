@@ -15,12 +15,11 @@ export class Dom {
           const {name: attributeName, parser, selector} = config;
           const targetElement = Dom.requireTargetElement_(selector, instance);
           return AttributeBinder.of(targetElement, attributeName, parser);
-        },
-        config);
+        });
   }
 
-  private static createMonad_(factory: MonadFactory<any>, id: any): ParameterDecorator {
-    return monad(factory, id);
+  private static createMonad_(factory: MonadFactory<any>): ParameterDecorator {
+    return monad(factory);
   }
 
   static element(config: ElementConfig): ParameterDecorator {
@@ -29,8 +28,7 @@ export class Dom {
           const {selector} = config;
           const targetElement = Dom.requireTargetElement_(selector, instance);
           return ElementBinder.of(targetElement);
-        },
-        config);
+        });
   }
 
   private static requireTargetElement_(selector: string | null, instance: Object): Element {

@@ -9,20 +9,22 @@ import { Event } from '../interfaces/event';
 import { Monad as MonadType } from '../interfaces/monad';
 import { MonadFactory } from '../interfaces/monad-factory';
 
-type MonadData = {factory: MonadFactory<any>, id: any, index: number};
+type MonadData = {factory: MonadFactory<any>, index: number, setter: boolean};
 
 export class MonadUtil {
   static async callFunction<E extends Event<any>>(
       event: E,
       context: any,
       key: string | symbol): Promise<void> {
+    let id = 0;
     const fn = context[key];
     const {monadData, eventIndexes} = MonadUtil.getMonadData_(context, key);
     const monadDataMap = ImmutableMap
         .of(monadData
-            .mapItem(({id, index, factory}: MonadData) => {
-              return [index, [factory(context), factory, id, factory]] as
-                  [number, [MonadType<any>, MonadFactory<any>, any]];
+            .mapItem(({index, factory, setter}: MonadData) => {
+              id++;
+              return [index, [factory(context), factory, id, setter]] as
+                  [number, [MonadType<any>, MonadFactory<any>, number, boolean]];
             }));
 
     const args = ImmutableList
@@ -36,8 +38,9 @@ export class MonadUtil {
             throw new Error(`No factories found for ${index}`);
           }
 
-          const [monad] = data;
-          return monad.get();
+          const [monad, factory, id, setter] = data;
+          const value = monad.get();
+          return setter ? {id, value} : value;
         })
         .toArray();
 

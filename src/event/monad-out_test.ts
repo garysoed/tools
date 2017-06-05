@@ -1,20 +1,21 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import { ANNOTATIONS, monad } from '../event/monad';
+import { ANNOTATIONS } from '../event/monad';
+import { monadOut } from '../event/monad-out';
 import { Mocks } from '../mock/mocks';
 
 
 class TestClass { }
 
-describe('event.Monad', () => {
+describe('event.monadOut', () => {
   it('should add the annotation correctly', () => {
     const id = Mocks.object('id');
     const factory = Mocks.object('factory');
     const method = 'method';
     const index = 3;
-    monad(factory)(TestClass.prototype, method, index);
+    monadOut(factory)(TestClass.prototype, method, index);
     assert(ANNOTATIONS.forCtor(TestClass).getAttachedValues().get(method)!)
-        .to.haveElements([{factory, index, setter: false}]);
+        .to.haveElements([{factory, index, setter: true}]);
   });
 });
