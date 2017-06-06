@@ -29,7 +29,7 @@ const LOG = new Log('gs.webc.ElementRegistrar');
 export class ElementRegistrar extends BaseDisposable {
   private static __instance: symbol = Symbol('instance');
 
-  private registeredCtors_: Set<gs.ICtor<BaseElement>> = new Set();
+  private registeredCtors_: Set<gs.ICtor<BaseDisposable>> = new Set();
 
   /**
    * @hidden
@@ -80,8 +80,10 @@ export class ElementRegistrar extends BaseDisposable {
         if (attributes[propertyName]) {
           this[propertyName] = attributes[propertyName].parse(newValue);
         }
-        ElementRegistrar.runOnInstance_(this, (element: BaseElement) => {
-          element.onAttributeChanged(attrName, oldValue, newValue);
+        ElementRegistrar.runOnInstance_(this, (element: BaseDisposable) => {
+          if (element instanceof BaseElement) {
+            element.onAttributeChanged(attrName, oldValue, newValue);
+          }
         });
       },
       created: function(this: HTMLElement): void {
@@ -92,15 +94,16 @@ export class ElementRegistrar extends BaseDisposable {
         const shadow = this.attachShadow({mode: 'open'});
         shadow.innerHTML = content;
 
-        Util.addAttributes(this, attributes);
         Util.setElement(instance, this);
 
         if (instance instanceof BaseElement) {
+          Util.addAttributes(this, attributes);
           registrar.configureLegacy_(instance, this);
         } else {
           for (const key of registrar.getMethodsWithLifecycle_('create', instance)) {
             MonadUtil.callFunction({type: 'create'}, instance, key);
           }
+          Handler.configure(this, instance);
         }
       },
       inserted: function(this: HTMLElement): void {
@@ -147,7 +150,7 @@ export class ElementRegistrar extends BaseDisposable {
    * @param config The configuration object to register.
    * @return Promise that will be resolved when the registration process is done.
    */
-  async register(ctor: gs.ICtor<BaseElement>): Promise<void> {
+  async register(ctor: gs.ICtor<BaseDisposable>): Promise<void> {
     const config = Util.getConfig(ctor);
     if (!config) {
       return Promise.resolve();
@@ -203,9 +206,9 @@ export class ElementRegistrar extends BaseDisposable {
    * @param el The element containing the instance to run the function on.
    * @param callback The function to run on the instance.
    */
-  private static runOnInstance_(el: any, callback: (component: BaseElement) => void): any {
+  private static runOnInstance_(el: any, callback: (component: BaseDisposable) => void): any {
     const instance = el[ElementRegistrar.__instance];
-    if (InstanceofType(BaseElement).check(instance)) {
+    if (InstanceofType(BaseDisposable).check(instance)) {
       return callback(instance);
     } else {
       throw Error(`Cannot find valid instance on element ${el.nodeName}`);

@@ -61,9 +61,11 @@ export class Util {
    * @return The target element.
    */
   static resolveSelector(
-      selector: string | null, parentElement: HTMLElement): Element | null {
+      selector: string | null | 'parent', parentElement: HTMLElement): Element | null {
     if (selector === null || parentElement.shadowRoot === null) {
       return parentElement;
+    } else if (selector === 'parent') {
+      return parentElement.parentElement;
     } else {
       return parentElement.shadowRoot.querySelector(selector);
     }

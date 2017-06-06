@@ -1,4 +1,5 @@
 import { monad } from '../event/monad';
+import { monadOut } from '../event/monad-out';
 import { AttributeConfig } from '../interfaces/attribute-config';
 import { ElementConfig } from '../interfaces/element-config';
 import { MonadFactory } from '../interfaces/monad-factory';
@@ -9,8 +10,10 @@ import { Util } from '../webc/util';
 
 
 export class Dom {
-  static attribute(config: AttributeConfig<any>): ParameterDecorator {
-    return Dom.createMonad_(
+  constructor(private readonly setter_: boolean) { }
+
+  attribute(config: AttributeConfig<any>): ParameterDecorator {
+    return this.createMonad_(
         (instance: Object) => {
           const {name: attributeName, parser, selector} = config;
           const targetElement = Dom.requireTargetElement_(selector, instance);
@@ -18,12 +21,12 @@ export class Dom {
         });
   }
 
-  private static createMonad_(factory: MonadFactory<any>): ParameterDecorator {
-    return monad(factory);
+  private createMonad_(factory: MonadFactory<any>): ParameterDecorator {
+    return this.setter_ ? monadOut(factory) : monad(factory);
   }
 
-  static element(config: ElementConfig): ParameterDecorator {
-    return Dom.createMonad_(
+  element(config: ElementConfig): ParameterDecorator {
+    return this.createMonad_(
         (instance: Object) => {
           const {selector} = config;
           const targetElement = Dom.requireTargetElement_(selector, instance);
@@ -45,4 +48,5 @@ export class Dom {
   }
 }
 
-export const dom = Dom;
+export const dom = new Dom(false);
+export const domOut = new Dom(true);

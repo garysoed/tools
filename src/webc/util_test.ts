@@ -65,6 +65,14 @@ describe('webc.Util', () => {
       assert(mockShadowRoot.querySelector).to.haveBeenCalledWith(selector);
     });
 
+    it('should return the parent element if selector is "parent"', () => {
+      const parent = Mocks.object('parent');
+      const element = Mocks.object('element');
+      element.parentElement = parent;
+
+      assert(Util.resolveSelector('parent', element)).to.equal(parent);
+    });
+
     it('should create the root element when the selector is null', () => {
       const element = Mocks.object('element');
 

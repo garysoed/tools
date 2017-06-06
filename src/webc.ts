@@ -10,5 +10,5 @@ export { handle } from './webc/handle';
 export { DomBinder } from './webc/interfaces';
 export { Templates } from './webc/templates';
 export { onDom } from './webc/on-dom';
-export { dom } from './webc/dom';
+export { dom, domOut } from './webc/dom';
 export { WindowBus } from './webc/window-bus';

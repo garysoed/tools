@@ -10,6 +10,12 @@ import { Util } from '../webc/util';
 
 
 describe('webc.Dom', () => {
+  let dom: Dom;
+
+  beforeEach(() => {
+    dom = new Dom(true /* setter */);
+  });
+
   describe('attribute', () => {
     it('should create the monad correctly', () => {
       const attributeName = 'attributeName';
@@ -22,7 +28,7 @@ describe('webc.Dom', () => {
       };
 
       const monad = Mocks.object('monad');
-      const createMonadSpy = spyOn(Dom, 'createMonad_').and.returnValue(monad);
+      const createMonadSpy = spyOn(dom, 'createMonad_').and.returnValue(monad);
 
       const binder = Mocks.object('binder');
       spyOn(AttributeBinder, 'of').and.returnValue(binder);
@@ -30,8 +36,8 @@ describe('webc.Dom', () => {
       const target = Mocks.object('target');
       spyOn(Dom, 'requireTargetElement_').and.returnValue(target);
 
-      assert(Dom.attribute(config)).to.equal(monad);
-      assert(Dom['createMonad_']).to.haveBeenCalledWith(Matchers.any(Function) as any);
+      assert(dom.attribute(config)).to.equal(monad);
+      assert(dom['createMonad_']).to.haveBeenCalledWith(Matchers.any(Function) as any);
 
       const instance = Mocks.object('instance');
       assert(createMonadSpy.calls.argsFor(0)[0](instance)).to.equal(binder);
@@ -46,7 +52,7 @@ describe('webc.Dom', () => {
       const config = {selector};
 
       const monad = Mocks.object('monad');
-      const createMonadSpy = spyOn(Dom, 'createMonad_').and.returnValue(monad);
+      const createMonadSpy = spyOn(dom, 'createMonad_').and.returnValue(monad);
 
       const binder = Mocks.object('binder');
       spyOn(ElementBinder, 'of').and.returnValue(binder);
@@ -54,8 +60,8 @@ describe('webc.Dom', () => {
       const target = Mocks.object('target');
       spyOn(Dom, 'requireTargetElement_').and.returnValue(target);
 
-      assert(Dom.element(config)).to.equal(monad);
-      assert(Dom['createMonad_']).to.haveBeenCalledWith(Matchers.any(Function) as any);
+      assert(dom.element(config)).to.equal(monad);
+      assert(dom['createMonad_']).to.haveBeenCalledWith(Matchers.any(Function) as any);
 
       const instance = Mocks.object('instance');
       assert(createMonadSpy.calls.argsFor(0)[0](instance)).to.equal(binder);

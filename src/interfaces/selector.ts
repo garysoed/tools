@@ -1,1 +1,1 @@
-export type Selector = {selector: string | null};
+export type Selector = {selector: string | null | 'parent'};

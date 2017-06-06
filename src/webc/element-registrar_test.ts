@@ -11,6 +11,7 @@ import { Log } from '../util/log';
 import { BaseElement } from '../webc/base-element';
 import { DomHook } from '../webc/dom-hook';
 import { ElementRegistrar } from '../webc/element-registrar';
+import { Handler } from '../webc/handle';
 import { ANNOTATIONS as HookAnnotations } from '../webc/hook';
 import { ANNOTATIONS as LIFECYCLE_ANNOTATIONS } from '../webc/on-lifecycle';
 import { Util } from '../webc/util';
@@ -37,35 +38,6 @@ describe('webc.ElementRegistrar', () => {
       mockProvider = jasmine.createSpy('provider');
     });
 
-    it('should return config with correct attributeChanged handler', () => {
-      const attrName = 'attrName';
-      const oldValue = 'oldValue';
-      const newValue = 'newValue';
-      const mockHTMLElement = Mocks.object('HTMLElement');
-      const mockElement = jasmine.createSpyObj('Element', ['onAttributeChanged']);
-
-      const parsedValue = Mocks.object('parsedValue');
-      const mockAttributeParser = jasmine.createSpyObj('AttributeParser', ['parse']);
-      mockAttributeParser.parse.and.returnValue(parsedValue);
-
-      const runOnInstanceSpy = spyOn(ElementRegistrar, 'runOnInstance_');
-
-      const lifecycleConfig = registrar['getLifecycleConfig_'](
-          {[attrName]: mockAttributeParser},
-          mockProvider,
-          'content');
-      lifecycleConfig.attributeChanged!.call(mockHTMLElement, 'attr-name', oldValue, newValue);
-
-      mockHTMLElement[attrName] = parsedValue;
-      assert(mockAttributeParser.parse).to.haveBeenCalledWith(newValue);
-
-      assert(ElementRegistrar['runOnInstance_'])
-          .to.haveBeenCalledWith(mockHTMLElement, Matchers.any(Function) as any);
-
-      runOnInstanceSpy.calls.argsFor(0)[1](mockElement);
-      assert(mockElement.onAttributeChanged).to.haveBeenCalledWith('attr-name', oldValue, newValue);
-    });
-
     it('should return config with correct created handler', () => {
       const content = 'content';
       const attributes = Mocks.object('attributes');
@@ -79,6 +51,7 @@ describe('webc.ElementRegistrar', () => {
       spyOn(MonadUtil, 'callFunction');
       spyOn(Util, 'addAttributes');
       spyOn(Util, 'setElement');
+      spyOn(Handler, 'configure');
 
       const key1 = 'key1';
       const key2 = 'key2';
@@ -87,13 +60,13 @@ describe('webc.ElementRegistrar', () => {
       const lifecycleConfig = registrar['getLifecycleConfig_'](attributes, mockProvider, content);
       lifecycleConfig.created!.call(mockHTMLElement);
 
+      assert(Handler.configure).to.haveBeenCalledWith(mockHTMLElement, mockInstance);
       assert(MonadUtil.callFunction).to
           .haveBeenCalledWith({type: 'create'}, mockInstance, key1);
       assert(MonadUtil.callFunction).to
           .haveBeenCalledWith({type: 'create'}, mockInstance, key2);
       assert(registrar['getMethodsWithLifecycle_']).to.haveBeenCalledWith('create', mockInstance);
       assert(Util.setElement).to.haveBeenCalledWith(mockInstance, mockHTMLElement);
-      assert(Util.addAttributes).to.haveBeenCalledWith(mockHTMLElement, attributes);
       assert(mockShadowRoot.innerHTML).to.equal(content);
       assert(mockHTMLElement.attachShadow).to.haveBeenCalledWith({mode: 'open'});
       assert(mockHTMLElement[ElementRegistrar['__instance']]).to.equal(mockInstance);
