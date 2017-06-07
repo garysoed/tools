@@ -1,6 +1,9 @@
+import { StringType } from '../check/string-type';
 import { ImmutableMap } from '../immutable/immutable-map';
 import { Parser } from '../interfaces/parser';
+import { ElementSelector } from '../interfaces/selector';
 import { Cases } from '../string/cases';
+import { assertUnreachable } from '../typescript/assert-unreachable';
 import { IElementConfig } from '../webc/interfaces';
 
 const __CONFIG: symbol = Symbol('config');
@@ -61,13 +64,15 @@ export class Util {
    * @return The target element.
    */
   static resolveSelector(
-      selector: string | null | 'parent', parentElement: HTMLElement): Element | null {
+      selector: ElementSelector, parentElement: HTMLElement): Element | null {
     if (selector === null || parentElement.shadowRoot === null) {
       return parentElement;
     } else if (selector === 'parent') {
       return parentElement.parentElement;
-    } else {
+    } else if (StringType.check(selector)) {
       return parentElement.shadowRoot.querySelector(selector);
+    } else {
+      throw assertUnreachable(selector);
     }
   }
 
@@ -91,4 +96,3 @@ export class Util {
     instance[__ELEMENT] = element;
   }
 }
-// TODO: Mutable

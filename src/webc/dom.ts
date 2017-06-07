@@ -1,9 +1,8 @@
 import { monad } from '../event/monad';
 import { monadOut } from '../event/monad-out';
-import { AttributeConfig } from '../interfaces/attribute-config';
-import { ElementConfig } from '../interfaces/element-config';
 import { MonadFactory } from '../interfaces/monad-factory';
 import { Parser } from '../interfaces/parser';
+import { AttributeSelector, ElementSelector } from '../interfaces/selector';
 import { AttributeBinder } from '../webc/attribute-binder';
 import { ElementBinder } from '../webc/element-binder';
 import { Util } from '../webc/util';
@@ -12,7 +11,7 @@ import { Util } from '../webc/util';
 export class Dom {
   constructor(private readonly setter_: boolean) { }
 
-  attribute(config: AttributeConfig<any>): ParameterDecorator {
+  attribute(config: AttributeSelector<any>): ParameterDecorator {
     return this.createMonad_(
         (instance: Object) => {
           const {name: attributeName, parser, selector} = config;
@@ -25,10 +24,13 @@ export class Dom {
     return this.setter_ ? monadOut(factory) : monad(factory);
   }
 
-  element(config: ElementConfig): ParameterDecorator {
+  /**
+   * Resolves to an element. This is READONLY.
+   * @param selector Selector for the element.
+   */
+  element(selector: ElementSelector): ParameterDecorator {
     return this.createMonad_(
         (instance: Object) => {
-          const {selector} = config;
           const targetElement = Dom.requireTargetElement_(selector, instance);
           return ElementBinder.of(targetElement);
         });

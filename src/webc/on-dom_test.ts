@@ -27,7 +27,7 @@ describe('webc.onDom', () => {
       const decorator = Mocks.object('decorator');
       spyOn(EVENT_HANDLER, 'createDecorator').and.returnValue(decorator);
 
-      assert(onDom.event({name, selector})).to.equal(decorator);
+      assert(onDom.event(selector, name)).to.equal(decorator);
       assert(EVENT_HANDLER.createDecorator).to.haveBeenCalledWith(name, selector, []);
     });
   });

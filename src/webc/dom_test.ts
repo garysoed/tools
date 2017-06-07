@@ -49,7 +49,6 @@ describe('webc.Dom', () => {
   describe('element', () => {
     it('should create the monad correctly', () => {
       const selector = 'selector';
-      const config = {selector};
 
       const monad = Mocks.object('monad');
       const createMonadSpy = spyOn(dom, 'createMonad_').and.returnValue(monad);
@@ -60,7 +59,7 @@ describe('webc.Dom', () => {
       const target = Mocks.object('target');
       spyOn(Dom, 'requireTargetElement_').and.returnValue(target);
 
-      assert(dom.element(config)).to.equal(monad);
+      assert(dom.element(selector)).to.equal(monad);
       assert(dom['createMonad_']).to.haveBeenCalledWith(Matchers.any(Function) as any);
 
       const instance = Mocks.object('instance');
