@@ -1,6 +1,6 @@
+import { DomBinder } from '../interfaces/dom-binder';
 import { Monad } from '../interfaces/monad';
 import { Parser } from '../interfaces/parser';
-import { DomBinder } from '../webc/interfaces';
 
 
 /**

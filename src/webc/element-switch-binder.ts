@@ -1,5 +1,5 @@
 import { ImmutableMap } from '../immutable/immutable-map';
-import { DomBinder } from '../webc/interfaces';
+import { DomBinder } from '../interfaces/dom-binder';
 
 export const __enumValue: symbol = Symbol('enumValue');
 

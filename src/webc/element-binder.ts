@@ -1,4 +1,4 @@
-import { DomBinder } from './interfaces';
+import { DomBinder } from '../interfaces/dom-binder';
 
 
 export class ElementBinder<T extends Element> implements DomBinder<T> {

@@ -4,7 +4,7 @@ import { NonNullType } from '../check/non-null-type';
 import { ImmutableList } from '../immutable/immutable-list';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Iterables } from '../immutable/iterables';
-import { DomBinder } from '../webc/interfaces';
+import { DomBinder } from '../interfaces/dom-binder';
 
 
 export interface IDataHelper<T> {

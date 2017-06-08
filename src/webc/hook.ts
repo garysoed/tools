@@ -1,12 +1,12 @@
 import { InstanceofType } from '../check/instanceof-type';
 import { Annotations } from '../data/annotations';
+import { DomBinder } from '../interfaces/dom-binder';
 import { Parser } from '../interfaces/parser';
 import { AttributeBinder } from '../webc/attribute-binder';
 import { ChildrenElementsBinder, IDataHelper } from '../webc/children-elements-binder';
 import { ClassListBinder } from '../webc/class-list-binder';
 import { ElementBinder } from '../webc/element-binder';
 import { ElementSwitchBinder } from '../webc/element-switch-binder';
-import { DomBinder } from '../webc/interfaces';
 import { PropertyBinder } from '../webc/property-binder';
 import { Util } from '../webc/util';
 

@@ -1,4 +1,4 @@
-import { DomBinder } from './interfaces';
+import { DomBinder } from '../interfaces/dom-binder';
 
 
 /**

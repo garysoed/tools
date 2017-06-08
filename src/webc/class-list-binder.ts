@@ -1,6 +1,6 @@
 import { ImmutableList } from '../immutable/immutable-list';
 import { ImmutableSet } from '../immutable/immutable-set';
-import { DomBinder } from '../webc/interfaces';
+import { DomBinder } from '../interfaces/dom-binder';
 
 
 export class ClassListBinder implements DomBinder<ImmutableSet<string>> {
