@@ -6,6 +6,7 @@ import { Mocks } from '../mock/mocks';
 import { AttributeBinder } from '../webc/attribute-binder';
 import { Dom } from '../webc/dom';
 import { ElementBinder } from '../webc/element-binder';
+import { EventDispatcher } from '../webc/event-dispatcher';
 import { Util } from '../webc/util';
 
 
@@ -66,6 +67,27 @@ describe('webc.Dom', () => {
       assert(createMonadSpy.calls.argsFor(0)[0](instance)).to.equal(binder);
       assert(ElementBinder.of).to.haveBeenCalledWith(target);
       assert(Dom['requireTargetElement_']).to.haveBeenCalledWith(selector, instance);
+    });
+  });
+
+  describe('eventDispatcher', () => {
+    it('should create the monad correctly', () => {
+      const monad = Mocks.object('monad');
+      const createMonadSpy = spyOn(dom, 'createMonad_').and.returnValue(monad);
+
+      const dispatcher = Mocks.object('dispatcher');
+      spyOn(EventDispatcher, 'of').and.returnValue(dispatcher);
+
+      const target = Mocks.object('target');
+      spyOn(Dom, 'requireTargetElement_').and.returnValue(target);
+
+      assert(dom.eventDispatcher()).to.equal(monad);
+      assert(dom['createMonad_']).to.haveBeenCalledWith(Matchers.any(Function) as any);
+
+      const instance = Mocks.object('instance');
+      assert(createMonadSpy.calls.argsFor(0)[0](instance)).to.equal(dispatcher);
+      assert(EventDispatcher.of).to.haveBeenCalledWith(target);
+      assert(Dom['requireTargetElement_']).to.haveBeenCalledWith(null, instance);
     });
   });
 

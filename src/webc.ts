@@ -8,7 +8,7 @@ export { DomHook } from './webc/dom-hook';
 export { ElementRegistrar } from './webc/element-registrar';
 export { handle } from './webc/handle';
 export { hook } from './webc/hook';
-export { DomBinder } from './webc/interfaces';
+export { DomBinder } from './interfaces/dom-binder';
 export { onDom } from './webc/on-dom';
 export { onLifecycle } from './webc/on-lifecycle';
 export { Templates } from './webc/templates';

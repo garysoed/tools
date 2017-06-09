@@ -5,6 +5,7 @@ import { Parser } from '../interfaces/parser';
 import { AttributeSelector, ElementSelector } from '../interfaces/selector';
 import { AttributeBinder } from '../webc/attribute-binder';
 import { ElementBinder } from '../webc/element-binder';
+import { EventDispatcher } from '../webc/event-dispatcher';
 import { Util } from '../webc/util';
 
 
@@ -33,6 +34,14 @@ export class Dom {
         (instance: Object) => {
           const targetElement = Dom.requireTargetElement_(selector, instance);
           return ElementBinder.of(targetElement);
+        });
+  }
+
+  eventDispatcher(): ParameterDecorator {
+    return this.createMonad_(
+        (instance: Object) => {
+          const targetElement = Dom.requireTargetElement_(null, instance);
+          return EventDispatcher.of(targetElement);
         });
   }
 
