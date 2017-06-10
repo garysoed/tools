@@ -12,12 +12,14 @@
         "noImplicitAny": false,
         "removeComments": true,
         "noLib": false,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
         "preserveConstEnums": true,
         "suppressImplicitAnyIndexErrors": true,
         "outDir": "out/",
         "rootDir": "./",
         "skipLibCheck": true,
-        "strictNullChecks": true
+        "strict": true
     },
     "exclude": [
     ],
