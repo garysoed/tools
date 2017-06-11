@@ -9,7 +9,7 @@ import { Reflect } from '../util/reflect';
 
 
 describe('inject.Injector', () => {
-  let mockBindings;
+  let mockBindings: Map<string | symbol, any>;
   let injector: Injector;
 
   beforeEach(() => {
@@ -52,7 +52,7 @@ describe('inject.Injector', () => {
 
   describe('getParameters', () => {
     class TestClass {
-      constructor(a: string, b: string) { }
+      constructor(_a: string, _b: string) { }
     }
 
     it('should return the parameters correctly', () => {

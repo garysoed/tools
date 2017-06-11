@@ -5,7 +5,7 @@ import { NumberAssert } from './number-assert';
 
 
 describe('jasmine.NumberAssert', () => {
-  let assert;
+  let assert: NumberAssert;
 
   beforeEach(() => {
     assert = new NumberAssert(true /* value */, false /* reversed */, jasmine.createSpy('expect'));

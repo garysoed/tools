@@ -8,10 +8,10 @@ export class ArrayAssert<T> extends IterableAssert<T> {
    * @param expect_ Reference to jasmine's expect function.'
    */
   constructor(
-      private arrayValue_: T[],
+      arrayValue: T[],
       reversed: boolean,
       expect: (actual: any) => jasmine.Matchers) {
-    super(arrayValue_, reversed, expect);
+    super(arrayValue, reversed, expect);
   }
 
   /**
@@ -21,4 +21,3 @@ export class ArrayAssert<T> extends IterableAssert<T> {
     this.getMatchers_().toContain(element);
   }
 }
-// TODO: Mutable

@@ -135,7 +135,7 @@ describe('immutable.ImmutableList', () => {
     });
 
     it('should return null if there are no matches', () => {
-      assert(ImmutableList.of([1, 2, 3]).find((n: number) => false)).to.beNull();
+      assert(ImmutableList.of([1, 2, 3]).find(() => false)).to.beNull();
     });
   });
 
@@ -145,7 +145,7 @@ describe('immutable.ImmutableList', () => {
     });
 
     it('should return null if there are no matches', () => {
-      assert(ImmutableList.of([1, 2, 3]).findEntry((n: number) => false)).to.beNull();
+      assert(ImmutableList.of([1, 2, 3]).findEntry(() => false)).to.beNull();
     });
   });
 
@@ -155,7 +155,7 @@ describe('immutable.ImmutableList', () => {
     });
 
     it('should return null if there are no matches', () => {
-      assert(ImmutableList.of([1, 2, 3]).findKey((n: number) => false)).to.beNull();
+      assert(ImmutableList.of([1, 2, 3]).findKey(() => false)).to.beNull();
     });
   });
 
@@ -165,7 +165,7 @@ describe('immutable.ImmutableList', () => {
     });
 
     it('should return null if there are no matches', () => {
-      assert(ImmutableList.of([1, 2, 3]).findValue((n: number) => false)).to.beNull();
+      assert(ImmutableList.of([1, 2, 3]).findValue(() => false)).to.beNull();
     });
   });
 

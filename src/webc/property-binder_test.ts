@@ -8,7 +8,7 @@ import { PropertyBinder } from './property-binder';
 
 describe('webc.PropertyBinder', () => {
   const PROPERTY_NAME = 'PROPERTY_NAME';
-  let element;
+  let element: any;
   let binder: PropertyBinder<number>;
 
   beforeEach(() => {

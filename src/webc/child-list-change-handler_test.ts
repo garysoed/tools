@@ -6,7 +6,6 @@ import { ImmutableSet } from '../immutable/immutable-set';
 import { Mocks } from '../mock/mocks';
 import {
   CHILD_LIST_CHANGE_ANNOTATIONS,
-  ChildListChangeConfig,
   ChildListChangeHandler } from '../webc/child-list-change-handler';
 
 

@@ -1,8 +1,6 @@
 import { GeneratedLinkedList } from '../immutable/generated-linked-list';
-import { InfiniteList } from '../immutable/infinite-list';
 import { Iterables } from '../immutable/iterables';
 import { Collection } from '../interfaces/collection';
-import { Finite } from '../interfaces/finite';
 import { FiniteCollection } from '../interfaces/finite-collection';
 import { Indexed } from '../interfaces/indexed';
 
@@ -45,7 +43,7 @@ export class InfiniteMap<K, V> implements Collection<[K, V]>, Indexed<K, V>, Ite
         .filterItem(([key, value]: [K, V]) => {
           return checker(value, key);
         })
-        .mapItem(([key, value]: [K, V]) => {
+        .mapItem(([key, _]: [K, V]) => {
           return key;
         });
     return new InfiniteMap(filteredKeys, this.generator_);

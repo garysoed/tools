@@ -7,7 +7,7 @@ import { ClassListBinder } from '../webc/class-list-binder';
 
 
 describe('webc.ClassListBinder', () => {
-  let mockClassList;
+  let mockClassList: any;
   let binder: ClassListBinder;
 
   beforeEach(() => {

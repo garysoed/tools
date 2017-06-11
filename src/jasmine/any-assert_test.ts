@@ -9,7 +9,7 @@ import { AnyAssert } from './any-assert';
 describe('jasmine.AnyAssert', () => {
   let mockExpect;
   let value;
-  let assert;
+  let assert: AnyAssert<any>;
 
   beforeEach(() => {
     mockExpect = jasmine.createSpy('Expect');

@@ -9,7 +9,7 @@ class TestIdGenerator extends BaseIdGenerator {
     return '';
   }
 
-  protected resolveConflict_(id: string): string {
+  protected resolveConflict_(): string {
     return '';
   }
 }

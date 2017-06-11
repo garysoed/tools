@@ -14,7 +14,7 @@ export class EventDispatcher implements DomBinder<DispatchFn<any>> {
     };
   }
 
-  set(value: DispatchFn<any> | null): void {
+  set(_: DispatchFn<any> | null): void {
     throw new Error('Set is unsupported');
   }
 

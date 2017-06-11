@@ -2,10 +2,8 @@ import { ImmutableList } from '../immutable/immutable-list';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Collection } from '../interfaces/collection';
 import { CompareResult } from '../interfaces/compare-result';
-import { Finite } from '../interfaces/finite';
 import { FiniteCollection } from '../interfaces/finite-collection';
 import { FiniteIndexed } from '../interfaces/finite-indexed';
-import { Indexed } from '../interfaces/indexed';
 import { Ordered } from '../interfaces/ordered';
 
 export class OrderedMap<K, V> implements
@@ -39,7 +37,7 @@ export class OrderedMap<K, V> implements
   addAll(items: FiniteCollection<[K, V]>): OrderedMap<K, V> {
     const keysClone = this.keys_.slice(0);
     const mapClone = new Map(this.map_);
-    const entriesToAdd = items.filterItem(([key, value]: [K, V]) => !this.hasKey(key));
+    const entriesToAdd = items.filterItem(([key, _]: [K, V]) => !this.hasKey(key));
     for (const [key, value] of entriesToAdd) {
       keysClone.push(key);
       mapClone.set(key, value);
@@ -145,7 +143,7 @@ export class OrderedMap<K, V> implements
 
   filterItem(checker: (item: [K, V]) => boolean): OrderedMap<K, V> {
     const filteredEntries = this.entries().filterItem(checker);
-    const keysClone = filteredEntries.mapItem(([key, value]: [K, V]) => key).toArray();
+    const keysClone = filteredEntries.mapItem(([key, _]: [K, V]) => key).toArray();
     const mapClone = new Map(filteredEntries.toArray());
     return new OrderedMap(keysClone, mapClone);
   }
@@ -228,7 +226,7 @@ export class OrderedMap<K, V> implements
 
   keys(): ImmutableList<K> {
     return this.entries()
-        .mapItem(([key, value]: [K, V]) => {
+        .mapItem(([key, _]: [K, V]) => {
           return key;
         });
   }
@@ -311,7 +309,7 @@ export class OrderedMap<K, V> implements
 
   values(): ImmutableList<V> {
     return this.entries()
-        .mapItem(([key, value]: [K, V]) => {
+        .mapItem(([_, value]: [K, V]) => {
           return value;
         });
   }

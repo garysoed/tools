@@ -7,9 +7,9 @@ import { ElementAssert } from './element-assert';
 
 
 describe('jasmine.ElementAssert', () => {
-  let mockExpect;
-  let parentEl;
-  let assert;
+  let mockExpect: any;
+  let parentEl: any;
+  let assert: ElementAssert;
 
   beforeEach(() => {
     mockExpect = jasmine.createSpy('Expect');
@@ -49,7 +49,7 @@ describe('jasmine.ElementAssert', () => {
 
       const expectedChildren = Mocks.object('expectedChildren');
 
-      assert['reversed_'] = true;
+      (assert as any)['reversed_'] = true;
       assert.haveChildren(expectedChildren);
 
       expect(mockMatcher.toEqual).toHaveBeenCalledWith(expectedChildren);

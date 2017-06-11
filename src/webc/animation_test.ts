@@ -7,9 +7,9 @@ import { Animation } from './animation';
 
 
 describe('webc.Animation', () => {
-  let keyframes;
-  let options;
-  let animation;
+  let keyframes: any[];
+  let options: {};
+  let animation: Animation;
 
   beforeEach(() => {
     keyframes = [];

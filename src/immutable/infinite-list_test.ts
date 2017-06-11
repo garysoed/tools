@@ -48,7 +48,7 @@ describe('immutable.InfiniteList', () => {
   describe('filter', () => {
     it('should filter elements correctly', () => {
       const list = InfiniteList.of<string>((i: number) => `${i}`)
-          .filter((item: string, index: number) => {
+          .filter((_: string, index: number) => {
             return (index % 2) === 0;
           });
       assert(list).to.startWith(['0', '2', '4', '6']);

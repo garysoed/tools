@@ -8,8 +8,8 @@ import { ListenableDom } from './listenable-dom';
 
 
 describe('event.ListenableDom', () => {
-  let mockEventTarget;
-  let listenable;
+  let mockEventTarget: any;
+  let listenable: ListenableDom<any>;
 
   beforeEach(() => {
     mockEventTarget = jasmine.createSpyObj(

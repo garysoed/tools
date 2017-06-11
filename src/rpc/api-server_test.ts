@@ -6,9 +6,9 @@ import { ApiServer } from '../rpc/api-server';
 
 
 describe('rpc.ApiServer', () => {
-  let mockChannel;
-  let mockProcessRequest;
-  let mockRequestType;
+  let mockChannel: any;
+  let mockProcessRequest: any;
+  let mockRequestType: any;
   let server: ApiServer<any, any>;
 
   beforeEach(() => {

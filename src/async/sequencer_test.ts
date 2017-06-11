@@ -8,7 +8,7 @@ import { Mocks } from '../mock/mocks';
 
 
 describe('async.Sequencer', () => {
-  let sequencer;
+  let sequencer: Sequencer;
 
   beforeEach(() => {
     sequencer = Sequencer.newInstance();
@@ -16,7 +16,7 @@ describe('async.Sequencer', () => {
   });
 
   describe('run', () => {
-    let mockOperation;
+    let mockOperation: any;
 
     beforeEach(() => {
       mockOperation = jasmine.createSpy('Operation');

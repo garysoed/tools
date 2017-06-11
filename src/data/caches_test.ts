@@ -19,7 +19,7 @@ describe('data.Caches', () => {
   }
 
   let test: TestClass;
-  let spy;
+  let spy: any;
 
   beforeEach(() => {
     spy = jasmine.createSpy('spy');

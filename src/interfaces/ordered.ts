@@ -1,4 +1,3 @@
-import { Collection } from '../interfaces/collection';
 import { CompareResult } from '../interfaces/compare-result';
 import { Finite } from '../interfaces/finite';
 import { FiniteCollection } from '../interfaces/finite-collection';

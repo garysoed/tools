@@ -1,9 +1,6 @@
-import { ImmutableList } from '../immutable/immutable-list';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Iterables } from '../immutable/iterables';
-import { Collection } from '../interfaces/collection';
 import { CompareResult } from '../interfaces/compare-result';
-import { Finite } from '../interfaces/finite';
 import { FiniteCollection } from '../interfaces/finite-collection';
 import { Ordered } from '../interfaces/ordered';
 
@@ -64,7 +61,7 @@ export class OrderedSet<T> implements FiniteCollection<T>, Ordered<T> {
 
   deleteAt(index: number): OrderedSet<T> {
     const clone = this.data_.slice(0);
-    const deleted = clone.splice(index, 1);
+    clone.splice(index, 1);
     return new OrderedSet(clone);
   }
 

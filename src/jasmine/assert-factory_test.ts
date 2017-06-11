@@ -7,8 +7,8 @@ import { AssertFactory } from './assert-factory';
 
 
 describe('jasmine.AssertFactory', () => {
-  let mockProvider;
-  let factory;
+  let mockProvider: any;
+  let factory: AssertFactory<any>;
 
   beforeEach(() => {
     mockProvider = jasmine.createSpy('Provider');

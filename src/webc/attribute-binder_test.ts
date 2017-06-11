@@ -8,8 +8,8 @@ import { AttributeBinder } from './attribute-binder';
 
 describe('webc.AttributeBinder', () => {
   const ATTRIBUTE_NAME = 'ATTRIBUTE_NAME';
-  let mockElement;
-  let mockParser;
+  let mockElement: any;
+  let mockParser: any;
   let binder: AttributeBinder<string>;
 
   beforeEach(() => {

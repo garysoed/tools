@@ -2,7 +2,6 @@ import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
 import { Bus } from '../event/bus';
-import { Mocks } from '../mock/mocks';
 import { TestDispose } from '../testing/test-dispose';
 import { Log } from '../util/log';
 
@@ -59,7 +58,7 @@ describe('event.Bus', () => {
       const event = {type: eventType};
       TestDispose.add(bus.on(
           eventType,
-          (payload: any) => {
+          () => {
             throw new Error('Expected error');
           },
           window,

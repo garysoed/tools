@@ -7,7 +7,7 @@ import KeyboardEventPolyfill from './keyboard-event-polyfill';
 
 
 describe('ui.KeyboardEventPolyfill', () => {
-  let MockKeyboardEvent;
+  let MockKeyboardEvent: any;
 
   beforeEach(() => {
     class KeyboardEvent {

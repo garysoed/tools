@@ -2,7 +2,6 @@ import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
 import { DisposableFunction } from '../dispose/disposable-function';
-import { Fakes } from '../mock/fakes';
 import { Mocks } from '../mock/mocks';
 
 import { MonadUtil } from '../event/monad-util';
@@ -11,7 +10,6 @@ import { ImmutableSet } from '../immutable/immutable-set';
 import {
   ATTR_CHANGE_ANNOTATIONS,
   AttributeChangeHandler,
-  AttributeChangeHandlerConfig,
   AttributeChangeHandlerConfig as Config} from '../webc/attribute-change-handler';
 
 

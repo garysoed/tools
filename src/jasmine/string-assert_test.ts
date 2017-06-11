@@ -7,7 +7,7 @@ import { StringAssert } from './string-assert';
 
 
 describe('jasmine.StringAssert', () => {
-  let assert;
+  let assert: StringAssert;
 
   beforeEach(() => {
     assert = new StringAssert(

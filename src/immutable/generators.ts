@@ -1,5 +1,3 @@
-import { Finite } from '../interfaces/finite';
-
 export class Generators {
   static *ranged(
       from: number,

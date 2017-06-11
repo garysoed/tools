@@ -7,7 +7,7 @@ import { Spec } from './spec';
 
 describe('solver.Solve', () => {
   describe('findThreshold', () => {
-    let spec;
+    let spec: Spec;
 
     beforeEach(() => {
       spec = Spec.newInstance(0, 2, 20);

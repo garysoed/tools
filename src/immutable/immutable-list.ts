@@ -5,12 +5,9 @@ import { InstanceofType } from '../check/instanceof-type';
 import { IntersectType } from '../check/intersect-type';
 import { NumberType } from '../check/number-type';
 import { Iterables } from '../immutable/iterables';
-import { Collection } from '../interfaces/collection';
 import { CompareResult } from '../interfaces/compare-result';
-import { Finite } from '../interfaces/finite';
 import { FiniteCollection } from '../interfaces/finite-collection';
 import { FiniteIndexed } from '../interfaces/finite-indexed';
-import { Indexed } from '../interfaces/indexed';
 import { Ordered } from '../interfaces/ordered';
 import { assertUnreachable } from '../typescript/assert-unreachable';
 
@@ -145,7 +142,7 @@ export class ImmutableList<T> implements
   }
 
   filterItem(checker: (item: T) => boolean): ImmutableList<T> {
-    return this.filter((value: T, index: number) => checker(value));
+    return this.filter((value: T, _: number) => checker(value));
   }
 
   find(check: (item: T) => boolean): T | null {
@@ -204,7 +201,7 @@ export class ImmutableList<T> implements
   }
 
   keys(): ImmutableList<number> {
-    return new ImmutableList(this.data_.map((value: T, index: number) => index));
+    return new ImmutableList(this.data_.map((_: T, index: number) => index));
   }
 
   map<R>(fn: (value: T, index: number) => R): ImmutableList<R> {
@@ -212,7 +209,7 @@ export class ImmutableList<T> implements
   }
 
   mapItem<R>(fn: (item: T) => R): ImmutableList<R> {
-    return this.map<R>((value: T, index: number) => fn(value));
+    return this.map<R>((value: T, _: number) => fn(value));
   }
 
   reduce<R>(fn: (prevValue: R, value: T, key: number) => R, init: R): R {

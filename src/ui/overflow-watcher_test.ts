@@ -10,9 +10,9 @@ import OverflowWatcher, {EventType, State } from './overflow-watcher';
 
 
 describe('ui.OverflowWatcher', () => {
-  let mockContainer;
-  let mockElement;
-  let watcher;
+  let mockContainer: any;
+  let mockElement: any;
+  let watcher: OverflowWatcher;
 
   beforeEach(() => {
     mockContainer = jasmine.createSpyObj('Container', ['addEventListener', 'removeEventListener']);
@@ -108,7 +108,7 @@ describe('ui.OverflowWatcher', () => {
       spyOn(watcher, 'getState_').and.returnValue(state);
 
       assert(watcher.getState()).to.equal(state);
-      assert(watcher.getState_).to.haveBeenCalledWith();
+      assert(watcher['getState_']).to.haveBeenCalledWith();
     });
 
     it('should cache the output of getState_', () => {
@@ -120,7 +120,7 @@ describe('ui.OverflowWatcher', () => {
       spyGetState_.calls.reset();
 
       assert(watcher.getState()).to.equal(state);
-      assert(watcher.getState_).toNot.haveBeenCalled();
+      assert(watcher['getState_']).toNot.haveBeenCalled();
     });
   });
 });

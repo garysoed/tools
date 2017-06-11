@@ -1,6 +1,5 @@
 import { Injector } from './injector';
 
-
 /**
  * Marks the given class as injectable.
  *
@@ -11,7 +10,7 @@ import { Injector } from './injector';
  * @param name Name to bind the class to.
  * @param dependencies Dependencies of constructors to load.
  */
-export function bind(name: (string|null) = null, dependencies: any[] = []): ClassDecorator {
+export function bind(name: (string|null) = null, _: any[] = []): ClassDecorator {
   return function<C extends gs.ICtor<any>>(ctor: C): void {
     const ctorName = name || ctor['name'];
     Injector.bind(ctor, ctorName);

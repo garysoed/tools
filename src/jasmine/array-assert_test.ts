@@ -9,7 +9,7 @@ import { ArrayAssert } from './array-assert';
 describe('jasmine.ArrayAssert', () => {
   let mockExpect;
   let value;
-  let assert;
+  let assert: ArrayAssert<any>;
 
   beforeEach(() => {
     mockExpect = jasmine.createSpy('Expect');

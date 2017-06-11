@@ -5,8 +5,8 @@ import { Templates } from './templates';
 
 
 describe('webc.Templates', () => {
-  let replacementMap;
-  let templates;
+  let replacementMap: Map<RegExp, string>;
+  let templates: Templates;
 
   beforeEach(() => {
     Templates['templates_'].clear();

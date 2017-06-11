@@ -1,4 +1,3 @@
-import { ArrayOfType } from '../check/array-of-type';
 import { FiniteIterableOfType } from '../check/finite-iterable-of-type';
 import { NonNullType } from '../check/non-null-type';
 import { ImmutableList } from '../immutable/immutable-list';

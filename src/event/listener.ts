@@ -1,8 +1,6 @@
-import { Annotations } from '../data/annotations';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { MonadUtil } from '../event/monad-util';
 import { ON_ANNOTATIONS } from '../event/on';
-import { ImmutableSet } from '../immutable/immutable-set';
 import { Event } from '../interfaces/event';
 
 export function listener(): ClassDecorator {

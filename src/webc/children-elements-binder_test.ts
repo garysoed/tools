@@ -1,16 +1,15 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import { ImmutableList } from '../immutable/immutable-list';
 import { Fakes } from '../mock/fakes';
 import { Mocks } from '../mock/mocks';
 import { ChildrenElementsBinder } from '../webc/children-elements-binder';
 
 
 describe('webc.ChildrenElementsBinder', () => {
-  let mockDataHelper;
+  let mockDataHelper: any;
   let binder: ChildrenElementsBinder<number>;
-  let instance;
+  let instance: any;
   let parentEl: Element;
 
   beforeEach(() => {

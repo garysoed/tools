@@ -8,7 +8,7 @@ import { HttpError } from '../net/http-error';
 
 
 describe('net.Http', () => {
-  let mockRequest;
+  let mockRequest: any;
 
   beforeEach(() => {
     mockRequest = jasmine.createSpyObj('Request', ['open', 'send', 'setRequestHeader']);

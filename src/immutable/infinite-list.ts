@@ -1,7 +1,6 @@
 import { GeneratedLinkedList } from '../immutable/generated-linked-list';
 import { Iterables } from '../immutable/iterables';
 import { Collection } from '../interfaces/collection';
-import { Finite } from '../interfaces/finite';
 import { FiniteCollection } from '../interfaces/finite-collection';
 import { Indexed } from '../interfaces/indexed';
 

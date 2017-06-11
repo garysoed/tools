@@ -10,7 +10,7 @@ import { WebStorage } from '../store/web-storage';
 
 describe('store.WebStorage', () => {
   const PREFIX = 'prefix';
-  let mockStorage;
+  let mockStorage: any;
   let storage: WebStorage<any>;
 
   beforeEach(() => {

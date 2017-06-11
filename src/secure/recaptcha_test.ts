@@ -11,8 +11,8 @@ describe('secure.Recaptcha', () => {
   const SITEKEY = 'sitekey';
   const WIDGET_ID = 'widgetId';
   let recaptcha: Recaptcha;
-  let mockElement;
-  let mockGrecaptcha;
+  let mockElement: any;
+  let mockGrecaptcha: any;
 
   beforeEach(() => {
     mockElement = Mocks.object('Element');
@@ -31,7 +31,7 @@ describe('secure.Recaptcha', () => {
       sitekey: SITEKEY,
     });
 
-    TestDispose.add(recaptcha.on(EventType.NEW_RESPONSE, callback, this));
+    TestDispose.add(recaptcha.on(EventType.NEW_RESPONSE, callback, window));
 
     mockGrecaptcha.render.calls.argsFor(0)[1].callback();
     assert(callback).to.haveBeenCalledWith(null);

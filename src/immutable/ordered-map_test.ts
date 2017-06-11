@@ -155,24 +155,24 @@ describe('immutable.OrderedMap', () => {
   describe('every', () => {
     it('should return true if every entry passes the check', () => {
       const map = OrderedMap.of([[1, 'a'], [2, 'b'], [3, 'c']]);
-      assert(map.every((value: string, key: number) => key > 0)).to.beTrue();
+      assert(map.every((_: string, key: number) => key > 0)).to.beTrue();
     });
 
     it('should return false if one entry does not pass the check', () => {
       const map = OrderedMap.of([[1, 'a'], [2, 'b'], [3, 'c']]);
-      assert(map.every((value: string, key: number) => key !== 2)).to.beFalse();
+      assert(map.every((_: string, key: number) => key !== 2)).to.beFalse();
     });
   });
 
   describe('everyItem', () => {
     it('should return true if every entry passes the check', () => {
       const map = OrderedMap.of([[1, 'a'], [2, 'b'], [3, 'c']]);
-      assert(map.everyItem(([key, value]: [number, string]) => key > 0)).to.beTrue();
+      assert(map.everyItem(([key, _]: [number, string]) => key > 0)).to.beTrue();
     });
 
     it('should return false if one entry does not pass the check', () => {
       const map = OrderedMap.of([[1, 'a'], [2, 'b'], [3, 'c']]);
-      assert(map.everyItem(([key, value]: [number, string]) => key !== 2)).to.beFalse();
+      assert(map.everyItem(([key, _]: [number, string]) => key !== 2)).to.beFalse();
     });
   });
 
@@ -180,7 +180,7 @@ describe('immutable.OrderedMap', () => {
     it('should filter the items correctly', () => {
       const map = OrderedMap
           .of([[0, 'a'], [1, 'b'], [2, 'c']])
-          .filter((value: string, index: number) => (index % 2) === 0);
+          .filter((_: string, index: number) => (index % 2) === 0);
       assert(map).to.haveElements([[0, 'a'], [2, 'c']]);
     });
   });
@@ -189,7 +189,7 @@ describe('immutable.OrderedMap', () => {
     it('should filter the items correctly', () => {
       const map = OrderedMap
           .of([[0, 'a'], [1, 'b'], [2, 'c']])
-          .filterItem(([index, value]: [number, string]) => (index % 2) === 0);
+          .filterItem(([index, _]: [number, string]) => (index % 2) === 0);
       assert(map).to.haveElements([[0, 'a'], [2, 'c']]);
     });
   });
@@ -198,7 +198,7 @@ describe('immutable.OrderedMap', () => {
     it('should return the first matching entry in the map', () => {
       const entry = OrderedMap
           .of([[0, 'a'], [1, 'b'], [2, 'c']])
-          .find(([key, value]: [number, string]) => {
+          .find(([key, _]: [number, string]) => {
             return key >= 1;
           });
       assert(entry).to.equal([1, 'b']);
@@ -207,7 +207,7 @@ describe('immutable.OrderedMap', () => {
     it('should return null if the entry is not in the map', () => {
       const entry = OrderedMap
           .of([[0, 'a'], [1, 'b'], [2, 'c']])
-          .find(([key, value]: [number, string]) => false);
+          .find(() => false);
       assert(entry).to.beNull();
     });
   });
@@ -216,7 +216,7 @@ describe('immutable.OrderedMap', () => {
     it('should return the first matching entry in the map', () => {
       const entry = OrderedMap
           .of([[0, 'a'], [1, 'b'], [2, 'c']])
-          .findEntry((value: string, key: number) => {
+          .findEntry((_: string, key: number) => {
             return key >= 1;
           });
       assert(entry).to.equal([1, 'b']);
@@ -225,7 +225,7 @@ describe('immutable.OrderedMap', () => {
     it('should return null if the entry is not in the map', () => {
       const entry = OrderedMap
           .of([[0, 'a'], [1, 'b'], [2, 'c']])
-          .findEntry((value: string, key: number) => false);
+          .findEntry(() => false);
       assert(entry).to.beNull();
     });
   });
@@ -234,7 +234,7 @@ describe('immutable.OrderedMap', () => {
     it('should return the first matching entry in the map', () => {
       const entry = OrderedMap
           .of([[0, 'a'], [1, 'b'], [2, 'c']])
-          .findKey((value: string, key: number) => {
+          .findKey((_: string, key: number) => {
             return key >= 1;
           });
       assert(entry).to.equal(1);
@@ -243,7 +243,7 @@ describe('immutable.OrderedMap', () => {
     it('should return null if the entry is not in the map', () => {
       const entry = OrderedMap
           .of([[0, 'a'], [1, 'b'], [2, 'c']])
-          .findKey((value: string, key: number) => false);
+          .findKey(() => false);
       assert(entry).to.beNull();
     });
   });
@@ -252,7 +252,7 @@ describe('immutable.OrderedMap', () => {
     it('should return the first matching entry in the map', () => {
       const entry = OrderedMap
           .of([[0, 'a'], [1, 'b'], [2, 'c']])
-          .findValue((value: string, key: number) => {
+          .findValue((_: string, key: number) => {
             return key >= 1;
           });
       assert(entry).to.equal('b');
@@ -261,7 +261,7 @@ describe('immutable.OrderedMap', () => {
     it('should return null if the entry is not in the map', () => {
       const entry = OrderedMap
           .of([[0, 'a'], [1, 'b'], [2, 'c']])
-          .findValue((value: string, key: number) => false);
+          .findValue(() => false);
       assert(entry).to.beNull();
     });
   });
@@ -408,24 +408,24 @@ describe('immutable.OrderedMap', () => {
   describe('some', () => {
     it('should return true if some element passes the check', () => {
       const map = OrderedMap.of([[1, 'a'], [2, 'b'], [3, 'c']]);
-      assert(map.some((value: string, key: number) => key === 2)).to.beTrue();
+      assert(map.some((_: string, key: number) => key === 2)).to.beTrue();
     });
 
     it('should return false if every element does not pass the check', () => {
       const map = OrderedMap.of([[1, 'a'], [2, 'b'], [3, 'c']]);
-      assert(map.some((value: string, key: number) => key < 0)).to.beFalse();
+      assert(map.some((_: string, key: number) => key < 0)).to.beFalse();
     });
   });
 
   describe('someItem', () => {
     it('should return true if some element passes the check', () => {
       const map = OrderedMap.of([[1, 'a'], [2, 'b'], [3, 'c']]);
-      assert(map.someItem(([key, value]: [number, string]) => key === 2)).to.beTrue();
+      assert(map.someItem(([key, _]: [number, string]) => key === 2)).to.beTrue();
     });
 
     it('should return false if every element does not pass the check', () => {
       const map = OrderedMap.of([[1, 'a'], [2, 'b'], [3, 'c']]);
-      assert(map.someItem(([key, value]: [number, string]) => key < 0)).to.beFalse();
+      assert(map.someItem(([key, _]: [number, string]) => key < 0)).to.beFalse();
     });
   });
 

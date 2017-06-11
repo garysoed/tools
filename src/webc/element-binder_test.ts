@@ -6,7 +6,7 @@ import { ElementBinder } from '../webc/element-binder';
 
 
 describe('webc.ElementBinder', () => {
-  let element;
+  let element: any;
   let binder: ElementBinder<Element>;
 
   beforeEach(() => {

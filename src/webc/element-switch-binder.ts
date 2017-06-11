@@ -47,7 +47,7 @@ export class ElementSwitchBinder<T> implements DomBinder<T> {
     }
 
     const foundEntry = this.mapping_
-        .find(([key, value]: [T, string]) => {
+        .find(([_, value]: [T, string]) => {
           return value === element.id;
         });
     const foundEnum = foundEntry ? foundEntry[0] : null;

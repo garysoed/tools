@@ -6,9 +6,9 @@ import { ApiClient } from '../rpc/api-client';
 
 
 describe('rpc.ApiClient', () => {
-  let mockChannel;
-  let mockResponseCheck;
-  let mockResponseType;
+  let mockChannel: any;
+  let mockResponseCheck: any;
+  let mockResponseType: any;
   let client: ApiClient<any, any>;
 
   beforeEach(() => {

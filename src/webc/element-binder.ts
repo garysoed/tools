@@ -25,7 +25,7 @@ export class ElementBinder<T extends Element> implements DomBinder<T> {
   /**
    * @override
    */
-  set(value: T): void {
+  set(_: any): void {
     throw new Error('Set is unsupported');
   }
 

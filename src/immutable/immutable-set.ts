@@ -1,8 +1,6 @@
 import { FiniteIterableType } from '../check/finite-iterable-type';
 import { InstanceofType } from '../check/instanceof-type';
 import { Iterables } from '../immutable/iterables';
-import { Collection } from '../interfaces/collection';
-import { Finite } from '../interfaces/finite';
 import { FiniteCollection } from '../interfaces/finite-collection';
 import { assertUnreachable } from '../typescript/assert-unreachable';
 

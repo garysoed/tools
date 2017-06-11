@@ -15,7 +15,7 @@ describe('Reflect', () => {
         this.b_ = b;
       }
 
-      static [Reflect.__initialize](instance: TestClass): void { }
+      static [Reflect.__initialize](): void { }
 
       get a(): number {
         return this.a_;

@@ -7,7 +7,7 @@ import { FunctionAssert } from './function-assert';
 
 
 describe('jasmine.FunctionAssert', () => {
-  let assert;
+  let assert: FunctionAssert<Function>;
 
   beforeEach(() => {
     assert = new FunctionAssert(

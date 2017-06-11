@@ -5,8 +5,8 @@ import { ColorAssert } from '../jasmine/color-assert';
 
 
 describe('jasmine.ColorAssert', () => {
-  let mockColor;
-  let mockExpect;
+  let mockColor: any;
+  let mockExpect: any;
 
   beforeEach(() => {
     mockExpect = jasmine.createSpy('Expect');

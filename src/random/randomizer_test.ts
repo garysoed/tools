@@ -5,7 +5,7 @@ import { Randomizer } from './randomizer';
 
 
 describe('random.Randomizer', () => {
-  let mockRng;
+  let mockRng: any;
   let randomizer: Randomizer;
 
   beforeEach(() => {

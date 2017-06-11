@@ -2,7 +2,6 @@ import { BaseDisposable } from '../dispose/base-disposable';
 import { Bus } from '../event/bus';
 import { event } from '../event/event';
 import { listener } from '../event/listener';
-import { monad } from '../event/monad';
 import { monadOut } from '../event/monad-out';
 import { on } from '../event/on';
 import { SimpleMonad } from '../event/simple-monad';
@@ -63,7 +62,7 @@ class TestClass extends BaseDisposable {
 }
 
 describe('event functional test', () => {
-  let mockSpy;
+  let mockSpy: any;
   let instance;
 
   beforeEach(() => {
@@ -89,7 +88,7 @@ describe('event functional test', () => {
   it('should process the monad correctly', () => {
     const newValue = 123;
     Fakes.build(mockSpy.onMonad)
-        .call((id: any, value: any) => ImmutableMap.of([[id, newValue]]));
+        .call((id: any, _: any) => ImmutableMap.of([[id, newValue]]));
 
     const event: TestEventB = {payload: 123, type: 'eventB'};
     TEST_EVENT_BUS.dispatch(event);

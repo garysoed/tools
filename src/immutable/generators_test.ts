@@ -2,7 +2,6 @@ import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
 import { Generators } from '../immutable/generators';
-import { Iterables } from '../immutable/iterables';
 
 
 describe('immutable.Generators', () => {
@@ -13,7 +12,7 @@ describe('immutable.Generators', () => {
 
     it('should throw error if "to" is less than "from"', () => {
       assert(() => {
-        for (const item of Generators.ranged(10, 3, 3)) { }
+        for (const _ of Generators.ranged(10, 3, 3)) { }
       }).to.throwError(/must be <=/);
     });
   });

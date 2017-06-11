@@ -5,7 +5,7 @@ import { Mocks } from '../mock/mocks';
 import { EventDispatcher } from '../webc/event-dispatcher';
 
 describe('webc.EventDispatcher', () => {
-  let mockElement;
+  let mockElement: any;
   let dispatcher: EventDispatcher;
 
   beforeEach(() => {

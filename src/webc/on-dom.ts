@@ -1,4 +1,3 @@
-import { Parser } from '../interfaces/parser';
 import { AttributeSelector, ElementSelector } from '../interfaces/selector';
 import { AttributeChangeHandler } from '../webc/attribute-change-handler';
 import { EventHandler } from '../webc/event-handler';

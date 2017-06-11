@@ -38,7 +38,7 @@ export class MonadUtil {
             throw new Error(`No factories found for ${index}`);
           }
 
-          const [monad, factory, id, setter] = data;
+          const [monad, , id, setter] = data;
           const value = monad.get();
           return setter ? {id, value} : value;
         })
@@ -48,7 +48,7 @@ export class MonadUtil {
     const monadMap = ImmutableMap.of(
         monadDataMap
             .values()
-            .mapItem(([monad, factory, id]: [MonadType<any>, MonadFactory<any>, any]) => {
+            .mapItem(([monad, _, id]: [MonadType<any>, MonadFactory<any>, any]) => {
               return [id, monad] as [any, MonadType<any>];
             }));
     if (rv instanceof ImmutableMap) {

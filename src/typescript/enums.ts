@@ -23,7 +23,7 @@ export class Enums {
    */
   static fromNumberString<E>(stringValue: string, enumSet: gs.IEnum): E {
     const nameString: string = enumSet[stringValue];
-    return enumSet[nameString];
+    return enumSet[nameString] as E;
   }
 
   /**
@@ -54,4 +54,3 @@ export class Enums {
     return enumSet[enumValue].toLowerCase();
   }
 }
-// TODO: Mutable

@@ -5,7 +5,6 @@ import { ImmutableMap } from '../immutable/immutable-map';
 import { Mocks } from '../mock/mocks';
 import { __enumValue, ElementSwitchBinder } from '../webc/element-switch-binder';
 
-
 enum Enum {
   A,
   B,
@@ -13,7 +12,7 @@ enum Enum {
 
 describe('webc.ElementSwitchBinder', () => {
   let mapping: ImmutableMap<Enum, string>;
-  let mockParentEl;
+  let mockParentEl: any;
   let binder: ElementSwitchBinder<Enum>;
 
   beforeEach(() => {

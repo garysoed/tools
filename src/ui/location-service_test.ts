@@ -12,8 +12,8 @@ import { Reflect } from '../util/reflect';
 
 
 describe('ui.LocationService', () => {
-  let mockLocation;
-  let mockWindow;
+  let mockLocation: any;
+  let mockWindow: any;
   let service: LocationService;
 
   beforeEach(() => {

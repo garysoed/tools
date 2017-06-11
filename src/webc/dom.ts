@@ -1,7 +1,6 @@
 import { monad } from '../event/monad';
 import { monadOut } from '../event/monad-out';
 import { MonadFactory } from '../interfaces/monad-factory';
-import { Parser } from '../interfaces/parser';
 import { AttributeSelector, ElementSelector } from '../interfaces/selector';
 import { AttributeBinder } from '../webc/attribute-binder';
 import { ElementBinder } from '../webc/element-binder';

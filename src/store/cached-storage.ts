@@ -1,6 +1,5 @@
 import { BaseDisposable } from '../dispose/base-disposable';
 
-import { ImmutableList } from '../immutable/immutable-list';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Iterables } from '../immutable/iterables';
 import { Storage } from './interfaces';

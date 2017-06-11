@@ -1,4 +1,3 @@
-export function assertUnreachable(v: never): never {
+export function assertUnreachable(_: never): never {
   throw new Error('Unreachable code reached');
 }
-// TODO: Mutable

@@ -7,7 +7,7 @@ import { BaseAssert } from './base-assert';
 
 
 describe('jasmine.BaseAssert', () => {
-  let mockExpect;
+  let mockExpect: any;
 
   beforeEach(() => {
     mockExpect = jasmine.createSpy('Expect');

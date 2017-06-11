@@ -1,5 +1,4 @@
 import { Collection } from '../interfaces/collection';
-import { Finite } from '../interfaces/finite';
 import { FiniteCollection } from '../interfaces/finite-collection';
 
 export interface Indexed<I, T> {

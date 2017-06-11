@@ -33,7 +33,7 @@ export class LocationService extends BaseListenableListener<LocationServiceEvent
    * Initializes the given LocationService instance.
    * @param service The service instance to be initialized.
    */
-  private [Reflect.__initialize](service: LocationService): void {
+  [Reflect.__initialize](): void {
     this.listenTo(this.window_, DomEvent.HASHCHANGE, this.onHashChange_);
   }
 

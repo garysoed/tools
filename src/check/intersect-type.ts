@@ -1,5 +1,4 @@
 import { IType } from '../check/i-type';
-import { ImmutableList } from '../immutable/immutable-list';
 
 class IntersectTypeBuilder<T> {
   private readonly types_: IType<any>[];

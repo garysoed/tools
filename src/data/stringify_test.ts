@@ -26,8 +26,8 @@ describe('data.Stringify', () => {
     });
 
     it('should stringify Functions correctly', () => {
-      const f = function a(a: any, b: any, c: any): any {};
-      assert(Stringify['formatField_'](f, '|', '--', '>>')).to.equal('function a(a, b, c)');
+      const f = function a(_a: any, _b: any, _c: any): any {};
+      assert(Stringify['formatField_'](f, '|', '--', '>>')).to.equal('function a(_a, _b, _c)');
     });
 
     it('should stringify objects correctly without padding', () => {

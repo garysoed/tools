@@ -8,7 +8,7 @@ declare module xtag {
   interface IAccessorConfig {
     attribute?: IAttributeConfig
     get?: () => any
-    set?: (value) => void
+    set?: (value: any) => void
   }
 
   interface IConfig {

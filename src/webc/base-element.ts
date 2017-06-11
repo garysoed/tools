@@ -23,7 +23,7 @@ export class BaseElement extends BaseListener {
    * @param oldValue Old value of the attribute.
    * @param newValue New value of the attribute.
    */
-  onAttributeChanged(attrName: string, oldValue: string, newValue: string): void { }
+  onAttributeChanged(_attrName: string, _oldValue: string, _newValue: string): void { }
 
   /**
    * Called when the element is created.
@@ -40,13 +40,13 @@ export class BaseElement extends BaseListener {
    *
    * @param element Reference to the element.
    */
-  onInserted(element: HTMLElement): void { }
+  onInserted(_element: HTMLElement): void { }
 
   /**
    * Called when the element is removed from the DOM.
    *
    * @param element Reference to the element.
    */
-  onRemoved(element: HTMLElement): void { }
+  onRemoved(_element: HTMLElement): void { }
 }
 // TODO: Mutable

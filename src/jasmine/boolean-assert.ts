@@ -11,10 +11,10 @@ export class BooleanAssert extends BaseAssert {
    * @param expect_ Reference to jasmine's expect function.'
    */
   constructor(
-      private booleanValue_: boolean,
+      booleanValue: boolean,
       reversed: boolean,
       expect: (actual: any) => jasmine.Matchers) {
-    super(booleanValue_, reversed, expect);
+    super(booleanValue, reversed, expect);
   }
 
   /**

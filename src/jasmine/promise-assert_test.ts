@@ -7,8 +7,8 @@ import { Mocks } from '../mock/mocks';
 
 
 describe('jasmine.PromiseAssert', () => {
-  let mockExpect;
-  let mockFail;
+  let mockExpect: any;
+  let mockFail: any;
 
   beforeEach(() => {
     mockExpect = jasmine.createSpy('Expect');

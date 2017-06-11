@@ -1,5 +1,4 @@
 import { CtorType } from '../check/ctor-type';
-import { InstanceofType } from '../check/instanceof-type';
 import { InjectMetadata } from '../inject/inject-metadata';
 import { InjectUtil } from '../inject/inject-util';
 

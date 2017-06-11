@@ -35,7 +35,7 @@ describe('event.MonadUtil', () => {
       spyOn(MonadUtil, 'getMonadData_').and.returnValue({monadData, eventIndexes});
 
       const mockFn = jasmine.createSpy('Fn');
-      function fn(arg1: any, arg2: any, arg3: any, arg4: any): any {
+      function fn(this: any, arg1: any, arg2: any, arg3: any, arg4: any): any {
         mockFn(this, arg1, arg2, arg3, arg4);
       }
 
@@ -67,7 +67,7 @@ describe('event.MonadUtil', () => {
       const rv = ImmutableMap.of([[mockFactory, 123]]);
       const mockFn = jasmine.createSpy('Fn');
       mockFn.and.returnValue(rv);
-      function fn(arg1: any): any {
+      function fn(this: any, arg1: any): any {
         return mockFn(this, arg1);
       }
 
@@ -103,7 +103,7 @@ describe('event.MonadUtil', () => {
       const rv = ImmutableMap.of([[mockFactory, 123]]);
       const mockFn = jasmine.createSpy('Fn');
       mockFn.and.returnValue(Promise.resolve(rv));
-      function fn(arg1: any): any {
+      function fn(this: any, arg1: any): any {
         return mockFn(this, arg1);
       }
 
@@ -138,7 +138,7 @@ describe('event.MonadUtil', () => {
 
       const mockFn = jasmine.createSpy('Fn');
       mockFn.and.returnValue(Promise.resolve(Mocks.object('rv')));
-      function fn(arg1: any): any {
+      function fn(this: any, arg1: any): any {
         return mockFn(this, arg1);
       }
 
@@ -171,7 +171,7 @@ describe('event.MonadUtil', () => {
 
       const mockFn = jasmine.createSpy('Fn');
       mockFn.and.returnValue(Promise.resolve(Mocks.object('rv')));
-      function fn(arg1: any): any {
+      function fn(this: any, arg1: any): any {
         return mockFn(this, arg1);
       }
 

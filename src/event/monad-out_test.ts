@@ -10,7 +10,6 @@ class TestClass { }
 
 describe('event.monadOut', () => {
   it('should add the annotation correctly', () => {
-    const id = Mocks.object('id');
     const factory = Mocks.object('factory');
     const method = 'method';
     const index = 3;

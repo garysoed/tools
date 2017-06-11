@@ -10,7 +10,7 @@ import { TestDispose } from '../testing/test-dispose';
 
 
 describe('store.CachedStorage', () => {
-  let mockInnerStorage;
+  let mockInnerStorage: any;
   let storage: CachedStorage<string>;
 
   beforeEach(() => {

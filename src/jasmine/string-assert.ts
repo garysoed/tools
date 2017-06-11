@@ -11,10 +11,10 @@ export class StringAssert extends AnyAssert<string> {
    * @param expect_ Reference to jasmine's expect function.'
    */
   constructor(
-      private stringValue_: string,
+      stringValue: string,
       reversed: boolean,
       expect: (actual: any) => jasmine.Matchers) {
-    super(stringValue_, reversed, expect);
+    super(stringValue, reversed, expect);
   }
 
   /**
@@ -24,4 +24,3 @@ export class StringAssert extends AnyAssert<string> {
     this.getMatchers_().toEqual(jasmine.stringMatching(regexp));
   }
 }
-// TODO: Mutable

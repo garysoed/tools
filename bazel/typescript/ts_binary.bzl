@@ -12,17 +12,18 @@ def _ts_binary_impl(ctx):
   compile_command = ' '.join([
     'tsc',
     '--baseUrl', '.',
-    '--experimentalDecorators',
+    '--target', ctx.attr.ts_target,
     '--module', 'commonjs',
+    '--moduleResolution', 'classic',
+    '--experimentalDecorators',
     '--outDir', ctx.label.name,
-    '--rootDir', '.',
-    '--noResolve',
     '--noUnusedLocals',
     '--noUnusedParameters',
-    '--pretty',
-    '--moduleResolution', 'classic',
+    '--rootDir', '.',
+    '--suppressImplicitAnyIndexErrors',
     '--strict',
-    '--target', ctx.attr.ts_target,
+    '--noResolve',
+    '--pretty',
     paths
   ])
   tar_command = 'tar cf %s %s' % (ctx.outputs.out.path, ctx.label.name)

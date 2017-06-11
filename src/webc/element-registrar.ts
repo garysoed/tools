@@ -4,14 +4,13 @@ import { MonadUtil } from '../event/monad-util';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Iterables } from '../immutable/iterables';
 import { Injector } from '../inject/injector';
-import { DomBinder } from '../interfaces/dom-binder';
 import { Parser } from '../interfaces/parser';
 import { Cases } from '../string/cases';
 import { Log } from '../util/log';
 import { BaseElement } from '../webc/base-element';
 import { DomHook } from '../webc/dom-hook';
 import { Handler } from '../webc/handle';
-import { ANNOTATIONS as HookAnnotations, BinderFactory as HookBinderFactory } from '../webc/hook';
+import { ANNOTATIONS as HookAnnotations } from '../webc/hook';
 import { ANNOTATIONS as LIFECYCLE_ANNOTATIONS } from '../webc/on-lifecycle';
 import { Templates } from '../webc/templates';
 import { Util } from '../webc/util';
@@ -137,9 +136,7 @@ export class ElementRegistrar extends BaseDisposable {
     return LIFECYCLE_ANNOTATIONS
         .forCtor(instance.constructor)
         .getAttachedValues()
-        .filter((
-            annotations: ImmutableSet<'create' | 'insert' | 'remove'>,
-            key: string | symbol) => {
+        .filter((annotations: ImmutableSet<'create' | 'insert' | 'remove'>) => {
           return annotations.has(lifecycle);
         })
         .keys();

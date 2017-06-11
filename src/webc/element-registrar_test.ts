@@ -9,18 +9,16 @@ import { Mocks } from '../mock/mocks';
 import { TestDispose } from '../testing/test-dispose';
 import { Log } from '../util/log';
 import { BaseElement } from '../webc/base-element';
-import { DomHook } from '../webc/dom-hook';
 import { ElementRegistrar } from '../webc/element-registrar';
 import { Handler } from '../webc/handle';
-import { ANNOTATIONS as HookAnnotations } from '../webc/hook';
 import { ANNOTATIONS as LIFECYCLE_ANNOTATIONS } from '../webc/on-lifecycle';
 import { Util } from '../webc/util';
 
 
 describe('webc.ElementRegistrar', () => {
-  let mockInjector;
-  let mockTemplates;
-  let mockXtag;
+  let mockInjector: any;
+  let mockTemplates: any;
+  let mockXtag: any;
   let registrar: ElementRegistrar;
 
   beforeEach(() => {
@@ -32,7 +30,7 @@ describe('webc.ElementRegistrar', () => {
   });
 
   describe('getLifecycleConfig_', () => {
-    let mockProvider;
+    let mockProvider: any;
 
     beforeEach(() => {
       mockProvider = jasmine.createSpy('provider');
@@ -77,7 +75,7 @@ describe('webc.ElementRegistrar', () => {
       const mockHTMLElement = Mocks.object('HTMLElement');
 
       Fakes.build(spyOn(ElementRegistrar, 'runOnInstance_'))
-          .call((registrar: any, callback: Function) => callback(instance));
+          .call((_: any, callback: Function) => callback(instance));
       const key1 = 'key1';
       const key2 = 'key2';
       spyOn(registrar, 'getMethodsWithLifecycle_').and.returnValue(ImmutableSet.of([key1, key2]));
@@ -102,7 +100,7 @@ describe('webc.ElementRegistrar', () => {
       const mockHTMLElement = Mocks.object('HTMLElement');
 
       Fakes.build(spyOn(ElementRegistrar, 'runOnInstance_'))
-          .call((registrar: any, callback: Function) => callback(instance));
+          .call((_: any, callback: Function) => callback(instance));
       const key1 = 'key1';
       const key2 = 'key2';
       spyOn(registrar, 'getMethodsWithLifecycle_').and.returnValue(ImmutableSet.of([key1, key2]));
@@ -147,7 +145,7 @@ describe('webc.ElementRegistrar', () => {
   });
 
   describe('register', () => {
-    let ctor;
+    let ctor: any;
 
     beforeEach(() => {
       ctor = Mocks.object('ctor');
@@ -162,7 +160,7 @@ describe('webc.ElementRegistrar', () => {
       const originalRegister = registrar.register.bind(registrar);
       Fakes.build(spyOn(registrar, 'register'))
           .when(mockDependency).resolve(1)
-          .else().call((inputCtor: any) => originalRegister(ctor));
+          .else().call((_: any) => originalRegister(ctor));
 
       const mockConfig = {
         attributes: attributes,

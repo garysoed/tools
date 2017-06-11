@@ -68,7 +68,7 @@ describe('immutable.ImmutableSet', () => {
     });
 
     it('should return null if there are no matches', () => {
-      assert(ImmutableSet.of([1, 2, 3]).find((n: number) => false)).to.beNull();
+      assert(ImmutableSet.of([1, 2, 3]).find(() => false)).to.beNull();
     });
   });
 

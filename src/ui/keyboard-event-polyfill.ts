@@ -21,7 +21,7 @@ class KeyboardEventPolyfill {
 
     if (!KeyboardEvent.prototype.key) {
       Object.defineProperty(KeyboardEvent.prototype, 'key', {
-        get: function(): string {
+        get: function(this: KeyboardEvent): string {
           if (this.charCode !== undefined) {
             return String.fromCharCode(this.charCode);
           }

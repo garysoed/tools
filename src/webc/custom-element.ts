@@ -1,6 +1,5 @@
 import { BaseDisposable } from '../dispose/base-disposable';
 import { listener } from '../event/listener';
-import { BaseElement } from '../webc/base-element';
 import { IElementConfig } from '../webc/interfaces';
 import { Util } from '../webc/util';
 

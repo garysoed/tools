@@ -1,13 +1,12 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import { ImmutableList } from '../immutable/immutable-list';
 import { Fakes } from '../mock/fakes';
 import { Doms } from '../ui/doms';
 
 
 describe('ui.Doms', () => {
-  let rootEl;
+  let rootEl: HTMLElement;
 
   beforeEach(() => {
     rootEl = document.createElement('div');

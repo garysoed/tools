@@ -8,7 +8,7 @@ export function onLifecycle(lifecycle: Lifecycle): MethodDecorator {
   return (
       target: Object,
       propertyKey: string | symbol,
-      descriptor: PropertyDescriptor) => {
+      _: PropertyDescriptor) => {
     ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(propertyKey, lifecycle);
   };
 }

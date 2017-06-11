@@ -49,7 +49,7 @@ describe('immutable.InfiniteMap', () => {
   describe('filter', () => {
     it('should filter correctly', () => {
       const map = InfiniteMap.of(Iterables.of(generateInts), (i: number) => `${i}`)
-          .filter((value: string, key: number) => {
+          .filter((_: string, key: number) => {
             return (key % 2) === 0;
           });
       assert(map).to.startWith([[0, '0'], [2, '2'], [4, '4'], [6, '6']]);
@@ -59,7 +59,7 @@ describe('immutable.InfiniteMap', () => {
   describe('filterItem', () => {
     it('should filter correctly', () => {
       const map = InfiniteMap.of(Iterables.of(generateInts), (i: number) => `${i}`)
-          .filterItem(([key, value]: [number, string]) => {
+          .filterItem(([key, _]: [number, string]) => {
             return (key % 2) === 0;
           });
       assert(map).to.startWith([[0, '0'], [2, '2'], [4, '4'], [6, '6']]);
@@ -90,7 +90,7 @@ describe('immutable.InfiniteMap', () => {
   describe('map', () => {
     it('should map correctly', () => {
       const map = InfiniteMap.of(Iterables.of(generateInts), (i: number) => `${i}`)
-          .map((value: string, key: number) => {
+          .map((_: string, key: number) => {
             return (key % 2) === 0;
           });
       assert(map).to.startWith([[0, true], [1, false], [2, true], [3, false]]);
@@ -100,7 +100,7 @@ describe('immutable.InfiniteMap', () => {
   describe('mapItem', () => {
     it('should map correctly', () => {
       const map = InfiniteMap.of(Iterables.of(generateInts), (i: number) => `${i}`)
-          .mapItem(([key, value]: [number, string]) => {
+          .mapItem(([key, _]: [number, string]) => {
             return (key % 2) === 0;
           });
       assert(map).to.startWith([true, false, true, false]);

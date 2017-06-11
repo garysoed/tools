@@ -11,8 +11,8 @@ import { TestDispose } from '../testing/test-dispose';
 
 
 describe('rpc.PostMessageChannel', () => {
-  let mockDestWindow;
-  let mockSrcWindow;
+  let mockDestWindow: any;
+  let mockSrcWindow: any;
   let channel: PostMessageChannel;
 
   beforeEach(() => {

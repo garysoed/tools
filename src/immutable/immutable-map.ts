@@ -1,12 +1,8 @@
 import { FiniteIterableType } from '../check/finite-iterable-type';
 import { InstanceofType } from '../check/instanceof-type';
 import { ImmutableSet } from '../immutable/immutable-set';
-import { Collection } from '../interfaces/collection';
-import { Finite } from '../interfaces/finite';
 import { FiniteCollection } from '../interfaces/finite-collection';
 import { FiniteIndexed } from '../interfaces/finite-indexed';
-import { Indexed } from '../interfaces/indexed';
-import { assertUnreachable } from '../typescript/assert-unreachable';
 
 export class ImmutableMap<K, V> implements
     FiniteCollection<[K, V]>,
@@ -33,7 +29,7 @@ export class ImmutableMap<K, V> implements
     return new ImmutableMap(clone);
   }
 
-  delete([key, value]: [K, V]): ImmutableMap<K, V> {
+  delete([key, _]: [K, V]): ImmutableMap<K, V> {
     const clone = new Map(this.data_);
     clone.delete(key);
     return new ImmutableMap(clone);
@@ -41,7 +37,7 @@ export class ImmutableMap<K, V> implements
 
   deleteAll(items: FiniteCollection<[K, V]>): ImmutableMap<K, V> {
     const clone = new Map(this.data_);
-    for (const [key, value] of items) {
+    for (const [key, _] of items) {
       clone.delete(key);
     }
     return new ImmutableMap(clone);
@@ -127,7 +123,7 @@ export class ImmutableMap<K, V> implements
 
   keys(): ImmutableSet<K> {
     return this.entries()
-        .mapItem(([key, value]: [K, V]) => {
+        .mapItem(([key, _]: [K, V]) => {
           return key;
         });
   }
@@ -164,7 +160,7 @@ export class ImmutableMap<K, V> implements
     return new ImmutableMap(clone);
   }
 
-  private setForTest(key: K, value: V): void {
+  setForTest(key: K, value: V): void {
     this.data_.set(key, value);
   }
 
@@ -189,7 +185,7 @@ export class ImmutableMap<K, V> implements
 
   values(): ImmutableSet<V> {
     return this.entries()
-        .mapItem(([key, value]: [K, V]) => {
+        .mapItem(([_, value]: [K, V]) => {
           return value;
         });
   }

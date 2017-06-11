@@ -20,7 +20,7 @@ export class IterableAssert<T> extends AnyAssert<Iterable<T>> {
     // Collect the first few elements of the iterator.
     const toCheck: T[] = [];
     let result = iterator.next();
-    for (const value of expected) {
+    for (const _ of expected) {
       if (result.done) {
         break;
       }

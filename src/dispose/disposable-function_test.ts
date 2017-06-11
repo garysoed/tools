@@ -7,8 +7,8 @@ import { DisposableFunction } from './disposable-function';
 
 
 describe('dispose.DisposableFunction', () => {
-  let mockFunction;
-  let disposableFunction;
+  let mockFunction: any;
+  let disposableFunction: DisposableFunction;
 
   beforeEach(() => {
     mockFunction = jasmine.createSpy('Function');

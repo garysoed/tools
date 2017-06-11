@@ -11,7 +11,7 @@ import { TestDispose } from '../testing/test-dispose';
 
 describe('async.WaitUntil', () => {
   const INTERVAL = 200;
-  let mockCheckFn;
+  let mockCheckFn: any;
   let waitUntil: WaitUntil;
 
   beforeEach(() => {
@@ -69,12 +69,12 @@ describe('async.WaitUntil', () => {
       const mockInterval = jasmine.createSpyObj('Interval', ['dispose', 'on', 'start']);
 
       spyOn(Interval, 'newInstance').and.returnValue(mockInterval);
-      Fakes.build(spyOn(waitUntil, 'onTick_')).call((interval: any, resolve: any) => {
+      Fakes.build(spyOn(waitUntil, 'onTick_')).call((_: any, resolve: any) => {
         resolve();
       });
 
       const spyListenTo = spyOn(waitUntil, 'listenTo');
-      Fakes.build(spyListenTo).call((listenable: any, eventType: any, callback: any) => {
+      Fakes.build(spyListenTo).call((_listenable: any, _eventType: any, callback: any) => {
         callback();
       });
 

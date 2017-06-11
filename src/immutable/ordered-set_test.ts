@@ -117,7 +117,7 @@ describe('immutable.OrderedSet', () => {
     });
 
     it('should return null if there are no matches', () => {
-      assert(OrderedSet.of([1, 2, 3]).find((n: number) => false)).to.beNull();
+      assert(OrderedSet.of([1, 2, 3]).find((_: number) => false)).to.beNull();
     });
   });
 

@@ -8,7 +8,7 @@ import { BaseListenable } from './base-listenable';
 
 
 describe('event.BaseListenable', () => {
-  let listenable;
+  let listenable: BaseListenable<string>;
 
   beforeEach(() => {
     listenable = new BaseListenable<string>();
@@ -19,7 +19,7 @@ describe('event.BaseListenable', () => {
     it('should clear the callback map', () => {
       const mockCallback = jasmine.createSpy('Callback');
       const event = 'event';
-      TestDispose.add(listenable.on(event, mockCallback));
+      TestDispose.add(listenable.on(event, mockCallback, window));
       listenable.dispose();
 
       listenable.dispatch(event, () => {});
@@ -38,7 +38,7 @@ describe('event.BaseListenable', () => {
           (payload: any) => {
             mockBubbleHandler(i, payload);
           },
-          this,
+          window,
           false));
 
       const mockCaptureHandler = jasmine.createSpy('CaptureHandler');
@@ -47,7 +47,7 @@ describe('event.BaseListenable', () => {
           (payload: any) => {
             mockCaptureHandler(i, payload);
           },
-          this,
+          window,
           true));
 
       const payload = Mocks.object('payload');
@@ -80,7 +80,7 @@ describe('event.BaseListenable', () => {
           (payload: any) => {
             mockBubbleHandler(i, payload);
           },
-          this,
+          window,
           false));
 
       const mockCaptureHandler = jasmine.createSpy('CaptureHandler');
@@ -89,7 +89,7 @@ describe('event.BaseListenable', () => {
           (payload: any) => {
             mockCaptureHandler(i, payload);
           },
-          this,
+          window,
           true));
 
       const payload = Mocks.object('payload');
@@ -121,7 +121,7 @@ describe('event.BaseListenable', () => {
       const mockCallback = jasmine.createSpy('Callback');
       const event = 'event';
 
-      const disposableFunction = listenable.on(event, mockCallback);
+      const disposableFunction = listenable.on(event, mockCallback, window);
       disposableFunction.dispose();
 
       listenable.dispatch(event, () => {});
@@ -135,7 +135,7 @@ describe('event.BaseListenable', () => {
       const mockCallback = jasmine.createSpy('Callback');
       const event = 'event';
 
-      const disposableFunction = listenable.once(event, mockCallback);
+      const disposableFunction = listenable.once(event, mockCallback, window);
       listenable.dispatch(event, () => {});
 
       assert(mockCallback).to.haveBeenCalledWith(null);
@@ -151,7 +151,7 @@ describe('event.BaseListenable', () => {
       const mockCallback = jasmine.createSpy('Callback');
       const event = 'event';
 
-      const disposableFunction = listenable.once(event, mockCallback);
+      const disposableFunction = listenable.once(event, mockCallback, window);
       disposableFunction.dispose();
 
       listenable.dispatch(event, () => {});

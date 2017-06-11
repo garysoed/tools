@@ -11,7 +11,7 @@ export const __SEQUENCER: symbol = Symbol('sequencer');
 export function atomic(): MethodDecorator {
   return function(
       target: gs.ICtor<any>,
-      property: string | symbol,
+      _: string | symbol,
       descriptor: TypedPropertyDescriptor<(...args: any[]) => any>):
       TypedPropertyDescriptor<(...args: any[]) => any> {
     if (!(target instanceof BaseDisposable)) {
@@ -24,7 +24,7 @@ export function atomic(): MethodDecorator {
         if (!this[__SEQUENCER]) {
           const sequencer = Sequencer.newInstance();
           this[__SEQUENCER] = sequencer;
-          this.addDisposable(sequencer);
+          (this as BaseDisposable).addDisposable(sequencer);
         }
         return this[__SEQUENCER].run(() => {
           return Promise.resolve(originalFn!.apply(this, args));

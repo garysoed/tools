@@ -9,7 +9,7 @@ import { Sequencer } from './sequencer';
 
 
 describe('async.sequenced', () => {
-  let decorator;
+  let decorator: MethodDecorator;
 
   beforeEach(() => {
     decorator = atomic();
@@ -52,7 +52,8 @@ describe('async.sequenced', () => {
 
     const instance = Mocks.object('instance');
     instance[__SEQUENCER] = mockSequencer;
-    await decorator(Class.prototype, 'property', descriptor).value.call(instance, 1, 2);
+    const decoratedFunction = decorator(Class.prototype, 'property', descriptor)!.value as Function;
+    await decoratedFunction.call(instance, 1, 2);
     assert(mockSequencer.run).to.haveBeenCalledWith(Matchers.any(Function));
   });
 

@@ -2,7 +2,6 @@ import { BaseDisposable } from '../dispose/base-disposable';
 import { ImmutableList } from '../immutable/immutable-list';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Iterables } from '../immutable/iterables';
-import { Parser } from '../interfaces/parser';
 import { StringParser } from '../parse/string-parser';
 import { AttributeChangeHandler } from '../webc/attribute-change-handler';
 import { ChildListChangeHandler } from '../webc/child-list-change-handler';

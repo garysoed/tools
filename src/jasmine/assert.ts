@@ -1,8 +1,5 @@
 import { BooleanType } from '../check/boolean-type';
 import { FiniteIterableType } from '../check/finite-iterable-type';
-import { HasPropertyType } from '../check/has-property-type';
-import { InstanceofType } from '../check/instanceof-type';
-import { IntersectType } from '../check/intersect-type';
 import { IterableType } from '../check/iterable-type';
 import { NumberType } from '../check/number-type';
 import { StringType } from '../check/string-type';

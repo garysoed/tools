@@ -1,8 +1,5 @@
 import { ImmutableList } from '../immutable/immutable-list';
 import { Parser } from '../interfaces/parser';
-import { Log } from '../util/log';
-
-const LOGGER = Log.of('parse.ArrayParser');
 
 export const DELIMITER_: string = ',';
 

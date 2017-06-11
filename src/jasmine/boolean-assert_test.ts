@@ -5,7 +5,7 @@ import { BooleanAssert } from './boolean-assert';
 
 
 describe('jasmine.BooleanAssert', () => {
-  let assert;
+  let assert: BooleanAssert;
 
   beforeEach(() => {
     assert = new BooleanAssert(true /* value */, true /* reversed */, jasmine.createSpy('expect'));

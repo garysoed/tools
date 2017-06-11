@@ -1,4 +1,4 @@
-import { assert, Matchers, TestBase } from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
 import { Annotations, AnnotationsHandler } from '../data/annotations';
@@ -8,7 +8,7 @@ import { Mocks } from '../mock/mocks';
 
 describe('data.AnnotationsHandler', () => {
   const __SYMBOL = Symbol('symbol');
-  let parent;
+  let parent: any;
   let handler: AnnotationsHandler<number>;
 
   beforeEach(() => {
@@ -115,8 +115,8 @@ describe('data.AnnotationsHandler', () => {
   });
 
   describe('of', () => {
-    let ctor;
-    let annotation;
+    let ctor: any;
+    let annotation: symbol;
 
     beforeEach(() => {
       ctor = Mocks.object('ctor');
