@@ -3,7 +3,20 @@
  *
  * @TODO Turn this into Fluent
  */
+import { deprecated } from '../typescript/deprecated';
+import { Log } from '../util/log';
+
+const LOG = Log.of('gs-tools.data.Jsons');
+
 export class Jsons {
+  static clone<T extends gs.IJson>(original: gs.IJson): T {
+    const clone = {};
+    for (const key in original) {
+      clone[key] = original[key];
+    }
+    return clone as T;
+  }
+
   /**
    * Recursively clones the given JSON.
    *
@@ -41,6 +54,7 @@ export class Jsons {
    * @param {gs.IJson } fromObj [description]
    * @param {gs.IJson} toObj [description]
    */
+  @deprecated(LOG, 'Use object spread instead')
   static mixin<A extends gs.IJson, B extends gs.IJson>(fromObj: A, toObj: B): A & B {
     for (const key in fromObj) {
       const value = fromObj[key];
