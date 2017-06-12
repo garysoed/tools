@@ -10,7 +10,7 @@ import { TestDispose } from '../testing/test-dispose';
 import { Log } from '../util/log';
 import { BaseElement } from '../webc/base-element';
 import { ElementRegistrar } from '../webc/element-registrar';
-import { Handler } from '../webc/handle';
+import { onDom } from '../webc/on-dom';
 import { ANNOTATIONS as LIFECYCLE_ANNOTATIONS } from '../webc/on-lifecycle';
 import { Util } from '../webc/util';
 
@@ -49,7 +49,7 @@ describe('webc.ElementRegistrar', () => {
       spyOn(MonadUtil, 'callFunction');
       spyOn(Util, 'addAttributes');
       spyOn(Util, 'setElement');
-      spyOn(Handler, 'configure');
+      spyOn(onDom, 'configure');
 
       const key1 = 'key1';
       const key2 = 'key2';
@@ -58,7 +58,7 @@ describe('webc.ElementRegistrar', () => {
       const lifecycleConfig = registrar['getLifecycleConfig_'](attributes, mockProvider, content);
       lifecycleConfig.created!.call(mockHTMLElement);
 
-      assert(Handler.configure).to.haveBeenCalledWith(mockHTMLElement, mockInstance);
+      assert(onDom.configure).to.haveBeenCalledWith(mockHTMLElement, mockInstance);
       assert(MonadUtil.callFunction).to
           .haveBeenCalledWith({type: 'create'}, mockInstance, key1);
       assert(MonadUtil.callFunction).to

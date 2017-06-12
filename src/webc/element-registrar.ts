@@ -11,6 +11,7 @@ import { BaseElement } from '../webc/base-element';
 import { DomHook } from '../webc/dom-hook';
 import { Handler } from '../webc/handle';
 import { ANNOTATIONS as HookAnnotations } from '../webc/hook';
+import { onDom } from '../webc/on-dom';
 import { ANNOTATIONS as LIFECYCLE_ANNOTATIONS } from '../webc/on-lifecycle';
 import { Templates } from '../webc/templates';
 import { Util } from '../webc/util';
@@ -102,7 +103,7 @@ export class ElementRegistrar extends BaseDisposable {
           for (const key of registrar.getMethodsWithLifecycle_('create', instance)) {
             MonadUtil.callFunction({type: 'create'}, instance, key);
           }
-          Handler.configure(this, instance);
+          onDom.configure(this, instance);
         }
       },
       inserted: function(this: HTMLElement): void {

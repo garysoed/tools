@@ -2,11 +2,12 @@ import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
 import { Mocks } from '../mock/mocks';
-
-import { Animation } from './animation';
+import { AnimateEventHandler } from '../webc/animate-event-handler';
+import { Animation } from '../webc/animation';
 
 
 describe('webc.Animation', () => {
+  const ID = Symbol('id');
   let keyframes: any[];
   let options: {};
   let animation: Animation;
@@ -14,7 +15,7 @@ describe('webc.Animation', () => {
   beforeEach(() => {
     keyframes = [];
     options = {};
-    animation = Animation.newInstance(keyframes, options);
+    animation = Animation.newInstance(keyframes, options, ID);
   });
 
   describe('appendKeyframe', () => {
@@ -24,7 +25,7 @@ describe('webc.Animation', () => {
       spyOn(Animation, 'newInstance').and.returnValue(newAnimation);
 
       assert(animation.appendKeyframe(keyframe)).to.equal(newAnimation);
-      assert(Animation.newInstance).to.haveBeenCalledWith([keyframe], {});
+      assert(Animation.newInstance).to.haveBeenCalledWith([keyframe], {}, ID);
     });
   });
 
@@ -36,6 +37,22 @@ describe('webc.Animation', () => {
 
       assert(animation.applyTo(mockElement)).to.equal(domAnimate);
       assert(mockElement.animate).to.haveBeenCalledWith(keyframes, options);
+    });
+  });
+
+  describe('start', () => {
+    it(`should add the animation correctly`, () => {
+      const instance = Mocks.object('instance');
+      const selector = Mocks.object('selector');
+      spyOn(AnimateEventHandler, 'addAnimation');
+
+      animation.start(instance, selector);
+      assert(AnimateEventHandler.addAnimation).to.haveBeenCalledWith(
+          instance,
+          selector,
+          keyframes,
+          options,
+          ID);
     });
   });
 });

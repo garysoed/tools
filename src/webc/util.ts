@@ -56,6 +56,15 @@ export class Util {
     return instance[__ELEMENT];
   }
 
+  static requireSelector(
+      selector: ElementSelector, parentElement: HTMLElement): HTMLElement {
+    const element = Util.resolveSelector(selector, parentElement);
+    if (!element) {
+      throw new Error(`No elements found for ${selector}`);
+    }
+    return element;
+  }
+
   /**
    * Gets the target element according to the given config.
    *
@@ -64,13 +73,13 @@ export class Util {
    * @return The target element.
    */
   static resolveSelector(
-      selector: ElementSelector, parentElement: HTMLElement): Element | null {
+      selector: ElementSelector, parentElement: HTMLElement): HTMLElement | null {
     if (selector === null || parentElement.shadowRoot === null) {
       return parentElement;
     } else if (selector === 'parent') {
       return parentElement.parentElement;
     } else if (StringType.check(selector)) {
-      return parentElement.shadowRoot.querySelector(selector);
+      return parentElement.shadowRoot.querySelector(selector) as HTMLElement;
     } else {
       throw assertUnreachable(selector);
     }

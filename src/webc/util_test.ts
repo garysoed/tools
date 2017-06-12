@@ -51,6 +51,26 @@ describe('webc.Util', () => {
     });
   });
 
+  describe('requireSelector', () => {
+    it(`should return the correct element`, () => {
+      const selector = 'selector';
+      const parentElement = Mocks.object('parentElement');
+      const element = Mocks.object('element');
+      spyOn(Util, 'resolveSelector').and.returnValue(element);
+
+      assert(Util.requireSelector(selector, parentElement)).to.equal(element);
+      assert(Util.resolveSelector).to.haveBeenCalledWith(selector, parentElement);
+    });
+
+    it(`should throw error if the element does not exist`, () => {
+      spyOn(Util, 'resolveSelector').and.returnValue(null);
+
+      assert(() => {
+        Util.requireSelector('selector', Mocks.object('parentElement'));
+      }).to.throwError(/No elements found/i);
+    });
+  });
+
   describe('resolveSelector', () => {
     it('should return the correct element if selector is specified', () => {
       const targetEl = Mocks.object('targetEl');

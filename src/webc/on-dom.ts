@@ -1,16 +1,91 @@
+import { BaseDisposable } from '../dispose/base-disposable';
+import { ImmutableList } from '../immutable/immutable-list';
+import { ImmutableSet } from '../immutable/immutable-set';
+import { Iterables } from '../immutable/iterables';
 import { AttributeSelector, ElementSelector } from '../interfaces/selector';
+import { AnimateEventHandler } from '../webc/animate-event-handler';
 import { AttributeChangeHandler } from '../webc/attribute-change-handler';
 import { EventHandler } from '../webc/event-handler';
+import { IHandler } from '../webc/interfaces';
+import { Util } from '../webc/util';
 
+export const ANIMATE_EVENT_HANDLER = new AnimateEventHandler();
 export const ATTRIBUTE_CHANGE_HANDLER = new AttributeChangeHandler();
 export const EVENT_HANDLER = new EventHandler();
 
-export const onDom = {
-  attributeChange({name, parser, selector}: AttributeSelector<any>): MethodDecorator {
-    return ATTRIBUTE_CHANGE_HANDLER.createDecorator(name, parser, selector);
-  },
+class OnDom {
+  static animate(
+      selector: ElementSelector,
+      event: 'cancel' | 'finish',
+      id: symbol): MethodDecorator {
+    return ANIMATE_EVENT_HANDLER.createDecorator(id, event, selector);
+  }
 
-  event(selector: ElementSelector, event: string): MethodDecorator {
+  static attributeChange({name, parser, selector}: AttributeSelector<any>): MethodDecorator {
+    return ATTRIBUTE_CHANGE_HANDLER.createDecorator(name, parser, selector);
+  }
+
+  static configure(element: HTMLElement, instance: BaseDisposable): void {
+    const unresolvedSelectors = ImmutableSet
+        .of<string | null>([])
+        .addAll(onDom.configure_(element, instance, ANIMATE_EVENT_HANDLER))
+        .addAll(onDom.configure_(element, instance, ATTRIBUTE_CHANGE_HANDLER))
+        .addAll(onDom.configure_(element, instance, EVENT_HANDLER));
+
+    const selectorsString = ImmutableList.of(unresolvedSelectors).toArray().join(', ');
+
+    if (unresolvedSelectors.size() > 0) {
+      throw new Error(`The following selectors cannot be resolved for handle: ${selectorsString}`);
+    }
+  }
+
+  private static configure_<T extends {selector: string | null}>(
+      parentElement: HTMLElement,
+      instance: BaseDisposable,
+      handler: IHandler<T>): ImmutableSet<string | null> {
+    const unresolvedSelectors = new Set<string | null>();
+    const configEntries = handler
+        .getConfigs(instance)
+        .values()
+        .mapItem((configs: ImmutableSet<T>): [Element | null, T][] => {
+          const entries = configs
+              .mapItem((config: T): [Element | null, T] => {
+                const selector = config.selector;
+                const element = Util.resolveSelector(selector, parentElement);
+                if (element === null) {
+                  unresolvedSelectors.add(selector);
+                }
+
+                // Element can be null, but keep going to make debugging easier.
+                return [element, config];
+              });
+          return Iterables.toArray(entries);
+        });
+
+    const entryMap = new Map();
+    for (const configEntry of configEntries) {
+      for (const [element, config] of configEntry) {
+        const existingConfigs = entryMap.get(element);
+        if (existingConfigs === undefined) {
+          entryMap.set(element, ImmutableSet.of([config]));
+        } else {
+          entryMap.set(element, existingConfigs.add(config));
+        }
+      }
+    }
+
+    for (const [targetEl, configs] of entryMap) {
+      if (targetEl !== null) {
+        handler.configure(targetEl, instance, configs);
+      }
+    }
+
+    return ImmutableSet.of(unresolvedSelectors);
+  }
+
+  static event(selector: ElementSelector, event: string): MethodDecorator {
     return EVENT_HANDLER.createDecorator(event, selector, []);
-  },
-};
+  }
+}
+
+export const onDom = OnDom;

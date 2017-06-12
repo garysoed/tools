@@ -1,10 +1,15 @@
 /**
  * Creates an animation object that can be applied to different elements.
  */
+import { BaseDisposable } from '../dispose/base-disposable';
+import { ElementSelector } from '../interfaces/selector';
+import { AnimateEventHandler } from '../webc/animate-event-handler';
+
 export class Animation {
   constructor(
       private keyframes_: AnimationKeyframe[],
-      private options_: AnimationOption) { }
+      private options_: AnimationOption,
+      private id_: symbol) { }
 
   /**
    * Appends a keyframe to the end of animation.
@@ -15,7 +20,7 @@ export class Animation {
   appendKeyframe(keyframe: AnimationKeyframe): Animation {
     const newKeyframes = this.keyframes_.slice(0);
     newKeyframes.push(keyframe);
-    return Animation.newInstance(newKeyframes, this.options_);
+    return Animation.newInstance(newKeyframes, this.options_, this.id_);
   }
 
   /**
@@ -28,6 +33,15 @@ export class Animation {
     return element.animate(this.keyframes_, this.options_);
   }
 
+  start(instance: BaseDisposable, selector: ElementSelector): void {
+    AnimateEventHandler.addAnimation(
+        instance,
+        selector,
+        this.keyframes_,
+        this.options_,
+        this.id_);
+  }
+
   /**
    * Creates a new instance of Animation.
    *
@@ -37,8 +51,9 @@ export class Animation {
    */
   static newInstance(
       keyframes: AnimationKeyframe[],
-      options: AnimationOption): Animation {
-    return new Animation(keyframes, options);
+      options: AnimationOption,
+      id: symbol): Animation {
+    return new Animation(keyframes, options, id);
   }
 }
 // TODO: Mutable
