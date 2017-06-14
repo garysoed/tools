@@ -11,6 +11,16 @@ export class Reflect {
    */
   static __initialize: symbol = Symbol('initialize');
 
+  static addInitializer(ctor: gs.ICtor<any>, initializer: (...args: any[]) => void): any {
+    const origInitializer = ctor.prototype[Reflect.__initialize];
+    ctor.prototype[Reflect.__initialize] = function(...args: any[]): void {
+      if (origInitializer) {
+        origInitializer.apply(this, args);
+      }
+      initializer.apply(this, args);
+    };
+  }
+
   /**
    * Constructs a new instance of the constructor with the given arguments. If the constructor has
    * a function referenced by the `__initialize` symbol, that function will be called with the
@@ -39,4 +49,3 @@ export class Reflect {
     Object.defineProperty(object, propertyName, { get: (): any => newValue });
   }
 }
-// TODO: Mutable

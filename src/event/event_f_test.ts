@@ -12,6 +12,7 @@ import { Fakes } from '../mock/fakes';
 import { assert, Matchers, TestBase } from '../test-base';
 import { TestDispose } from '../testing/test-dispose';
 import { Log } from '../util/log';
+import { Reflect } from '../util/reflect';
 
 TestBase.setup();
 
@@ -67,7 +68,7 @@ describe('event functional test', () => {
 
   beforeEach(() => {
     mockSpy = jasmine.createSpyObj('Spy', ['onEventA', 'onEventB', 'onMonad']);
-    instance = new TestClass(mockSpy);
+    instance = Reflect.construct(TestClass, [mockSpy]);
     TestDispose.add(instance);
   });
 

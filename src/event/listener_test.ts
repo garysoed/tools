@@ -9,6 +9,7 @@ import { ImmutableMap } from '../immutable/immutable-map';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Mocks } from '../mock/mocks';
 import { TestDispose } from '../testing/test-dispose';
+import { Reflect } from '../util/reflect';
 
 
 class TestDisposable extends BaseDisposable { }
@@ -16,7 +17,7 @@ class TestDisposable extends BaseDisposable { }
 
 describe('event.listener', () => {
   it('should listen to the events correctly', () => {
-    const ctor = listener()(TestDisposable)!;
+    listener()(TestDisposable);
 
     const key1 = 'key1';
 
@@ -61,7 +62,7 @@ describe('event.listener', () => {
 
     spyOn(TestDisposable.prototype, 'addDisposable');
 
-    const instance = new ctor();
+    const instance = Reflect.construct(TestDisposable, []);
     TestDispose.add(instance);
 
     const event = Mocks.object('event');
@@ -96,10 +97,10 @@ describe('event.listener', () => {
   });
 
   it('should throw error if the object does not extend BaseDisposable', () => {
-    const ctor = listener()(class {})!;
-
+    @listener()
+    class NonDisposableClass { }
     assert(() => {
-      new ctor();
+      Reflect.construct(NonDisposableClass, []);
     }).to.throwError(/cannot be a @listener/i);
   });
 });

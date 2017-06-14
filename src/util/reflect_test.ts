@@ -5,6 +5,32 @@ import { Reflect } from './reflect';
 
 
 describe('Reflect', () => {
+  describe('addInitializer', () => {
+    it(`should call the original initializer if exists`, () => {
+      class InitializedClass {
+        [Reflect.__initialize](): void { }
+      }
+
+      const mockInitializer = jasmine.createSpy('Initializer');
+
+      const initializerSpy = spyOn(InitializedClass.prototype, Reflect.__initialize);
+      Reflect.addInitializer(InitializedClass, mockInitializer);
+      const instance = Reflect.construct(InitializedClass, []);
+      assert(initializerSpy).to.haveBeenCalledWith(instance);
+      assert(mockInitializer).to.haveBeenCalledWith(instance);
+    });
+
+    it(`should not throw error if original initializer does not exist`, () => {
+      class UninitializedClass { }
+
+      const mockInitializer = jasmine.createSpy('Initializer');
+
+      Reflect.addInitializer(UninitializedClass, mockInitializer);
+      const instance = Reflect.construct(UninitializedClass, []);
+      assert(mockInitializer).to.haveBeenCalledWith(instance);
+    });
+  });
+
   describe('construct', () => {
     class TestClass {
       private a_: number;
