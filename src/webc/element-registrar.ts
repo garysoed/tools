@@ -6,7 +6,7 @@ import { Iterables } from '../immutable/iterables';
 import { Injector } from '../inject/injector';
 import { Parser } from '../interfaces/parser';
 import { Cases } from '../string/cases';
-import { Log } from '../util/log';
+import { Log, LogLevel } from '../util/log';
 import { BaseElement } from '../webc/base-element';
 import { DomHook } from '../webc/dom-hook';
 import { Handler } from '../webc/handle';
@@ -20,7 +20,7 @@ import { Util } from '../webc/util';
 /**
  * @hidden
  */
-const LOG = new Log('gs.webc.ElementRegistrar');
+const LOG = new Log('gs-tools.webc.ElementRegistrar');
 
 
 /**
@@ -61,7 +61,11 @@ export class ElementRegistrar extends BaseDisposable {
     }
 
     instance.onCreated(xtagContext);
+
+    const origLogLevel = Log.getEnabledLevel();
+    Log.setEnabledLevel(LogLevel.WARNING);
     Handler.configure(xtagContext, instance);
+    Log.setEnabledLevel(origLogLevel);
   }
 
   private getLifecycleConfig_(
@@ -179,7 +183,7 @@ export class ElementRegistrar extends BaseDisposable {
             });
 
         this.registeredCtors_.add(ctor);
-        Log.info(LOG, `Registered: ${config.tag}`);
+        Log.info(LOG, `Registered: [${config.tag}]`);
       }
     } catch (error) {
       Log.error(LOG, `Failed to register ${config.tag}. Error: ${error}`);

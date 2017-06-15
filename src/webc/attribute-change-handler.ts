@@ -6,8 +6,10 @@ import { ImmutableMap } from '../immutable/immutable-map';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Iterables } from '../immutable/iterables';
 import { Parser } from '../interfaces/parser';
+import { Log } from '../util/log';
 import { IHandler } from '../webc/interfaces';
 
+const LOGGER = Log.of('gs-tools.webc.AttributeChangeHandler');
 
 export type AttributeChangeHandlerConfig = {
   attributeName: string,
@@ -33,6 +35,8 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
       targetEl: Element,
       instance: BaseDisposable,
       configs: ImmutableSet<AttributeChangeHandlerConfig>): void {
+    Log.groupCollapsed(LOGGER, 'Configuring ...');
+
     // Group the configs together.
     const configEntries: ImmutableSet<[string, AttributeChangeHandlerConfig]> = configs
         .mapItem((config: AttributeChangeHandlerConfig):
@@ -42,6 +46,10 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
 
     const map: Map<string, ImmutableSet<AttributeChangeHandlerConfig>> = new Map();
     for (const [attrName, config] of configEntries) {
+      Log.debug(
+          LOGGER,
+          `Handling changes on attribute [${config.attributeName}] at [${config.selector}] ` +
+          `with [${config.handlerKey}]`);
       const set = map.get(attrName);
       if (set === undefined) {
         map.set(attrName, ImmutableSet.of([config]));
@@ -80,6 +88,8 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
     instance.addDisposable(DisposableFunction.of(() => {
       observer.disconnect();
     }));
+
+    Log.groupEnd(LOGGER);
   }
 
   /**

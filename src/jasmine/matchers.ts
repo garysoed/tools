@@ -7,6 +7,10 @@ export class Matchers {
     return jasmine.any(obj.constructor) as any as T;
   }
 
+  static anyString(): string {
+    return jasmine.any(String) as any as string;
+  }
+
   static anyThing(): any {
     return jasmine.anything();
   }

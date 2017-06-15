@@ -14,9 +14,17 @@
  * Log.error(LOG, 'Error message');
  * ```
  */
+export enum LogLevel {
+  DEBUG = 0,
+  INFO = 1,
+  WARNING = 2,
+  ERROR = 3,
+  OFF = 4,
+}
+
 export class Log {
   private static COLOR_ENABLED_: boolean = true;
-  private static ENABLED_: boolean = true;
+  private static ENABLED_LOG_LEVEL_: LogLevel = LogLevel.DEBUG;
 
   private namespace_: string;
 
@@ -27,17 +35,24 @@ export class Log {
     this.namespace_ = namespace;
   }
 
-  private callIfEnabled_(fn: (message: string, ...args: string[]) => void, message: string): void {
-    if (Log.ENABLED_) {
-      const matches = message.replace(/%%/g, 'a').match(/%c/g);
-      const colorCount = matches ? matches.length : 0;
-      const colors: string[] = [];
-      for (let i = 0; i < colorCount; i++) {
-        const isDefault = (i % 2) === 0;
-        colors.push(isDefault ? 'font-weight: normal;' : 'font-weight: bold;');
-      }
-      fn(`[${this.namespace_}] ${message}`, ...colors);
+  private callIfEnabled_(
+      fn: (message: string, ...args: any[]) => void,
+      logLevel: LogLevel,
+      color: string,
+      ...messages: any[]): void {
+    if (logLevel >= Log.ENABLED_LOG_LEVEL_) {
+      const usedColor = Log.COLOR_ENABLED_ ? color : 'default';
+      fn(
+          `%c${this.namespace_}%c`,
+          `color: ${usedColor}`,
+          `color: default`,
+          ...messages);
     }
+  }
+
+  static debug(log: Log, ...messages: any[]): void {
+    log.callIfEnabled_(
+        console.debug.bind(console), LogLevel.DEBUG, '#8000ff', ...messages);
   }
 
   /**
@@ -46,20 +61,22 @@ export class Log {
    * @param log The log object.
    * @param message The message to log.
    */
-  static error(log: Log, message: string): void {
-    log.callIfEnabled_(console.error.bind(console), message);
+  static error(log: Log, ...messages: any[]): void {
+    log.callIfEnabled_(
+        console.error.bind(console), LogLevel.ERROR, '#800000', ...messages);
   }
 
-  static highlight(literals: TemplateStringsArray, ...placeholders: string[]): string {
-    let out = Log.COLOR_ENABLED_ ? '%c' : '';
-    for (let i = 0; i < placeholders.length; i++) {
-      if (Log.COLOR_ENABLED_) {
-        out += `${literals[i].replace(/%c/g, '%%c')}%c${placeholders[i].replace(/%c/g, '%%c')}%c`;
-      } else {
-        out += `${literals[i]}${placeholders[i]}`;
-      }
-    }
-    return out;
+  static getEnabledLevel(): LogLevel {
+    return Log.ENABLED_LOG_LEVEL_;
+  }
+
+  static groupCollapsed(log: Log, ...messages: any[]): void {
+    log.callIfEnabled_(
+        console.groupCollapsed.bind(console), LogLevel.INFO, '#808080', ...messages);
+  }
+
+  static groupEnd(log: Log): void {
+    log.callIfEnabled_(console.groupEnd.bind(console), LogLevel.INFO, '');
   }
 
   /**
@@ -68,8 +85,8 @@ export class Log {
    * @param log The log object.
    * @param message The message to log.
    */
-  static info(log: Log, message: string): void {
-    log.callIfEnabled_(console.info.bind(console), message);
+  static info(log: Log, ...messages: any[]): void {
+    log.callIfEnabled_(console.info.bind(console), LogLevel.INFO, '#00bfff', ...messages);
   }
 
   static of(namespace: string): Log {
@@ -81,16 +98,14 @@ export class Log {
   }
 
   /**
-   * Enables / disables logging.
-   *
-   * @param enabled True iff logging should be enabled.
+   * Sets the enabled logging level..
    */
-  static setEnabled(enabled: boolean): void {
-    Log.ENABLED_ = enabled;
+  static setEnabledLevel(logLevel: LogLevel): void {
+    Log.ENABLED_LOG_LEVEL_ = logLevel;
   }
 
   static trace(log: Log): void {
-    log.callIfEnabled_(console.trace.bind(console), '');
+    log.callIfEnabled_(console.trace.bind(console), LogLevel.DEBUG, '');
   }
 
   /**
@@ -99,7 +114,7 @@ export class Log {
    * @param log The log object.
    * @param message The message to log.
    */
-  static warn(log: Log, message: string): void {
-    log.callIfEnabled_(console.warn.bind(console), message);
+  static warn(log: Log, ...messages: any[]): void {
+    log.callIfEnabled_(console.warn.bind(console), LogLevel.WARNING, '#ff9f00', ...messages);
   }
 }

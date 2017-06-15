@@ -3,6 +3,7 @@ import { ImmutableList } from '../immutable/immutable-list';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Iterables } from '../immutable/iterables';
 import { AttributeSelector, ElementSelector } from '../interfaces/selector';
+import { Log, LogLevel } from '../util/log';
 import { AnimateEventHandler } from '../webc/animate-event-handler';
 import { AttributeChangeHandler } from '../webc/attribute-change-handler';
 import { EventHandler } from '../webc/event-handler';
@@ -12,6 +13,9 @@ import { Util } from '../webc/util';
 export const ANIMATE_EVENT_HANDLER = new AnimateEventHandler();
 export const ATTRIBUTE_CHANGE_HANDLER = new AttributeChangeHandler();
 export const EVENT_HANDLER = new EventHandler();
+
+const LOGGER = Log.of('gs-tools.webc.onDom');
+const LOGGED_ELEMENTS: Set<string> = new Set();
 
 class OnDom {
   static animate(
@@ -26,6 +30,13 @@ class OnDom {
   }
 
   static configure(element: HTMLElement, instance: BaseDisposable): void {
+    const elementName = element.nodeName.toLowerCase();
+    const previousLogLevel = Log.getEnabledLevel();
+    const logLevel = LOGGED_ELEMENTS.has(elementName) ? LogLevel.WARNING : LogLevel.DEBUG;
+    LOGGED_ELEMENTS.add(elementName);
+
+    Log.setEnabledLevel(Math.max(previousLogLevel, logLevel));
+    Log.groupCollapsed(LOGGER, `Configuring [${element.nodeName.toLowerCase()}]`);
     const unresolvedSelectors = ImmutableSet
         .of<string | null>([])
         .addAll(onDom.configure_(element, instance, ANIMATE_EVENT_HANDLER))
@@ -37,6 +48,9 @@ class OnDom {
     if (unresolvedSelectors.size() > 0) {
       throw new Error(`The following selectors cannot be resolved for handle: ${selectorsString}`);
     }
+
+    Log.groupEnd(LOGGER);
+    Log.setEnabledLevel(previousLogLevel);
   }
 
   private static configure_<T extends {selector: string | null}>(

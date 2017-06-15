@@ -7,7 +7,7 @@ import { ImmutableSet } from '../immutable/immutable-set';
 import { Log } from '../util/log';
 import { IHandler } from '../webc/interfaces';
 
-const LOG = Log.of('webc.EventHandler');
+const LOGGER = Log.of('gs-tools.webc.EventHandler');
 
 export type EventHandlerConfig = {
   boundArgs: any[],
@@ -30,13 +30,15 @@ export class EventHandler implements IHandler<EventHandlerConfig> {
       targetEl: Element,
       instance: BaseDisposable,
       configs: ImmutableSet<EventHandlerConfig>): void {
+    Log.groupCollapsed(LOGGER, 'Configuring ...');
     const listenable = ListenableDom.of(targetEl);
     instance.addDisposable(listenable);
 
-    for (const {boundArgs, event, handlerKey} of configs) {
+    for (const {boundArgs, event, handlerKey, selector} of configs) {
+      Log.debug(LOGGER, `Handling [${event}] event on [${selector}] with [${handlerKey}]`);
       if (boundArgs.length > 0) {
-        Log.warn(LOG, `Deprecated use of boundArgs detected`);
-        Log.trace(LOG);
+        Log.warn(LOGGER, `Deprecated use of boundArgs detected`);
+        Log.trace(LOGGER);
       }
       instance.addDisposable(listenable.on(
           event,
@@ -45,6 +47,7 @@ export class EventHandler implements IHandler<EventHandlerConfig> {
           },
           instance));
     }
+    Log.groupEnd(LOGGER);
   }
 
   /**

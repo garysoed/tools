@@ -5,6 +5,7 @@ import { MonadUtil } from '../event/monad-util';
 import { ImmutableMap } from '../immutable/immutable-map';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { ElementSelector } from '../interfaces/selector';
+import { Log } from '../util/log';
 import { IHandler } from '../webc/interfaces';
 import { Util } from '../webc/util';
 
@@ -24,16 +25,21 @@ export const __animationHandlerMap: symbol = Symbol('handlerMap');
 export const ANNOTATIONS: Annotations<AnimateEventHandlerConfig> =
     Annotations.of<AnimateEventHandlerConfig>(Symbol('animateEventHandler'));
 
+const LOGGER = Log.of('gs-tools.webc.AnimateEventHandler');
+
 export class AnimateEventHandler implements IHandler<AnimateEventHandlerConfig> {
   configure(
       rootEl: HTMLElement,
       _: BaseDisposable,
       configs: ImmutableSet<AnimateEventHandlerConfig>): void {
+    Log.groupCollapsed(LOGGER, 'Configuring ...');
     for (const {animationId, event, key, selector} of configs) {
       const targetEl = Util.requireSelector(selector, rootEl);
       const handlers = AnimateEventHandler.getAnimationHandlerList_(targetEl, animationId);
       handlers.push({event, key});
+      Log.debug(LOGGER, `Handling animation [${event}] event on [${selector}] with [${key}]`);
     }
+    Log.groupEnd(LOGGER);
   }
 
   createDecorator(
