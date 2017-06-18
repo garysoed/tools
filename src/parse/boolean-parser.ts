@@ -25,4 +25,3 @@ export const BooleanParser: Parser<boolean> = {
     return value ? 'true' : 'false';
   },
 };
-// TODO: Mutable
