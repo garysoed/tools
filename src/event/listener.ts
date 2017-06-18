@@ -15,7 +15,8 @@ export function listener(): ClassDecorator {
 
           const attachedValues = ON_ANNOTATIONS.forCtor(target).getAttachedValues();
           for (const [key, values] of attachedValues) {
-            for (const {bus, type, useCapture} of values) {
+            for (const {busProvider, type, useCapture} of values) {
+              const bus = busProvider(instance);
               instance.addDisposable(bus.on(
                   type,
                   (event: Event<any>) => {

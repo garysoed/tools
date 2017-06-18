@@ -84,8 +84,12 @@ export class AnimateEventHandler implements IHandler<AnimateEventHandlerConfig> 
       instance.addDisposable(listenableAnimation);
       instance.addDisposable(listenableAnimation.once(
           event,
-          (e: Event) => {
-            MonadUtil.callFunction(e, instance, key);
+          () => {
+            const eventDetail = {
+              keyframes,
+              type: event,
+            };
+            MonadUtil.callFunction(eventDetail, instance, key);
           },
           instance));
     }

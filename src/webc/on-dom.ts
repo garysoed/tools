@@ -6,12 +6,14 @@ import { AttributeSelector, ElementSelector } from '../interfaces/selector';
 import { Log, LogLevel } from '../util/log';
 import { AnimateEventHandler } from '../webc/animate-event-handler';
 import { AttributeChangeHandler } from '../webc/attribute-change-handler';
+import { ChildListChangeHandler } from '../webc/child-list-change-handler';
 import { EventHandler } from '../webc/event-handler';
 import { IHandler } from '../webc/interfaces';
 import { Util } from '../webc/util';
 
 export const ANIMATE_EVENT_HANDLER = new AnimateEventHandler();
 export const ATTRIBUTE_CHANGE_HANDLER = new AttributeChangeHandler();
+export const CHILD_LIST_CHANGE_HANDLER = new ChildListChangeHandler();
 export const EVENT_HANDLER = new EventHandler();
 
 const LOGGER = Log.of('gs-tools.webc.onDom');
@@ -29,6 +31,10 @@ class OnDom {
     return ATTRIBUTE_CHANGE_HANDLER.createDecorator(name, parser, selector);
   }
 
+  static childListChange(selector: ElementSelector): MethodDecorator {
+    return CHILD_LIST_CHANGE_HANDLER.createDecorator(selector);
+  }
+
   static configure(element: HTMLElement, instance: BaseDisposable): void {
     const elementName = element.nodeName.toLowerCase();
     const previousLogLevel = Log.getEnabledLevel();
@@ -41,6 +47,7 @@ class OnDom {
         .of<string | null>([])
         .addAll(onDom.configure_(element, instance, ANIMATE_EVENT_HANDLER))
         .addAll(onDom.configure_(element, instance, ATTRIBUTE_CHANGE_HANDLER))
+        .addAll(onDom.configure_(element, instance, CHILD_LIST_CHANGE_HANDLER))
         .addAll(onDom.configure_(element, instance, EVENT_HANDLER));
 
     const selectorsString = ImmutableList.of(unresolvedSelectors).toArray().join(', ');

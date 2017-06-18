@@ -1,15 +1,10 @@
-import { BaseListenable } from '../event/base-listenable';
+import { Bus } from '../event/bus';
+import { Log } from '../util/log';
 
-/**
- * Events dispatched by [[Interval]].
- */
-enum EventType {
-  /**
-   * Called at every interval.
-   */
-  TICK,
-}
+export type IntervalEventType = 'tick';
+export type IntervalEvent = {type: IntervalEventType};
 
+const LOGGER: Log = Log.of('gs-tools.async.Interval');
 
 /**
  * Wrapper around `window.setInterval`.
@@ -21,10 +16,7 @@ enum EventType {
  * 1.  Call [[start]] to start the interval.
  * 1.  You can stop the interval using the [[stop]] method or just [[dispose]] it.
  */
-export class Interval extends BaseListenable<EventType> {
-  static TICK_EVENT: EventType = EventType.TICK;
-
-  private interval_: number;
+export class Interval extends Bus<IntervalEventType, IntervalEvent> {
   private intervalId_: (number | null);
 
   /**
@@ -32,9 +24,8 @@ export class Interval extends BaseListenable<EventType> {
    *
    * @param interval Time between each tick, in millis.
    */
-  constructor(interval: number) {
-    super();
-    this.interval_ = interval;
+  constructor(private readonly interval_: number) {
+    super(LOGGER);
     this.intervalId_ = null;
   }
 
@@ -54,7 +45,7 @@ export class Interval extends BaseListenable<EventType> {
       throw new Error('Interval is already running, cannot start again');
     }
     this.intervalId_ = window.setInterval(() => {
-      this.dispatch(Interval.TICK_EVENT, () => {});
+      this.dispatch({type: 'tick'});
     }, this.interval_);
   }
 

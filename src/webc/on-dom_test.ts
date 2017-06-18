@@ -5,13 +5,28 @@ import { ImmutableMap } from '../immutable/immutable-map';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Fakes } from '../mock/fakes';
 import { Mocks } from '../mock/mocks';
-import { ATTRIBUTE_CHANGE_HANDLER, EVENT_HANDLER, onDom } from '../webc/on-dom';
+import {
+  ANIMATE_EVENT_HANDLER,
+  ATTRIBUTE_CHANGE_HANDLER,
+  CHILD_LIST_CHANGE_HANDLER,
+  EVENT_HANDLER,
+  onDom} from '../webc/on-dom';
 import { Util } from '../webc/util';
 
 
 describe('webc.onDom', () => {
   describe('animate', () => {
-    fit(`should return the correct decorator`);
+    it(`should return the correct decorator`, () => {
+      const event = 'cancel';
+      const selector = 'selector';
+      const id = Symbol('id');
+      const decorator = Mocks.object('decorator');
+      spyOn(ANIMATE_EVENT_HANDLER, 'createDecorator').and.returnValue(decorator);
+
+      assert(onDom.animate(selector, event, id)).to.equal(decorator);
+      assert(ANIMATE_EVENT_HANDLER.createDecorator).to
+          .haveBeenCalledWith(id, event, selector);
+    });
   });
 
   describe('attributeChange', () => {
@@ -25,6 +40,17 @@ describe('webc.onDom', () => {
       assert(onDom.attributeChange({name, parser, selector})).to.equal(decorator);
       assert(ATTRIBUTE_CHANGE_HANDLER.createDecorator).to
           .haveBeenCalledWith(name, parser, selector);
+    });
+  });
+
+  describe('childListChange', () => {
+    it('should return the correct decorator', () => {
+      const selector = 'selector';
+      const decorator = Mocks.object('decorator');
+      spyOn(CHILD_LIST_CHANGE_HANDLER, 'createDecorator').and.returnValue(decorator);
+
+      assert(onDom.childListChange(selector)).to.equal(decorator);
+      assert(CHILD_LIST_CHANGE_HANDLER.createDecorator).to.haveBeenCalledWith(selector);
     });
   });
 
@@ -43,6 +69,7 @@ describe('webc.onDom', () => {
   describe('configure', () => {
     it('should configure the handlers correctly', () => {
       const element = Mocks.object('element');
+      element.nodeName = 'element';
       const instance = Mocks.object('instance');
       spyOn(onDom, 'configure_').and.returnValue(new Set());
 
@@ -57,6 +84,7 @@ describe('webc.onDom', () => {
     it('should throw error if there are unresolved electors', () => {
       const selector = 'selector';
       const element = Mocks.object('element');
+      element.nodeName = 'element';
       const instance = Mocks.object('instance');
       spyOn(onDom, 'configure_').and.returnValue(new Set(selector));
 

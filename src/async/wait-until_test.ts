@@ -73,8 +73,7 @@ describe('async.WaitUntil', () => {
         resolve();
       });
 
-      const spyListenTo = spyOn(waitUntil, 'listenTo');
-      Fakes.build(spyListenTo).call((_listenable: any, _eventType: any, callback: any) => {
+      Fakes.build(mockInterval.on).call((_eventType: any, callback: any) => {
         callback();
       });
 
@@ -82,10 +81,11 @@ describe('async.WaitUntil', () => {
       await promise;
       assert(waitUntil['promise_']).to.equal(promise);
       assert(mockInterval.start).to.haveBeenCalledWith();
-      assert(waitUntil.listenTo).to.haveBeenCalledWith(
-          mockInterval,
-          Interval.TICK_EVENT,
-          Matchers.any(Function) as () => void);
+      assert(mockInterval.on).to.haveBeenCalledWith(
+          'tick',
+          Matchers.any(Function) as () => void,
+          waitUntil);
+      mockInterval.on.calls.argsFor(0)[1]();
       assert(waitUntil['onTick_']).to
           .haveBeenCalledWith(mockInterval, jasmine.anything() as any, jasmine.anything() as any);
       assert(Interval.newInstance).to.haveBeenCalledWith(INTERVAL);

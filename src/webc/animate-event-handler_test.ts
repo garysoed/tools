@@ -122,6 +122,9 @@ describe('webc.AnimateEventHandler', () => {
       const mockListenableAnimation2 = jasmine.createSpyObj('ListenableAnimation2', ['once']);
       mockListenableAnimation2.once.and.returnValue(disposableFunction2);
 
+      spyOn(ListenableDom, 'of').and
+          .returnValues(mockListenableAnimation1, mockListenableAnimation2);
+
       const event1 = 'finish';
       const event2 = 'cancel';
       const key1 = 'key1';
@@ -133,7 +136,6 @@ describe('webc.AnimateEventHandler', () => {
       ];
       spyOn(AnimateEventHandler, 'getAnimationHandlerList_').and.returnValue(handlers);
 
-
       const animation = Mocks.object('animation');
       const mockTargetEl = jasmine.createSpyObj('TargetEl', ['animate']);
       mockTargetEl.animate.and.returnValue(animation);
@@ -142,6 +144,8 @@ describe('webc.AnimateEventHandler', () => {
       const instanceEl = Mocks.object('instanceEl');
       spyOn(Util, 'getElement').and.returnValue(instanceEl);
 
+      spyOn(MonadUtil, 'callFunction');
+
       AnimateEventHandler.addAnimation(
           mockInstance,
           selector,
@@ -149,15 +153,16 @@ describe('webc.AnimateEventHandler', () => {
           options,
           animationId);
 
-      const eventObject = Mocks.object('eventObject');
-
       assert(mockInstance.addDisposable).to.haveBeenCalledWith(disposableFunction1);
       assert(mockListenableAnimation1.once).to.haveBeenCalledWith(
           event1,
           Matchers.any(Function),
           mockInstance);
-      mockListenableAnimation1.once.calls.argsFor(0)[1](eventObject);
-      assert(MonadUtil.callFunction).to.haveBeenCalledWith(eventObject, mockInstance, key1);
+      mockListenableAnimation1.once.calls.argsFor(0)[1]();
+      assert(MonadUtil.callFunction).to.haveBeenCalledWith(
+          {keyframes, type: event1},
+          mockInstance,
+          key1);
       assert(mockInstance.addDisposable).to.haveBeenCalledWith(mockListenableAnimation1);
 
       assert(mockInstance.addDisposable).to.haveBeenCalledWith(disposableFunction2);
@@ -165,8 +170,11 @@ describe('webc.AnimateEventHandler', () => {
           event2,
           Matchers.any(Function),
           mockInstance);
-      mockListenableAnimation2.once.calls.argsFor(0)[1](eventObject);
-      assert(MonadUtil.callFunction).to.haveBeenCalledWith(eventObject, mockInstance, key2);
+      mockListenableAnimation2.once.calls.argsFor(0)[1]();
+      assert(MonadUtil.callFunction).to.haveBeenCalledWith(
+          {keyframes, type: event2},
+          mockInstance,
+          key2);
       assert(mockInstance.addDisposable).to.haveBeenCalledWith(mockListenableAnimation2);
 
       assert(ListenableDom.of).to.haveBeenCalledWith(animation);

@@ -35,10 +35,7 @@ class WaitUntil extends BaseListener {
     const promise = new Promise<void>((resolve: () => void, reject: (error: any) => void) => {
       const interval = Interval.newInstance(this.interval_);
       this.addDisposable(interval);
-      this.listenTo(
-          interval,
-          Interval.TICK_EVENT,
-          this.onTick_.bind(this, interval, resolve, reject));
+      interval.on('tick', this.onTick_.bind(this, interval, resolve, reject), this);
       interval.start();
     });
     this.promise_ = promise;

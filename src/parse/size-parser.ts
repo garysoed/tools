@@ -23,7 +23,7 @@ type Unit =
   'vmin' |
   'vmax' |
   'vw';
-type Size = {size: number, unit: Unit};
+type Size = {unit: Unit, value: number};
 
 const UNITS: Unit[] = [
   'cap',
@@ -64,8 +64,8 @@ export const SizeParser: Parser<Size> = {
     }
 
     return {
-      size: parsedSize,
       unit: unit || 'pt',
+      value: parsedSize,
     };
   },
 
@@ -73,6 +73,6 @@ export const SizeParser: Parser<Size> = {
     if (!value) {
       return '';
     }
-    return `${FloatParser.stringify(value.size)}${value.unit}`;
+    return `${FloatParser.stringify(value.value)}${value.unit}`;
   },
 };

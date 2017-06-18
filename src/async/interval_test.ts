@@ -25,18 +25,16 @@ describe('async.Interval', () => {
 
   describe('start', () => {
     it('should start the interval and dispatch TICK events', () => {
-      const callback = jasmine.createSpy('callback');
       const intervalId = 123;
       const spy = spyOn(window, 'setInterval').and.returnValue(intervalId);
-
-      TestDispose.add(interval.on(Interval.TICK_EVENT, callback, window));
+      spyOn(interval, 'dispatch');
       interval.start();
 
       assert(interval['intervalId_']).to.equal(intervalId);
       assert(window.setInterval).to.haveBeenCalledWith(Matchers.any(Function), INTERVAL);
 
       spy.calls.argsFor(0)[0]();
-      assert(callback).to.haveBeenCalledWith(null);
+      assert(interval.dispatch).to.haveBeenCalledWith({type: 'tick'});
     });
 
     it('should throw error if the interval is already running', () => {
