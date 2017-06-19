@@ -20,6 +20,7 @@ gs_tools(
       "//src/solver",
       "//src/store",
       "//src/string",
+      "//src/testgen",
       "//src/testing",
       "//src/typescript",
       "//src/ui",

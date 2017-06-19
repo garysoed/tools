@@ -1,7 +1,7 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import { ANNOTATIONS as EVENT_ANNOTATIONS } from '../event/event';
+import { ANNOTATIONS as EVENT_ANNOTATIONS } from '../event/event-details';
 import { ANNOTATIONS as MONAD_ANNOTATIONS } from '../event/monad';
 import { MonadUtil } from '../event/monad-util';
 import { ImmutableMap } from '../immutable/immutable-map';

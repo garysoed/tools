@@ -1,4 +1,4 @@
-import { ANNOTATIONS as EVENT_ANNOTATIONS } from '../event/event';
+import { ANNOTATIONS as EVENT_ANNOTATIONS } from '../event/event-details';
 import { ANNOTATIONS as MONAD_ANNOTATIONS } from '../event/monad';
 import { Generators } from '../immutable/generators';
 import { ImmutableList } from '../immutable/immutable-list';

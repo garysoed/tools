@@ -1,6 +1,6 @@
 import { BaseDisposable } from '../dispose/base-disposable';
 import { Bus } from '../event/bus';
-import { event } from '../event/event';
+import { eventDetails } from '../event/event-details';
 import { listener } from '../event/listener';
 import { monadOut } from '../event/monad-out';
 import { on } from '../event/on';
@@ -45,12 +45,12 @@ class TestClass extends BaseDisposable {
   }
 
   @on(TEST_EVENT_BUS, 'eventA')
-  onEventA(@event() event: TestEventA): void {
+  onEventA(@eventDetails() event: TestEventA): void {
     this.spy_.onEventA(event);
   }
 
   @on(TEST_EVENT_BUS, 'eventB')
-  onEventB(@event() event: TestEventB): void {
+  onEventB(@eventDetails() event: TestEventB): void {
     this.spy_.onEventB(event);
   }
 
