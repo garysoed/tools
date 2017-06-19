@@ -6,8 +6,12 @@ import { SizeParser } from '../parse/size-parser';
 
 describe('parse.SizeParser', () => {
   describe('parse', () => {
-    it(`should return the correct object`, () => {
-      assert(SizeParser.parse('123vh')).to.equal({unit: 'vh', value: 123});
+    it(`should return the correct object for 123pt`, () => {
+      assert(SizeParser.parse('123pt')).to.equal({unit: 'pt', value: 123});
+    });
+
+    it(`should return the correct object for 0px`, () => {
+      assert(SizeParser.parse('0px')).to.equal({unit: 'px', value: 0});
     });
 
     it(`should default unitless size to "pt"`, () => {

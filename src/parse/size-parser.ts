@@ -59,7 +59,7 @@ export const SizeParser: Parser<Size> = {
     const unitLength = unit ? unit.length : 0;
     const size = input.substr(0, input.length - unitLength);
     const parsedSize = FloatParser.parse(size);
-    if (!parsedSize) {
+    if (parsedSize === null) {
       return null;
     }
 

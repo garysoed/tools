@@ -1,8 +1,10 @@
 import { Annotations } from '../data/annotations';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { DisposableFunction } from '../dispose/disposable-function';
+import { MonadUtil } from '../event/monad-util';
 import { ImmutableMap } from '../immutable/immutable-map';
 import { ImmutableSet } from '../immutable/immutable-set';
+import { BaseElement } from '../webc/base-element';
 import { IHandler } from '../webc/interfaces';
 
 
@@ -132,8 +134,15 @@ export class ChildListChangeHandler implements IHandler<ChildListChangeConfig> {
     for (const record of records) {
       for (const handlerKey of handlerKeys) {
         const handler = instance[handlerKey];
-        if (!!handler) {
-          handler.call(instance, record.addedNodes, record.removedNodes);
+        if (instance instanceof BaseElement) {
+          if (handler) {
+              handler.call(instance, record.addedNodes, record.removedNodes);
+          }
+        } else {
+          MonadUtil.callFunction(
+              {added: record.addedNodes, type: 'childlistchange', removed: record.removedNodes},
+              instance,
+              handlerKey);
         }
       }
     }

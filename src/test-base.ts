@@ -6,7 +6,9 @@ import { TestSetup } from './testing/test-setup';
 import { Log, LogLevel } from './util/log';
 export { assert } from './jasmine/assert';
 export { assertColor } from './jasmine/assert-color';
+export { gentest } from './testgen/gentest';
 export { Matchers } from './jasmine/matchers';
+export { TestSpec } from './testgen/test-spec';
 
 const TEST_SETUP = new TestSetup([
   TestAsync,

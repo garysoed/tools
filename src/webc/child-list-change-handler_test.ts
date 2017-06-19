@@ -2,6 +2,7 @@ import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
 import { DisposableFunction } from '../dispose/disposable-function';
+import { MonadUtil } from '../event/monad-util';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Mocks } from '../mock/mocks';
 import {
@@ -48,11 +49,9 @@ describe('webc.ChildListChangeHandler', () => {
 
   describe('onMutation_', () => {
     it('should call the handler correctly', () => {
-      const mockHandler1 = jasmine.createSpy('Handler1');
-      const mockHandler2 = jasmine.createSpy('Handler2');
       const handlerKey1 = 'handlerKey1';
       const handlerKey2 = 'handlerKey2';
-      const instance = {[handlerKey1]: mockHandler1, [handlerKey2]: mockHandler2};
+      const instance = Mocks.object('instance');
 
       const addedNodes1 = Mocks.object('addedNodes1');
       const removedNodes1 = Mocks.object('removedNodes1');
@@ -63,12 +62,26 @@ describe('webc.ChildListChangeHandler', () => {
         {addedNodes: addedNodes2, removedNodes: removedNodes2},
       ]);
 
+      spyOn(MonadUtil, 'callFunction');
+
       handler['onMutation_'](instance, ImmutableSet.of([handlerKey1, handlerKey2]), records);
 
-      assert(mockHandler1).to.haveBeenCalledWith(addedNodes1, removedNodes1);
-      assert(mockHandler1).to.haveBeenCalledWith(addedNodes2, removedNodes2);
-      assert(mockHandler2).to.haveBeenCalledWith(addedNodes1, removedNodes1);
-      assert(mockHandler2).to.haveBeenCalledWith(addedNodes2, removedNodes2);
+      assert(MonadUtil.callFunction).to.haveBeenCalledWith(
+          {added: addedNodes1, type: 'childlistchange', removed: removedNodes1},
+          instance,
+          handlerKey1);
+      assert(MonadUtil.callFunction).to.haveBeenCalledWith(
+          {added: addedNodes2, type: 'childlistchange', removed: removedNodes2},
+          instance,
+          handlerKey2);
+      assert(MonadUtil.callFunction).to.haveBeenCalledWith(
+          {added: addedNodes1, type: 'childlistchange', removed: removedNodes1},
+          instance,
+          handlerKey1);
+      assert(MonadUtil.callFunction).to.haveBeenCalledWith(
+          {added: addedNodes2, type: 'childlistchange', removed: removedNodes2},
+          instance,
+          handlerKey2);
     });
 
     it('should do nothing if the handler cannot be found', () => {
