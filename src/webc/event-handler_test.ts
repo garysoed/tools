@@ -9,7 +9,7 @@ import { TestDispose } from '../testing/test-dispose';
 import { EVENT_ANNOTATIONS, EventHandler } from '../webc/event-handler';
 
 
-describe('web.EventHandler', () => {
+describe('webc.EventHandler', () => {
   let handler: EventHandler;
 
   beforeEach(() => {
@@ -53,11 +53,12 @@ describe('web.EventHandler', () => {
       assert(mockListenableDom.on)
           .to.haveBeenCalledWith(event2, Matchers.any(Function), mockInstance);
 
-      mockListenableDom.on.calls.argsFor(0)[1]();
-      assert(MonadUtil.callFunction).to.haveBeenCalledWith({type: event1}, mockInstance, key1);
+      const eventDetail = Mocks.object('eventDetail');
+      mockListenableDom.on.calls.argsFor(0)[1](eventDetail);
+      assert(MonadUtil.callFunction).to.haveBeenCalledWith(eventDetail, mockInstance, key1);
 
-      mockListenableDom.on.calls.argsFor(1)[1]();
-      assert(MonadUtil.callFunction).to.haveBeenCalledWith({type: event2}, mockInstance, key2);
+      mockListenableDom.on.calls.argsFor(1)[1](eventDetail);
+      assert(MonadUtil.callFunction).to.haveBeenCalledWith(eventDetail, mockInstance, key2);
     });
   });
 

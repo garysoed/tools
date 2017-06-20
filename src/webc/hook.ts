@@ -3,7 +3,7 @@ import { Annotations } from '../data/annotations';
 import { DomBinder } from '../interfaces/dom-binder';
 import { Parser } from '../interfaces/parser';
 import { AttributeBinder } from '../webc/attribute-binder';
-import { ChildrenElementsBinder, IDataHelper } from '../webc/children-elements-binder';
+import { ChildrenElementsBinder, DataHelper } from '../webc/children-elements-binder';
 import { ClassListBinder } from '../webc/class-list-binder';
 import { ElementBinder } from '../webc/element-binder';
 import { ElementSwitchBinder } from '../webc/element-switch-binder';
@@ -48,7 +48,7 @@ export class Hook {
    * @return Property descriptor
    */
   childrenElements<T>(
-      dataHelper: IDataHelper<T>,
+      dataHelper: DataHelper<T>,
       startPadCount: number = 0,
       endPadCount: number = 0): PropertyDecorator {
     return this.createDecorator_(

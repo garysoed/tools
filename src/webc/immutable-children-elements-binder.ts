@@ -3,35 +3,19 @@ import { NonNullType } from '../check/non-null-type';
 import { ImmutableList } from '../immutable/immutable-list';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Iterables } from '../immutable/iterables';
+import { DataBridge } from '../interfaces/data-bridge';
 import { DomBinder } from '../interfaces/dom-binder';
 
-
-export interface DataHelper<T> {
-  create: (document: Document, instance: any) => Element;
-  get: (element: Element) => T | null;
-  set: (data: T, element: Element, instance: any) => void;
-}
-
-export class ChildrenElementsBinder<T> implements DomBinder<T[]> {
-  private readonly dataHelper_: DataHelper<T>;
+export class ChildrenElementsBinder<T> implements DomBinder<ImmutableList<T>> {
   private readonly elementPool_: Set<Element>;
-  private readonly endPadCount_: number;
-  private readonly instance_: any;
-  private readonly parentEl_: Element;
-  private readonly startPadCount_: number;
 
   constructor(
-      parentEl: Element,
-      helper: DataHelper<T>,
-      startPadCount: number,
-      endPadCount: number,
-      instance: any) {
-    this.dataHelper_ = helper;
-    this.endPadCount_ = endPadCount;
+      private readonly parentEl_: Element,
+      private readonly dataBridge_: DataBridge<T>,
+      private readonly startPadCount_: number,
+      private readonly endPadCount_: number,
+      private readonly instance_: any) {
     this.elementPool_ = new Set();
-    this.startPadCount_ = startPadCount;
-    this.instance_ = instance;
-    this.parentEl_ = parentEl;
   }
 
   /**
@@ -52,13 +36,13 @@ export class ChildrenElementsBinder<T> implements DomBinder<T[]> {
   /**
    * @override
    */
-  get(): T[] | null {
+  get(): ImmutableList<T> | null {
     const data = this.getChildElements_()
         .map((child: Element) => {
-          return this.dataHelper_.get(child);
+          return this.dataBridge_.get(child);
         });
     if (FiniteIterableOfType<T, ImmutableList<T>>(NonNullType<T>()).check(data)) {
-      return data.toArray();
+      return data;
     } else {
       return null;
     }
@@ -74,7 +58,7 @@ export class ChildrenElementsBinder<T> implements DomBinder<T[]> {
         .filter((element: Element, index: number) => {
           return index >= this.startPadCount_
               && index < lastIndex
-              && this.dataHelper_.get(element) !== undefined;
+              && this.dataBridge_.get(element) !== undefined;
         });
   }
 
@@ -84,7 +68,7 @@ export class ChildrenElementsBinder<T> implements DomBinder<T[]> {
   private getElement_(): Element {
     const element = Iterables.toArray(ImmutableSet.of(this.elementPool_))[0];
     if (!element) {
-      return this.dataHelper_.create(this.parentEl_.ownerDocument, this.instance_);
+      return this.dataBridge_.create(this.parentEl_.ownerDocument, this.instance_);
     } else {
       this.elementPool_.delete(element);
       return element;
@@ -94,25 +78,25 @@ export class ChildrenElementsBinder<T> implements DomBinder<T[]> {
   /**
    * @override
    */
-  set(value: T[] | null): void {
-    const valueArray = value || [];
+  set(value: ImmutableList<T> | null): void {
+    const valueArray = value || ImmutableList.of([]);
     const dataChildren = this.getChildElements_().toArray();
 
     // Make sure that there are equal number of children.
-    for (let i = 0; i < valueArray.length - dataChildren.length; i++) {
+    for (let i = 0; i < valueArray.size() - dataChildren.length; i++) {
       this.parentEl_.insertBefore(
           this.getElement_(),
           this.parentEl_.children.item(this.startPadCount_ + i) || null);
     }
 
-    for (let i = dataChildren.length - valueArray.length - 1; i >= 0; i--) {
+    for (let i = dataChildren.length - valueArray.size() - 1; i >= 0; i--) {
       this.parentEl_.removeChild(this.parentEl_.children.item(this.startPadCount_ + i));
     }
 
     // Now set the data.
     for (const [index, value] of valueArray.entries()) {
       const element = this.parentEl_.children.item(this.startPadCount_ + index);
-      this.dataHelper_.set(value, element, this.instance_);
+      this.dataBridge_.set(value, element, this.instance_);
     }
   }
 
@@ -126,12 +110,10 @@ export class ChildrenElementsBinder<T> implements DomBinder<T[]> {
    */
   static of<T>(
       parentEl: Element,
-      dataHelper: DataHelper<T>,
+      dataBridge: DataBridge<T>,
       startPadCount: number,
       endPadCount: number,
       instance: any): ChildrenElementsBinder<T> {
-    return new ChildrenElementsBinder(parentEl, dataHelper, startPadCount, endPadCount, instance);
+    return new ChildrenElementsBinder(parentEl, dataBridge, startPadCount, endPadCount, instance);
   }
 }
-
-// TODO: Mutable

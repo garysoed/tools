@@ -42,8 +42,8 @@ export class EventHandler implements IHandler<EventHandlerConfig> {
       }
       instance.addDisposable(listenable.on(
           event,
-          () => {
-            MonadUtil.callFunction({type: event}, instance, handlerKey);
+          (eventDetails: Event) => {
+            MonadUtil.callFunction(eventDetails, instance, handlerKey);
           },
           instance));
     }

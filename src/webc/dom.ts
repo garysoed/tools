@@ -1,10 +1,11 @@
 import { monad } from '../event/monad';
 import { monadOut } from '../event/monad-out';
 import { MonadFactory } from '../interfaces/monad-factory';
-import { AttributeSelector, ElementSelector } from '../interfaces/selector';
+import { AttributeSelector, ChildElementsSelector, ElementSelector } from '../interfaces/selector';
 import { AttributeBinder } from '../webc/attribute-binder';
 import { ElementBinder } from '../webc/element-binder';
 import { EventDispatcher } from '../webc/event-dispatcher';
+import { ChildrenElementsBinder } from '../webc/immutable-children-elements-binder';
 import { Util } from '../webc/util';
 
 
@@ -17,6 +18,20 @@ export class Dom {
           const {name: attributeName, parser, selector} = config;
           const targetElement = Dom.requireTargetElement_(selector, instance);
           return AttributeBinder.of(targetElement, attributeName, parser);
+        });
+  }
+
+  childElements<T>(config: ChildElementsSelector<T>): ParameterDecorator {
+    return this.createMonad_(
+        (instance: Object) => {
+          const {bridge, endPadCount, selector, startPadCount} = config;
+          const element = Dom.requireTargetElement_(selector, instance);
+          return ChildrenElementsBinder.of<T>(
+              element,
+              bridge,
+              startPadCount || 0,
+              endPadCount || 0,
+              instance);
         });
   }
 
@@ -44,7 +59,7 @@ export class Dom {
         });
   }
 
-  private static requireTargetElement_(selector: string | null, instance: Object): Element {
+  private static requireTargetElement_(selector: ElementSelector, instance: Object): Element {
     const root = Util.getElement(instance);
     if (!root) {
       throw new Error(`Element not found for ${instance}`);

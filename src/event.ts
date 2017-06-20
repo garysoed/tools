@@ -6,6 +6,7 @@ export { DomEvent } from './event/dom-event';
 export { eventDetails } from './event/event-details';
 export { ListenableDom } from './event/listenable-dom';
 export { monad } from './event/monad';
+export { monadOut } from './event/monad-out';
 export { MonadSetter } from './interfaces/monad-setter';
 export { on } from './event/on';
 export { SimpleMonad } from './event/simple-monad';

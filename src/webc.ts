@@ -1,7 +1,7 @@
 export { Animation } from './webc/animation';
 export { AnimationEasing } from './webc/animation-easing';
 export { BaseElement } from './webc/base-element';
-export { IDataHelper as ChildElementDataHelper } from './webc/children-elements-binder';
+export { DataHelper as ChildElementDataHelper } from './webc/children-elements-binder';
 export { customElement } from './webc/custom-element';
 export { dom, domOut } from './webc/dom';
 export { DomHook } from './webc/dom-hook';
