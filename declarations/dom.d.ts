@@ -1,4 +1,5 @@
 interface AnimationKeyframe {
+  bottom?: string
   height?: string
   left?: string
   opacity?: number

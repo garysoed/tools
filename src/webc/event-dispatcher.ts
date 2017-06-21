@@ -10,7 +10,7 @@ export class EventDispatcher implements DomBinder<DispatchFn<any>> {
 
   get(): DispatchFn<any> {
     return (name: string, payload: any = null) => {
-      this.element_.dispatchEvent(new CustomEvent(name, {detail: payload}));
+      this.element_.dispatchEvent(new CustomEvent(name, {bubbles: true, detail: payload}));
     };
   }
 

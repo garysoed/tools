@@ -83,17 +83,6 @@ describe('webc.ChildListChangeHandler', () => {
           instance,
           handlerKey2);
     });
-
-    it('should do nothing if the handler cannot be found', () => {
-      const handlerKey = 'handlerKey';
-      const instance = {};
-
-      const records = ImmutableSet.of<any>([{}]);
-
-      assert(() => {
-        handler['onMutation_'](instance, ImmutableSet.of([handlerKey]), records);
-      }).toNot.throw();
-    });
   });
 
   describe('configure', () => {

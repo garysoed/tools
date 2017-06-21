@@ -136,7 +136,7 @@ export class ChildListChangeHandler implements IHandler<ChildListChangeConfig> {
         const handler = instance[handlerKey];
         if (instance instanceof BaseElement) {
           if (handler) {
-              handler.call(instance, record.addedNodes, record.removedNodes);
+            handler.call(instance, record.addedNodes, record.removedNodes);
           }
         } else {
           MonadUtil.callFunction(
