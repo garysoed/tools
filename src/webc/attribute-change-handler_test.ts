@@ -176,63 +176,286 @@ describe('webc.AttributeChangeHandler', () => {
       const configs = ImmutableMap.of<string, ImmutableSet<any>>([
         [
           attributeName1,
-          ImmutableSet.of([{handlerKey: handlerKey1, parser: mockParser1}])],
+          ImmutableSet.of([{handlerKey: handlerKey1, parser: mockParser1}]),
+        ],
         [
           attributeName2,
-          ImmutableSet.of([{handlerKey: handlerKey2, parser: mockParser2}])],
-        ]);
+          ImmutableSet.of([{handlerKey: handlerKey2, parser: mockParser2}]),
+        ],
+      ]);
 
       const oldValue1 = Mocks.object('oldValue1');
       const oldValue2 = Mocks.object('oldValue2');
+      const mockTarget1 = jasmine.createSpyObj('Target1', ['getAttribute']);
+      Object.setPrototypeOf(mockTarget1, Element.prototype);
+      mockTarget1.getAttribute.and.returnValue(Mocks.object('value1'));
+      const mockTarget2 = jasmine.createSpyObj('Target2', ['getAttribute']);
+      Object.setPrototypeOf(mockTarget2, Element.prototype);
+      mockTarget2.getAttribute.and.returnValue(Mocks.object('value2'));
       const records = ImmutableSet.of<any>(
         [
           {
             attributeName: attributeName1,
             oldValue: oldValue1,
+            target: mockTarget1,
           },
           {
             attributeName: attributeName2,
             oldValue: oldValue2,
+            target: mockTarget2,
           },
         ]);
       spyOn(MonadUtil, 'callFunction');
 
       handler['onMutation_'](instance, configs, records);
       assert(MonadUtil.callFunction).to.haveBeenCalledWith(
-          {type: 'gse-attributechanged', oldValue: parsedValue1}, instance, handlerKey1);
+          {type: 'gs-attributechanged', oldValue: parsedValue1}, instance, handlerKey1);
       assert(MonadUtil.callFunction).to.haveBeenCalledWith(
-          {type: 'gse-attributechanged', oldValue: parsedValue2}, instance, handlerKey2);
+          {type: 'gs-attributechanged', oldValue: parsedValue2}, instance, handlerKey2);
       assert(mockParser1.parse).to.haveBeenCalledWith(oldValue1);
       assert(mockParser2.parse).to.haveBeenCalledWith(oldValue2);
     });
 
-    it('should not throw error if the record has no attribute names', () => {
-      const mockHandler = jasmine.createSpy('Handler');
-      const instance = Mocks.object('instance');
-      instance['handlerKey'] = mockHandler;
+    it(`should skip records with no matching configs`, () => {
+      const handlerKey1 = 'handlerKey1';
+      const handlerKey2 = 'handlerKey2';
 
+      const mockHandler1 = jasmine.createSpy('Handler1');
+      const mockHandler2 = jasmine.createSpy('Handler2');
+      const instance = Mocks.object('instance');
+      instance[handlerKey1] = mockHandler1;
+      instance[handlerKey2] = mockHandler2;
+
+      const parsedValue1 = Mocks.object('parsedValue1');
+      const parsedValue2 = Mocks.object('parsedValue2');
+      const mockParser1 = jasmine.createSpyObj('Parser1', ['parse']);
+      mockParser1.parse.and.returnValue(parsedValue1);
+      const mockParser2 = jasmine.createSpyObj('Parser2', ['parse']);
+      mockParser2.parse.and.returnValue(parsedValue2);
+
+      const attributeName1 = 'attributeName1';
+      const attributeName2 = 'attributeName2';
       const configs = ImmutableMap.of<string, ImmutableSet<any>>([
         [
-          'attributeName',
-          ImmutableSet.of([{handlerKey: 'handlerKey', parser: Mocks.object('parser')}]),
+          attributeName2,
+          ImmutableSet.of([{handlerKey: handlerKey2, parser: mockParser2}]),
         ],
       ]);
 
-      const mockTargetEl = jasmine.createSpyObj('TargetEl', ['getAttribute']);
-      mockTargetEl.getAttribute.and.returnValue('newValue');
+      const oldValue1 = Mocks.object('oldValue1');
+      const oldValue2 = Mocks.object('oldValue2');
+      const mockTarget1 = jasmine.createSpyObj('Target1', ['getAttribute']);
+      Object.setPrototypeOf(mockTarget1, Element.prototype);
+      mockTarget1.getAttribute.and.returnValue(Mocks.object('value1'));
+      const mockTarget2 = jasmine.createSpyObj('Target2', ['getAttribute']);
+      Object.setPrototypeOf(mockTarget2, Element.prototype);
+      mockTarget2.getAttribute.and.returnValue(Mocks.object('value2'));
+      const records = ImmutableSet.of<any>(
+        [
+          {
+            attributeName: attributeName1,
+            oldValue: oldValue1,
+            target: mockTarget1,
+          },
+          {
+            attributeName: attributeName2,
+            oldValue: oldValue2,
+            target: mockTarget2,
+          },
+        ]);
+      spyOn(MonadUtil, 'callFunction');
 
-      const records = ImmutableSet.of<any>([
-        {
-          attributeName: null,
-          oldValue: 'oldValue',
-          target: mockTargetEl,
-        },
+      handler['onMutation_'](instance, configs, records);
+      assert(MonadUtil.callFunction).toNot.haveBeenCalledWith(
+          {type: 'gs-attributechanged', oldValue: parsedValue1}, instance, handlerKey1);
+      assert(MonadUtil.callFunction).to.haveBeenCalledWith(
+          {type: 'gs-attributechanged', oldValue: parsedValue2}, instance, handlerKey2);
+      assert(mockParser1.parse).toNot.haveBeenCalledWith(oldValue1);
+      assert(mockParser2.parse).to.haveBeenCalledWith(oldValue2);
+    });
+
+    it(`should skip records whose value has not changed`, () => {
+      const handlerKey1 = 'handlerKey1';
+      const handlerKey2 = 'handlerKey2';
+
+      const mockHandler1 = jasmine.createSpy('Handler1');
+      const mockHandler2 = jasmine.createSpy('Handler2');
+      const instance = Mocks.object('instance');
+      instance[handlerKey1] = mockHandler1;
+      instance[handlerKey2] = mockHandler2;
+
+      const parsedValue1 = Mocks.object('parsedValue1');
+      const parsedValue2 = Mocks.object('parsedValue2');
+      const mockParser1 = jasmine.createSpyObj('Parser1', ['parse']);
+      mockParser1.parse.and.returnValue(parsedValue1);
+      const mockParser2 = jasmine.createSpyObj('Parser2', ['parse']);
+      mockParser2.parse.and.returnValue(parsedValue2);
+
+      const attributeName1 = 'attributeName1';
+      const attributeName2 = 'attributeName2';
+      const configs = ImmutableMap.of<string, ImmutableSet<any>>([
+        [
+          attributeName1,
+          ImmutableSet.of([{handlerKey: handlerKey1, parser: mockParser1}]),
+        ],
+        [
+          attributeName2,
+          ImmutableSet.of([{handlerKey: handlerKey2, parser: mockParser2}]),
+        ],
       ]);
 
-      assert(() => {
-        handler['onMutation_'](instance, configs, records);
-      }).toNot.throw();
-      assert(mockHandler).toNot.haveBeenCalled();
+      const oldValue1 = Mocks.object('oldValue1');
+      const oldValue2 = Mocks.object('oldValue2');
+      const mockTarget1 = jasmine.createSpyObj('Target1', ['getAttribute']);
+      Object.setPrototypeOf(mockTarget1, Element.prototype);
+      mockTarget1.getAttribute.and.returnValue(oldValue1);
+      const mockTarget2 = jasmine.createSpyObj('Target2', ['getAttribute']);
+      Object.setPrototypeOf(mockTarget2, Element.prototype);
+      mockTarget2.getAttribute.and.returnValue(Mocks.object('value2'));
+      const records = ImmutableSet.of<any>(
+        [
+          {
+            attributeName: attributeName1,
+            oldValue: oldValue1,
+            target: mockTarget1,
+          },
+          {
+            attributeName: attributeName2,
+            oldValue: oldValue2,
+            target: mockTarget2,
+          },
+        ]);
+      spyOn(MonadUtil, 'callFunction');
+
+      handler['onMutation_'](instance, configs, records);
+      assert(MonadUtil.callFunction).toNot.haveBeenCalledWith(
+          {type: 'gs-attributechanged', oldValue: parsedValue1}, instance, handlerKey1);
+      assert(MonadUtil.callFunction).to.haveBeenCalledWith(
+          {type: 'gs-attributechanged', oldValue: parsedValue2}, instance, handlerKey2);
+      assert(mockParser1.parse).toNot.haveBeenCalledWith(oldValue1);
+      assert(mockParser2.parse).to.haveBeenCalledWith(oldValue2);
+    });
+
+    it('should skip records with no attribute names', () => {
+      const handlerKey1 = 'handlerKey1';
+      const handlerKey2 = 'handlerKey2';
+
+      const mockHandler1 = jasmine.createSpy('Handler1');
+      const mockHandler2 = jasmine.createSpy('Handler2');
+      const instance = Mocks.object('instance');
+      instance[handlerKey1] = mockHandler1;
+      instance[handlerKey2] = mockHandler2;
+
+      const parsedValue1 = Mocks.object('parsedValue1');
+      const parsedValue2 = Mocks.object('parsedValue2');
+      const mockParser1 = jasmine.createSpyObj('Parser1', ['parse']);
+      mockParser1.parse.and.returnValue(parsedValue1);
+      const mockParser2 = jasmine.createSpyObj('Parser2', ['parse']);
+      mockParser2.parse.and.returnValue(parsedValue2);
+
+      const attributeName1 = 'attributeName1';
+      const attributeName2 = 'attributeName2';
+      const configs = ImmutableMap.of<string, ImmutableSet<any>>([
+        [
+          attributeName1,
+          ImmutableSet.of([{handlerKey: handlerKey1, parser: mockParser1}]),
+        ],
+        [
+          attributeName2,
+          ImmutableSet.of([{handlerKey: handlerKey2, parser: mockParser2}]),
+        ],
+      ]);
+
+      const oldValue1 = Mocks.object('oldValue1');
+      const oldValue2 = Mocks.object('oldValue2');
+      const mockTarget1 = jasmine.createSpyObj('Target1', ['getAttribute']);
+      Object.setPrototypeOf(mockTarget1, Element.prototype);
+      mockTarget1.getAttribute.and.returnValue(Mocks.object('value1'));
+      const mockTarget2 = jasmine.createSpyObj('Target2', ['getAttribute']);
+      Object.setPrototypeOf(mockTarget2, Element.prototype);
+      mockTarget2.getAttribute.and.returnValue(Mocks.object('value2'));
+      const records = ImmutableSet.of<any>(
+        [
+          {
+            oldValue: oldValue1,
+            target: mockTarget1,
+          },
+          {
+            attributeName: attributeName2,
+            oldValue: oldValue2,
+            target: mockTarget2,
+          },
+        ]);
+      spyOn(MonadUtil, 'callFunction');
+
+      handler['onMutation_'](instance, configs, records);
+      assert(MonadUtil.callFunction).toNot.haveBeenCalledWith(
+          {type: 'gs-attributechanged', oldValue: parsedValue1}, instance, handlerKey1);
+      assert(MonadUtil.callFunction).to.haveBeenCalledWith(
+          {type: 'gs-attributechanged', oldValue: parsedValue2}, instance, handlerKey2);
+      assert(mockParser1.parse).toNot.haveBeenCalledWith(oldValue1);
+      assert(mockParser2.parse).to.haveBeenCalledWith(oldValue2);
+    });
+
+    it(`should skip records whose target is not an element`, () => {
+      const handlerKey1 = 'handlerKey1';
+      const handlerKey2 = 'handlerKey2';
+
+      const mockHandler1 = jasmine.createSpy('Handler1');
+      const mockHandler2 = jasmine.createSpy('Handler2');
+      const instance = Mocks.object('instance');
+      instance[handlerKey1] = mockHandler1;
+      instance[handlerKey2] = mockHandler2;
+
+      const parsedValue1 = Mocks.object('parsedValue1');
+      const parsedValue2 = Mocks.object('parsedValue2');
+      const mockParser1 = jasmine.createSpyObj('Parser1', ['parse']);
+      mockParser1.parse.and.returnValue(parsedValue1);
+      const mockParser2 = jasmine.createSpyObj('Parser2', ['parse']);
+      mockParser2.parse.and.returnValue(parsedValue2);
+
+      const attributeName1 = 'attributeName1';
+      const attributeName2 = 'attributeName2';
+      const configs = ImmutableMap.of<string, ImmutableSet<any>>([
+        [
+          attributeName1,
+          ImmutableSet.of([{handlerKey: handlerKey1, parser: mockParser1}]),
+        ],
+        [
+          attributeName2,
+          ImmutableSet.of([{handlerKey: handlerKey2, parser: mockParser2}]),
+        ],
+      ]);
+
+      const oldValue1 = Mocks.object('oldValue1');
+      const oldValue2 = Mocks.object('oldValue2');
+      const mockTarget1 = jasmine.createSpyObj('Target1', ['getAttribute']);
+      mockTarget1.getAttribute.and.returnValue(Mocks.object('value1'));
+      const mockTarget2 = jasmine.createSpyObj('Target2', ['getAttribute']);
+      Object.setPrototypeOf(mockTarget2, Element.prototype);
+      mockTarget2.getAttribute.and.returnValue(Mocks.object('value2'));
+      const records = ImmutableSet.of<any>(
+        [
+          {
+            attributeName: attributeName1,
+            oldValue: oldValue1,
+            target: mockTarget1,
+          },
+          {
+            attributeName: attributeName2,
+            oldValue: oldValue2,
+            target: mockTarget2,
+          },
+        ]);
+      spyOn(MonadUtil, 'callFunction');
+
+      handler['onMutation_'](instance, configs, records);
+      assert(MonadUtil.callFunction).toNot.haveBeenCalledWith(
+          {type: 'gs-attributechanged', oldValue: parsedValue1}, instance, handlerKey1);
+      assert(MonadUtil.callFunction).to.haveBeenCalledWith(
+          {type: 'gs-attributechanged', oldValue: parsedValue2}, instance, handlerKey2);
+      assert(mockParser1.parse).toNot.haveBeenCalledWith(oldValue1);
+      assert(mockParser2.parse).to.haveBeenCalledWith(oldValue2);
     });
   });
 });

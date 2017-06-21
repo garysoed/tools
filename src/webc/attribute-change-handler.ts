@@ -154,20 +154,31 @@ export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerCo
     for (const record of records) {
       const attributeName = record.attributeName;
       if (attributeName === null) {
-        return;
+        continue;
+      }
+
+      const target = record.target;
+      if (!(target instanceof Element)) {
+        continue;
+      }
+
+      if (target.getAttribute(record.attributeName || '') === record.oldValue) {
+        continue;
       }
 
       const matchingConfigs = configs.get(attributeName);
-      if (matchingConfigs !== undefined) {
-        for (const {handlerKey, parser} of matchingConfigs) {
-          MonadUtil.callFunction(
+      if (matchingConfigs === undefined) {
+        continue;
+      }
+
+      for (const {handlerKey, parser} of matchingConfigs) {
+        MonadUtil.callFunction(
             {
               oldValue: parser.parse(record.oldValue),
-              type: 'gse-attributechanged',
+              type: 'gs-attributechanged',
             },
             instance,
             handlerKey);
-        }
       }
     }
   }
