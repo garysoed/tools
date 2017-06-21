@@ -2,14 +2,18 @@
  * Creates an animation object that can be applied to different elements.
  */
 import { BaseDisposable } from '../dispose/base-disposable';
+import { ListenableDom } from '../event/listenable-dom';
 import { ElementSelector } from '../interfaces/selector';
-import { AnimateEventHandler } from '../webc/animate-event-handler';
+import { EventDispatcher } from '../webc/event-dispatcher';
+import { Util } from '../webc/util';
+
+export type AnimationEventDetail = {id: symbol, keyframes: AnimationKeyframe[]};
 
 export class Animation {
   constructor(
-      private keyframes_: AnimationKeyframe[],
-      private options_: AnimationOption,
-      private id_: symbol) { }
+      private readonly keyframes_: AnimationKeyframe[],
+      private readonly options_: AnimationOption,
+      private readonly id_: symbol) { }
 
   /**
    * Appends a keyframe to the end of animation.
@@ -34,12 +38,22 @@ export class Animation {
   }
 
   start(instance: BaseDisposable, selector: ElementSelector): void {
-    AnimateEventHandler.addAnimation(
-        instance,
-        selector,
-        this.keyframes_,
-        this.options_,
-        this.id_);
+    const instanceEl = Util.getElement(instance);
+    if (!instanceEl) {
+      throw new Error(`No elements found for instance [${instance}]`);
+    }
+    const targetEl = Util.requireSelector(selector, instanceEl);
+    const animation = targetEl.animate(this.keyframes_, this.options_);
+    const listenableAnimation = ListenableDom.of(animation);
+    instance.addDisposable(listenableAnimation);
+
+    const eventDetail = {id: this.id_, keyframes: this.keyframes_};
+    instance.addDisposable(listenableAnimation.once(
+        'finish',
+        () => {
+          EventDispatcher.dispatchEvent(targetEl, 'gs-animationfinish', eventDetail);
+        },
+        this));
   }
 
   /**

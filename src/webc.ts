@@ -1,4 +1,4 @@
-export { Animation } from './webc/animation';
+export { Animation, AnimationEventDetail } from './webc/animation';
 export { AnimationEasing } from './webc/animation-easing';
 export { BaseElement } from './webc/base-element';
 export { DataHelper as ChildElementDataHelper } from './webc/children-elements-binder';

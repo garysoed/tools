@@ -4,14 +4,12 @@ import { ImmutableSet } from '../immutable/immutable-set';
 import { Iterables } from '../immutable/iterables';
 import { AttributeSelector, ElementSelector } from '../interfaces/selector';
 import { Log, LogLevel } from '../util/log';
-import { AnimateEventHandler } from '../webc/animate-event-handler';
 import { AttributeChangeHandler } from '../webc/attribute-change-handler';
 import { ChildListChangeHandler } from '../webc/child-list-change-handler';
 import { EventHandler } from '../webc/event-handler';
 import { IHandler } from '../webc/interfaces';
 import { Util } from '../webc/util';
 
-export const ANIMATE_EVENT_HANDLER = new AnimateEventHandler();
 export const ATTRIBUTE_CHANGE_HANDLER = new AttributeChangeHandler();
 export const CHILD_LIST_CHANGE_HANDLER = new ChildListChangeHandler();
 export const EVENT_HANDLER = new EventHandler();
@@ -20,13 +18,6 @@ const LOGGER = Log.of('gs-tools.webc.onDom');
 const LOGGED_ELEMENTS: Set<string> = new Set();
 
 class OnDom {
-  static animate(
-      selector: ElementSelector,
-      event: 'cancel' | 'finish',
-      id: symbol): MethodDecorator {
-    return ANIMATE_EVENT_HANDLER.createDecorator(id, event, selector);
-  }
-
   static attributeChange({name, parser, selector}: AttributeSelector<any>): MethodDecorator {
     return ATTRIBUTE_CHANGE_HANDLER.createDecorator(name, parser, selector);
   }
@@ -45,7 +36,6 @@ class OnDom {
     Log.groupCollapsed(LOGGER, `Configuring [${element.nodeName.toLowerCase()}]`);
     const unresolvedSelectors = ImmutableSet
         .of<string | null>([])
-        .addAll(onDom.configure_(element, instance, ANIMATE_EVENT_HANDLER))
         .addAll(onDom.configure_(element, instance, ATTRIBUTE_CHANGE_HANDLER))
         .addAll(onDom.configure_(element, instance, CHILD_LIST_CHANGE_HANDLER))
         .addAll(onDom.configure_(element, instance, EVENT_HANDLER));

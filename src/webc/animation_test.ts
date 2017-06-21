@@ -1,9 +1,11 @@
-import { assert, TestBase } from '../test-base';
+import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
+import { ListenableDom } from '../event/listenable-dom';
 import { Mocks } from '../mock/mocks';
-import { AnimateEventHandler } from '../webc/animate-event-handler';
 import { Animation } from '../webc/animation';
+import { EventDispatcher } from '../webc/event-dispatcher';
+import { Util } from '../webc/util';
 
 
 describe('webc.Animation', () => {
@@ -42,17 +44,47 @@ describe('webc.Animation', () => {
 
   describe('start', () => {
     it(`should add the animation correctly`, () => {
+      const mockInstance = jasmine.createSpyObj('Instance', ['addDisposable']);
+      const selector = Mocks.object('selector');
+
+      const instanceElement = Mocks.object('instanceElement');
+      const animationEventTarget = Mocks.object('animationEventTarget');
+      const mockTargetEl = jasmine.createSpyObj('TargetEl', ['animate']);
+      mockTargetEl.animate.and.returnValue(animationEventTarget);
+
+      spyOn(Util, 'requireSelector').and.returnValue(mockTargetEl);
+      spyOn(Util, 'getElement').and.returnValue(instanceElement);
+
+      const onceDisposable = Mocks.object('onceDisposable');
+      const mockListenableAnimation = jasmine.createSpyObj('ListenableAnimation', ['once']);
+      mockListenableAnimation.once.and.returnValue(onceDisposable);
+      spyOn(ListenableDom, 'of').and.returnValue(mockListenableAnimation);
+
+      spyOn(EventDispatcher, 'dispatchEvent');
+
+      animation.start(mockInstance, selector);
+      assert(mockInstance.addDisposable).to.haveBeenCalledWith(onceDisposable);
+      assert(mockInstance.addDisposable).to.haveBeenCalledWith(mockListenableAnimation);
+      assert(mockListenableAnimation.once).to
+          .haveBeenCalledWith('finish', Matchers.any(Function), animation);
+      mockListenableAnimation.once.calls.argsFor(0)[1]();
+      assert(EventDispatcher.dispatchEvent).to
+          .haveBeenCalledWith(mockTargetEl, 'gs-animationfinish', {id: ID, keyframes});
+
+      assert(ListenableDom.of).to.haveBeenCalledWith(animationEventTarget);
+      assert(mockTargetEl.animate).to.haveBeenCalledWith(keyframes, options);
+      assert(Util.getElement).to.haveBeenCalledWith(mockInstance);
+      assert(Util.requireSelector).to.haveBeenCalledWith(selector, instanceElement);
+    });
+
+    it(`should throw error if the instance has no element`, () => {
       const instance = Mocks.object('instance');
       const selector = Mocks.object('selector');
-      spyOn(AnimateEventHandler, 'addAnimation');
+      spyOn(Util, 'getElement').and.returnValue(null);
 
-      animation.start(instance, selector);
-      assert(AnimateEventHandler.addAnimation).to.haveBeenCalledWith(
-          instance,
-          selector,
-          keyframes,
-          options,
-          ID);
+      assert(() => {
+        animation.start(instance, selector);
+      }).to.throwError(/No elements found/);
     });
   });
 });

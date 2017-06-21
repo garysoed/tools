@@ -10,12 +10,16 @@ export class EventDispatcher implements DomBinder<DispatchFn<any>> {
 
   get(): DispatchFn<any> {
     return (name: string, payload: any = null) => {
-      this.element_.dispatchEvent(new CustomEvent(name, {bubbles: true, detail: payload}));
+      EventDispatcher.dispatchEvent(this.element_, name, payload);
     };
   }
 
   set(_: DispatchFn<any> | null): void {
     throw new Error('Set is unsupported');
+  }
+
+  static dispatchEvent(element: Element, name: string, payload: any = null): void {
+    element.dispatchEvent(new CustomEvent(name, {bubbles: true, detail: payload}));
   }
 
   static of(element: Element): DomBinder<DispatchFn<any>> {

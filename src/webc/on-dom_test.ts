@@ -6,7 +6,6 @@ import { ImmutableSet } from '../immutable/immutable-set';
 import { Fakes } from '../mock/fakes';
 import { Mocks } from '../mock/mocks';
 import {
-  ANIMATE_EVENT_HANDLER,
   ATTRIBUTE_CHANGE_HANDLER,
   CHILD_LIST_CHANGE_HANDLER,
   EVENT_HANDLER,
@@ -15,20 +14,6 @@ import { Util } from '../webc/util';
 
 
 describe('webc.onDom', () => {
-  describe('animate', () => {
-    it(`should return the correct decorator`, () => {
-      const event = 'cancel';
-      const selector = 'selector';
-      const id = Symbol('id');
-      const decorator = Mocks.object('decorator');
-      spyOn(ANIMATE_EVENT_HANDLER, 'createDecorator').and.returnValue(decorator);
-
-      assert(onDom.animate(selector, event, id)).to.equal(decorator);
-      assert(ANIMATE_EVENT_HANDLER.createDecorator).to
-          .haveBeenCalledWith(id, event, selector);
-    });
-  });
-
   describe('attributeChange', () => {
     it('should return the correct decorator', () => {
       const name = 'name';
