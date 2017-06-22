@@ -4,7 +4,7 @@ import { Parser } from '../interfaces/parser';
 import { ElementSelector } from '../interfaces/selector';
 import { Cases } from '../string/cases';
 import { assertUnreachable } from '../typescript/assert-unreachable';
-import { IElementConfig } from '../webc/interfaces';
+import { ElementConfig } from '../webc/element-config';
 
 const __CONFIG: symbol = Symbol('config');
 const __ELEMENT: symbol = Symbol('element');
@@ -42,7 +42,7 @@ export class Util {
    * @param ctor The constructor to get the configuration from.
    * @return The configuration from the given constructor.
    */
-  static getConfig(ctor: gs.ICtor<any>): IElementConfig {
+  static getConfig(ctor: gs.ICtor<any>): ElementConfig {
     return ctor[__CONFIG];
   }
 
@@ -91,7 +91,7 @@ export class Util {
    * @param ctor The constructor to set the configuration to.
    * @param config The configuration object to set.
    */
-  static setConfig(ctor: gs.ICtor<any>, config: IElementConfig): void {
+  static setConfig(ctor: gs.ICtor<any>, config: ElementConfig): void {
     ctor[__CONFIG] = config;
   }
 

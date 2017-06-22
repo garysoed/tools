@@ -5,7 +5,7 @@ import { MonadUtil } from '../event/monad-util';
 import { ImmutableMap } from '../immutable/immutable-map';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { BaseElement } from '../webc/base-element';
-import { IHandler } from '../webc/interfaces';
+import { Handler } from '../webc/handler';
 
 
 export type ChildListChangeConfig = {
@@ -20,7 +20,7 @@ export const CHILD_LIST_CHANGE_ANNOTATIONS: Annotations<ChildListChangeConfig> =
 /**
  * Handles child list changes.
  */
-export class ChildListChangeHandler implements IHandler<ChildListChangeConfig> {
+export class ChildListChangeHandler implements Handler<ChildListChangeConfig> {
 
   /**
    * @override

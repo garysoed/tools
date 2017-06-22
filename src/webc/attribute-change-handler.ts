@@ -7,7 +7,7 @@ import { ImmutableSet } from '../immutable/immutable-set';
 import { Iterables } from '../immutable/iterables';
 import { Parser } from '../interfaces/parser';
 import { Log } from '../util/log';
-import { IHandler } from '../webc/interfaces';
+import { Handler } from '../webc/handler';
 
 const LOGGER = Log.of('gs-tools.webc.AttributeChangeHandler');
 
@@ -27,7 +27,7 @@ export const ATTR_CHANGE_ANNOTATIONS: Annotations<AttributeChangeHandlerConfig> 
 /**
  * Handles attribute changes.
  */
-export class AttributeChangeHandler implements IHandler<AttributeChangeHandlerConfig> {
+export class AttributeChangeHandler implements Handler<AttributeChangeHandlerConfig> {
   /**
    * @override
    */

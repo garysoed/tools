@@ -7,7 +7,7 @@ import { Log, LogLevel } from '../util/log';
 import { AttributeChangeHandler } from '../webc/attribute-change-handler';
 import { ChildListChangeHandler } from '../webc/child-list-change-handler';
 import { EventHandler } from '../webc/event-handler';
-import { IHandler } from '../webc/interfaces';
+import { Handler } from '../webc/handler';
 import { Util } from '../webc/util';
 
 export const ATTRIBUTE_CHANGE_HANDLER = new AttributeChangeHandler();
@@ -53,7 +53,7 @@ class OnDom {
   private static configure_<T extends {selector: string | null}>(
       parentElement: HTMLElement,
       instance: BaseDisposable,
-      handler: IHandler<T>): ImmutableSet<string | null> {
+      handler: Handler<T>): ImmutableSet<string | null> {
     const unresolvedSelectors = new Set<string | null>();
     const configEntries = handler
         .getConfigs(instance)

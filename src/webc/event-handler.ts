@@ -5,7 +5,7 @@ import { MonadUtil } from '../event/monad-util';
 import { ImmutableMap } from '../immutable/immutable-map';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Log } from '../util/log';
-import { IHandler } from '../webc/interfaces';
+import { Handler } from '../webc/handler';
 
 const LOGGER = Log.of('gs-tools.webc.EventHandler');
 
@@ -22,7 +22,7 @@ export const EVENT_ANNOTATIONS: Annotations<EventHandlerConfig> =
 export const __listenable = Symbol('listenable');
 
 
-export class EventHandler implements IHandler<EventHandlerConfig> {
+export class EventHandler implements Handler<EventHandlerConfig> {
   /**
    * @override
    */

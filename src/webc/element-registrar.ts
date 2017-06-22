@@ -9,7 +9,7 @@ import { Cases } from '../string/cases';
 import { Log, LogLevel } from '../util/log';
 import { BaseElement } from '../webc/base-element';
 import { DomHook } from '../webc/dom-hook';
-import { Handler } from '../webc/handle';
+import { Handle } from '../webc/handle';
 import { ANNOTATIONS as HookAnnotations } from '../webc/hook';
 import { onDom } from '../webc/on-dom';
 import { ANNOTATIONS as LIFECYCLE_ANNOTATIONS } from '../webc/on-lifecycle';
@@ -64,7 +64,7 @@ export class ElementRegistrar extends BaseDisposable {
 
     const origLogLevel = Log.getEnabledLevel();
     Log.setEnabledLevel(LogLevel.WARNING);
-    Handler.configure(xtagContext, instance);
+    Handle.configure(xtagContext, instance);
     Log.setEnabledLevel(origLogLevel);
   }
 

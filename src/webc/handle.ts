@@ -6,7 +6,7 @@ import { StringParser } from '../parse/string-parser';
 import { AttributeChangeHandler } from '../webc/attribute-change-handler';
 import { ChildListChangeHandler } from '../webc/child-list-change-handler';
 import { EventHandler } from '../webc/event-handler';
-import { IHandler } from '../webc/interfaces';
+import { Handler } from '../webc/handler';
 import { Util } from '../webc/util';
 
 
@@ -20,7 +20,7 @@ export const EVENT_HANDLER = new EventHandler();
  *
  * Use this to annotate methods to handle various DOM events.
  */
-export class Handler {
+export class Handle {
   private selector_: string | null;
 
   /**
@@ -73,9 +73,9 @@ export class Handler {
   static configure(element: HTMLElement, instance: BaseDisposable): void {
     const unresolvedSelectors = ImmutableSet
         .of<string | null>([])
-        .addAll(Handler.configure_(element, instance, ATTRIBUTE_CHANGE_HANDLER))
-        .addAll(Handler.configure_(element, instance, EVENT_HANDLER))
-        .addAll(Handler.configure_(element, instance, CHILD_LIST_CHANGE_HANDLER));
+        .addAll(Handle.configure_(element, instance, ATTRIBUTE_CHANGE_HANDLER))
+        .addAll(Handle.configure_(element, instance, EVENT_HANDLER))
+        .addAll(Handle.configure_(element, instance, CHILD_LIST_CHANGE_HANDLER));
 
     const selectorsString = ImmutableList.of(unresolvedSelectors).toArray().join(', ');
 
@@ -87,7 +87,7 @@ export class Handler {
   private static configure_<T extends {selector: string | null}>(
       parentElement: HTMLElement,
       instance: BaseDisposable,
-      handler: IHandler<T>): ImmutableSet<string | null> {
+      handler: Handler<T>): ImmutableSet<string | null> {
     const unresolvedSelectors = new Set<string | null>();
     const configEntries = handler
         .getConfigs(instance)
@@ -129,7 +129,7 @@ export class Handler {
   }
 }
 
-export function handle(selector: string | null): Handler {
-  return new Handler(selector);
+export function handle(selector: string | null): Handle {
+  return new Handle(selector);
 }
 // TODO: Mutable

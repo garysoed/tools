@@ -1,6 +1,6 @@
 import { BaseDisposable } from '../dispose/base-disposable';
 import { listener } from '../event/listener';
-import { IElementConfig } from '../webc/interfaces';
+import { ElementConfig } from '../webc/element-config';
 import { Util } from '../webc/util';
 
 
@@ -47,7 +47,7 @@ import { Util } from '../webc/util';
  *
  * @param config The configuration object.
  */
-export function customElement(config: IElementConfig): ClassDecorator {
+export function customElement(config: ElementConfig): ClassDecorator {
   return function<C extends gs.ICtor<any>>(ctor: C): void {
     if (!(ctor.prototype instanceof BaseDisposable)) {
       throw new Error(`${ctor} needs to extend BaseDisposable`);
