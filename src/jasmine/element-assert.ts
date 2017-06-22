@@ -20,5 +20,12 @@ export class ElementAssert extends AnyAssert<Element> {
 
     this.getMatchers_(children).toEqual(expectedChildren);
   }
+
+  haveClasses(expectedClasses: string[]): void {
+    const classes: string[] = [];
+    for (let i = 0; i < this.elementValue_.classList.length; i++) {
+      classes.push(this.elementValue_.classList.item(i));
+    }
+    this.getMatchers_(classes).toEqual(expectedClasses);
+  }
 }
-// TODO: Mutable
