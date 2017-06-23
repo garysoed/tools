@@ -1,53 +1,6 @@
 import { Parser } from '../interfaces/parser';
+import { Size, UNITS } from '../interfaces/size';
 import { FloatParser } from '../parse/float-parser';
-
-type Unit =
-  'cap' |
-  'ch' |
-  'cm' |
-  'em' |
-  'ex' |
-  'ic' |
-  'in' |
-  'lh' |
-  'mm' |
-  'pc' |
-  'pt' |
-  'px' |
-  'q' |
-  'rem' |
-  'rlh' |
-  'vb' |
-  'vh' |
-  'vi' |
-  'vmin' |
-  'vmax' |
-  'vw';
-type Size = {unit: Unit, value: number};
-
-const UNITS: Unit[] = [
-  'cap',
-  'ch',
-  'cm',
-  'em',
-  'ex',
-  'ic',
-  'in',
-  'lh',
-  'mm',
-  'pc',
-  'pt',
-  'px',
-  'q',
-  'rem',
-  'rlh',
-  'vb',
-  'vh',
-  'vi',
-  'vmin',
-  'vmax',
-  'vw',
-];
 
 export const SizeParser: Parser<Size> = {
   parse(input: string | null): Size | null {
