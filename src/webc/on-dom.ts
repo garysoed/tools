@@ -6,12 +6,14 @@ import { AttributeSelector, ElementSelector } from '../interfaces/selector';
 import { Log, LogLevel } from '../util/log';
 import { AttributeChangeHandler } from '../webc/attribute-change-handler';
 import { ChildListChangeHandler } from '../webc/child-list-change-handler';
+import { DimensionChangeHandler } from '../webc/dimension-change-handler';
 import { EventHandler } from '../webc/event-handler';
 import { Handler } from '../webc/handler';
 import { Util } from '../webc/util';
 
 export const ATTRIBUTE_CHANGE_HANDLER = new AttributeChangeHandler();
 export const CHILD_LIST_CHANGE_HANDLER = new ChildListChangeHandler();
+export const DIMENSION_CHANGE_HANDLER = new DimensionChangeHandler();
 export const EVENT_HANDLER = new EventHandler();
 
 const LOGGER = Log.of('gs-tools.webc.onDom');
@@ -38,6 +40,7 @@ class OnDom {
         .of<string | null>([])
         .addAll(onDom.configure_(element, instance, ATTRIBUTE_CHANGE_HANDLER))
         .addAll(onDom.configure_(element, instance, CHILD_LIST_CHANGE_HANDLER))
+        .addAll(onDom.configure_(element, instance, DIMENSION_CHANGE_HANDLER))
         .addAll(onDom.configure_(element, instance, EVENT_HANDLER));
 
     const selectorsString = ImmutableList.of(unresolvedSelectors).toArray().join(', ');
@@ -50,11 +53,11 @@ class OnDom {
     Log.setEnabledLevel(previousLogLevel);
   }
 
-  private static configure_<T extends {selector: string | null}>(
+  private static configure_<T extends {selector: ElementSelector}>(
       parentElement: HTMLElement,
       instance: BaseDisposable,
-      handler: Handler<T>): ImmutableSet<string | null> {
-    const unresolvedSelectors = new Set<string | null>();
+      handler: Handler<T>): ImmutableSet<ElementSelector> {
+    const unresolvedSelectors = new Set<ElementSelector>();
     const configEntries = handler
         .getConfigs(instance)
         .values()
@@ -92,6 +95,10 @@ class OnDom {
     }
 
     return ImmutableSet.of(unresolvedSelectors);
+  }
+
+  static dimensionChange(selector: ElementSelector): MethodDecorator {
+    return DIMENSION_CHANGE_HANDLER.createDecorator(selector);
   }
 
   static event(selector: ElementSelector, event: string): MethodDecorator {

@@ -8,5 +8,6 @@ gs_tools(
       "//src/inject",
       "//src/parse",
       "//src/string",
+      "//src/ui",
       "//src/util",
     ])

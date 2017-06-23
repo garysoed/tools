@@ -8,6 +8,7 @@ import { Mocks } from '../mock/mocks';
 import {
   ATTRIBUTE_CHANGE_HANDLER,
   CHILD_LIST_CHANGE_HANDLER,
+  DIMENSION_CHANGE_HANDLER,
   EVENT_HANDLER,
   onDom} from '../webc/on-dom';
 import { Util } from '../webc/util';
@@ -39,18 +40,6 @@ describe('webc.onDom', () => {
     });
   });
 
-  describe('event', () => {
-    it('should return the correct decorator', () => {
-      const name = 'name';
-      const selector = 'selector';
-      const decorator = Mocks.object('decorator');
-      spyOn(EVENT_HANDLER, 'createDecorator').and.returnValue(decorator);
-
-      assert(onDom.event(selector, name)).to.equal(decorator);
-      assert(EVENT_HANDLER.createDecorator).to.haveBeenCalledWith(name, selector, []);
-    });
-  });
-
   describe('configure', () => {
     it('should configure the handlers correctly', () => {
       const element = Mocks.object('element');
@@ -62,6 +51,10 @@ describe('webc.onDom', () => {
 
       assert(onDom['configure_']).to
           .haveBeenCalledWith(element, instance, ATTRIBUTE_CHANGE_HANDLER);
+      assert(onDom['configure_']).to
+          .haveBeenCalledWith(element, instance, CHILD_LIST_CHANGE_HANDLER);
+      assert(onDom['configure_']).to
+          .haveBeenCalledWith(element, instance, DIMENSION_CHANGE_HANDLER);
       assert(onDom['configure_']).to
           .haveBeenCalledWith(element, instance, EVENT_HANDLER);
     });
@@ -151,6 +144,29 @@ describe('webc.onDom', () => {
       assert(mockHandler.configure).toNot.haveBeenCalled();
       assert(Util.resolveSelector).to.haveBeenCalledWith(selector, parentElement);
       assert(mockHandler.getConfigs).to.haveBeenCalledWith(instance);
+    });
+  });
+
+  describe('dimensionChange', () => {
+    it('should return the correct decorator', () => {
+      const selector = 'selector';
+      const decorator = Mocks.object('decorator');
+      spyOn(DIMENSION_CHANGE_HANDLER, 'createDecorator').and.returnValue(decorator);
+
+      assert(onDom.dimensionChange(selector)).to.equal(decorator);
+      assert(DIMENSION_CHANGE_HANDLER.createDecorator).to.haveBeenCalledWith(selector);
+    });
+  });
+
+  describe('event', () => {
+    it('should return the correct decorator', () => {
+      const name = 'name';
+      const selector = 'selector';
+      const decorator = Mocks.object('decorator');
+      spyOn(EVENT_HANDLER, 'createDecorator').and.returnValue(decorator);
+
+      assert(onDom.event(selector, name)).to.equal(decorator);
+      assert(EVENT_HANDLER.createDecorator).to.haveBeenCalledWith(name, selector, []);
     });
   });
 });

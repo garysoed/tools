@@ -4,13 +4,14 @@ import { DisposableFunction } from '../dispose/disposable-function';
 import { MonadUtil } from '../event/monad-util';
 import { ImmutableMap } from '../immutable/immutable-map';
 import { ImmutableSet } from '../immutable/immutable-set';
+import { ElementSelector } from '../interfaces/selector';
 import { BaseElement } from '../webc/base-element';
 import { Handler } from '../webc/handler';
 
 
 export type ChildListChangeConfig = {
   handlerKey: string | symbol,
-  selector: string | null,
+  selector: ElementSelector,
 };
 
 export const CHILD_LIST_CHANGE_ANNOTATIONS: Annotations<ChildListChangeConfig> =
@@ -66,7 +67,7 @@ export class ChildListChangeHandler implements Handler<ChildListChangeConfig> {
    * @return The method decorator. The method take in 2 arguments: the new parsed value of the
    *    attribute and the old parsed value of the attribute.
    */
-  createDecorator(selector: string | null): MethodDecorator {
+  createDecorator(selector: ElementSelector): MethodDecorator {
     return function(
         target: Object,
         propertyKey: string | symbol,
@@ -75,7 +76,7 @@ export class ChildListChangeHandler implements Handler<ChildListChangeConfig> {
           propertyKey,
           {
             handlerKey: propertyKey,
-            selector: selector,
+            selector,
           });
       return descriptor;
     };
@@ -140,7 +141,7 @@ export class ChildListChangeHandler implements Handler<ChildListChangeConfig> {
           }
         } else {
           MonadUtil.callFunction(
-              {added: record.addedNodes, type: 'childlistchange', removed: record.removedNodes},
+              {added: record.addedNodes, type: 'gs-childlistchange', removed: record.removedNodes},
               instance,
               handlerKey);
         }

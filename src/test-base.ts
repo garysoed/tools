@@ -8,6 +8,8 @@ export { assert } from './jasmine/assert';
 export { assertColor } from './jasmine/assert-color';
 export { gentest } from './testgen/gentest';
 export { Matchers } from './jasmine/matchers';
+export { Fakes } from './mock/fakes';
+export { Mocks } from './mock/mocks';
 export { TestSpec } from './testgen/test-spec';
 
 const TEST_SETUP = new TestSetup([

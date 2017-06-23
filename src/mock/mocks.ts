@@ -3,9 +3,10 @@ import { DisposableFunction } from '../dispose/disposable-function';
 
 
 /**
+ * Do not use symbol. Jasmine does not detect symbolic keys for equality checking.
  * @hidden
  */
-const __id = Symbol('id');
+const __id = '$id';
 
 /**
  * Contains various utility methods to create mocks for testing.
@@ -85,4 +86,3 @@ export class Mocks {
     return {[__id]: name};
   }
 }
-// TODO: Mutable

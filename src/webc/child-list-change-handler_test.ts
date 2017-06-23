@@ -47,44 +47,6 @@ describe('webc.ChildListChangeHandler', () => {
     });
   });
 
-  describe('onMutation_', () => {
-    it('should call the handler correctly', () => {
-      const handlerKey1 = 'handlerKey1';
-      const handlerKey2 = 'handlerKey2';
-      const instance = Mocks.object('instance');
-
-      const addedNodes1 = Mocks.object('addedNodes1');
-      const removedNodes1 = Mocks.object('removedNodes1');
-      const addedNodes2 = Mocks.object('addedNodes2');
-      const removedNodes2 = Mocks.object('removedNodes2');
-      const records = ImmutableSet.of<any>([
-        {addedNodes: addedNodes1, removedNodes: removedNodes1},
-        {addedNodes: addedNodes2, removedNodes: removedNodes2},
-      ]);
-
-      spyOn(MonadUtil, 'callFunction');
-
-      handler['onMutation_'](instance, ImmutableSet.of([handlerKey1, handlerKey2]), records);
-
-      assert(MonadUtil.callFunction).to.haveBeenCalledWith(
-          {added: addedNodes1, type: 'childlistchange', removed: removedNodes1},
-          instance,
-          handlerKey1);
-      assert(MonadUtil.callFunction).to.haveBeenCalledWith(
-          {added: addedNodes2, type: 'childlistchange', removed: removedNodes2},
-          instance,
-          handlerKey2);
-      assert(MonadUtil.callFunction).to.haveBeenCalledWith(
-          {added: addedNodes1, type: 'childlistchange', removed: removedNodes1},
-          instance,
-          handlerKey1);
-      assert(MonadUtil.callFunction).to.haveBeenCalledWith(
-          {added: addedNodes2, type: 'childlistchange', removed: removedNodes2},
-          instance,
-          handlerKey2);
-    });
-  });
-
   describe('configure', () => {
     it('should create the mutation observer correctly, call the initial mutation and ' +
         'disconnects on dispose',
@@ -181,6 +143,44 @@ describe('webc.ChildListChangeHandler', () => {
 
       assert(handler.getConfigs(instance)).to.equal(attachedValues);
       assert(CHILD_LIST_CHANGE_ANNOTATIONS.forCtor).to.haveBeenCalledWith(constructor);
+    });
+  });
+
+  describe('onMutation_', () => {
+    it('should call the handler correctly', () => {
+      const handlerKey1 = 'handlerKey1';
+      const handlerKey2 = 'handlerKey2';
+      const instance = Mocks.object('instance');
+
+      const addedNodes1 = Mocks.object('addedNodes1');
+      const removedNodes1 = Mocks.object('removedNodes1');
+      const addedNodes2 = Mocks.object('addedNodes2');
+      const removedNodes2 = Mocks.object('removedNodes2');
+      const records = ImmutableSet.of<any>([
+        {addedNodes: addedNodes1, removedNodes: removedNodes1},
+        {addedNodes: addedNodes2, removedNodes: removedNodes2},
+      ]);
+
+      spyOn(MonadUtil, 'callFunction');
+
+      handler['onMutation_'](instance, ImmutableSet.of([handlerKey1, handlerKey2]), records);
+
+      assert(MonadUtil.callFunction).to.haveBeenCalledWith(
+          {added: addedNodes1, type: 'gs-childlistchange', removed: removedNodes1},
+          instance,
+          handlerKey1);
+      assert(MonadUtil.callFunction).to.haveBeenCalledWith(
+          {added: addedNodes2, type: 'gs-childlistchange', removed: removedNodes2},
+          instance,
+          handlerKey2);
+      assert(MonadUtil.callFunction).to.haveBeenCalledWith(
+          {added: addedNodes1, type: 'gs-childlistchange', removed: removedNodes1},
+          instance,
+          handlerKey1);
+      assert(MonadUtil.callFunction).to.haveBeenCalledWith(
+          {added: addedNodes2, type: 'gs-childlistchange', removed: removedNodes2},
+          instance,
+          handlerKey2);
     });
   });
 });
