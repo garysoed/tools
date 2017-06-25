@@ -270,18 +270,29 @@ export class ImmutableList<T> implements
 
   static of<T>(data: FiniteCollection<T>): ImmutableList<T>;
   static of<T>(data: T[]): ImmutableList<T>;
+  static of<DataTransferItem>(data: DataTransferItemList): ImmutableList<DataTransferItem>;
   static of<T>(data: ItemList<T>): ImmutableList<T>;
-  static of<T>(data: T[] | FiniteCollection<T> | ItemList<T>): ImmutableList<T> {
+  static of(
+      data: any[] |
+          FiniteCollection<any> |
+          ItemList<any> |
+          DataTransferItemList): ImmutableList<any> {
     if (FiniteIterableType.check(data)) {
-      return new ImmutableList<T>(Iterables.toArray(data));
-    } else if (ItemListType<T>().check(data)) {
-      const array: T[] = [];
+      return new ImmutableList<any>(Iterables.toArray(data));
+    } else if (ItemListType<any>().check(data)) {
+      const array: any[] = [];
       for (let i = 0; i < data.length; i++) {
         array.push(data.item(i));
       }
       return new ImmutableList(array);
+    } else if (data instanceof DataTransferItemList) {
+      const array: DataTransferItem[] = [];
+      for (let i = 0; i < data.length; i++) {
+        array.push(data[i]);
+      }
+      return new ImmutableList<DataTransferItem>(array);
     } else if (data instanceof Array) {
-      return new ImmutableList<T>(data);
+      return new ImmutableList<any>(data);
     } else {
       throw assertUnreachable(data);
     }

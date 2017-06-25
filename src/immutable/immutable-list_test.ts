@@ -1,4 +1,4 @@
-import { assert, TestBase } from '../test-base';
+import { assert, Mocks, TestBase } from '../test-base';
 TestBase.setup();
 
 import { ImmutableList } from '../immutable/immutable-list';
@@ -352,6 +352,16 @@ describe('immutable.ImmutableList', () => {
         length: 4,
       };
       assert(ImmutableList.of(itemList)).to.haveElements(items);
+    });
+
+    it(`should create the list correctly from DataTransferItemLists`, () => {
+      const items = [
+        Mocks.object('DataTransferItem1'),
+        Mocks.object('DataTransferItem2'),
+        Mocks.object('DataTransferItem3'),
+        Mocks.object('DataTransferItem4'),
+      ];
+      assert(ImmutableList.of(items as any as DataTransferItemList)).to.haveElements(items);
     });
   });
 });
