@@ -12,4 +12,5 @@ export { DomBinder } from './interfaces/dom-binder';
 export { onDom } from './webc/on-dom';
 export { onLifecycle } from './webc/on-lifecycle';
 export { Templates } from './webc/templates';
+export { Util } from './webc/util';
 export { WindowBus } from './webc/window-bus';

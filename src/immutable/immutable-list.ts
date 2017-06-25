@@ -25,7 +25,7 @@ export class ImmutableList<T> implements
     Ordered<T> {
   private readonly data_: T[];
 
-  private constructor(data: T[]) {
+  constructor(data: T[]) {
     this.data_ = data.slice(0);
   }
 

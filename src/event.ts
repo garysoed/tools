@@ -8,5 +8,6 @@ export { ListenableDom } from './event/listenable-dom';
 export { monad } from './event/monad';
 export { monadOut } from './event/monad-out';
 export { MonadSetter } from './interfaces/monad-setter';
+export { MonadUtil } from './event/monad-util';
 export { on } from './event/on';
 export { SimpleMonad } from './event/simple-monad';

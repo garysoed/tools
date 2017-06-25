@@ -43,5 +43,8 @@ export const TestJasmine = {
       window['it'] = runTest.bind(window, it);
       window['jasminePatched'] = true;
     }
+
+    jasmine['MAX_PRETTY_PRINT_DEPTH'] = 2;
+    jasmine['MAX_PRETTY_PRINT_ARRAY_LENGTH'] = 5;
   },
 };
