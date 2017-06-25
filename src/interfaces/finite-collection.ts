@@ -1,5 +1,7 @@
 import { Collection } from '../interfaces/collection';
 import { Finite } from '../interfaces/finite';
+import { Ordered } from '../interfaces/ordered';
+import { Ordering } from '../interfaces/ordering';
 
 /**
  * A collection that has a finite size.
@@ -36,6 +38,10 @@ export interface FiniteCollection<T> extends Finite, Collection<T> {
    */
   has(item: T): boolean;
 
+  max(ordering: Ordering<T>): T | null;
+
+  min(ordering: Ordering<T>): T | null;
+
   reduceItem<R>(fn: (prevItem: R, item: T) => R, init: R): R;
 
   /**
@@ -44,4 +50,6 @@ export interface FiniteCollection<T> extends Finite, Collection<T> {
   size(): number;
 
   someItem(check: (item: T) => boolean): boolean;
+
+  sort(compareFn: Ordering<T>): Ordered<T>;
 }

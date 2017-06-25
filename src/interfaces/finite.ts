@@ -1,5 +1,5 @@
 /**
- * A collection that has a finite size.
+ * An collection (not Collection) with a known size, but we don't know what the items are.
  */
 export interface Finite {
   /**

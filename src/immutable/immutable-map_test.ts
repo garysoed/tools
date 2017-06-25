@@ -3,6 +3,7 @@ TestBase.setup();
 
 import { ImmutableMap } from '../immutable/immutable-map';
 import { ImmutableSet } from '../immutable/immutable-set';
+import { Orderings } from '../immutable/orderings';
 
 
 describe('immutable.ImmutableMap', () => {
@@ -256,6 +257,36 @@ describe('immutable.ImmutableMap', () => {
     });
   });
 
+  describe('max', () => {
+    it(`should return the correct max item`, () => {
+      const max = ImmutableMap
+          .of([[-1, 1], [0, 2], [1, 3], [2, 1]])
+          .max(([key1, value1]: [number, number], [key2, value2]: [number, number]) => {
+            return Orderings.normal()(key1 + value1, key2 + value2);
+          });
+      assert(max).to.equal([1, 3]);
+    });
+
+    it(`should return null if the list is null`, () => {
+      assert(ImmutableMap.of<number, number>([]).max(Orderings.normal())).to.beNull();
+    });
+  });
+
+  describe('min', () => {
+    it(`should return the correct min item`, () => {
+      const min = ImmutableMap
+          .of([[1, 3], [0, 2], [-1, 1], [2, 1]])
+          .min(([key1, value1]: [number, number], [key2, value2]: [number, number]) => {
+            return Orderings.normal()(key1 + value1, key2 + value2);
+          });
+      assert(min).to.equal([-1, 1]);
+    });
+
+    it(`should return null if the list is null`, () => {
+      assert(ImmutableMap.of<number, number>([]).min(Orderings.normal())).to.beNull();
+    });
+  });
+
   describe('reduce', () => {
     it('should return the correct value', () => {
       const result = ImmutableMap
@@ -314,6 +345,17 @@ describe('immutable.ImmutableMap', () => {
     it('should return false if every element does not pass the check', () => {
       const map = ImmutableMap.of([[1, 'a'], [2, 'b'], [3, 'c']]);
       assert(map.someItem(([key, _]: [number, string]) => key < 0)).to.beFalse();
+    });
+  });
+
+  describe('sort', () => {
+    it('should sort the items correctly', () => {
+      const orderedSet = ImmutableMap
+          .of([[-1, 1], [0, 2], [1, 2], [3, 1]])
+          .sort(([key1, value1]: [number, number], [key2, value2]: [number, number]) => {
+            return Orderings.reverse(Orderings.normal())(key1 + value1, key2 + value2);
+          });
+      assert(orderedSet).to.haveElements([[3, 1], [1, 2], [0, 2], [-1, 1]]);
     });
   });
 

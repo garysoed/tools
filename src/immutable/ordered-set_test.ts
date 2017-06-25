@@ -3,6 +3,7 @@ TestBase.setup();
 
 import { ImmutableSet } from '../immutable/immutable-set';
 import { OrderedSet } from '../immutable/ordered-set';
+import { Orderings } from '../immutable/orderings';
 
 
 describe('immutable.OrderedSet', () => {
@@ -166,6 +167,26 @@ describe('immutable.OrderedSet', () => {
           .of([0, 1, 2])
           .mapItem((key: number) => `${key}`);
       assert(set).to.haveElements(['0', '1', '2']);
+    });
+  });
+
+  describe('max', () => {
+    it(`should return the correct max item`, () => {
+      assert(OrderedSet.of([0, 2, 4, 3]).max(Orderings.normal())).to.equal(4);
+    });
+
+    it(`should return null if the list is null`, () => {
+      assert(OrderedSet.of<number>([]).max(Orderings.normal())).to.beNull();
+    });
+  });
+
+  describe('min', () => {
+    it(`should return the correct min item`, () => {
+      assert(OrderedSet.of([4, 2, 0, 3]).min(Orderings.normal())).to.equal(0);
+    });
+
+    it(`should return null if the list is null`, () => {
+      assert(OrderedSet.of<number>([]).min(Orderings.normal())).to.beNull();
     });
   });
 

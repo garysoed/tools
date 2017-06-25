@@ -3,6 +3,7 @@ TestBase.setup();
 
 import { ImmutableSet } from '../immutable/immutable-set';
 import { OrderedMap } from '../immutable/ordered-map';
+import { Orderings } from '../immutable/orderings';
 
 
 describe('immutable.OrderedMap', () => {
@@ -349,6 +350,36 @@ describe('immutable.OrderedMap', () => {
           .of([[0, 'a'], [1, 'b'], [2, 'c']])
           .mapItem(([key, value]: [number, string]) => `${key}${value}`);
       assert(map).to.haveElements([[0, '0a'], [1, '1b'], [2, '2c']]);
+    });
+  });
+
+  describe('max', () => {
+    it(`should return the correct max item`, () => {
+      const max = OrderedMap
+          .of([[-1, 1], [0, 2], [1, 3], [2, 1]])
+          .max(([key1, value1]: [number, number], [key2, value2]: [number, number]) => {
+            return Orderings.normal()(key1 + value1, key2 + value2);
+          });
+      assert(max).to.equal([1, 3]);
+    });
+
+    it(`should return null if the list is null`, () => {
+      assert(OrderedMap.of<number, number>([]).max(Orderings.normal())).to.beNull();
+    });
+  });
+
+  describe('min', () => {
+    it(`should return the correct min item`, () => {
+      const min = OrderedMap
+          .of([[1, 3], [0, 2], [-1, 1], [2, 1]])
+          .min(([key1, value1]: [number, number], [key2, value2]: [number, number]) => {
+            return Orderings.normal()(key1 + value1, key2 + value2);
+          });
+      assert(min).to.equal([-1, 1]);
+    });
+
+    it(`should return null if the list is null`, () => {
+      assert(OrderedMap.of<number, number>([]).min(Orderings.normal())).to.beNull();
     });
   });
 

@@ -6,4 +6,3 @@ export interface DisposableFunction extends Disposable {
    */
   run(): void;
 }
-// TODO: Mutable

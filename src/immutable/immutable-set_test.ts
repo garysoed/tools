@@ -1,6 +1,7 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
+import { Orderings } from 'src/immutable/orderings';
 import { ImmutableSet } from '../immutable/immutable-set';
 
 
@@ -93,6 +94,26 @@ describe('immutable.ImmutableSet', () => {
     });
   });
 
+  describe('max', () => {
+    it(`should return the correct max item`, () => {
+      assert(ImmutableSet.of([0, 2, 4, 3]).max(Orderings.normal())).to.equal(4);
+    });
+
+    it(`should return null if the list is null`, () => {
+      assert(ImmutableSet.of<number>([]).max(Orderings.normal())).to.beNull();
+    });
+  });
+
+  describe('min', () => {
+    it(`should return the correct min item`, () => {
+      assert(ImmutableSet.of([4, 2, 0, 3]).min(Orderings.normal())).to.equal(0);
+    });
+
+    it(`should return null if the list is null`, () => {
+      assert(ImmutableSet.of<number>([]).min(Orderings.normal())).to.beNull();
+    });
+  });
+
   describe('reduceItem', () => {
     it('should return the correct value', () => {
       const result = ImmutableSet
@@ -117,6 +138,15 @@ describe('immutable.ImmutableSet', () => {
 
     it('should return false if every element does not pass the check', () => {
       assert(ImmutableSet.of([1, 2, 3]).someItem((i: number) => i < 0)).to.beFalse();
+    });
+  });
+
+  describe('sort', () => {
+    it('should sort the items correctly', () => {
+      const orderedSet = ImmutableSet
+          .of([1, 2, 3, 4])
+          .sort(Orderings.reverse(Orderings.normal()));
+      assert(orderedSet).to.haveElements([4, 3, 2, 1]);
     });
   });
 

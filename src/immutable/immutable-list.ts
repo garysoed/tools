@@ -5,10 +5,12 @@ import { InstanceofType } from '../check/instanceof-type';
 import { IntersectType } from '../check/intersect-type';
 import { NumberType } from '../check/number-type';
 import { Iterables } from '../immutable/iterables';
+import { Orderings } from '../immutable/orderings';
 import { CompareResult } from '../interfaces/compare-result';
 import { FiniteCollection } from '../interfaces/finite-collection';
 import { FiniteIndexed } from '../interfaces/finite-indexed';
 import { Ordered } from '../interfaces/ordered';
+import { Ordering } from '../interfaces/ordering';
 import { assertUnreachable } from '../typescript/assert-unreachable';
 
 type ItemList<T> = {item: (index: number) => T, length: number};
@@ -210,6 +212,26 @@ export class ImmutableList<T> implements
 
   mapItem<R>(fn: (item: T) => R): ImmutableList<R> {
     return this.map<R>((value: T, _: number) => fn(value));
+  }
+
+  max(ordering: Ordering<T>): T | null {
+    return this.reduceItem(
+        (prevValue: T | null, value: T) => {
+          if (prevValue === null) {
+            return value;
+          }
+
+          if (ordering(prevValue, value) === -1) {
+            return value;
+          } else {
+            return prevValue;
+          }
+        },
+        null);
+  }
+
+  min(ordering: Ordering<T>): T | null {
+    return this.max(Orderings.reverse(ordering));
   }
 
   reduce<R>(fn: (prevValue: R, value: T, key: number) => R, init: R): R {

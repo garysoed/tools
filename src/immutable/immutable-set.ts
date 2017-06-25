@@ -1,7 +1,10 @@
 import { FiniteIterableType } from '../check/finite-iterable-type';
 import { InstanceofType } from '../check/instanceof-type';
 import { Iterables } from '../immutable/iterables';
+import { OrderedSet } from '../immutable/ordered-set';
+import { Orderings } from '../immutable/orderings';
 import { FiniteCollection } from '../interfaces/finite-collection';
+import { Ordering } from '../interfaces/ordering';
 import { assertUnreachable } from '../typescript/assert-unreachable';
 
 export class ImmutableSet<T> implements FiniteCollection<T> {
@@ -85,6 +88,26 @@ export class ImmutableSet<T> implements FiniteCollection<T> {
     })));
   }
 
+  max(ordering: Ordering<T>): T | null {
+    return this.reduceItem(
+        (prevValue: T | null, value: T) => {
+          if (prevValue === null) {
+            return value;
+          }
+
+          if (ordering(prevValue, value) === -1) {
+            return value;
+          } else {
+            return prevValue;
+          }
+        },
+        null);
+  }
+
+  min(ordering: Ordering<T>): T | null {
+    return this.max(Orderings.reverse(ordering));
+  }
+
   reduceItem<R>(fn: (prevItem: R, item: T) => R, init: R): R {
     let result = init;
     for (const item of this.data_) {
@@ -104,6 +127,11 @@ export class ImmutableSet<T> implements FiniteCollection<T> {
       }
     }
     return false;
+  }
+
+  sort(compareFn: Ordering<T>): OrderedSet<T> {
+    const arrayData = Array.from(this.data_);
+    return OrderedSet.of(arrayData.sort(compareFn));
   }
 
   static of<T>(data: FiniteCollection<T>): ImmutableSet<T>;

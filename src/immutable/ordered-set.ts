@@ -1,8 +1,10 @@
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Iterables } from '../immutable/iterables';
+import { Orderings } from '../immutable/orderings';
 import { CompareResult } from '../interfaces/compare-result';
 import { FiniteCollection } from '../interfaces/finite-collection';
 import { Ordered } from '../interfaces/ordered';
+import { Ordering } from '../interfaces/ordering';
 
 
 export class OrderedSet<T> implements FiniteCollection<T>, Ordered<T> {
@@ -136,6 +138,26 @@ export class OrderedSet<T> implements FiniteCollection<T>, Ordered<T> {
     return new OrderedSet(this.data_.slice(0).map((item: T) => {
       return fn(item);
     }));
+  }
+
+  max(ordering: Ordering<T>): T | null {
+    return this.reduceItem(
+        (prevValue: T | null, value: T) => {
+          if (prevValue === null) {
+            return value;
+          }
+
+          if (ordering(prevValue, value) === -1) {
+            return value;
+          } else {
+            return prevValue;
+          }
+        },
+        null);
+  }
+
+  min(ordering: Ordering<T>): T | null {
+    return this.max(Orderings.reverse(ordering));
   }
 
   reduceItem<R>(fn: (prevItem: R, item: T) => R, init: R): R {

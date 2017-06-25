@@ -1,4 +1,3 @@
-import { CompareResult } from '../interfaces/compare-result';
 import { Finite } from '../interfaces/finite';
 import { FiniteCollection } from '../interfaces/finite-collection';
 
@@ -16,6 +15,4 @@ export interface Ordered<T> extends Finite {
   reverse(): Ordered<T>;
 
   setAt(index: number, item: T): Ordered<T>;
-
-  sort(compareFn: (item1: T, item2: T) => CompareResult): Ordered<T>;
 }

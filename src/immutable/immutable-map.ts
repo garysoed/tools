@@ -1,8 +1,11 @@
 import { FiniteIterableType } from '../check/finite-iterable-type';
 import { InstanceofType } from '../check/instanceof-type';
 import { ImmutableSet } from '../immutable/immutable-set';
+import { OrderedMap } from '../immutable/ordered-map';
+import { Orderings } from '../immutable/orderings';
 import { FiniteCollection } from '../interfaces/finite-collection';
 import { FiniteIndexed } from '../interfaces/finite-indexed';
+import { Ordering } from '../interfaces/ordering';
 
 export class ImmutableMap<K, V> implements
     FiniteCollection<[K, V]>,
@@ -140,6 +143,26 @@ export class ImmutableMap<K, V> implements
     return ImmutableMap.of(mappedEntries);
   }
 
+  max(ordering: Ordering<[K, V]>): [K, V] | null {
+    return this.reduceItem<[K, V] | null>(
+        (prevValue: [K, V] | null, currentEntry: [K, V]) => {
+          if (prevValue === null) {
+            return currentEntry;
+          }
+
+          if (ordering(prevValue, currentEntry) === -1) {
+            return currentEntry;
+          } else {
+            return prevValue;
+          }
+        },
+        null);
+  }
+
+  min(ordering: Ordering<[K, V]>): [K, V] | null {
+    return this.max(Orderings.reverse(ordering));
+  }
+
   reduce<R>(fn: (prevValue: R, value: V, key: K) => R, init: R): R {
     let result: R = init;
     for (const [key, value] of this.data_) {
@@ -181,6 +204,10 @@ export class ImmutableMap<K, V> implements
       }
     }
     return false;
+  }
+
+  sort(ordering: Ordering<[K, V]>): OrderedMap<K, V> {
+    return OrderedMap.of(this.entries().sort(ordering).toArray());
   }
 
   values(): ImmutableSet<V> {

@@ -1,10 +1,12 @@
 import { ImmutableList } from '../immutable/immutable-list';
 import { ImmutableSet } from '../immutable/immutable-set';
+import { Orderings } from '../immutable/orderings';
 import { Collection } from '../interfaces/collection';
 import { CompareResult } from '../interfaces/compare-result';
 import { FiniteCollection } from '../interfaces/finite-collection';
 import { FiniteIndexed } from '../interfaces/finite-indexed';
 import { Ordered } from '../interfaces/ordered';
+import { Ordering } from '../interfaces/ordering';
 
 export class OrderedMap<K, V> implements
     FiniteCollection<[K, V]>,
@@ -242,6 +244,26 @@ export class OrderedMap<K, V> implements
       mapClone.set(key, fn([key, value]));
     }
     return new OrderedMap(keysClone, mapClone);
+  }
+
+  max(ordering: Ordering<[K, V]>): [K, V] | null {
+    return this.reduceItem<[K, V] | null>(
+        (prevValue: [K, V] | null, currentEntry: [K, V]) => {
+          if (prevValue === null) {
+            return currentEntry;
+          }
+
+          if (ordering(prevValue, currentEntry) === -1) {
+            return currentEntry;
+          } else {
+            return prevValue;
+          }
+        },
+        null);
+  }
+
+  min(ordering: Ordering<[K, V]>): [K, V] | null {
+    return this.max(Orderings.reverse(ordering));
   }
 
   reduce<R>(fn: (prevValue: R, value: V, key: K) => R, init: R): R {
