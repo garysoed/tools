@@ -51,7 +51,7 @@ export class Animation {
     instance.addDisposable(listenableAnimation.once(
         'finish',
         () => {
-          EventDispatcher.dispatchEvent(targetEl, 'gs-animationfinish', eventDetail);
+          EventDispatcher.dispatchEventNow(targetEl, 'gs-animationfinish', eventDetail);
         },
         this));
   }
@@ -70,4 +70,3 @@ export class Animation {
     return new Animation(keyframes, options, id);
   }
 }
-// TODO: Mutable

@@ -60,7 +60,7 @@ describe('webc.Animation', () => {
       mockListenableAnimation.once.and.returnValue(onceDisposable);
       spyOn(ListenableDom, 'of').and.returnValue(mockListenableAnimation);
 
-      spyOn(EventDispatcher, 'dispatchEvent');
+      spyOn(EventDispatcher, 'dispatchEventNow');
 
       animation.start(mockInstance, selector);
       assert(mockInstance.addDisposable).to.haveBeenCalledWith(onceDisposable);
@@ -68,7 +68,7 @@ describe('webc.Animation', () => {
       assert(mockListenableAnimation.once).to
           .haveBeenCalledWith('finish', Matchers.any(Function), animation);
       mockListenableAnimation.once.calls.argsFor(0)[1]();
-      assert(EventDispatcher.dispatchEvent).to
+      assert(EventDispatcher.dispatchEventNow).to
           .haveBeenCalledWith(mockTargetEl, 'gs-animationfinish', {id: ID, keyframes});
 
       assert(ListenableDom.of).to.haveBeenCalledWith(animationEventTarget);

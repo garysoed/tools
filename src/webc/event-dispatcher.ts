@@ -21,8 +21,12 @@ export class EventDispatcher implements DomBinder<DispatchFn<any>> {
 
   static dispatchEvent(element: Element, name: string, payload: any = null): Promise<void> {
     return Asyncs.run(() => {
-      element.dispatchEvent(new CustomEvent(name, {bubbles: true, detail: payload}));
+      EventDispatcher.dispatchEventNow(element, name, payload);
     });
+  }
+
+  static dispatchEventNow(element: Element, name: string, payload: any = null): void {
+    element.dispatchEvent(new CustomEvent(name, {bubbles: true, detail: payload}));
   }
 
   static of(element: Element): DomBinder<DispatchFn<any>> {
