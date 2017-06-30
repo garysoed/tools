@@ -25,12 +25,11 @@ describe('webc.EventDispatcher', () => {
     it('should return the correct dispatcher', () => {
       const name = 'name';
       const payload = Mocks.object('payload');
-      const fn = dispatcher.get();
-      fn(name, payload);
-      assert(mockElement.dispatchEvent).to.haveBeenCalledWith(Matchers.any(CustomEvent));
-      const event: CustomEvent = mockElement.dispatchEvent.calls.argsFor(0)[0];
-      assert(event.type).to.equal(name);
-      assert(event.detail).to.equal(payload);
+      spyOn(EventDispatcher, 'dispatchEvent');
+
+      dispatcher.get()(name, payload);
+
+      assert(EventDispatcher.dispatchEvent).to.haveBeenCalledWith(mockElement, name, payload);
     });
   });
 
@@ -39,6 +38,20 @@ describe('webc.EventDispatcher', () => {
       assert(() => {
         dispatcher.set(null);
       }).to.throwError(/is unsupported/);
+    });
+  });
+
+  describe('dispatchEvent', () => {
+    it(`should dispatch the event correctly`, async () => {
+      const name = 'name';
+      const payload = Mocks.object('payload');
+
+      await EventDispatcher.dispatchEvent(mockElement, name, payload);
+
+      assert(mockElement.dispatchEvent).to.haveBeenCalledWith(Matchers.any(CustomEvent));
+      const event: CustomEvent = mockElement.dispatchEvent.calls.argsFor(0)[0];
+      assert(event.type).to.equal(name);
+      assert(event.detail).to.equal(payload);
     });
   });
 });

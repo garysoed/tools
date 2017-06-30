@@ -1,3 +1,4 @@
+import { Asyncs } from '../async/asyncs';
 import { DispatchFn } from '../interfaces/dispatch-fn';
 import { DomBinder } from '../interfaces/dom-binder';
 
@@ -18,8 +19,10 @@ export class EventDispatcher implements DomBinder<DispatchFn<any>> {
     throw new Error('Set is unsupported');
   }
 
-  static dispatchEvent(element: Element, name: string, payload: any = null): void {
-    element.dispatchEvent(new CustomEvent(name, {bubbles: true, detail: payload}));
+  static dispatchEvent(element: Element, name: string, payload: any = null): Promise<void> {
+    return Asyncs.run(() => {
+      element.dispatchEvent(new CustomEvent(name, {bubbles: true, detail: payload}));
+    });
   }
 
   static of(element: Element): DomBinder<DispatchFn<any>> {
