@@ -1,19 +1,22 @@
-import { BaseListenableListener } from '../event/base-listenable-listener';
-import { DomEvent } from '../event/dom-event';
+import { Bus } from '../event/bus';
 import { ListenableDom } from '../event/listenable-dom';
 import { ImmutableList } from '../immutable/immutable-list';
 import { ImmutableMap } from '../immutable/immutable-map';
 import { LocationServiceEvents } from '../ui/location-service-events';
 import { Locations } from '../ui/locations';
+import { Log } from '../util/log';
 import { Reflect } from '../util/reflect';
 
+type LocationServiceEvent = {type: LocationServiceEvents};
+
+const LOGGER = Log.of('gs-tools.ui.LocationService');
 
 /**
  * Service to manage location on a page.
  *
  * This only uses the location's hash.
  */
-export class LocationService extends BaseListenableListener<LocationServiceEvents> {
+export class LocationService extends Bus<LocationServiceEvents, LocationServiceEvent> {
   private location_: Location;
   private window_: ListenableDom<Window>;
 
@@ -21,7 +24,7 @@ export class LocationService extends BaseListenableListener<LocationServiceEvent
    * @param window Reference to the window object.
    */
   constructor(window: ListenableDom<Window>) {
-    super();
+    super(LOGGER);
 
     this.location_ = window.getEventTarget().location;
     this.window_ = window;
@@ -34,7 +37,7 @@ export class LocationService extends BaseListenableListener<LocationServiceEvent
    * @param service The service instance to be initialized.
    */
   [Reflect.__initialize](): void {
-    this.listenTo(this.window_, DomEvent.HASHCHANGE, this.onHashChange_);
+    this.window_.on('hashchange', this.onHashChange_, this);
   }
 
   /**
@@ -77,7 +80,7 @@ export class LocationService extends BaseListenableListener<LocationServiceEvent
    * Handles event when the hash has been changed.
    */
   private onHashChange_(): void {
-    this.dispatch(LocationServiceEvents.CHANGED);
+    this.dispatch({type: LocationServiceEvents.CHANGED});
   }
 
   /**

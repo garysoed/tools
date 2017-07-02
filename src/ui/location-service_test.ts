@@ -1,7 +1,6 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import { DomEvent } from '../event/dom-event';
 import { ImmutableList } from '../immutable/immutable-list';
 import { Mocks } from '../mock/mocks';
 import { TestDispose } from '../testing/test-dispose';
@@ -26,23 +25,12 @@ describe('ui.LocationService', () => {
 
   describe('[Reflect.__initialize]', () => {
     it('should listen to the hashchange event', () => {
-      spyOn(service, 'onHashChange_');
-      spyOn(service, 'listenTo');
+      spyOn(service['window_'], 'on');
 
       service[Reflect.__initialize]();
 
-      assert(service.listenTo).to
-          .haveBeenCalledWith(mockWindow, DomEvent.HASHCHANGE, service['onHashChange_']);
-    });
-  });
-
-  describe('onHashChange_', () => {
-    it('should dispatch the CHANGED event', () => {
-      spyOn(service, 'dispatch');
-
-      service['onHashChange_']();
-
-      assert(service.dispatch).to.haveBeenCalledWith(LocationServiceEvents.CHANGED);
+      assert(service['window_'].on).to
+          .haveBeenCalledWith('hashchange', service['onHashChange_'], service);
     });
   });
 
@@ -71,6 +59,16 @@ describe('ui.LocationService', () => {
       spyOn(service, 'getMatches').and.returnValue(null);
       assert(service.hasMatch(matcher)).to.beFalse();
       assert(service.getMatches).to.haveBeenCalledWith(matcher);
+    });
+  });
+
+  describe('onHashChange_', () => {
+    it('should dispatch the CHANGED event', () => {
+      spyOn(service, 'dispatch');
+
+      service['onHashChange_']();
+
+      assert(service.dispatch).to.haveBeenCalledWith({type: LocationServiceEvents.CHANGED});
     });
   });
 
