@@ -37,7 +37,7 @@ export class LocationService extends Bus<LocationServiceEvents, LocationServiceE
    * @param service The service instance to be initialized.
    */
   [Reflect.__initialize](): void {
-    this.window_.on('hashchange', this.onHashChange_, this);
+    this.addDisposable(this.window_.on('hashchange', this.onHashChange_, this));
   }
 
   /**
