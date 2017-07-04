@@ -16,18 +16,18 @@ const LOGGER = Log.of('gs-tools.ui.LocationService');
  *
  * This only uses the location's hash.
  */
-export class LocationService extends Bus<LocationServiceEvents, LocationServiceEvent> {
+export class LocationServiceImpl extends Bus<LocationServiceEvents, LocationServiceEvent> {
   private location_: Location;
   private window_: ListenableDom<Window>;
 
   /**
    * @param window Reference to the window object.
    */
-  constructor(window: ListenableDom<Window>) {
+  constructor(window: Window) {
     super(LOGGER);
 
-    this.location_ = window.getEventTarget().location;
-    this.window_ = window;
+    this.location_ = window.location;
+    this.window_ = ListenableDom.of(window);
 
     this.addDisposable(this.window_);
   }
@@ -38,6 +38,25 @@ export class LocationService extends Bus<LocationServiceEvents, LocationServiceE
    */
   [Reflect.__initialize](): void {
     this.addDisposable(this.window_.on('hashchange', this.onHashChange_, this));
+  }
+
+  /**
+   * Appends the given parts to a single part.
+   *
+   * @param parts Parts to be joined.
+   * @return The joined parts.
+   */
+  appendParts(parts: ImmutableList<string>): string {
+    const path = parts
+        .filter((part: string) => {
+          return part !== '.';
+        })
+        .map((part: string) => {
+          return Locations.normalizePath(part);
+        })
+        .toArray()
+        .join('');
+    return path === '' ? '/' : path;
   }
 
   /**
@@ -82,23 +101,7 @@ export class LocationService extends Bus<LocationServiceEvents, LocationServiceE
   private onHashChange_(): void {
     this.dispatch({type: LocationServiceEvents.CHANGED});
   }
-
-  /**
-   * Appends the given parts to a single part.
-   *
-   * @param parts Parts to be joined.
-   * @return The joined parts.
-   */
-  static appendParts(parts: ImmutableList<string>): string {
-    const path = parts
-        .filter((part: string) => {
-          return part !== '.';
-        })
-        .map((part: string) => {
-          return Locations.normalizePath(part);
-        })
-        .toArray()
-        .join('');
-    return path === '' ? '/' : path;
-  }
 }
+
+export const LocationService: LocationServiceImpl =
+    Reflect.construct(LocationServiceImpl, [window]);

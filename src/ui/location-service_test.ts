@@ -2,9 +2,8 @@ import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
 import { ImmutableList } from '../immutable/immutable-list';
-import { Mocks } from '../mock/mocks';
 import { TestDispose } from '../testing/test-dispose';
-import { LocationService } from '../ui/location-service';
+import { LocationServiceImpl } from '../ui/location-service';
 import { LocationServiceEvents } from '../ui/location-service-events';
 import { Locations } from '../ui/locations';
 import { Reflect } from '../util/reflect';
@@ -13,24 +12,36 @@ import { Reflect } from '../util/reflect';
 describe('ui.LocationService', () => {
   let mockLocation: any;
   let mockWindow: any;
-  let service: LocationService;
+  let service: LocationServiceImpl;
 
   beforeEach(() => {
     mockLocation = {hash: ''};
-    mockWindow = Mocks.listenable('window', {location: mockLocation});
+    mockWindow = {location: mockLocation};
 
-    service = new LocationService(mockWindow);
+    service = new LocationServiceImpl(mockWindow);
     TestDispose.add(service);
   });
 
   describe('[Reflect.__initialize]', () => {
     it('should listen to the hashchange event', () => {
-      spyOn(service['window_'], 'on');
+      const mockDisposable = jasmine.createSpyObj('Disposable', ['dispose']);
+      spyOn(service['window_'], 'on').and.returnValue(mockDisposable);
 
       service[Reflect.__initialize]();
 
       assert(service['window_'].on).to
           .haveBeenCalledWith('hashchange', service['onHashChange_'], service);
+    });
+  });
+
+  describe('appendParts', () => {
+    it('should combine the parts together', () => {
+      assert(service.appendParts(ImmutableList.of(['a', 'b/', '/c', '.', '/d/e/'])))
+          .to.equal('/a/b/c/d/e');
+    });
+
+    it('should return "/" if there path is empty', () => {
+      assert(service.appendParts(ImmutableList.of(['.', '']))).to.equal('/');
     });
   });
 
@@ -69,17 +80,6 @@ describe('ui.LocationService', () => {
       service['onHashChange_']();
 
       assert(service.dispatch).to.haveBeenCalledWith({type: LocationServiceEvents.CHANGED});
-    });
-  });
-
-  describe('appendParts', () => {
-    it('should combine the parts together', () => {
-      assert(LocationService.appendParts(ImmutableList.of(['a', 'b/', '/c', '.', '/d/e/'])))
-          .to.equal('/a/b/c/d/e');
-    });
-
-    it('should return "/" if there path is empty', () => {
-      assert(LocationService.appendParts(ImmutableList.of(['.', '']))).to.equal('/');
     });
   });
 });
