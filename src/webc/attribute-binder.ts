@@ -43,7 +43,12 @@ export class AttributeBinder<T> implements DomBinder<T>, Monad<T | null> {
    * @override
    */
   set(value: T | null): void {
-    this.element_.setAttribute(this.attributeName_, this.parser_.stringify(value) || '');
+    if (value) {
+      const stringifiedValue = this.parser_.stringify(value) || '';
+      this.element_.setAttribute(this.attributeName_, stringifiedValue);
+    } else {
+      this.delete();
+    }
   }
 
   /**

@@ -75,5 +75,11 @@ describe('webc.AttributeBinder', () => {
       assert(mockElement.setAttribute).to.haveBeenCalledWith(ATTRIBUTE_NAME, '');
       assert(mockParser.stringify).to.haveBeenCalledWith(value);
     });
+
+    it(`should delete the attribute if the value is falsy`, () => {
+      spyOn(binder, 'delete');
+      binder.set(null);
+      assert(binder.delete).to.haveBeenCalledWith();
+    });
   });
 });

@@ -8,6 +8,9 @@ import { Iterables } from '../immutable/iterables';
 import { Event } from '../interfaces/event';
 import { Monad as MonadType } from '../interfaces/monad';
 import { MonadFactory } from '../interfaces/monad-factory';
+import { Log } from '../util/log';
+
+const LOGGER: Log = Log.of('gs-tools.event.MonadUtil');
 
 type MonadData = {factory: MonadFactory<any>, index: number, setter: boolean};
 
@@ -16,6 +19,7 @@ export class MonadUtil {
       event: E,
       context: any,
       key: string | symbol): Promise<void> {
+    Log.debug(LOGGER, `Calling function ${key}`);
     let id = 0;
     const fn = context[key];
     const {monadData, eventIndexes} = MonadUtil.getMonadData_(context, key);
@@ -35,7 +39,7 @@ export class MonadUtil {
           }
           const data = monadDataMap.get(index);
           if (!data) {
-            throw new Error(`No factories found for ${index}`);
+            throw new Error(`No factories found for ${index} while trying to call ${key}`);
           }
 
           const [monad, , id, setter] = data;
