@@ -118,6 +118,13 @@ export class Serializer {
     return fields.addAll(ctor.prototype[__FIELDS]);
   }
 
+  static getRegisteredCtor(serializedName: string): any {
+    return CTORS.get(serializedName) || null;
+  }
+
+  static getSerializedName(ctor: any): string | null {
+    return ctor[__NAME] || null;
+  }
 
   /**
    * Converts the given [[Serializable]] object to JSON object.
