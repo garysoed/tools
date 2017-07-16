@@ -5,7 +5,6 @@ load("//:defs.bzl", "gs_tools")
 gs_tools(
     deps = [
       "//src/async",
-      "//src/data",
       "//src/dispose",
       "//src/event",
       "//src/inject",
