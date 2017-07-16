@@ -6,6 +6,7 @@ load("//bazel/typescript:defs.bzl", "ts_library")
 gs_tools(
     deps = [
       "//src/color",
+      "//src/datamodel",
       "//src/dispose",
       "//src/immutable",
       "//src/inject",

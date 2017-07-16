@@ -73,50 +73,6 @@ export abstract class Manager<D extends DataModel<any>>
 
     this.dispatch({data: item, type: existingItem ? 'edit' : 'add'});
 
-    this.searcher_.reset();
+    this.searcher_.index(this.list_());
   }
 }
-
-
-// private async search_(this: Manager<S, D>, token: string): Promise<ImmutableList<D>> {
-//     const fuse = await this.getFusePromise_();
-//     return ImmutableList.of(fuse.search(token))
-//         .map((result: S) => {
-//           return result.this;
-//         });
-//   }
-  // /**
-  //  * Creates a Fuse object.
-  //  * @param indexes Search indexes to initialize the fuse with.
-  //  * @return New instance of Fuse.
-  //  */
-  // private createFuse_(indexes: ImmutableSet<S>): Fuse<S> {
-  //   return new Fuse<S>(
-  //       Iterables.toArray(indexes),
-  //       {
-  //         keys: ['name'],
-  //         shouldSort: true,
-  //         threshold: 0.5,
-  //       });
-  // }
-  // /**
-  //  * Gets the promise that will be resolved with the fuse object initialized with the item
-  //  * search indexes.
-  //  * @return Promise that will be resolved with the fuse object.
-  //  */
-  // private getFusePromise_(): Promise<Fuse<S>> {
-  //   if (this.fusePromise_ !== null) {
-  //     return this.fusePromise_;
-  //   }
-
-  //   this.fusePromise_ = this
-  //       .list_()
-  //       .then((items: ImmutableSet<D>) => {
-  //         const searchIndexes = items
-  //             .mapItem((item: D) => {
-  //               return item.getSearchIndex();
-  //             });
-  //         return this.createFuse_(searchIndexes);
-  //       });
-  //   return this.fusePromise_;
-  // }

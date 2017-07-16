@@ -1,6 +1,6 @@
-import { Serializer } from '../data/a-serializable';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Iterables } from '../immutable/iterables';
+import { Parser } from '../interfaces/parser';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { SimpleIdGenerator } from '../random/simple-id-generator';
 import { Storage as GsStorage } from '../store/interfaces';
@@ -8,17 +8,16 @@ import { Storage as GsStorage } from '../store/interfaces';
 
 export class WebStorage<T> implements GsStorage<T> {
   private readonly idGenerator_: BaseIdGenerator;
-  private readonly prefix_: string;
-  private readonly storage_: Storage;
 
   /**
    * @param storage Reference to storage instance.
    * @param prefix The prefix of the IDs added by this storage.
    */
-  constructor(storage: Storage, prefix: string) {
+  constructor(
+      private readonly storage_: Storage,
+      private readonly prefix_: string,
+      private readonly parser_: Parser<T>) {
     this.idGenerator_ = new SimpleIdGenerator();
-    this.prefix_ = prefix;
-    this.storage_ = storage;
   }
 
   /**
@@ -105,8 +104,7 @@ export class WebStorage<T> implements GsStorage<T> {
         if (stringValue === null) {
           resolve(null);
         } else {
-          const json = JSON.parse(stringValue);
-          resolve(Serializer.fromJSON(json));
+          resolve(this.parser_.parse(stringValue));
         }
       } catch (e) {
         reject(e);
@@ -124,8 +122,7 @@ export class WebStorage<T> implements GsStorage<T> {
 
     return new Promise<void>((resolve: () => void, reject: (cause: Error) => void) => {
       try {
-        const json = Serializer.toJSON(instance);
-        this.storage_.setItem(path, JSON.stringify(json));
+        this.storage_.setItem(path, this.parser_.stringify(instance));
         resolve();
       } catch (e) {
         reject(e);

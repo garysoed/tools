@@ -22,7 +22,7 @@ describe('datamodel.Manager', () => {
   let manager: TestManager;
 
   beforeEach(() => {
-    mockSearcher = jasmine.createSpyObj('Searcher', ['reset', 'search']);
+    mockSearcher = jasmine.createSpyObj('Searcher', ['index', 'search']);
     mockStorage = jasmine.createSpyObj('Storage', ['generateId', 'read', 'list', 'update']);
     manager = new TestManager(mockStorage, mockSearcher);
     TestDispose.add(manager);
@@ -103,12 +103,14 @@ describe('datamodel.Manager', () => {
     it(`should update the item and dispatch the 'add' event if new`, async () => {
       const id = 'id';
       const item = Mocks.object('item');
+      const itemList = Mocks.object('itemList');
+      spyOn(manager, 'list_').and.returnValue(itemList);
 
       mockStorage.read.and.returnValue(null);
       spyOn(manager, 'dispatch');
 
       await manager['update_'](id, item);
-      assert(mockSearcher.reset).to.haveBeenCalledWith();
+      assert(mockSearcher.index).to.haveBeenCalledWith(itemList);
       assert(manager.dispatch).to.haveBeenCalledWith({data: item, type: 'add'});
       assert(mockStorage.update).to.haveBeenCalledWith(id, item);
       assert(mockStorage.read).to.haveBeenCalledWith(id);
@@ -117,12 +119,14 @@ describe('datamodel.Manager', () => {
     it(`should update the item and dispatch the 'edit' event if not new`, async () => {
       const id = 'id';
       const item = Mocks.object('item');
+      const itemList = Mocks.object('itemList');
+      spyOn(manager, 'list_').and.returnValue(itemList);
 
       mockStorage.read.and.returnValue(Mocks.object('OldItem'));
       spyOn(manager, 'dispatch');
 
       await manager['update_'](id, item);
-      assert(mockSearcher.reset).to.haveBeenCalledWith();
+      assert(mockSearcher.index).to.haveBeenCalledWith(itemList);
       assert(manager.dispatch).to.haveBeenCalledWith({data: item, type: 'edit'});
       assert(mockStorage.update).to.haveBeenCalledWith(id, item);
       assert(mockStorage.read).to.haveBeenCalledWith(id);

@@ -1,7 +1,6 @@
 import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import { Serializer } from '../data/a-serializable';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Fakes } from '../mock/fakes';
 import { Mocks } from '../mock/mocks';
@@ -11,11 +10,13 @@ import { WebStorage } from '../store/web-storage';
 describe('store.WebStorage', () => {
   const PREFIX = 'prefix';
   let mockStorage: any;
+  let mockParser: any;
   let storage: WebStorage<any>;
 
   beforeEach(() => {
+    mockParser = jasmine.createSpyObj('Parser', ['parse', 'stringify']);
     mockStorage = jasmine.createSpyObj('Storage', ['getItem', 'removeItem', 'setItem']);
-    storage = new WebStorage<any>(mockStorage, PREFIX);
+    storage = new WebStorage<any>(mockStorage, PREFIX, mockParser);
   });
 
   describe('getIndexes_', () => {
@@ -152,17 +153,14 @@ describe('store.WebStorage', () => {
       const path = 'path';
       const stringValue = 'stringValue';
       const object = Mocks.object('object');
-      const json = Mocks.object('json');
 
       mockStorage.getItem.and.returnValue(stringValue);
       spyOn(storage, 'getPath_').and.returnValue(path);
-      spyOn(JSON, 'parse').and.returnValue(json);
-      spyOn(Serializer, 'fromJSON').and.returnValue(object);
+      mockParser.parse.and.returnValue(object);
 
       const result = await storage.read(id);
       assert(result).to.equal(object);
-      assert(Serializer.fromJSON).to.haveBeenCalledWith(json);
-      assert(JSON.parse).to.haveBeenCalledWith(stringValue);
+      assert(mockParser.parse).to.haveBeenCalledWith(stringValue);
       assert(mockStorage.getItem).to.haveBeenCalledWith(path);
       assert(storage['getPath_']).to.haveBeenCalledWith(id);
     });
@@ -205,20 +203,17 @@ describe('store.WebStorage', () => {
       const path = 'path';
       const object = Mocks.object('object');
       const stringValue = 'stringValue';
-      const json = Mocks.object('json');
       const oldId = 'oldId';
       const indexes = ImmutableSet.of([oldId]);
 
       spyOn(storage, 'getIndexes_').and.returnValue(indexes);
       spyOn(storage, 'updateIndexes_');
       spyOn(storage, 'getPath_').and.returnValue(path);
-      spyOn(Serializer, 'toJSON').and.returnValue(json);
-      spyOn(JSON, 'stringify').and.returnValue(stringValue);
+      mockParser.stringify.and.returnValue(stringValue);
 
       await storage.update(id, object);
       assert(mockStorage.setItem).to.haveBeenCalledWith(path, stringValue);
-      assert(JSON.stringify).to.haveBeenCalledWith(json);
-      assert(Serializer.toJSON).to.haveBeenCalledWith(object);
+      assert(mockParser.stringify).to.haveBeenCalledWith(object);
       assert(storage['updateIndexes_']).to.haveBeenCalledWith(Matchers.any(ImmutableSet));
       assert(storage['updateIndexes_']['calls'].argsFor(0)[0] as ImmutableSet<string>)
           .to.haveElements([oldId, id]);
@@ -227,7 +222,7 @@ describe('store.WebStorage', () => {
     it('should reject if there was an error', async () => {
       const errorMsg = 'errorMsg';
 
-      spyOn(Serializer, 'toJSON').and.throwError(errorMsg);
+      mockParser.stringify.and.throwError(errorMsg);
       spyOn(storage, 'getIndexes_').and.returnValue(new Set());
 
       await assert(storage.update('id', Mocks.object('object'))).to

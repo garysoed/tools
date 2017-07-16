@@ -1,9 +1,9 @@
-import { WebStorage } from './web-storage';
+import { Parser } from '../interfaces/parser';
+import { WebStorage } from '../store/web-storage';
 
 
 export class SessionStorage<T> extends WebStorage<T> {
-  constructor(window: Window, prefix: string) {
-    super(window.sessionStorage, prefix);
+  constructor(window: Window, prefix: string, parser: Parser<T>) {
+    super(window.sessionStorage, prefix, parser);
   }
 }
-// TODO: Mutable
