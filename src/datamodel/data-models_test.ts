@@ -205,6 +205,7 @@ describe('datamodel.DataModels', () => {
       abstract class TestClass {}
       const baseClass = TestClass as any;
       const key1 = 'key1';
+      const initValue1 = Mocks.object('initValue1');
       const key2 = 'key2';
 
       const getter1 = Mocks.object('getter1');
@@ -231,12 +232,16 @@ describe('datamodel.DataModels', () => {
       const serializedName = 'serializedName';
       spyOn(Serializer, 'getSerializedName').and.returnValue(serializedName);
 
-      const instance = DataModels.newInstance<any>(baseClass);
+      const instance = DataModels.newInstance<any>(
+          baseClass,
+          ImmutableMap.of([[key1, initValue1]]));
       assert(instance).to.equal(Matchers.any(baseClass));
       assert(instance.getField1).to.equal(getter1);
       assert(instance.setField1).to.equal(setter1);
       assert(instance.getField2).to.equal(getter2);
       assert(instance.setField2).to.equal(setter2);
+      assert(instance[key1]).to.equal(initValue1);
+      assert(instance[key2]).toNot.beDefined();
       assert(instance[__serializedName]).to.equal(serializedName);
       assert(Serializer.getSerializedName).to.haveBeenCalledWith(baseClass.prototype);
       assert(DataModels['createGetter_']).to.haveBeenCalledWith(instance, key1);

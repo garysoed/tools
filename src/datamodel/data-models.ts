@@ -5,6 +5,7 @@ import { UnionType } from '../check/union-type';
 import { Serializer } from '../data/a-serializable';
 import { DataModel } from '../datamodel/data-model';
 import { ANNOTATIONS } from '../datamodel/field';
+import { ImmutableMap } from '../immutable/immutable-map';
 
 const SimpleJsonType = UnionType.builder<number | string | boolean>()
     .addType(NumberType)
@@ -81,7 +82,9 @@ export class DataModels {
     return obj[__serializedName] || null;
   }
 
-  static newInstance<T extends DataModel<any>>(baseClass: any): T {
+  static newInstance<T extends DataModel<any>>(
+      baseClass: any,
+      init: ImmutableMap<string | symbol, any> = ImmutableMap.of<string | symbol, any>([])): T {
     class GenClass extends baseClass { }
     const instance = (new GenClass()) as T;
     for (const [key, configs] of ANNOTATIONS.forCtor(baseClass).getAttachedValues()) {
@@ -90,12 +93,18 @@ export class DataModels {
         instance[`set${fieldName}`] = DataModels
             .createSetter_<any, T>(baseClass, instance, key, eqFn);
       }
+
+      const initValue = init.get(key);
+      if (initValue !== undefined) {
+        instance[key] = initValue;
+      }
     }
 
     const serializedName = Serializer.getSerializedName(baseClass.prototype);
     if (serializedName) {
       instance[__serializedName] = serializedName;
     }
+
     return instance;
   }
 
