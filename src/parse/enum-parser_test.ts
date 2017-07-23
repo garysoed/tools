@@ -1,8 +1,8 @@
+import { EnumParser } from '../parse';
+import { EnumParserImpl } from '../parse/enum-parser';
 import { assert, TestBase } from '../test-base';
+
 TestBase.setup();
-
-import { EnumParser, EnumParserImpl } from '../parse/enum-parser';
-
 
 enum Enum {
   A,

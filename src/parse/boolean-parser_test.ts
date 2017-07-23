@@ -1,7 +1,7 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import { BooleanParser } from '../parse/boolean-parser';
+import { BooleanParser } from '../parse';
 
 
 describe('parse.BooleanParser', () => {

@@ -1,15 +1,13 @@
 import { assert, Fakes, Matchers, Mocks, TestBase } from '../test-base';
 TestBase.setup();
 
-import { Serializer } from '../data/a-serializable';
-import { DataModel } from '../datamodel/data-model';
-import { DataModels } from '../datamodel/data-models';
+import { Serializer } from '../data';
+import { DataModel, DataModels } from '../datamodel';
 import { ANNOTATIONS } from '../datamodel/field';
-import { ImmutableMap } from '../immutable/immutable-map';
-import { ImmutableSet } from '../immutable/immutable-set';
-import { Parser } from '../interfaces/parser';
-import { DataModelParser, TYPE_FIELD_ } from '../parse/data-model-parser';
-import { JsonParser } from '../parse/json-parser';
+import { ImmutableMap, ImmutableSet } from '../immutable';
+import { Parser } from '../interfaces';
+import { DataModelParser, JsonParser } from '../parse';
+import { TYPE_FIELD_ } from '../parse/data-model-parser';
 
 describe('parse.DataModelParser', () => {
   let parser: Parser<DataModel<any>>;

@@ -1,4 +1,4 @@
-import { IType } from 'src/check/i-type';
+import { IType } from '../check/i-type';
 
 
 /**

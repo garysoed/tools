@@ -14,7 +14,7 @@ def _ts_binary_impl(ctx):
     '--baseUrl', '.',
     '--target', ctx.attr.ts_target,
     '--module', 'commonjs',
-    '--moduleResolution', 'classic',
+    '--moduleResolution', 'node',
     '--experimentalDecorators',
     '--outDir', ctx.label.name,
     '--noUnusedLocals',

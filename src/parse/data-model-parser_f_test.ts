@@ -1,13 +1,9 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import { Serializable } from '../data/a-serializable';
-import { DataModel } from '../datamodel/data-model';
-import { DataModels } from '../datamodel/data-models';
-import { field } from '../datamodel/field';
-import { DataModelParser } from '../parse/data-model-parser';
-import { FloatParser } from '../parse/float-parser';
-import { StringParser } from '../parse/string-parser';
+import { Serializable } from '../data';
+import { DataModel, DataModels, field } from '../datamodel';
+import { DataModelParser, FloatParser, StringParser } from '../parse';
 
 @Serializable('parent')
 abstract class TestParentClass implements DataModel<{}> {

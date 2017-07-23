@@ -1,9 +1,8 @@
-import { Serializer } from '../data/a-serializable';
-import { DataModel } from '../datamodel/data-model';
-import { DataModels } from '../datamodel/data-models';
+import { Serializer } from '../data';
+import { DataModel, DataModels } from '../datamodel';
 import { ANNOTATIONS } from '../datamodel/field';
-import { Parser } from '../interfaces/parser';
-import { JsonParser } from '../parse/json-parser';
+import { Parser } from '../interfaces';
+import { JsonParser } from '../parse';
 
 export const TYPE_FIELD_ = '_type';
 
