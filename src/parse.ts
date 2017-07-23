@@ -4,6 +4,7 @@ export { EnumParser } from './parse/enum-parser';
 export { FloatParser } from './parse/float-parser';
 export { IntegerParser } from './parse/integer-parser';
 export { ListParser } from './parse/list-parser';
+export { MapParser } from './parse/map-parser';
 export { SerializableParser } from './parse/serializable-parser';
 export { SetParser } from './parse/set-parser';
 export { SizeParser } from './parse/size-parser';

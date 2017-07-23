@@ -1,8 +1,6 @@
 import { ImmutableList } from '../immutable/immutable-list';
 import { Parser } from '../interfaces/parser';
 
-export const DELIMITER_: string = ',';
-
 export class ListParserImpl<T> implements Parser<ImmutableList<T | null>> {
   private readonly elementParser_: Parser<T>;
 
@@ -15,8 +13,13 @@ export class ListParserImpl<T> implements Parser<ImmutableList<T | null>> {
       return null;
     }
 
+    const array = JSON.parse(input) as string[];
+    if (!array) {
+      return null;
+    }
+
     return ImmutableList
-        .of(input.split(DELIMITER_))
+        .of(array)
         .map((element: string) => {
           return this.elementParser_.parse(element);
         });
@@ -27,12 +30,12 @@ export class ListParserImpl<T> implements Parser<ImmutableList<T | null>> {
       return '';
     }
 
-    return value
+    const array = value
         .map((element: T | null) => {
           return this.elementParser_.stringify(element);
         })
-        .toArray()
-        .join(DELIMITER_);
+        .toArray();
+    return JSON.stringify(array);
   }
 }
 
