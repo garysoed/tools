@@ -52,7 +52,7 @@ def gs_tools(deps = [], test_deps = []):
   ts_library(
       name = testlib_name,
       srcs = test_srcs,
-      deps = [":" + lib_name] + ["//src:test_base"],
+      deps = [":" + lib_name] + test_deps + ["//src:test_base"],
   )
 
   # Generates a pack and karma run file for every test.

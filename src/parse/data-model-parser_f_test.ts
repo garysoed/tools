@@ -5,6 +5,7 @@ import { Serializable } from '../data/a-serializable';
 import { DataModel } from '../datamodel/data-model';
 import { DataModels } from '../datamodel/data-models';
 import { field } from '../datamodel/field';
+import { DataModelParser } from '../parse/data-model-parser';
 import { FloatParser } from '../parse/float-parser';
 import { StringParser } from '../parse/string-parser';
 
@@ -55,6 +56,22 @@ describe('parse.DataModels_Functional', () => {
       const instance2 = instance.setB('b');
       assert(instance2).to.be(instance);
     });
+
+    it(`should serialize correctly`, () => {
+      const instance = DataModels.newInstance<TestParentClass>(TestParentClass);
+      assert(JSON.parse(DataModelParser().stringify(instance))).to.equal({
+        '_type': 'parent',
+        'a': '1',
+        'b': 'b',
+      });
+    });
+
+    it(`should deserialize correctly`, () => {
+      const instance = DataModelParser<TestParentClass>()
+          .parse(JSON.stringify({'_type': 'parent', 'a': 1, 'b': 'b'}))!;
+      assert(instance.getA()).to.equal(1);
+      assert(instance.getB()).to.equal('b');
+    });
   });
 
   describe('Child class', () => {
@@ -81,6 +98,31 @@ describe('parse.DataModels_Functional', () => {
       const instance = DataModels.newInstance<TestClass>(TestClass);
       const instance2 = instance.setB('b');
       assert(instance2).to.be(instance);
+    });
+
+    it(`should serialize correctly`, () => {
+      const instance = DataModels.newInstance<TestClass>(TestClass);
+      assert(JSON.parse(DataModelParser().stringify(instance))).to.equal({
+        '_type': 'test',
+        'a': '1',
+        'b': 'b',
+        'c': '3',
+        'd': 'd',
+      });
+    });
+
+    it(`should deserialize correctly`, () => {
+      const instance = DataModelParser<TestClass>().parse(JSON.stringify({
+        '_type': 'test',
+        'a': '1',
+        'b': 'b',
+        'c': '3',
+        'd': 'd',
+      }))!;
+      assert(instance.getA()).to.equal(1);
+      assert(instance.getB()).to.equal('b');
+      assert(instance.getC()).to.equal(3);
+      assert(instance.getD()).to.equal('d');
     });
   });
 });

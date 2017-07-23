@@ -1,20 +1,9 @@
-import { BooleanType } from '../check/boolean-type';
-import { NumberType } from '../check/number-type';
-import { StringType } from '../check/string-type';
-import { UnionType } from '../check/union-type';
 import { Serializer } from '../data/a-serializable';
 import { DataModel } from '../datamodel/data-model';
 import { ANNOTATIONS } from '../datamodel/field';
 import { ImmutableMap } from '../immutable/immutable-map';
 
-const SimpleJsonType = UnionType.builder<number | string | boolean>()
-    .addType(NumberType)
-    .addType(StringType)
-    .addType(BooleanType)
-    .build();
-
 export const __serializedName = Symbol('serializedName');
-export const TYPE_FIELD_ = '_type';
 
 export class DataModels {
   private static createGetter_(instance: any, key: string | symbol): () => any {
@@ -42,43 +31,7 @@ export class DataModels {
     };
   }
 
-  static fromJson<T extends DataModel<any>>(json: gs.IJson): T {
-    const serializedName = json[TYPE_FIELD_];
-    if (!serializedName) {
-      throw new Error('No serialized names found');
-    }
-
-    return DataModels.fromJsonDataModel_(json, serializedName);
-  }
-
-  private static fromJsonDataModel_(json: gs.IJson, serializedName: string): any {
-    const baseClass = Serializer.getRegisteredCtor(serializedName);
-    if (!baseClass) {
-      throw new Error(`No constructors found for ${serializedName}`);
-    }
-
-    const instance = DataModels.newInstance(baseClass);
-    for (const [key, configs] of ANNOTATIONS.forCtor(baseClass).getAttachedValues()) {
-      for (const {serializedFieldName} of configs) {
-        instance[key] = DataModels.fromJsonValue_(json[serializedFieldName]);
-      }
-    }
-
-    return instance;
-  }
-
-  private static fromJsonValue_(json: any): any {
-    if (SimpleJsonType.check(json)) {
-      return json;
-    }
-
-    const serializedName = json[TYPE_FIELD_];
-    return serializedName ?
-        DataModels.fromJsonDataModel_(json, serializedName) :
-        Serializer.fromJSON(json);
-  }
-
-  private static getSerializedName_(obj: any): string | null {
+  static getSerializedName(obj: any): string | null {
     return obj[__serializedName] || null;
   }
 
@@ -106,43 +59,5 @@ export class DataModels {
     }
 
     return instance;
-  }
-
-  static toJson(obj: any): gs.IJson {
-    const serializedName = DataModels.getSerializedName_(obj);
-    if (!serializedName) {
-      throw new Error(`Object ${obj} was not created with DataModels or is not serializable`);
-    }
-
-    return DataModels.toJsonDataModel_(obj, serializedName);
-  }
-
-  private static toJsonDataModel_(obj: any, serializedName: string): gs.IJson {
-    const json: object = {[TYPE_FIELD_]: serializedName};
-    const baseClass = Serializer.getRegisteredCtor(serializedName);
-
-    if (!baseClass) {
-      throw new Error(`No constructors found for ${serializedName}`);
-    }
-
-    for (const [key, configs] of ANNOTATIONS.forCtor(baseClass).getAttachedValues()) {
-      for (const config of configs) {
-        json[config.serializedFieldName] = DataModels.toJsonValue_(obj[key]);
-      }
-    }
-    return json;
-  }
-
-  private static toJsonValue_(obj: any): string | number | boolean | gs.IJson {
-    if (SimpleJsonType.check(obj)) {
-      return obj;
-    }
-
-    const serializedName = DataModels.getSerializedName_(obj);
-    if (!serializedName) {
-      return Serializer.toJSON(obj);
-    } else {
-      return DataModels.toJsonDataModel_(obj, serializedName);
-    }
   }
 }
