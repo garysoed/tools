@@ -44,12 +44,4 @@ export class Iterables {
     }
     return array;
   }
-
-  static unsafeToArray<T>(iterable: Iterable<T>): T[] {
-    const array: T[] = [];
-    for (const item of iterable) {
-      array.push(item);
-    }
-    return array;
-  }
 }

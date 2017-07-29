@@ -1,7 +1,7 @@
 import { IterableType } from '../check';
 import { ANNOTATIONS as EVENT_ANNOTATIONS } from '../event/event-details';
 import { ANNOTATIONS as MONAD_ANNOTATIONS } from '../event/monad';
-import { Generators, ImmutableList, ImmutableMap, ImmutableSet, Iterables } from '../immutable';
+import { Generators, ImmutableList, ImmutableMap, ImmutableSet } from '../immutable';
 import { Event, Monad as MonadType, MonadFactory, MonadSetter, MonadValue } from '../interfaces';
 import { Log } from '../util';
 
@@ -35,7 +35,7 @@ export class MonadUtil {
             }));
 
     const args = ImmutableList
-        .of(Iterables.unsafeToArray(Generators.ranged(0, 1, fn.length)))
+        .of([...Generators.ranged(0, 1, fn.length)])
         .map((index: number) => {
           if (eventIndexes.has(index)) {
             return event;
