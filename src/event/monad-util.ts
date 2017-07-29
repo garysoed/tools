@@ -48,10 +48,9 @@ export class MonadUtil {
           const [monad, , id, setter] = data;
           const value = monad.get();
           return setter ? new MonadSetterImpl(id, value) : value;
-        })
-        .toArray();
+        });
 
-    const rv = fn.apply(context, args);
+    const rv = fn.apply(context, [...args]);
     const monadMap = ImmutableMap.of(
         monadDataMap
             .values()

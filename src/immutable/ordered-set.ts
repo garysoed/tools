@@ -1,11 +1,5 @@
-import { ImmutableSet } from '../immutable/immutable-set';
-import { Iterables } from '../immutable/iterables';
-import { Orderings } from '../immutable/orderings';
-import { CompareResult } from '../interfaces/compare-result';
-import { FiniteCollection } from '../interfaces/finite-collection';
-import { Ordered } from '../interfaces/ordered';
-import { Ordering } from '../interfaces/ordering';
-
+import { ImmutableSet, Orderings } from '../immutable';
+import { CompareResult, FiniteCollection, Ordered, Ordering } from '../interfaces';
 
 export class OrderedSet<T> implements FiniteCollection<T>, Ordered<T> {
   private readonly data_: T[];
@@ -124,9 +118,8 @@ export class OrderedSet<T> implements FiniteCollection<T>, Ordered<T> {
       }
     }
 
-    const clone = this.deleteAll(items).toArray();
-    const toInsert = Iterables.toArray(items);
-    clone.splice(index - preInsertionCount, 0, ...toInsert);
+    const clone = [...this.deleteAll(items)];
+    clone.splice(index - preInsertionCount, 0, ...items);
     return new OrderedSet<T>(clone);
   }
 
@@ -191,10 +184,6 @@ export class OrderedSet<T> implements FiniteCollection<T>, Ordered<T> {
     const clone = this.data_.slice(0);
     clone.sort(compareFn);
     return new OrderedSet<T>(clone);
-  }
-
-  toArray(): T[] {
-    return this.data_.slice(0);
   }
 
   static of<T>(items: T[]): OrderedSet<T> {

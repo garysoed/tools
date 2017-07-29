@@ -1,19 +1,15 @@
-import { FiniteIterableType } from '../check/finite-iterable-type';
-import { HasPropertyType } from '../check/has-property-type';
-import { IType } from '../check/i-type';
-import { InstanceofType } from '../check/instanceof-type';
-import { IntersectType } from '../check/intersect-type';
-import { NumberType } from '../check/number-type';
-import { Iterables } from '../immutable/iterables';
-import { Orderings } from '../immutable/orderings';
-import { CompareResult } from '../interfaces/compare-result';
-import { FiniteCollection } from '../interfaces/finite-collection';
-import { FiniteIndexed } from '../interfaces/finite-indexed';
-import { Ordered } from '../interfaces/ordered';
-import { Ordering } from '../interfaces/ordering';
-import { assertUnreachable } from '../typescript/assert-unreachable';
+import {
+  FiniteIterableType,
+  HasPropertyType,
+  InstanceofType,
+  IntersectType,
+  IType,
+  NumberType } from '../check';
+import { Orderings } from '../immutable';
+import { CompareResult, FiniteCollection, FiniteIndexed, Ordered, Ordering } from '../interfaces';
+import { assertUnreachable } from '../typescript';
 
-type ItemList<T> = {item: (index: number) => T, length: number};
+type ItemList<T> = { item: (index: number) => T, length: number };
 function ItemListType<T>(): IType<ItemList<T>> {
   return IntersectType.builder<ItemList<T>>()
       .addType(HasPropertyType('item', InstanceofType(Function)))
@@ -282,10 +278,6 @@ export class ImmutableList<T> implements
     return new ImmutableList(clone.sort(compareFn));
   }
 
-  toArray(): T[] {
-    return this.data_.slice(0);
-  }
-
   values(): ImmutableList<T> {
     return this;
   }
@@ -300,7 +292,7 @@ export class ImmutableList<T> implements
           ItemList<any> |
           DataTransferItemList): ImmutableList<any> {
     if (FiniteIterableType.check(data)) {
-      return new ImmutableList<any>(Iterables.toArray(data));
+      return new ImmutableList<any>([...data]);
     } else if (ItemListType<any>().check(data)) {
       const array: any[] = [];
       for (let i = 0; i < data.length; i++) {

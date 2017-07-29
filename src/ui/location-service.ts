@@ -1,13 +1,9 @@
-import { Bus } from '../event/bus';
-import { ListenableDom } from '../event/listenable-dom';
-import { ImmutableList } from '../immutable/immutable-list';
-import { ImmutableMap } from '../immutable/immutable-map';
-import { LocationServiceEvents } from '../ui/location-service-events';
-import { Locations } from '../ui/locations';
-import { Log } from '../util/log';
-import { Reflect } from '../util/reflect';
+import { Bus, ListenableDom } from '../event';
+import { ImmutableList, ImmutableMap } from '../immutable';
+import { Locations, LocationServiceEvents } from '../ui';
+import { Log, Reflect } from '../util';
 
-type LocationServiceEvent = {type: LocationServiceEvents};
+type LocationServiceEvent = { type: LocationServiceEvents };
 
 const LOGGER = Log.of('gs-tools.ui.LocationService');
 
@@ -47,15 +43,14 @@ export class LocationServiceImpl extends Bus<LocationServiceEvents, LocationServ
    * @return The joined parts.
    */
   appendParts(parts: ImmutableList<string>): string {
-    const path = parts
+    const list = parts
         .filter((part: string) => {
           return part !== '.';
         })
         .map((part: string) => {
           return Locations.normalizePath(part);
-        })
-        .toArray()
-        .join('');
+        });
+    const path = [...list].join('');
     return path === '' ? '/' : path;
   }
 

@@ -1,25 +1,16 @@
-import { InstanceofType } from '../check/instanceof-type';
-import { BaseDisposable } from '../dispose/base-disposable';
-import { MonadUtil } from '../event/monad-util';
-import { ImmutableSet } from '../immutable/immutable-set';
-import { Iterables } from '../immutable/iterables';
-import { Injector } from '../inject/injector';
-import { Parser } from '../interfaces/parser';
-import { Cases } from '../string/cases';
-import { Log, LogLevel } from '../util/log';
-import { BaseElement } from '../webc/base-element';
-import { DomHook } from '../webc/dom-hook';
+import { InstanceofType } from '../check';
+import { BaseDisposable } from '../dispose';
+import { MonadUtil } from '../event';
+import { ImmutableSet } from '../immutable';
+import { Injector } from '../inject';
+import { Parser } from '../interfaces';
+import { Cases } from '../string';
+import { Log, LogLevel } from '../util';
+import { BaseElement, DomHook, onDom, Templates, Util } from '../webc';
 import { Handle } from '../webc/handle';
 import { ANNOTATIONS as HookAnnotations } from '../webc/hook';
-import { onDom } from '../webc/on-dom';
 import { ANNOTATIONS as LIFECYCLE_ANNOTATIONS } from '../webc/on-lifecycle';
-import { Templates } from '../webc/templates';
-import { Util } from '../webc/util';
 
-
-/**
- * @hidden
- */
 const LOG = new Log('gs-tools.webc.ElementRegistrar');
 
 
@@ -48,7 +39,7 @@ export class ElementRegistrar extends BaseDisposable {
       if (factories.size() > 1) {
         throw new Error(`Key ${key} can only have 1 Bind annotation`);
       }
-      const factory = Iterables.toArray(factories)[0];
+      const factory = [...factories][0];
       if (factory === null) {
         return;
       }

@@ -1,12 +1,11 @@
-import { ImmutableList } from '../immutable/immutable-list';
-import { ImmutableSet } from '../immutable/immutable-set';
-import { Orderings } from '../immutable/orderings';
-import { Collection } from '../interfaces/collection';
-import { CompareResult } from '../interfaces/compare-result';
-import { FiniteCollection } from '../interfaces/finite-collection';
-import { FiniteIndexed } from '../interfaces/finite-indexed';
-import { Ordered } from '../interfaces/ordered';
-import { Ordering } from '../interfaces/ordering';
+import { ImmutableList, ImmutableSet, Orderings } from '../immutable';
+import {
+  Collection,
+  CompareResult,
+  FiniteCollection,
+  FiniteIndexed,
+  Ordered,
+  Ordering } from '../interfaces';
 
 export class OrderedMap<K, V> implements
     FiniteCollection<[K, V]>,
@@ -145,9 +144,9 @@ export class OrderedMap<K, V> implements
 
   filterItem(checker: (item: [K, V]) => boolean): OrderedMap<K, V> {
     const filteredEntries = this.entries().filterItem(checker);
-    const keysClone = filteredEntries.mapItem(([key, _]: [K, V]) => key).toArray();
-    const mapClone = new Map(filteredEntries.toArray());
-    return new OrderedMap(keysClone, mapClone);
+    const keysClone = filteredEntries.mapItem(([key, _]: [K, V]) => key);
+    const mapClone = new Map([...filteredEntries]);
+    return new OrderedMap([...keysClone], mapClone);
   }
 
   find(check: (item: [K, V]) => boolean): [K, V] | null {
@@ -214,12 +213,12 @@ export class OrderedMap<K, V> implements
     }
 
     const keysToInsert = ImmutableSet.of(items).mapItem(([key]: [K, V]) => key);
-    const keysClone = ImmutableList.of(this.keys_).insertAllAt(index, keysToInsert).toArray();
+    const keysClone = ImmutableList.of(this.keys_).insertAllAt(index, keysToInsert);
     const mapClone = new Map(this.map_);
     for (const [key, value] of items) {
       mapClone.set(key, value);
     }
-    return new OrderedMap(keysClone, mapClone);
+    return new OrderedMap([...keysClone], mapClone);
   }
 
   insertAt(index: number, item: [K, V]): OrderedMap<K, V> {

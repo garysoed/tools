@@ -1,7 +1,6 @@
 import { BaseColor } from '../color/base-color';
-import { cache } from '../data/cache';
-import { ImmutableList } from '../immutable/immutable-list';
-
+import { cache } from '../data';
+import { ImmutableList } from '../immutable';
 
 export class HslColor extends BaseColor {
   private readonly hue_: number;
@@ -84,11 +83,11 @@ export class HslColor extends BaseColor {
     }
 
     const min = this.getLightness() - chroma / 2;
-    const [r, g, b] = ImmutableList.of([r1, g1, b1])
+    const components = ImmutableList.of([r1, g1, b1])
         .map((value: number) => {
           return Math.round((value + min) * 255);
-        })
-        .toArray();
+        });
+    const [r, g, b] = [...components];
     return [r, g, b];
   }
 

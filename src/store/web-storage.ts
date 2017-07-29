@@ -1,5 +1,4 @@
 import { ImmutableSet } from '../immutable/immutable-set';
-import { Iterables } from '../immutable/iterables';
 import { Parser } from '../interfaces/parser';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { SimpleIdGenerator } from '../random/simple-id-generator';
@@ -37,7 +36,7 @@ export class WebStorage<T> implements GsStorage<T> {
    * @override
    */
   generateId(): Promise<string> {
-    return Promise.resolve(this.idGenerator_.generate(Iterables.toArray(this.getIndexes_())));
+    return Promise.resolve(this.idGenerator_.generate([...this.getIndexes_()]));
   }
 
   /**
@@ -78,7 +77,7 @@ export class WebStorage<T> implements GsStorage<T> {
         .mapItem((id: string) => {
           return this.read(id);
         });
-    const items = await Promise.all(Iterables.toArray(promises));
+    const items = await Promise.all([...promises]);
     return ImmutableSet
         .of(items)
         .filterItem((item: T | null) => {
@@ -137,6 +136,6 @@ export class WebStorage<T> implements GsStorage<T> {
    * @private
    */
   private updateIndexes_(indexes: ImmutableSet<string>): void {
-    this.storage_.setItem(this.prefix_, JSON.stringify(Iterables.toArray(indexes)));
+    this.storage_.setItem(this.prefix_, JSON.stringify([...indexes]));
   }
 }

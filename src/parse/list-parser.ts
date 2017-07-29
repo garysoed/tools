@@ -1,5 +1,5 @@
-import { ImmutableList } from '../immutable/immutable-list';
-import { Parser } from '../interfaces/parser';
+import { ImmutableList } from '../immutable';
+import { Parser } from '../interfaces';
 
 export class ListParserImpl<T> implements Parser<ImmutableList<T | null>> {
   private readonly elementParser_: Parser<T>;
@@ -30,12 +30,11 @@ export class ListParserImpl<T> implements Parser<ImmutableList<T | null>> {
       return '';
     }
 
-    const array = value
+    const list = value
         .map((element: T | null) => {
           return this.elementParser_.stringify(element);
-        })
-        .toArray();
-    return JSON.stringify(array);
+        });
+    return JSON.stringify([...list]);
   }
 }
 

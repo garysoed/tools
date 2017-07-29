@@ -1,12 +1,9 @@
-import { Annotations } from '../data/annotations';
-import { BaseDisposable } from '../dispose/base-disposable';
-import { DisposableFunction } from '../dispose/disposable-function';
-import { MonadUtil } from '../event/monad-util';
-import { ImmutableMap } from '../immutable/immutable-map';
-import { ImmutableSet } from '../immutable/immutable-set';
-import { Iterables } from '../immutable/iterables';
-import { Parser } from '../interfaces/parser';
-import { Log } from '../util/log';
+import { Annotations } from '../data';
+import { BaseDisposable, DisposableFunction } from '../dispose';
+import { MonadUtil } from '../event';
+import { ImmutableMap, ImmutableSet } from '../immutable';
+import { Parser } from '../interfaces';
+import { Log } from '../util';
 import { Handler } from '../webc/handler';
 
 const LOGGER = Log.of('gs-tools.webc.AttributeChangeHandler');
@@ -60,13 +57,17 @@ export class AttributeChangeHandler implements Handler<AttributeChangeHandlerCon
     const groupedConfig: GroupedConfig = ImmutableMap.of(map);
     const observer = this.createMutationObserver_(instance, groupedConfig);
 
-    const attributeFilter = Iterables.toArray(configs
+    const attributeFilter = configs
         .mapItem((config: AttributeChangeHandlerConfig) => {
           return config.attributeName;
-        }));
+        });
     observer.observe(
         targetEl,
-        {attributeFilter, attributeOldValue: true, attributes: true});
+        {
+          attributeFilter: [...attributeFilter],
+          attributeOldValue: true,
+          attributes: true,
+        });
 
     // Calls the initial "change".
     for (const attributeName of groupedConfig.keys()) {

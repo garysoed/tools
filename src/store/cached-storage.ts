@@ -1,8 +1,7 @@
-import { BaseDisposable } from '../dispose/base-disposable';
+import { BaseDisposable } from '../dispose';
 
-import { ImmutableSet } from '../immutable/immutable-set';
-import { Iterables } from '../immutable/iterables';
-import { Storage } from './interfaces';
+import { ImmutableSet } from '../immutable';
+import { Storage } from '../store/interfaces';
 
 
 export class CachedStorage<T> extends BaseDisposable implements Storage<T> {
@@ -63,7 +62,7 @@ export class CachedStorage<T> extends BaseDisposable implements Storage<T> {
         .mapItem((id: string) => {
           return this.read(id);
         });
-    const items = await Promise.all(Iterables.toArray(promises));
+    const items = await Promise.all([...promises]);
     return ImmutableSet
         .of(items)
         .filterItem((item: T | null) => {

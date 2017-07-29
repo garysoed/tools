@@ -1,8 +1,7 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import { ImmutableList } from '../immutable/immutable-list';
-import { Iterables } from '../immutable/iterables';
+import { Iterables } from '../immutable';
 
 describe('immutable.Iterables', () => {
   describe('clone', () => {
@@ -39,13 +38,6 @@ describe('immutable.Iterables', () => {
       }
 
       assert(Iterables.of(generator)).to.startWith([0, 1, 2, 3]);
-    });
-  });
-
-  describe('toArray', () => {
-    it('should return the correct array', () => {
-      const list = ImmutableList.of([1, 2, 3, 4]);
-      assert(Iterables.toArray(list)).to.equal([1, 2, 3, 4]);
     });
   });
 });

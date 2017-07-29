@@ -1,11 +1,6 @@
-import { FiniteIterableType } from '../check/finite-iterable-type';
-import { InstanceofType } from '../check/instanceof-type';
-import { ImmutableSet } from '../immutable/immutable-set';
-import { OrderedMap } from '../immutable/ordered-map';
-import { Orderings } from '../immutable/orderings';
-import { FiniteCollection } from '../interfaces/finite-collection';
-import { FiniteIndexed } from '../interfaces/finite-indexed';
-import { Ordering } from '../interfaces/ordering';
+import { FiniteIterableType, InstanceofType } from '../check';
+import { ImmutableSet, OrderedMap, Orderings } from '../immutable';
+import { FiniteCollection, FiniteIndexed, Ordering } from '../interfaces';
 
 export class ImmutableMap<K, V> implements
     FiniteCollection<[K, V]>,
@@ -207,7 +202,7 @@ export class ImmutableMap<K, V> implements
   }
 
   sort(ordering: Ordering<[K, V]>): OrderedMap<K, V> {
-    return OrderedMap.of(this.entries().sort(ordering).toArray());
+    return OrderedMap.of([...this.entries().sort(ordering)]);
   }
 
   values(): ImmutableSet<V> {

@@ -1,5 +1,7 @@
 export { ArrayOfType } from './array-of-type';
 export { BooleanType } from './boolean-type';
+export { FiniteIterableType } from './finite-iterable-type';
+export { FiniteIterableOfType } from './finite-iterable-of-type';
 export { HasPropertyType } from './has-property-type';
 export { InstanceofType } from './instanceof-type';
 export { IntersectType } from './intersect-type';

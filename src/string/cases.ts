@@ -1,7 +1,7 @@
 /**
  * Utility class to convert between different capitalization styles.
  */
-import { ImmutableList } from '../immutable/immutable-list';
+import { ImmutableList } from '../immutable';
 
 export class Cases {
   private static CAMEL_CASE_REGEX_: RegExp = /^[a-z][a-zA-Z0-9]*$/;
@@ -17,16 +17,15 @@ export class Cases {
    * @return The camel case version of the string.
    */
   toCamelCase(): string {
-    return this.words_
+    const list = this.words_
         .map((value: string, index: number) => {
           if (index === 0) {
             return value;
           } else {
             return `${value[0].toUpperCase()}${value.substring(1)}`;
           }
-        })
-        .toArray()
-        .join('');
+        });
+    return [...list].join('');
   }
 
   /**
@@ -35,7 +34,7 @@ export class Cases {
    * @return The lower case version of the string.
    */
   toLowerCase(): string {
-    return this.words_.toArray().join('-');
+    return [...this.words_].join('-');
   }
 
   /**
@@ -44,12 +43,11 @@ export class Cases {
    * @return The pascal case version of the string.
    */
   toPascalCase(): string {
-    return this.words_
+    const list = this.words_
         .map((value: string) => {
           return `${value[0].toUpperCase()}${value.substring(1)}`;
-        })
-        .toArray()
-        .join('');
+        });
+    return [...list].join('');
   }
 
   /**
@@ -58,12 +56,11 @@ export class Cases {
    * @return The upper case version of the string.
    */
   toUpperCase(): string {
-    return this.words_
+    const list = this.words_
         .map((value: string) => {
           return value.toUpperCase();
-        })
-        .toArray()
-        .join('_');
+        });
+    return [...list].join('_');
   }
 
   /**

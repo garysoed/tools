@@ -1,14 +1,11 @@
-import { BaseDisposable } from '../dispose/base-disposable';
-import { ImmutableList } from '../immutable/immutable-list';
-import { ImmutableSet } from '../immutable/immutable-set';
-import { Iterables } from '../immutable/iterables';
-import { StringParser } from '../parse/string-parser';
+import { BaseDisposable } from '../dispose';
+import { ImmutableList, ImmutableSet } from '../immutable';
+import { StringParser } from '../parse';
+import { Util } from '../webc';
 import { AttributeChangeHandler } from '../webc/attribute-change-handler';
 import { ChildListChangeHandler } from '../webc/child-list-change-handler';
 import { EventHandler } from '../webc/event-handler';
 import { Handler } from '../webc/handler';
-import { Util } from '../webc/util';
-
 
 export const ATTRIBUTE_CHANGE_HANDLER = new AttributeChangeHandler();
 export const CHILD_LIST_CHANGE_HANDLER = new ChildListChangeHandler();
@@ -77,7 +74,7 @@ export class Handle {
         .addAll(Handle.configure_(element, instance, EVENT_HANDLER))
         .addAll(Handle.configure_(element, instance, CHILD_LIST_CHANGE_HANDLER));
 
-    const selectorsString = ImmutableList.of(unresolvedSelectors).toArray().join(', ');
+    const selectorsString = [...ImmutableList.of(unresolvedSelectors)].join(', ');
 
     if (unresolvedSelectors.size() > 0) {
       throw new Error(`The following selectors cannot be resolved for handle: ${selectorsString}`);
@@ -104,7 +101,7 @@ export class Handle {
                 // Element can be null, but keep going to make debugging easier.
                 return [element, config];
               });
-          return Iterables.toArray(entries);
+          return [...entries];
         });
 
     const entryMap = new Map();

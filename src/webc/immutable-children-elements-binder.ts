@@ -1,10 +1,7 @@
-import { FiniteIterableOfType } from '../check/finite-iterable-of-type';
-import { NonNullType } from '../check/non-null-type';
-import { ImmutableList } from '../immutable/immutable-list';
-import { ImmutableSet } from '../immutable/immutable-set';
-import { Iterables } from '../immutable/iterables';
+import { FiniteIterableOfType, NonNullType } from '../check';
+import { ImmutableList, ImmutableSet } from '../immutable';
+import { DomBinder } from '../interfaces';
 import { DataBridge } from '../interfaces/data-bridge';
-import { DomBinder } from '../interfaces/dom-binder';
 
 export class ChildrenElementsBinder<T> implements DomBinder<ImmutableList<T>> {
   private readonly elementPool_: Set<Element>;
@@ -66,7 +63,7 @@ export class ChildrenElementsBinder<T> implements DomBinder<ImmutableList<T>> {
    * @return A newly created element, or a reused element from the element pool.
    */
   private getElement_(): Element {
-    const element = Iterables.toArray(ImmutableSet.of(this.elementPool_))[0];
+    const element = [...ImmutableSet.of(this.elementPool_)][0];
     if (!element) {
       return this.dataBridge_.create(this.parentEl_.ownerDocument, this.instance_);
     } else {
@@ -80,7 +77,7 @@ export class ChildrenElementsBinder<T> implements DomBinder<ImmutableList<T>> {
    */
   set(value: ImmutableList<T> | null): void {
     const valueArray = value || ImmutableList.of([]);
-    const dataChildren = this.getChildElements_().toArray();
+    const dataChildren = [...this.getChildElements_()];
 
     // Make sure that there are equal number of children.
     for (let i = 0; i < valueArray.size() - dataChildren.length; i++) {

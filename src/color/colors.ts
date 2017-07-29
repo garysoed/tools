@@ -1,13 +1,8 @@
-import { ArrayOfType } from '../check/array-of-type';
-import { NonNullType } from '../check/non-null-type';
-import { HslColor } from '../color/hsl-color';
-import { RgbColor } from '../color/rgb-color';
-import { ImmutableList } from '../immutable/immutable-list';
-import { Color } from '../interfaces/color';
-import { FloatParser } from '../parse/float-parser';
-import { HexParser } from '../parse/hex-parser';
-import { IntegerParser } from '../parse/integer-parser';
-import { PercentParser } from '../parse/percent-parser';
+import { ArrayOfType, NonNullType } from '../check';
+import { HslColor, RgbColor } from '../color';
+import { ImmutableList } from '../immutable';
+import { Color } from '../interfaces';
+import { FloatParser, HexParser, IntegerParser, PercentParser } from '../parse';
 
 const RGB_REGEXP = /^rgb\((.*)\)$/;
 const RGBA_REGEXP = /^rgba\((.*)\)$/;
@@ -36,20 +31,20 @@ export const Colors = {
       const matchString = matches[1];
       let components: (number | null)[];
       if (matchString.indexOf('/') < 0) {
-        components = ImmutableList
+        const list = ImmutableList
             .of(matchString.replace(/ /g, '').split(','))
             .map((match: string, index: number) => {
               return index <= 2 ? IntegerParser.parse(match) : FloatParser.parse(match);
-            })
-            .toArray();
+            });
+        components = [...list];
       } else {
         const [rgbString] = matchString.split('/');
-        components = ImmutableList
+        const list = ImmutableList
             .of(rgbString.replace(/ +/g, ' ').trim().split(' '))
             .map((match: string) => {
               return IntegerParser.parse(match.trim());
-            })
-            .toArray();
+            });
+        components = [...list];
       }
 
       if (!ArrayOfType(NonNullType<number>()).check(components)) {
@@ -68,7 +63,7 @@ export const Colors = {
       const matchString = matches[1];
       let components: (number | null)[];
       if (matchString.indexOf('/') < 0) {
-        components = ImmutableList
+        const list = ImmutableList
             .of(matchString.replace(/ /g, '').split(',').slice(0, 3))
             .map((match: string, index: number) => {
               if (index === 0) {
@@ -77,11 +72,11 @@ export const Colors = {
               } else {
                 return PercentParser.parse(match);
               }
-            })
-            .toArray();
+            });
+        components = [...list];
       } else {
         const [hslString] = matchString.split('/');
-        components = ImmutableList
+        const list = ImmutableList
             .of(hslString.replace(/ +/g, ' ').trim().split(' '))
             .map((match: string, index: number) => {
               if (index === 0) {
@@ -90,8 +85,8 @@ export const Colors = {
               } else {
                 return PercentParser.parse(match);
               }
-            })
-            .toArray();
+            });
+        components = [...list];
       }
 
       if (!ArrayOfType(NonNullType<number>()).check(components)) {
@@ -108,19 +103,19 @@ export const Colors = {
       const matches = hexMatches[1];
       let components: (number | null)[];
       if (matches.length === 3 || matches.length === 4) {
-        components = ImmutableList
+        const list = ImmutableList
             .of(matches.split(''))
             .map((match: string) => {
               return HexParser.parse(match + match);
-            })
-            .toArray();
+            });
+        components = [...list];
       } else if (matches.length === 6 || matches.length === 8) {
-        components = ImmutableList
+        const list = ImmutableList
             .of(matches.match(/../g)!)
             .map((match: string) => {
               return HexParser.parse(match);
-            })
-            .toArray();
+            });
+        components = [...list];
       } else {
         return null;
       }

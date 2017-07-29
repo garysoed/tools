@@ -1,15 +1,13 @@
-import { BaseDisposable } from '../dispose/base-disposable';
-import { ImmutableList } from '../immutable/immutable-list';
-import { ImmutableSet } from '../immutable/immutable-set';
-import { Iterables } from '../immutable/iterables';
-import { AttributeSelector, ElementSelector } from '../interfaces/selector';
-import { Log, LogLevel } from '../util/log';
+import { BaseDisposable } from '../dispose';
+import { ImmutableList, ImmutableSet } from '../immutable';
+import { AttributeSelector, ElementSelector } from '../interfaces';
+import { Log, LogLevel } from '../util';
+import { Util } from '../webc';
 import { AttributeChangeHandler } from '../webc/attribute-change-handler';
 import { ChildListChangeHandler } from '../webc/child-list-change-handler';
 import { DimensionChangeHandler } from '../webc/dimension-change-handler';
 import { EventHandler } from '../webc/event-handler';
 import { Handler } from '../webc/handler';
-import { Util } from '../webc/util';
 
 export const ATTRIBUTE_CHANGE_HANDLER = new AttributeChangeHandler();
 export const CHILD_LIST_CHANGE_HANDLER = new ChildListChangeHandler();
@@ -43,7 +41,7 @@ class OnDom {
         .addAll(onDom.configure_(element, instance, DIMENSION_CHANGE_HANDLER))
         .addAll(onDom.configure_(element, instance, EVENT_HANDLER));
 
-    const selectorsString = ImmutableList.of(unresolvedSelectors).toArray().join(', ');
+    const selectorsString = [...ImmutableList.of(unresolvedSelectors)].join(', ');
 
     if (unresolvedSelectors.size() > 0) {
       throw new Error(`The following selectors cannot be resolved for handle: ${selectorsString}`);
@@ -73,7 +71,7 @@ class OnDom {
                 // Element can be null, but keep going to make debugging easier.
                 return [element, config];
               });
-          return Iterables.toArray(entries);
+          return [...entries];
         });
 
     const entryMap = new Map();
