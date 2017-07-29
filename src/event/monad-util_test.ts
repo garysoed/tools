@@ -64,7 +64,7 @@ describe('event.MonadUtil', () => {
       const eventIndexes = ImmutableSet.of([]);
       spyOn(MonadUtil, 'getMonadData_').and.returnValue({monadData, eventIndexes});
 
-      const rv = ImmutableMap.of([[mockFactory, 123]]);
+      const rv = ImmutableSet.of([{id: 123, value: mockFactory}]);
       const mockFn = jasmine.createSpy('Fn');
       mockFn.and.returnValue(rv);
       function fn(this: any, arg1: any): any {
@@ -100,7 +100,7 @@ describe('event.MonadUtil', () => {
       const eventIndexes = ImmutableSet.of([]);
       spyOn(MonadUtil, 'getMonadData_').and.returnValue({monadData, eventIndexes});
 
-      const rv = ImmutableMap.of([[mockFactory, 123]]);
+      const rv = ImmutableSet.of([{id: 123, value: mockFactory}]);
       const mockFn = jasmine.createSpy('Fn');
       mockFn.and.returnValue(Promise.resolve(rv));
       function fn(this: any, arg1: any): any {
@@ -252,9 +252,9 @@ describe('event.MonadUtil', () => {
       ]);
       const value1 = Mocks.object('value1');
       const value2 = Mocks.object('value2');
-      const newValues = ImmutableMap.of([
-        [id1, value1],
-        [id2, value2],
+      const newValues = ImmutableSet.of([
+        {id: id1, value: value1},
+        {id: id2, value: value2},
       ]);
 
       MonadUtil['updateMonads_'](monadMap, newValues);
@@ -265,13 +265,12 @@ describe('event.MonadUtil', () => {
     it('should throw error if a monad factory is unrecognized', () => {
       const id = Mocks.object('id');
       const mockMonad = jasmine.createSpyObj('Monad', ['set']);
-      const unknownFactory = Mocks.object('unknownFactory');
       const monadMap = ImmutableMap.of([
         [id, mockMonad],
       ]);
-      const newValues = ImmutableMap.of([
-        [id, Mocks.object('value1')],
-        [unknownFactory, Mocks.object('value2')],
+      const newValues = ImmutableSet.of([
+        {id: id, value: Mocks.object('value1')},
+        {id: 456, value: Mocks.object('value2')},
       ]);
 
       assert(() => {

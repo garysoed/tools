@@ -11,6 +11,17 @@ describe('jasmine.BooleanAssert', () => {
     assert = new BooleanAssert(true /* value */, true /* reversed */, jasmine.createSpy('expect'));
   });
 
+  describe('be', () => {
+    it('should call the matchers correctly', () => {
+      const mockMatchers = jasmine.createSpyObj('Matcher', ['toBe']);
+      spyOn(assert, 'getMatchers_').and.returnValue(mockMatchers);
+
+      assert.be(false);
+
+      expect(mockMatchers.toBe).toHaveBeenCalledWith(false);
+    });
+  });
+
   describe('beFalse', () => {
     it('should call the matchers correctly', () => {
       const mockMatchers = jasmine.createSpyObj('Matcher', ['toBe']);

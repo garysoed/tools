@@ -1,4 +1,4 @@
-import { BaseAssert } from './base-assert';
+import { BaseAssert } from '../jasmine/base-assert';
 
 
 /**
@@ -17,18 +17,21 @@ export class BooleanAssert extends BaseAssert {
     super(booleanValue, reversed, expect);
   }
 
+  be(value: boolean): void {
+    this.getMatchers_().toBe(value);
+  }
+
   /**
    * Asserts that the value is false.
    */
   beFalse(): void {
-    this.getMatchers_().toBe(false);
+    this.be(false);
   }
 
   /**
    * Asserts that the value is true.
    */
   beTrue(): void {
-    this.getMatchers_().toBe(true);
+    this.be(true);
   }
 }
-// TODO: Mutable

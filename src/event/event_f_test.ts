@@ -1,18 +1,12 @@
-import { BaseDisposable } from '../dispose/base-disposable';
-import { Bus } from '../event/bus';
-import { eventDetails } from '../event/event-details';
-import { listener } from '../event/listener';
-import { monadOut } from '../event/monad-out';
-import { on } from '../event/on';
-import { SimpleMonad } from '../event/simple-monad';
-import { ImmutableMap } from '../immutable/immutable-map';
-import { MonadFactory } from '../interfaces/monad-factory';
-import { MonadSetter } from '../interfaces/monad-setter';
+import { assert, TestBase } from '../test-base';
+
+import { BaseDisposable } from '../dispose';
+import { Bus, eventDetails, listener, monadOut, on, SimpleMonad } from '../event';
+import { ImmutableList, ImmutableMap } from '../immutable';
+import { MonadFactory, MonadSetter } from '../interfaces';
 import { Fakes } from '../mock/fakes';
-import { assert, Matchers, TestBase } from '../test-base';
 import { TestDispose } from '../testing/test-dispose';
-import { Log } from '../util/log';
-import { Reflect } from '../util/reflect';
+import { Log, Reflect } from '../util';
 
 TestBase.setup();
 
@@ -56,9 +50,9 @@ class TestClass extends BaseDisposable {
 
   @on(TEST_EVENT_BUS, 'eventB')
   onMonad(
-      @monadOut(TEST_MONAD_FACTORY) {id, value}: MonadSetter<number>):
+      @monadOut(TEST_MONAD_FACTORY) monadSetter: MonadSetter<number>):
       ImmutableMap<MonadFactory<any>, any> {
-    return this.spy_.onMonad(id, value);
+    return this.spy_.onMonad(monadSetter);
   }
 }
 
@@ -89,13 +83,13 @@ describe('event functional test', () => {
   it('should process the monad correctly', () => {
     const newValue = 123;
     Fakes.build(mockSpy.onMonad)
-        .call((id: any, _: any) => ImmutableMap.of([[id, newValue]]));
+        .call((setter: any) => ImmutableList.of([setter.set(newValue)]));
 
     const event: TestEventB = {payload: 123, type: 'eventB'};
     TEST_EVENT_BUS.dispatch(event);
-    assert(mockSpy.onMonad).to.haveBeenCalledWith(Matchers.anyThing(), 1);
+    assert(mockSpy.onMonad.calls.argsFor(0)[0].value).to.equal(1);
 
     TEST_EVENT_BUS.dispatch(event);
-    assert(mockSpy.onMonad).to.haveBeenCalledWith(Matchers.anyThing(), newValue);
+    assert(mockSpy.onMonad.calls.argsFor(1)[0].value).to.equal(newValue);
   });
 });

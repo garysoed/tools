@@ -1,18 +1,21 @@
+import { IterableType } from '../check';
 import { ANNOTATIONS as EVENT_ANNOTATIONS } from '../event/event-details';
 import { ANNOTATIONS as MONAD_ANNOTATIONS } from '../event/monad';
-import { Generators } from '../immutable/generators';
-import { ImmutableList } from '../immutable/immutable-list';
-import { ImmutableMap } from '../immutable/immutable-map';
-import { ImmutableSet } from '../immutable/immutable-set';
-import { Iterables } from '../immutable/iterables';
-import { Event } from '../interfaces/event';
-import { Monad as MonadType } from '../interfaces/monad';
-import { MonadFactory } from '../interfaces/monad-factory';
-import { Log } from '../util/log';
+import { Generators, ImmutableList, ImmutableMap, ImmutableSet, Iterables } from '../immutable';
+import { Event, Monad as MonadType, MonadFactory, MonadSetter, MonadValue } from '../interfaces';
+import { Log } from '../util';
 
 const LOGGER: Log = Log.of('gs-tools.event.MonadUtil');
 
 type MonadData = {factory: MonadFactory<any>, index: number, setter: boolean};
+
+class MonadSetterImpl<T> implements MonadSetter<T> {
+  constructor(private readonly id_: number, readonly value: T) { }
+
+  set(newValue: T): MonadValue<T> {
+    return {id: this.id_, value: newValue};
+  }
+}
 
 export class MonadUtil {
   static async callFunction<E extends Event<any>>(
@@ -44,7 +47,7 @@ export class MonadUtil {
 
           const [monad, , id, setter] = data;
           const value = monad.get();
-          return setter ? {id, value} : value;
+          return setter ? new MonadSetterImpl(id, value) : value;
         })
         .toArray();
 
@@ -55,11 +58,11 @@ export class MonadUtil {
             .mapItem(([monad, _, id]: [MonadType<any>, MonadFactory<any>, any]) => {
               return [id, monad] as [any, MonadType<any>];
             }));
-    if (rv instanceof ImmutableMap) {
+    if (IterableType.check(rv)) {
       MonadUtil.updateMonads_(monadMap, rv);
     } else if (rv instanceof Promise) {
       await rv.then((resolveValue: any) => {
-        if (resolveValue instanceof ImmutableMap) {
+        if (IterableType.check(resolveValue)) {
           MonadUtil.updateMonads_(monadMap, resolveValue);
         }
       });
@@ -77,9 +80,9 @@ export class MonadUtil {
 
   private static updateMonads_(
       monadMap: ImmutableMap<any, MonadType<any>>,
-      newValues: ImmutableMap<any, any>): void  {
-    for (const [factory, value] of newValues) {
-      const monad = monadMap.get(factory);
+      newValues: Iterable<MonadValue<any>>): void  {
+    for (const {id, value} of newValues) {
+      const monad = monadMap.get(id);
       if (!monad) {
         throw new Error(`No monads found for value: ${value}`);
       }

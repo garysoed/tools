@@ -1,1 +1,7 @@
-export type MonadSetter<T> = {id: any, value: T};
+import { MonadValue } from '../interfaces/monad-value';
+
+export interface MonadSetter<T> {
+  readonly value: T;
+
+  set(newValue: T): MonadValue<T>;
+}
