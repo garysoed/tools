@@ -17,3 +17,7 @@ interface HTMLElement {
   animate(keyframes: AnimationKeyframe[], options_: AnimationOption): EventTarget;
   getDistributedNodes(): HTMLElement[];
 }
+
+interface Node {
+  getRootNode(options?: {composed?: boolean}): Node | null;
+}

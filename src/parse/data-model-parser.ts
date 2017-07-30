@@ -49,7 +49,7 @@ class DataModelParserImpl<T extends DataModel<any>> implements Parser<T> {
   }
 
   stringify(value: T | null): string {
-    return JsonParser.stringify(this.toJson_(value));
+    return JsonParser.stringify(value === null ? null : this.toJson_(value));
   }
 
   private toJson_(obj: any): gs.IJson {

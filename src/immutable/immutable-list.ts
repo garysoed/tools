@@ -5,7 +5,7 @@ import {
   IntersectType,
   IType,
   NumberType } from '../check';
-import { Orderings } from '../immutable';
+import { Orderings } from '../immutable/orderings';
 import { CompareResult, FiniteCollection, FiniteIndexed, Ordered, Ordering } from '../interfaces';
 import { assertUnreachable } from '../typescript';
 

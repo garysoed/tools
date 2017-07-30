@@ -15,4 +15,5 @@ export type ChildElementsSelector<T> = {
  * current element.
  */
 export type ElementSelector = string | null | 'parent';
+export type InnerTextSelector<T> = {parser: Parser<T>, selector: ElementSelector};
 export type Selector = ElementSelector | AttributeSelector<any> | ChildElementsSelector<any>;

@@ -1,4 +1,3 @@
-import { ImmutableList, ImmutableSet, Orderings } from '../immutable';
 import {
   Collection,
   CompareResult,
@@ -6,6 +5,9 @@ import {
   FiniteIndexed,
   Ordered,
   Ordering } from '../interfaces';
+import { ImmutableList } from './immutable-list';
+import { ImmutableSet } from './immutable-set';
+import { Orderings } from './orderings';
 
 export class OrderedMap<K, V> implements
     FiniteCollection<[K, V]>,

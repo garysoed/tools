@@ -1,5 +1,6 @@
-import { ImmutableSet, Orderings } from '../immutable';
 import { CompareResult, FiniteCollection, Ordered, Ordering } from '../interfaces';
+import { ImmutableSet } from './immutable-set';
+import { Orderings } from './orderings';
 
 export class OrderedSet<T> implements FiniteCollection<T>, Ordered<T> {
   private readonly data_: T[];

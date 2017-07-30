@@ -1,6 +1,8 @@
 import { FiniteIterableType, InstanceofType } from '../check';
-import { ImmutableSet, OrderedMap, Orderings } from '../immutable';
 import { FiniteCollection, FiniteIndexed, Ordering } from '../interfaces';
+import { ImmutableSet } from './immutable-set';
+import { OrderedMap } from './ordered-map';
+import { Orderings } from './orderings';
 
 export class ImmutableMap<K, V> implements
     FiniteCollection<[K, V]>,

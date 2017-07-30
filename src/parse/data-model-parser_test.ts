@@ -137,6 +137,10 @@ describe('parse.DataModelParser', () => {
       assert(JsonParser.stringify).to.haveBeenCalledWith(json);
       assert(parser['toJson_']).to.haveBeenCalledWith(dataModel);
     });
+
+    it(`should return empty string if null`, () => {
+      assert(parser.stringify(null)).to.equal('');
+    });
   });
 
   describe('toJson_', () => {

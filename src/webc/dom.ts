@@ -1,11 +1,16 @@
 import { monad } from '../event/monad';
 import { monadOut } from '../event/monad-out';
 import { MonadFactory } from '../interfaces/monad-factory';
-import { AttributeSelector, ChildElementsSelector, ElementSelector } from '../interfaces/selector';
+import {
+    AttributeSelector,
+    ChildElementsSelector,
+    ElementSelector,
+    InnerTextSelector } from '../interfaces/selector';
 import { AttributeBinder } from '../webc/attribute-binder';
 import { ElementBinder } from '../webc/element-binder';
 import { EventDispatcher } from '../webc/event-dispatcher';
 import { ChildrenElementsBinder } from '../webc/immutable-children-elements-binder';
+import { InnerTextBinder } from '../webc/inner-text-binder';
 import { Util } from '../webc/util';
 
 
@@ -59,7 +64,15 @@ export class Dom {
         });
   }
 
-  private static requireTargetElement_(selector: ElementSelector, instance: Object): Element {
+  innerText(config: InnerTextSelector<any>): ParameterDecorator {
+    return this.createMonad_(
+        (instance: Object) => {
+          const targetElement = Dom.requireTargetElement_(config.selector, instance);
+          return InnerTextBinder.of(targetElement, config.parser);
+        });
+  }
+
+  private static requireTargetElement_(selector: ElementSelector, instance: Object): HTMLElement {
     const root = Util.getElement(instance);
     if (!root) {
       throw new Error(`Element not found for ${instance}`);

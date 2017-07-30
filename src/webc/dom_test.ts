@@ -1,13 +1,13 @@
-import { assert, TestBase } from '../test-base';
+import { assert, Matchers, Mocks, TestBase } from '../test-base';
 TestBase.setup();
 
-import { Matchers } from '../jasmine/matchers';
-import { Mocks } from '../mock/mocks';
-import { AttributeBinder } from '../webc/attribute-binder';
-import { Dom } from '../webc/dom';
-import { ElementBinder } from '../webc/element-binder';
-import { EventDispatcher } from '../webc/event-dispatcher';
-import { Util } from '../webc/util';
+import { AttributeBinder } from './attribute-binder';
+import { Dom } from './dom';
+import { ElementBinder } from './element-binder';
+import { EventDispatcher } from './event-dispatcher';
+import { ChildrenElementsBinder } from './immutable-children-elements-binder';
+import { InnerTextBinder } from './inner-text-binder';
+import { Util } from './util';
 
 
 describe('webc.Dom', () => {
@@ -43,6 +43,43 @@ describe('webc.Dom', () => {
       const instance = Mocks.object('instance');
       assert(createMonadSpy.calls.argsFor(0)[0](instance)).to.equal(binder);
       assert(AttributeBinder.of).to.haveBeenCalledWith(target, attributeName, parser);
+      assert(Dom['requireTargetElement_']).to.haveBeenCalledWith(selector, instance);
+    });
+  });
+
+  describe('childElements', () => {
+    it('should create the monad correctly', () => {
+      const bridge = Mocks.object('bridge');
+      const startPadCount = 123;
+      const endPadCount = 456;
+      const selector = 'selector';
+      const config = {
+        bridge,
+        selector,
+        startPadCount,
+        endPadCount,
+      };
+
+      const monad = Mocks.object('monad');
+      const createMonadSpy = spyOn(dom, 'createMonad_').and.returnValue(monad);
+
+      const binder = Mocks.object('binder');
+      spyOn(ChildrenElementsBinder, 'of').and.returnValue(binder);
+
+      const target = Mocks.object('target');
+      spyOn(Dom, 'requireTargetElement_').and.returnValue(target);
+
+      assert(dom.childElements(config)).to.equal(monad);
+      assert(dom['createMonad_']).to.haveBeenCalledWith(Matchers.any(Function) as any);
+
+      const instance = Mocks.object('instance');
+      assert(createMonadSpy.calls.argsFor(0)[0](instance)).to.equal(binder);
+      assert(ChildrenElementsBinder.of).to.haveBeenCalledWith(
+          target,
+          bridge,
+          startPadCount,
+          endPadCount,
+          instance);
       assert(Dom['requireTargetElement_']).to.haveBeenCalledWith(selector, instance);
     });
   });
@@ -88,6 +125,30 @@ describe('webc.Dom', () => {
       assert(createMonadSpy.calls.argsFor(0)[0](instance)).to.equal(dispatcher);
       assert(EventDispatcher.of).to.haveBeenCalledWith(target);
       assert(Dom['requireTargetElement_']).to.haveBeenCalledWith(null, instance);
+    });
+  });
+
+  describe('innerText', () => {
+    it('should create the monad correctly', () => {
+      const parser = Mocks.object('parser');
+      const selector = 'selector';
+
+      const monad = Mocks.object('monad');
+      const createMonadSpy = spyOn(dom, 'createMonad_').and.returnValue(monad);
+
+      const binder = Mocks.object('binder');
+      spyOn(InnerTextBinder, 'of').and.returnValue(binder);
+
+      const target = Mocks.object('target');
+      spyOn(Dom, 'requireTargetElement_').and.returnValue(target);
+
+      assert(dom.innerText({parser, selector})).to.equal(monad);
+      assert(dom['createMonad_']).to.haveBeenCalledWith(Matchers.any(Function) as any);
+
+      const instance = Mocks.object('instance');
+      assert(createMonadSpy.calls.argsFor(0)[0](instance)).to.equal(binder);
+      assert(InnerTextBinder.of).to.haveBeenCalledWith(target, parser);
+      assert(Dom['requireTargetElement_']).to.haveBeenCalledWith(selector, instance);
     });
   });
 
