@@ -1,13 +1,12 @@
-import { Promises } from '../async/promises';
+import { Promises } from '../async';
 import { DataAccess } from '../datamodel/data-access';
 import { DataModel } from '../datamodel/data-model';
 import { Searcher } from '../datamodel/searcher';
-import { Bus } from '../event/bus';
-import { ImmutableList } from '../immutable/immutable-list';
-import { ImmutableSet } from '../immutable/immutable-set';
-import { MonadFactory } from '../interfaces/monad-factory';
-import { Storage as GsStorage } from '../store/interfaces';
-import { Log } from '../util/log';
+import { Bus } from '../event';
+import { ImmutableList, ImmutableSet } from '../immutable';
+import { Monad } from '../interfaces';
+import { Storage as GsStorage } from '../store';
+import { Log } from '../util';
 
 type EventType = 'add' | 'remove' | 'edit';
 export type ManagerEvent<T extends DataModel<any>> = {data: T, type: EventType};
@@ -25,9 +24,9 @@ export abstract class Manager<D extends DataModel<any>>
     return this.storage_.read(id);
   }
 
-  idMonad(): MonadFactory<Promise<string>> {
+  idMonad(): Monad<Promise<string>> {
     const id = this.storage_.generateId();
-    return () => ({
+    return {
       get: () => {
         return id;
       },
@@ -35,15 +34,15 @@ export abstract class Manager<D extends DataModel<any>>
       set: () => {
         // Noop
       },
-    });
+    };
   }
 
   private list_(): Promise<ImmutableSet<D>> {
     return this.storage_.list();
   }
 
-  monad(): MonadFactory<DataAccess<D>> {
-    return () => ({
+  monad(): Monad<DataAccess<D>> {
+    return {
       get: () => {
         return DataAccess.of<D>(
             this.get_.bind(this),
@@ -60,7 +59,7 @@ export abstract class Manager<D extends DataModel<any>>
                 })
                 .values());
       },
-    });
+    };
   }
 
   private search_(this: Manager<D>, token: string): Promise<ImmutableList<D>> {

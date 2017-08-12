@@ -44,7 +44,7 @@ describe('datamodel.Manager', () => {
       const itemId = 'itemId';
 
       mockStorage.generateId.and.returnValue(Promise.resolve(itemId));
-      const monad = manager.idMonad()(Mocks.object('instance'));
+      const monad = manager.idMonad();
       assert(await monad.get()).to.equal(itemId);
 
       mockStorage.generateId.calls.reset();
@@ -66,7 +66,7 @@ describe('datamodel.Manager', () => {
 
   describe('monad', () => {
     it(`should return monad with the correct get method`, () => {
-      assert(manager.monad()(Mocks.object('instance')).get()).to.equal(Matchers.any(DataAccess));
+      assert(manager.monad().get()).to.equal(Matchers.any(DataAccess));
     });
 
     it(`should return monad with the correct set method`, async () => {
@@ -81,7 +81,7 @@ describe('datamodel.Manager', () => {
 
       spyOn(manager, 'update_');
 
-      await manager.monad()(Mocks.object('instance')).set(mockDataAccess);
+      await manager.monad().set(mockDataAccess);
       assert(manager['update_']).to.haveBeenCalledWith(id1, item1);
       assert(manager['update_']).to.haveBeenCalledWith(id2, item2);
     });
