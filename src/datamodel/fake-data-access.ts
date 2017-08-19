@@ -8,9 +8,9 @@ export class FakeDataAccess<T> extends DataAccess<T> {
       searchIndex: ImmutableMap<string, ImmutableList<T>> =
           ImmutableMap.of<string, ImmutableList<T>>([])) {
     super(
-      (id: string) => Promise.resolve(data.get(id) || null),
-      () => Promise.resolve(data.values()),
-      (token: string) => Promise.resolve(searchIndex.get(token) || ImmutableList.of([])),
-      ImmutableMap.of<string, T>([]));
+        (id: string) => Promise.resolve(data.get(id) || null),
+        () => Promise.resolve(data.values()),
+        (token: string) => Promise.resolve(searchIndex.get(token) || ImmutableList.of([])),
+        ImmutableMap.of<string, T>([]));
   }
 }

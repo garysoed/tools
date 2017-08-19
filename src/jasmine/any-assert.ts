@@ -53,5 +53,12 @@ export class AnyAssert<T> extends BaseAssert {
   equal(other: T): void {
     this.getMatchers_().toEqual(other);
   }
+
+  /**
+   * Checks that the value is equal to object containing the given object.
+   * @param obj
+   */
+  matchObject(obj: any): void {
+    this.getMatchers_().toEqual(jasmine.objectContaining(obj));
+  }
 }
-// TODO: Mutable
