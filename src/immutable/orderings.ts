@@ -23,6 +23,23 @@ export const Orderings = {
   },
 
   /**
+   * Orders items matching the given list at the start of the list.
+   * @param checked
+   */
+  isOneOf<T>(checked: Iterable<T>): Ordering<T> {
+    const checkedSet = new Set(checked);
+    return (item1: T, item2: T): CompareResult => {
+      const has1 = checkedSet.has(item1);
+      const has2 = checkedSet.has(item2);
+      if (has1 === has2) {
+        return 0;
+      }
+
+      return (has1 && !has2) ? -1 : 1;
+    };
+  },
+
+  /**
    * Natural ordering that pays attention to numerical values in the string.
    */
   natural(): Ordering<string> {

@@ -24,7 +24,7 @@ export enum LogLevel {
 
 export class Log {
   private static COLOR_ENABLED_: boolean = true;
-  private static ENABLED_LOG_LEVEL_: LogLevel = LogLevel.DEBUG;
+  private static ENABLED_LOG_LEVEL_: LogLevel = LogLevel.INFO;
 
   private namespace_: string;
 

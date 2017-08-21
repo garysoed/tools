@@ -26,6 +26,13 @@ describe('immutable.Orderings', () => {
     });
   });
 
+  describe('isOneOf', () => {
+    it(`should order matching items at the start of the list`, () => {
+      const list = ImmutableList.of([1, 2, 3]);
+      assert(list.sort(Orderings.isOneOf([3]))).to.haveElements([3, 1, 2]);
+    });
+  });
+
   describe('natural', () => {
     it(`should put 'a' before 'b'`, () => {
       assert(Orderings.natural()('a', 'b')).to.equal(-1);

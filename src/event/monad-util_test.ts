@@ -1,4 +1,4 @@
-import { assert, TestBase } from '../test-base';
+import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
 import { ANNOTATIONS as EVENT_ANNOTATIONS } from '../event/event-details';
@@ -73,13 +73,13 @@ describe('event.MonadUtil', () => {
 
       const context = Mocks.object('context');
       context[key] = fn;
-      spyOn(MonadUtil, 'updateMonads_');
+      const updateMonadsSpy = spyOn(MonadUtil, 'updateMonads_');
 
       await MonadUtil.callFunction(event, context, key);
       assert(mockFn).to.haveBeenCalledWith(context, value);
       assert(MonadUtil['getMonadData_']).to.haveBeenCalledWith(context, key);
-      assert(MonadUtil['updateMonads_']).to
-          .haveBeenCalledWith(ImmutableMap.of([[mockFactory, mockMonad]]), rv);
+      assert(MonadUtil['updateMonads_']).to.haveBeenCalledWith(Matchers.anyThing(), rv);
+      assert([...updateMonadsSpy.calls.argsFor(0)[0]][0][1]).to.equal(mockMonad);
     });
 
     it('should update the monads correctly if it is a promise that resolves to immutable map',
@@ -109,13 +109,13 @@ describe('event.MonadUtil', () => {
 
       const context = Mocks.object('context');
       context[key] = fn;
-      spyOn(MonadUtil, 'updateMonads_');
+      const updateMonadsSpy = spyOn(MonadUtil, 'updateMonads_');
 
       await MonadUtil.callFunction(event, context, key);
       assert(mockFn).to.haveBeenCalledWith(context, value);
       assert(MonadUtil['getMonadData_']).to.haveBeenCalledWith(context, key);
-      assert(MonadUtil['updateMonads_']).to
-          .haveBeenCalledWith(ImmutableMap.of([[mockFactory, mockMonad]]), rv);
+      assert(MonadUtil['updateMonads_']).to.haveBeenCalledWith(Matchers.anyThing(), rv);
+      assert([...updateMonadsSpy.calls.argsFor(0)[0]][0][1]).to.equal(mockMonad);
     });
 
     it('should ignore the return value if it is a promise that resolves to a non immutable map',

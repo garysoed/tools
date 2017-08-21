@@ -25,7 +25,6 @@ describe('webc.AttributeChangeHandler', () => {
       const proto = Mocks.object('proto');
       const mockInstance = jasmine.createSpyObj('Instance', ['addDisposable']);
       mockInstance.constructor = {prototype: proto};
-      const element = Mocks.object('element');
 
       const attributeName1 = 'attributeName1';
       const config1 = Mocks.object('config1');
@@ -39,7 +38,7 @@ describe('webc.AttributeChangeHandler', () => {
       configMap.set('propertyKey1', config1);
       configMap.set('propertyKey2', config2);
 
-      spyOn(handler, 'onMutation_');
+      const onMutationSpy = spyOn(handler, 'onMutation_');
 
       const mockObserver = jasmine.createSpyObj('Observer', ['disconnect', 'observe']);
       spyOn(handler, 'createMutationObserver_').and.returnValue(mockObserver);
@@ -59,31 +58,34 @@ describe('webc.AttributeChangeHandler', () => {
       assert(handler['onMutation_']).to.haveBeenCalledWith(
           mockInstance,
           Matchers.any(ImmutableMap),
-          ImmutableSet.of([{
-            addedNodes: {length: 0} as any as NodeList,
-            attributeName: attributeName1,
-            attributeNamespace: null,
-            nextSibling: null,
-            oldValue: null,
-            previousSibling: null,
-            removedNodes: {length: 0} as any as NodeList,
-            target: element,
-            type: 'attributes',
-          }]));
+          Matchers.any(ImmutableSet));
+      assert([...onMutationSpy.calls.argsFor(0)[2]][0]).to.equal({
+        addedNodes: {length: 0} as any as NodeList,
+        attributeName: attributeName1,
+        attributeNamespace: null,
+        nextSibling: null,
+        oldValue: null,
+        previousSibling: null,
+        removedNodes: {length: 0} as any as NodeList,
+        target: targetEl,
+        type: 'attributes',
+      });
+
       assert(handler['onMutation_']).to.haveBeenCalledWith(
           mockInstance,
           Matchers.any(ImmutableMap),
-          ImmutableSet.of([{
-            addedNodes: {length: 0} as NodeList as any,
-            attributeName: attributeName2,
-            attributeNamespace: null,
-            nextSibling: null,
-            oldValue: null,
-            previousSibling: null,
-            removedNodes: {length: 0} as any as NodeList,
-            target: element,
-            type: 'attributes',
-          }]));
+          Matchers.any(ImmutableSet));
+      assert([...onMutationSpy.calls.argsFor(1)[2]][0]).to.equal({
+        addedNodes: {length: 0} as NodeList as any,
+        attributeName: attributeName2,
+        attributeNamespace: null,
+        nextSibling: null,
+        oldValue: null,
+        previousSibling: null,
+        removedNodes: {length: 0} as any as NodeList,
+        target: targetEl,
+        type: 'attributes',
+      });
 
       const map: ImmutableMap<string, ImmutableSet<Config>> =
           (handler['onMutation_'] as any).calls.argsFor(0)[1];

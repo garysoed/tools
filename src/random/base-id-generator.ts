@@ -5,7 +5,7 @@ export abstract class BaseIdGenerator {
    * @param existingIds IDs that already exist.
    * @return Newly generated ID.
    */
-  generate(existingIds: string[]): string {
+  generate(existingIds: Iterable<string>): string {
     const existingSet = new Set(existingIds);
     let id = this.newId_();
     while (existingSet.has(id)) {
@@ -33,4 +33,3 @@ export abstract class BaseIdGenerator {
    */
   protected abstract resolveConflict_(id: string): string;
 }
-// TODO: Mutable
