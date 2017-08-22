@@ -58,8 +58,8 @@ describe('graph functional test', () => {
       }
     }
 
-    const $a = instanceId('a', NumberType, TestClass);
-    const $b = instanceId('b', NumberType, TestClass);
+    const $a = instanceId('a', NumberType);
+    const $b = instanceId('b', NumberType);
     let providesC: NodeProvider<number>;
 
     beforeEach(() => {

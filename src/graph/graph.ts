@@ -2,12 +2,11 @@ import { GNode } from '../graph/g-node';
 import { InnerNode } from '../graph/inner-node';
 import { InputNode } from '../graph/input-node';
 import { InstanceId } from '../graph/instance-id';
+import { NodeId } from '../graph/node-id';
 import { NodeProvider } from '../graph/node-provider';
 import { Provider, Provider0, Provider1, Provider2 } from '../graph/provider';
 import { StaticId } from '../graph/static-id';
 import { ImmutableList } from '../immutable';
-
-type NodeId<T> = StaticId<T> | InstanceId<T, any>;
 
 export const SET_QUEUE: (() => void)[] = [];
 export const NODES: Map<NodeId<any>, GNode<any>> = new Map();
@@ -45,7 +44,7 @@ export class Graph {
    * @return Promise that will be resolved with the value associated with the given ID.
    */
   static async get<T>(staticId: StaticId<T>): Promise<T>;
-  static async get<T, C>(instanceId: InstanceId<T, C>, context: C): Promise<T>;
+  static async get<T, C>(instanceId: InstanceId<T>, context: C): Promise<T>;
   static async get<T, C>(nodeId: NodeId<T>, context: C | null = null): Promise<T> {
     const node = NODES.get(nodeId);
     if (!node) {
@@ -91,13 +90,13 @@ export class Graph {
       arg0: StaticId<P0>,
       arg1: StaticId<P1>): void;
 
-  static registerProvider<T, C>(instanceId: InstanceId<T, C>, provider: Provider0<T>): void;
-  static registerProvider<T, C, P0>(
-      instanceId: InstanceId<T, C>,
+  static registerProvider<T>(instanceId: InstanceId<T>, provider: Provider0<T>): void;
+  static registerProvider<T, P0>(
+      instanceId: InstanceId<T>,
       provider: Provider1<T, P0>,
       arg0: NodeId<P0>): void;
-  static registerProvider<T, C, P0, P1>(
-      instanceId: InstanceId<T, C>,
+  static registerProvider<T, P0, P1>(
+      instanceId: InstanceId<T>,
       provider: Provider2<T, P0, P1>,
       arg0: NodeId<P0>,
       arg1: NodeId<P1>): void;

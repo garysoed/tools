@@ -59,9 +59,9 @@ describe('graph.Graph', () => {
 
       const instance = new TestClass();
       const $ = {
-        param1: instanceId('param1', NumberType, TestClass),
-        param2: instanceId('param2', NumberType, TestClass),
-        test: instanceId('test', NumberType, TestClass),
+        param1: instanceId('param1', NumberType),
+        param2: instanceId('param2', NumberType),
+        test: instanceId('test', NumberType),
       };
       const value = 123;
 

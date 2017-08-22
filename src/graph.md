@@ -1,30 +1,3 @@
-Instance graphs (without annotations).
-```typescript
-const $$a = instanceId('a');
-const $$b = instanceId('b');
-
-class TestClass {
-  constructor(private readonly b_: number) { }
-
-  providesA(b: number): number {
-    return b + 1;
-  }
-
-  providesB(): number {
-    return this.b_;
-  }
-}
-
-Graph.registerProvider<number>($$a, TestClass.prototype.providesA, $$b);
-
-const t1 = new TestClass(2);
-Graph.get($$a, t1); // Returns 3.
-Graph.get($$a, t1); // Returns 3, cached.
-
-const t2 = new TestClass(3);
-Graph.get($$a, t2); // Returns 4.
-```
-
 Instance graphs (with annotations).
 
 ```typescript
