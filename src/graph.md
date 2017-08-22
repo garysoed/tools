@@ -16,7 +16,6 @@ class TestClass {
 }
 
 Graph.registerProvider<number>($$a, TestClass.prototype.providesA, $$b);
-Graph.registerProvider
 
 const t1 = new TestClass(2);
 Graph.get($$a, t1); // Returns 3.
