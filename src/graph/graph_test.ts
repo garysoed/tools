@@ -21,7 +21,7 @@ describe('graph.Graph', () => {
       spyOn(Graph, 'set_').and.returnValue(promise);
 
       const provider = Graph.createProvider($, value);
-      assert(staticNodes.get($)!.execute([])).to.equal(value);
+      assert(staticNodes.get($)!.execute(null, [])).to.equal(value);
 
       const newValue = 456;
       assert(provider(newValue)).to.equal(promise);
@@ -51,7 +51,7 @@ describe('graph.Graph', () => {
       staticNodes.set($.test, mockNode);
 
       await assert(Graph.get($.test)).to.resolveWith(value);
-      assert(mockNode.execute).to.haveBeenCalledWith([param1, param2]);
+      assert(mockNode.execute).to.haveBeenCalledWith(null, [param1, param2]);
     });
 
     it(`should reject if the value has the wrong type`, async () => {
@@ -72,7 +72,7 @@ describe('graph.Graph', () => {
       staticNodes.set($.test, mockNode);
 
       await assert(Graph.get($.test)).to.rejectWithError(/incorrect type/);
-      assert(mockNode.execute).to.haveBeenCalledWith([param]);
+      assert(mockNode.execute).to.haveBeenCalledWith(null, [param]);
     });
 
     it(`should reject if the node corresponding to the ID cannot be found`, async () => {
@@ -105,7 +105,7 @@ describe('graph.Graph', () => {
       mockProvider.and.returnValue(value);
 
       Graph.registerProvider($, mockProvider);
-      assert(staticNodes.get($)!.execute([])).to.equal(value);
+      assert(staticNodes.get($)!.execute(null, [])).to.equal(value);
       assert(mockProvider).to.haveBeenCalledWith();
     });
 
@@ -129,7 +129,7 @@ describe('graph.Graph', () => {
       staticNodes.set($, mockNode);
 
       await Graph['set_']($, value);
-      assert(mockNode.set).to.haveBeenCalledWith(value);
+      assert(mockNode.set).to.haveBeenCalledWith(null, value);
     });
 
     it(`should throw error if the corresponding node is not an InputNode`, () => {

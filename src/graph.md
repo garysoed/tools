@@ -1,30 +1,32 @@
-Static graphs.
-
+Instance graphs (without annotations).
 ```typescript
-const $a = staticId('a');
-const $b = staticId('b');
-const $c = staticId('c');
+const $$a = instanceId('a');
+const $$b = instanceId('b');
 
-const providerB = Graph.createProvider($b, 3);
-const providerC = Graph.createProvider($c, 4);
+class TestClass {
+  constructor(private readonly b_: number) { }
 
-function providesA(
-    @nodeIn($b) b: number,
-    @nodeIn($c) c: number): number {
-  return b + c;
+  providesA(b: number): number {
+    return b + 1;
+  }
+
+  providesB(): number {
+    return this.b_;
+  }
 }
-Graph.registerProvider($a, providesA);
 
-Graph.get($a); // Resolves with 7
+Graph.registerProvider<number>($$a, TestClass.prototype.providesA, $$b);
+Graph.registerProvider
 
-// This clears the cache for $a.
-providerB(2);
-Graph.get($a); // Returns 6
+const t1 = new TestClass(2);
+Graph.get($$a, t1); // Returns 3.
+Graph.get($$a, t1); // Returns 3, cached.
 
-Graph.createProvider($a, 7); // Throws error since A has a provider.
+const t2 = new TestClass(3);
+Graph.get($$a, t2); // Returns 4.
 ```
 
-Instance graphs.
+Instance graphs (with annotations).
 
 ```typescript
 const $$a = instanceId('a');
@@ -33,7 +35,6 @@ const $$b = instanceId('b');
 class TestClass {
   constructor(private readonly b_: number) { }
 
-  @nodeOut($$a)
   providesA(@nodeIn($$b) b: number): number {
     return b + 1;
   }
@@ -46,6 +47,7 @@ class TestClass {
 
 const t1 = new TestClass(2);
 Graph.get($$a, t1); // Returns 3.
+Graph.get($$a, t1); // Returns 3, cached.
 
 const t2 = new TestClass(3);
 Graph.get($$a, t2); // Returns 4.

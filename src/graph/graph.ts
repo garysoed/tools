@@ -2,7 +2,7 @@ import { GNode } from '../graph/g-node';
 import { InnerNode } from '../graph/inner-node';
 import { InputNode } from '../graph/input-node';
 import { NodeProvider } from '../graph/node-provider';
-import { SimpleProviderFn } from '../graph/provider';
+import { Provider, Provider0, Provider1 } from '../graph/provider';
 import { StaticId } from '../graph/static-id';
 import { ImmutableList } from '../immutable';
 
@@ -26,7 +26,8 @@ export class Graph {
    *     be resolved when the value has been set.
    */
   static createProvider<T>(staticId: StaticId<T>, initValue: T): NodeProvider<T> {
-    const node = new InputNode<T>(initValue);
+    const node = new InputNode<T>();
+    node.set(null, initValue);
     staticNodes.set(staticId, node);
 
     const provider = (newValue: T): Promise<void> => {
@@ -51,7 +52,7 @@ export class Graph {
           return Graph.get(parameterId);
         }));
 
-    const value = await node.execute(parameters);
+    const value = await node.execute(null, parameters);
     if (!staticId.getType().check(value)) {
       throw new Error(`Node for ${staticId} returns the incorrect type. [${value}]`);
     }
@@ -70,12 +71,20 @@ export class Graph {
    * @param staticId
    * @param provider
    */
-  static registerProvider<T>(staticId: StaticId<T>, provider: SimpleProviderFn<T>): void {
+  static registerProvider<T>(staticId: StaticId<T>, provider: Provider0<T>): void;
+  static registerProvider<T, P0>(
+      staticId: StaticId<T>,
+      provider: Provider1<T, P0>,
+      arg0: StaticId<P0>): void;
+  static registerProvider<T>(
+      staticId: StaticId<T>,
+      provider: Provider<T>,
+      ...args: StaticId<any>[]): void {
     if (staticNodes.has(staticId)) {
       throw new Error(`Node ${staticId} is already registered`);
     }
 
-    const node = new InnerNode<T>(null, provider, ImmutableList.of([]));
+    const node = new InnerNode<T>(provider, ImmutableList.of(args));
     staticNodes.set(staticId, node);
   }
 
@@ -87,7 +96,7 @@ export class Graph {
 
     const promise = new Promise<void>((resolve: () => void) => {
       setQueue.push(() => {
-        node.set(value);
+        node.set(null, value);
         resolve();
       });
     });

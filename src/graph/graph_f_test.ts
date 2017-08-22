@@ -15,20 +15,17 @@ describe('graph functional test', () => {
     Graph.clearForTests();
   });
 
-  describe('with static without nodeOut annotations', () => {
+  describe('with static functions', () => {
     let providesB: NodeProvider<number>;
     let providesC: NodeProvider<number>;
 
-    async function providesA(): Promise<number> {
-      const [b, c] = await Promise.all([
-        Graph.get($.b),
-        Graph.get($.c),
-      ]);
+    async function providesA(b: number): Promise<number> {
+      const c = await Graph.get($.c);
       return b + c;
     }
 
     beforeEach(() => {
-      Graph.registerProvider<number>($.a, providesA);
+      Graph.registerProvider<number, number>($.a, providesA, $.b);
       providesB = Graph.createProvider($.b, 3);
       providesC = Graph.createProvider($.c, 4);
     });

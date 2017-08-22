@@ -1,16 +1,22 @@
 import { ImmutableList } from 'src/immutable';
-import { GNode } from '../graph/g-node';
+import { GLOBALS, GNode } from '../graph/g-node';
 
 export class InputNode<T> extends GNode<T> {
-  constructor(private value_: T) {
+  private readonly symbol_: symbol = Symbol('inputNode');
+
+  constructor() {
     super(ImmutableList.of([]));
   }
 
-  execute(): T {
-    return this.value_;
+  protected execute_(context: {}): T {
+    return context[this.symbol_];
   }
 
-  set(value: T): void {
-    this.value_ = value;
+  set(context: {} | null, value: T): void {
+    this.set_(context || GLOBALS, value);
+  }
+
+  private set_(context: {}, value: T): void {
+    context[this.symbol_] = value;
   }
 }
