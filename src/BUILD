@@ -33,7 +33,6 @@ ts_library(
     srcs = ["test-base.ts"],
     deps = [
       "//src/jasmine",
-      "//src/testgen",
       "//src/testing",
     ],
 )
