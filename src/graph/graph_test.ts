@@ -1,11 +1,14 @@
-import { assert, Fakes, Mocks, TestBase } from '../test-base';
+import { assert, Fakes, Matchers, Mocks, TestBase } from '../test-base';
 TestBase.setup();
 
 import { NumberType } from '../check';
+import { BaseDisposable } from '../dispose';
 import { Graph, instanceId, staticId } from '../graph';
-import { NODES, SET_QUEUE } from '../graph/graph';
+import { MONITORED_NODES, NODES, SET_QUEUE } from '../graph/graph';
+import { InnerNode } from '../graph/inner-node';
 import { InputNode } from '../graph/input-node';
-import { ImmutableList } from '../immutable';
+import { ImmutableList, ImmutableSet } from '../immutable';
+import { TestDispose } from '../testing';
 
 
 describe('graph.Graph', () => {
@@ -54,7 +57,7 @@ describe('graph.Graph', () => {
       Fakes.build(spyOn(Graph, 'get'))
           .when($.param1).resolve(param1)
           .when($.param2).resolve(param2)
-          .else().call(origGet);
+          .else().call(origGet.bind(Graph));
       const mockNode = jasmine.createSpyObj('Node', ['execute', 'getParameterIds']);
       mockNode.execute.and.returnValue(value);
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([$.param1, $.param2]));
@@ -65,9 +68,15 @@ describe('graph.Graph', () => {
     });
 
     it(`should handle instance IDs`, async () => {
-      class TestClass { }
+      class TestClass extends BaseDisposable {
+        constructor() {
+          super();
+        }
+      }
 
       const instance = new TestClass();
+      TestDispose.add(instance);
+
       const $ = {
         param1: instanceId('param1', NumberType),
         param2: instanceId('param2', NumberType),
@@ -81,14 +90,29 @@ describe('graph.Graph', () => {
       Fakes.build(spyOn(Graph, 'get'))
           .when($.param1).resolve(param1)
           .when($.param2).resolve(param2)
-          .else().call(origGet);
-      const mockNode = jasmine.createSpyObj('Node', ['execute', 'getParameterIds']);
+          .else().call(origGet.bind(Graph));
+      const mockNode = jasmine.createSpyObj(
+          'Node',
+          ['execute', 'getParameterIds', 'monitorsChanges']);
       mockNode.execute.and.returnValue(value);
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([$.param1, $.param2]));
+      mockNode.monitorsChanges.and.returnValue(true);
+      Object.setPrototypeOf(mockNode, InnerNode.prototype);
       NODES.set($.test, mockNode);
+
+      const graphOnSpy = spyOn(Graph, 'on')
+          .and.returnValue(jasmine.createSpyObj('disposable', ['dispose']));
+      spyOn(Graph, 'onChange_');
 
       await assert(Graph.get($.test, instance)).to.resolveWith(value);
       assert(mockNode.execute).to.haveBeenCalledWith(instance, [param1, param2]);
+      assert(MONITORED_NODES.get(instance)!).to.haveElements([$.test]);
+      assert(Graph.on).to.haveBeenCalledWith('change', Matchers.any(Function) as any, Graph);
+
+      const event = Mocks.object('event');
+      graphOnSpy.calls.argsFor(0)[1](event);
+      assert(Graph['onChange_']).to.haveBeenCalledWith($.test, mockNode, instance, event);
+
       assert(Graph.get).to.haveBeenCalledWith($.param1, instance);
       assert(Graph.get).to.haveBeenCalledWith($.param2, instance);
     });
@@ -104,7 +128,7 @@ describe('graph.Graph', () => {
       const origGet = Graph.get;
       Fakes.build(spyOn(Graph, 'get'))
           .when($.param).resolve(param)
-          .else().call((id: any) => origGet(id));
+          .else().call(origGet.bind(Graph));
       const mockNode = jasmine.createSpyObj('Node', ['execute', 'getParameterIds']);
       mockNode.execute.and.returnValue(value);
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([$.param]));
@@ -120,6 +144,209 @@ describe('graph.Graph', () => {
       };
 
       await assert(Graph.get($.test)).to.rejectWithError(/cannot be found/);
+    });
+
+    it(`should not monitor if already monitored`, async () => {
+      class TestClass extends BaseDisposable {
+        constructor() {
+          super();
+        }
+      }
+
+      const instance = new TestClass();
+      TestDispose.add(instance);
+
+      const $test = instanceId('test', NumberType);
+      const value = 123;
+
+      const mockNode = jasmine.createSpyObj(
+          'Node',
+          ['execute', 'getParameterIds', 'monitorsChanges']);
+      mockNode.execute.and.returnValue(value);
+      mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
+      mockNode.monitorsChanges.and.returnValue(true);
+      Object.setPrototypeOf(mockNode, InnerNode.prototype);
+      NODES.set($test, mockNode);
+
+      spyOn(Graph, 'on');
+      spyOn(Graph, 'onChange_');
+      spyOn(Graph, 'isMonitored_').and.returnValue(true);
+
+      await assert(Graph.get($test, instance)).to.resolveWith(value);
+      assert(Graph.on).toNot.haveBeenCalled();
+      assert(Graph['isMonitored_']).to.haveBeenCalledWith(instance, $test);
+    });
+
+    it(`should not monitor if the node is not set up to monitor changes`, async () => {
+      class TestClass extends BaseDisposable {
+        constructor() {
+          super();
+        }
+      }
+
+      const instance = new TestClass();
+      TestDispose.add(instance);
+
+      const $test = instanceId('test', NumberType);
+      const value = 123;
+
+      const mockNode = jasmine.createSpyObj(
+          'Node',
+          ['execute', 'getParameterIds', 'monitorsChanges']);
+      mockNode.execute.and.returnValue(value);
+      mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
+      mockNode.monitorsChanges.and.returnValue(false);
+      Object.setPrototypeOf(mockNode, InnerNode.prototype);
+      NODES.set($test, mockNode);
+
+      spyOn(Graph, 'on');
+      spyOn(Graph, 'onChange_');
+
+      await assert(Graph.get($test, instance)).to.resolveWith(value);
+      assert(Graph.on).toNot.haveBeenCalled();
+    });
+
+    it(`should not monitor if node is not InnerNode`, async () => {
+      class TestClass extends BaseDisposable {
+        constructor() {
+          super();
+        }
+      }
+
+      const instance = new TestClass();
+      TestDispose.add(instance);
+
+      const $test = instanceId('test', NumberType);
+      const value = 123;
+
+      const mockNode = jasmine.createSpyObj(
+          'Node',
+          ['execute', 'getParameterIds', 'monitorsChanges']);
+      mockNode.execute.and.returnValue(value);
+      mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
+      NODES.set($test, mockNode);
+
+      spyOn(Graph, 'on');
+      spyOn(Graph, 'onChange_');
+
+      await assert(Graph.get($test, instance)).to.resolveWith(value);
+      assert(Graph.on).toNot.haveBeenCalled();
+    });
+
+    it(`should not monitor if the nodeId is not InstanceId`, async () => {
+      const $test = staticId('test', NumberType);
+      const value = 123;
+
+      const mockNode = jasmine.createSpyObj(
+          'Node',
+          ['execute', 'getParameterIds', 'monitorsChanges']);
+      mockNode.execute.and.returnValue(value);
+      mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
+      NODES.set($test, mockNode);
+
+      spyOn(Graph, 'on');
+      spyOn(Graph, 'onChange_');
+
+      await assert(Graph.get($test)).to.resolveWith(value);
+      assert(Graph.on).toNot.haveBeenCalled();
+    });
+
+    it(`should not monitor if the context is not BaseDisposable`, async () => {
+      class TestClass { }
+
+      const instance = new TestClass();
+      const $test = instanceId('test', NumberType);
+      const value = 123;
+
+      const mockNode = jasmine.createSpyObj(
+          'Node',
+          ['execute', 'getParameterIds', 'monitorsChanges']);
+      mockNode.execute.and.returnValue(value);
+      mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
+      NODES.set($test, mockNode);
+
+      spyOn(Graph, 'on');
+      spyOn(Graph, 'onChange_');
+
+      await assert(Graph.get($test, instance)).to.resolveWith(value);
+      assert(Graph.on).toNot.haveBeenCalled();
+    });
+
+    it(`should not monitor if the context is null`, async () => {
+      const $test = instanceId('test', NumberType);
+      const value = 123;
+
+      const mockNode = jasmine.createSpyObj(
+          'Node',
+          ['execute', 'getParameterIds', 'monitorsChanges']);
+      mockNode.execute.and.returnValue(value);
+      mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
+      NODES.set($test, mockNode);
+
+      spyOn(Graph, 'on');
+      spyOn(Graph, 'onChange_');
+
+      await assert(Graph.get($test, null)).to.resolveWith(value);
+      assert(Graph.on).toNot.haveBeenCalled();
+    });
+  });
+
+  describe('isMonitored_', () => {
+    it(`should return true if the ID is monitored`, () => {
+      const context = Mocks.object('context');
+      const nodeId = instanceId('test', NumberType);
+      MONITORED_NODES.set(context, ImmutableSet.of([nodeId]));
+
+      assert(Graph['isMonitored_'](context, nodeId)).to.beTrue();
+    });
+
+    it(`should return false if the ID is not monitored for the context`, () => {
+      const context = Mocks.object('context');
+      const nodeId = instanceId('test', NumberType);
+      MONITORED_NODES.set(context, ImmutableSet.of([instanceId('other', NumberType)]));
+
+      assert(Graph['isMonitored_'](context, nodeId)).to.beFalse();
+    });
+
+    it(`should return false if the context is not monitored`, () => {
+      const context = Mocks.object('context');
+      const nodeId = instanceId('test', NumberType);
+
+      assert(Graph['isMonitored_'](context, nodeId)).to.beFalse();
+    });
+  });
+
+  describe('onChange_', () => {
+    it(`should get the new value`, () => {
+      const nodeId = instanceId('test', NumberType);
+      const paramId = staticId('param', NumberType);
+      const mockNode = jasmine.createSpyObj('Node', ['getParameterIds']);
+      mockNode.getParameterIds.and.returnValue([paramId]);
+
+      const context = Mocks.object('context');
+      const graphEvent = Mocks.object('graphEvent');
+      graphEvent.id = paramId;
+
+      spyOn(Graph, 'get');
+
+      Graph['onChange_'](nodeId, mockNode, context, graphEvent);
+      assert(Graph.get).to.haveBeenCalledWith(nodeId, context);
+    });
+
+    it(`should do nothing if the changed ID is not a parameter`, () => {
+      const nodeId = instanceId('test', NumberType);
+      const paramId = staticId('param', NumberType);
+      const mockNode = jasmine.createSpyObj('Node', ['getParameterIds']);
+      mockNode.getParameterIds.and.returnValue([]);
+
+      const context = Mocks.object('context');
+      const graphEvent = Mocks.object('graphEvent');
+      graphEvent.id = paramId;
+
+      spyOn(Graph, 'get');
+
+      Graph['onChange_'](nodeId, mockNode, context, graphEvent);
+      assert(Graph.get).toNot.haveBeenCalled();
     });
   });
 
@@ -143,8 +370,10 @@ describe('graph.Graph', () => {
       const mockProvider = jasmine.createSpy('Provider');
       mockProvider.and.returnValue(value);
 
-      Graph.registerProvider($, mockProvider);
-      assert(NODES.get($)!.execute(null, [])).to.equal(value);
+      Graph.registerProvider($, true, mockProvider);
+      const node = NODES.get($)! as InnerNode<number>;
+      assert(node.execute(null, [])).to.equal(value);
+      assert(node.monitorsChanges()).to.beTrue();
       assert(mockProvider).to.haveBeenCalledWith();
     });
 
@@ -154,7 +383,7 @@ describe('graph.Graph', () => {
       NODES.set($, node);
 
       assert(() => {
-        Graph.registerProvider($, Mocks.object('provider'));
+        Graph.registerProvider($, true, Mocks.object('provider'));
       }).to.throwError(/already registered/);
     });
   });

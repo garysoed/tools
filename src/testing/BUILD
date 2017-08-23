@@ -4,10 +4,10 @@ load("//:defs.bzl", "gs_tools")
 
 gs_tools(
     deps = [
-      "//src/async",
-      "//src/dispose",
-      "//src/event",
-      "//src/inject",
+        "//src/async",
+        "//src/dispose",
+        "//src/event",
+        "//src/inject",
     ])
 
 filegroup(

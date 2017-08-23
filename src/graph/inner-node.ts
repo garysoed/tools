@@ -10,6 +10,7 @@ export class InnerNode<T> extends GNode<T> {
 
   constructor(
       private readonly fn_: Provider<T>,
+      private readonly monitorChanges_: boolean,
       parameterIds_: ImmutableList<NodeId<any>>) {
     super(parameterIds_);
   }
@@ -42,5 +43,9 @@ export class InnerNode<T> extends GNode<T> {
     }
 
     return Iterables.unsafeEquals(this.cache_.params, params);
+  }
+
+  monitorsChanges(): boolean {
+    return this.monitorChanges_;
   }
 }

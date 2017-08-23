@@ -11,7 +11,7 @@ describe('graph.InnerNode', () => {
 
   beforeEach(() => {
     mockFn = jasmine.createSpy('Fn');
-    node = new InnerNode<number>(mockFn, ImmutableList.of([]));
+    node = new InnerNode<number>(mockFn, true, ImmutableList.of([]));
   });
 
   describe('execute_', () => {
