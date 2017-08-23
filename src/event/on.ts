@@ -1,10 +1,12 @@
 import { Annotations } from '../data/annotations';
 import { Bus } from '../event/bus';
+import { MonadUtil } from '../event/monad-util';
 import { Event } from '../interfaces/event';
 
 type BusProvider<T, E extends Event<T>> = (instance: any) => Bus<T, E>;
 type OnConfig<T, E extends Event<T>> = {
   busProvider: BusProvider<T, E>,
+  handler: (event: Event<T>, instance: {}) => void,
   type: T,
   useCapture: boolean,
 };
@@ -21,7 +23,14 @@ export function on<T, E extends Event<T>>(
     const busProvider = bus instanceof Bus ? () => bus : bus;
     ON_ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
         propertyKey,
-        {busProvider, type, useCapture});
+        {
+          busProvider,
+          handler(event: Event<any>, instance: {}): void {
+            MonadUtil.callFunction(event, instance, propertyKey);
+          },
+          type,
+          useCapture,
+        });
     return descriptor;
   };
 }

@@ -1,6 +1,7 @@
 import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
+import { MonadUtil } from '../event';
 import { Bus } from '../event/bus';
 import { on, ON_ANNOTATIONS } from '../event/on';
 import { Mocks } from '../mock/mocks';
@@ -25,8 +26,15 @@ describe('event.on', () => {
     assert(on(bus, type, useCapture)(target, propertyKey, descriptor)).to.equal(descriptor);
     assert(mockAnnotations.attachValueToProperty).to.haveBeenCalledWith(
         propertyKey,
-        {busProvider: Matchers.any(Function), type, useCapture});
+        {busProvider: Matchers.any(Function), handler: Matchers.any(Function), type, useCapture});
     assert(mockAnnotations.attachValueToProperty.calls.argsFor(0)[1].busProvider()).to.equal(bus);
+
+    spyOn(MonadUtil, 'callFunction');
+    const event = Mocks.object('event');
+    const instance = Mocks.object('instance');
+    mockAnnotations.attachValueToProperty.calls.argsFor(0)[1].handler(event, instance);
+    assert(MonadUtil.callFunction).to.haveBeenCalledWith(event, instance, propertyKey);
+
     assert(ON_ANNOTATIONS.forCtor).to.haveBeenCalledWith(constructor);
   });
 
@@ -47,7 +55,14 @@ describe('event.on', () => {
     assert(on(busProvider, type, useCapture)(target, propertyKey, descriptor)).to.equal(descriptor);
     assert(mockAnnotations.attachValueToProperty).to.haveBeenCalledWith(
         propertyKey,
-        {busProvider, type, useCapture});
+        {busProvider, handler: Matchers.any(Function), type, useCapture});
+
+    spyOn(MonadUtil, 'callFunction');
+    const event = Mocks.object('event');
+    const instance = Mocks.object('instance');
+    mockAnnotations.attachValueToProperty.calls.argsFor(0)[1].handler(event, instance);
+    assert(MonadUtil.callFunction).to.haveBeenCalledWith(event, instance, propertyKey);
+
     assert(ON_ANNOTATIONS.forCtor).to.haveBeenCalledWith(constructor);
   });
 });
