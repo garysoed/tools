@@ -20,6 +20,12 @@ export class Graph {
     SET_QUEUE.splice(0, SET_QUEUE.length);
   }
 
+  static clearNodesForTests(nodeIds: Iterable<NodeId<any>>): void {
+    for (const nodeId of nodeIds) {
+      NODES.delete(nodeId);
+    }
+  }
+
   /**
    * Creates a new provider.
    * @param staticId
@@ -28,6 +34,10 @@ export class Graph {
    *     be resolved when the value has been set.
    */
   static createProvider<T>(staticId: StaticId<T>, initValue: T): NodeProvider<T> {
+    if (NODES.has(staticId)) {
+      throw new Error(`Node ${staticId} is already registered`);
+    }
+
     const node = new InputNode<T>();
     node.set(null, initValue);
     NODES.set(staticId, node);
@@ -74,6 +84,18 @@ export class Graph {
     SET_QUEUE.splice(0, SET_QUEUE.length);
   }
 
+  static registerGenericProvider_<T>(
+      nodeId: NodeId<T>,
+      provider: Provider<T>,
+      ...args: NodeId<any>[]): void {
+    if (NODES.has(nodeId)) {
+      throw new Error(`Node ${nodeId} is already registered`);
+    }
+
+    const node = new InnerNode<T>(provider, ImmutableList.of(args));
+    NODES.set(nodeId, node);
+  }
+
   /**
    * Registers the given provider function.
    * @param staticId
@@ -105,12 +127,7 @@ export class Graph {
       nodeId: NodeId<T>,
       provider: Provider<T>,
       ...args: NodeId<any>[]): void {
-    if (NODES.has(nodeId)) {
-      throw new Error(`Node ${nodeId} is already registered`);
-    }
-
-    const node = new InnerNode<T>(provider, ImmutableList.of(args));
-    NODES.set(nodeId, node);
+    Graph.registerGenericProvider_(nodeId, provider, ...args);
   }
 
   private static set_<T>(staticId: StaticId<T>, value: T): Promise<void> {

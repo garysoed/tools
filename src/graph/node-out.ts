@@ -1,0 +1,20 @@
+import { Graph } from '../graph';
+import { InstanceId } from '../graph/instance-id';
+import { NodeId } from '../graph/node-id';
+import { ANNOTATIONS } from '../graph/node-in';
+
+export function nodeOut(instanceId: InstanceId<any>): MethodDecorator {
+  return (target: Object, propertyKey: string | symbol) => {
+    const paramsSet = ANNOTATIONS
+        .forCtor(target.constructor)
+        .getAttachedValues()
+        .get(propertyKey);
+
+    const paramsArray: NodeId<any>[] = [];
+    for (const {index, instanceId} of paramsSet || []) {
+      paramsArray[index] = instanceId;
+    }
+
+    Graph.registerGenericProvider_(instanceId, target[propertyKey] as any, ...paramsArray);
+  };
+}

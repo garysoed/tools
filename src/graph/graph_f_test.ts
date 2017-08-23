@@ -2,7 +2,7 @@ import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
 import { NumberType } from '../check';
-import { Graph, instanceId, NodeProvider, staticId } from '../graph';
+import { Graph, instanceId, nodeIn, nodeOut, NodeProvider, staticId } from '../graph';
 
 const $ = {
   a: staticId<number>('a', NumberType),
@@ -11,10 +11,6 @@ const $ = {
 };
 
 describe('graph functional test', () => {
-  beforeEach(() => {
-    Graph.clearForTests();
-  });
-
   describe('with static functions', () => {
     let providesB: NodeProvider<number>;
     let providesC: NodeProvider<number>;
@@ -25,6 +21,7 @@ describe('graph functional test', () => {
     }
 
     beforeEach(() => {
+      Graph.clearNodesForTests([$.a, $.b, $.c]);
       Graph.registerProvider<number, number>($.a, providesA, $.b);
       providesB = Graph.createProvider($.b, 3);
       providesC = Graph.createProvider($.c, 4);
@@ -46,6 +43,9 @@ describe('graph functional test', () => {
   });
 
   describe('with instance functions without annotations', () => {
+    const $a = instanceId('a', NumberType);
+    const $b = instanceId('b', NumberType);
+
     class TestClass {
       constructor(private readonly b_: number) { }
 
@@ -57,14 +57,85 @@ describe('graph functional test', () => {
         return this.b_;
       }
     }
-
-    const $a = instanceId('a', NumberType);
-    const $b = instanceId('b', NumberType);
     let providesC: NodeProvider<number>;
 
     beforeEach(() => {
+      Graph.clearNodesForTests([$a, $b, $.c]);
       Graph.registerProvider($a, TestClass.prototype.providesA, $b, $.c);
       Graph.registerProvider($b, TestClass.prototype.providesB);
+      providesC = Graph.createProvider($.c, 3);
+    });
+
+    it(`should handle default values`, async () => {
+      const test1 = new TestClass(1);
+      const test2 = new TestClass(2);
+
+      assert(await Graph.get($a, test1)).to.equal(4);
+      assert(await Graph.get($a, test2)).to.equal(5);
+    });
+
+    it(`should cache the previous execution`, async () => {
+      const providesASpy = spyOn(TestClass.prototype, 'providesA').and.callThrough();
+
+      const test = new TestClass(1);
+      assert(await Graph.get($a, test)).to.equal(4);
+
+      providesASpy.calls.reset();
+      assert(await Graph.get($a, test)).to.equal(4);
+
+      assert(test.providesA).toNot.haveBeenCalled();
+    });
+
+    it(`should handle values set by the provider`, async () => {
+      const test = new TestClass(2);
+      const setPromise = providesC(5);
+
+      // At this point, the value hasn't been set yet.
+      assert(await Graph.get($a, test)).to.equal(5);
+
+      await setPromise;
+      assert(await Graph.get($a, test)).to.equal(7);
+    });
+
+    it(`should clear the cache if one of the providers have changed`, async () => {
+      const test = new TestClass(2);
+      const setPromise = providesC(5);
+      const providesASpy = spyOn(TestClass.prototype, 'providesA').and.callThrough();
+
+      // At this point, the value hasn't been set yet.
+      assert(await Graph.get($a, test)).to.equal(5);
+      providesASpy.calls.reset();
+      assert(await Graph.get($a, test)).to.equal(5);
+      assert(test.providesA).toNot.haveBeenCalled();
+
+      await setPromise;
+      assert(await Graph.get($a, test)).to.equal(7);
+    });
+  });
+
+
+  describe('with instance functions with annotations', () => {
+    const $a = instanceId('a', NumberType);
+    const $b = instanceId('b', NumberType);
+
+    class TestClass {
+      constructor(private readonly b_: number) { }
+
+      @nodeOut($a)
+      providesA(@nodeIn($b) b: number, @nodeIn($.c) c: number): number {
+        return b + c;
+      }
+
+      @nodeOut($b)
+      providesB(): number {
+        return this.b_;
+      }
+    }
+
+    let providesC: NodeProvider<number>;
+
+    beforeEach(() => {
+      Graph.clearNodesForTests([$.c]);
       providesC = Graph.createProvider($.c, 3);
     });
 

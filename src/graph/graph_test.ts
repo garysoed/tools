@@ -27,6 +27,16 @@ describe('graph.Graph', () => {
       assert(provider(newValue)).to.equal(promise);
       assert(Graph['set_']).to.haveBeenCalledWith($, newValue);
     });
+
+    it(`should throw error if the node is already registered`, () => {
+      const $ = staticId('id', NumberType);
+      const value = 123;
+      NODES.set($, Mocks.object('node'));
+
+      assert(() => {
+        Graph.createProvider($, value);
+      }).to.throwError(/already registered/);
+    });
   });
 
   describe('get', () => {
