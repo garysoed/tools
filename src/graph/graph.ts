@@ -94,9 +94,15 @@ class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
       MONITORED_NODES.set(context, ids.add(nodeId));
     }
 
+    const cachedValue = node instanceof InnerNode ? node.getCachedValue() : null;
     const value = await node.execute(context, parameters);
+
     if (!nodeId.getType().check(value)) {
       throw new Error(`Node for ${nodeId} returns the incorrect type. [${value}]`);
+    }
+
+    if (cachedValue !== value) {
+      this.dispatch({context, id: nodeId, type: 'change' as 'change'});
     }
     return value;
   }

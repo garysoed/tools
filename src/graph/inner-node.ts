@@ -33,6 +33,10 @@ export class InnerNode<T> extends GNode<T> {
     return cache.value;
   }
 
+  getCachedValue(): T | null {
+    return this.cache_ ? this.cache_.value : null;
+  }
+
   isCached(context: {} | null, params: Iterable<any>): boolean {
     if (!this.cache_) {
       return false;

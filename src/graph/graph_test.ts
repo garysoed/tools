@@ -63,8 +63,11 @@ describe('graph.Graph', () => {
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([$.param1, $.param2]));
       NODES.set($.test, mockNode);
 
+      spyOn(Graph, 'dispatch');
+
       await assert(Graph.get($.test)).to.resolveWith(value);
       assert(mockNode.execute).to.haveBeenCalledWith(null, [param1, param2]);
+      assert(Graph.dispatch).to.haveBeenCalledWith({context: null, id: $.test, type: 'change'});
     });
 
     it(`should handle instance IDs`, async () => {
@@ -288,6 +291,28 @@ describe('graph.Graph', () => {
 
       await assert(Graph.get($test, null)).to.resolveWith(value);
       assert(Graph.on).toNot.haveBeenCalled();
+    });
+
+    it(`should not dispatch any events if the new value is the same as the cached one`,
+        async () => {
+      const $ = {
+        test: staticId('test', NumberType),
+      };
+      const value = 123;
+
+      const mockNode = jasmine
+          .createSpyObj('Node', ['execute', 'getCachedValue', 'getParameterIds']);
+      mockNode.execute.and.returnValue(value);
+      mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
+      mockNode.getCachedValue.and.returnValue(value);
+      Object.setPrototypeOf(mockNode, InnerNode.prototype);
+      NODES.set($.test, mockNode);
+
+      spyOn(Graph, 'dispatch');
+
+      await assert(Graph.get($.test)).to.resolveWith(value);
+      assert(mockNode.execute).to.haveBeenCalledWith(null, []);
+      assert(Graph.dispatch).toNot.haveBeenCalled();
     });
   });
 

@@ -4,7 +4,15 @@ TestBase.setup();
 import { NumberType } from '../check';
 import { BaseDisposable } from '../dispose';
 import { eventDetails, listener } from '../event';
-import { Graph, GraphEvent, instanceId, nodeIn, nodeOut, NodeProvider, staticId } from '../graph';
+import {
+  Graph,
+  GraphEvent,
+  instanceId,
+  nodeIn,
+  nodeOut,
+  NodeProvider,
+  onNodeChange,
+  staticId } from '../graph';
 import { TestDispose } from '../testing';
 import { Reflect } from '../util';
 
@@ -207,7 +215,7 @@ describe('graph functional test', () => {
         super();
       }
 
-      // @onNodeChange($a)
+      @onNodeChange($a)
       onAChange(@eventDetails() event: GraphEvent<number, this>): void {
         this.aChangeCallback_(event);
       }
@@ -226,7 +234,7 @@ describe('graph functional test', () => {
       providesC = Graph.createProvider($.c, 2);
     });
 
-    xit(`should call the callback correctly`, async () => {
+    it(`should call the callback correctly`, async () => {
       const mockCallback1 = jasmine.createSpy('Callback1');
       const t1 = Reflect.construct(
           TestClass,
@@ -241,7 +249,13 @@ describe('graph functional test', () => {
 
       assert(await Promise.all([Graph.get($a, t1), Graph.get($a, t2)])).to.equal([3, 4]);
 
+      const promise1 = new Promise((resolve) => {
+        mockCallback1.and.callFake(resolve);
+      });
+
       providesC(3);
+
+      await promise1;
       assert(mockCallback1).to.haveBeenCalledWith(Matchers.objectContaining({
         context: t1,
         id: $a,
