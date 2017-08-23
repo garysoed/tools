@@ -83,7 +83,7 @@ describe('graph functional test', () => {
       providesASpy.calls.reset();
       assert(await Graph.get($a, test)).to.equal(4);
 
-      assert(test.providesA).toNot.haveBeenCalled();
+      assert(providesASpy).toNot.haveBeenCalled();
     });
 
     it(`should handle values set by the provider`, async () => {
@@ -113,16 +113,18 @@ describe('graph functional test', () => {
     });
   });
 
-
   describe('with instance functions with annotations', () => {
     const $a = instanceId('a', NumberType);
     const $b = instanceId('b', NumberType);
 
     class TestClass {
-      constructor(private readonly b_: number) { }
+      constructor(
+          private readonly b_: number,
+          private readonly providesASpy_: jasmine.Spy) { }
 
       @nodeOut($a)
       providesA(@nodeIn($b) b: number, @nodeIn($.c) c: number): number {
+        this.providesASpy_(b, c);
         return b + c;
       }
 
@@ -140,27 +142,28 @@ describe('graph functional test', () => {
     });
 
     it(`should handle default values`, async () => {
-      const test1 = new TestClass(1);
-      const test2 = new TestClass(2);
+      const test1 = new TestClass(1, jasmine.createSpy('ProvidesA1'));
+      const test2 = new TestClass(2, jasmine.createSpy('ProvidesA2'));
 
       assert(await Graph.get($a, test1)).to.equal(4);
       assert(await Graph.get($a, test2)).to.equal(5);
     });
 
     it(`should cache the previous execution`, async () => {
-      const providesASpy = spyOn(TestClass.prototype, 'providesA').and.callThrough();
+      const mockProvidesASpy = jasmine.createSpy('ProvidesASpy');
 
-      const test = new TestClass(1);
+      const test = new TestClass(1, mockProvidesASpy);
+      assert(await Graph.get($a, test)).to.equal(4);
+      assert(mockProvidesASpy).to.haveBeenCalledWith(1, 3);
+
+      mockProvidesASpy.calls.reset();
       assert(await Graph.get($a, test)).to.equal(4);
 
-      providesASpy.calls.reset();
-      assert(await Graph.get($a, test)).to.equal(4);
-
-      assert(test.providesA).toNot.haveBeenCalled();
+      assert(mockProvidesASpy).toNot.haveBeenCalled();
     });
 
     it(`should handle values set by the provider`, async () => {
-      const test = new TestClass(2);
+      const test = new TestClass(2, jasmine.createSpy('ProvidesA'));
       const setPromise = providesC(5);
 
       // At this point, the value hasn't been set yet.
@@ -171,7 +174,7 @@ describe('graph functional test', () => {
     });
 
     it(`should clear the cache if one of the providers have changed`, async () => {
-      const test = new TestClass(2);
+      const test = new TestClass(2, jasmine.createSpy('ProvidesA'));
       const setPromise = providesC(5);
       const providesASpy = spyOn(TestClass.prototype, 'providesA').and.callThrough();
 
