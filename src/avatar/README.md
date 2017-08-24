@@ -1,7 +1,7 @@
 Basic custom element
 
 ```typescript
-@customElement({
+@component({
   name: 'gs-custom-element',
   parent: HTMLDivElement,
   templateKey: '/src/path/to/template',

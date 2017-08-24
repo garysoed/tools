@@ -1,34 +1,20 @@
+import { ComponentSpec } from '../avatar/component-spec';
 import { CustomElement } from '../avatar/custom-element';
 import { BaseDisposable } from '../dispose';
 import { Injector } from '../inject';
 import { Log } from '../util';
 import { Templates } from '../webc';
 
-type D<T> = {
-  prototype: T,
-  new (): T,
-};
-type Ctor<M> = {[C in keyof M]: D<M[C]>};
-
-type ComponentSpec<H extends keyof HTMLElementTagNameMap> = {
-  ctrl: typeof BaseDisposable,
-  dependencies?: Iterable<typeof Object>,
-  parent?: {
-    class: Ctor<HTMLElementTagNameMap>[H],
-    tag: H,
-  },
-  tag: string,
-  templateKey: string,
-};
+type Spec<H extends keyof HTMLElementTagNameMap> = ComponentSpec<H> & {ctrl: typeof BaseDisposable};
 
 const LOGGER: Log = Log.of('gs-tools.avatar.Avatar');
 
 export class AvatarImpl {
-  private readonly componentSpecs_: Map<typeof BaseDisposable, ComponentSpec<any>> = new Map();
+  private readonly componentSpecs_: Map<typeof BaseDisposable, Spec<any>> = new Map();
 
   constructor(private readonly customElements_: CustomElementRegistry) {}
 
-  define<H extends keyof HTMLElementTagNameMap>(spec: ComponentSpec<H>): void {
+  define<H extends keyof HTMLElementTagNameMap>(spec: Spec<H>): void {
     if (this.componentSpecs_.has(spec.ctrl)) {
       throw new Error(`${spec.ctrl} is already registered`);
     }
@@ -36,7 +22,7 @@ export class AvatarImpl {
   }
 
   private register_<H extends keyof HTMLElementTagNameMap>(
-      injector: Injector, templates: Templates, spec: ComponentSpec<H>): void {
+      injector: Injector, templates: Templates, spec: Spec<H>): void {
     const templateStr = templates.getTemplate(spec.templateKey);
     if (!templateStr) {
       throw new Error(`No templates found for ${spec.templateKey}`);
@@ -80,10 +66,14 @@ export class AvatarImpl {
       }
     };
 
-    if (spec.parent) {
-      this.customElements_.define(spec.tag, CustomElement, {extends: spec.parent.tag});
-    } else {
-      this.customElements_.define(spec.tag, CustomElement);
+    try {
+      if (spec.parent) {
+        this.customElements_.define(spec.tag, CustomElement, {extends: spec.parent.tag});
+      } else {
+        this.customElements_.define(spec.tag, CustomElement);
+      }
+    } catch (e) {
+      Log.error(LOGGER, `Error registering ${spec.tag}`, e);
     }
     Log.info(LOGGER, `Registered: [${spec.tag}]`);
   }
