@@ -349,7 +349,7 @@ describe('immutable.OrderedMap', () => {
       const map = OrderedMap
           .of([[0, 'a'], [1, 'b'], [2, 'c']])
           .mapItem(([key, value]: [number, string]) => `${key}${value}`);
-      assert(map).to.haveElements([[0, '0a'], [1, '1b'], [2, '2c']]);
+      assert(map).to.haveElements(['0a', '1b', '2c']);
     });
   });
 

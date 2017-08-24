@@ -129,15 +129,19 @@ export class ImmutableMap<K, V> implements
   }
 
   map<R>(fn: (value: V, index: K) => R): ImmutableMap<K, R> {
-    return this.mapItem(([key, value]: [K, V]) => fn(value, key));
-  }
-
-  mapItem<R>(fn: (item: [K, V]) => R): ImmutableMap<K, R> {
     const mappedEntries = this.entries()
         .mapItem(([key, value]: [K, V]) => {
-          return [key, fn([key, value])] as [K, R];
+          return [key, fn(value, key)] as [K, R];
         });
     return ImmutableMap.of(mappedEntries);
+  }
+
+  mapItem<R>(fn: (item: [K, V]) => R): ImmutableSet<R> {
+    const mappedEntries = this.entries()
+        .mapItem(([key, value]: [K, V]) => {
+          return fn([key, value]);
+        });
+    return ImmutableSet.of(mappedEntries);
   }
 
   max(ordering: Ordering<[K, V]>): [K, V] | null {

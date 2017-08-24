@@ -11,7 +11,7 @@ enum TestEnum {
 describe('typescript.Enums', () => {
   describe('fromLowerCaseString', () => {
     it('should return the correct enum', () => {
-      assert(Enums.fromLowerCaseString('value_a', TestEnum)).to.equal(TestEnum.VALUE_A);
+      assert(Enums.fromLowerCaseString<TestEnum>('value_a', TestEnum)).to.equal(TestEnum.VALUE_A);
     });
   });
 

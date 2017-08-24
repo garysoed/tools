@@ -4,9 +4,9 @@ import { Event } from '../interfaces/event';
 import { Reflect } from '../util/reflect';
 
 export function listener(): ClassDecorator {
-  return (target: new (...args: any[]) => {}) => {
+  return (target: Function) => {
     Reflect.addInitializer(
-        target,
+        target as gs.ICtor<{}>,
         (instance: any) => {
           if (!(instance instanceof BaseDisposable)) {
             throw new Error(`Object of ${target} cannot be a @listener`);

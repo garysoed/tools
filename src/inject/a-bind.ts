@@ -11,9 +11,8 @@ import { Injector } from './injector';
  * @param dependencies Dependencies of constructors to load.
  */
 export function bind(name: (string|null) = null, _: any[] = []): ClassDecorator {
-  return function<C extends gs.ICtor<any>>(ctor: C): void {
+  return function(ctor: Function): void {
     const ctorName = name || ctor['name'];
-    Injector.bind(ctor, ctorName);
+    Injector.bind(ctor as gs.ICtor<any>, ctorName);
   };
 }
-// TODO: Mutable

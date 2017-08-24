@@ -10,17 +10,17 @@ export const __SEQUENCER: symbol = Symbol('sequencer');
  */
 export function atomic(): MethodDecorator {
   return function(
-      target: gs.ICtor<any>,
+      target: Object,
       _: string | symbol,
-      descriptor: TypedPropertyDescriptor<(...args: any[]) => any>):
-      TypedPropertyDescriptor<(...args: any[]) => any> {
+      descriptor: TypedPropertyDescriptor<any>):
+      TypedPropertyDescriptor<any> {
     if (!(target instanceof BaseDisposable)) {
       throw new Error(`${target} should be an instance of BaseDisposable`);
     }
 
     const originalFn = descriptor.value;
     if (originalFn !== undefined) {
-      descriptor.value = function(...args: any[]): any {
+      descriptor.value = function(this: any, ...args: any[]): any {
         if (!this[__SEQUENCER]) {
           const sequencer = Sequencer.newInstance();
           this[__SEQUENCER] = sequencer;
@@ -34,4 +34,3 @@ export function atomic(): MethodDecorator {
     return descriptor;
   };
 }
-// TODO: Mutable

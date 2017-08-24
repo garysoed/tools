@@ -1,3 +1,7 @@
+import { ImmutableList } from '../immutable/immutable-list';
+import { ImmutableSet } from '../immutable/immutable-set';
+import { OrderedSet } from '../immutable/ordered-set';
+import { Orderings } from '../immutable/orderings';
 import {
   Collection,
   CompareResult,
@@ -5,9 +9,6 @@ import {
   FiniteIndexed,
   Ordered,
   Ordering } from '../interfaces';
-import { ImmutableList } from './immutable-list';
-import { ImmutableSet } from './immutable-set';
-import { Orderings } from './orderings';
 
 export class OrderedMap<K, V> implements
     FiniteCollection<[K, V]>,
@@ -235,16 +236,16 @@ export class OrderedMap<K, V> implements
   }
 
   map<R>(fn: (value: V, index: K) => R): OrderedMap<K, R> {
-    return this.mapItem(([key, value]: [K, V]) => fn(value, key));
-  }
-
-  mapItem<R>(fn: (item: [K, V]) => R): OrderedMap<K, R> {
     const keysClone = this.keys_.slice(0);
     const mapClone = new Map();
     for (const [key, value] of this.map_) {
-      mapClone.set(key, fn([key, value]));
+      mapClone.set(key, fn(value, key));
     }
     return new OrderedMap(keysClone, mapClone);
+  }
+
+  mapItem<R>(fn: (item: [K, V]) => R): OrderedSet<R> {
+    return OrderedSet.of([...this.map_].map((entry: [K, V]) => fn(entry)));
   }
 
   max(ordering: Ordering<[K, V]>): [K, V] | null {

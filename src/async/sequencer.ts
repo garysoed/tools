@@ -5,25 +5,23 @@ import { BaseDisposable } from '../dispose/base-disposable';
  * Takes several operations and makes sure that only one of them runs at any time, in a sequence.
  */
 export class Sequencer extends BaseDisposable {
-  private lastOperation_: Promise<never> = Promise.resolve();
+  private lastOperation_: Promise<void> = Promise.resolve();
 
   /**
    * Runs the given operation after the previous one has finished running.
    */
-  run<T>(operation: () => Promise<T>): Promise<T> {
+  run<T>(operation: () => Promise<T>): Promise<void> {
     const newPromise = this.lastOperation_
-        .then<never>(() => {
+        .then(() => {
           if (!this.isDisposed()) {
-            return operation();
-          } else {
-            return Promise.resolve();
+            operation();
           }
         })
         .catch((error: any) => {
           if (!this.isDisposed()) {
-            return operation();
+            operation();
           } else {
-            return Promise.reject(error);
+            throw error;
           }
         });
     this.lastOperation_ = newPromise;
@@ -37,4 +35,3 @@ export class Sequencer extends BaseDisposable {
     return new Sequencer();
   }
 }
-// TODO: Mutable

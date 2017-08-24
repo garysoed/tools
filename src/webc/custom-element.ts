@@ -48,7 +48,7 @@ import { Util } from '../webc/util';
  * @param config The configuration object.
  */
 export function customElement(config: ElementConfig): ClassDecorator {
-  return function<C extends gs.ICtor<any>>(ctor: C): void {
+  return function(ctor: Function): void {
     if (!(ctor.prototype instanceof BaseDisposable)) {
       throw new Error(`${ctor} needs to extend BaseDisposable`);
     }
@@ -60,7 +60,7 @@ export function customElement(config: ElementConfig): ClassDecorator {
     if (config.templateKey === '') {
       throw new Error(`Configuration for ${ctor.name} should have a non empty template key`);
     }
-    Util.setConfig(ctor, config);
+    Util.setConfig(ctor as gs.ICtor<any>, config);
     listener()(ctor);
   };
 }
