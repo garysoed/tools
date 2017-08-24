@@ -11,15 +11,18 @@ describe('CustomElement', () => {
   class TestCtrl extends BaseDisposable { }
 
   let mockInjector: any;
-  let element: CustomElement;
+  let element: CustomElement & HTMLElement;
 
   beforeEach(() => {
     mockInjector = jasmine.createSpyObj('Injector', ['instantiate']);
     const mockCustomElements = jasmine.createSpyObj('CustomElements', ['define']);
+    const mockTemplates = jasmine.createSpyObj('Templates', ['getTemplate']);
+    mockTemplates.getTemplate.and.returnValue('templateContent');
     const avatar = new AvatarImpl(mockCustomElements);
 
     avatar['register_'](
         mockInjector,
+        mockTemplates,
         {
           ctrl: TestCtrl,
           tag: 'test',
@@ -119,12 +122,15 @@ describe('avatar.Avatar', () => {
       const dependencySpec = Mocks.object('dependencySpec');
       avatar['componentSpecs_'].set(dependencyCtor1, dependencySpec);
 
+      const mockTemplates = jasmine.createSpyObj('Templates', ['getTemplate']);
+      mockTemplates.getTemplate.and.returnValue('templateContent');
+
       const origRegister = avatar['register_'].bind(avatar);
       Fakes.build(spyOn(avatar, 'register_'))
-          .when(injector, dependencySpec).return()
+          .when(injector, mockTemplates, dependencySpec).return()
           .else().call(origRegister);
 
-      avatar['register_'](injector, spec);
+      avatar['register_'](injector, mockTemplates, spec);
       assert(mockCustomElements.define).to
           .haveBeenCalledWith(tag, Matchers.anyThing(), {extends: parentTag});
       const ctor = mockCustomElements.define.calls.argsFor(0)[1];
@@ -132,7 +138,7 @@ describe('avatar.Avatar', () => {
       // Jasmine calls the parentCtor for some reason.
       assert(ctor.prototype instanceof parentCtor).to.beTrue();
 
-      assert(avatar['register_']).to.haveBeenCalledWith(Matchers.anyThing(), dependencySpec);
+      assert(avatar['register_']).to.haveBeenCalledWith(injector, mockTemplates, dependencySpec);
     });
 
     it(`should register with HTMLElement if the spec has no parents`, () => {
@@ -145,12 +151,32 @@ describe('avatar.Avatar', () => {
         templateKey: 'templateKey',
       };
 
-      avatar['register_'](injector, spec);
+      const mockTemplates = jasmine.createSpyObj('Templates', ['getTemplate']);
+      mockTemplates.getTemplate.and.returnValue('templateContent');
+
+      avatar['register_'](injector, mockTemplates, spec);
       assert(mockCustomElements.define).to.haveBeenCalledWith(tag, Matchers.anyThing());
       const ctor = mockCustomElements.define.calls.argsFor(0)[1];
 
       // Jasmine calls the parentCtor for some reason.
       assert(ctor.prototype instanceof HTMLElement).to.beTrue();
+    });
+
+    it(`should throw error if the template string cannot be found`, () => {
+      const injector = Mocks.object('injector');
+      const ctrl = Mocks.object('ctrl');
+      const tag = 'tag';
+      const spec = {
+        ctrl,
+        tag,
+        templateKey: 'templateKey',
+      };
+
+      const mockTemplates = jasmine.createSpyObj('Templates', ['getTemplate']);
+
+      assert(() => {
+        avatar['register_'](injector, mockTemplates, spec);
+      }).to.throwError(/No templates found/);
     });
   });
 
@@ -164,9 +190,11 @@ describe('avatar.Avatar', () => {
 
       spyOn(avatar, 'register_');
 
-      avatar.registerAll(injector);
-      assert(avatar['register_']).to.haveBeenCalledWith(injector, spec1);
-      assert(avatar['register_']).to.haveBeenCalledWith(injector, spec2);
+      const templates = Mocks.object('templates');
+
+      avatar.registerAll(injector, templates);
+      assert(avatar['register_']).to.haveBeenCalledWith(injector, templates, spec1);
+      assert(avatar['register_']).to.haveBeenCalledWith(injector, templates, spec2);
     });
   });
 });

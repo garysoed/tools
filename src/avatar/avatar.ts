@@ -2,6 +2,7 @@ import { CustomElement } from '../avatar/custom-element';
 import { BaseDisposable } from '../dispose';
 import { Injector } from '../inject';
 import { Log } from '../util';
+import { Templates } from '../webc';
 
 type D<T> = {
   prototype: T,
@@ -35,12 +36,17 @@ export class AvatarImpl {
   }
 
   private register_<H extends keyof HTMLElementTagNameMap>(
-      injector: Injector, spec: ComponentSpec<H>): void {
+      injector: Injector, templates: Templates, spec: ComponentSpec<H>): void {
+    const templateStr = templates.getTemplate(spec.templateKey);
+    if (!templateStr) {
+      throw new Error(`No templates found for ${spec.templateKey}`);
+    }
+
     if (spec.dependencies) {
       for (const dependency of spec.dependencies) {
         const dependencySpec = this.componentSpecs_.get(dependency as any);
         if (dependencySpec) {
-          this.register_(injector, dependencySpec);
+          this.register_(injector, templates, dependencySpec);
         }
       }
     }
@@ -53,7 +59,8 @@ export class AvatarImpl {
       constructor() {
         super();
 
-        // TODO: Shadow root.
+        const shadow = this.attachShadow({mode: 'open'});
+        shadow.innerHTML = templateStr || '';
       }
 
       connectedCallback(): void {
@@ -81,9 +88,9 @@ export class AvatarImpl {
     Log.info(LOGGER, `Registered: [${spec.tag}]`);
   }
 
-  registerAll(injector: Injector): void {
+  registerAll(injector: Injector, templates: Templates): void {
     for (const [, spec] of this.componentSpecs_) {
-      this.register_(injector, spec);
+      this.register_(injector, templates, spec);
     }
   }
 }

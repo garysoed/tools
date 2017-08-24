@@ -170,7 +170,7 @@ export class ElementRegistrar extends BaseDisposable {
                   () => {
                     return this.injector_.instantiate(ctor);
                   },
-                  template!),
+                  template),
             });
 
         this.registeredCtors_.add(ctor);

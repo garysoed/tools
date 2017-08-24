@@ -4,5 +4,6 @@ load("//:defs.bzl", "gs_tools")
 
 gs_tools(
     deps = [
-        "//src/graph"
+        "//src/graph",
+        "//src/webc",
     ])
