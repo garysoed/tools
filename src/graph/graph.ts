@@ -13,22 +13,15 @@ import { ImmutableList, ImmutableSet } from '../immutable';
 import { Log } from '../util';
 
 const LOGGER: Log = Log.of('gs-tools.graph.Graph');
-export const SET_QUEUE: (() => void)[] = [];
-export const NODES: Map<NodeId<any>, GNode<any>> = new Map();
-export const MONITORED_NODES: WeakMap<{}, ImmutableSet<InstanceId<any>>> = new WeakMap();
 
-class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
-  /**
-   * Resets the state for testing.
-   */
-  clearForTests(): void {
-    NODES.clear();
-    SET_QUEUE.splice(0, SET_QUEUE.length);
-  }
+export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
+  private readonly monitoredNodes_: WeakMap<{}, ImmutableSet<InstanceId<any>>> = new WeakMap();
+  private readonly nodes_: Map<NodeId<any>, GNode<any>> = new Map();
+  private readonly setQueue_: (() => void)[] = [];
 
   clearNodesForTests(nodeIds: Iterable<NodeId<any>>): void {
     for (const nodeId of nodeIds) {
-      NODES.delete(nodeId);
+      this.nodes_.delete(nodeId);
     }
   }
 
@@ -40,13 +33,13 @@ class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
    *     be resolved when the value has been set.
    */
   createProvider<T>(staticId: StaticId<T>, initValue: T): NodeProvider<T> {
-    if (NODES.has(staticId)) {
+    if (this.nodes_.has(staticId)) {
       throw new Error(`Node ${staticId} is already registered`);
     }
 
     const node = new InputNode<T>();
     node.set(null, initValue);
-    NODES.set(staticId, node);
+    this.nodes_.set(staticId, node);
 
     const provider = (newValue: T): Promise<void> => {
       return this.set_(staticId, newValue);
@@ -62,7 +55,7 @@ class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
   async get<T>(staticId: StaticId<T>): Promise<T>;
   async get<T, C>(instanceId: InstanceId<T>, context: C): Promise<T>;
   async get<T, C>(nodeId: NodeId<T>, context: C | null = null): Promise<T> {
-    const node = NODES.get(nodeId);
+    const node = this.nodes_.get(nodeId);
     if (!node) {
       throw new Error(`Node for ${nodeId} cannot be found`);
     }
@@ -86,12 +79,12 @@ class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
           this.on(
               'change',
               (event: GraphEvent<T, C>) => {
-                Graph.onChange_<T, C>(nodeId, node, context, event);
+                this.onChange_<T, C>(nodeId, node, context, event);
               },
               this));
 
-      const ids = MONITORED_NODES.get(context) || ImmutableSet.of([]);
-      MONITORED_NODES.set(context, ids.add(nodeId));
+      const ids = this.monitoredNodes_.get(context) || ImmutableSet.of([]);
+      this.monitoredNodes_.set(context, ids.add(nodeId));
     }
 
     const cachedValue = node instanceof InnerNode ? node.getCachedValue() : null;
@@ -108,7 +101,7 @@ class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
   }
 
   private isMonitored_(context: {}, nodeId: InstanceId<any>): boolean {
-    const ids = MONITORED_NODES.get(context);
+    const ids = this.monitoredNodes_.get(context);
     if (!ids) {
       return false;
     }
@@ -125,10 +118,10 @@ class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
   }
 
   private processSetQueue_(): void {
-    for (const setFn of SET_QUEUE) {
+    for (const setFn of this.setQueue_) {
       setFn();
     }
-    SET_QUEUE.splice(0, SET_QUEUE.length);
+    this.setQueue_.splice(0, this.setQueue_.length);
   }
 
   registerGenericProvider_<T>(
@@ -136,12 +129,12 @@ class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
       monitorsChanges: boolean,
       provider: Provider<T>,
       ...args: NodeId<any>[]): void {
-    if (NODES.has(nodeId)) {
+    if (this.nodes_.has(nodeId)) {
       throw new Error(`Node ${nodeId} is already registered`);
     }
 
     const node = new InnerNode<T>(provider, monitorsChanges, ImmutableList.of(args));
-    NODES.set(nodeId, node);
+    this.nodes_.set(nodeId, node);
   }
 
   /**
@@ -190,13 +183,13 @@ class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
   }
 
   private set_<T>(staticId: StaticId<T>, value: T): Promise<void> {
-    const node = NODES.get(staticId);
+    const node = this.nodes_.get(staticId);
     if (!(node instanceof InputNode)) {
       throw new Error(`Node ${staticId} is not an instance of InputNode. [${node}]`);
     }
 
     const promise = new Promise<void>((resolve: () => void) => {
-      SET_QUEUE.push(() => {
+      this.setQueue_.push(() => {
         const event = {context: null, id: staticId, type: 'change' as 'change'};
         this.dispatch(event, () => node.set(null, value));
         resolve();
