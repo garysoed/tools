@@ -10,7 +10,7 @@ class CustomElementCtrl extends BaseDisposable {
 
 }
 
-AvatarRegistrar.registerAll(); // Calls customElements.register on all.
+Avatar.registerAll(); // Calls customElements.register on all.
 ```
 
 Rendering stuff onto the template.
@@ -52,7 +52,7 @@ const $ = selectors({
     innerText: innerTextSelector(elementSelector('name.element'), StringType, StringParser),
   },
   button: {
-    element: elementSelector('#button', HTMLButtonElement),
+    element: elementSelector('#button', InstanceofType(HTMLButtonElement)),
   },
 });
 
@@ -65,7 +65,7 @@ class CustomElementCtrl extends BaseDisposable {
   // These are called when the element is attached.
   @render.innerText($.name)
   renderName(@nodeIn($projectName) projectName: string): string {
-    return `Project: ${projecName}`;
+    return `Project: ${projectName}`;
   }
 
   @onDom.event($.button.element, 'click')
