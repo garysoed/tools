@@ -14,7 +14,7 @@ function resolveSelectorsHelper_<T extends {}>(current: T, root: {}): T {
       continue;
     }
 
-    if (value instanceof Object) {
+    if (value instanceof Object && value.constructor === Object) {
       processed[key] = resolveSelectorsHelper_(value, root);
     } else {
       processed[key] = value;

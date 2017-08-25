@@ -21,6 +21,10 @@ describe('avatar.resolveSelectors', () => {
 
     const object = Mocks.object('object');
 
+    const value = 123;
+    const mockObject = jasmine.createSpyObj('Object', ['getValue']);
+    mockObject.getValue.and.returnValue(value);
+
     const input = {
       a: 1,
       b: {
@@ -31,9 +35,11 @@ describe('avatar.resolveSelectors', () => {
       c: mockStub3,
       d: impl4,
       e: object,
+      f: mockObject,
     };
 
-    assert(resolveSelectors(input)).to.equal({
+    const output = resolveSelectors(input);
+    assert(output).to.equal({
       a: 1,
       b: {
         a: impl1,
@@ -43,8 +49,10 @@ describe('avatar.resolveSelectors', () => {
       c: impl3,
       d: impl4,
       e: object,
+      f: mockObject,
     });
     assert(mockStub1.resolve).to.haveBeenCalledWith(input);
     assert(mockStub3.resolve).to.haveBeenCalledWith(input);
+    assert(output.f.getValue()).to.equal(value);
   });
 });

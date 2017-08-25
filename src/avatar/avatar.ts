@@ -4,6 +4,7 @@ import { CustomElement } from '../avatar/custom-element';
 import { BaseDisposable } from '../dispose';
 import { Graph, GraphEvent } from '../graph';
 import { InstanceId } from '../graph/instance-id';
+import { NodeId } from '../graph/node-id';
 import { ImmutableMap } from '../immutable';
 import { Injector } from '../inject';
 import { Log } from '../util';
@@ -11,7 +12,7 @@ import { Templates } from '../webc';
 
 type Ctrl = typeof BaseDisposable;
 type PropertyKey = string | symbol;
-type RendererSpec = {parameters: Iterable<InstanceId<any>>, selector: Selector<any>};
+type RendererSpec = {parameters: Iterable<NodeId<any>>, selector: Selector<any>};
 
 const LOGGER: Log = Log.of('gs-tools.avatar.Avatar');
 
@@ -102,7 +103,7 @@ export class AvatarImpl {
       ctrl: Ctrl,
       propertyKey: PropertyKey,
       selector: Selector<any>,
-      ...parameters: InstanceId<any>[]): void {
+      ...parameters: NodeId<any>[]): void {
     const propertyMap: Map<PropertyKey, RendererSpec> = this.rendererSpecs_.get(ctrl) || new Map();
     if (propertyMap.has(propertyKey)) {
       throw new Error(`Renderer ${ctrl}.${propertyKey} is already registered`);

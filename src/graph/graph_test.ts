@@ -62,9 +62,11 @@ describe('graph.Graph', () => {
           .when($.param1).resolve(param1)
           .when($.param2).resolve(param2)
           .else().call(origGet.bind(graph));
-      const mockNode = jasmine.createSpyObj('Node', ['execute', 'getParameterIds']);
-      mockNode.execute.and.returnValue(value);
+      const mockNode = jasmine
+          .createSpyObj('Node', ['execute', 'getPreviousValue', 'getParameterIds']);
+      mockNode.execute.and.returnValue(Promise.resolve(value));
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([$.param1, $.param2]));
+      Object.setPrototypeOf(mockNode, InnerNode.prototype);
       graph['nodes_'].set($.test, mockNode);
 
       spyOn(graph, 'dispatch');
@@ -100,8 +102,8 @@ describe('graph.Graph', () => {
           .else().call(origGet.bind(graph));
       const mockNode = jasmine.createSpyObj(
           'Node',
-          ['execute', 'getParameterIds', 'monitorsChanges']);
-      mockNode.execute.and.returnValue(value);
+          ['execute', 'getPreviousValue', 'getParameterIds', 'monitorsChanges']);
+      mockNode.execute.and.returnValue(Promise.resolve(value));
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([$.param1, $.param2]));
       mockNode.monitorsChanges.and.returnValue(true);
       Object.setPrototypeOf(mockNode, InnerNode.prototype);
@@ -136,8 +138,9 @@ describe('graph.Graph', () => {
       Fakes.build(spyOn(graph, 'get'))
           .when($.param).resolve(param)
           .else().call(origGet.bind(graph));
-      const mockNode = jasmine.createSpyObj('Node', ['execute', 'getParameterIds']);
-      mockNode.execute.and.returnValue(value);
+      const mockNode = jasmine
+          .createSpyObj('Node', ['execute', 'getPreviousValue', 'getParameterIds']);
+      mockNode.execute.and.returnValue(Promise.resolve(value));
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([$.param]));
       graph['nodes_'].set($.test, mockNode);
 
@@ -168,7 +171,7 @@ describe('graph.Graph', () => {
 
       const mockNode = jasmine.createSpyObj(
           'Node',
-          ['execute', 'getParameterIds', 'monitorsChanges']);
+          ['execute', 'getPreviousValue', 'getParameterIds', 'monitorsChanges']);
       mockNode.execute.and.returnValue(value);
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
       mockNode.monitorsChanges.and.returnValue(true);
@@ -199,7 +202,7 @@ describe('graph.Graph', () => {
 
       const mockNode = jasmine.createSpyObj(
           'Node',
-          ['execute', 'getParameterIds', 'monitorsChanges']);
+          ['execute', 'getPreviousValue', 'getParameterIds', 'monitorsChanges']);
       mockNode.execute.and.returnValue(value);
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
       mockNode.monitorsChanges.and.returnValue(false);
@@ -228,7 +231,7 @@ describe('graph.Graph', () => {
 
       const mockNode = jasmine.createSpyObj(
           'Node',
-          ['execute', 'getParameterIds', 'monitorsChanges']);
+          ['execute', 'getPreviousValue', 'getParameterIds', 'monitorsChanges']);
       mockNode.execute.and.returnValue(value);
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
       graph['nodes_'].set($test, mockNode);
@@ -246,7 +249,7 @@ describe('graph.Graph', () => {
 
       const mockNode = jasmine.createSpyObj(
           'Node',
-          ['execute', 'getParameterIds', 'monitorsChanges']);
+          ['execute', 'getPreviousValue', 'getParameterIds', 'monitorsChanges']);
       mockNode.execute.and.returnValue(value);
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
       graph['nodes_'].set($test, mockNode);
@@ -267,7 +270,7 @@ describe('graph.Graph', () => {
 
       const mockNode = jasmine.createSpyObj(
           'Node',
-          ['execute', 'getParameterIds', 'monitorsChanges']);
+          ['execute', 'getPreviousValue', 'getParameterIds', 'monitorsChanges']);
       mockNode.execute.and.returnValue(value);
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
       graph['nodes_'].set($test, mockNode);
@@ -285,7 +288,7 @@ describe('graph.Graph', () => {
 
       const mockNode = jasmine.createSpyObj(
           'Node',
-          ['execute', 'getParameterIds', 'monitorsChanges']);
+          ['execute', 'getPreviousValue', 'getParameterIds', 'monitorsChanges']);
       mockNode.execute.and.returnValue(value);
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
       graph['nodes_'].set($test, mockNode);
@@ -305,10 +308,10 @@ describe('graph.Graph', () => {
       const value = 123;
 
       const mockNode = jasmine
-          .createSpyObj('Node', ['execute', 'getCachedValue', 'getParameterIds']);
+          .createSpyObj('Node', ['execute', 'getPreviousValue', 'getParameterIds']);
       mockNode.execute.and.returnValue(value);
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
-      mockNode.getCachedValue.and.returnValue(value);
+      mockNode.getPreviousValue.and.returnValue(value);
       Object.setPrototypeOf(mockNode, InnerNode.prototype);
       graph['nodes_'].set($.test, mockNode);
 
@@ -349,7 +352,7 @@ describe('graph.Graph', () => {
     it(`should get the new value`, () => {
       const nodeId = instanceId('test', NumberType);
       const paramId = staticId('param', NumberType);
-      const mockNode = jasmine.createSpyObj('Node', ['getParameterIds']);
+      const mockNode = jasmine.createSpyObj('Node', ['clearCache', 'getParameterIds']);
       mockNode.getParameterIds.and.returnValue([paramId]);
 
       const context = Mocks.object('context');
@@ -360,6 +363,7 @@ describe('graph.Graph', () => {
 
       graph['onChange_'](nodeId, mockNode, context, graphEvent);
       assert(graph.get).to.haveBeenCalledWith(nodeId, context);
+      assert(mockNode.clearCache).to.haveBeenCalledWith(context);
     });
 
     it(`should do nothing if the changed ID is not a parameter`, () => {

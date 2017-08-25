@@ -89,17 +89,6 @@ describe('graph functional test', () => {
       assert(await Graph.get($a, test2)).to.equal(5);
     });
 
-    it(`should cache the previous execution`, async () => {
-      const providesASpy = jasmine.createSpy('ProvidesA');
-      const test = new TestClass(1, providesASpy);
-      assert(await Graph.get($a, test)).to.equal(4);
-
-      providesASpy.calls.reset();
-      assert(await Graph.get($a, test)).to.equal(4);
-
-      assert(providesASpy).toNot.haveBeenCalled();
-    });
-
     it(`should handle values set by the provider`, async () => {
       const test = new TestClass(2, jasmine.createSpy('ProvidesA'));
       const setPromise = providesC(5);
@@ -163,40 +152,12 @@ describe('graph functional test', () => {
       assert(await Graph.get($a, test2)).to.equal(5);
     });
 
-    it(`should cache the previous execution`, async () => {
-      const mockProvidesASpy = jasmine.createSpy('ProvidesASpy');
-
-      const test = new TestClass(1, mockProvidesASpy);
-      assert(await Graph.get($a, test)).to.equal(4);
-      assert(mockProvidesASpy).to.haveBeenCalledWith(1, 3);
-
-      mockProvidesASpy.calls.reset();
-      assert(await Graph.get($a, test)).to.equal(4);
-
-      assert(mockProvidesASpy).toNot.haveBeenCalled();
-    });
-
     it(`should handle values set by the provider`, async () => {
       const test = new TestClass(2, jasmine.createSpy('ProvidesA'));
       const setPromise = providesC(5);
 
       // At this point, the value hasn't been set yet.
       assert(await Graph.get($a, test)).to.equal(5);
-
-      await setPromise;
-      assert(await Graph.get($a, test)).to.equal(7);
-    });
-
-    it(`should clear the cache if one of the providers have changed`, async () => {
-      const mockProvidesASpy = jasmine.createSpy('ProvidesASpy');
-      const test = new TestClass(2, mockProvidesASpy);
-      const setPromise = providesC(5);
-
-      // At this point, the value hasn't been set yet.
-      assert(await Graph.get($a, test)).to.equal(5);
-      mockProvidesASpy.calls.reset();
-      assert(await Graph.get($a, test)).to.equal(5);
-      assert(mockProvidesASpy).toNot.haveBeenCalled();
 
       await setPromise;
       assert(await Graph.get($a, test)).to.equal(7);

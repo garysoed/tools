@@ -87,14 +87,15 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
       this.monitoredNodes_.set(context, ids.add(nodeId));
     }
 
-    const cachedValue = node instanceof InnerNode ? node.getCachedValue() : null;
-    const value = await node.execute(context, parameters);
+    const cachedValue = Promise.resolve(node.getPreviousValue(context));
+    const value = node.execute(context, parameters);
 
-    if (!nodeId.getType().check(value)) {
+    const [resolvedCached, resolvedValue] = await Promise.all([cachedValue, value]);
+    if (!nodeId.getType().check(resolvedValue)) {
       throw new Error(`Node for ${nodeId} returns the incorrect type. [${value}]`);
     }
 
-    if (cachedValue !== value) {
+    if (resolvedCached !== resolvedValue) {
       this.dispatch({context, id: nodeId, type: 'change' as 'change'});
     }
     return value;
@@ -113,6 +114,7 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
       nodeId: InstanceId<T>, node: InnerNode<T>, context: C, event: GraphEvent<T, C>): void {
     const inIds = ImmutableSet.of(node.getParameterIds());
     if (inIds.has(event.id)) {
+      node.clearCache(context);
       this.get(nodeId, context);
     }
   }
