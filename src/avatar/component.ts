@@ -5,6 +5,6 @@ import { BaseDisposable } from '../dispose';
 export function component<T extends keyof HTMLElementTagNameMap>(
     spec: ComponentSpec<T>): ClassDecorator {
   return (target: Function) => {
-    Avatar.define({...spec, ctrl: target as (typeof BaseDisposable)});
+    Avatar.define(target as (typeof BaseDisposable), spec);
   };
 }

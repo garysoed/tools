@@ -1,18 +1,3 @@
-Basic custom element
-
-```typescript
-@component({
-  name: 'gs-custom-element',
-  parent: HTMLDivElement,
-  templateKey: '/src/path/to/template',
-})
-class CustomElementCtrl extends BaseDisposable {
-
-}
-
-Avatar.registerAll(); // Calls customElements.register on all.
-```
-
 Rendering stuff onto the template.
 
 ```typescript

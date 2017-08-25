@@ -1,4 +1,6 @@
-import { IType } from '../check';
+import { SelectorImpl, SelectorStub } from '../avatar/selector';
+import { InstanceofType, IType } from '../check';
+import { Jsons } from '../data';
 import { instanceId } from '../graph';
 import { InstanceId } from '../graph/instance-id';
 
@@ -8,39 +10,52 @@ export interface ElementSelector<T> {
   getSelector(): string;
 }
 
-export class ElementSelectorStub<T> implements ElementSelector<T> {
-  constructor(private readonly path_: string) { }
-
-  getId(): InstanceId<T> {
-    throw new Error('This is a stub. Use resolveSelectors to resolve this.');
+export class ElementSelectorStub<T> extends SelectorStub<T> implements ElementSelector<T> {
+  constructor(private readonly path_: string) {
+    super();
   }
 
-  getPath(): string {
-    return this.path_;
-  }
+  resolve(allSelectors: {}): ElementSelectorImpl<T> {
+    const value = Jsons.getValue(allSelectors, this.path_);
+    if (!InstanceofType(ElementSelectorImpl).check(value)) {
+      throw new Error(`Cannot resolve element selector. [${this.path_}] is [${value}], expecting '
+          + 'an element selector`);
+    }
 
-  getSelector(): string {
-    throw new Error('This is a stub. Use resolveSelectors to resolve this.');
+    return value;
   }
 }
 
-export class ElementSelectorImpl<T> implements ElementSelector<T> {
+export class ElementSelectorImpl<T> extends SelectorImpl<T> implements ElementSelector<T> {
   constructor(
       private readonly selector_: string,
-      private readonly instanceId_: InstanceId<T>) { }
-
-  getId(): InstanceId<T> {
-    return this.instanceId_;
+      private readonly type_: IType<T>,
+      id: InstanceId<T>) {
+    super(id);
   }
 
   getSelector(): string {
     return this.selector_;
   }
+
+  getValue(root: ShadowRoot): T {
+    const el = root.querySelector(this.selector_);
+    if (!this.type_.check(el)) {
+      throw new Error(`[${this.selector_}] has the wrong type. Expected: ${this.type_} but was '
+          + '${el}`);
+    }
+
+    return el;
+  }
+
+  setValue(): void {
+    throw new Error('Unsupported');
+  }
 }
 
 export function elementSelector<T>(selectorOrId: string, type?: IType<T>): ElementSelector<T> {
   if (type) {
-    return new ElementSelectorImpl(selectorOrId, instanceId(selectorOrId, type));
+    return new ElementSelectorImpl(selectorOrId, type, instanceId(selectorOrId, type));
   } else {
     return new ElementSelectorStub(selectorOrId);
   }
