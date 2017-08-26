@@ -10,19 +10,23 @@ import {
   component,
   elementSelector,
   innerTextSelector,
+  onDom,
   Persona,
   render,
-  resolveSelectors } from '../persona';
+  resolveSelectors} from '../persona';
 import { Templates } from '../webc';
 
 
 describe('persona functional test with annotations', () => {
-  const TEMPLATE_CONTENT = '<div id="root"></div>';
+  const TEMPLATE_CONTENT = '<div id="root"></div><button id="button">button</button>';
   const TEMPLATE_KEY = 'templateKey';
   Templates.register(TEMPLATE_KEY, TEMPLATE_CONTENT);
 
   let valueProvider: NodeProvider<number>;
+  let mockButtonClickCallback: any;
+
   const $ = resolveSelectors({
+    button: elementSelector('#button', InstanceofType(HTMLButtonElement)),
     root: {
       element: elementSelector('#root', InstanceofType(HTMLElement)),
       innerText: innerTextSelector(elementSelector('root.element'), IntegerParser, NumberType),
@@ -35,6 +39,11 @@ describe('persona functional test with annotations', () => {
     templateKey: TEMPLATE_KEY,
   })
   class TestCtrl extends BaseDisposable {
+    @onDom.event($.button, 'click')
+    onButtonClick(): void {
+      mockButtonClickCallback();
+    }
+
     @render.innerText($.root.innerText)
     async renderRootInnerText(@nodeIn($.value) value: number): Promise<number> {
       return Promise.resolve(value);
@@ -44,6 +53,10 @@ describe('persona functional test with annotations', () => {
   beforeAll(() => {
     valueProvider = Graph.createProvider($.value, 123);
     Persona.registerAll(Injector.newInstance(), Templates.newInstance());
+  });
+
+  beforeEach(() => {
+    mockButtonClickCallback = jasmine.createSpy('ButtonClickCallback');
   });
 
   it(`should create the element correctly`, async () => {
@@ -64,6 +77,19 @@ describe('persona functional test with annotations', () => {
     });
     await promise;
     await valueProvider(123);
+    el.remove();
+  });
+
+  it(`should react to event`, async () => {
+    const el = document.createElement('gs-test');
+    document.body.appendChild(el);
+
+    assert(el['getCtrl']()).to.beAnInstanceOf(TestCtrl);
+
+    const buttonEl = el.shadowRoot!.querySelector('#button') as HTMLButtonElement;
+    buttonEl.click();
+
+    assert(mockButtonClickCallback).to.haveBeenCalledWith();
     el.remove();
   });
 });
