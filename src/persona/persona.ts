@@ -1,12 +1,12 @@
-import { Selector } from 'src/avatar/selector';
-import { ComponentSpec } from '../avatar/component-spec';
-import { CustomElement } from '../avatar/custom-element';
 import { BaseDisposable } from '../dispose';
 import { Graph, GraphEvent } from '../graph';
 import { InstanceId } from '../graph/instance-id';
 import { NodeId } from '../graph/node-id';
 import { ImmutableMap } from '../immutable';
 import { Injector } from '../inject';
+import { ComponentSpec } from '../persona/component-spec';
+import { CustomElement } from '../persona/custom-element';
+import { Selector } from '../persona/selector';
 import { Log } from '../util';
 import { Templates } from '../webc';
 
@@ -14,9 +14,9 @@ type Ctrl = typeof BaseDisposable;
 type PropertyKey = string | symbol;
 type RendererSpec = {parameters: Iterable<NodeId<any>>, selector: Selector<any>};
 
-const LOGGER: Log = Log.of('gs-tools.avatar.Avatar');
+const LOGGER: Log = Log.of('gs-tools.persona.Persona');
 
-export class AvatarImpl {
+export class PersonaImpl {
   private readonly componentSpecs_: Map<typeof BaseDisposable, ComponentSpec<any>> = new Map();
   private readonly rendererSpecs_:
       Map<typeof BaseDisposable, Map<PropertyKey, RendererSpec>> = new Map();
@@ -169,4 +169,4 @@ export class AvatarImpl {
   }
 }
 
-export const Avatar = new AvatarImpl(customElements);
+export const Persona = new PersonaImpl(customElements);

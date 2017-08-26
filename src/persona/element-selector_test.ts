@@ -1,11 +1,11 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
+import { InstanceofType } from '../check';
 import {
   elementSelector,
   ElementSelectorImpl,
-  ElementSelectorStub} from '../avatar/element-selector';
-import { InstanceofType } from '../check';
+  ElementSelectorStub} from '../persona/element-selector';
 
 function getShadowRoot(): ShadowRoot {
   return document.body.shadowRoot || document.body.attachShadow({mode: 'open'});

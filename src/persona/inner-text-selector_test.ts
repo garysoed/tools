@@ -1,11 +1,11 @@
 import { assert, Mocks, TestBase } from '../test-base';
 TestBase.setup();
 
-import { elementSelector, innerTextSelector } from '../avatar';
-import { ElementSelectorImpl } from '../avatar/element-selector';
-import { InnerTextSelectorStub } from '../avatar/inner-text-selector';
 import { NumberType } from '../check';
 import { IntegerParser } from '../parse';
+import { elementSelector, innerTextSelector } from '../persona';
+import { ElementSelectorImpl } from '../persona/element-selector';
+import { InnerTextSelectorStub } from '../persona/inner-text-selector';
 
 function getShadowRoot(): ShadowRoot {
   return document.body.shadowRoot || document.body.attachShadow({mode: 'open'});

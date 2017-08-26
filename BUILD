@@ -19,7 +19,6 @@ karma_run(
     name = "test",
     srcs = [
         "//src/async:test_src",
-        "//src/avatar:test_src",
         "//src/check:test_src",
         "//src/color:test_src",
         "//src/data:test_src",
@@ -32,6 +31,7 @@ karma_run(
         "//src/jasmine:test_src",
         "//src/net:test_src",
         "//src/parse:test_src",
+        "//src/persona:test_src",
         "//src/random:test_src",
         "//src/rpc:test_src",
         "//src/secure:test_src",
@@ -49,7 +49,6 @@ test_suite(
     name = "lint",
     tests = [
       "//src/async:lint",
-      "//src/avatar:lint",
       "//src/check:lint",
       "//src/color:lint",
       "//src/data:lint",
@@ -64,6 +63,7 @@ test_suite(
       "//src/mock:lint",
       "//src/net:lint",
       "//src/parse:lint",
+      "//src/persona:lint",
       "//src/random:lint",
       "//src/rpc:lint",
       "//src/secure:lint",

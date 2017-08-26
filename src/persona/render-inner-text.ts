@@ -1,9 +1,9 @@
-import { Avatar } from '../avatar/avatar';
-import { InnerTextSelector } from '../avatar/inner-text-selector';
 import { BaseDisposable } from '../dispose';
 import { NodeId } from '../graph/node-id';
 import { ANNOTATIONS } from '../graph/node-in';
 import { ImmutableSet } from '../immutable';
+import { InnerTextSelector } from '../persona/inner-text-selector';
+import { Persona } from '../persona/persona';
 
 export function renderInnerText<T>(selector: InnerTextSelector<T>): MethodDecorator {
   return (target: Object, propertyKey: string | symbol) => {
@@ -21,7 +21,7 @@ export function renderInnerText<T>(selector: InnerTextSelector<T>): MethodDecora
           return id;
         });
 
-    Avatar.defineRenderer(
+    Persona.defineRenderer(
         target.constructor as (typeof BaseDisposable),
         propertyKey,
         selector,

@@ -1,4 +1,4 @@
-import { Selector, SelectorStub } from '../avatar/selector';
+import { Selector, SelectorStub } from '../persona/selector';
 
 function resolveSelectorsHelper_<T extends {}>(current: T, root: {}): T {
   const processed: T = {} as T;

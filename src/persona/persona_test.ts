@@ -1,12 +1,12 @@
 import { assert, Fakes, Matchers, Mocks, TestBase } from '../test-base';
 TestBase.setup();
 
-import { ImmutableMap } from 'src/immutable';
-import { AvatarImpl } from '../avatar/avatar';
-import { CustomElement } from '../avatar/custom-element';
 import { BaseDisposable } from '../dispose';
 import { Graph } from '../graph';
 import { InstanceId } from '../graph/instance-id';
+import { ImmutableMap } from '../immutable';
+import { CustomElement } from '../persona/custom-element';
+import { PersonaImpl } from '../persona/persona';
 
 describe('CustomElement', () => {
   class TestCtrl extends BaseDisposable { }
@@ -21,7 +21,7 @@ describe('CustomElement', () => {
     const mockTemplates = jasmine.createSpyObj('Templates', ['getTemplate']);
     mockTemplates.getTemplate.and.returnValue('templateContent');
 
-    const avatar = new AvatarImpl(mockCustomElements);
+    const avatar = new PersonaImpl(mockCustomElements);
     rendererSpecMap = new Map();
     avatar['rendererSpecs_'].set(TestCtrl, rendererSpecMap);
 
@@ -155,13 +155,13 @@ describe('CustomElement', () => {
 });
 
 
-describe('avatar.Avatar', () => {
+describe('persona.Persona', () => {
   let mockCustomElements: any;
-  let avatar: AvatarImpl;
+  let persona: PersonaImpl;
 
   beforeEach(() => {
     mockCustomElements = jasmine.createSpyObj('CustomElements', ['define']);
-    avatar = new AvatarImpl(mockCustomElements);
+    persona = new PersonaImpl(mockCustomElements);
   });
 
   describe('define', () => {
@@ -172,8 +172,8 @@ describe('avatar.Avatar', () => {
         templateKey: 'key',
       };
 
-      avatar.define(ctrl, spec);
-      assert(avatar['componentSpecs_']).to.haveEntries([[ctrl, spec]]);
+      persona.define(ctrl, spec);
+      assert(persona['componentSpecs_']).to.haveEntries([[ctrl, spec]]);
     });
 
     it(`should throw error if the component is already registered`, () => {
@@ -182,10 +182,10 @@ describe('avatar.Avatar', () => {
         tag: 'gs-test',
         templateKey: 'key',
       };
-      avatar['componentSpecs_'].set(ctrl, spec);
+      persona['componentSpecs_'].set(ctrl, spec);
 
       assert(() => {
-        avatar.define(ctrl, spec);
+        persona.define(ctrl, spec);
       }).to.throwError(/is already registered/);
     });
   });
@@ -198,8 +198,8 @@ describe('avatar.Avatar', () => {
       const parameter1 = Mocks.object('parameter1');
       const parameter2 = Mocks.object('parameter2');
 
-      avatar.defineRenderer(ctrl, propertyKey, selector, parameter1, parameter2);
-      assert(avatar['rendererSpecs_'].get(ctrl)!).to
+      persona.defineRenderer(ctrl, propertyKey, selector, parameter1, parameter2);
+      assert(persona['rendererSpecs_'].get(ctrl)!).to
           .haveEntries([[propertyKey, {parameters: [parameter1, parameter2], selector}]]);
     });
 
@@ -210,10 +210,10 @@ describe('avatar.Avatar', () => {
 
       const otherPropertyKey = 'otherPropertyKey';
       const otherSpec = Mocks.object('otherSpec');
-      avatar['rendererSpecs_'].set(ctrl, new Map([[otherPropertyKey, otherSpec]]));
+      persona['rendererSpecs_'].set(ctrl, new Map([[otherPropertyKey, otherSpec]]));
 
-      avatar.defineRenderer(ctrl, propertyKey, selector);
-      assert(avatar['rendererSpecs_'].get(ctrl)!).to.haveEntries([
+      persona.defineRenderer(ctrl, propertyKey, selector);
+      assert(persona['rendererSpecs_'].get(ctrl)!).to.haveEntries([
         [otherPropertyKey, otherSpec],
         [propertyKey, {parameters: [], selector}],
       ]);
@@ -225,10 +225,10 @@ describe('avatar.Avatar', () => {
       const selector = Mocks.object('selector');
 
       const otherSpec = Mocks.object('otherSpec');
-      avatar['rendererSpecs_'].set(ctrl, new Map([[propertyKey, otherSpec]]));
+      persona['rendererSpecs_'].set(ctrl, new Map([[propertyKey, otherSpec]]));
 
       assert(() => {
-        avatar.defineRenderer(ctrl, propertyKey, selector);
+        persona.defineRenderer(ctrl, propertyKey, selector);
       }).to.throwError(/is already registered/);
     });
   });
@@ -260,7 +260,7 @@ describe('avatar.Avatar', () => {
         [key1, {parameters: [param11, param12], selector: mockSelector1}],
         [key2, {parameters: [], selector: mockSelector2}],
       ]);
-      avatar['rendererSpecs_'].set(ctrl, rendererSpecs);
+      persona['rendererSpecs_'].set(ctrl, rendererSpecs);
 
       const dependencyCtor1 = Mocks.object('dependencyCtor1');
       const dependencyCtor2 = Mocks.object('dependencyCtor2');
@@ -276,27 +276,27 @@ describe('avatar.Avatar', () => {
         tag,
         templateKey: 'templateKey',
       };
-      avatar['componentSpecs_'].set(ctrl, spec);
+      persona['componentSpecs_'].set(ctrl, spec);
 
       const dependencySpec = Mocks.object('dependencySpec');
       const templateContent = 'templateContent';
       const mockTemplates = jasmine.createSpyObj('Templates', ['getTemplate']);
       mockTemplates.getTemplate.and.returnValue(templateContent);
 
-      const origRegister = avatar['register_'].bind(avatar);
-      Fakes.build(spyOn(avatar, 'register_'))
+      const origRegister = persona['register_'].bind(persona);
+      Fakes.build(spyOn(persona, 'register_'))
           .when(injector, mockTemplates, ctrl, dependencySpec).return()
           .else().call(origRegister);
 
       spyOn(Graph, 'registerGenericProvider_');
 
       const customElementClass = Mocks.object('customElementClass');
-      spyOn(avatar, 'createCustomElementClass_').and.returnValue(customElementClass);
+      spyOn(persona, 'createCustomElementClass_').and.returnValue(customElementClass);
 
-      avatar['register_'](injector, mockTemplates, ctrl);
+      persona['register_'](injector, mockTemplates, ctrl);
       assert(mockCustomElements.define).to
           .haveBeenCalledWith(tag, customElementClass, {extends: parentTag});
-      assert(avatar['createCustomElementClass_']).to.haveBeenCalledWith(
+      assert(persona['createCustomElementClass_']).to.haveBeenCalledWith(
           parentCtor,
           templateContent,
           injector,
@@ -307,8 +307,8 @@ describe('avatar.Avatar', () => {
           .haveBeenCalledWith(id1, true, fn1, param11, param12);
       assert(Graph.registerGenericProvider_).to.haveBeenCalledWith(id2, true, fn2);
 
-      assert(avatar['register_']).to.haveBeenCalledWith(injector, mockTemplates, dependencyCtor1);
-      assert(avatar['register_']).to.haveBeenCalledWith(injector, mockTemplates, dependencyCtor2);
+      assert(persona['register_']).to.haveBeenCalledWith(injector, mockTemplates, dependencyCtor1);
+      assert(persona['register_']).to.haveBeenCalledWith(injector, mockTemplates, dependencyCtor2);
     });
 
     it(`should register with HTMLElement if the spec has no parents`, () => {
@@ -328,7 +328,7 @@ describe('avatar.Avatar', () => {
       const rendererSpecs = new Map([
         [key, {parameters: [param], selector: mockSelector}],
       ]);
-      avatar['rendererSpecs_'].set(ctrl, rendererSpecs);
+      persona['rendererSpecs_'].set(ctrl, rendererSpecs);
 
       const dependencyCtor = Mocks.object('dependencyCtor');
       const tag = 'tag';
@@ -337,27 +337,27 @@ describe('avatar.Avatar', () => {
         tag,
         templateKey: 'templateKey',
       };
-      avatar['componentSpecs_'].set(ctrl, spec);
+      persona['componentSpecs_'].set(ctrl, spec);
 
       const dependencySpec = Mocks.object('dependencySpec');
       const templateContent = 'templateContent';
       const mockTemplates = jasmine.createSpyObj('Templates', ['getTemplate']);
       mockTemplates.getTemplate.and.returnValue(templateContent);
 
-      const origRegister = avatar['register_'].bind(avatar);
-      Fakes.build(spyOn(avatar, 'register_'))
+      const origRegister = persona['register_'].bind(persona);
+      Fakes.build(spyOn(persona, 'register_'))
           .when(injector, mockTemplates, ctrl, dependencySpec).return()
           .else().call(origRegister);
 
       spyOn(Graph, 'registerGenericProvider_');
 
       const customElementClass = Mocks.object('customElementClass');
-      spyOn(avatar, 'createCustomElementClass_').and.returnValue(customElementClass);
+      spyOn(persona, 'createCustomElementClass_').and.returnValue(customElementClass);
 
-      avatar['register_'](injector, mockTemplates, ctrl);
+      persona['register_'](injector, mockTemplates, ctrl);
       assert(mockCustomElements.define).to
           .haveBeenCalledWith(tag, customElementClass);
-      assert(avatar['createCustomElementClass_']).to.haveBeenCalledWith(
+      assert(persona['createCustomElementClass_']).to.haveBeenCalledWith(
           HTMLElement,
           templateContent,
           injector,
@@ -365,7 +365,7 @@ describe('avatar.Avatar', () => {
           rendererSpecs);
 
       assert(Graph.registerGenericProvider_).to.haveBeenCalledWith(id, true, fn, param);
-      assert(avatar['register_']).to.haveBeenCalledWith(injector, mockTemplates, dependencyCtor);
+      assert(persona['register_']).to.haveBeenCalledWith(injector, mockTemplates, dependencyCtor);
     });
 
     it(`should not throw errors there are no renderers`, () => {
@@ -379,34 +379,34 @@ describe('avatar.Avatar', () => {
         tag,
         templateKey: 'templateKey',
       };
-      avatar['componentSpecs_'].set(ctrl, spec);
+      persona['componentSpecs_'].set(ctrl, spec);
 
       const dependencySpec = Mocks.object('dependencySpec');
       const templateContent = 'templateContent';
       const mockTemplates = jasmine.createSpyObj('Templates', ['getTemplate']);
       mockTemplates.getTemplate.and.returnValue(templateContent);
 
-      const origRegister = avatar['register_'].bind(avatar);
-      Fakes.build(spyOn(avatar, 'register_'))
+      const origRegister = persona['register_'].bind(persona);
+      Fakes.build(spyOn(persona, 'register_'))
           .when(injector, mockTemplates, ctrl, dependencySpec).return()
           .else().call(origRegister);
 
       spyOn(Graph, 'registerGenericProvider_');
 
       const customElementClass = Mocks.object('customElementClass');
-      spyOn(avatar, 'createCustomElementClass_').and.returnValue(customElementClass);
+      spyOn(persona, 'createCustomElementClass_').and.returnValue(customElementClass);
 
-      avatar['register_'](injector, mockTemplates, ctrl);
+      persona['register_'](injector, mockTemplates, ctrl);
       assert(mockCustomElements.define).to
           .haveBeenCalledWith(tag, customElementClass);
-      assert(avatar['createCustomElementClass_']).to.haveBeenCalledWith(
+      assert(persona['createCustomElementClass_']).to.haveBeenCalledWith(
           HTMLElement,
           templateContent,
           injector,
           ctrl,
           new Map());
 
-      assert(avatar['register_']).to.haveBeenCalledWith(injector, mockTemplates, dependencyCtor);
+      assert(persona['register_']).to.haveBeenCalledWith(injector, mockTemplates, dependencyCtor);
     });
 
     it(`should not throw errors if there are no dependencies`, () => {
@@ -418,19 +418,19 @@ describe('avatar.Avatar', () => {
         tag,
         templateKey: 'templateKey',
       };
-      avatar['componentSpecs_'].set(ctrl, spec);
+      persona['componentSpecs_'].set(ctrl, spec);
 
       const templateContent = 'templateContent';
       const mockTemplates = jasmine.createSpyObj('Templates', ['getTemplate']);
       mockTemplates.getTemplate.and.returnValue(templateContent);
 
       const customElementClass = Mocks.object('customElementClass');
-      spyOn(avatar, 'createCustomElementClass_').and.returnValue(customElementClass);
+      spyOn(persona, 'createCustomElementClass_').and.returnValue(customElementClass);
 
-      avatar['register_'](injector, mockTemplates, ctrl);
+      persona['register_'](injector, mockTemplates, ctrl);
       assert(mockCustomElements.define).to
           .haveBeenCalledWith(tag, customElementClass);
-      assert(avatar['createCustomElementClass_']).to.haveBeenCalledWith(
+      assert(persona['createCustomElementClass_']).to.haveBeenCalledWith(
           HTMLElement,
           templateContent,
           injector,
@@ -446,12 +446,12 @@ describe('avatar.Avatar', () => {
         tag,
         templateKey: 'templateKey',
       };
-      avatar['componentSpecs_'].set(ctrl, spec);
+      persona['componentSpecs_'].set(ctrl, spec);
 
       const mockTemplates = jasmine.createSpyObj('Templates', ['getTemplate']);
 
       assert(() => {
-        avatar['register_'](injector, mockTemplates, ctrl);
+        persona['register_'](injector, mockTemplates, ctrl);
       }).to.throwError(/No templates found/);
     });
 
@@ -460,7 +460,7 @@ describe('avatar.Avatar', () => {
       const ctrl = Mocks.object('ctrl');
       const mockTemplates = jasmine.createSpyObj('Templates', ['getTemplate']);
 
-      avatar['register_'](injector, mockTemplates, ctrl);
+      persona['register_'](injector, mockTemplates, ctrl);
       assert(mockCustomElements.define).toNot.haveBeenCalled();
     });
   });
@@ -472,16 +472,16 @@ describe('avatar.Avatar', () => {
       const ctor2 = Mocks.object('ctor2');
       const spec1 = Mocks.object('spec1');
       const spec2 = Mocks.object('spec2');
-      avatar['componentSpecs_'].set(ctor1, spec1);
-      avatar['componentSpecs_'].set(ctor2, spec2);
+      persona['componentSpecs_'].set(ctor1, spec1);
+      persona['componentSpecs_'].set(ctor2, spec2);
 
-      spyOn(avatar, 'register_');
+      spyOn(persona, 'register_');
 
       const templates = Mocks.object('templates');
 
-      avatar.registerAll(injector, templates);
-      assert(avatar['register_']).to.haveBeenCalledWith(injector, templates, ctor1);
-      assert(avatar['register_']).to.haveBeenCalledWith(injector, templates, ctor2);
+      persona.registerAll(injector, templates);
+      assert(persona['register_']).to.haveBeenCalledWith(injector, templates, ctor1);
+      assert(persona['register_']).to.haveBeenCalledWith(injector, templates, ctor2);
     });
   });
 });

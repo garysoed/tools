@@ -1,11 +1,11 @@
 import { assert, Mocks, TestBase } from '../test-base';
 TestBase.setup();
 
-import { Avatar } from '../avatar';
-import { renderInnerText } from '../avatar/render-inner-text';
 import { BaseDisposable } from '../dispose';
 import { ANNOTATIONS } from '../graph/node-in';
 import { ImmutableMap, ImmutableSet } from '../immutable';
+import { Persona } from '../persona';
+import { renderInnerText } from '../persona/render-inner-text';
 
 describe('avatar.renderInnerText', () => {
   it(`should define the renderer correctly`, () => {
@@ -14,7 +14,7 @@ describe('avatar.renderInnerText', () => {
     const selector = Mocks.object('selector');
     const propertyKey = 'propertyKey';
 
-    spyOn(Avatar, 'defineRenderer');
+    spyOn(Persona, 'defineRenderer');
 
     const param1 = Mocks.object('param1');
     const param2 = Mocks.object('param2');
@@ -25,7 +25,7 @@ describe('avatar.renderInnerText', () => {
     spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotations);
 
     renderInnerText(selector)(TestClass.prototype, propertyKey, {});
-    assert(Avatar.defineRenderer).to.haveBeenCalledWith(
+    assert(Persona.defineRenderer).to.haveBeenCalledWith(
         TestClass,
         propertyKey,
         selector,

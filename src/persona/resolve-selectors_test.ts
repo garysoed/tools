@@ -1,8 +1,8 @@
 import { assert, Mocks, TestBase } from '../test-base';
 TestBase.setup();
 
-import { resolveSelectors } from '../avatar';
-import { SelectorStub } from '../avatar/selector';
+import { resolveSelectors } from '../persona';
+import { SelectorStub } from '../persona/selector';
 
 describe('avatar.resolveSelectors', () => {
   it(`should resolve all SelectorStubs`, () => {

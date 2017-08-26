@@ -1,12 +1,12 @@
-import { IType } from 'src/check';
-import { instanceId } from 'src/graph';
+import { IType } from '../check';
+import { instanceId } from '../graph';
+import { InstanceId } from '../graph/instance-id';
+import { Parser } from '../interfaces';
 import {
   ElementSelector,
   ElementSelectorImpl,
-  ElementSelectorStub } from '../avatar/element-selector';
-import { SelectorImpl, SelectorStub } from '../avatar/selector';
-import { InstanceId } from '../graph/instance-id';
-import { Parser } from '../interfaces';
+  ElementSelectorStub } from '../persona/element-selector';
+import { SelectorImpl, SelectorStub } from '../persona/selector';
 
 export interface InnerTextSelector<T> {
   getElementSelector(): ElementSelector<any>;

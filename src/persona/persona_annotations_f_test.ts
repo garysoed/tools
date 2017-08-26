@@ -1,21 +1,27 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {
-  Avatar,
-  elementSelector,
-  innerTextSelector,
-  resolveSelectors } from '../avatar';
 import { InstanceofType, NumberType } from '../check';
 import { BaseDisposable } from '../dispose';
-import { Graph, NodeProvider, staticId } from '../graph';
+import { Graph, nodeIn, NodeProvider, staticId } from '../graph';
 import { Injector } from '../inject';
 import { IntegerParser } from '../parse';
+import {
+  component,
+  elementSelector,
+  innerTextSelector,
+  Persona,
+  render,
+  resolveSelectors } from '../persona';
 import { Templates } from '../webc';
 
 
-describe('avatar functional test without annotations', () => {
+describe('persona functional test with annotations', () => {
   const TEMPLATE_CONTENT = '<div id="root"></div>';
+  const TEMPLATE_KEY = 'templateKey';
+  Templates.register(TEMPLATE_KEY, TEMPLATE_CONTENT);
+
+  let valueProvider: NodeProvider<number>;
   const $ = resolveSelectors({
     root: {
       element: elementSelector('#root', InstanceofType(HTMLElement)),
@@ -24,38 +30,27 @@ describe('avatar functional test without annotations', () => {
     value: staticId('value', NumberType),
   });
 
-  let valueProvider: NodeProvider<number>;
-
+  @component({
+    tag: 'gs-test',
+    templateKey: TEMPLATE_KEY,
+  })
   class TestCtrl extends BaseDisposable {
-    async renderRootInnerText(): Promise<number> {
-      return await Graph.get($.value);
+    @render.innerText($.root.innerText)
+    async renderRootInnerText(@nodeIn($.value) value: number): Promise<number> {
+      return Promise.resolve(value);
     }
   }
 
   beforeAll(() => {
-    const templateKey = 'templateKey1';
-    Templates.register(templateKey, TEMPLATE_CONTENT);
     valueProvider = Graph.createProvider($.value, 123);
-    Avatar.defineRenderer(TestCtrl, 'renderRootInnerText', $.root.innerText, $.value);
-    Avatar.define(
-        TestCtrl,
-        {
-          tag: 'gs-test-1',
-          templateKey,
-        });
-    Avatar.registerAll(Injector.newInstance(), Templates.newInstance());
+    Persona.registerAll(Injector.newInstance(), Templates.newInstance());
   });
 
-  afterAll(() => {
-    Graph.clearNodesForTests([$.root.innerText.getId(), $.root.element.getId()]);
-  });
-
-  it(`should render data correctly`, async () => {
-    const el = document.createElement('gs-test-1');
+  it(`should create the element correctly`, async () => {
+    const el = document.createElement('gs-test');
     document.body.appendChild(el);
 
     assert(el['getCtrl']()).to.beAnInstanceOf(TestCtrl);
-
     const rootEl = el.shadowRoot!.querySelector('#root') as HTMLElement;
     const value = 234;
     await valueProvider(value);

@@ -1,8 +1,8 @@
-import { SelectorImpl, SelectorStub } from '../avatar/selector';
 import { InstanceofType, IType } from '../check';
 import { Jsons } from '../data';
 import { instanceId } from '../graph';
 import { InstanceId } from '../graph/instance-id';
+import { SelectorImpl, SelectorStub } from '../persona/selector';
 
 export interface ElementSelector<T> {
   getId(): InstanceId<T>;
