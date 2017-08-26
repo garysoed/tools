@@ -8,15 +8,18 @@ import { Injector } from '../inject';
 import { IntegerParser } from '../parse';
 import {
   elementSelector,
+  eventListener,
   innerTextSelector,
   Persona,
-  resolveSelectors } from '../persona';
+  resolveSelectors} from '../persona';
 import { Templates } from '../webc';
 
 
+
 describe('persona functional test without annotations', () => {
-  const TEMPLATE_CONTENT = '<div id="root"></div>';
+  const TEMPLATE_CONTENT = '<div id="root"></div><button id="button">button</button>';
   const $ = resolveSelectors({
+    button: elementSelector('#button', InstanceofType(HTMLButtonElement)),
     root: {
       element: elementSelector('#root', InstanceofType(HTMLElement)),
       innerText: innerTextSelector(elementSelector('root.element'), IntegerParser, NumberType),
@@ -25,8 +28,13 @@ describe('persona functional test without annotations', () => {
   });
 
   let valueProvider: NodeProvider<number>;
+  let mockButtonClickCallback: any;
 
   class TestCtrl extends BaseDisposable {
+    onButtonClick(): void {
+      mockButtonClickCallback();
+    }
+
     async renderRootInnerText(): Promise<number> {
       return await Graph.get($.value);
     }
@@ -36,6 +44,7 @@ describe('persona functional test without annotations', () => {
     const templateKey = 'templateKey1';
     Templates.register(templateKey, TEMPLATE_CONTENT);
     valueProvider = Graph.createProvider($.value, 123);
+    Persona.defineListener(TestCtrl, 'onButtonClick', eventListener($.button, 'click'));
     Persona.defineRenderer(TestCtrl, 'renderRootInnerText', $.root.innerText, $.value);
     Persona.define(
         TestCtrl,
@@ -44,6 +53,10 @@ describe('persona functional test without annotations', () => {
           templateKey,
         });
     Persona.registerAll(Injector.newInstance(), Templates.newInstance());
+  });
+
+  beforeEach(() => {
+    mockButtonClickCallback = jasmine.createSpy('ButtonClickCallback');
   });
 
   afterAll(() => {
@@ -69,6 +82,19 @@ describe('persona functional test without annotations', () => {
     });
     await promise;
     await valueProvider(123);
+    el.remove();
+  });
+
+  it(`should react to event`, async () => {
+    const el = document.createElement('gs-test-1');
+    document.body.appendChild(el);
+
+    assert(el['getCtrl']()).to.beAnInstanceOf(TestCtrl);
+
+    const buttonEl = el.shadowRoot!.querySelector('#button') as HTMLButtonElement;
+    buttonEl.click();
+
+    assert(mockButtonClickCallback).to.haveBeenCalledWith();
     el.remove();
   });
 });

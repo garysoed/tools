@@ -51,10 +51,10 @@ describe('persona functional test with annotations', () => {
     document.body.appendChild(el);
 
     assert(el['getCtrl']()).to.beAnInstanceOf(TestCtrl);
-    const rootEl = el.shadowRoot!.querySelector('#root') as HTMLElement;
     const value = 234;
     await valueProvider(value);
 
+    const rootEl = el.shadowRoot!.querySelector('#root') as HTMLElement;
     const promise = new Promise((resolve: any) => {
       window.setInterval(() => {
         if (rootEl.innerText === `${value}`) {

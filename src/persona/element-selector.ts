@@ -4,13 +4,14 @@ import { instanceId } from '../graph';
 import { InstanceId } from '../graph/instance-id';
 import { SelectorImpl, SelectorStub } from '../persona/selector';
 
-export interface ElementSelector<T> {
+export interface ElementSelector<T extends HTMLElement> {
   getId(): InstanceId<T>;
 
   getSelector(): string;
 }
 
-export class ElementSelectorStub<T> extends SelectorStub<T> implements ElementSelector<T> {
+export class ElementSelectorStub<T extends HTMLElement>
+    extends SelectorStub<T> implements ElementSelector<T> {
   constructor(private readonly path_: string) {
     super();
   }
@@ -26,7 +27,8 @@ export class ElementSelectorStub<T> extends SelectorStub<T> implements ElementSe
   }
 }
 
-export class ElementSelectorImpl<T> extends SelectorImpl<T> implements ElementSelector<T> {
+export class ElementSelectorImpl<T extends HTMLElement>
+    extends SelectorImpl<T> implements ElementSelector<T> {
   constructor(
       private readonly selector_: string,
       private readonly type_: IType<T>,
@@ -53,7 +55,8 @@ export class ElementSelectorImpl<T> extends SelectorImpl<T> implements ElementSe
   }
 }
 
-export function elementSelector<T>(selectorOrId: string, type?: IType<T>): ElementSelector<T> {
+export function elementSelector<T extends HTMLElement>(
+    selectorOrId: string, type?: IType<T>): ElementSelector<T> {
   if (type) {
     return new ElementSelectorImpl(selectorOrId, type, instanceId(selectorOrId, type));
   } else {

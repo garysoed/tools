@@ -12,6 +12,7 @@ describe('CustomElement', () => {
   class TestCtrl extends BaseDisposable { }
 
   let mockInjector: any;
+  let listenerSpecMap: Map<any, any>;
   let rendererSpecMap: Map<any, any>;
   let element: CustomElement & HTMLElement;
 
@@ -24,6 +25,9 @@ describe('CustomElement', () => {
     const avatar = new PersonaImpl(mockCustomElements);
     rendererSpecMap = new Map();
     avatar['rendererSpecs_'].set(TestCtrl, rendererSpecMap);
+
+    listenerSpecMap = new Map();
+    avatar['listenerSpecs_'].set(TestCtrl, listenerSpecMap);
 
     avatar['componentSpecs_'].set(TestCtrl, Mocks.object('spec'));
 
@@ -54,9 +58,29 @@ describe('CustomElement', () => {
       rendererSpecMap.set('key1', {selector: mockSelector1});
       rendererSpecMap.set('key2', {selector: mockSelector2});
 
+      const mockListener1 = jasmine.createSpyObj('Listener1', ['start']);
+      const handler1 = Mocks.object('handler1');
+      const useCapture1 = true;
+      listenerSpecMap.set(
+          'listenerKey1',
+          {handler: handler1, listener: mockListener1, useCapture: useCapture1});
+
+      const mockListener2 = jasmine.createSpyObj('Listener2', ['start']);
+      const handler2 = Mocks.object('handler2');
+      const useCapture2 = false;
+      listenerSpecMap.set(
+          'listenerKey2',
+          {handler: handler2, listener: mockListener2, useCapture: useCapture2});
+
+      const shadowRoot = Mocks.object('shadowRoot');
+      spyOn(element, 'getShadowRoot_').and.returnValue(shadowRoot);
+
       spyOn(element, 'updateElement_');
 
       element.connectedCallback();
+      assert(mockListener1.start).to.haveBeenCalledWith(shadowRoot, handler1, useCapture1);
+      assert(mockListener2.start).to.haveBeenCalledWith(shadowRoot, handler2, useCapture2);
+
       assert(element['updateElement_']).to.haveBeenCalledWith(mockSelector1);
       assert(element['updateElement_']).to.haveBeenCalledWith(mockSelector2);
 
@@ -84,6 +108,7 @@ describe('CustomElement', () => {
 
       element.disconnectedCallback();
       assert(mockCtrl.dispose).to.haveBeenCalledWith();
+      assert(element['ctrl_']).to.beNull();
     });
 
     it(`should not throw errors if the ctrl does not exist`, () => {
@@ -152,6 +177,27 @@ describe('CustomElement', () => {
       assert(element['updateElement_']).toNot.haveBeenCalled();
     });
   });
+
+  describe('updateElement_', () => {
+    it(`should update the selector correctly`, async () => {
+      const id = Mocks.object('id');
+      const mockSelector = jasmine.createSpyObj('Selector', ['getId', 'setValue']);
+      mockSelector.getId.and.returnValue(id);
+
+      const value = Mocks.object('value');
+      spyOn(Graph, 'get').and.returnValue(Promise.resolve(value));
+
+      const shadowRoot = Mocks.object('shadowRoot');
+      spyOn(element, 'getShadowRoot_').and.returnValue(shadowRoot);
+
+      const ctrl = Mocks.object('ctrl');
+      element['ctrl_'] = ctrl;
+
+      await element['updateElement_'](mockSelector);
+      assert(mockSelector.setValue).to.haveBeenCalledWith(value, shadowRoot);
+      assert(Graph.get).to.haveBeenCalledWith(id, ctrl);
+    });
+  });
 });
 
 
@@ -187,6 +233,55 @@ describe('persona.Persona', () => {
       assert(() => {
         persona.define(ctrl, spec);
       }).to.throwError(/is already registered/);
+    });
+  });
+
+  describe('defineListener', () => {
+    it(`should set the listener correctly`, () => {
+      const propertyKey = 'propertyKey';
+
+      class TestClass extends BaseDisposable {
+        [propertyKey](): void { }
+      }
+
+      const listener = Mocks.object('listener');
+      const useCapture = true;
+
+      persona.defineListener(TestClass, propertyKey, listener, useCapture);
+      assert(persona['listenerSpecs_'].get(TestClass)!.get(propertyKey)!).to.equal({
+        handler: TestClass.prototype[propertyKey],
+        listener,
+        useCapture,
+      });
+    });
+
+    it(`should throw error if the listener is already registered`, () => {
+      const propertyKey = 'propertyKey';
+
+      class TestClass extends BaseDisposable {
+        [propertyKey](): void { }
+      }
+
+      const listener = Mocks.object('listener');
+      const useCapture = true;
+      const spec = Mocks.object('spec');
+      persona['listenerSpecs_'].set(TestClass, new Map([[propertyKey, spec]]));
+
+      assert(() => {
+        persona.defineListener(TestClass, propertyKey, listener, useCapture);
+      }).to.throwError(/is already registered/);
+    });
+
+    it(`should throw error if the handler is not a function`, () => {
+      class TestClass extends BaseDisposable { }
+
+      const propertyKey = 'propertyKey';
+      const listener = Mocks.object('listener');
+      const useCapture = true;
+
+      assert(() => {
+        persona.defineListener(TestClass, propertyKey, listener, useCapture);
+      }).to.throwError(/is not a Function/);
     });
   });
 
@@ -262,6 +357,9 @@ describe('persona.Persona', () => {
       ]);
       persona['rendererSpecs_'].set(ctrl, rendererSpecs);
 
+      const listenerSpecs = Mocks.object('listenerSpecs');
+      persona['listenerSpecs_'].set(ctrl, listenerSpecs);
+
       const dependencyCtor1 = Mocks.object('dependencyCtor1');
       const dependencyCtor2 = Mocks.object('dependencyCtor2');
       const parentCtor = HTMLDivElement;
@@ -301,6 +399,7 @@ describe('persona.Persona', () => {
           templateContent,
           injector,
           ctrl,
+          listenerSpecs,
           rendererSpecs);
 
       assert(Graph.registerGenericProvider_).to
@@ -330,6 +429,9 @@ describe('persona.Persona', () => {
       ]);
       persona['rendererSpecs_'].set(ctrl, rendererSpecs);
 
+      const listenerSpecs = Mocks.object('listenerSpecs');
+      persona['listenerSpecs_'].set(ctrl, listenerSpecs);
+
       const dependencyCtor = Mocks.object('dependencyCtor');
       const tag = 'tag';
       const spec = {
@@ -362,6 +464,7 @@ describe('persona.Persona', () => {
           templateContent,
           injector,
           ctrl,
+          listenerSpecs,
           rendererSpecs);
 
       assert(Graph.registerGenericProvider_).to.haveBeenCalledWith(id, true, fn, param);
@@ -369,6 +472,52 @@ describe('persona.Persona', () => {
     });
 
     it(`should not throw errors there are no renderers`, () => {
+      const injector = Mocks.object('injector');
+
+      const ctrl = Mocks.object('ctrl');
+
+      const listenerSpecs = Mocks.object('listenerSpecs');
+      persona['listenerSpecs_'].set(ctrl, listenerSpecs);
+
+      const dependencyCtor = Mocks.object('dependencyCtor');
+      const tag = 'tag';
+      const spec = {
+        dependencies: [dependencyCtor],
+        tag,
+        templateKey: 'templateKey',
+      };
+      persona['componentSpecs_'].set(ctrl, spec);
+
+      const dependencySpec = Mocks.object('dependencySpec');
+      const templateContent = 'templateContent';
+      const mockTemplates = jasmine.createSpyObj('Templates', ['getTemplate']);
+      mockTemplates.getTemplate.and.returnValue(templateContent);
+
+      const origRegister = persona['register_'].bind(persona);
+      Fakes.build(spyOn(persona, 'register_'))
+          .when(injector, mockTemplates, ctrl, dependencySpec).return()
+          .else().call(origRegister);
+
+      spyOn(Graph, 'registerGenericProvider_');
+
+      const customElementClass = Mocks.object('customElementClass');
+      spyOn(persona, 'createCustomElementClass_').and.returnValue(customElementClass);
+
+      persona['register_'](injector, mockTemplates, ctrl);
+      assert(mockCustomElements.define).to
+          .haveBeenCalledWith(tag, customElementClass);
+      assert(persona['createCustomElementClass_']).to.haveBeenCalledWith(
+          HTMLElement,
+          templateContent,
+          injector,
+          ctrl,
+          listenerSpecs,
+          new Map());
+
+      assert(persona['register_']).to.haveBeenCalledWith(injector, mockTemplates, dependencyCtor);
+    });
+
+    it(`should not throw errors there are no listeners`, () => {
       const injector = Mocks.object('injector');
 
       const ctrl = Mocks.object('ctrl');
@@ -404,6 +553,7 @@ describe('persona.Persona', () => {
           templateContent,
           injector,
           ctrl,
+          new Map(),
           new Map());
 
       assert(persona['register_']).to.haveBeenCalledWith(injector, mockTemplates, dependencyCtor);
@@ -435,6 +585,7 @@ describe('persona.Persona', () => {
           templateContent,
           injector,
           ctrl,
+          new Map(),
           new Map());
     });
 

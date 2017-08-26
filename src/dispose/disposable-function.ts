@@ -33,4 +33,3 @@ export class DisposableFunction extends BaseDisposable implements IDisposableFun
     return new DisposableFunction(fn);
   }
 }
-// TODO: Mutable
