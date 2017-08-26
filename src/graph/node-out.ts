@@ -11,8 +11,8 @@ export function nodeOut(instanceId: InstanceId<any>, isEager: boolean = false): 
         .get(propertyKey);
 
     const paramsArray: NodeId<any>[] = [];
-    for (const {index, instanceId} of paramsSet || []) {
-      paramsArray[index] = instanceId;
+    for (const {index, id} of paramsSet || []) {
+      paramsArray[index] = id;
     }
 
     Graph.registerGenericProvider_(
