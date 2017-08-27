@@ -3,6 +3,7 @@
  *
  * @TODO Turn this into Fluent
  */
+import { AssertionError } from '../error';
 import { deprecated } from '../typescript/deprecated';
 import { Log } from '../util/log';
 
@@ -87,7 +88,7 @@ export class Jsons {
    */
   static setValue(json: gs.IJson, path: string, value: any): void {
     if (path === '') {
-      throw new Error(`Expected ${path} to not be empty`);
+      throw AssertionError.condition('path', 'not be empty', path);
     }
 
     let object = json;

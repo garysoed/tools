@@ -16,7 +16,7 @@ export function atomic(): MethodDecorator {
       descriptor: TypedPropertyDescriptor<any>):
       TypedPropertyDescriptor<any> {
     if (!(target instanceof BaseDisposable)) {
-      throw AssertionError.instanceOf(BaseDisposable, target);
+      throw AssertionError.instanceOf('target', BaseDisposable, target);
     }
 
     const originalFn = descriptor.value;

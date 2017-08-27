@@ -1,14 +1,24 @@
+import { Type } from '../check';
+
 export class AssertionError extends Error {
   constructor(message: string) {
     super(`AssertionError: ${message}`);
     Object.setPrototypeOf(this, new.target.prototype);
   }
 
+  static condition(field: string, expected: string, actual: any): AssertionError {
+    return AssertionError.generic(`[${field}] should ${expected}, but was [${actual}]`);
+  }
+
   static generic(message: string): AssertionError {
     return new AssertionError(message);
   }
 
-  static instanceOf(expected: gs.ICtor<Object>, actual: Object): AssertionError {
-    return new AssertionError(`[${actual}] is expected to be of type [${expected.name}]`);
+  static instanceOf(field: string, expected: gs.ICtor<Object>, actual: Object): AssertionError {
+    return AssertionError.condition(field, `be [${expected.name}]`, actual);
+  }
+
+  static type(field: string, expected: Type<any>, actual: any): AssertionError {
+    return AssertionError.condition(field, `be [${expected}]`, actual);
   }
 }

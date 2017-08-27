@@ -1,4 +1,5 @@
 import { CACHE_ANNOTATIONS, Caches } from '../data/caches';
+import { AssertionError } from '../error';
 import { hash } from '../util/hash';
 
 
@@ -9,8 +10,8 @@ export function cache(): MethodDecorator {
       propertyKey: string | symbol,
       descriptor: TypedPropertyDescriptor<any>): TypedPropertyDescriptor<any> {
     const value = descriptor.value;
-    if (value === undefined) {
-      throw new Error(`Property ${propertyKey} must be a method`);
+    if (!(value instanceof Function)) {
+      throw AssertionError.instanceOf('attached', Function, value);
     }
 
     descriptor.value = function(...args: any[]): any {

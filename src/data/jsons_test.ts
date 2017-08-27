@@ -75,7 +75,7 @@ describe('data.Jsons', () => {
     it('should throw error when the path is empty', () => {
       assert(() => {
         Jsons.setValue({ }, '', 123);
-      }).to.throwError(/to not be empty/);
+      }).to.throwError(/not be empty/);
     });
   });
 });
