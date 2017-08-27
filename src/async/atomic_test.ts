@@ -8,7 +8,7 @@ import { __SEQUENCER, atomic } from './atomic';
 import { Sequencer } from './sequencer';
 
 
-describe('async.sequenced', () => {
+describe('async.atomic', () => {
   let decorator: MethodDecorator;
 
   beforeEach(() => {
@@ -68,6 +68,6 @@ describe('async.sequenced', () => {
     class Class {}
     assert(() => {
       decorator(Class.prototype, 'property', {});
-    }).to.throwError(/be an instance of BaseDisposable/);
+    }).to.throwError(/expected to be of type/);
   });
 });

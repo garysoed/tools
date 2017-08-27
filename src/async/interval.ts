@@ -1,5 +1,6 @@
-import { Bus } from '../event/bus';
-import { Log } from '../util/log';
+import { AssertionError } from '../error';
+import { Bus } from '../event';
+import { Log } from '../util';
 
 export type IntervalEventType = 'tick';
 export type IntervalEvent = {type: IntervalEventType};
@@ -42,7 +43,7 @@ export class Interval extends Bus<IntervalEventType, IntervalEvent> {
    */
   start(): void {
     if (this.intervalId_ !== null) {
-      throw new Error('Interval is already running, cannot start again');
+      throw AssertionError.generic('Interval is already running, cannot start again');
     }
     this.intervalId_ = window.setInterval(() => {
       this.dispatch({type: 'tick'});
@@ -68,4 +69,3 @@ export class Interval extends Bus<IntervalEventType, IntervalEvent> {
     return new Interval(interval);
   }
 }
-// TODO: Mutable
