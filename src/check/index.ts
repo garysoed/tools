@@ -8,6 +8,8 @@ export { IntersectType } from './intersect-type';
 export { IterableType } from './iterable-type';
 export { IType } from './i-type';
 export { NonNullType } from './non-null-type';
+export { NullType } from './null-type';
+export { NullableType } from './nullable-type';
 export { NumberType } from './number-type';
 export { StringType } from './string-type';
 export { UnionType } from './union-type';

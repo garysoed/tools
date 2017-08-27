@@ -18,11 +18,12 @@ describe('persona.EventListener', () => {
       const shadowRoot = Mocks.object('shadowRoot');
       const mockHandler = jasmine.createSpy('Handler');
       const useCapture = false;
+      const context = Mocks.object('context');
 
       const button = document.createElement('button');
       mockSelector.getValue.and.returnValue(button);
 
-      const deregister = listener.start(shadowRoot, mockHandler, useCapture);
+      const deregister = listener.start(shadowRoot, mockHandler, context, useCapture);
       button.click();
       assert(mockHandler).to.haveBeenCalledWith(Matchers.objectContaining({type: 'click'}));
 

@@ -1,5 +1,5 @@
-import { ImmutableList } from 'src/immutable';
 import { GLOBALS, GNode } from '../graph/g-node';
+import { ImmutableList } from '../immutable';
 
 export class InputNode<T> extends GNode<T> {
   private readonly symbol_: symbol = Symbol('inputNode');

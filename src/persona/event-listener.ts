@@ -11,11 +11,13 @@ export class EventListener<E extends keyof HTMLElementEventMap> implements Liste
   start(
       root: ShadowRoot,
       handler: (event: Event<E>) => any,
+      context: any,
       useCapture: boolean): DisposableFunction {
     const element = this.selector_.getValue(root);
-    element.addEventListener(this.eventType_, handler, useCapture);
+    const boundHandler = handler.bind(context);
+    element.addEventListener(this.eventType_, boundHandler, useCapture);
     return DisposableFunction.of(() => {
-      element.removeEventListener(this.eventType_, handler, useCapture);
+      element.removeEventListener(this.eventType_, boundHandler, useCapture);
     });
   }
 }

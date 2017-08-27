@@ -2,11 +2,9 @@ import { InstanceofType, IType } from '../check';
 import { Jsons } from '../data';
 import { instanceId } from '../graph';
 import { InstanceId } from '../graph/instance-id';
-import { SelectorImpl, SelectorStub } from '../persona/selector';
+import { Selector, SelectorImpl, SelectorStub } from '../persona/selector';
 
-export interface ElementSelector<T extends HTMLElement> {
-  getId(): InstanceId<T>;
-
+export interface ElementSelector<T extends HTMLElement> extends Selector<T> {
   getSelector(): string;
 }
 
@@ -31,7 +29,7 @@ export class ElementSelectorImpl<T extends HTMLElement>
     extends SelectorImpl<T> implements ElementSelector<T> {
   constructor(
       private readonly selector_: string,
-      private readonly type_: IType<T>,
+      protected readonly type_: IType<T>,
       id: InstanceId<T>) {
     super(id);
   }

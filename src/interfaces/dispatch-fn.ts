@@ -1,1 +1,1 @@
-export type DispatchFn<T> = (name: string, payload: T) => void;
+export type DispatchFn<T> = (name: string, payload: T) => any;

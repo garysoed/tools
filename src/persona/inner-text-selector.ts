@@ -1,23 +1,14 @@
 import { IType } from '../check';
 import { instanceId } from '../graph';
-import { InstanceId } from '../graph/instance-id';
 import { Parser } from '../interfaces';
 import {
   ElementSelector,
   ElementSelectorImpl,
   ElementSelectorStub } from '../persona/element-selector';
-import { SelectorImpl, SelectorStub } from '../persona/selector';
+import { Selector, SelectorImpl, SelectorStub } from '../persona/selector';
 
-export interface InnerTextSelector<T> {
-  getElementSelector(): ElementSelector<any>;
-
-  getId(): InstanceId<T>;
-
-  getParser(): Parser<T>;
-
-  getValue(root: ShadowRoot): T | null;
-
-  setValue(value: T | null, root: ShadowRoot): void;
+export interface InnerTextSelector<T> extends Selector<T> {
+  getElementSelector(): ElementSelector<HTMLElement>;
 }
 
 export class InnerTextSelectorStub<T> extends SelectorStub<T> implements InnerTextSelector<T> {
@@ -32,10 +23,6 @@ export class InnerTextSelectorStub<T> extends SelectorStub<T> implements InnerTe
     return this.throwStub();
   }
 
-  getParser(): Parser<T> {
-    return this.throwStub();
-  }
-
   resolve(allSelectors: {}): InnerTextSelectorImpl<T> {
     return new InnerTextSelectorImpl(
         this.elementSelector_.resolve(allSelectors),
@@ -46,18 +33,14 @@ export class InnerTextSelectorStub<T> extends SelectorStub<T> implements InnerTe
 
 export class InnerTextSelectorImpl<T> extends SelectorImpl<T> implements InnerTextSelector<T> {
   constructor(
-      private elementSelector_: ElementSelectorImpl<HTMLElement>,
-      private parser_: Parser<T>,
+      private readonly elementSelector_: ElementSelectorImpl<HTMLElement>,
+      private readonly parser_: Parser<T>,
       type: IType<T>) {
     super(instanceId(`${elementSelector_.getSelector()}@innerText`, type));
   }
 
   getElementSelector(): ElementSelector<HTMLElement> {
     return this.elementSelector_;
-  }
-
-  getParser(): Parser<T> {
-    return this.parser_;
   }
 
   getValue(root: ShadowRoot): T | null {
