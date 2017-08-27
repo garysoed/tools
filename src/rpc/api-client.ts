@@ -1,4 +1,4 @@
-import { IType } from '../check/i-type';
+import { Type } from '../check/type';
 import { PostMessageChannel } from '../rpc/post-message-channel';
 
 
@@ -10,12 +10,12 @@ import { PostMessageChannel } from '../rpc/post-message-channel';
 export class ApiClient<Q extends gs.IJson, P> {
   private readonly channel_: PostMessageChannel;
   private readonly responseCheck_: (request: Q, response: P) => boolean;
-  private readonly responseType_: IType<P>;
+  private readonly responseType_: Type<P>;
 
   constructor(
       channel: PostMessageChannel,
       responseCheck: (request: Q, response: P) => boolean,
-      responseType: IType<P>) {
+      responseType: Type<P>) {
     this.channel_ = channel;
     this.responseCheck_ = responseCheck;
     this.responseType_ = responseType;
@@ -50,7 +50,7 @@ export class ApiClient<Q extends gs.IJson, P> {
   static of<Q extends gs.IJson, P>(
       channel: PostMessageChannel,
       responseCheck: (request: Q, response: P) => boolean,
-      responseType: IType<P>): ApiClient<Q, P> {
+      responseType: Type<P>): ApiClient<Q, P> {
     return new ApiClient<Q, P>(channel, responseCheck, responseType);
   }
 }

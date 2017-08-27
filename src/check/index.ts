@@ -6,7 +6,7 @@ export { HasPropertyType } from './has-property-type';
 export { InstanceofType } from './instanceof-type';
 export { IntersectType } from './intersect-type';
 export { IterableType } from './iterable-type';
-export { IType } from './i-type';
+export { Type } from './type';
 export { NonNullType } from './non-null-type';
 export { NullType } from './null-type';
 export { NullableType } from './nullable-type';

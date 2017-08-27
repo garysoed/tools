@@ -3,14 +3,14 @@ import {
   HasPropertyType,
   InstanceofType,
   IntersectType,
-  IType,
-  NumberType } from '../check';
+  NumberType,
+  Type } from '../check';
 import { Orderings } from '../immutable/orderings';
 import { CompareResult, FiniteCollection, FiniteIndexed, Ordered, Ordering } from '../interfaces';
 import { assertUnreachable } from '../typescript';
 
 type ItemList<T> = { item: (index: number) => T, length: number };
-function ItemListType<T>(): IType<ItemList<T>> {
+function ItemListType<T>(): Type<ItemList<T>> {
   return IntersectType.builder<ItemList<T>>()
       .addType(HasPropertyType('item', InstanceofType(Function)))
       .addType(HasPropertyType('length', NumberType))

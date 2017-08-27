@@ -1,5 +1,5 @@
-import { IType } from '../check/i-type';
 import { InstanceofType } from '../check/instanceof-type';
+import { Type } from '../check/type';
 
 /**
  * Checks if the elements of the given array are all of the given type.
@@ -8,7 +8,7 @@ import { InstanceofType } from '../check/instanceof-type';
  * @param <T> Type of the element.
  * @return The array type.
  */
-export function ArrayOfType<T>(type: IType<T>): IType<T[]> {
+export function ArrayOfType<T>(type: Type<T>): Type<T[]> {
   return {
     /**
      * @override
@@ -21,6 +21,10 @@ export function ArrayOfType<T>(type: IType<T>): IType<T[]> {
       } else {
         return false;
       }
+    },
+
+    toString(): string {
+      return `${type}[]`;
     },
   };
 }

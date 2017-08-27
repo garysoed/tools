@@ -1,7 +1,7 @@
-import { IType } from '../check/i-type';
+import { Type } from '../check/type';
 
 class IntersectTypeBuilder<T> {
-  private readonly types_: IType<any>[];
+  private readonly types_: Type<any>[];
 
   constructor() {
     this.types_ = [];
@@ -11,7 +11,7 @@ class IntersectTypeBuilder<T> {
    * Adds the given type as a requirement to check.
    * @param type Type to check.
    */
-  addType(type: IType<any>): IntersectTypeBuilder<T> {
+  addType(type: Type<any>): IntersectTypeBuilder<T> {
     this.types_.push(type);
     return this;
   }
@@ -32,13 +32,13 @@ class IntersectTypeBuilder<T> {
  * type T.
  * @param <T> Type to check.
  */
-export class IntersectType<T> implements IType<T> {
-  private readonly types_: IType<T>[];
+export class IntersectType<T> implements Type<T> {
+  private readonly types_: Type<T>[];
 
   /**
    * @param types Types that the checked object should satisfy.
    */
-  constructor(types: IType<T>[]) {
+  constructor(types: Type<T>[]) {
     this.types_ = types;
   }
 
@@ -46,9 +46,14 @@ export class IntersectType<T> implements IType<T> {
    * @override
    */
   check(target: any): target is T {
-    return this.types_.every((type: IType<T>) => {
+    return this.types_.every((type: Type<T>) => {
       return type.check(target);
     });
+  }
+
+  toString(): string {
+    const types = this.types_.map((type: Type<T>) => `${type}`).join(' & ');
+    return `(${types})`;
   }
 
   /**

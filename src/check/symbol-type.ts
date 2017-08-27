@@ -1,11 +1,14 @@
-import { IType } from '../check/i-type';
+import { Type } from '../check/type';
 
-export const SymbolType: IType<symbol> = {
+export const SymbolType: Type<symbol> = {
   /**
    * @override
    */
   check(target: any): target is symbol {
     return typeof target === 'symbol';
   },
+
+  toString(): string {
+    return 'symbol';
+  },
 };
-// TODO: Mutable

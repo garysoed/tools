@@ -1,11 +1,11 @@
-import { IType } from '../check';
+import { Type } from '../check';
 
 export class InstanceId<T> {
   constructor(
       private readonly debug_: string,
-      private readonly type_: IType<T>) { }
+      private readonly type_: Type<T>) { }
 
-  getType(): IType<T> {
+  getType(): Type<T> {
     return this.type_;
   }
 
@@ -14,6 +14,6 @@ export class InstanceId<T> {
   }
 }
 
-export function instanceId<T>(debug: string, type: IType<T>): InstanceId<T> {
+export function instanceId<T>(debug: string, type: Type<T>): InstanceId<T> {
   return new InstanceId(debug, type);
 }

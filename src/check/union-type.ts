@@ -1,8 +1,8 @@
-import { IType } from '../check/i-type';
+import { Type } from '../check/type';
 import { ImmutableList } from '../immutable/immutable-list';
 
 class UnionTypeBuilder<T> {
-  private readonly types_: IType<any>[];
+  private readonly types_: Type<any>[];
 
   constructor() {
     this.types_ = [];
@@ -12,7 +12,7 @@ class UnionTypeBuilder<T> {
    * Adds the given type as a requirement to check.
    * @param type Type to check.
    */
-  addType<S extends T>(type: IType<S>): UnionTypeBuilder<T> {
+  addType<S extends T>(type: Type<S>): UnionTypeBuilder<T> {
     this.types_.push(type);
     return this;
   }
@@ -33,13 +33,13 @@ class UnionTypeBuilder<T> {
  * be treated as type T.
  * @param <T> Type to check.
  */
-export class UnionType<T> implements IType<T> {
-  private readonly types_: IType<T>[];
+export class UnionType<T> implements Type<T> {
+  private readonly types_: Type<T>[];
 
   /**
    * @param types Types that the checked object should satisfy.
    */
-  constructor(types: IType<T>[]) {
+  constructor(types: Type<T>[]) {
     this.types_ = types;
   }
 
@@ -49,9 +49,14 @@ export class UnionType<T> implements IType<T> {
   check(target: any): target is T {
     return ImmutableList
         .of(this.types_)
-        .some((type: IType<T>) => {
+        .some((type: Type<T>) => {
           return type.check(target);
         });
+  }
+
+  toString(): string {
+    const types = this.types_.map((type: Type<T>) => `${type}`).join(' | ');
+    return `(${types})`;
   }
 
   /**
@@ -63,4 +68,3 @@ export class UnionType<T> implements IType<T> {
     return new UnionTypeBuilder<T>();
   }
 }
-// TODO: Mutable

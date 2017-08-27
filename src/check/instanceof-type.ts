@@ -1,4 +1,4 @@
-import { IType } from '../check/i-type';
+import { Type } from '../check/type';
 
 
 /**
@@ -6,7 +6,7 @@ import { IType } from '../check/i-type';
  * @param ctor Ctor to check the type.
  * @return The instanceof type.
  */
-export function InstanceofType<T>(ctor: gs.ICtor<T>): IType<T> {
+export function InstanceofType<T>(ctor: gs.ICtor<T>): Type<T> {
   return {
     /**
      * @override
@@ -14,6 +14,9 @@ export function InstanceofType<T>(ctor: gs.ICtor<T>): IType<T> {
     check(target: any): target is T {
       return target instanceof ctor;
     },
+
+    toString(): string {
+      return `(instanceof ${ctor})`;
+    },
   };
 }
-// TODO: Mutable

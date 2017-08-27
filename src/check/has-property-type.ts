@@ -1,6 +1,6 @@
-import { IType } from '../check/i-type';
+import { Type } from '../check/type';
 
-export function HasPropertyType<T>(name: string | symbol, type: IType<any>): IType<T> {
+export function HasPropertyType<T>(name: string | symbol, type: Type<any>): Type<T> {
   return {
     /**
      * @override
@@ -12,6 +12,10 @@ export function HasPropertyType<T>(name: string | symbol, type: IType<any>): ITy
 
       const value = target[name];
       return value !== undefined && type.check(value);
+    },
+
+    toString(): string {
+      return `{${name}: ${type}}`;
     },
   };
 }

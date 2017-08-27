@@ -1,11 +1,14 @@
-import { IType } from '../check/i-type';
+import { Type } from '../check/type';
 
-export const StringType: IType<string> = {
+export const StringType: Type<string> = {
   /**
    * @override
    */
   check(target: any): target is string {
     return typeof target === 'string' || target instanceof String;
   },
+
+  toString(): string {
+    return 'string';
+  },
 };
-// TODO: Mutable

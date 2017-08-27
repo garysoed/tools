@@ -1,8 +1,8 @@
-import { HasPropertyType, InstanceofType, IterableType, IType, StringType } from '../check';
+import { HasPropertyType, InstanceofType, IterableType, StringType, Type } from '../check';
 import { assertUnreachable } from '../typescript';
 
 export class Iterables {
-  static ITERATOR_TYPE: IType<Iterator<any>> =
+  static ITERATOR_TYPE: Type<Iterator<any>> =
       HasPropertyType<Iterator<any>>('next', InstanceofType(Function));
 
   static clone<T>(iterable: Iterable<T>): Iterable<T> {

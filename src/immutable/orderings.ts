@@ -1,6 +1,4 @@
-import { IType } from '../check/i-type';
-import { NumberType } from '../check/number-type';
-import { StringType } from '../check/string-type';
+import { NumberType, StringType, Type } from '../check';
 import { ImmutableList } from '../immutable/immutable-list';
 import { CompareResult } from '../interfaces/compare-result';
 import { Finite } from '../interfaces/finite';
@@ -99,7 +97,7 @@ export const Orderings = {
   /**
    * Order the items by the types.
    */
-  type(types: Iterable<IType<any>> & Finite): Ordering<any> {
+  type(types: Iterable<Type<any>> & Finite): Ordering<any> {
     return (item1: any, item2: any): CompareResult => {
       for (const type of types) {
         const passes1 = type.check(item1);

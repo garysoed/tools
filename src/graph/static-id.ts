@@ -1,11 +1,11 @@
-import { IType } from '../check';
+import { Type } from '../check';
 
 export class StaticId<T> {
   constructor(
       private readonly debug_: string,
-      private readonly type_: IType<T>) { }
+      private readonly type_: Type<T>) { }
 
-  getType(): IType<T> {
+  getType(): Type<T> {
     return this.type_;
   }
 
@@ -14,6 +14,6 @@ export class StaticId<T> {
   }
 }
 
-export function staticId<T>(debug: string, type: IType<T>): StaticId<T> {
+export function staticId<T>(debug: string, type: Type<T>): StaticId<T> {
   return new StaticId(debug, type);
 }

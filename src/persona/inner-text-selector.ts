@@ -1,4 +1,4 @@
-import { IType } from '../check';
+import { Type } from '../check';
 import { instanceId } from '../graph';
 import { Parser } from '../interfaces';
 import {
@@ -15,7 +15,7 @@ export class InnerTextSelectorStub<T> extends SelectorStub<T> implements InnerTe
   constructor(
       private readonly elementSelector_: ElementSelectorStub<HTMLElement>,
       private readonly parser_: Parser<T>,
-      private readonly type_: IType<T>) {
+      private readonly type_: Type<T>) {
     super();
   }
 
@@ -35,7 +35,7 @@ export class InnerTextSelectorImpl<T> extends SelectorImpl<T> implements InnerTe
   constructor(
       private readonly elementSelector_: ElementSelectorImpl<HTMLElement>,
       private readonly parser_: Parser<T>,
-      type: IType<T>) {
+      type: Type<T>) {
     super(instanceId(`${elementSelector_.getSelector()}@innerText`, type));
   }
 
@@ -57,7 +57,7 @@ export class InnerTextSelectorImpl<T> extends SelectorImpl<T> implements InnerTe
 export function innerTextSelector<T>(
     elementSelector: ElementSelector<HTMLElement>,
     parser: Parser<T>,
-    type: IType<T>): InnerTextSelector<T> {
+    type: Type<T>): InnerTextSelector<T> {
   if (elementSelector instanceof ElementSelectorStub) {
     return new InnerTextSelectorStub(elementSelector, parser, type);
   } else if (elementSelector instanceof ElementSelectorImpl) {

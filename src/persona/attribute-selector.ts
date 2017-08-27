@@ -1,4 +1,4 @@
-import { IType } from '../check';
+import { Type } from '../check';
 import { instanceId } from '../graph';
 import { Parser } from '../interfaces';
 import {
@@ -16,7 +16,7 @@ export class AttributeSelectorStub<T> extends SelectorStub<T> implements Attribu
       private readonly elementSelector_: ElementSelectorStub<HTMLElement>,
       private readonly parser_: Parser<T>,
       private readonly attrName_: string,
-      private readonly type_: IType<T>) {
+      private readonly type_: Type<T>) {
     super();
   }
 
@@ -38,7 +38,7 @@ export class AttributeSelectorImpl<T> extends SelectorImpl<T> implements Attribu
       private readonly elementSelector_: ElementSelectorImpl<HTMLElement>,
       private readonly parser_: Parser<T>,
       private readonly attrName_: string,
-      type: IType<T>) {
+      type: Type<T>) {
     super(instanceId(`${elementSelector_.getSelector()}[${attrName_}]`, type));
   }
 
@@ -67,7 +67,7 @@ export function attributeSelector<T>(
     elementSelector: ElementSelector<HTMLElement>,
     attrName: string,
     parser: Parser<T>,
-    type: IType<T>): AttributeSelector<T> {
+    type: Type<T>): AttributeSelector<T> {
   if (elementSelector instanceof ElementSelectorStub) {
     return new AttributeSelectorStub(elementSelector, parser, attrName, type);
   } else if (elementSelector instanceof ElementSelectorImpl) {

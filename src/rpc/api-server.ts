@@ -1,4 +1,4 @@
-import { IType } from '../check/i-type';
+import { Type } from '../check/type';
 import { PostMessageChannel } from '../rpc/post-message-channel';
 
 
@@ -10,12 +10,12 @@ import { PostMessageChannel } from '../rpc/post-message-channel';
 export class ApiServer<Q, P extends gs.IJson> {
   private readonly channel_: PostMessageChannel;
   private readonly processRequest_: (request: Q) => Promise<P>;
-  private readonly requestType_: IType<Q>;
+  private readonly requestType_: Type<Q>;
 
   constructor(
       channel: PostMessageChannel,
       processRequest: (request: Q) => Promise<P>,
-      requestType: IType<Q>) {
+      requestType: Type<Q>) {
     this.channel_ = channel;
     this.processRequest_ = processRequest;
     this.requestType_ = requestType;
@@ -49,7 +49,7 @@ export class ApiServer<Q, P extends gs.IJson> {
   static of<Q, P extends gs.IJson>(
       channel: PostMessageChannel,
       processRequest: (request: Q) => Promise<P>,
-      requestType: IType<Q>): ApiServer<Q, P> {
+      requestType: Type<Q>): ApiServer<Q, P> {
     return new ApiServer<Q, P>(channel, processRequest, requestType);
   }
 }

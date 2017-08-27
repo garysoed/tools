@@ -1,4 +1,4 @@
-import { InstanceofType, IType } from '../check';
+import { InstanceofType, Type } from '../check';
 import { Jsons } from '../data';
 import { instanceId } from '../graph';
 import { InstanceId } from '../graph/instance-id';
@@ -29,7 +29,7 @@ export class ElementSelectorImpl<T extends HTMLElement>
     extends SelectorImpl<T> implements ElementSelector<T> {
   constructor(
       private readonly selector_: string,
-      protected readonly type_: IType<T>,
+      protected readonly type_: Type<T>,
       id: InstanceId<T>) {
     super(id);
   }
@@ -54,7 +54,7 @@ export class ElementSelectorImpl<T extends HTMLElement>
 }
 
 export function elementSelector<T extends HTMLElement>(
-    selectorOrId: string, type?: IType<T>): ElementSelector<T> {
+    selectorOrId: string, type?: Type<T>): ElementSelector<T> {
   if (type) {
     return new ElementSelectorImpl(selectorOrId, type, instanceId(selectorOrId, type));
   } else {
