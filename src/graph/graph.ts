@@ -1,6 +1,6 @@
 import { BaseDisposable } from '../dispose';
 import { Bus } from '../event';
-import { GNode } from '../graph/g-node';
+import { GLOBALS, GNode } from '../graph/g-node';
 import { EventType, GraphEvent } from '../graph/graph-event';
 import { InnerNode } from '../graph/inner-node';
 import { InputNode } from '../graph/input-node';
@@ -10,12 +10,13 @@ import { NodeProvider } from '../graph/node-provider';
 import { Provider, Provider0, Provider1, Provider2 } from '../graph/provider';
 import { StaticId } from '../graph/static-id';
 import { ImmutableList, ImmutableSet } from '../immutable';
+import { assertUnreachable, equals } from '../typescript';
 import { Log } from '../util';
 
 const LOGGER: Log = Log.of('gs-tools.graph.Graph');
 
 export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
-  private readonly monitoredNodes_: WeakMap<{}, ImmutableSet<InstanceId<any>>> = new WeakMap();
+  private readonly monitoredNodes_: WeakMap<{}, ImmutableSet<NodeId<any>>> = new WeakMap();
   private readonly nodes_: Map<NodeId<any>, GNode<any>> = new Map();
   private readonly setQueue_: (() => void)[] = [];
 
@@ -54,7 +55,7 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
    */
   async get<T>(staticId: StaticId<T>): Promise<T>;
   async get<T, C>(instanceId: InstanceId<T>, context: C): Promise<T>;
-  async get<T, C>(nodeId: NodeId<T>, context: C | null = null): Promise<T> {
+  async get<T>(nodeId: NodeId<T>, context: any = GLOBALS): Promise<T> {
     const node = this.nodes_.get(nodeId);
     if (!node) {
       throw new Error(`Node for ${nodeId} cannot be found`);
@@ -69,17 +70,15 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
           }
         }));
 
-    if (context !== null &&
-        context instanceof BaseDisposable &&
-        nodeId instanceof InstanceId &&
+    if (context instanceof BaseDisposable &&
         node instanceof InnerNode &&
         node.monitorsChanges() &&
         !this.isMonitored_(context, nodeId)) {
       context.addDisposable(
           this.on(
               'change',
-              (event: GraphEvent<T, C>) => {
-                this.onChange_<T, C>(nodeId, node, context, event);
+              (event: GraphEvent<T, any>) => {
+                this.onChange_<T, any>(nodeId, node, context, event);
               },
               this));
 
@@ -92,16 +91,16 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
 
     const [resolvedCached, resolvedValue] = await Promise.all([cachedValue, value]);
     if (!nodeId.getType().check(resolvedValue)) {
-      throw new Error(`Node for ${nodeId} returns the incorrect type. [${value}]`);
+      throw new Error(`Node for ${nodeId} returns the incorrect type. [${resolvedValue}]`);
     }
 
-    if (resolvedCached !== resolvedValue) {
+    if (!equals(resolvedCached, resolvedValue)) {
       this.dispatch({context, id: nodeId, type: 'change' as 'change'});
     }
     return value;
   }
 
-  private isMonitored_(context: {}, nodeId: InstanceId<any>): boolean {
+  private isMonitored_(context: {}, nodeId: NodeId<any>): boolean {
     const ids = this.monitoredNodes_.get(context);
     if (!ids) {
       return false;
@@ -111,11 +110,15 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
   }
 
   private onChange_<T, C>(
-      nodeId: InstanceId<T>, node: InnerNode<T>, context: C, event: GraphEvent<T, C>): void {
+      nodeId: NodeId<T>, node: InnerNode<T>, context: C, event: GraphEvent<T, C>): void {
     const inIds = ImmutableSet.of(node.getParameterIds());
     if (inIds.has(event.id)) {
       node.clearCache(context);
-      this.get(nodeId, context);
+      if (nodeId instanceof InstanceId) {
+        this.refresh(nodeId, context);
+      } else {
+        this.refresh(nodeId);
+      }
     }
   }
 
@@ -124,6 +127,18 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
       setFn();
     }
     this.setQueue_.splice(0, this.setQueue_.length);
+  }
+
+  async refresh<T>(staticId: StaticId<T>): Promise<T>;
+  async refresh<T, C>(instanceId: InstanceId<T>, context: C): Promise<T>;
+  async refresh<T, C>(nodeId: StaticId<T> | InstanceId<T>, context: C | null = null): Promise<T> {
+    if (nodeId instanceof StaticId) {
+      return this.get(nodeId);
+    } else if (nodeId instanceof InstanceId) {
+      return this.get(nodeId, context);
+    } else {
+      throw assertUnreachable(nodeId);
+    }
   }
 
   registerGenericProvider_<T>(
@@ -201,6 +216,10 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
     setTimeout(() => this.processSetQueue_(), 0);
 
     return promise;
+  }
+
+  toString(): string {
+    return 'Graph';
   }
 }
 

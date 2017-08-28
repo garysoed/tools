@@ -4,6 +4,7 @@ TestBase.setup();
 import { NumberType } from '../check';
 import { BaseDisposable } from '../dispose';
 import { instanceId, staticId } from '../graph';
+import { GLOBALS } from '../graph/g-node';
 import { GraphImpl } from '../graph/graph';
 import { InnerNode } from '../graph/inner-node';
 import { InputNode } from '../graph/input-node';
@@ -72,8 +73,8 @@ describe('graph.Graph', () => {
       spyOn(graph, 'dispatch');
 
       await assert(graph.get($.test)).to.resolveWith(value);
-      assert(mockNode.execute).to.haveBeenCalledWith(null, [param1, param2]);
-      assert(graph.dispatch).to.haveBeenCalledWith({context: null, id: $.test, type: 'change'});
+      assert(mockNode.execute).to.haveBeenCalledWith(GLOBALS, [param1, param2]);
+      assert(graph.dispatch).to.haveBeenCalledWith({context: GLOBALS, id: $.test, type: 'change'});
     });
 
     it(`should handle instance IDs`, async () => {
@@ -145,7 +146,7 @@ describe('graph.Graph', () => {
       graph['nodes_'].set($.test, mockNode);
 
       await assert(graph.get($.test)).to.rejectWithError(/incorrect type/);
-      assert(mockNode.execute).to.haveBeenCalledWith(null, [param]);
+      assert(mockNode.execute).to.haveBeenCalledWith(GLOBALS, [param]);
     });
 
     it(`should reject if the node corresponding to the ID cannot be found`, async () => {
@@ -243,24 +244,6 @@ describe('graph.Graph', () => {
       assert(graph.on).toNot.haveBeenCalled();
     });
 
-    it(`should not monitor if the nodeId is not InstanceId`, async () => {
-      const $test = staticId('test', NumberType);
-      const value = 123;
-
-      const mockNode = jasmine.createSpyObj(
-          'Node',
-          ['execute', 'getPreviousValue', 'getParameterIds', 'monitorsChanges']);
-      mockNode.execute.and.returnValue(value);
-      mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
-      graph['nodes_'].set($test, mockNode);
-
-      spyOn(graph, 'on');
-      spyOn(graph, 'onChange_');
-
-      await assert(graph.get($test)).to.resolveWith(value);
-      assert(graph.on).toNot.haveBeenCalled();
-    });
-
     it(`should not monitor if the context is not BaseDisposable`, async () => {
       class TestClass { }
 
@@ -282,24 +265,6 @@ describe('graph.Graph', () => {
       assert(graph.on).toNot.haveBeenCalled();
     });
 
-    it(`should not monitor if the context is null`, async () => {
-      const $test = instanceId('test', NumberType);
-      const value = 123;
-
-      const mockNode = jasmine.createSpyObj(
-          'Node',
-          ['execute', 'getPreviousValue', 'getParameterIds', 'monitorsChanges']);
-      mockNode.execute.and.returnValue(value);
-      mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
-      graph['nodes_'].set($test, mockNode);
-
-      spyOn(graph, 'on');
-      spyOn(graph, 'onChange_');
-
-      await assert(graph.get($test, null)).to.resolveWith(value);
-      assert(graph.on).toNot.haveBeenCalled();
-    });
-
     it(`should not dispatch any events if the new value is the same as the cached one`,
         async () => {
       const $ = {
@@ -318,7 +283,7 @@ describe('graph.Graph', () => {
       spyOn(graph, 'dispatch');
 
       await assert(graph.get($.test)).to.resolveWith(value);
-      assert(mockNode.execute).to.haveBeenCalledWith(null, []);
+      assert(mockNode.execute).to.haveBeenCalledWith(GLOBALS, []);
       assert(graph.dispatch).toNot.haveBeenCalled();
     });
   });
@@ -349,7 +314,7 @@ describe('graph.Graph', () => {
   });
 
   describe('onChange_', () => {
-    it(`should get the new value`, () => {
+    it(`should refresh the node`, () => {
       const nodeId = instanceId('test', NumberType);
       const paramId = staticId('param', NumberType);
       const mockNode = jasmine.createSpyObj('Node', ['clearCache', 'getParameterIds']);
@@ -359,11 +324,27 @@ describe('graph.Graph', () => {
       const graphEvent = Mocks.object('graphEvent');
       graphEvent.id = paramId;
 
-      spyOn(graph, 'get');
+      spyOn(graph, 'refresh');
 
       graph['onChange_'](nodeId, mockNode, context, graphEvent);
-      assert(graph.get).to.haveBeenCalledWith(nodeId, context);
+      assert(graph.refresh).to.haveBeenCalledWith(nodeId, context);
       assert(mockNode.clearCache).to.haveBeenCalledWith(context);
+    });
+
+    it(`should refresh the node for staticId`, () => {
+      const nodeId = staticId('test', NumberType);
+      const paramId = staticId('param', NumberType);
+      const mockNode = jasmine.createSpyObj('Node', ['clearCache', 'getParameterIds']);
+      mockNode.getParameterIds.and.returnValue([paramId]);
+
+      const graphEvent = Mocks.object('graphEvent');
+      graphEvent.id = paramId;
+
+      spyOn(graph, 'refresh');
+
+      graph['onChange_'](nodeId, mockNode, GLOBALS, graphEvent);
+      assert(graph.refresh).to.haveBeenCalledWith(nodeId);
+      assert(mockNode.clearCache).to.haveBeenCalledWith(GLOBALS);
     });
 
     it(`should do nothing if the changed ID is not a parameter`, () => {

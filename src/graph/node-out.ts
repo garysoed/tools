@@ -3,7 +3,8 @@ import { InstanceId } from '../graph/instance-id';
 import { NodeId } from '../graph/node-id';
 import { ANNOTATIONS } from '../graph/node-in';
 
-export function nodeOut(instanceId: InstanceId<any>, isEager: boolean = false): MethodDecorator {
+export function nodeOut(
+    instanceId: InstanceId<any>, monitorsChange: boolean = true): MethodDecorator {
   return (target: Object, propertyKey: string | symbol) => {
     const paramsSet = ANNOTATIONS
         .forCtor(target.constructor)
@@ -17,7 +18,7 @@ export function nodeOut(instanceId: InstanceId<any>, isEager: boolean = false): 
 
     Graph.registerGenericProvider_(
         instanceId,
-        isEager,
+        monitorsChange,
         target[propertyKey] as any,
         ...paramsArray);
   };

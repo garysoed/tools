@@ -20,6 +20,7 @@ export class Bus<T, E extends Event<T>> extends BaseDisposable {
   dispatch(event: E): undefined;
   dispatch<R>(event: E, callback: () => R): R;
   dispatch(event: E, callback: () => any = () => undefined): any {
+    Log.debug(this.log_, `[${this}] dispatching: `, event);
     const bubbleCallbacks = this.bubbleCallbacksMap_.get(event.type);
     const captureCallbacks = this.captureCallbacksMap_.get(event.type);
     if (captureCallbacks !== undefined) {
@@ -61,6 +62,7 @@ export class Bus<T, E extends Event<T>> extends BaseDisposable {
       callback: (payload?: any) => void,
       context: Object,
       useCapture: boolean = false): DisposableFunction {
+    Log.debug(this.log_, `[${context}] listening to [${this}]:`, eventType);
     const map = useCapture ? this.captureCallbacksMap_ : this.bubbleCallbacksMap_;
     const callbacks = map.get(eventType);
     const boundCallback = callback.bind(context);

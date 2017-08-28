@@ -1,4 +1,5 @@
 export { attributeSelector } from './attribute-selector';
+export { childrenSelector } from './children-selector';
 export { component } from './component';
 export { dispatcherSelector } from './dispatcher-selector';
 export { elementSelector } from './element-selector';

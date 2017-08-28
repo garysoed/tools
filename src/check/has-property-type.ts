@@ -1,5 +1,6 @@
 import { Type } from '../check/type';
 
+// TODO: Delete
 export function HasPropertyType<T>(name: string | symbol, type: Type<any>): Type<T> {
   return {
     /**

@@ -1,7 +1,10 @@
 import { Bus, ListenableDom } from '../event';
 import { ImmutableList, ImmutableMap } from '../immutable';
-import { Locations, LocationServiceEvents } from '../ui';
+import { LocationServiceEvents } from '../ui/location-service-events';
+import { Locations } from '../ui/locations';
 import { Log, Reflect } from '../util';
+
+// TODO: DELETE
 
 type LocationServiceEvent = { type: LocationServiceEvents };
 

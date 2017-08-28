@@ -6,7 +6,7 @@ import { Type } from '../check/type';
  * @param ctor Ctor to check the type.
  * @return The instanceof type.
  */
-export function InstanceofType<T>(ctor: gs.ICtor<T>): Type<T> {
+export function InstanceofType<T>(ctor: gs.ICtor<T> | Function): Type<T> {
   return {
     /**
      * @override
@@ -16,7 +16,7 @@ export function InstanceofType<T>(ctor: gs.ICtor<T>): Type<T> {
     },
 
     toString(): string {
-      return `(instanceof ${ctor})`;
+      return `(instanceof ${ctor.name})`;
     },
   };
 }

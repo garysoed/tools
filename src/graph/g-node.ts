@@ -1,8 +1,9 @@
+import { BaseDisposable } from '../dispose';
 import { NodeId } from '../graph/node-id';
 import { ImmutableList } from '../immutable';
 import { hash } from '../util/hash';
 
-export const GLOBALS = {};
+export const GLOBALS = new BaseDisposable();
 
 export abstract class GNode<T> {
   private readonly cacheMap_: Map<string, T> = new Map<string, T>();
