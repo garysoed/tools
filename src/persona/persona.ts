@@ -8,6 +8,7 @@ import { Event } from '../interfaces';
 import { ComponentSpec } from '../persona/component-spec';
 import { CustomElement } from '../persona/custom-element';
 import { Listener } from '../persona/listener';
+import { __onCreated } from '../persona/on-created-symbol';
 import { Selector } from '../persona/selector';
 import { __shadowRoot } from '../persona/shadow-root-symbol';
 import { Log } from '../util';
@@ -49,7 +50,8 @@ export class PersonaImpl {
 
       connectedCallback(): void {
         this.ctrl_ = injector.instantiate(ctrl);
-        this.ctrl_[__shadowRoot] = this.getShadowRoot_();
+        const shadowRoot = this.getShadowRoot_();
+        this.ctrl_[__shadowRoot] = shadowRoot;
 
         // Install the renderers.
         const renderers = ImmutableMap.of(rendererSpecs)
@@ -73,7 +75,12 @@ export class PersonaImpl {
         // Install the listeners.
         for (const [, {handler, listener, useCapture}] of listenerSpecs) {
           this.ctrl_.addDisposable(
-              listener.start(this.getShadowRoot_(), handler, this.ctrl_, useCapture));
+              listener.start(shadowRoot, handler, this.ctrl_, useCapture));
+        }
+
+        const onCreatedHandler = this.ctrl_[__onCreated];
+        if (onCreatedHandler instanceof Function) {
+          onCreatedHandler.call(this.ctrl_, shadowRoot);
         }
       }
 

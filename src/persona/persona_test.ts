@@ -6,6 +6,7 @@ import { Graph } from '../graph';
 import { InstanceId } from '../graph/instance-id';
 import { ImmutableMap } from '../immutable';
 import { CustomElement } from '../persona/custom-element';
+import { __onCreated } from '../persona/on-created-symbol';
 import { PersonaImpl } from '../persona/persona';
 import { __shadowRoot } from '../persona/shadow-root-symbol';
 
@@ -42,7 +43,9 @@ describe('CustomElement', () => {
 
   describe('connectedCallback', () => {
     it(`should instantiate the ctrl correctly`, () => {
+      const mockOnCreatedHandler = jasmine.createSpy('OnCreatedHandler');
       const mockCtrl = jasmine.createSpyObj('Ctrl', ['addDisposable']);
+      mockCtrl[__onCreated] = mockOnCreatedHandler;
       mockInjector.instantiate.and.returnValue(mockCtrl);
 
       const graphOnSpy = spyOn(Graph, 'on');
@@ -79,6 +82,7 @@ describe('CustomElement', () => {
       spyOn(element, 'updateElement_');
 
       element.connectedCallback();
+      assert(mockOnCreatedHandler).to.haveBeenCalledWith(shadowRoot);
       assert(mockListener1.start).to
           .haveBeenCalledWith(shadowRoot, handler1, mockCtrl, useCapture1);
       assert(mockListener2.start).to

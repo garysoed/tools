@@ -1,3 +1,4 @@
+export { __onCreated } from './on-created-symbol';
 export { attributeSelector } from './attribute-selector';
 export { childrenSelector } from './children-selector';
 export { component } from './component';
