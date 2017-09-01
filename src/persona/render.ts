@@ -13,7 +13,7 @@ export function createRenderDecorator<S extends Selector<any>>():
       if (!(target instanceof BaseDisposable)) {
         throw new Error(`${target} is not an instance of BaseDisposable`);
       }
-g
+
       const nodeIns = ANNOTATIONS
           .forCtor(target.constructor)
           .getAttachedValues()
