@@ -1,7 +1,7 @@
 import { MonadSetter, MonadValue } from '../interfaces';
 
 let ID: number = 0;
-
+// TODO: DELETE
 export class FakeMonadSetter<T> implements MonadSetter<T> {
   private readonly id_: number;
 
