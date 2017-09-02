@@ -7,7 +7,6 @@ import { Disposable } from '../interfaces/disposable';
  */
 const DISPOSABLES: BaseDisposable[] = [];
 
-
 /**
  * Test setup object for testing any code using code from the `dispose` directory.
  *

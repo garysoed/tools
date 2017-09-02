@@ -8,7 +8,7 @@ export const $location = {
 export function providesPath(): string {
   return Locations.normalizePath(window.location.hash.substr(1));
 }
-Graph.registerProvider($location.path, false, providesPath);
+Graph.registerProvider($location.path, providesPath);
 
 window.addEventListener('hashchange', () => {
   Graph.refresh($location.path);

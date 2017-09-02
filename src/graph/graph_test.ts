@@ -47,6 +47,24 @@ describe('graph.Graph', () => {
     });
   });
 
+  describe('dependsOn_', () => {
+    it(`should return true if the nodeId depends on the given nodeId`, () => {
+      const node1 = Mocks.object('node1');
+      const node2 = Mocks.object('node2');
+      spyOn(graph, 'getTransitiveDependencies_').and.returnValue(ImmutableSet.of([node2]));
+
+      assert(graph['dependsOn_'](node1, node2)).to.beTrue();
+    });
+
+    it(`should return false if the first nodeId doesn't depend on the second one`, () => {
+      const node1 = Mocks.object('node1');
+      const node2 = Mocks.object('node2');
+      spyOn(graph, 'getTransitiveDependencies_').and.returnValue(ImmutableSet.of([]));
+
+      assert(graph['dependsOn_'](node1, node2)).to.beFalse();
+    });
+  });
+
   describe('get', () => {
     it(`should return the correct value`, async () => {
       const $ = {
@@ -63,12 +81,17 @@ describe('graph.Graph', () => {
           .when($.param1).resolve(param1)
           .when($.param2).resolve(param2)
           .else().call(origGet.bind(graph));
-      const mockNode = jasmine
-          .createSpyObj('Node', ['execute', 'getPreviousValue', 'getParameterIds']);
+      const mockNode = jasmine.createSpyObj(
+        'Node',
+        ['execute', 'getPreviousValue', 'getParameterIds', 'shouldReexecute']);
       mockNode.execute.and.returnValue(Promise.resolve(value));
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([$.param1, $.param2]));
+      mockNode.shouldReexecute.and.returnValue(true);
       Object.setPrototypeOf(mockNode, InnerNode.prototype);
       graph['nodes_'].set($.test, mockNode);
+
+      spyOn(GLOBALS, 'addDisposable').and
+          .callFake((disposable: any) => TestDispose.add(disposable));
 
       spyOn(graph, 'dispatch');
 
@@ -103,25 +126,26 @@ describe('graph.Graph', () => {
           .else().call(origGet.bind(graph));
       const mockNode = jasmine.createSpyObj(
           'Node',
-          ['execute', 'getPreviousValue', 'getParameterIds', 'monitorsChanges']);
+          ['execute', 'getPreviousValue', 'getParameterIds', 'shouldReexecute']);
       mockNode.execute.and.returnValue(Promise.resolve(value));
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([$.param1, $.param2]));
-      mockNode.monitorsChanges.and.returnValue(true);
+      mockNode.shouldReexecute.and.returnValue(true);
+
       Object.setPrototypeOf(mockNode, InnerNode.prototype);
       graph['nodes_'].set($.test, mockNode);
 
       const graphOnSpy = spyOn(graph, 'on')
           .and.returnValue(jasmine.createSpyObj('disposable', ['dispose']));
-      spyOn(graph, 'onChange_');
+      spyOn(graph, 'onReady_');
 
       await assert(graph.get($.test, instance)).to.resolveWith(value);
       assert(mockNode.execute).to.haveBeenCalledWith(instance, [param1, param2]);
       assert(graph['monitoredNodes_'].get(instance)!).to.haveElements([$.test]);
-      assert(graph.on).to.haveBeenCalledWith('change', Matchers.any(Function) as any, graph);
+      assert(graph.on).to.haveBeenCalledWith('ready', Matchers.any(Function) as any, graph);
 
       const event = Mocks.object('event');
       graphOnSpy.calls.argsFor(0)[1](event);
-      assert(graph['onChange_']).to.haveBeenCalledWith($.test, mockNode, instance, event);
+      assert(graph['onReady_']).to.haveBeenCalledWith($.test, instance, event);
 
       assert(graph.get).to.haveBeenCalledWith($.param1, instance);
       assert(graph.get).to.haveBeenCalledWith($.param2, instance);
@@ -139,10 +163,12 @@ describe('graph.Graph', () => {
       Fakes.build(spyOn(graph, 'get'))
           .when($.param).resolve(param)
           .else().call(origGet.bind(graph));
-      const mockNode = jasmine
-          .createSpyObj('Node', ['execute', 'getPreviousValue', 'getParameterIds']);
+      const mockNode = jasmine.createSpyObj(
+          'Node',
+          ['execute', 'getPreviousValue', 'getParameterIds', 'shouldReexecute']);
       mockNode.execute.and.returnValue(Promise.resolve(value));
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([$.param]));
+      mockNode.shouldReexecute.and.returnValue(true);
       graph['nodes_'].set($.test, mockNode);
 
       await assert(graph.get($.test)).to.rejectWithError(/incorrect type/);
@@ -172,15 +198,15 @@ describe('graph.Graph', () => {
 
       const mockNode = jasmine.createSpyObj(
           'Node',
-          ['execute', 'getPreviousValue', 'getParameterIds', 'monitorsChanges']);
+          ['execute', 'getPreviousValue', 'getParameterIds', 'shouldReexecute']);
       mockNode.execute.and.returnValue(value);
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
-      mockNode.monitorsChanges.and.returnValue(true);
+      mockNode.shouldReexecute.and.returnValue(true);
       Object.setPrototypeOf(mockNode, InnerNode.prototype);
       graph['nodes_'].set($test, mockNode);
 
       spyOn(graph, 'on');
-      spyOn(graph, 'onChange_');
+      spyOn(graph, 'onReady_');
       spyOn(graph, 'isMonitored_').and.returnValue(true);
 
       await assert(graph.get($test, instance)).to.resolveWith(value);
@@ -188,33 +214,29 @@ describe('graph.Graph', () => {
       assert(graph['isMonitored_']).to.haveBeenCalledWith(instance, $test);
     });
 
-    it(`should not monitor if the node is not set up to monitor changes`, async () => {
-      class TestClass extends BaseDisposable {
-        constructor() {
-          super();
-        }
-      }
+    it(`should not execute if doesn't need to be reexecuted`, async () => {
+      class TestClass extends BaseDisposable { }
 
       const instance = new TestClass();
       TestDispose.add(instance);
 
       const $test = instanceId('test', NumberType);
-      const value = 123;
+      const cachedValue = 345;
 
       const mockNode = jasmine.createSpyObj(
           'Node',
-          ['execute', 'getPreviousValue', 'getParameterIds', 'monitorsChanges']);
-      mockNode.execute.and.returnValue(value);
+          ['execute', 'getPreviousValue', 'getParameterIds', 'shouldReexecute']);
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
-      mockNode.monitorsChanges.and.returnValue(false);
+      mockNode.shouldReexecute.and.returnValue(false);
+      mockNode.getPreviousValue.and.returnValue(cachedValue);
       Object.setPrototypeOf(mockNode, InnerNode.prototype);
       graph['nodes_'].set($test, mockNode);
 
-      spyOn(graph, 'on');
-      spyOn(graph, 'onChange_');
+      spyOn(graph, 'on').and.returnValue(jasmine.createSpyObj('Disposable', ['dispose']));
+      spyOn(graph, 'onReady_');
 
-      await assert(graph.get($test, instance)).to.resolveWith(value);
-      assert(graph.on).toNot.haveBeenCalled();
+      await assert(graph.get($test, instance)).to.resolveWith(cachedValue);
+      assert(mockNode.execute).toNot.haveBeenCalled();
     });
 
     it(`should not monitor if node is not InnerNode`, async () => {
@@ -232,34 +254,14 @@ describe('graph.Graph', () => {
 
       const mockNode = jasmine.createSpyObj(
           'Node',
-          ['execute', 'getPreviousValue', 'getParameterIds', 'monitorsChanges']);
+          ['execute', 'getPreviousValue', 'getParameterIds', 'shouldReexecute']);
       mockNode.execute.and.returnValue(value);
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
+      mockNode.shouldReexecute.and.returnValue(true);
       graph['nodes_'].set($test, mockNode);
 
       spyOn(graph, 'on');
-      spyOn(graph, 'onChange_');
-
-      await assert(graph.get($test, instance)).to.resolveWith(value);
-      assert(graph.on).toNot.haveBeenCalled();
-    });
-
-    it(`should not monitor if the context is not BaseDisposable`, async () => {
-      class TestClass { }
-
-      const instance = new TestClass();
-      const $test = instanceId('test', NumberType);
-      const value = 123;
-
-      const mockNode = jasmine.createSpyObj(
-          'Node',
-          ['execute', 'getPreviousValue', 'getParameterIds', 'monitorsChanges']);
-      mockNode.execute.and.returnValue(value);
-      mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
-      graph['nodes_'].set($test, mockNode);
-
-      spyOn(graph, 'on');
-      spyOn(graph, 'onChange_');
+      spyOn(graph, 'onReady_');
 
       await assert(graph.get($test, instance)).to.resolveWith(value);
       assert(graph.on).toNot.haveBeenCalled();
@@ -272,14 +274,17 @@ describe('graph.Graph', () => {
       };
       const value = 123;
 
-      const mockNode = jasmine
-          .createSpyObj('Node', ['execute', 'getPreviousValue', 'getParameterIds']);
+      const mockNode = jasmine.createSpyObj(
+          'Node',
+          ['execute', 'getPreviousValue', 'getParameterIds', 'shouldReexecute']);
       mockNode.execute.and.returnValue(value);
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
       mockNode.getPreviousValue.and.returnValue(value);
+      mockNode.shouldReexecute.and.returnValue(true);
       Object.setPrototypeOf(mockNode, InnerNode.prototype);
       graph['nodes_'].set($.test, mockNode);
 
+      spyOn(graph, 'isMonitored_').and.returnValue(true);
       spyOn(graph, 'dispatch');
 
       await assert(graph.get($.test)).to.resolveWith(value);
@@ -313,54 +318,52 @@ describe('graph.Graph', () => {
     });
   });
 
-  describe('onChange_', () => {
+  describe('onReady_', () => {
     it(`should refresh the node`, () => {
       const nodeId = instanceId('test', NumberType);
       const paramId = staticId('param', NumberType);
-      const mockNode = jasmine.createSpyObj('Node', ['clearCache', 'getParameterIds']);
-      mockNode.getParameterIds.and.returnValue([paramId]);
 
       const context = Mocks.object('context');
       const graphEvent = Mocks.object('graphEvent');
       graphEvent.id = paramId;
 
       spyOn(graph, 'refresh');
+      spyOn(graph, 'dependsOn_').and.returnValue(true);
 
-      graph['onChange_'](nodeId, mockNode, context, graphEvent);
+      graph['onReady_'](nodeId, context, graphEvent);
       assert(graph.refresh).to.haveBeenCalledWith(nodeId, context);
-      assert(mockNode.clearCache).to.haveBeenCalledWith(context);
+      assert(graph['dependsOn_']).to.haveBeenCalledWith(nodeId, paramId);
     });
 
     it(`should refresh the node for staticId`, () => {
       const nodeId = staticId('test', NumberType);
       const paramId = staticId('param', NumberType);
-      const mockNode = jasmine.createSpyObj('Node', ['clearCache', 'getParameterIds']);
-      mockNode.getParameterIds.and.returnValue([paramId]);
 
       const graphEvent = Mocks.object('graphEvent');
       graphEvent.id = paramId;
 
       spyOn(graph, 'refresh');
+      spyOn(graph, 'dependsOn_').and.returnValue(true);
 
-      graph['onChange_'](nodeId, mockNode, GLOBALS, graphEvent);
+      graph['onReady_'](nodeId, GLOBALS, graphEvent);
       assert(graph.refresh).to.haveBeenCalledWith(nodeId);
-      assert(mockNode.clearCache).to.haveBeenCalledWith(GLOBALS);
+      assert(graph['dependsOn_']).to.haveBeenCalledWith(nodeId, paramId);
     });
 
-    it(`should do nothing if the changed ID is not a parameter`, () => {
+    it(`should do nothing if the changed ID is not a dependency`, () => {
       const nodeId = instanceId('test', NumberType);
       const paramId = staticId('param', NumberType);
-      const mockNode = jasmine.createSpyObj('Node', ['getParameterIds']);
-      mockNode.getParameterIds.and.returnValue([]);
 
       const context = Mocks.object('context');
       const graphEvent = Mocks.object('graphEvent');
       graphEvent.id = paramId;
 
-      spyOn(graph, 'get');
+      spyOn(graph, 'refresh');
+      spyOn(graph, 'dependsOn_').and.returnValue(false);
 
-      graph['onChange_'](nodeId, mockNode, context, graphEvent);
-      assert(graph.get).toNot.haveBeenCalled();
+      graph['onReady_'](nodeId, context, graphEvent);
+      assert(graph.refresh).toNot.haveBeenCalled();
+      assert(graph['dependsOn_']).to.haveBeenCalledWith(nodeId, paramId);
     });
   });
 
@@ -384,10 +387,9 @@ describe('graph.Graph', () => {
       const mockProvider = jasmine.createSpy('Provider');
       mockProvider.and.returnValue(value);
 
-      graph.registerProvider($, true, mockProvider);
+      graph.registerProvider($, mockProvider);
       const node = graph['nodes_'].get($)! as InnerNode<number>;
       assert(node.execute(null, [])).to.equal(value);
-      assert(node.monitorsChanges()).to.beTrue();
       assert(mockProvider).to.haveBeenCalledWith();
     });
 
@@ -397,7 +399,7 @@ describe('graph.Graph', () => {
       graph['nodes_'].set($, node);
 
       assert(() => {
-        graph.registerProvider($, true, Mocks.object('provider'));
+        graph.registerProvider($, Mocks.object('provider'));
       }).to.throwError(/already registered/);
     });
   });
@@ -410,8 +412,11 @@ describe('graph.Graph', () => {
       Object.setPrototypeOf(mockNode, InputNode.prototype);
       graph['nodes_'].set($, mockNode);
 
+      spyOn(graph, 'refresh');
+
       await graph['set_']($, value);
       assert(mockNode.set).to.haveBeenCalledWith(null, value);
+      assert(graph.refresh).to.haveBeenCalledWith($);
     });
 
     it(`should throw error if the corresponding node is not an InputNode`, () => {

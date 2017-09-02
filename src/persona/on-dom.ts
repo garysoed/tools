@@ -12,9 +12,9 @@ export function asBaseDisposableCtor(target: Object): typeof BaseDisposable {
 }
 
 export const onDom = {
-  event<T extends keyof HTMLElementEventMap>(
+  event(
       selector: ElementSelector<any>,
-      eventType: T,
+      eventType: string,
       useCapture: boolean = false): MethodDecorator {
     return (target: Object, propertyKey: string | symbol) => {
       Persona.defineListener(

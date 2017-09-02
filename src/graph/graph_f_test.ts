@@ -3,6 +3,7 @@ TestBase.setup();
 
 import { NumberType } from '../check';
 import { BaseDisposable } from '../dispose';
+import { Flags } from '../dispose/base-disposable';
 import { eventDetails, listener } from '../event';
 import {
   Graph,
@@ -11,7 +12,7 @@ import {
   nodeIn,
   nodeOut,
   NodeProvider,
-  onNodeChange,
+  onNodeReady,
   staticId } from '../graph';
 import { TestDispose } from '../testing';
 import { Reflect } from '../util';
@@ -23,6 +24,10 @@ const $ = {
 };
 
 describe('graph functional test', () => {
+  beforeEach(() => {
+    Flags.enableTracking = false;
+  });
+
   describe('with static functions', () => {
     let providesB: NodeProvider<number>;
     let providesC: NodeProvider<number>;
@@ -34,7 +39,7 @@ describe('graph functional test', () => {
 
     beforeEach(() => {
       Graph.clearNodesForTests([$.a, $.b, $.c]);
-      Graph.registerProvider<number, number>($.a, false, providesA, $.b);
+      Graph.registerProvider<number, number>($.a, providesA, $.b);
       providesB = Graph.createProvider($.b, 3);
       providesC = Graph.createProvider($.c, 4);
     });
@@ -58,10 +63,12 @@ describe('graph functional test', () => {
     const $a = instanceId('a', NumberType);
     const $b = instanceId('b', NumberType);
 
-    class TestClass {
+    class TestClass extends BaseDisposable {
       constructor(
           private readonly b_: number,
-          private readonly providesASpy_: jasmine.Spy) { }
+          private readonly providesASpy_: jasmine.Spy) {
+        super();
+      }
 
       providesA(b: number, c: number): number {
         this.providesASpy_(b, c);
@@ -76,8 +83,8 @@ describe('graph functional test', () => {
 
     beforeEach(() => {
       Graph.clearNodesForTests([$a, $b, $.c]);
-      Graph.registerProvider($a, false, TestClass.prototype.providesA, $b, $.c);
-      Graph.registerProvider($b, false, TestClass.prototype.providesB);
+      Graph.registerProvider($a, TestClass.prototype.providesA, $b, $.c);
+      Graph.registerProvider($b, TestClass.prototype.providesB);
       providesC = Graph.createProvider($.c, 3);
     });
 
@@ -102,6 +109,8 @@ describe('graph functional test', () => {
 
     it(`should clear the cache if one of the providers have changed`, async () => {
       const test = new TestClass(2, jasmine.createSpy('ProvidesA'));
+      TestDispose.add(test);
+
       const setPromise = providesC(5);
       const providesASpy = spyOn(TestClass.prototype, 'providesA').and.callThrough();
 
@@ -120,10 +129,12 @@ describe('graph functional test', () => {
     const $a = instanceId('a', NumberType);
     const $b = instanceId('b', NumberType);
 
-    class TestClass {
+    class TestClass extends BaseDisposable {
       constructor(
           private readonly b_: number,
-          private readonly providesASpy_: jasmine.Spy) { }
+          private readonly providesASpy_: jasmine.Spy) {
+        super();
+      }
 
       @nodeOut($a)
       providesA(@nodeIn($b) b: number, @nodeIn($.c) c: number): number {
@@ -176,12 +187,12 @@ describe('graph functional test', () => {
         super();
       }
 
-      @onNodeChange($a)
+      @onNodeReady($a)
       onAChange(@eventDetails() event: GraphEvent<number, this>): void {
         this.aChangeCallback_(event);
       }
 
-      @nodeOut($a, true)
+      @nodeOut($a)
       providesA(@nodeIn($.c) c: number): number {
         this.providesASpy_(c);
         return this.b_ + c;
@@ -225,26 +236,6 @@ describe('graph functional test', () => {
         context: t2,
         id: $a,
       }));
-    });
-
-    it(`should call providesA if $.c has changed`, async () => {
-      const mockProvidesASpy = jasmine.createSpy('ProvidesASpy');
-
-      const test = Reflect.construct(
-          TestClass,
-          [1, jasmine.createSpy('Callback'), mockProvidesASpy]);
-      TestDispose.add(test);
-      await Graph.get($a, test);
-      assert(mockProvidesASpy).to.haveBeenCalledWith(2);
-
-      const promise = new Promise((resolve) => {
-        mockProvidesASpy.and.callFake(resolve);
-      });
-
-      providesC(4);
-
-      await promise;
-      assert(mockProvidesASpy).to.haveBeenCalledWith(4);
     });
   });
 });

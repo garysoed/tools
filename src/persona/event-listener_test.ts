@@ -6,11 +6,11 @@ import { EventListener } from '../persona/event-listener';
 
 describe('persona.EventListener', () => {
   let mockSelector: any;
-  let listener: EventListener<'click'>;
+  let listener: EventListener;
 
   beforeEach(() => {
     mockSelector = jasmine.createSpyObj('Selector', ['getValue']);
-    listener = new EventListener<'click'>(mockSelector, 'click');
+    listener = new EventListener(mockSelector, 'click');
   });
 
   describe('start', () => {

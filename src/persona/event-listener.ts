@@ -3,14 +3,14 @@ import { Event } from '../interfaces';
 import { ElementSelector, ElementSelectorImpl } from '../persona/element-selector';
 import { Listener } from '../persona/listener';
 
-export class EventListener<E extends keyof HTMLElementEventMap> implements Listener<E> {
+export class EventListener implements Listener<string> {
   constructor(
       private readonly selector_: ElementSelectorImpl<any>,
-      private readonly eventType_: E) { }
+      private readonly eventType_: string) { }
 
   start(
       root: ShadowRoot,
-      handler: (event: Event<E>) => any,
+      handler: (event: Event<string>) => any,
       context: any,
       useCapture: boolean): DisposableFunction {
     const element = this.selector_.getValue(root);
@@ -22,11 +22,11 @@ export class EventListener<E extends keyof HTMLElementEventMap> implements Liste
   }
 }
 
-export function eventListener<E extends keyof HTMLElementEventMap>(
-    selector: ElementSelector<any>, eventType: E): EventListener<E> {
+export function eventListener(
+    selector: ElementSelector<any>, eventType: string): EventListener {
   if (!(selector instanceof ElementSelectorImpl)) {
     throw new Error(`${selector} is a stub. Did you run resolveSelectors?`);
   }
 
-  return new EventListener<E>(selector, eventType);
+  return new EventListener(selector, eventType);
 }

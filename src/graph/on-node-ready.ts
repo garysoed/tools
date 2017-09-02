@@ -4,7 +4,7 @@ import { Graph } from '../graph/graph';
 import { GraphEvent } from '../graph/graph-event';
 import { InstanceId } from '../graph/instance-id';
 
-export function onNodeChange<T, C>(
+export function onNodeReady<T, C>(
     instanceId: InstanceId<T>, useCapture: boolean = false): MethodDecorator {
   return (target: Object, propertyKey: string | symbol, descriptor: PropertyDecorator) => {
     ON_ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
@@ -16,7 +16,7 @@ export function onNodeChange<T, C>(
               MonadUtil.callFunction(event, instance, propertyKey);
             }
           },
-          type: 'change',
+          type: 'ready',
           useCapture,
         },
     );

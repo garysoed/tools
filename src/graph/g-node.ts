@@ -1,22 +1,24 @@
 import { BaseDisposable } from '../dispose';
 import { NodeId } from '../graph/node-id';
 import { ImmutableList } from '../immutable';
-import { hash } from '../util/hash';
 
 export const GLOBALS = new BaseDisposable();
 
 export abstract class GNode<T> {
-  private readonly cacheMap_: Map<string, T> = new Map<string, T>();
+  private readonly previousValueMap_: Map<{}, T> = new Map<string, T>();
+  private readonly shouldReexecuteMap_: Map<{}, boolean> = new Map<string, boolean>();
 
   constructor(private readonly parameterIds_: ImmutableList<NodeId<any>>) { }
 
   clearCache(context: {} | null): void {
-    this.cacheMap_.delete(this.hash_(context));
+    this.previousValueMap_.delete(context || GLOBALS);
   }
 
   execute(context: {} | null, params: Iterable<any>): T {
-    const value = this.execute_(context || GLOBALS, params);
-    this.cacheMap_.set(this.hash_(context), value);
+    const normalizedContext = context || GLOBALS;
+    const value = this.execute_(normalizedContext, params);
+    this.previousValueMap_.set(normalizedContext, value);
+    this.shouldReexecuteMap_.set(normalizedContext, false);
     return value;
   }
 
@@ -27,10 +29,18 @@ export abstract class GNode<T> {
   }
 
   getPreviousValue(context: {} | null): T | null {
-    return this.cacheMap_.get(this.hash_(context)) || null;
+    return this.previousValueMap_.get(context || GLOBALS) || null;
   }
 
-  private hash_(context: {} | null): string {
-    return hash(context || GLOBALS);
+  setShouldReexecute(context: {} | null): void {
+    this.shouldReexecuteMap_.set(context || GLOBALS, true);
+  }
+
+  shouldReexecute(context: {} | null): boolean {
+    const normalizedContext = context || GLOBALS;
+    if (this.shouldReexecuteMap_.has(normalizedContext)) {
+      return this.shouldReexecuteMap_.get(normalizedContext)!;
+    }
+    return true;
   }
 }

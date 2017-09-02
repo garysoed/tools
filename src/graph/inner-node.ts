@@ -6,16 +6,11 @@ import { ImmutableList } from '../immutable';
 export class InnerNode<T> extends GNode<T> {
   constructor(
       private readonly fn_: Provider<T>,
-      private readonly monitorChanges_: boolean,
       parameterIds_: ImmutableList<NodeId<any>>) {
     super(parameterIds_);
   }
 
   execute_(context: {}, params: Iterable<any>): T {
     return this.fn_.apply(context, [...params]);
-  }
-
-  monitorsChanges(): boolean {
-    return this.monitorChanges_;
   }
 }

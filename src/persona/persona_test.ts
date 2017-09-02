@@ -48,7 +48,7 @@ describe('CustomElement', () => {
       mockInjector.instantiate.and.returnValue(mockCtrl);
 
       const graphOnSpy = spyOn(Graph, 'on');
-      spyOn(element, 'onGraphChange_');
+      spyOn(element, 'onGraphReady_');
 
       const id1 = Mocks.object('id1');
       const mockSelector1 = jasmine.createSpyObj('Selector1', ['getId']);
@@ -92,14 +92,14 @@ describe('CustomElement', () => {
       assert(element['updateElement_']).to.haveBeenCalledWith(mockSelector1);
       assert(element['updateElement_']).to.haveBeenCalledWith(mockSelector2);
 
-      assert(Graph.on).to.haveBeenCalledWith('change', Matchers.any(Function) as any, element);
+      assert(Graph.on).to.haveBeenCalledWith('ready', Matchers.any(Function) as any, element);
 
       const graphEvent = Mocks.object('graphEvent');
       graphOnSpy.calls.argsFor(0)[1](graphEvent);
-      assert(element['onGraphChange_']).to
+      assert(element['onGraphReady_']).to
           .haveBeenCalledWith(Matchers.any(ImmutableMap), graphEvent);
 
-      assert(element['onGraphChange_'].calls.argsFor(0)[0] as ImmutableMap<any, any>).to
+      assert(element['onGraphReady_'].calls.argsFor(0)[0] as ImmutableMap<any, any>).to
           .haveElements([
             [id1, mockSelector1],
             [id2, mockSelector2],
@@ -127,7 +127,7 @@ describe('CustomElement', () => {
     });
   });
 
-  describe('onGraphChange_', () => {
+  describe('onGraphReady_', () => {
     it(`should update the element correctly`, () => {
       const id = Mocks.object('id');
       Object.setPrototypeOf(id, InstanceId.prototype);
@@ -139,7 +139,7 @@ describe('CustomElement', () => {
 
       spyOn(element, 'updateElement_');
 
-      element['onGraphChange_'](map, {id, context});
+      element['onGraphReady_'](map, {id, context});
       assert(element['updateElement_']).to.haveBeenCalledWith(selector);
     });
 
@@ -153,7 +153,7 @@ describe('CustomElement', () => {
 
       spyOn(element, 'updateElement_');
 
-      element['onGraphChange_'](map, {id, context});
+      element['onGraphReady_'](map, {id, context});
       assert(element['updateElement_']).toNot.haveBeenCalled();
     });
 
@@ -168,7 +168,7 @@ describe('CustomElement', () => {
 
       spyOn(element, 'updateElement_');
 
-      element['onGraphChange_'](map, {id, context: Mocks.object('otherContext')});
+      element['onGraphReady_'](map, {id, context: Mocks.object('otherContext')});
       assert(element['updateElement_']).toNot.haveBeenCalled();
     });
 
@@ -182,7 +182,7 @@ describe('CustomElement', () => {
 
       spyOn(element, 'updateElement_');
 
-      element['onGraphChange_'](map, {id, context});
+      element['onGraphReady_'](map, {id, context});
       assert(element['updateElement_']).toNot.haveBeenCalled();
     });
   });
@@ -489,10 +489,10 @@ describe('persona.Persona', () => {
           rendererSpecs);
 
       assert(Graph.registerGenericProvider_).to
-          .haveBeenCalledWith(id1, true, fn1, param11, param12);
-      assert(Graph.registerGenericProvider_).to.haveBeenCalledWith(id2, true, fn2);
-      assert(Graph.registerGenericProvider_).to.haveBeenCalledWith(input1, false, inputProvider1);
-      assert(Graph.registerGenericProvider_).to.haveBeenCalledWith(input2, false, inputProvider2);
+          .haveBeenCalledWith(id1, fn1, param11, param12);
+      assert(Graph.registerGenericProvider_).to.haveBeenCalledWith(id2, fn2);
+      assert(Graph.registerGenericProvider_).to.haveBeenCalledWith(input1, inputProvider1);
+      assert(Graph.registerGenericProvider_).to.haveBeenCalledWith(input2, inputProvider2);
 
       assert(persona['register_']).to.haveBeenCalledWith(injector, mockTemplates, dependencyCtor1);
       assert(persona['register_']).to.haveBeenCalledWith(injector, mockTemplates, dependencyCtor2);
@@ -563,8 +563,8 @@ describe('persona.Persona', () => {
           listenerSpecs,
           rendererSpecs);
 
-      assert(Graph.registerGenericProvider_).to.haveBeenCalledWith(id, true, fn, param);
-      assert(Graph.registerGenericProvider_).to.haveBeenCalledWith(input, false, inputProvider);
+      assert(Graph.registerGenericProvider_).to.haveBeenCalledWith(id, fn, param);
+      assert(Graph.registerGenericProvider_).to.haveBeenCalledWith(input, inputProvider);
       assert(persona['register_']).to.haveBeenCalledWith(injector, mockTemplates, dependencyCtor);
     });
 

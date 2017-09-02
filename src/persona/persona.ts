@@ -1,4 +1,5 @@
 import { BaseDisposable } from '../dispose';
+import { AssertionError } from '../error';
 import { Graph, GraphEvent } from '../graph';
 import { InstanceId } from '../graph/instance-id';
 import { NodeId } from '../graph/node-id';
@@ -66,9 +67,9 @@ export class PersonaImpl {
         const idRendererMap = ImmutableMap.of(renderers);
 
         this.ctrl_.addDisposable(Graph.on(
-            'change',
+            'ready',
             async (event: GraphEvent<any, any>) => {
-              this.onGraphChange_(idRendererMap, event);
+              this.onGraphReady_(idRendererMap, event);
             },
             this));
 
@@ -85,14 +86,6 @@ export class PersonaImpl {
         this.dispatch_('gs-create', shadowRoot);
       }
 
-      private dispatch_(type: string, shadowRoot: ShadowRoot): void {
-        const dispatchFn = this.dispatcher_.getValue(shadowRoot);
-        if (!dispatchFn) {
-          throw new Error(`No dispatchFn found`);
-        }
-        dispatchFn(type, {});
-      }
-
       disconnectedCallback(): void {
         if (!this.ctrl_) {
           return;
@@ -100,6 +93,14 @@ export class PersonaImpl {
 
         this.ctrl_.dispose();
         this.ctrl_ = null;
+      }
+
+      private dispatch_(type: string, shadowRoot: ShadowRoot): void {
+        const dispatchFn = this.dispatcher_.getValue(shadowRoot);
+        if (!dispatchFn) {
+          throw new Error(`No dispatchFn found`);
+        }
+        dispatchFn(type, {});
       }
 
       getCtrl(): BaseDisposable | null {
@@ -116,7 +117,7 @@ export class PersonaImpl {
         return shadow;
       }
 
-      private onGraphChange_(
+      private onGraphReady_(
           idSelectorMap: ImmutableMap<InstanceId<any>, Selector<any>>,
           event: GraphEvent<any, any>): void {
         const id = event.id;
@@ -129,7 +130,11 @@ export class PersonaImpl {
       }
 
       private async updateElement_(selector: Selector<any>): Promise<void> {
-        const value = await Graph.get(selector.getId(), this.ctrl_);
+        const ctrl = this.ctrl_;
+        if (!ctrl) {
+          throw AssertionError.generic(`Required ctrl cannot be found`);
+        }
+        const value = await Graph.get(selector.getId(), ctrl);
         selector.setValue(value, this.getShadowRoot_());
       }
     };
@@ -230,7 +235,6 @@ export class PersonaImpl {
       for (const selector of spec.inputs) {
         Graph.registerGenericProvider_(
             selector.getId(),
-            false,
             selector.getProvider());
       }
     }
@@ -241,7 +245,6 @@ export class PersonaImpl {
       for (const [key, {parameters, selector}] of rendererSpecs) {
         Graph.registerGenericProvider_(
             selector.getId(),
-            true,
             ctrl.prototype[key],
             ...parameters);
       }

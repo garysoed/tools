@@ -19,18 +19,18 @@ describe('graph.nodeOut', () => {
 
     const mockAnnotations = jasmine.createSpyObj('Annotations', ['getAttachedValues']);
     mockAnnotations.getAttachedValues.and.returnValue(new Map([
-      ['method', [{index: 0, instanceId: $a}, {index: 1, instanceId: $b}]],
+      ['method', [{index: 0, id: $a}, {index: 1, id: $b}]],
     ]));
     spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotations);
 
     spyOn(Graph, 'registerGenericProvider_');
 
     nodeOut($)(TestClass.prototype, 'method', Mocks.object('descriptor'));
-    // assert(Graph.registerGenericProvider_).to.haveBeenCalledWith(
-    //     $,
-    //     TestClass.prototype.method,
-    //     $a,
-    //     $b);
+    assert(Graph.registerGenericProvider_).to.haveBeenCalledWith(
+        $,
+        TestClass.prototype.method,
+        $a,
+        $b);
     assert(ANNOTATIONS.forCtor).to.haveBeenCalledWith(TestClass);
   });
 });
