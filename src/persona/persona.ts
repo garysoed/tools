@@ -4,13 +4,15 @@ import { InstanceId } from '../graph/instance-id';
 import { NodeId } from '../graph/node-id';
 import { ImmutableMap } from '../immutable';
 import { Injector } from '../inject';
-import { Event } from '../interfaces';
+import { DispatchFn, Event } from '../interfaces';
 import { ComponentSpec } from '../persona/component-spec';
 import { CustomElement } from '../persona/custom-element';
+import { dispatcherSelector, DispatcherSelector } from '../persona/dispatcher-selector';
 import { Listener } from '../persona/listener';
-import { __onCreated } from '../persona/on-created-symbol';
 import { Selector } from '../persona/selector';
+import { shadowHostSelector } from '../persona/shadow-host-selector';
 import { __shadowRoot } from '../persona/shadow-root-symbol';
+import { isDescendantOf } from '../typescript';
 import { Log } from '../util';
 import { Templates } from '../webc';
 
@@ -39,10 +41,12 @@ export class PersonaImpl {
       templateStr: string,
       injector: Injector,
       ctrl: Ctrl,
-      listenerSpecs: Map<PropertyKey, ListenerSpec>,
-      rendererSpecs: Map<PropertyKey, RendererSpec>): Function {
+      listenerSpecs: Iterable<[PropertyKey, ListenerSpec]>,
+      rendererSpecs: Iterable<[PropertyKey, RendererSpec]>): Function {
     return class extends parentClass implements CustomElement {
       private ctrl_: BaseDisposable | null;
+      private readonly dispatcher_: DispatcherSelector<DispatchFn<{}>> =
+          dispatcherSelector<{}>(shadowHostSelector);
 
       constructor() {
         super();
@@ -78,10 +82,15 @@ export class PersonaImpl {
               listener.start(shadowRoot, handler, this.ctrl_, useCapture));
         }
 
-        const onCreatedHandler = this.ctrl_[__onCreated];
-        if (onCreatedHandler instanceof Function) {
-          onCreatedHandler.call(this.ctrl_, shadowRoot);
+        this.dispatch_('gs-create', shadowRoot);
+      }
+
+      private dispatch_(type: string, shadowRoot: ShadowRoot): void {
+        const dispatchFn = this.dispatcher_.getValue(shadowRoot);
+        if (!dispatchFn) {
+          throw new Error(`No dispatchFn found`);
         }
+        dispatchFn(type, {});
       }
 
       disconnectedCallback(): void {
@@ -166,6 +175,39 @@ export class PersonaImpl {
     this.rendererSpecs_.set(ctrl, propertyMap);
   }
 
+  private getAncestorSpecs_<T>(descendantCtor: Function, map: Map<Function, Map<PropertyKey, T>>):
+      ImmutableMap<PropertyKey, T> {
+    const rv: Map<PropertyKey, {ctor: Function, value: T}> = new Map();
+    for (const [ctor, entries] of map) {
+      const shouldAdd = ctor === descendantCtor || isDescendantOf(descendantCtor, ctor);
+      if (!shouldAdd) {
+        continue;
+      }
+
+      for (const [key, value] of entries) {
+        const existingEntry = rv.get(key);
+        if (existingEntry && isDescendantOf(ctor, existingEntry.ctor)) {
+          rv.delete(key);
+        }
+
+        rv.set(key, {ctor, value});
+      }
+    }
+
+    return ImmutableMap.of(rv)
+        .map(({value}: {ctor: Function, value: T}) => {
+          return value;
+        });
+  }
+
+  getShadowRoot(ctrl: {}): ShadowRoot | null {
+    const root = ctrl[__shadowRoot] || null;
+    if (!(root instanceof DocumentFragment)) {
+      return null;
+    }
+    return root as ShadowRoot;
+  }
+
   private register_(injector: Injector, templates: Templates, ctrl: Ctrl): void {
     const spec = this.componentSpecs_.get(ctrl);
     if (!spec) {
@@ -194,7 +236,7 @@ export class PersonaImpl {
     }
 
     // Process the renderers.
-    const rendererSpecs = this.rendererSpecs_.get(ctrl);
+    const rendererSpecs = this.getAncestorSpecs_(ctrl, this.rendererSpecs_);
     if (rendererSpecs) {
       for (const [key, {parameters, selector}] of rendererSpecs) {
         Graph.registerGenericProvider_(
@@ -206,7 +248,7 @@ export class PersonaImpl {
     }
 
     // Listeners.
-    const listenerSpecs = this.listenerSpecs_.get(ctrl);
+    const listenerSpecs = this.getAncestorSpecs_(ctrl, this.listenerSpecs_);
 
     const parentClass: typeof HTMLElement = spec.parent ? spec.parent.class : HTMLElement;
     const CustomElement = this.createCustomElementClass_(
@@ -214,8 +256,8 @@ export class PersonaImpl {
         templateStr,
         injector,
         ctrl,
-        listenerSpecs || new Map(),
-        rendererSpecs || new Map());
+        listenerSpecs,
+        rendererSpecs);
 
     try {
       if (spec.parent) {

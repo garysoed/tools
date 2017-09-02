@@ -17,4 +17,3 @@ export class FiniteIterableAssert<T> extends IterableAssert<T> {
     this.getMatchers_(values).toEqual(elements);
   }
 }
-// TODO: Mutable

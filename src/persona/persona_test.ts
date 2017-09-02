@@ -6,7 +6,6 @@ import { Graph } from '../graph';
 import { InstanceId } from '../graph/instance-id';
 import { ImmutableMap } from '../immutable';
 import { CustomElement } from '../persona/custom-element';
-import { __onCreated } from '../persona/on-created-symbol';
 import { PersonaImpl } from '../persona/persona';
 import { __shadowRoot } from '../persona/shadow-root-symbol';
 
@@ -24,16 +23,18 @@ describe('CustomElement', () => {
     const mockTemplates = jasmine.createSpyObj('Templates', ['getTemplate']);
     mockTemplates.getTemplate.and.returnValue('templateContent');
 
-    const avatar = new PersonaImpl(mockCustomElements);
+    const persona = new PersonaImpl(mockCustomElements);
     rendererSpecMap = new Map();
-    avatar['rendererSpecs_'].set(TestCtrl, rendererSpecMap);
+    persona['rendererSpecs_'].set(TestCtrl, rendererSpecMap);
 
     listenerSpecMap = new Map();
-    avatar['listenerSpecs_'].set(TestCtrl, listenerSpecMap);
+    Fakes.build(spyOn(persona, 'getAncestorSpecs_'))
+        .when(TestCtrl, persona['rendererSpecs_']).return(rendererSpecMap)
+        .when(TestCtrl, persona['listenerSpecs_']).return(listenerSpecMap);
 
-    avatar['componentSpecs_'].set(TestCtrl, Mocks.object('spec'));
+    persona['componentSpecs_'].set(TestCtrl, Mocks.object('spec'));
 
-    avatar['register_'](mockInjector, mockTemplates, TestCtrl);
+    persona['register_'](mockInjector, mockTemplates, TestCtrl);
     const elementCtor = mockCustomElements.define.calls.argsFor(0)[1];
 
     // Customized native HTML Element isn't supported yet, so we use a mock.
@@ -43,9 +44,7 @@ describe('CustomElement', () => {
 
   describe('connectedCallback', () => {
     it(`should instantiate the ctrl correctly`, () => {
-      const mockOnCreatedHandler = jasmine.createSpy('OnCreatedHandler');
       const mockCtrl = jasmine.createSpyObj('Ctrl', ['addDisposable']);
-      mockCtrl[__onCreated] = mockOnCreatedHandler;
       mockInjector.instantiate.and.returnValue(mockCtrl);
 
       const graphOnSpy = spyOn(Graph, 'on');
@@ -81,8 +80,10 @@ describe('CustomElement', () => {
 
       spyOn(element, 'updateElement_');
 
+      spyOn(element, 'dispatch_');
+
       element.connectedCallback();
-      assert(mockOnCreatedHandler).to.haveBeenCalledWith(shadowRoot);
+      assert(element['dispatch_']).to.haveBeenCalledWith('gs-create', shadowRoot);
       assert(mockListener1.start).to
           .haveBeenCalledWith(shadowRoot, handler1, mockCtrl, useCapture1);
       assert(mockListener2.start).to
@@ -336,6 +337,68 @@ describe('persona.Persona', () => {
     });
   });
 
+  describe('getAncestorSpecs_', () => {
+    it(`should add the entries correctly`, () => {
+      class ParentClass {
+        methodA(): void { }
+        methodB(): void { }
+      }
+
+      class ChildClass extends ParentClass {
+        methodA(): void { }
+        methodC(): void { }
+      }
+
+      const map = new Map([
+        [
+          ParentClass,
+          new Map([
+            ['methodA', 1],
+            ['methodB', 2],
+          ]),
+        ],
+        [
+          ChildClass,
+          new Map([
+            ['methodA', 3],
+            ['methodC', 4],
+          ]),
+        ],
+      ]);
+
+      assert(persona['getAncestorSpecs_'](ChildClass, map)).to.haveElements([
+        ['methodB', 2],
+        ['methodA', 3],
+        ['methodC', 4],
+      ]);
+    });
+  });
+
+  describe('getShadowRoot', () => {
+    it(`should return the root`, () => {
+      const shadowRoot = Mocks.object('shadowRoot');
+      Object.setPrototypeOf(shadowRoot, DocumentFragment.prototype);
+      const ctrl = Mocks.object('ctrl');
+      ctrl[__shadowRoot] = shadowRoot;
+
+      assert(persona.getShadowRoot(ctrl)).to.equal(shadowRoot);
+    });
+
+    it(`should return null if the root is not a DocumentFragment`, () => {
+      const shadowRoot = Mocks.object('shadowRoot');
+      const ctrl = Mocks.object('ctrl');
+      ctrl[__shadowRoot] = shadowRoot;
+
+      assert(persona.getShadowRoot(ctrl)).to.beNull();
+    });
+
+    it(`should return null if the are no roots on the ctrl`, () => {
+      const ctrl = Mocks.object('ctrl');
+
+      assert(persona.getShadowRoot(ctrl)).to.beNull();
+    });
+  });
+
   describe('register_', () => {
     it(`should register the dependencies and the custom element correctly`, () => {
       const injector = Mocks.object('injector');
@@ -363,10 +426,11 @@ describe('persona.Persona', () => {
         [key1, {parameters: [param11, param12], selector: mockSelector1}],
         [key2, {parameters: [], selector: mockSelector2}],
       ]);
-      persona['rendererSpecs_'].set(ctrl, rendererSpecs);
 
       const listenerSpecs = Mocks.object('listenerSpecs');
-      persona['listenerSpecs_'].set(ctrl, listenerSpecs);
+      Fakes.build(spyOn(persona, 'getAncestorSpecs_'))
+          .when(ctrl, persona['rendererSpecs_']).return(rendererSpecs)
+          .when(ctrl, persona['listenerSpecs_']).return(listenerSpecs);
 
       const dependencyCtor1 = Mocks.object('dependencyCtor1');
       const dependencyCtor2 = Mocks.object('dependencyCtor2');
@@ -451,10 +515,10 @@ describe('persona.Persona', () => {
       const rendererSpecs = new Map([
         [key, {parameters: [param], selector: mockSelector}],
       ]);
-      persona['rendererSpecs_'].set(ctrl, rendererSpecs);
-
       const listenerSpecs = Mocks.object('listenerSpecs');
-      persona['listenerSpecs_'].set(ctrl, listenerSpecs);
+      Fakes.build(spyOn(persona, 'getAncestorSpecs_'))
+          .when(ctrl, persona['rendererSpecs_']).return(rendererSpecs)
+          .when(ctrl, persona['listenerSpecs_']).return(listenerSpecs);
 
       const dependencyCtor = Mocks.object('dependencyCtor');
       const tag = 'tag';
@@ -504,112 +568,6 @@ describe('persona.Persona', () => {
       assert(persona['register_']).to.haveBeenCalledWith(injector, mockTemplates, dependencyCtor);
     });
 
-    it(`should not throw errors if there are no renderers`, () => {
-      const injector = Mocks.object('injector');
-
-      const ctrl = Mocks.object('ctrl');
-
-      const listenerSpecs = Mocks.object('listenerSpecs');
-      persona['listenerSpecs_'].set(ctrl, listenerSpecs);
-
-      const dependencyCtor = Mocks.object('dependencyCtor');
-      const tag = 'tag';
-
-      const dependencySpec = Mocks.object('dependencySpec');
-      const templateContent = 'templateContent';
-      const mockTemplates = jasmine.createSpyObj('Templates', ['getTemplate']);
-      mockTemplates.getTemplate.and.returnValue(templateContent);
-
-      const origRegister = persona['register_'].bind(persona);
-      Fakes.build(spyOn(persona, 'register_'))
-          .when(injector, mockTemplates, ctrl, dependencySpec).return()
-          .else().call(origRegister);
-
-      spyOn(Graph, 'registerGenericProvider_');
-
-      const customElementClass = Mocks.object('customElementClass');
-      spyOn(persona, 'createCustomElementClass_').and.returnValue(customElementClass);
-
-      const input = Mocks.object('input1');
-      const inputProvider = Mocks.object('inputProvider');
-      const mockInputSelector = jasmine.createSpyObj('InputSelector', ['getId', 'getProvider']);
-      mockInputSelector.getId.and.returnValue(input);
-      mockInputSelector.getProvider.and.returnValue(inputProvider);
-
-      const spec = {
-        dependencies: [dependencyCtor],
-        inputs: [mockInputSelector],
-        tag,
-        templateKey: 'templateKey',
-      };
-      persona['componentSpecs_'].set(ctrl, spec);
-
-      persona['register_'](injector, mockTemplates, ctrl);
-      assert(mockCustomElements.define).to
-          .haveBeenCalledWith(tag, customElementClass);
-      assert(persona['createCustomElementClass_']).to.haveBeenCalledWith(
-          HTMLElement,
-          templateContent,
-          injector,
-          ctrl,
-          listenerSpecs,
-          new Map());
-
-      assert(Graph.registerGenericProvider_).to.haveBeenCalledWith(input, false, inputProvider);
-      assert(persona['register_']).to.haveBeenCalledWith(injector, mockTemplates, dependencyCtor);
-    });
-
-    it(`should not throw errors if there are no listeners`, () => {
-      const injector = Mocks.object('injector');
-
-      const ctrl = Mocks.object('ctrl');
-      const dependencyCtor = Mocks.object('dependencyCtor');
-      const tag = 'tag';
-
-      const dependencySpec = Mocks.object('dependencySpec');
-      const templateContent = 'templateContent';
-      const mockTemplates = jasmine.createSpyObj('Templates', ['getTemplate']);
-      mockTemplates.getTemplate.and.returnValue(templateContent);
-
-      const origRegister = persona['register_'].bind(persona);
-      Fakes.build(spyOn(persona, 'register_'))
-          .when(injector, mockTemplates, ctrl, dependencySpec).return()
-          .else().call(origRegister);
-
-      spyOn(Graph, 'registerGenericProvider_');
-
-      const customElementClass = Mocks.object('customElementClass');
-      spyOn(persona, 'createCustomElementClass_').and.returnValue(customElementClass);
-
-      const input = Mocks.object('input1');
-      const inputProvider = Mocks.object('inputProvider');
-      const mockInputSelector = jasmine.createSpyObj('InputSelector', ['getId', 'getProvider']);
-      mockInputSelector.getId.and.returnValue(input);
-      mockInputSelector.getProvider.and.returnValue(inputProvider);
-
-      const spec = {
-        dependencies: [dependencyCtor],
-        inputs: [mockInputSelector],
-        tag,
-        templateKey: 'templateKey',
-      };
-      persona['componentSpecs_'].set(ctrl, spec);
-
-      persona['register_'](injector, mockTemplates, ctrl);
-      assert(mockCustomElements.define).to
-          .haveBeenCalledWith(tag, customElementClass);
-      assert(persona['createCustomElementClass_']).to.haveBeenCalledWith(
-          HTMLElement,
-          templateContent,
-          injector,
-          ctrl,
-          new Map(),
-          new Map());
-
-      assert(Graph.registerGenericProvider_).to.haveBeenCalledWith(input, false, inputProvider);
-      assert(persona['register_']).to.haveBeenCalledWith(injector, mockTemplates, dependencyCtor);
-    });
-
     it(`should not throw errors if there are no inputs`, () => {
       const injector = Mocks.object('injector');
 
@@ -629,6 +587,12 @@ describe('persona.Persona', () => {
 
       spyOn(Graph, 'registerGenericProvider_');
 
+      const rendererSpecs = ImmutableMap.of<any, any>([]);
+      const listenerSpecs = ImmutableMap.of<any, any>([]);
+      Fakes.build(spyOn(persona, 'getAncestorSpecs_'))
+          .when(ctrl, persona['rendererSpecs_']).return(rendererSpecs)
+          .when(ctrl, persona['listenerSpecs_']).return(listenerSpecs);
+
       const customElementClass = Mocks.object('customElementClass');
       spyOn(persona, 'createCustomElementClass_').and.returnValue(customElementClass);
 
@@ -647,8 +611,8 @@ describe('persona.Persona', () => {
           templateContent,
           injector,
           ctrl,
-          new Map(),
-          new Map());
+          listenerSpecs,
+          rendererSpecs);
 
       assert(persona['register_']).to.haveBeenCalledWith(injector, mockTemplates, dependencyCtor);
     });
@@ -671,6 +635,12 @@ describe('persona.Persona', () => {
       const customElementClass = Mocks.object('customElementClass');
       spyOn(persona, 'createCustomElementClass_').and.returnValue(customElementClass);
 
+      const rendererSpecs = ImmutableMap.of<any, any>([]);
+      const listenerSpecs = ImmutableMap.of<any, any>([]);
+      Fakes.build(spyOn(persona, 'getAncestorSpecs_'))
+          .when(ctrl, persona['rendererSpecs_']).return(rendererSpecs)
+          .when(ctrl, persona['listenerSpecs_']).return(listenerSpecs);
+
       persona['register_'](injector, mockTemplates, ctrl);
       assert(mockCustomElements.define).to
           .haveBeenCalledWith(tag, customElementClass);
@@ -679,8 +649,8 @@ describe('persona.Persona', () => {
           templateContent,
           injector,
           ctrl,
-          new Map(),
-          new Map());
+          listenerSpecs,
+          rendererSpecs);
     });
 
     it(`should throw error if the template string cannot be found`, () => {
