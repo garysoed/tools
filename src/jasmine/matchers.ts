@@ -3,6 +3,12 @@ export class Matchers {
     return jasmine.any(ctor) as any as T;
   }
 
+  static anyFunction<R>(): () => R;
+  static anyFunction<P1, R>(): (arg1: P1) => R;
+  static anyFunction(): any {
+    return jasmine.any(Function);
+  }
+
   static anyInstanceOf<T>(obj: T): T {
     return jasmine.any(obj.constructor) as any as T;
   }
@@ -30,4 +36,3 @@ export class Matchers {
 
 // TODO: anyTypeof
 // TODO: anyNumberCloseTo
-// TODO: Mutable
