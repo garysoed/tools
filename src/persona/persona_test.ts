@@ -4,7 +4,7 @@ TestBase.setup();
 import { BaseDisposable } from '../dispose';
 import { Graph } from '../graph';
 import { InstanceId } from '../graph/instance-id';
-import { ImmutableMap } from '../immutable';
+import { ImmutableMap, ImmutableSet } from '../immutable';
 import { CustomElement } from '../persona/custom-element';
 import { PersonaImpl } from '../persona/persona';
 import { __shadowRoot } from '../persona/shadow-root-symbol';
@@ -61,19 +61,28 @@ describe('CustomElement', () => {
       rendererSpecMap.set('key1', {selector: mockSelector1});
       rendererSpecMap.set('key2', {selector: mockSelector2});
 
-      const mockListener1 = jasmine.createSpyObj('Listener1', ['start']);
-      const handler1 = Mocks.object('handler1');
-      const useCapture1 = true;
+      const mockListener11 = jasmine.createSpyObj('Listener11', ['start']);
+      const handler11 = Mocks.object('handler11');
+      const useCapture11 = true;
+
+      const mockListener12 = jasmine.createSpyObj('Listener12', ['start']);
+      const handler12 = Mocks.object('handler12');
+      const useCapture12 = true;
       listenerSpecMap.set(
           'listenerKey1',
-          {handler: handler1, listener: mockListener1, useCapture: useCapture1});
+          ImmutableSet.of([
+            {handler: handler11, listener: mockListener11, useCapture: useCapture11},
+            {handler: handler12, listener: mockListener12, useCapture: useCapture12},
+          ]));
 
       const mockListener2 = jasmine.createSpyObj('Listener2', ['start']);
       const handler2 = Mocks.object('handler2');
       const useCapture2 = false;
       listenerSpecMap.set(
           'listenerKey2',
-          {handler: handler2, listener: mockListener2, useCapture: useCapture2});
+          ImmutableSet.of([
+            {handler: handler2, listener: mockListener2, useCapture: useCapture2},
+          ]));
 
       const shadowRoot = Mocks.object('shadowRoot');
       spyOn(element, 'getShadowRoot_').and.returnValue(shadowRoot);
@@ -84,8 +93,10 @@ describe('CustomElement', () => {
 
       element.connectedCallback();
       assert(element['dispatch_']).to.haveBeenCalledWith('gs-create', shadowRoot);
-      assert(mockListener1.start).to
-          .haveBeenCalledWith(shadowRoot, handler1, mockCtrl, useCapture1);
+      assert(mockListener11.start).to
+          .haveBeenCalledWith(shadowRoot, handler11, mockCtrl, useCapture11);
+      assert(mockListener12.start).to
+          .haveBeenCalledWith(shadowRoot, handler12, mockCtrl, useCapture12);
       assert(mockListener2.start).to
           .haveBeenCalledWith(shadowRoot, handler2, mockCtrl, useCapture2);
 
@@ -257,14 +268,14 @@ describe('persona.Persona', () => {
       const useCapture = true;
 
       persona.defineListener(TestClass, propertyKey, listener, useCapture);
-      assert(persona['listenerSpecs_'].get(TestClass)!.get(propertyKey)!).to.equal({
+      assert(persona['listenerSpecs_'].get(TestClass)!.get(propertyKey)!).to.haveElements([{
         handler: TestClass.prototype[propertyKey],
         listener,
         useCapture,
-      });
+      }]);
     });
 
-    it(`should throw error if the listener is already registered`, () => {
+    it(`should handle the case where the listener is already registered`, () => {
       const propertyKey = 'propertyKey';
 
       class TestClass extends BaseDisposable {
@@ -274,11 +285,16 @@ describe('persona.Persona', () => {
       const listener = Mocks.object('listener');
       const useCapture = true;
       const spec = Mocks.object('spec');
-      persona['listenerSpecs_'].set(TestClass, new Map([[propertyKey, spec]]));
+      persona['listenerSpecs_'].set(TestClass, new Map([[propertyKey, ImmutableSet.of([spec])]]));
 
-      assert(() => {
-        persona.defineListener(TestClass, propertyKey, listener, useCapture);
-      }).to.throwError(/is already registered/);
+      persona.defineListener(TestClass, propertyKey, listener, useCapture);
+      assert(persona['listenerSpecs_'].get(TestClass)!.get(propertyKey)!).to.haveElements([
+        spec,
+        {
+          handler: TestClass.prototype[propertyKey],
+          listener,
+          useCapture,
+        }]);
     });
 
     it(`should throw error if the handler is not a function`, () => {

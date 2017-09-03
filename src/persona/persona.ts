@@ -3,7 +3,7 @@ import { AssertionError } from '../error';
 import { Graph, GraphEvent } from '../graph';
 import { InstanceId } from '../graph/instance-id';
 import { NodeId } from '../graph/node-id';
-import { ImmutableMap } from '../immutable';
+import { ImmutableMap, ImmutableSet } from '../immutable';
 import { Injector } from '../inject';
 import { DispatchFn, Event } from '../interfaces';
 import { ComponentSpec } from '../persona/component-spec';
@@ -31,7 +31,7 @@ const LOGGER: Log = Log.of('gs-tools.persona.Persona');
 export class PersonaImpl {
   private readonly componentSpecs_: Map<typeof BaseDisposable, ComponentSpec<any>> = new Map();
   private readonly listenerSpecs_:
-      Map<typeof BaseDisposable, Map<PropertyKey, ListenerSpec>> = new Map();
+      Map<typeof BaseDisposable, Map<PropertyKey, ImmutableSet<ListenerSpec>>> = new Map();
   private readonly rendererSpecs_:
       Map<typeof BaseDisposable, Map<PropertyKey, RendererSpec>> = new Map();
 
@@ -42,7 +42,7 @@ export class PersonaImpl {
       templateStr: string,
       injector: Injector,
       ctrl: Ctrl,
-      listenerSpecs: Iterable<[PropertyKey, ListenerSpec]>,
+      listenerSpecs: Iterable<[PropertyKey, Iterable<ListenerSpec>]>,
       rendererSpecs: Iterable<[PropertyKey, RendererSpec]>): Function {
     return class extends parentClass implements CustomElement {
       private ctrl_: BaseDisposable | null;
@@ -78,9 +78,11 @@ export class PersonaImpl {
         }
 
         // Install the listeners.
-        for (const [, {handler, listener, useCapture}] of listenerSpecs) {
-          this.ctrl_.addDisposable(
-              listener.start(shadowRoot, handler, this.ctrl_, useCapture));
+        for (const [, specs] of listenerSpecs) {
+          for (const {handler, listener, useCapture} of specs) {
+            this.ctrl_.addDisposable(
+                listener.start(shadowRoot, handler, this.ctrl_, useCapture));
+          }
         }
 
         this.dispatch_('gs-create', shadowRoot);
@@ -157,12 +159,10 @@ export class PersonaImpl {
       throw new Error(`${propertyKey} in ${ctrl.constructor} is not a Function. [${handler}]`);
     }
 
-    const propertyMap: Map<PropertyKey, ListenerSpec> = this.listenerSpecs_.get(ctrl) || new Map();
-    if (propertyMap.has(propertyKey)) {
-      throw new Error(`Listener ${ctrl}.${propertyKey} is already registered`);
-    }
-
-    propertyMap.set(propertyKey, {handler, listener, useCapture});
+    const propertyMap: Map<PropertyKey, ImmutableSet<ListenerSpec>> =
+        this.listenerSpecs_.get(ctrl) || new Map();
+    const specs = propertyMap.get(propertyKey) || ImmutableSet.of([]);
+    propertyMap.set(propertyKey, specs.add({handler, listener, useCapture}));
     this.listenerSpecs_.set(ctrl, propertyMap);
   }
 

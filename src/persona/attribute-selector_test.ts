@@ -24,6 +24,27 @@ describe('persona.AttributeSelectorImpl', () => {
       assert(selector.getValue(root)).to.equal(value);
       assert(mockElementSelector.getValue).to.haveBeenCalledWith(root);
     });
+
+    it(`should return the default value if set`, () => {
+      const value = 123;
+      const attrName = 'attr-name';
+      const element = document.createElement('div');
+
+      const mockElementSelector = jasmine.createSpyObj('ElementSelector', ['getValue']);
+      mockElementSelector.getValue.and.returnValue(element);
+      Object.setPrototypeOf(mockElementSelector, ElementSelectorImpl.prototype);
+
+      const root = Mocks.object('root');
+
+      const selector = attributeSelector(
+          mockElementSelector,
+          attrName,
+          IntegerParser,
+          NumberType,
+          value);
+      assert(selector.getValue(root)).to.equal(value);
+      assert(mockElementSelector.getValue).to.haveBeenCalledWith(root);
+    });
   });
 
   describe('setValue', () => {

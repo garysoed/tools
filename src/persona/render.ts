@@ -1,6 +1,7 @@
 import { BaseDisposable } from '../dispose';
 import { ANNOTATIONS } from '../graph/node-in';
 import { ImmutableSet } from '../immutable';
+import { AttributeSelector } from '../persona/attribute-selector';
 import { ChildrenSelector } from '../persona/children-selector';
 import { InnerTextSelector } from '../persona/inner-text-selector';
 import { Persona } from '../persona/persona';
@@ -34,6 +35,7 @@ export function createRenderDecorator<S extends Selector<any>>():
 }
 
 export const render = {
+  attribute: createRenderDecorator<AttributeSelector<any>>(),
   children: createRenderDecorator<ChildrenSelector<any>>(),
   innerText: createRenderDecorator<InnerTextSelector<any>>(),
 };

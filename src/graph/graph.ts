@@ -35,17 +35,19 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
    * @return Function to call for setting the value. The return value of this is a Promise that will
    *     be resolved when the value has been set.
    */
-  createProvider<T>(staticId: StaticId<T>, initValue: T): NodeProvider<T> {
-    if (this.nodes_.has(staticId)) {
-      throw new Error(`Node ${staticId} is already registered`);
+  createProvider<T>(staticId: StaticId<T>, initValue: T): NodeProvider<T>;
+  createProvider<T>(instanceId: InstanceId<T>, initValue: T, context: {}): NodeProvider<T>;
+  createProvider<T>(nodeId: NodeId<T>, initValue: T, context: {} = GLOBALS): NodeProvider<T> {
+    if (this.nodes_.has(nodeId)) {
+      throw new Error(`Node ${nodeId} is already registered`);
     }
 
     const node = new InputNode<T>();
     node.set(null, initValue);
-    this.nodes_.set(staticId, node);
+    this.nodes_.set(nodeId, node);
 
     const provider = (newValue: T): Promise<void> => {
-      return this.set_(staticId, newValue);
+      return this.set_(nodeId, context, newValue);
     };
     return provider;
   }
@@ -227,21 +229,27 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
     this.registerGenericProvider_(nodeId, provider, ...args);
   }
 
-  private set_<T>(staticId: StaticId<T>, value: T): Promise<void> {
-    Log.debug(LOGGER, `setting: `, staticId, value);
+  private set_<T>(nodeId: NodeId<T>, context: {}, value: T): Promise<void> {
+    Log.debug(LOGGER, `setting: `, nodeId, value);
 
-    const node = this.nodes_.get(staticId);
+    const node = this.nodes_.get(nodeId);
     if (!(node instanceof InputNode)) {
-      throw new Error(`Node ${staticId} is not an instance of InputNode. [${node}]`);
+      throw new Error(`Node ${nodeId} is not an instance of InputNode. [${node}]`);
     }
 
     const promise = new Promise<void>((resolve: () => void) => {
       this.setQueue_.push(() => {
-        Log.debug(LOGGER, `set flush: `, staticId, value);
-        const event = {context: null, id: staticId, type: 'change' as 'change'};
+        Log.debug(LOGGER, `set flush: `, nodeId, value);
+        const event = {context, id: nodeId, type: 'change' as 'change'};
         this.dispatch(event, () => {
-          node.set(null, value);
-          this.refresh(staticId);
+          node.set(context, value);
+          if (nodeId instanceof StaticId) {
+            this.refresh(nodeId);
+          } else if (nodeId instanceof InstanceId) {
+            this.refresh(nodeId, context);
+          } else {
+            assertUnreachable(nodeId);
+          }
         });
         resolve();
       });

@@ -9,6 +9,8 @@ import { Selector, SelectorImpl, SelectorStub } from '../persona/selector';
 
 export interface AttributeSelector<T> extends Selector<T> {
   getElementSelector(): ElementSelector<any>;
+
+  getName(): string;
 }
 
 export class AttributeSelectorStub<T> extends SelectorStub<T> implements AttributeSelector<T> {
@@ -16,7 +18,8 @@ export class AttributeSelectorStub<T> extends SelectorStub<T> implements Attribu
       private readonly elementSelector_: ElementSelectorStub<HTMLElement>,
       private readonly parser_: Parser<T>,
       private readonly attrName_: string,
-      private readonly type_: Type<T>) {
+      private readonly type_: Type<T>,
+      private readonly defaultValue_: T | undefined) {
     super();
   }
 
@@ -24,12 +27,17 @@ export class AttributeSelectorStub<T> extends SelectorStub<T> implements Attribu
     return this.elementSelector_;
   }
 
+  getName(): string {
+    return this.attrName_;
+  }
+
   resolve(allSelectors: {}): SelectorImpl<T> {
     return new AttributeSelectorImpl<T>(
       this.elementSelector_.resolve(allSelectors),
       this.parser_,
       this.attrName_,
-      this.type_);
+      this.type_,
+      this.defaultValue_);
     }
 }
 
@@ -38,7 +46,8 @@ export class AttributeSelectorImpl<T> extends SelectorImpl<T> implements Attribu
       private readonly elementSelector_: ElementSelectorImpl<HTMLElement>,
       private readonly parser_: Parser<T>,
       private readonly attrName_: string,
-      type: Type<T>) {
+      type: Type<T>,
+      private readonly defaultValue_: T | undefined) {
     super(instanceId(`${elementSelector_.getSelector()}[${attrName_}]`, type));
   }
 
@@ -46,8 +55,15 @@ export class AttributeSelectorImpl<T> extends SelectorImpl<T> implements Attribu
     return this.elementSelector_;
   }
 
+  getName(): string {
+    return this.attrName_;
+  }
+
   getValue(root: ShadowRoot): T | null {
     const element = this.elementSelector_.getValue(root);
+    if (!element.hasAttribute(this.attrName_) && this.defaultValue_ !== undefined) {
+      return this.defaultValue_;
+    }
     const strValue = element.getAttribute(this.attrName_);
     return this.parser_.parse(strValue);
   }
@@ -67,11 +83,12 @@ export function attributeSelector<T>(
     elementSelector: ElementSelector<HTMLElement>,
     attrName: string,
     parser: Parser<T>,
-    type: Type<T>): AttributeSelector<T> {
+    type: Type<T>,
+    defaultValue?: T): AttributeSelector<T> {
   if (elementSelector instanceof ElementSelectorStub) {
-    return new AttributeSelectorStub(elementSelector, parser, attrName, type);
+    return new AttributeSelectorStub(elementSelector, parser, attrName, type, defaultValue);
   } else if (elementSelector instanceof ElementSelectorImpl) {
-    return new AttributeSelectorImpl(elementSelector, parser, attrName, type);
+    return new AttributeSelectorImpl(elementSelector, parser, attrName, type, defaultValue);
   } else {
     throw new Error(`Unhandled ElementSelector type ${elementSelector}`);
   }

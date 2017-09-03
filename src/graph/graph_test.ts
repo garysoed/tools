@@ -22,7 +22,7 @@ describe('graph.Graph', () => {
   });
 
   describe('createProvider', () => {
-    it(`should create the correct provider`, () => {
+    it(`should create the correct provider for staticId`, () => {
       const $ = staticId('id', NumberType);
       const value = 123;
       const promise = Mocks.object('promise');
@@ -33,7 +33,23 @@ describe('graph.Graph', () => {
 
       const newValue = 456;
       assert(provider(newValue)).to.equal(promise);
-      assert(graph['set_']).to.haveBeenCalledWith($, newValue);
+      assert(graph['set_']).to.haveBeenCalledWith($, GLOBALS, newValue);
+    });
+
+    it(`should create the correct provider for instanceId`, () => {
+      const $ = instanceId('id', NumberType);
+      const value = 123;
+      const promise = Mocks.object('promise');
+      spyOn(graph, 'set_').and.returnValue(promise);
+
+      const context = Mocks.object('context');
+
+      const provider = graph.createProvider($, value, context);
+      assert(graph['nodes_'].get($)!.execute(null, [])).to.equal(value);
+
+      const newValue = 456;
+      assert(provider(newValue)).to.equal(promise);
+      assert(graph['set_']).to.haveBeenCalledWith($, context, newValue);
     });
 
     it(`should throw error if the node is already registered`, () => {
@@ -414,8 +430,10 @@ describe('graph.Graph', () => {
 
       spyOn(graph, 'refresh');
 
-      await graph['set_']($, value);
-      assert(mockNode.set).to.haveBeenCalledWith(null, value);
+      const context = Mocks.object('context');
+
+      await graph['set_']($, context, value);
+      assert(mockNode.set).to.haveBeenCalledWith(context, value);
       assert(graph.refresh).to.haveBeenCalledWith($);
     });
 
@@ -424,8 +442,10 @@ describe('graph.Graph', () => {
       const mockNode = jasmine.createSpyObj('Node', ['set']);
       graph['nodes_'].set($, mockNode);
 
+      const context = Mocks.object('context');
+
       assert(() => {
-        graph['set_']($, 123);
+        graph['set_']($, context, 123);
       }).to.throwError(/not an instance of InputNode/);
     });
   });

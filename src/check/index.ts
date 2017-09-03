@@ -1,6 +1,7 @@
 export { AnyType } from './any-type';
 export { ArrayOfType } from './array-of-type';
 export { BooleanType } from './boolean-type';
+export { EnumType } from './enum-type';
 export { FiniteIterableType } from './finite-iterable-type';
 export { FiniteIterableOfType } from './finite-iterable-of-type';
 export { HasPropertiesType } from './has-properties-type';
