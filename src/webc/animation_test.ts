@@ -66,7 +66,7 @@ describe('webc.Animation', () => {
       assert(mockInstance.addDisposable).to.haveBeenCalledWith(onceDisposable);
       assert(mockInstance.addDisposable).to.haveBeenCalledWith(mockListenableAnimation);
       assert(mockListenableAnimation.once).to
-          .haveBeenCalledWith('finish', Matchers.any(Function), animation);
+          .haveBeenCalledWith('finish', Matchers.anyFunction(), animation);
       mockListenableAnimation.once.calls.argsFor(0)[1]();
       assert(EventDispatcher.dispatchEventNow).to
           .haveBeenCalledWith(mockTargetEl, 'gs-animationfinish', {id: ID, keyframes});

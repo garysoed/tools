@@ -103,7 +103,7 @@ describe('CustomElement', () => {
       assert(element['updateElement_']).to.haveBeenCalledWith(mockSelector1);
       assert(element['updateElement_']).to.haveBeenCalledWith(mockSelector2);
 
-      assert(Graph.on).to.haveBeenCalledWith('ready', Matchers.any(Function) as any, element);
+      assert(Graph.on).to.haveBeenCalledWith('ready', Matchers.anyFunction(), element);
 
       const graphEvent = Mocks.object('graphEvent');
       graphOnSpy.calls.argsFor(0)[1](graphEvent);

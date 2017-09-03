@@ -56,25 +56,24 @@ describe('rpc.ApiClient', () => {
   });
 
   describe('post', () => {
-    it('should post the request, wait for message and return the correct response',
-        async () => {
-          const request = Mocks.object('request');
-          spyOn(client, 'onMessage_');
+    it('should post the request, wait for message and return the correct response', async () => {
+      const request = Mocks.object('request');
+      spyOn(client, 'onMessage_');
 
-          const response = Mocks.object('response');
-          mockChannel.waitForMessage.and.returnValue(Promise.resolve(response));
-          mockResponseType.check.and.returnValue(true);
+      const response = Mocks.object('response');
+      mockChannel.waitForMessage.and.returnValue(Promise.resolve(response));
+      mockResponseType.check.and.returnValue(true);
 
-          assert(await client.post(request)).to.equal(response);
-          assert(mockResponseType.check).to.haveBeenCalledWith(response);
+      assert(await client.post(request)).to.equal(response);
+      assert(mockResponseType.check).to.haveBeenCalledWith(response);
 
-          assert(mockChannel.waitForMessage).to.haveBeenCalledWith(Matchers.any(Function));
+      assert(mockChannel.waitForMessage).to.haveBeenCalledWith(Matchers.anyFunction());
 
-          const message = Mocks.object('message');
-          mockChannel.waitForMessage.calls.argsFor(0)[0](message);
-          assert(client['onMessage_']).to.haveBeenCalledWith(request, message);
-          assert(mockChannel.post).to.haveBeenCalledWith(request);
-        });
+      const message = Mocks.object('message');
+      mockChannel.waitForMessage.calls.argsFor(0)[0](message);
+      assert(client['onMessage_']).to.haveBeenCalledWith(request, message);
+      assert(mockChannel.post).to.haveBeenCalledWith(request);
+    });
 
     it('should reject if the response type is incorrect', async () => {
       const request = Mocks.object('request');

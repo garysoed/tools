@@ -49,9 +49,9 @@ describe('webc.EventHandler', () => {
       handler.configure(targetEl, mockInstance, ImmutableSet.of<any>([config1, config2]));
 
       assert(mockListenableDom.on).to
-          .haveBeenCalledWith(event1, Matchers.any(Function), mockInstance);
+          .haveBeenCalledWith(event1, Matchers.anyFunction(), mockInstance);
       assert(mockListenableDom.on)
-          .to.haveBeenCalledWith(event2, Matchers.any(Function), mockInstance);
+          .to.haveBeenCalledWith(event2, Matchers.anyFunction(), mockInstance);
 
       const eventDetail = Mocks.object('eventDetail');
       mockListenableDom.on.calls.argsFor(0)[1](eventDetail);

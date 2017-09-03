@@ -50,7 +50,7 @@ describe('webc.AttributeChangeHandler', () => {
       handler.configure(targetEl, mockInstance, ImmutableSet.of([config1, config2]));
 
       assert(mockInstance.addDisposable).to.haveBeenCalledWith(disposableFunction);
-      assert(DisposableFunction.of).to.haveBeenCalledWith(Matchers.any(Function) as any);
+      assert(DisposableFunction.of).to.haveBeenCalledWith(Matchers.anyFunction());
 
       (DisposableFunction.of as any).calls.argsFor(0)[0]();
       assert(mockObserver.disconnect).to.haveBeenCalledWith();

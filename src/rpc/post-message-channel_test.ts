@@ -33,7 +33,7 @@ describe('rpc.PostMessageChannel', () => {
 
       channel['post_'](message);
 
-      assert(Asyncs.run).to.haveBeenCalledWith(Matchers.any(Function) as any);
+      assert(Asyncs.run).to.haveBeenCalledWith(Matchers.anyFunction());
       assert(mockDestWindow.postMessage).to.haveBeenCalledWith(json, origin);
       assert(PostMessageChannel.getOrigin).to.haveBeenCalledWith(mockSrcWindow);
       assert(Serializer.toJSON).to.haveBeenCalledWith(message);
@@ -62,7 +62,7 @@ describe('rpc.PostMessageChannel', () => {
       const promise = channel['waitForMessage_'](testFn);
 
       assert(channel.listenTo).to.haveBeenCalledWith(
-            channel['srcWindow_'], DomEvent.MESSAGE, Matchers.any(Function) as any);
+            channel['srcWindow_'], DomEvent.MESSAGE, Matchers.anyFunction());
 
       listenToSpy.calls.argsFor(0)[2]({data: json1, origin: origin});
       listenToSpy.calls.argsFor(0)[2]({data: json2, origin: origin});
@@ -97,7 +97,7 @@ describe('rpc.PostMessageChannel', () => {
       const promise = channel['waitForMessage_'](testFn);
 
       assert(channel.listenTo).to.haveBeenCalledWith(
-          channel['srcWindow_'], DomEvent.MESSAGE, Matchers.any(Function) as any);
+          channel['srcWindow_'], DomEvent.MESSAGE, Matchers.anyFunction());
 
       listenToSpy.calls.argsFor(0)[2]({data: json1, origin: 'otherOrigin'});
       listenToSpy.calls.argsFor(0)[2]({data: json2, origin: origin});
@@ -197,7 +197,7 @@ describe('rpc.PostMessageChannel', () => {
           .to.beTrue();
 
       assert(window.setInterval)
-          .to.haveBeenCalledWith(Matchers.any(Function), Matchers.any(Number));
+          .to.haveBeenCalledWith(Matchers.anyFunction(), Matchers.any(Number));
 
       setIntervalSpy.calls.argsFor(0)[0]();
       assert(mockChannel.post_).to.haveBeenCalledWith(Matchers.any(Message));
@@ -254,7 +254,7 @@ describe('rpc.PostMessageChannel', () => {
       const promise = PostMessageChannel.listen(mockSrcWindow, expectedOrigin);
 
       assert(mockSrcWindow.addEventListener)
-          .to.haveBeenCalledWith('message', Matchers.any(Function), false);
+          .to.haveBeenCalledWith('message', Matchers.anyFunction(), false);
       mockSrcWindow.addEventListener.calls.argsFor(0)[1]({
         data: Serializer.toJSON(new Message(MessageType.PING, { 'id': id })),
         getType: () => 'message',
@@ -274,7 +274,7 @@ describe('rpc.PostMessageChannel', () => {
           .to.haveBeenCalledWith(mockSrcWindow, mockDestWindow);
 
       assert(window.setTimeout)
-          .to.haveBeenCalledWith(Matchers.any(Function), Matchers.any(Number));
+          .to.haveBeenCalledWith(Matchers.anyFunction(), Matchers.any(Number));
       assert(window.clearTimeout).to.haveBeenCalledWith(timeoutId);
     });
 

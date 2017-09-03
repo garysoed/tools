@@ -31,7 +31,7 @@ describe('net.Http', () => {
 
       assert(mockRequest.send).to.haveBeenCalledWith(null);
       assert(getRequest.listenTo).to
-          .haveBeenCalledWith(mockListenableRequest, DomEvent.LOAD, Matchers.any(Function) as any);
+          .haveBeenCalledWith(mockListenableRequest, DomEvent.LOAD, Matchers.anyFunction());
 
       mockRequest.responseText = expectedResponseText;
       mockRequest.status = 200;
@@ -85,7 +85,7 @@ describe('net.Http', () => {
       assert(mockRequest.setRequestHeader).to
           .haveBeenCalledWith('Content-Type', 'application/json');
       assert(postRequest.listenTo).to
-          .haveBeenCalledWith(mockListenableRequest, DomEvent.LOAD, Matchers.any(Function) as any);
+          .haveBeenCalledWith(mockListenableRequest, DomEvent.LOAD, Matchers.anyFunction());
 
       mockRequest.responseText = expectedResponseText;
       mockRequest.status = 200;

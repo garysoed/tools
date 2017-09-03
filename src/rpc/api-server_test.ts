@@ -31,7 +31,7 @@ describe('rpc.ApiServer', () => {
       assert(mockProcessRequest).to.haveBeenCalledWith(message);
       assert(mockRequestType.check).to.haveBeenCalledWith(message);
 
-      assert(mockPromise.then).to.haveBeenCalledWith(Matchers.any(Function));
+      assert(mockPromise.then).to.haveBeenCalledWith(Matchers.anyFunction());
       mockPromise.then.calls.argsFor(0)[0](response);
       assert(mockChannel.post).to.haveBeenCalledWith(response);
     });
@@ -50,7 +50,7 @@ describe('rpc.ApiServer', () => {
     it('should wait for the message', () => {
       spyOn(server, 'onMessage_');
       server.run();
-      assert(mockChannel.waitForMessage).to.haveBeenCalledWith(Matchers.any(Function));
+      assert(mockChannel.waitForMessage).to.haveBeenCalledWith(Matchers.anyFunction());
 
       const message = Mocks.object('message');
       mockChannel.waitForMessage.calls.argsFor(0)[0](message);

@@ -157,7 +157,7 @@ describe('graph.Graph', () => {
       await assert(graph.get($.test, instance)).to.resolveWith(value);
       assert(mockNode.execute).to.haveBeenCalledWith(instance, [param1, param2]);
       assert(graph['monitoredNodes_'].get(instance)!).to.haveElements([$.test]);
-      assert(graph.on).to.haveBeenCalledWith('ready', Matchers.any(Function) as any, graph);
+      assert(graph.on).to.haveBeenCalledWith('ready', Matchers.anyFunction(), graph);
 
       const event = Mocks.object('event');
       graphOnSpy.calls.argsFor(0)[1](event);

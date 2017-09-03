@@ -26,7 +26,7 @@ describe('event.on', () => {
     assert(on(bus, type, useCapture)(target, propertyKey, descriptor)).to.equal(descriptor);
     assert(mockAnnotations.attachValueToProperty).to.haveBeenCalledWith(
         propertyKey,
-        {busProvider: Matchers.any(Function), handler: Matchers.any(Function), type, useCapture});
+        {busProvider: Matchers.anyFunction(), handler: Matchers.anyFunction(), type, useCapture});
     assert(mockAnnotations.attachValueToProperty.calls.argsFor(0)[1].busProvider()).to.equal(bus);
 
     spyOn(MonadUtil, 'callFunction');
@@ -55,7 +55,7 @@ describe('event.on', () => {
     assert(on(busProvider, type, useCapture)(target, propertyKey, descriptor)).to.equal(descriptor);
     assert(mockAnnotations.attachValueToProperty).to.haveBeenCalledWith(
         propertyKey,
-        {busProvider, handler: Matchers.any(Function), type, useCapture});
+        {busProvider, handler: Matchers.anyFunction(), type, useCapture});
 
     spyOn(MonadUtil, 'callFunction');
     const event = Mocks.object('event');

@@ -185,7 +185,7 @@ describe('ui.DimensionObserver', () => {
       assert(observer.observe(element)).to.equal(unregisterFn);
       assert(observer['observedElements_']).to
           .haveEntries([[element, {boundingRect: null, unregisterFn}]]);
-      assert(DisposableFunction.of).to.haveBeenCalledWith(Matchers.any(Function) as any);
+      assert(DisposableFunction.of).to.haveBeenCalledWith(Matchers.anyFunction());
       disposableOfSpy.calls.argsFor(0)[0]();
       assert(observer['observedElements_']).to.haveEntries([]);
     });

@@ -187,7 +187,7 @@ describe('webc.ElementRegistrar', () => {
           });
 
       assert(registrar['getLifecycleConfig_'])
-          .to.haveBeenCalledWith(attributes, Matchers.any(Function) as any, templateContent);
+          .to.haveBeenCalledWith(attributes, Matchers.anyFunction(), templateContent);
       assert(spy.calls.argsFor(0)[1]()).to.equal(instance);
       assert(mockInjector.instantiate).to.haveBeenCalledWith(ctor);
 

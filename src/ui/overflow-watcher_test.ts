@@ -25,7 +25,7 @@ describe('ui.OverflowWatcher', () => {
 
   it('should initialize correctly', () => {
     assert(mockContainer.addEventListener)
-        .to.haveBeenCalledWith('scroll', Matchers.any(Function), false);
+        .to.haveBeenCalledWith('scroll', Matchers.anyFunction(), false);
   });
 
   describe('getState_', () => {

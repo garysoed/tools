@@ -31,7 +31,7 @@ describe('async.Interval', () => {
       interval.start();
 
       assert(interval['intervalId_']).to.equal(intervalId);
-      assert(window.setInterval).to.haveBeenCalledWith(Matchers.any(Function), INTERVAL);
+      assert(window.setInterval).to.haveBeenCalledWith(Matchers.anyFunction(), INTERVAL);
 
       spy.calls.argsFor(0)[0]();
       assert(interval.dispatch).to.haveBeenCalledWith({type: 'tick'});

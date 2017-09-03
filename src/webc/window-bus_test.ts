@@ -33,7 +33,7 @@ describe('webc.WindowBus', () => {
       assert(bus['listenedEvents_']).to.haveElements([eventType]);
       assert(bus['listenableWindow_'].on).to.haveBeenCalledWith(
           eventType,
-          Matchers.any(Function) as any,
+          Matchers.anyFunction(),
           bus);
       spyListenedWindowOn.calls.argsFor(0)[1]();
       assert(bus.dispatch).to.haveBeenCalledWith({type: eventType});

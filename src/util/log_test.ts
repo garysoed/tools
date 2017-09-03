@@ -48,7 +48,7 @@ describe('util.Log', () => {
       Log.error(log, message);
 
       assert(log['callIfEnabled_']).to.haveBeenCalledWith(
-          Matchers.any(Function) as any,
+          Matchers.anyFunction(),
           LogLevel.ERROR,
           Matchers.anyString(),
           message);
@@ -70,7 +70,7 @@ describe('util.Log', () => {
       Log.info(log, message);
 
       assert(log['callIfEnabled_']).to.haveBeenCalledWith(
-          Matchers.any(Function) as any,
+          Matchers.anyFunction(),
           LogLevel.INFO,
           Matchers.anyString(),
           message);
@@ -90,7 +90,7 @@ describe('util.Log', () => {
       Log.trace(log);
 
       assert(log['callIfEnabled_']).to.haveBeenCalledWith(
-          Matchers.any(Function) as any,
+          Matchers.anyFunction(),
           LogLevel.DEBUG,
           Matchers.anyString());
 
@@ -111,7 +111,7 @@ describe('util.Log', () => {
       Log.warn(log, message);
 
       assert(log['callIfEnabled_']).to.haveBeenCalledWith(
-          Matchers.any(Function) as any,
+          Matchers.anyFunction(),
           LogLevel.WARNING,
           Matchers.anyString(),
           message);

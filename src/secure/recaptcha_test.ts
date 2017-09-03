@@ -27,7 +27,7 @@ describe('secure.Recaptcha', () => {
     const callback = jasmine.createSpy('Callback');
 
     assert(mockGrecaptcha.render).to.haveBeenCalledWith(mockElement, {
-      callback: Matchers.any(Function),
+      callback: Matchers.anyFunction(),
       sitekey: SITEKEY,
     });
 

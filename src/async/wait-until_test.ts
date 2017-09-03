@@ -81,10 +81,7 @@ describe('async.WaitUntil', () => {
       await promise;
       assert(waitUntil['promise_']).to.equal(promise);
       assert(mockInterval.start).to.haveBeenCalledWith();
-      assert(mockInterval.on).to.haveBeenCalledWith(
-          'tick',
-          Matchers.any(Function) as () => void,
-          waitUntil);
+      assert(mockInterval.on).to.haveBeenCalledWith('tick', Matchers.anyFunction(), waitUntil);
       mockInterval.on.calls.argsFor(0)[1]();
       assert(waitUntil['onTick_']).to
           .haveBeenCalledWith(mockInterval, jasmine.anything() as any, jasmine.anything() as any);

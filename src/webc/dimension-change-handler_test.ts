@@ -36,7 +36,7 @@ describe('webc.DimensionChangeHandler', () => {
       handler.configure(targetEl, instance, configs);
       assert(mockObserver.observe).to.haveBeenCalledWith(targetEl);
 
-      assert(DimensionObserver.of).to.haveBeenCalledWith(Matchers.any(Function) as any, handler);
+      assert(DimensionObserver.of).to.haveBeenCalledWith(Matchers.anyFunction(), handler);
       const clientRect = Mocks.object('clientRect');
       observerOfSpy.calls.argsFor(0)[0](clientRect);
       assert(handler['onDimensionChanged_'] as any).to

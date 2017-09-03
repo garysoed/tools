@@ -1,7 +1,6 @@
 import { AssertionError } from '../error';
-import { NodeId } from '../graph/node-id';
 
-type ValueSpec<T> = {context: {}, id: NodeId<T>, value: T};
+type ValueSpec<T> = {context: {}, id: any, value: T};
 
 let fakeGraph: any = null;
 let valueSpecs: ValueSpec<any>[] = [];
@@ -11,7 +10,7 @@ function buildGraph(): void {
     throw AssertionError.generic(`TestGraph#setup hasn't been called yet!`);
   }
 
-  fakeGraph.get.and.callFake((nodeId: NodeId<any>, context: {} | null = null) => {
+  fakeGraph.get.and.callFake((nodeId: any, context: {} | null = null) => {
     const spec = valueSpecs.find((value: ValueSpec<any>) => {
       return value.id === nodeId && value.context === context;
     });
@@ -31,7 +30,7 @@ export const TestGraph = {
     spyOn(graph, 'get');
   },
 
-  set<T>(nodeId: NodeId<T>, context: {}, value: T): void {
+  set<T>(nodeId: any, context: {}, value: T): void {
     valueSpecs.push({context, id: nodeId, value});
     buildGraph();
   },

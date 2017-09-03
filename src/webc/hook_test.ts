@@ -41,7 +41,7 @@ describe('webc.hook', () => {
       decorator(target, propertyKey);
 
       assert(mockAnnotationHandler.attachValueToProperty).to
-          .haveBeenCalledWith(propertyKey, Matchers.any(Function));
+          .haveBeenCalledWith(propertyKey, Matchers.anyFunction());
 
       const parentEl = Mocks.object('parentEl');
       const instance = Mocks.object('instance');

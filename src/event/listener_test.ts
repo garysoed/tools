@@ -87,7 +87,7 @@ describe('event.listener', () => {
     assert(instance.addDisposable).to.haveBeenCalledWith(disposable11);
     assert(mockBus11.on).to.haveBeenCalledWith(
         type11,
-        Matchers.any(Function),
+        Matchers.anyFunction(),
         instance,
         useCapture11);
     mockBus11.on.calls.argsFor(0)[1](event);
@@ -97,7 +97,7 @@ describe('event.listener', () => {
     assert(instance.addDisposable).to.haveBeenCalledWith(disposable12);
     assert(mockBus12.on).to.haveBeenCalledWith(
         type12,
-        Matchers.any(Function),
+        Matchers.anyFunction(),
         instance,
         useCapture12);
     mockBus12.on.calls.argsFor(0)[1](event);
@@ -106,7 +106,7 @@ describe('event.listener', () => {
 
     assert(mockBus2.on).to.haveBeenCalledWith(
         type2,
-        Matchers.any(Function),
+        Matchers.anyFunction(),
         instance,
         useCapture2);
     mockBus2.on.calls.argsFor(0)[1](event);

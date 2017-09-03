@@ -35,7 +35,7 @@ describe('async.atomic', () => {
         const mockInstance = jasmine.createSpyObj('Instance', ['addDisposable']);
         await descriptor.value.call(mockInstance, 1, 2);
 
-        assert(mockSequencer.run).to.haveBeenCalledWith(Matchers.any(Function));
+        assert(mockSequencer.run).to.haveBeenCalledWith(Matchers.anyFunction());
         mockSequencer.run.calls.argsFor(0)[0]();
 
         assert(mockFunction).to.haveBeenCalledWith(1, 2);
@@ -54,7 +54,7 @@ describe('async.atomic', () => {
     instance[__SEQUENCER] = mockSequencer;
     const decoratedFunction = decorator(Class.prototype, 'property', descriptor)!.value as Function;
     await decoratedFunction.call(instance, 1, 2);
-    assert(mockSequencer.run).to.haveBeenCalledWith(Matchers.any(Function));
+    assert(mockSequencer.run).to.haveBeenCalledWith(Matchers.anyFunction());
   });
 
   it('should not throw error if the descriptor has no values', () => {
