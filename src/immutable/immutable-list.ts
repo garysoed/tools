@@ -278,6 +278,11 @@ export class ImmutableList<T> implements
     return new ImmutableList(clone.sort(compareFn));
   }
 
+  toString(): string {
+    const items = this.mapItem((item: T) => `${item}`);
+    return `[${[...items].join(', ')}]`;
+  }
+
   values(): ImmutableList<T> {
     return this;
   }

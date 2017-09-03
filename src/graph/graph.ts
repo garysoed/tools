@@ -183,8 +183,33 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
       nodeId: NodeId<T>,
       provider: Provider<T>,
       ...args: NodeId<any>[]): void {
-    if (this.nodes_.has(nodeId)) {
-      throw new Error(`Node ${nodeId} is already registered`);
+    const existingNode = this.nodes_.get(nodeId);
+    if (existingNode) {
+      if (!(existingNode instanceof InnerNode)) {
+        throw AssertionError.generic(`node for ${nodeId} is already registered as InputNode`);
+      }
+
+      if (existingNode.getProvider().toString() !== provider.toString()) {
+        throw AssertionError.equals(
+            `reregistered node provider for ${nodeId}`,
+            existingNode.getProvider(),
+            provider);
+      }
+
+      const existingArgs = existingNode.getParameterIds();
+      const newArgs = ImmutableList.of(args);
+      const maxIndex = Math.max(existingArgs.size(), newArgs.size());
+      for (let i = 0; i < maxIndex; i++) {
+        const existingArg = existingArgs.getAt(i);
+        const newArg = newArgs.getAt(i);
+        if (existingArg !== newArg) {
+          throw AssertionError.equals(
+              `reregistered node parameter ${i} for ${nodeId}`,
+              existingArg,
+              newArg);
+        }
+      }
+      return;
     }
 
     const node = new InnerNode<T>(provider, ImmutableList.of(args));

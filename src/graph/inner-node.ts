@@ -13,4 +13,8 @@ export class InnerNode<T> extends GNode<T> {
   execute_(context: {}, params: Iterable<any>): T {
     return this.fn_.apply(context, [...params]);
   }
+
+  getProvider(): Provider<T> {
+    return this.fn_;
+  }
 }

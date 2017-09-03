@@ -409,13 +409,81 @@ describe('graph.Graph', () => {
       assert(mockProvider).to.haveBeenCalledWith();
     });
 
-    it(`should throw error if the node is already registered`, () => {
+    it(`should do nothing if reregistered node is the same as registered one`, () => {
       const $ = staticId('test', NumberType);
-      const node = Mocks.object('node');
-      graph['nodes_'].set($, node);
+      const param1 = Mocks.object('param1');
+      const param2 = Mocks.object('param2');
+      const provider = Mocks.object('provider');
+      const mockNode = jasmine.createSpyObj('Node', ['getParameterIds', 'getProvider']);
+      mockNode.getParameterIds.and.returnValue(ImmutableList.of([param1, param2]));
+      mockNode.getProvider.and.returnValue(provider);
+      Object.setPrototypeOf(mockNode, InnerNode.prototype);
+      graph['nodes_'].set($, mockNode);
+
+      spyOn(graph['nodes_'], 'set').and.callThrough();
+
+      graph.registerProvider($, provider, param1, param2);
+      assert(graph['nodes_'].set).toNot.haveBeenCalled();
+    });
+
+    it(`should throw error if reregistered node params has a different element`, () => {
+      const $ = staticId('test', NumberType);
+      const param1 = Mocks.object('param1');
+      const param2 = Mocks.object('param2');
+      const param3 = Mocks.object('param3');
+      const provider = Mocks.object('provider');
+      const mockNode = jasmine.createSpyObj('Node', ['getParameterIds', 'getProvider']);
+      mockNode.getParameterIds.and.returnValue(ImmutableList.of([param1, param2]));
+      mockNode.getProvider.and.returnValue(provider);
+      Object.setPrototypeOf(mockNode, InnerNode.prototype);
+      graph['nodes_'].set($, mockNode);
 
       assert(() => {
-        graph.registerProvider($, Mocks.object('provider'));
+        graph.registerProvider($, provider, param1, param3);
+      }).to.throwError(/reregistered node parameter/);
+    });
+
+    it(`should throw error if reregistered node params has different lengths`, () => {
+      const $ = staticId('test', NumberType);
+      const param1 = Mocks.object('param1');
+      const param2 = Mocks.object('param2');
+      const provider = Mocks.object('provider');
+      const mockNode = jasmine.createSpyObj('Node', ['getParameterIds', 'getProvider']);
+      mockNode.getParameterIds.and.returnValue(ImmutableList.of([param1]));
+      mockNode.getProvider.and.returnValue(provider);
+      Object.setPrototypeOf(mockNode, InnerNode.prototype);
+      graph['nodes_'].set($, mockNode);
+
+      assert(() => {
+        graph.registerProvider($, provider, param1, param2);
+      }).to.throwError(/reregistered node parameter/);
+    });
+
+    it(`should throw error if registered node has different provider`, () => {
+      const $ = staticId('test', NumberType);
+      const provider1 = () => 1;
+      const provider2 = () => 2;
+      const mockNode = jasmine.createSpyObj('Node', ['getParameterIds', 'getProvider']);
+      mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
+      mockNode.getProvider.and.returnValue(provider1);
+      Object.setPrototypeOf(mockNode, InnerNode.prototype);
+      graph['nodes_'].set($, mockNode);
+
+      assert(() => {
+        graph.registerProvider($, provider2);
+      }).to.throwError(/reregistered node provider/);
+    });
+
+    it(`should throw error if registered node is not an InnerNode`, () => {
+      const $ = staticId('test', NumberType);
+      const provider = Mocks.object('provider');
+      const mockNode = jasmine.createSpyObj('Node', ['getParameterIds', 'getProvider']);
+      mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
+      mockNode.getProvider.and.returnValue(provider);
+      graph['nodes_'].set($, mockNode);
+
+      assert(() => {
+        graph.registerProvider($, provider);
       }).to.throwError(/already registered/);
     });
   });

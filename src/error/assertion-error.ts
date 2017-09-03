@@ -10,6 +10,10 @@ export class AssertionError extends Error {
     return AssertionError.generic(`[${field}] should ${expected}, but was [${actual}]`);
   }
 
+  static equals(field: string, expected: any, actual: any): AssertionError {
+    return AssertionError.condition(field, `equal to [${expected}]`, actual);
+  }
+
   static generic(message: string): AssertionError {
     return new AssertionError(message);
   }
