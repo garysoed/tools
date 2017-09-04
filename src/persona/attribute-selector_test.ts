@@ -20,7 +20,8 @@ describe('persona.AttributeSelectorImpl', () => {
 
       const root = Mocks.object('root');
 
-      const selector = attributeSelector(mockElementSelector, attrName, IntegerParser, NumberType);
+      const selector = attributeSelector(
+          mockElementSelector, attrName, IntegerParser, NumberType, 123);
       assert(selector.getValue(root)).to.equal(value);
       assert(mockElementSelector.getValue).to.haveBeenCalledWith(root);
     });
@@ -60,7 +61,8 @@ describe('persona.AttributeSelectorImpl', () => {
 
       const root = Mocks.object('root');
 
-      const selector = attributeSelector(mockElementSelector, attrName, IntegerParser, NumberType);
+      const selector = attributeSelector(
+          mockElementSelector, attrName, IntegerParser, NumberType, 123);
       selector.setValue(value, root);
       assert(element.getAttribute(attrName)).to.equal(`${value}`);
       assert(selector.getValue(root)).to.equal(value);
@@ -77,7 +79,8 @@ describe('persona.AttributeSelectorImpl', () => {
 
       const root = Mocks.object('root');
 
-      const selector = attributeSelector(mockElementSelector, attrName, StringParser, StringType);
+      const selector = attributeSelector(
+          mockElementSelector, attrName, StringParser, StringType, '123');
       selector.setValue(null, root);
       assert(element.hasAttribute(attrName)).to.beFalse();
     });

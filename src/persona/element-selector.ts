@@ -17,8 +17,8 @@ export class ElementSelectorStub<T extends HTMLElement>
   resolve(allSelectors: {}): ElementSelectorImpl<T> {
     const value = Jsons.getValue(allSelectors, this.path_);
     if (!InstanceofType(ElementSelectorImpl).check(value)) {
-      throw new Error(`Cannot resolve element selector. [${this.path_}] is [${value}], expecting '
-          + 'an element selector`);
+      throw new Error(`Cannot resolve element selector. [${this.path_}] is [${value}], expecting `
+          + `an element selector`);
     }
 
     return value;
@@ -41,8 +41,8 @@ export class ElementSelectorImpl<T extends HTMLElement>
   getValue(root: ShadowRoot): T {
     const el = root.querySelector(this.selector_);
     if (!this.type_.check(el)) {
-      throw new Error(`[${this.selector_}] has the wrong type. Expected: ${this.type_} but was '
-          + '${el}`);
+      throw new Error(`[${this.selector_}] has the wrong type. Expected: ${this.type_} but was `
+          + `${el}`);
     }
 
     return el;

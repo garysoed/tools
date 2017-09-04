@@ -51,7 +51,7 @@ export class AttributeSelectorImpl<T> extends SelectorImpl<T> implements Attribu
     super(instanceId(`${elementSelector_.getSelector()}[${attrName_}]`, type));
   }
 
-  getElementSelector(): ElementSelector<any> {
+  getElementSelector(): ElementSelector<HTMLElement> {
     return this.elementSelector_;
   }
 
@@ -84,7 +84,7 @@ export function attributeSelector<T>(
     attrName: string,
     parser: Parser<T>,
     type: Type<T>,
-    defaultValue?: T): AttributeSelector<T> {
+    defaultValue: T): AttributeSelector<T> {
   if (elementSelector instanceof ElementSelectorStub) {
     return new AttributeSelectorStub(elementSelector, parser, attrName, type, defaultValue);
   } else if (elementSelector instanceof ElementSelectorImpl) {

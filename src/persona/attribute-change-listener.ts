@@ -42,8 +42,13 @@ export class AttributeChangeListener<T> implements Listener<'change'> {
     const observer = this.createMutationObserver_((records: Iterable<MutationRecord>) => {
       this.onMutation_(handler, context, records);
     });
+    const elementSelector = this.attributeSelector_.getElementSelector();
+    const element = elementSelector.getValue(root);
+    if (!element) {
+      throw AssertionError.condition(`element for ${elementSelector}`, 'exist', element);
+    }
     observer.observe(
-        this.attributeSelector_.getElementSelector().getValue(root),
+        element,
         {
           attributeFilter: [this.attributeSelector_.getName()],
           attributeOldValue: true,

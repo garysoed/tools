@@ -9,5 +9,9 @@ export function ElementWithTagType(tag: string): Type<HTMLElement> {
 
       return target.tagName.toLowerCase() === tag.toLowerCase();
     },
+
+    toString(): string {
+      return `HTMLElement(${tag})`;
+    },
   };
 }

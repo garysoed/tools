@@ -9,13 +9,15 @@ type ObservationData = {
   unregisterFn: DisposableFunction,
 };
 
+// TODO: DELETE
+
 export class DimensionObserver extends BaseDisposable {
   private readonly interval_: Interval;
   private readonly observedElements_: Map<Element, ObservationData>;
 
   constructor(private readonly callback_: (clientRect: ClientRect) => any) {
     super();
-    this.interval_ = new Interval(30);
+    this.interval_ = new Interval(5000);
     this.addDisposable(this.interval_);
 
     this.observedElements_ = new Map<Element, ObservationData>();

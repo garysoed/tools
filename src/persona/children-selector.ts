@@ -9,7 +9,7 @@ import {
 import { Selector, SelectorImpl, SelectorStub } from '../persona/selector';
 
 type Factory<E extends Element> = (document: Document) => E;
-type Getter<E extends Element, T> = (element: E) => T | null;
+type Getter<E extends Element, T> = (element: E) => T;
 type Setter<E extends Element, T> = (data: T, element: E) => void;
 
 export interface ChildrenSelector<T> extends Selector<ImmutableList<T>> { }
@@ -81,6 +81,10 @@ export class ChildrenSelectorImpl<E extends Element, T> extends
       this.elementPool_.delete(element);
       return element;
     }
+  }
+
+  getElementSelector(): ElementSelector<HTMLElement> {
+    return this.elementSelector_;
   }
 
   getValue(root: ShadowRoot): ImmutableList<T> {

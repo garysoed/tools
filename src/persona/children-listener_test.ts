@@ -1,48 +1,36 @@
 import { assert, Matchers, Mocks, TestBase } from '../test-base';
 TestBase.setup();
 
-import { AttributeChangeListener } from '../persona/attribute-change-listener';
+import { ChildrenListener } from '../persona/children-listener';
 
 
-describe('persona.AttributeChangeListener', () => {
+describe('persona.childrenListener', () => {
   let mockSelector: any;
-  let listener: AttributeChangeListener<number>;
+  let listener: ChildrenListener<HTMLElement, number>;
 
   beforeEach(() => {
-    mockSelector = jasmine.createSpyObj('Selector', ['getElementSelector', 'getName']);
-    listener = new AttributeChangeListener(mockSelector);
+    mockSelector = jasmine.createSpyObj('Selector', ['getElementSelector']);
+    listener = new ChildrenListener(mockSelector);
   });
 
   describe('onMutation_', () => {
     it(`should call the handlers correctly`, () => {
-      const attributeName1 = 'attributeName1';
-      const oldValue1 = 'oldValue1';
-      const target1 = document.createElement('div');
-      target1.setAttribute(attributeName1, oldValue1);
-      const record1 = {attributeName: attributeName1, oldValue: oldValue1, target: target1};
+      const addedNodes1 = Mocks.object('addedNodes1');
+      const removedNodes1 = Mocks.object('removedNodes1');
+      const record1 = {addedNodes: addedNodes1, removedNodes: removedNodes1};
 
-      const attributeName2 = 'attributeName2';
-      const oldValue2 = Mocks.object('oldValue2');
-      const target2 = Mocks.object('target2');
-      const record2 = {attributeName: attributeName2, oldValue: oldValue2, target: target2};
-
-      const oldValue3 = Mocks.object('oldValue3');
-      const target3 = document.createElement('div');
-      const record3 = {attributeName: null, oldValue: oldValue3, target: target3};
-
-      const attributeName4 = 'attributeName4';
-      const oldValue4 = Mocks.object('oldValue4');
-      const target4 = document.createElement('div');
-      const record4 = {attributeName: attributeName4, oldValue: oldValue4, target: target4};
+      const addedNodes2 = Mocks.object('addedNodes2');
+      const removedNodes2 = Mocks.object('removedNodes2');
+      const record2 = {addedNodes: addedNodes2, removedNodes: removedNodes2};
 
       const mockHandler = jasmine.createSpy('Handler');
       const context = Mocks.object('context');
 
-      listener['onMutation_'](mockHandler, context, [record1, record2, record3, record4] as any);
-      assert(mockHandler).to.haveBeenCalledWith({oldValue: oldValue4, type: 'change'});
-      assert(mockHandler).toNot.haveBeenCalledWith({oldValue: oldValue1, type: 'change'});
-      assert(mockHandler).toNot.haveBeenCalledWith({oldValue: oldValue2, type: 'change'});
-      assert(mockHandler).toNot.haveBeenCalledWith({oldValue: oldValue3, type: 'change'});
+      listener['onMutation_'](mockHandler, context, [record1, record2] as any);
+      assert(mockHandler).to.haveBeenCalledWith(
+          {added: addedNodes1, type: 'childrenchange', removed: removedNodes1});
+      assert(mockHandler).to.haveBeenCalledWith(
+          {added: addedNodes2, type: 'childrenchange', removed: removedNodes2});
     });
   });
 
@@ -60,16 +48,13 @@ describe('persona.AttributeChangeListener', () => {
       mockElementSelector.getValue.and.returnValue(element);
       mockSelector.getElementSelector.and.returnValue(mockElementSelector);
 
-      const attrName = 'attrName';
-      mockSelector.getName.and.returnValue(attrName);
-
       spyOn(listener, 'onMutation_');
 
       const disposable = listener.start(root, handler, context);
       assert(mockObserver.observe).to.haveBeenCalledWith(
           element,
           Matchers.objectContaining({
-            attributeFilter: [attrName],
+            childList: true,
           }));
       assert(mockElementSelector.getValue).to.haveBeenCalledWith(root);
 

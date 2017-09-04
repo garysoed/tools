@@ -1,6 +1,8 @@
 import { BaseDisposable } from '../dispose';
 import { attributeChangeListener, eventListener } from '../persona';
 import { AttributeSelector } from '../persona/attribute-selector';
+import { childrenListener } from '../persona/children-listener';
+import { ChildrenSelector } from '../persona/children-selector';
 import { ElementSelector } from '../persona/element-selector';
 import { Persona } from '../persona/persona';
 
@@ -19,6 +21,14 @@ export const onDom = {
           asBaseDisposableCtor(target),
           propertyKey,
           attributeChangeListener(selector));
+    };
+  },
+  children(selector: ChildrenSelector<any>): MethodDecorator {
+    return (target: Object, propertyKey: string | symbol) => {
+      Persona.defineListener(
+          asBaseDisposableCtor(target),
+          propertyKey,
+          childrenListener(selector));
     };
   },
   event(

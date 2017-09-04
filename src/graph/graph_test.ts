@@ -45,7 +45,7 @@ describe('graph.Graph', () => {
       const context = Mocks.object('context');
 
       const provider = graph.createProvider($, value, context);
-      assert(graph['nodes_'].get($)!.execute(null, [])).to.equal(value);
+      assert(graph['nodes_'].get($)!.execute(context, [])).to.equal(value);
 
       const newValue = 456;
       assert(provider(newValue)).to.equal(promise);

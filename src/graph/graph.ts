@@ -43,7 +43,7 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
     }
 
     const node = new InputNode<T>();
-    node.set(null, initValue);
+    node.set(context, initValue);
     this.nodes_.set(nodeId, node);
 
     const provider = (newValue: T): Promise<void> => {
@@ -64,10 +64,18 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
   async get<T>(staticId: StaticId<T>): Promise<T>;
   async get<T, C extends BaseDisposable>(instanceId: InstanceId<T>, context: C): Promise<T>;
   async get<T>(nodeId: NodeId<T>, context: BaseDisposable = GLOBALS): Promise<T> {
-    Log.debug(LOGGER, `getting: `, nodeId);
+    // TODO: This needs a ticketing system.
+    Log.debug(LOGGER, `getting: ${nodeId}`);
     const node = this.nodes_.get(nodeId);
     if (!node) {
       throw new Error(`Node for ${nodeId} cannot be found`);
+    }
+
+    const cachedValue = Promise.resolve(node.getPreviousValue(context));
+    if (!node.shouldReexecute(context)) {
+      const resolvedValue = await cachedValue;
+      Log.debug(LOGGER, `cached: ${nodeId} ${resolvedValue}`);
+      return resolvedValue;
     }
 
     const parameters = await Promise.all(node.getParameterIds()
@@ -93,14 +101,7 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
       this.monitoredNodes_.set(context, ids.add(nodeId));
     }
 
-    const cachedValue = Promise.resolve(node.getPreviousValue(context));
-    if (!node.shouldReexecute(context)) {
-      const resolvedValue = await cachedValue;
-      Log.debug(LOGGER, `cached: `, nodeId, resolvedValue);
-      return resolvedValue;
-    }
-
-    Log.debug(LOGGER, `executing: `, nodeId);
+    Log.debug(LOGGER, `executing: ${nodeId}`);
     const value = node.execute(context, parameters);
 
     const [resolvedCached, resolvedValue] = await Promise.all([cachedValue, value]);
@@ -112,7 +113,7 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
       this.dispatch({context, id: nodeId, type: 'change' as 'change'});
     }
 
-    Log.debug(LOGGER, 'executed: ', nodeId, resolvedValue);
+    Log.debug(LOGGER, `executed: ${nodeId} ${resolvedValue}`);
     return resolvedValue;
   }
 
@@ -255,7 +256,7 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
   }
 
   private set_<T>(nodeId: NodeId<T>, context: {}, value: T): Promise<void> {
-    Log.debug(LOGGER, `setting: `, nodeId, value);
+    Log.debug(LOGGER, `setting: ${nodeId} ${value}`);
 
     const node = this.nodes_.get(nodeId);
     if (!(node instanceof InputNode)) {
@@ -264,7 +265,7 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
 
     const promise = new Promise<void>((resolve: () => void) => {
       this.setQueue_.push(() => {
-        Log.debug(LOGGER, `set flush: `, nodeId, value);
+        Log.debug(LOGGER, `set flush: ${nodeId} ${value}`);
         const event = {context, id: nodeId, type: 'change' as 'change'};
         this.dispatch(event, () => {
           node.set(context, value);
