@@ -33,7 +33,7 @@ describe('graph functional test', () => {
     let providesC: NodeProvider<number>;
 
     async function providesA(b: number): Promise<number> {
-      const c = await Graph.get($.c);
+      const c = await Graph.get($.c, Graph.getTimestamp());
       return b + c;
     }
 
@@ -45,17 +45,17 @@ describe('graph functional test', () => {
     });
 
     it(`should handle default values`, async () => {
-      assert(await Graph.get($.a)).to.equal(7);
+      assert(await Graph.get($.a, Graph.getTimestamp())).to.equal(7);
     });
 
     it(`should handle values set by the provider`, async () => {
       const setPromises = Promise.all([providesB(2), providesC(3)]);
 
       // At this point, the value hasn't been set yet.
-      assert(await Graph.get($.a)).to.equal(7);
+      assert(await Graph.get($.a, Graph.getTimestamp())).to.equal(7);
 
       await setPromises;
-      assert(await Graph.get($.a)).to.equal(5);
+      assert(await Graph.get($.a, Graph.getTimestamp())).to.equal(5);
     });
   });
 
@@ -92,19 +92,21 @@ describe('graph functional test', () => {
       const test1 = new TestClass(1, jasmine.createSpy('ProvidesA1'));
       const test2 = new TestClass(2, jasmine.createSpy('ProvidesA2'));
 
-      assert(await Graph.get($a, test1)).to.equal(4);
-      assert(await Graph.get($a, test2)).to.equal(5);
+      assert(await Graph.get($a, Graph.getTimestamp(), test1)).to.equal(4);
+      assert(await Graph.get($a, Graph.getTimestamp(), test2)).to.equal(5);
     });
 
     it(`should handle values set by the provider`, async () => {
       const test = new TestClass(2, jasmine.createSpy('ProvidesA'));
+      const oldTimestamp = Graph.getTimestamp();
       const setPromise = providesC(5);
 
       // At this point, the value hasn't been set yet.
-      assert(await Graph.get($a, test)).to.equal(5);
+      assert(await Graph.get($a, Graph.getTimestamp(), test)).to.equal(5);
 
       await setPromise;
-      assert(await Graph.get($a, test)).to.equal(7);
+      assert(await Graph.get($a, Graph.getTimestamp(), test)).to.equal(7);
+      assert(await Graph.get($a, oldTimestamp, test)).to.equal(5);
     });
 
     it(`should clear the cache if one of the providers have changed`, async () => {
@@ -115,13 +117,13 @@ describe('graph functional test', () => {
       const providesASpy = spyOn(TestClass.prototype, 'providesA').and.callThrough();
 
       // At this point, the value hasn't been set yet.
-      assert(await Graph.get($a, test)).to.equal(5);
+      assert(await Graph.get($a, Graph.getTimestamp(), test)).to.equal(5);
       providesASpy.calls.reset();
-      assert(await Graph.get($a, test)).to.equal(5);
+      assert(await Graph.get($a, Graph.getTimestamp(), test)).to.equal(5);
       assert(test.providesA).toNot.haveBeenCalled();
 
       await setPromise;
-      assert(await Graph.get($a, test)).to.equal(7);
+      assert(await Graph.get($a, Graph.getTimestamp(), test)).to.equal(7);
     });
   });
 
@@ -159,8 +161,8 @@ describe('graph functional test', () => {
       const test1 = new TestClass(1, jasmine.createSpy('ProvidesA1'));
       const test2 = new TestClass(2, jasmine.createSpy('ProvidesA2'));
 
-      assert(await Graph.get($a, test1)).to.equal(4);
-      assert(await Graph.get($a, test2)).to.equal(5);
+      assert(await Graph.get($a, Graph.getTimestamp(), test1)).to.equal(4);
+      assert(await Graph.get($a, Graph.getTimestamp(), test2)).to.equal(5);
     });
 
     it(`should handle values set by the provider`, async () => {
@@ -168,10 +170,10 @@ describe('graph functional test', () => {
       const setPromise = providesC(5);
 
       // At this point, the value hasn't been set yet.
-      assert(await Graph.get($a, test)).to.equal(5);
+      assert(await Graph.get($a, Graph.getTimestamp(), test)).to.equal(5);
 
       await setPromise;
-      assert(await Graph.get($a, test)).to.equal(7);
+      assert(await Graph.get($a, Graph.getTimestamp(), test)).to.equal(7);
     });
   });
 
@@ -219,7 +221,10 @@ describe('graph functional test', () => {
           [2, mockCallback2, jasmine.createSpy('ProvidesASpy1')]);
       TestDispose.add(t2);
 
-      assert(await Promise.all([Graph.get($a, t1), Graph.get($a, t2)])).to.equal([3, 4]);
+      assert(await Promise.all([
+        Graph.get($a, Graph.getTimestamp(), t1),
+        Graph.get($a, Graph.getTimestamp(), t2),
+      ])).to.equal([3, 4]);
 
       const promise1 = new Promise((resolve) => {
         mockCallback1.and.callFake(resolve);

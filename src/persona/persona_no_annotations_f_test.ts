@@ -36,7 +36,7 @@ describe('persona functional test without annotations', () => {
     }
 
     async renderRootInnerText(): Promise<number> {
-      return await Graph.get($.value);
+      return await Graph.get($.value, Graph.getTimestamp());
     }
   }
 

@@ -3,7 +3,7 @@ TestBase.setup();
 
 import { NumberType } from '../check';
 import { BaseDisposable } from '../dispose';
-import { instanceId, staticId } from '../graph';
+import { GraphTime, instanceId, staticId } from '../graph';
 import { GLOBALS } from '../graph/g-node';
 import { GraphImpl } from '../graph/graph';
 import { InnerNode } from '../graph/inner-node';
@@ -29,7 +29,7 @@ describe('graph.Graph', () => {
       spyOn(graph, 'set_').and.returnValue(promise);
 
       const provider = graph.createProvider($, value);
-      assert(graph['nodes_'].get($)!.execute(null, [])).to.equal(value);
+      assert(graph['nodes_'].get($)!.execute(null, [], graph.getTimestamp())).to.equal(value);
 
       const newValue = 456;
       assert(provider(newValue)).to.equal(promise);
@@ -45,7 +45,7 @@ describe('graph.Graph', () => {
       const context = Mocks.object('context');
 
       const provider = graph.createProvider($, value, context);
-      assert(graph['nodes_'].get($)!.execute(context, [])).to.equal(value);
+      assert(graph['nodes_'].get($)!.execute(context, [], graph.getTimestamp())).to.equal(value);
 
       const newValue = 456;
       assert(provider(newValue)).to.equal(promise);
@@ -99,21 +99,28 @@ describe('graph.Graph', () => {
           .else().call(origGet.bind(graph));
       const mockNode = jasmine.createSpyObj(
         'Node',
-        ['execute', 'getPreviousValue', 'getParameterIds', 'shouldReexecute']);
+        ['execute', 'getLatestCacheValue', 'getParameterIds']);
       mockNode.execute.and.returnValue(Promise.resolve(value));
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([$.param1, $.param2]));
-      mockNode.shouldReexecute.and.returnValue(true);
       Object.setPrototypeOf(mockNode, InnerNode.prototype);
       graph['nodes_'].set($.test, mockNode);
 
       spyOn(GLOBALS, 'addDisposable').and
           .callFake((disposable: any) => TestDispose.add(disposable));
 
-      spyOn(graph, 'dispatch');
+      const timestamp = Mocks.object('timestamp');
+      const idealExecutionTime = Mocks.object('idealExecutionTime');
 
-      await assert(graph.get($.test)).to.resolveWith(value);
-      assert(mockNode.execute).to.haveBeenCalledWith(GLOBALS, [param1, param2]);
+      spyOn(graph, 'dispatch');
+      spyOn(graph, 'getIdealExecutionTime_').and.returnValue(idealExecutionTime);
+
+      await assert(graph.get($.test, timestamp)).to.resolveWith(value);
+      assert(mockNode.execute).to.haveBeenCalledWith(GLOBALS, [param1, param2], idealExecutionTime);
       assert(graph.dispatch).to.haveBeenCalledWith({context: GLOBALS, id: $.test, type: 'change'});
+      assert(graph.get).to.haveBeenCalledWith($.param1, idealExecutionTime);
+      assert(graph.get).to.haveBeenCalledWith($.param2, idealExecutionTime);
+      assert(mockNode.getLatestCacheValue).to.haveBeenCalledWith(GLOBALS, idealExecutionTime);
+      assert(graph['getIdealExecutionTime_']).to.haveBeenCalledWith($.test, timestamp);
     });
 
     it(`should handle instance IDs`, async () => {
@@ -142,20 +149,24 @@ describe('graph.Graph', () => {
           .else().call(origGet.bind(graph));
       const mockNode = jasmine.createSpyObj(
           'Node',
-          ['execute', 'getPreviousValue', 'getParameterIds', 'shouldReexecute']);
+          ['execute', 'getLatestCacheValue', 'getParameterIds']);
       mockNode.execute.and.returnValue(Promise.resolve(value));
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([$.param1, $.param2]));
-      mockNode.shouldReexecute.and.returnValue(true);
 
       Object.setPrototypeOf(mockNode, InnerNode.prototype);
       graph['nodes_'].set($.test, mockNode);
 
+      const timestamp = Mocks.object('timestamp');
+      const idealExecutionTime = Mocks.object('idealExecutionTime');
+
       const graphOnSpy = spyOn(graph, 'on')
           .and.returnValue(jasmine.createSpyObj('disposable', ['dispose']));
       spyOn(graph, 'onReady_');
+      spyOn(graph, 'getIdealExecutionTime_').and.returnValue(idealExecutionTime);
 
-      await assert(graph.get($.test, instance)).to.resolveWith(value);
-      assert(mockNode.execute).to.haveBeenCalledWith(instance, [param1, param2]);
+      await assert(graph.get($.test, timestamp, instance)).to.resolveWith(value);
+      assert(mockNode.execute).to
+          .haveBeenCalledWith(instance, [param1, param2], idealExecutionTime);
       assert(graph['monitoredNodes_'].get(instance)!).to.haveElements([$.test]);
       assert(graph.on).to.haveBeenCalledWith('ready', Matchers.anyFunction(), graph);
 
@@ -163,8 +174,10 @@ describe('graph.Graph', () => {
       graphOnSpy.calls.argsFor(0)[1](event);
       assert(graph['onReady_']).to.haveBeenCalledWith($.test, instance, event);
 
-      assert(graph.get).to.haveBeenCalledWith($.param1, instance);
-      assert(graph.get).to.haveBeenCalledWith($.param2, instance);
+      assert(graph.get).to.haveBeenCalledWith($.param1, idealExecutionTime, instance);
+      assert(graph.get).to.haveBeenCalledWith($.param2, idealExecutionTime, instance);
+      assert(mockNode.getLatestCacheValue).to.haveBeenCalledWith(instance, idealExecutionTime);
+      assert(graph['getIdealExecutionTime_']).to.haveBeenCalledWith($.test, timestamp, instance);
     });
 
     it(`should reject if the value has the wrong type`, async () => {
@@ -179,24 +192,30 @@ describe('graph.Graph', () => {
       Fakes.build(spyOn(graph, 'get'))
           .when($.param).resolve(param)
           .else().call(origGet.bind(graph));
+
+      const timestamp = Mocks.object('timestamp');
       const mockNode = jasmine.createSpyObj(
           'Node',
-          ['execute', 'getPreviousValue', 'getParameterIds', 'shouldReexecute']);
+          ['execute', 'getLatestCacheValue', 'getParameterIds']);
       mockNode.execute.and.returnValue(Promise.resolve(value));
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([$.param]));
-      mockNode.shouldReexecute.and.returnValue(true);
       graph['nodes_'].set($.test, mockNode);
 
-      await assert(graph.get($.test)).to.rejectWithError(/incorrect type/);
-      assert(mockNode.execute).to.haveBeenCalledWith(GLOBALS, [param]);
+      const idealExecutionTime = Mocks.object('idealExecutionTime');
+      spyOn(graph, 'getIdealExecutionTime_').and.returnValue(idealExecutionTime);
+
+      await assert(graph.get($.test, timestamp)).to.rejectWithError(/incorrect type/);
+      assert(mockNode.execute).to.haveBeenCalledWith(GLOBALS, [param], idealExecutionTime);
+      assert(graph['getIdealExecutionTime_']).to.haveBeenCalledWith($.test, timestamp);
     });
 
     it(`should reject if the node corresponding to the ID cannot be found`, async () => {
       const $ = {
         test: staticId('test', NumberType),
       };
+      const timestamp = Mocks.object('timestamp');
 
-      await assert(graph.get($.test)).to.rejectWithError(/cannot be found/);
+      await assert(graph.get($.test, timestamp)).to.rejectWithError(/cannot be found/);
     });
 
     it(`should not monitor if already monitored`, async () => {
@@ -214,45 +233,20 @@ describe('graph.Graph', () => {
 
       const mockNode = jasmine.createSpyObj(
           'Node',
-          ['execute', 'getPreviousValue', 'getParameterIds', 'shouldReexecute']);
+          ['execute', 'getLatestCacheValue', 'getParameterIds']);
       mockNode.execute.and.returnValue(value);
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
-      mockNode.shouldReexecute.and.returnValue(true);
       Object.setPrototypeOf(mockNode, InnerNode.prototype);
       graph['nodes_'].set($test, mockNode);
 
       spyOn(graph, 'on');
       spyOn(graph, 'onReady_');
       spyOn(graph, 'isMonitored_').and.returnValue(true);
+      const timestamp = Mocks.object('timestamp');
 
-      await assert(graph.get($test, instance)).to.resolveWith(value);
+      await assert(graph.get($test, timestamp, instance)).to.resolveWith(value);
       assert(graph.on).toNot.haveBeenCalled();
       assert(graph['isMonitored_']).to.haveBeenCalledWith(instance, $test);
-    });
-
-    it(`should not execute if doesn't need to be reexecuted`, async () => {
-      class TestClass extends BaseDisposable { }
-
-      const instance = new TestClass();
-      TestDispose.add(instance);
-
-      const $test = instanceId('test', NumberType);
-      const cachedValue = 345;
-
-      const mockNode = jasmine.createSpyObj(
-          'Node',
-          ['execute', 'getPreviousValue', 'getParameterIds', 'shouldReexecute']);
-      mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
-      mockNode.shouldReexecute.and.returnValue(false);
-      mockNode.getPreviousValue.and.returnValue(cachedValue);
-      Object.setPrototypeOf(mockNode, InnerNode.prototype);
-      graph['nodes_'].set($test, mockNode);
-
-      spyOn(graph, 'on').and.returnValue(jasmine.createSpyObj('Disposable', ['dispose']));
-      spyOn(graph, 'onReady_');
-
-      await assert(graph.get($test, instance)).to.resolveWith(cachedValue);
-      assert(mockNode.execute).toNot.haveBeenCalled();
     });
 
     it(`should not monitor if node is not InnerNode`, async () => {
@@ -270,16 +264,16 @@ describe('graph.Graph', () => {
 
       const mockNode = jasmine.createSpyObj(
           'Node',
-          ['execute', 'getPreviousValue', 'getParameterIds', 'shouldReexecute']);
+          ['execute', 'getLatestCacheValue', 'getParameterIds']);
       mockNode.execute.and.returnValue(value);
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
-      mockNode.shouldReexecute.and.returnValue(true);
       graph['nodes_'].set($test, mockNode);
 
       spyOn(graph, 'on');
       spyOn(graph, 'onReady_');
+      const timestamp = Mocks.object('timestamp');
 
-      await assert(graph.get($test, instance)).to.resolveWith(value);
+      await assert(graph.get($test, timestamp, instance)).to.resolveWith(value);
       assert(graph.on).toNot.haveBeenCalled();
     });
 
@@ -292,20 +286,66 @@ describe('graph.Graph', () => {
 
       const mockNode = jasmine.createSpyObj(
           'Node',
-          ['execute', 'getPreviousValue', 'getParameterIds', 'shouldReexecute']);
+          ['execute', 'getLatestCacheValue', 'getParameterIds']);
       mockNode.execute.and.returnValue(value);
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
-      mockNode.getPreviousValue.and.returnValue(value);
-      mockNode.shouldReexecute.and.returnValue(true);
+      mockNode.getLatestCacheValue.and.returnValue([Mocks.object('cacheTimestamp'), value]);
       Object.setPrototypeOf(mockNode, InnerNode.prototype);
       graph['nodes_'].set($.test, mockNode);
 
       spyOn(graph, 'isMonitored_').and.returnValue(true);
       spyOn(graph, 'dispatch');
 
-      await assert(graph.get($.test)).to.resolveWith(value);
-      assert(mockNode.execute).to.haveBeenCalledWith(GLOBALS, []);
+      const idealExecutionTime = Mocks.object('idealExecutionTime');
+      spyOn(graph, 'getIdealExecutionTime_').and.returnValue(idealExecutionTime);
+      const timestamp = Mocks.object('timestamp');
+
+      await assert(graph.get($.test, timestamp)).to.resolveWith(value);
+      assert(mockNode.execute).to.haveBeenCalledWith(GLOBALS, [], idealExecutionTime);
       assert(graph.dispatch).toNot.haveBeenCalled();
+    });
+  });
+
+  describe('getIdealExecutionTime_', () => {
+    it(`should return the maximum ideal execution time of the parameters`, () => {
+      const $ = {
+        a: staticId('a', NumberType),
+        ab: staticId('ab', NumberType),
+        abc: instanceId('abc', NumberType),
+        b: staticId('b', NumberType),
+        c: instanceId('c', NumberType),
+      };
+      const instance = new BaseDisposable();
+      TestDispose.add(instance);
+
+      let timestamp = GraphTime.new();
+      timestamp = timestamp.increment();
+      const nodeA = new InputNode();
+      nodeA.set(null, timestamp, 1);
+
+      timestamp = timestamp.increment();
+      const nodeB = new InputNode();
+      nodeB.set(null, timestamp, 2);
+
+      timestamp = timestamp.increment();
+      const nodeC = new InputNode();
+      nodeC.set(instance, timestamp, 3);
+
+      timestamp = timestamp.increment();
+
+      const nodeAB = new InnerNode(() => 1, ImmutableList.of([$.a, $.b]));
+      const nodeABC = new InnerNode(() => 2, ImmutableList.of([$.ab, $.c]));
+      graph['nodes_'].set($.a, nodeA);
+      graph['nodes_'].set($.b, nodeB);
+      graph['nodes_'].set($.c, nodeC);
+      graph['nodes_'].set($.ab, nodeAB);
+      graph['nodes_'].set($.abc, nodeABC);
+
+      assert(graph['getIdealExecutionTime_']($.a, timestamp)['timestamp_']).to.equal(1);
+      assert(graph['getIdealExecutionTime_']($.b, timestamp)['timestamp_']).to.equal(2);
+      assert(graph['getIdealExecutionTime_']($.c, timestamp, instance)['timestamp_']).to.equal(3);
+      assert(graph['getIdealExecutionTime_']($.ab, timestamp)['timestamp_']).to.equal(2);
+      assert(graph['getIdealExecutionTime_']($.abc, timestamp, instance)['timestamp_']).to.equal(3);
     });
   });
 
@@ -405,7 +445,7 @@ describe('graph.Graph', () => {
 
       graph.registerProvider($, mockProvider);
       const node = graph['nodes_'].get($)! as InnerNode<number>;
-      assert(node.execute(null, [])).to.equal(value);
+      assert(node.execute(null, [], graph.getTimestamp())).to.equal(value);
       assert(mockProvider).to.haveBeenCalledWith();
     });
 
@@ -501,8 +541,10 @@ describe('graph.Graph', () => {
       const context = Mocks.object('context');
 
       await graph['set_']($, context, value);
-      assert(mockNode.set).to.haveBeenCalledWith(context, value);
+      assert(mockNode.set).to.haveBeenCalledWith(context, Matchers.any(GraphTime), value);
+      assert(mockNode.set.calls.argsFor(0)[1]['timestamp_']).to.equal(1);
       assert(graph.refresh).to.haveBeenCalledWith($);
+      assert(graph.getTimestamp()['timestamp_']).to.equal(1);
     });
 
     it(`should throw error if the corresponding node is not an InputNode`, () => {

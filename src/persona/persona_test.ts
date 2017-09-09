@@ -213,9 +213,12 @@ describe('CustomElement', () => {
       const ctrl = Mocks.object('ctrl');
       element['ctrl_'] = ctrl;
 
+      const timestamp = Mocks.object('timestamp');
+      spyOn(Graph, 'getTimestamp').and.returnValue(timestamp);
+
       await element['updateElement_'](mockSelector);
       assert(mockSelector.setValue).to.haveBeenCalledWith(value, shadowRoot);
-      assert(Graph.get).to.haveBeenCalledWith(id, ctrl);
+      assert(Graph.get).to.haveBeenCalledWith(id, timestamp, ctrl);
     });
   });
 });

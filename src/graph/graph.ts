@@ -3,6 +3,7 @@ import { AssertionError } from '../error';
 import { Bus } from '../event';
 import { GLOBALS, GNode } from '../graph/g-node';
 import { EventType, GraphEvent } from '../graph/graph-event';
+import { GraphTime } from '../graph/graph-time';
 import { InnerNode } from '../graph/inner-node';
 import { InputNode } from '../graph/input-node';
 import { InstanceId } from '../graph/instance-id';
@@ -17,6 +18,7 @@ import { Log } from '../util';
 const LOGGER: Log = Log.of('gs-tools.graph.Graph');
 
 export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
+  private currentTime_: GraphTime = GraphTime.new();
   private readonly monitoredNodes_: WeakMap<{}, ImmutableSet<NodeId<any>>> = new WeakMap();
   private readonly nodes_: Map<NodeId<any>, GNode<any>> = new Map();
   private readonly setQueue_: (() => void)[] = [];
@@ -43,7 +45,7 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
     }
 
     const node = new InputNode<T>();
-    node.set(context, initValue);
+    node.set(context, this.currentTime_, initValue);
     this.nodes_.set(nodeId, node);
 
     const provider = (newValue: T): Promise<void> => {
@@ -61,29 +63,26 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
    * @param staticId
    * @return Promise that will be resolved with the value associated with the given ID.
    */
-  async get<T>(staticId: StaticId<T>): Promise<T>;
-  async get<T, C extends BaseDisposable>(instanceId: InstanceId<T>, context: C): Promise<T>;
-  async get<T>(nodeId: NodeId<T>, context: BaseDisposable = GLOBALS): Promise<T> {
+  async get<T>(staticId: StaticId<T>, timestamp: GraphTime): Promise<T>;
+  async get<T, C extends BaseDisposable>(
+      instanceId: InstanceId<T>, timestamp: GraphTime, context: C): Promise<T>;
+  async get<T>(
+      nodeId: NodeId<T>, timestamp: GraphTime, context: BaseDisposable = GLOBALS): Promise<T> {
     // TODO: This needs a ticketing system.
     Log.debug(LOGGER, `getting: ${nodeId}`);
-    const node = this.nodes_.get(nodeId);
-    if (!node) {
-      throw new Error(`Node for ${nodeId} cannot be found`);
-    }
+    const idealExecutionTime = nodeId instanceof StaticId ?
+        this.getIdealExecutionTime_(nodeId, timestamp) :
+        this.getIdealExecutionTime_(nodeId, timestamp, context);
 
-    const cachedValue = Promise.resolve(node.getPreviousValue(context));
-    if (!node.shouldReexecute(context)) {
-      const resolvedValue = await cachedValue;
-      Log.debug(LOGGER, `cached: ${nodeId} ${resolvedValue}`);
-      return resolvedValue;
-    }
+    const node = this.getNode_(nodeId);
+    const latestCacheValue = node.getLatestCacheValue(context, idealExecutionTime);
 
     const parameters = await Promise.all(node.getParameterIds()
         .map((parameterId: NodeId<any>) => {
           if (parameterId instanceof StaticId) {
-            return this.get(parameterId);
+            return this.get(parameterId, idealExecutionTime);
           } else {
-            return this.get(parameterId, context);
+            return this.get(parameterId, idealExecutionTime, context);
           }
         }));
 
@@ -102,8 +101,9 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
     }
 
     Log.debug(LOGGER, `executing: ${nodeId}`);
-    const value = node.execute(context, parameters);
+    const value = node.execute(context, parameters, idealExecutionTime);
 
+    const cachedValue = latestCacheValue ? latestCacheValue[1] : null;
     const [resolvedCached, resolvedValue] = await Promise.all([cachedValue, value]);
     if (!nodeId.getType().check(resolvedValue)) {
       throw new Error(`Node for ${nodeId} returns the incorrect type. [${resolvedValue}]`);
@@ -115,6 +115,46 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
 
     Log.debug(LOGGER, `executed: ${nodeId} ${resolvedValue}`);
     return resolvedValue;
+  }
+
+  private getIdealExecutionTime_(staticId: StaticId<any>, timestamp: GraphTime): GraphTime;
+  private getIdealExecutionTime_(instanceId: InstanceId<any>, timestamp: GraphTime, context: {}):
+      GraphTime;
+  private getIdealExecutionTime_(
+      nodeId: NodeId<any>,
+      timestamp: GraphTime,
+      context: {} = GLOBALS): GraphTime {
+    const node = this.getNode_(nodeId);
+    const parameterIds = node.getParameterIds();
+    if (parameterIds.size() === 0) {
+      const entry = node.getLatestCacheValue(context, timestamp);
+      return entry ? entry[0] : this.currentTime_;
+    }
+    const times = parameterIds
+        .map((id: NodeId<any>) => {
+          if (id instanceof StaticId) {
+            return this.getIdealExecutionTime_(id, timestamp);
+          } else {
+            return this.getIdealExecutionTime_(id, timestamp, context);
+          }
+        });
+    return times.reduce((prev: GraphTime, current: GraphTime) => {
+          return prev.beforeOrEqualTo(current) ? current : prev;
+        },
+        times.getAt(0)!);
+  }
+
+  private getNode_<T>(nodeId: NodeId<T>): GNode<T> {
+    const node = this.nodes_.get(nodeId);
+    if (!node) {
+      throw new Error(`Node for ${nodeId} cannot be found`);
+    }
+
+    return node;
+  }
+
+  getTimestamp(): GraphTime {
+    return this.currentTime_;
   }
 
   private getTransitiveDependencies_(nodeId: NodeId<any>): ImmutableSet<NodeId<any>> {
@@ -175,9 +215,7 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
     if (!node) {
       throw AssertionError.generic(`Cannot find node ${nodeId}`);
     }
-    this.dispatch({context, id: nodeId, type: 'ready'}, () => {
-      node.setShouldReexecute(context);
-    });
+    this.dispatch({context, id: nodeId, type: 'ready'});
   }
 
   registerGenericProvider_<T>(
@@ -268,7 +306,9 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
         Log.debug(LOGGER, `set flush: ${nodeId} ${value}`);
         const event = {context, id: nodeId, type: 'change' as 'change'};
         this.dispatch(event, () => {
-          node.set(context, value);
+          const newTime = this.currentTime_.increment();
+          node.set(context, newTime, value);
+          this.currentTime_ = newTime;
           if (nodeId instanceof StaticId) {
             this.refresh(nodeId);
           } else if (nodeId instanceof InstanceId) {

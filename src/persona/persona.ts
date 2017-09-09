@@ -136,7 +136,7 @@ export class PersonaImpl {
         if (!ctrl) {
           throw AssertionError.generic(`Required ctrl cannot be found`);
         }
-        const value = await Graph.get(selector.getId(), ctrl);
+        const value = await Graph.get(selector.getId(), Graph.getTimestamp(), ctrl);
         selector.setValue(value, this.getShadowRoot_());
       }
     };

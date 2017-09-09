@@ -23,7 +23,7 @@ describe('datamodel.registerDataGraph', () => {
       const id = 'id';
       mockStorage.generateId.and.returnValue(id);
 
-      const graph = await Graph.get(dataGraphId);
+      const graph = await Graph.get(dataGraphId, Graph.getTimestamp());
       assert(await graph.generateId()).to.equal(id);
     });
   });
@@ -34,7 +34,7 @@ describe('datamodel.registerDataGraph', () => {
       const object = Mocks.object('object');
       mockStorage.read.and.returnValue(object);
 
-      const graph = await Graph.get(dataGraphId);
+      const graph = await Graph.get(dataGraphId, Graph.getTimestamp());
       assert(await graph.get(id)).to.equal(object);
       assert(mockStorage.read).to.haveBeenCalledWith(id);
     });
@@ -45,7 +45,7 @@ describe('datamodel.registerDataGraph', () => {
       const list = Mocks.object('list');
       mockStorage.list.and.returnValue(list);
 
-      const graph = await Graph.get(dataGraphId);
+      const graph = await Graph.get(dataGraphId, Graph.getTimestamp());
       assert(await graph.list()).to.equal(list);
     });
   });
@@ -56,7 +56,7 @@ describe('datamodel.registerDataGraph', () => {
       const list = Mocks.object('list');
       mockSearcher.search.and.returnValue(list);
 
-      const graph = await Graph.get(dataGraphId);
+      const graph = await Graph.get(dataGraphId, Graph.getTimestamp());
       assert(await graph.search(token)).to.equal(list);
       assert(mockSearcher.search).to.haveBeenCalledWith(token);
     });
@@ -70,7 +70,7 @@ describe('datamodel.registerDataGraph', () => {
       spyOn(Graph, 'refresh');
 
       const list = Mocks.object('list');
-      const graph = await Graph.get(dataGraphId);
+      const graph = await Graph.get(dataGraphId, Graph.getTimestamp());
       spyOn(graph, 'list').and.returnValue(list);
 
       await graph.set(id, data);
@@ -87,7 +87,7 @@ describe('datamodel.registerDataGraph', () => {
       mockStorage.read.and.returnValue(data);
       spyOn(Graph, 'refresh');
 
-      const graph = await Graph.get(dataGraphId);
+      const graph = await Graph.get(dataGraphId, Graph.getTimestamp());
       await graph.set(id, data);
       assert(Graph.refresh).toNot.haveBeenCalled();
       assert(mockStorage.read).to.haveBeenCalledWith(id);
