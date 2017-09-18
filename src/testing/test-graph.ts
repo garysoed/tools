@@ -10,7 +10,7 @@ function buildGraph(): void {
     throw AssertionError.generic(`TestGraph#setup hasn't been called yet!`);
   }
 
-  fakeGraph.get.and.callFake((nodeId: any, context: {} | null = null) => {
+  fakeGraph.get.and.callFake((nodeId: any, _: any, context: {} | null = null) => {
     const spec = valueSpecs.find((value: ValueSpec<any>) => {
       return value.id === nodeId && value.context === context;
     });
