@@ -1,4 +1,4 @@
-import {Iterables} from '../immutable/iterables';
+import { ImmutableList, Iterables } from '../immutable';
 
 /**
  * Methods to manipulate DOM objects.
@@ -21,6 +21,20 @@ export class Doms {
         currentEl = stepper(currentEl);
       }
     });
+  }
+
+  /**
+   * @param node Node whose next siblings should be returned.
+   * @return The next siblings of the node.
+   */
+  static getNextSiblings(node: Node): ImmutableList<Node> {
+    const nodes = [];
+    let currentNode = node.nextSibling;
+    while (currentNode) {
+      nodes.push(currentNode);
+      currentNode = currentNode.nextSibling;
+    }
+    return ImmutableList.of(nodes);
   }
 
   /**

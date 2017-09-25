@@ -9,7 +9,7 @@ describe('persona.childrenListener', () => {
   let listener: ChildrenListener<HTMLElement, number>;
 
   beforeEach(() => {
-    mockSelector = jasmine.createSpyObj('Selector', ['getElementSelector']);
+    mockSelector = jasmine.createSpyObj('Selector', ['getParentSelector']);
     listener = new ChildrenListener(mockSelector);
   });
 
@@ -46,7 +46,7 @@ describe('persona.childrenListener', () => {
       const element = document.createElement('div');
       const mockElementSelector = jasmine.createSpyObj('ElementSelector', ['getValue']);
       mockElementSelector.getValue.and.returnValue(element);
-      mockSelector.getElementSelector.and.returnValue(mockElementSelector);
+      mockSelector.getParentSelector.and.returnValue(mockElementSelector);
 
       spyOn(listener, 'onMutation_');
 
@@ -75,7 +75,7 @@ describe('persona.childrenListener', () => {
 
       const mockElementSelector = jasmine.createSpyObj('ElementSelector', ['getValue']);
       mockElementSelector.getValue.and.returnValue(null);
-      mockSelector.getElementSelector.and.returnValue(mockElementSelector);
+      mockSelector.getParentSelector.and.returnValue(mockElementSelector);
 
       assert(() => {
         listener.start(root, handler, context);

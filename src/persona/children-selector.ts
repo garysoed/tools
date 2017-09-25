@@ -2,11 +2,9 @@ import { FiniteIterableOfType, Type } from '../check';
 import { AssertionError } from '../error';
 import { instanceId } from '../graph';
 import { ImmutableList, ImmutableSet } from '../immutable';
-import {
-  ElementSelector,
-  ElementSelectorImpl,
-  ElementSelectorStub } from '../persona/element-selector';
+import { ElementSelector } from '../persona/element-selector';
 import { Selector, SelectorImpl, SelectorStub } from '../persona/selector';
+import { SlotSelector, SlotSelectorImpl, SlotSelectorStub } from '../persona/slot-selector';
 
 type Factory<E extends Element> = (document: Document) => E;
 type Getter<E extends Element, T> = (element: E) => T;
@@ -17,27 +15,23 @@ export interface ChildrenSelector<T> extends Selector<ImmutableList<T>> { }
 export class ChildrenSelectorStub<E extends Element, T> extends
     SelectorStub<ImmutableList<T>> implements ChildrenSelector<T> {
   constructor(
-      private readonly elementSelector_: ElementSelectorStub<HTMLElement>,
+      private readonly slotSelector_: SlotSelectorStub,
       private readonly factory_: Factory<E>,
       private readonly getter_: Getter<E, T>,
       private readonly setter_: Setter<E, T>,
       private readonly childDataType_: Type<T>,
-      private readonly childType_: Type<E>,
-      private readonly startPadCount_: number,
-      private readonly endPadCount_: number) {
+      private readonly childType_: Type<E>) {
     super();
   }
 
   resolve(allSelectors: {}): ChildrenSelectorImpl<E, T> {
     return new ChildrenSelectorImpl(
-        this.elementSelector_.resolve(allSelectors),
+        this.slotSelector_.resolve(allSelectors),
         this.factory_,
         this.getter_,
         this.setter_,
         this.childDataType_,
-        this.childType_,
-        this.startPadCount_,
-        this.endPadCount_);
+        this.childType_);
   }
 }
 
@@ -46,34 +40,34 @@ export class ChildrenSelectorImpl<E extends Element, T> extends
   private readonly elementPool_: Set<E> = new Set();
 
   constructor(
-      private readonly elementSelector_: ElementSelectorImpl<HTMLElement>,
+      private readonly slotSelector_: SlotSelectorImpl,
       private readonly factory_: Factory<E>,
       private readonly getter_: Getter<E, T>,
       private readonly setter_: Setter<E, T>,
       private readonly childDataType_: Type<T>,
-      private readonly childType_: Type<E>,
-      private readonly startPadCount_: number,
-      private readonly endPadCount_: number) {
+      private readonly childType_: Type<E>) {
     super(
-        instanceId(`${elementSelector_.getSelector()}@children`,
+        instanceId(`${slotSelector_.getParentSelector().getSelector()}@children`,
         FiniteIterableOfType(childDataType_)));
   }
 
   private getChildElements_(root: ShadowRoot): ImmutableList<E> {
-    const parentEl = this.elementSelector_.getValue(root);
-    const lastIndex = parentEl.children.length - this.endPadCount_;
-    const elements = [];
-    for (let i = this.startPadCount_; i < lastIndex; i++) {
-      const child = parentEl.children.item(i);
-      if (!this.childType_.check(child)) {
-        throw AssertionError.type(`child[${i}]`, this.childType_, child);
+    const slot = this.slotSelector_.getValue(root);
+    let currentNode = slot.start.nextSibling;
+
+    const elements: E[] = [];
+    while (currentNode !== slot.end) {
+      if (!this.childType_.check(currentNode)) {
+        throw AssertionError.type('child', this.childType_, currentNode);
       }
-      elements.push(child);
+      elements.push(currentNode);
+      currentNode = currentNode.nextSibling;
     }
+
     return ImmutableList.of(elements);
   }
 
-  private getElement_(parentEl: HTMLElement): E {
+  private getElement_(parentEl: Node): E {
     const element = [...ImmutableSet.of(this.elementPool_)][0];
     if (!element) {
       return this.factory_(parentEl.ownerDocument);
@@ -83,8 +77,8 @@ export class ChildrenSelectorImpl<E extends Element, T> extends
     }
   }
 
-  getElementSelector(): ElementSelector<HTMLElement> {
-    return this.elementSelector_;
+  getParentSelector(): ElementSelector<HTMLElement> {
+    return this.slotSelector_.getParentSelector();
   }
 
   getValue(root: ShadowRoot): ImmutableList<T> {
@@ -101,26 +95,32 @@ export class ChildrenSelectorImpl<E extends Element, T> extends
 
   setValue(value: ImmutableList<T> | null, root: ShadowRoot): void {
     const valueArray = value || ImmutableList.of([]);
-    const dataChildren = this.getChildElements_(root);
-    const parentEl = this.elementSelector_.getValue(root);
-
-    // Make sure that there are equal number of children.
-    for (let i = 0; i < valueArray.size() - dataChildren.size(); i++) {
-      parentEl.insertBefore(
-          this.getElement_(parentEl),
-          parentEl.children.item(this.startPadCount_ + i) || null);
+    const existingChildren = this.getChildElements_(root);
+    const {end: endNode, start: startNode} = this.slotSelector_.getValue(root);
+    const parent = startNode.parentNode;
+    if (!parent) {
+      throw AssertionError.condition('parent node', 'to exist', parent);
     }
 
-    for (let i = dataChildren.size() - valueArray.size() - 1; i >= 0; i--) {
-      parentEl.removeChild(parentEl.children.item(this.startPadCount_ + i));
+    // Insert enough elements if there are not enough.
+    for (let i = 0; i < valueArray.size() - existingChildren.size(); i++) {
+      parent.insertBefore(this.getElement_(parent), endNode);
+    }
+
+    // Delete elements until there are enough number of elements.
+    for (
+        let i = existingChildren.size() - valueArray.size() - 1;
+        i >= 0 && startNode.nextSibling;
+        i--) {
+      parent.removeChild(startNode.nextSibling);
     }
 
     // Now set the data.
+    const childElements = this.getChildElements_(root);
     for (const [index, value] of valueArray.entries()) {
-      const childIndex = this.startPadCount_ + index;
-      const element = parentEl.children.item(this.startPadCount_ + index);
-      if (!this.childType_.check(element)) {
-        throw AssertionError.type(`child[${childIndex}]`, this.childType_, element);
+      const element = childElements.getAt(index);
+      if (!element) {
+        throw AssertionError.condition(`child[${index}]`, 'to exist', element);
       }
       this.setter_(value, element);
     }
@@ -128,35 +128,28 @@ export class ChildrenSelectorImpl<E extends Element, T> extends
 }
 
 export function childrenSelector<E extends Element, T>(
-    elementSelector: ElementSelector<HTMLElement>,
+    elementSelector: SlotSelector,
     factory: Factory<E>,
     getter: Getter<E, T>,
     setter: Setter<E, T>,
     childDataType: Type<T>,
-    childType: Type<E>,
-    pad: {end?: number, start?: number} = {}): ChildrenSelector<T> {
-  const endPad = pad.end || 0;
-  const startPad = pad.start || 0;
-  if (elementSelector instanceof ElementSelectorStub) {
+    childType: Type<E>): ChildrenSelector<T> {
+  if (elementSelector instanceof SlotSelectorStub) {
     return new ChildrenSelectorStub(
         elementSelector,
         factory,
         getter,
         setter,
         childDataType,
-        childType,
-        startPad,
-        endPad);
-  } else if (elementSelector instanceof ElementSelectorImpl) {
+        childType);
+  } else if (elementSelector instanceof SlotSelectorImpl) {
     return new ChildrenSelectorImpl(
         elementSelector,
         factory,
         getter,
         setter,
         childDataType,
-        childType,
-        startPad,
-        endPad);
+        childType);
   } else {
     throw new Error(`Unhandled ElementSelector type ${elementSelector}`);
   }

@@ -5,31 +5,28 @@ import { InstanceofType, NumberType } from '../check';
 import { ImmutableList } from '../immutable';
 import { childrenSelector } from '../persona';
 import { ChildrenSelectorImpl } from '../persona/children-selector';
-import { ElementSelectorImpl } from '../persona/element-selector';
-
-
-// describe('persona.ChildrenSelectorStub', () => {
-//   describe('resolve', () => {
-//     xit(`should return the correct selector`);
-//   });
-// });
+import { SlotSelectorImpl } from '../persona/slot-selector';
 
 describe('persona.ChildrenSelectorImpl', () => {
-  let mockElementSelector: any;
+  let mockSlotSelector: any;
   let mockFactory: any;
   let mockGetter: any;
   let mockSetter: any;
   let selector: ChildrenSelectorImpl<HTMLDivElement, number>;
 
   beforeEach(() => {
-    mockElementSelector = jasmine.createSpyObj('ElementSelector', ['getValue']);
-    Object.setPrototypeOf(mockElementSelector, ElementSelectorImpl.prototype);
+    const mockElementSelector = jasmine.createSpyObj('ElementSelector', ['getSelector']);
+    mockElementSelector.getSelector.and.returnValue('testElement');
+    mockSlotSelector = jasmine.createSpyObj('SlotSelector', ['getParentSelector', 'getValue']);
+    mockSlotSelector.getParentSelector.and.returnValue(mockElementSelector);
+
+    Object.setPrototypeOf(mockSlotSelector, SlotSelectorImpl.prototype);
 
     mockFactory = jasmine.createSpy('Factory');
     mockGetter = jasmine.createSpy('Getter');
     mockSetter = jasmine.createSpy('Setter');
     selector = childrenSelector(
-        mockElementSelector,
+        mockSlotSelector,
         mockFactory,
         mockGetter,
         mockSetter,
@@ -43,61 +40,41 @@ describe('persona.ChildrenSelectorImpl', () => {
       const child2 = document.createElement('div');
       const child3 = document.createElement('div');
       const child4 = document.createElement('div');
+      const startNode = document.createComment('start');
+      const endNode = document.createComment('end');
       const parentEl = document.createElement('div');
       parentEl.appendChild(child1);
+      parentEl.appendChild(startNode);
       parentEl.appendChild(child2);
       parentEl.appendChild(child3);
       parentEl.appendChild(child4);
+      parentEl.appendChild(endNode);
 
-      mockElementSelector.getValue.and.returnValue(parentEl);
+      mockSlotSelector.getValue.and.returnValue({end: endNode, start: startNode});
 
       selector = childrenSelector(
-          mockElementSelector,
+          mockSlotSelector,
           mockFactory,
           mockGetter,
           mockSetter,
           NumberType,
-          InstanceofType(HTMLDivElement),
-          {end: 0, start: 1}) as ChildrenSelectorImpl<HTMLDivElement, number>;
+          InstanceofType(HTMLDivElement)) as ChildrenSelectorImpl<HTMLDivElement, number>;
       const root = Mocks.object('root');
 
-      assert(selector['getChildElements_'](root) as ImmutableList<any>)
-          .to.haveElements([child2, child3, child4]);
-      assert(mockElementSelector.getValue).to.haveBeenCalledWith(root);
-    });
-
-    it('should not return elements beyond the endPadCount', () => {
-      const child1 = document.createElement('div');
-      const child2 = document.createElement('div');
-      const child3 = document.createElement('div');
-      const child4 = document.createElement('div');
-      const parentEl = document.createElement('div');
-      parentEl.appendChild(child1);
-      parentEl.appendChild(child2);
-      parentEl.appendChild(child3);
-      parentEl.appendChild(child4);
-
-      mockElementSelector.getValue.and.returnValue(parentEl);
-
-      selector = childrenSelector(
-          mockElementSelector,
-          mockFactory,
-          mockGetter,
-          mockSetter,
-          NumberType,
-          InstanceofType(HTMLDivElement),
-          {end: 1, start: 1}) as ChildrenSelectorImpl<HTMLDivElement, number>;
-      const root = Mocks.object('root');
-      assert(selector['getChildElements_'](root) as ImmutableList<any>)
-          .to.haveElements([child2, child3]);
+      assert(selector['getChildElements_'](root)).to.haveElements([child2, child3, child4]);
+      assert(mockSlotSelector.getValue).to.haveBeenCalledWith(root);
     });
 
     it(`should throw error if the child element type is incorrect`, () => {
       const child = document.createElement('a');
       const parentEl = document.createElement('div');
+      const startNode = document.createComment('start');
+      const endNode = document.createComment('end');
+      parentEl.appendChild(startNode);
       parentEl.appendChild(child);
+      parentEl.appendChild(endNode);
 
-      mockElementSelector.getValue.and.returnValue(parentEl);
+      mockSlotSelector.getValue.and.returnValue({end: endNode, start: startNode});
 
       const root = Mocks.object('root');
       assert(() => {
@@ -170,29 +147,32 @@ describe('persona.ChildrenSelectorImpl', () => {
 
       const existingChild1 = document.createElement('div');
       const existingChild2 = document.createElement('div');
+      const startNode = document.createComment('start');
+      const endNode = document.createComment('end');
       const parentEl = document.createElement('div');
       parentEl.appendChild(existingChild1);
+      parentEl.appendChild(startNode);
+      parentEl.appendChild(endNode);
       parentEl.appendChild(existingChild2);
-      mockElementSelector.getValue.and.returnValue(parentEl);
+      mockSlotSelector.getValue.and.returnValue({end: endNode, start: startNode});
 
       const element1 = document.createElement('div');
       const element2 = document.createElement('div');
 
       selector = childrenSelector(
-          mockElementSelector,
+          mockSlotSelector,
           mockFactory,
           mockGetter,
           mockSetter,
           NumberType,
-          InstanceofType(HTMLDivElement),
-          {end: 1, start: 1}) as ChildrenSelectorImpl<HTMLDivElement, number>;
+          InstanceofType(HTMLDivElement)) as ChildrenSelectorImpl<HTMLDivElement, number>;
       spyOn(selector, 'getElement_').and.returnValues(element1, element2);
 
       selector.setValue(ImmutableList.of([value1, value2]), document as any);
       assert(mockSetter).to.haveBeenCalledWith(value1, element1);
       assert(mockSetter).to.haveBeenCalledWith(value2, element2);
       assert(parentEl).to.haveChildren([existingChild1, element1, element2, existingChild2]);
-      assert(mockElementSelector.getValue).to.haveBeenCalledWith(document);
+      assert(mockSlotSelector.getValue).to.haveBeenCalledWith(document);
     });
 
     it('should remove all deleted entries', () => {
@@ -207,33 +187,38 @@ describe('persona.ChildrenSelectorImpl', () => {
 
       const existingChild1 = document.createElement('div');
       const existingChild2 = document.createElement('div');
+      const startNode = document.createComment('start');
+      const endNode = document.createComment('end');
 
       const parentEl = document.createElement('div');
       parentEl.appendChild(existingChild1);
+      parentEl.appendChild(startNode);
       parentEl.appendChild(child1);
       parentEl.appendChild(child2);
+      parentEl.appendChild(endNode);
       parentEl.appendChild(existingChild2);
-      mockElementSelector.getValue.and.returnValue(parentEl);
+      mockSlotSelector.getValue.and.returnValue({end: endNode, start: startNode});
 
       spyOn(parentEl, 'removeChild').and.callThrough();
 
       selector = childrenSelector(
-          mockElementSelector,
+          mockSlotSelector,
           mockFactory,
           mockGetter,
           mockSetter,
           NumberType,
-          InstanceofType(HTMLDivElement),
-          {end: 1, start: 1}) as ChildrenSelectorImpl<HTMLDivElement, number>;
+          InstanceofType(HTMLDivElement)) as ChildrenSelectorImpl<HTMLDivElement, number>;
       selector.setValue(ImmutableList.of([]), document as any);
 
       assert(parentEl).to.haveChildren([existingChild1, existingChild2]);
-      assert(mockElementSelector.getValue).to.haveBeenCalledWith(document);
+      assert(mockSlotSelector.getValue).to.haveBeenCalledWith(document);
     });
 
     it('should update all updated entries', () => {
       const child1 = document.createElement('div');
       const child2 = document.createElement('div');
+      const startNode = document.createComment('start');
+      const endNode = document.createComment('end');
       const data1 = Mocks.object('data1');
       const data2 = Mocks.object('data2');
       Fakes.build(mockGetter)
@@ -241,9 +226,11 @@ describe('persona.ChildrenSelectorImpl', () => {
           .when(child2).return(data2);
 
       const parentEl = document.createElement('div');
+      parentEl.appendChild(startNode);
       parentEl.appendChild(child1);
       parentEl.appendChild(child2);
-      mockElementSelector.getValue.and.returnValue(parentEl);
+      parentEl.appendChild(endNode);
+      mockSlotSelector.getValue.and.returnValue({end: endNode, start: startNode});
 
       const newData1 = Mocks.object('newData1');
       const newData2 = Mocks.object('newData2');
@@ -257,7 +244,7 @@ describe('persona.ChildrenSelectorImpl', () => {
       assert(parentEl.children.item(1)).to.equal(child2);
       assert(mockSetter).to.haveBeenCalledWith(newData1, child1);
       assert(mockSetter).to.haveBeenCalledWith(newData2, child2);
-      assert(mockElementSelector.getValue).to.haveBeenCalledWith(document);
+      assert(mockSlotSelector.getValue).to.haveBeenCalledWith(document);
     });
   });
 });

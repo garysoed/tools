@@ -37,6 +37,22 @@ describe('ui.Doms', () => {
     });
   });
 
+  describe('getNextSiblings', () => {
+    it(`should return the siblings correctly`, () => {
+      const element1 = document.createElement('div');
+      const element2 = document.createElement('div');
+      const element3 = document.createElement('div');
+      const element4 = document.createElement('div');
+      const parentEl = document.createElement('div');
+      parentEl.appendChild(element1);
+      parentEl.appendChild(element2);
+      parentEl.appendChild(element3);
+      parentEl.appendChild(element4);
+
+      assert(Doms.getNextSiblings(element2)).to.haveElements([element3, element4]);
+    });
+  });
+
   describe('getShadowHost', () => {
     it('should return the shadow host', () => {
       const host = document.createElement('div');

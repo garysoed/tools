@@ -11,3 +11,4 @@ export { Persona } from './persona';
 export { render } from './render';
 export { resolveSelectors } from './resolve-selectors';
 export { shadowHostSelector } from './shadow-host-selector';
+export { slotSelector } from './slot-selector';

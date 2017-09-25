@@ -14,12 +14,12 @@ export function navigateToHash(path: string): void {
   window.location.hash = Locations.normalizePath(path);
 }
 
-export function providesPath(): string {
+function getPath(): string {
   return Locations.normalizePath(window.location.hash.substr(1));
 }
-Graph.registerProvider($location.path, providesPath);
 
+const pathProvider = Graph.createProvider($location.path, getPath());
 window.addEventListener('hashchange', () => {
-  Graph.refresh($location.path);
+  pathProvider(getPath());
 });
 

@@ -30,7 +30,7 @@ export class ChildrenListener<E extends Element, T> implements Listener<'childre
     const observer = this.createMutationObserver_((records: Iterable<MutationRecord>) => {
       this.onMutation_(handler, context, records);
     });
-    const elementSelector = this.childrenSelector_.getElementSelector();
+    const elementSelector = this.childrenSelector_.getParentSelector();
     const element = elementSelector.getValue(root);
     if (!element) {
       throw AssertionError.condition(`element for ${elementSelector}`, 'exist', element);
