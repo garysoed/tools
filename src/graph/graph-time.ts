@@ -1,6 +1,10 @@
 export class GraphTime {
   constructor(private readonly timestamp_: number) { }
 
+  before(other: GraphTime): boolean {
+    return this.timestamp_ < other.timestamp_;
+  }
+
   beforeOrEqualTo(other: GraphTime): boolean {
     return this.timestamp_ <= other.timestamp_;
   }
@@ -16,6 +20,10 @@ export class GraphTime {
 
   toString(): string {
     return `GraphTime(${this.timestamp_})`;
+  }
+
+  value_(): number {
+    return this.timestamp_;
   }
 
   /**

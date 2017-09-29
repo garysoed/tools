@@ -11,7 +11,13 @@ describe('persona.SlotSelectorImpl', () => {
   beforeEach(() => {
     mockParentSelector = jasmine.createSpyObj('ParentSelector', ['getSelector', 'getValue']);
     mockParentSelector.getSelector.and.returnValue('parentSelector');
-    selector = new SlotSelectorImpl(mockParentSelector, NAME);
+    selector = new SlotSelectorImpl(
+      mockParentSelector,
+      NAME,
+      {
+        end: document.createComment(`commentEnd`),
+        start: document.createComment(`comment`),
+      });
   });
 
   describe('getValue', () => {

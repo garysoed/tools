@@ -168,7 +168,7 @@ describe('persona.ChildrenSelectorImpl', () => {
           InstanceofType(HTMLDivElement)) as ChildrenSelectorImpl<HTMLDivElement, number>;
       spyOn(selector, 'getElement_').and.returnValues(element1, element2);
 
-      selector.setValue(ImmutableList.of([value1, value2]), document as any);
+      selector.setValue_(ImmutableList.of([value1, value2]), document as any);
       assert(mockSetter).to.haveBeenCalledWith(value1, element1);
       assert(mockSetter).to.haveBeenCalledWith(value2, element2);
       assert(parentEl).to.haveChildren([existingChild1, element1, element2, existingChild2]);
@@ -208,7 +208,7 @@ describe('persona.ChildrenSelectorImpl', () => {
           mockSetter,
           NumberType,
           InstanceofType(HTMLDivElement)) as ChildrenSelectorImpl<HTMLDivElement, number>;
-      selector.setValue(ImmutableList.of([]), document as any);
+      selector.setValue_(ImmutableList.of([]), document as any);
 
       assert(parentEl).to.haveChildren([existingChild1, existingChild2]);
       assert(mockSlotSelector.getValue).to.haveBeenCalledWith(document);
@@ -237,7 +237,7 @@ describe('persona.ChildrenSelectorImpl', () => {
 
       spyOn(parentEl, 'removeChild').and.callThrough();
 
-      selector.setValue(ImmutableList.of([newData1, newData2]), document as any);
+      selector.setValue_(ImmutableList.of([newData1, newData2]), document as any);
 
       assert(parentEl.children.length).to.equal(2);
       assert(parentEl.children.item(0)).to.equal(child1);

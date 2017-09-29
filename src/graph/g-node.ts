@@ -33,7 +33,7 @@ export abstract class GNode<T> {
 
   protected abstract execute_(context: {}, params: Iterable<any>): T;
 
-  private getCache_(context: {}): Map<GraphTime, T> {
+  getCache_(context: {}): Map<GraphTime, T> {
     const map = this.cacheMap_.get(context);
     if (map) {
       return map;

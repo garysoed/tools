@@ -31,7 +31,7 @@ export class ElementSelectorImpl<T extends HTMLElement>
       private readonly selector_: string,
       protected readonly type_: Type<T>,
       id: InstanceId<T>) {
-    super(id);
+    super(undefined, id);
   }
 
   getSelector(): string {
@@ -48,7 +48,7 @@ export class ElementSelectorImpl<T extends HTMLElement>
     return el;
   }
 
-  setValue(): void {
+  setValue_(): void {
     throw new Error('Unsupported');
   }
 }

@@ -47,6 +47,7 @@ export class ChildrenSelectorImpl<E extends Element, T> extends
       private readonly childDataType_: Type<T>,
       private readonly childType_: Type<E>) {
     super(
+        ImmutableList.of([]),
         instanceId(`${slotSelector_.getParentSelector().getSelector()}@children`,
         FiniteIterableOfType(childDataType_)));
   }
@@ -93,7 +94,7 @@ export class ChildrenSelectorImpl<E extends Element, T> extends
         }) as ImmutableList<T>;
   }
 
-  setValue(value: ImmutableList<T> | null, root: ShadowRoot): void {
+  setValue_(value: ImmutableList<T> | null, root: ShadowRoot): void {
     const valueArray = value || ImmutableList.of([]);
     const existingChildren = this.getChildElements_(root);
     const {end: endNode, start: startNode} = this.slotSelector_.getValue(root);

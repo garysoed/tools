@@ -33,11 +33,11 @@ export class AttributeSelectorStub<T> extends SelectorStub<T> implements Attribu
 
   resolve(allSelectors: {}): SelectorImpl<T> {
     return new AttributeSelectorImpl<T>(
-      this.elementSelector_.resolve(allSelectors),
-      this.parser_,
-      this.attrName_,
-      this.type_,
-      this.defaultValue_);
+        this.elementSelector_.resolve(allSelectors),
+        this.parser_,
+        this.attrName_,
+        this.type_,
+        this.defaultValue_);
     }
 }
 
@@ -47,8 +47,8 @@ export class AttributeSelectorImpl<T> extends SelectorImpl<T> implements Attribu
       private readonly parser_: Parser<T>,
       private readonly attrName_: string,
       type: Type<T>,
-      private readonly defaultValue_: T | undefined) {
-    super(instanceId(`${elementSelector_.getSelector()}[${attrName_}]`, type));
+      defaultValue: T | undefined) {
+    super(defaultValue, instanceId(`${elementSelector_.getSelector()}[${attrName_}]`, type));
   }
 
   getElementSelector(): ElementSelector<HTMLElement> {
@@ -61,14 +61,15 @@ export class AttributeSelectorImpl<T> extends SelectorImpl<T> implements Attribu
 
   getValue(root: ShadowRoot): T | null {
     const element = this.elementSelector_.getValue(root);
-    if (!element.hasAttribute(this.attrName_) && this.defaultValue_ !== undefined) {
-      return this.defaultValue_;
+    const defaultValue = this.getDefaultValue();
+    if (!element.hasAttribute(this.attrName_) && defaultValue !== undefined) {
+      return defaultValue;
     }
     const strValue = element.getAttribute(this.attrName_);
     return this.parser_.parse(strValue);
   }
 
-  setValue(value: T | null, root: ShadowRoot): void {
+  setValue_(value: T | null, root: ShadowRoot): void {
     const strValue = this.parser_.stringify(value);
     const element = this.elementSelector_.getValue(root);
     if (strValue) {

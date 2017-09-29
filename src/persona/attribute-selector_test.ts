@@ -63,7 +63,7 @@ describe('persona.AttributeSelectorImpl', () => {
 
       const selector = attributeSelector(
           mockElementSelector, attrName, IntegerParser, NumberType, 123);
-      selector.setValue(value, root);
+      selector['setValue_'](value, root);
       assert(element.getAttribute(attrName)).to.equal(`${value}`);
       assert(selector.getValue(root)).to.equal(value);
     });
@@ -81,7 +81,7 @@ describe('persona.AttributeSelectorImpl', () => {
 
       const selector = attributeSelector(
           mockElementSelector, attrName, StringParser, StringType, '123');
-      selector.setValue(null, root);
+      selector['setValue_'](null, root);
       assert(element.hasAttribute(attrName)).to.beFalse();
     });
   });

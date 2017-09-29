@@ -44,11 +44,11 @@ describe('graph.Graph', () => {
 
       const context = Mocks.object('context');
 
-      const provider = graph.createProvider($, value, context);
+      const provider = graph.createProvider($, value);
       assert(graph['nodes_'].get($)!.execute(context, [], graph.getTimestamp())).to.equal(value);
 
       const newValue = 456;
-      assert(provider(newValue)).to.equal(promise);
+      assert(provider(newValue, context)).to.equal(promise);
       assert(graph['set_']).to.haveBeenCalledWith($, context, newValue);
     });
 
@@ -320,15 +320,15 @@ describe('graph.Graph', () => {
 
       let timestamp = GraphTime.new();
       timestamp = timestamp.increment();
-      const nodeA = new InputNode();
+      const nodeA = new InputNode(0);
       nodeA.set(null, timestamp, 1);
 
       timestamp = timestamp.increment();
-      const nodeB = new InputNode();
+      const nodeB = new InputNode(0);
       nodeB.set(null, timestamp, 2);
 
       timestamp = timestamp.increment();
-      const nodeC = new InputNode();
+      const nodeC = new InputNode(0);
       nodeC.set(instance, timestamp, 3);
 
       timestamp = timestamp.increment();
@@ -346,6 +346,22 @@ describe('graph.Graph', () => {
       assert(graph['getIdealExecutionTime_']($.c, timestamp, instance)['timestamp_']).to.equal(3);
       assert(graph['getIdealExecutionTime_']($.ab, timestamp)['timestamp_']).to.equal(2);
       assert(graph['getIdealExecutionTime_']($.abc, timestamp, instance)['timestamp_']).to.equal(3);
+    });
+  });
+
+  describe('getNode_', () => {
+    it(`should return the correct node`, () => {
+      const id = staticId('test', NumberType);
+      const node = Mocks.object('node');
+      graph['nodes_'].set(id, node);
+
+      assert(graph.getNode_(id)).to.equal(node);
+    });
+
+    it(`should throw error if the node cannot be found`, () => {
+      assert(() => {
+        graph.getNode_(staticId('test', NumberType));
+      }).to.throwError(/cannot be found/);
     });
   });
 
@@ -371,6 +387,21 @@ describe('graph.Graph', () => {
       const nodeId = instanceId('test', NumberType);
 
       assert(graph['isMonitored_'](context, nodeId)).to.beFalse();
+    });
+  });
+
+  describe('isRegistered', () => {
+    it(`should return true if node is registered`, () => {
+      const id = staticId('test', NumberType);
+      graph['nodes_'].set(id, Mocks.object('node'));
+
+      assert(graph.isRegistered(id)).to.beTrue();
+    });
+
+    it(`should return false if node is not registered`, () => {
+      const id = staticId('test', NumberType);
+
+      assert(graph.isRegistered(id)).to.beFalse();
     });
   });
 

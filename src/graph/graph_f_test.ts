@@ -11,9 +11,9 @@ import {
   instanceId,
   nodeIn,
   nodeOut,
-  NodeProvider,
   onNodeReady,
   staticId } from '../graph';
+import { StaticNodeProvider } from '../graph/node-provider';
 import { TestDispose } from '../testing';
 import { Reflect } from '../util';
 
@@ -29,8 +29,8 @@ describe('graph functional test', () => {
   });
 
   describe('with static functions', () => {
-    let providesB: NodeProvider<number>;
-    let providesC: NodeProvider<number>;
+    let providesB: StaticNodeProvider<number>;
+    let providesC: StaticNodeProvider<number>;
 
     async function providesA(b: number): Promise<number> {
       const c = await Graph.get($.c, Graph.getTimestamp());
@@ -79,7 +79,7 @@ describe('graph functional test', () => {
         return this.b_;
       }
     }
-    let providesC: NodeProvider<number>;
+    let providesC: StaticNodeProvider<number>;
 
     beforeEach(() => {
       Graph.clearNodesForTests([$a, $b, $.c]);
@@ -150,7 +150,7 @@ describe('graph functional test', () => {
       }
     }
 
-    let providesC: NodeProvider<number>;
+    let providesC: StaticNodeProvider<number>;
 
     beforeEach(() => {
       Graph.clearNodesForTests([$.c]);
@@ -201,7 +201,7 @@ describe('graph functional test', () => {
       }
     }
 
-    let providesC: NodeProvider<number>;
+    let providesC: StaticNodeProvider<number>;
 
     beforeEach(() => {
       Graph.clearNodesForTests([$.c]);
@@ -226,7 +226,7 @@ describe('graph functional test', () => {
         Graph.get($a, Graph.getTimestamp(), t2),
       ])).to.equal([3, 4]);
 
-      const promise1 = new Promise((resolve) => {
+      const promise1 = new Promise((resolve: any) => {
         mockCallback1.and.callFake(resolve);
       });
 

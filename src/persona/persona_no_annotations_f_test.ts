@@ -3,7 +3,7 @@ TestBase.setup();
 
 import { InstanceofType, NumberType } from '../check';
 import { BaseDisposable } from '../dispose';
-import { Graph, NodeProvider, staticId } from '../graph';
+import { Graph, staticId, StaticNodeProvider } from '../graph';
 import { Injector } from '../inject';
 import { IntegerParser } from '../parse';
 import {
@@ -22,12 +22,16 @@ describe('persona functional test without annotations', () => {
     button: elementSelector('#button', InstanceofType(HTMLButtonElement)),
     root: {
       element: elementSelector('#root', InstanceofType(HTMLElement)),
-      innerText: innerTextSelector(elementSelector('root.element'), IntegerParser, NumberType),
+      innerText: innerTextSelector(
+          elementSelector('root.element'),
+          IntegerParser,
+          NumberType,
+          123),
     },
     value: staticId('value', NumberType),
   });
 
-  let valueProvider: NodeProvider<number>;
+  let valueProvider: StaticNodeProvider<number>;
   let mockButtonClickCallback: any;
 
   class TestCtrl extends BaseDisposable {

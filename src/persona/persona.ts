@@ -1,6 +1,6 @@
 import { BaseDisposable } from '../dispose';
 import { AssertionError } from '../error';
-import { Graph, GraphEvent } from '../graph';
+import { Graph, GraphEvent, InstanceNodeProvider } from '../graph';
 import { InstanceId } from '../graph/instance-id';
 import { NodeId } from '../graph/node-id';
 import { ImmutableMap, ImmutableSet } from '../immutable';
@@ -30,6 +30,7 @@ const LOGGER: Log = Log.of('gs-tools.persona.Persona');
 
 export class PersonaImpl {
   private readonly componentSpecs_: Map<typeof BaseDisposable, ComponentSpec<any>> = new Map();
+  private readonly inputProviders_: Map<Selector<any>, InstanceNodeProvider<any>> = new Map();
   private readonly listenerSpecs_:
       Map<typeof BaseDisposable, Map<PropertyKey, ImmutableSet<ListenerSpec>>> = new Map();
   private readonly rendererSpecs_:
@@ -42,8 +43,10 @@ export class PersonaImpl {
       templateStr: string,
       injector: Injector,
       ctrl: Ctrl,
+      inputs: Iterable<Selector<any>>,
       listenerSpecs: Iterable<[PropertyKey, Iterable<ListenerSpec>]>,
       rendererSpecs: Iterable<[PropertyKey, RendererSpec]>): Function {
+    const self = this;
     return class extends parentClass implements CustomElement {
       private ctrl_: BaseDisposable | null;
       private readonly dispatcher_: DispatcherSelector<DispatchFn<{}>> =
@@ -83,6 +86,11 @@ export class PersonaImpl {
             this.ctrl_.addDisposable(
                 listener.start(shadowRoot, handler, this.ctrl_, useCapture));
           }
+        }
+
+        // Initialize all the inputs
+        for (const selector of inputs) {
+          self.updateValue(selector, this.ctrl_);
         }
 
         this.dispatch_('gs-create', shadowRoot);
@@ -136,8 +144,9 @@ export class PersonaImpl {
         if (!ctrl) {
           throw AssertionError.generic(`Required ctrl cannot be found`);
         }
-        const value = await Graph.get(selector.getId(), Graph.getTimestamp(), ctrl);
-        selector.setValue(value, this.getShadowRoot_());
+        const time = Graph.getTimestamp();
+        const value = await Graph.get(selector.getId(), time, ctrl);
+        selector.setValue(value, this.getShadowRoot_(), time);
       }
     };
   }
@@ -230,24 +239,23 @@ export class PersonaImpl {
       }
     }
 
-    // Process the inputs.
     if (spec.inputs) {
       for (const selector of spec.inputs) {
-        Graph.registerGenericProvider_(
-            selector.getId(),
-            selector.getProvider());
+        if (!Graph.isRegistered(selector.getId())) {
+          this.inputProviders_.set(
+              selector,
+              Graph.createProvider(selector.getId(), selector.getDefaultValue()));
+        }
       }
     }
 
     // Process the renderers.
     const rendererSpecs = this.getAncestorSpecs_(ctrl, this.rendererSpecs_);
-    if (rendererSpecs) {
-      for (const [key, {parameters, selector}] of rendererSpecs) {
-        Graph.registerGenericProvider_(
-            selector.getId(),
-            ctrl.prototype[key],
-            ...parameters);
-      }
+    for (const [key, {parameters, selector}] of rendererSpecs) {
+      Graph.registerGenericProvider_(
+          selector.getId(),
+          ctrl.prototype[key],
+          ...parameters);
     }
 
     // Listeners.
@@ -259,6 +267,7 @@ export class PersonaImpl {
         templateStr,
         injector,
         ctrl,
+        spec.inputs || [],
         listenerSpecs,
         rendererSpecs);
 
@@ -278,6 +287,20 @@ export class PersonaImpl {
     for (const ctrl of this.componentSpecs_.keys()) {
       this.register_(injector, templates, ctrl);
     }
+  }
+
+  async updateValue(selector: Selector<any>, ctrl: {}): Promise<void> {
+    const shadowRoot = this.getShadowRoot(ctrl);
+    if (!shadowRoot) {
+      throw AssertionError.condition('object', 'to be a controller', ctrl);
+    }
+
+    const provider = this.inputProviders_.get(selector);
+    if (!provider) {
+      throw AssertionError.condition(`Provider for ${selector}`, 'to exist', provider);
+    }
+
+    provider(await selector.getValue(shadowRoot), ctrl);
   }
 }
 

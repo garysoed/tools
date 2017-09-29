@@ -21,7 +21,7 @@ describe('avatar.InnerTextSelectorStub', () => {
 
       const parser = Mocks.object('parser');
       const type = Mocks.object('type');
-      const stub = innerTextSelector(mockElementSelector, parser, type) as
+      const stub = innerTextSelector(mockElementSelector, parser, type, 123) as
           InnerTextSelectorStub<number>;
       const all = Mocks.object('all');
 
@@ -40,7 +40,7 @@ describe('avatar.InnerTextSelectorImpl', () => {
       mockElementSelector.getValue.and.returnValue(element);
       Object.setPrototypeOf(mockElementSelector, ElementSelectorImpl.prototype);
 
-      const impl = innerTextSelector(mockElementSelector, IntegerParser, NumberType);
+      const impl = innerTextSelector(mockElementSelector, IntegerParser, NumberType, 123);
       const shadowRoot = getShadowRoot();
 
       assert(impl.getValue(shadowRoot)).to.equal(123);
@@ -48,17 +48,17 @@ describe('avatar.InnerTextSelectorImpl', () => {
     });
   });
 
-  describe('setValue', () => {
+  describe('setValue_', () => {
     it(`should set the value correctly`, () => {
       const element = document.createElement('div');
       const mockElementSelector = jasmine.createSpyObj('ElementSelector', ['getValue']);
       mockElementSelector.getValue.and.returnValue(element);
       Object.setPrototypeOf(mockElementSelector, ElementSelectorImpl.prototype);
 
-      const impl = innerTextSelector(mockElementSelector, IntegerParser, NumberType);
+      const impl = innerTextSelector(mockElementSelector, IntegerParser, NumberType, 123);
       const shadowRoot = getShadowRoot();
 
-      impl.setValue(123, shadowRoot);
+      impl['setValue_'](123, shadowRoot);
       assert(element.innerText).to.equal('123');
       assert(mockElementSelector.getValue).to.haveBeenCalledWith(shadowRoot);
     });

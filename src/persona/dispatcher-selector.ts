@@ -30,8 +30,10 @@ export class DispatcherSelectorStub<T> extends
 export class DispatcherSelectorImpl<T> extends
     SelectorImpl<DispatchFn<T>> implements DispatcherSelector<DispatchFn<T>> {
   constructor(private readonly elementSelector_: ElementSelectorImpl<HTMLElement>) {
-    super(instanceId(
-        `${elementSelector_.getSelector()}@dispatcher`, InstanceofType(Function) as any));
+    super(
+        () => undefined,
+        instanceId(
+            `${elementSelector_.getSelector()}@dispatcher`, InstanceofType(Function) as any));
   }
 
   getElementSelector(): ElementSelector<HTMLElement> {
@@ -47,7 +49,7 @@ export class DispatcherSelectorImpl<T> extends
     };
   }
 
-  setValue(): void {
+  setValue_(): void {
     throw new Error('Unsupported');
   }
 }

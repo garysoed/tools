@@ -19,7 +19,8 @@ export interface SlotSelector extends Selector<SlotPair> {
 export class SlotSelectorStub extends SelectorStub<SlotPair> implements SlotSelector {
   constructor(
       private readonly parentSelector_: ElementSelectorStub<HTMLElement>,
-      private readonly commentName_: string) {
+      private readonly commentName_: string,
+      private readonly defaultValue_: SlotPair) {
     super();
   }
 
@@ -34,15 +35,18 @@ export class SlotSelectorStub extends SelectorStub<SlotPair> implements SlotSele
   resolve(allSelectors: {}): SlotSelectorImpl {
     return new SlotSelectorImpl(
         this.parentSelector_.resolve(allSelectors),
-        this.commentName_);
+        this.commentName_,
+        this.defaultValue_);
   }
 }
 
 export class SlotSelectorImpl extends SelectorImpl<SlotPair> implements SlotSelector {
   constructor(
       private readonly parentSelector_: ElementSelectorImpl<HTMLElement>,
-      private readonly commentName_: string) {
+      private readonly commentName_: string,
+      defaultValue: SlotPair) {
     super(
+        defaultValue,
         instanceId(
             `${parentSelector_.getSelector()}@slot(${commentName_})`,
             HasPropertiesType({
@@ -91,7 +95,7 @@ export class SlotSelectorImpl extends SelectorImpl<SlotPair> implements SlotSele
     };
   }
 
-  setValue(): void {
+  setValue_(): void {
     throw new Error('Unsupported');
   }
 }
@@ -100,10 +104,14 @@ export function slotSelector(
     parentSelector: ElementSelector<HTMLElement>,
     slotName: string): SlotSelector {
   const commentName = `slot(${slotName})`;
+  const defaultValue = {
+    end: document.createComment(`${commentName}End`),
+    start: document.createComment(`${commentName}`),
+  };
   if (parentSelector instanceof ElementSelectorStub) {
-    return new SlotSelectorStub(parentSelector, commentName);
+    return new SlotSelectorStub(parentSelector, commentName, defaultValue);
   } else if (parentSelector instanceof ElementSelectorImpl) {
-    return new SlotSelectorImpl(parentSelector, commentName);
+    return new SlotSelectorImpl(parentSelector, commentName, defaultValue);
   } else {
     throw new Error(`Unhandled ElementSelector type ${parentSelector}`);
   }

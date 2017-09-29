@@ -5,12 +5,13 @@ import { ImmutableList } from '../immutable';
 export class InputNode<T> extends GNode<T> {
   private readonly symbol_: symbol = Symbol('inputNode');
 
-  constructor() {
+  constructor(private readonly initValue_: T) {
     super(ImmutableList.of([]));
   }
 
   protected execute_(context: {}): T {
-    return context[this.symbol_];
+    const value = context[this.symbol_];
+    return value === undefined ? this.initValue_ : value;
   }
 
   set(context: {} | null, timestamp: GraphTime, value: T): void {

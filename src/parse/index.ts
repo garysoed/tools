@@ -7,6 +7,7 @@ export { IntegerParser } from './integer-parser';
 export { JsonParser } from './json-parser';
 export { ListParser } from './list-parser';
 export { MapParser } from './map-parser';
+export { ObjectParser } from './object-parser';
 export { PercentParser } from './percent-parser';
 export { SerializableParser } from './serializable-parser';
 export { SetParser } from './set-parser';

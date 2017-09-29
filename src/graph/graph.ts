@@ -8,7 +8,7 @@ import { InnerNode } from '../graph/inner-node';
 import { InputNode } from '../graph/input-node';
 import { InstanceId } from '../graph/instance-id';
 import { NodeId } from '../graph/node-id';
-import { NodeProvider } from '../graph/node-provider';
+import { InstanceNodeProvider, StaticNodeProvider } from '../graph/node-provider';
 import { Provider, Provider0, Provider1, Provider2 } from '../graph/provider';
 import { StaticId } from '../graph/static-id';
 import { ImmutableList, ImmutableSet } from '../immutable';
@@ -37,21 +37,24 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
    * @return Function to call for setting the value. The return value of this is a Promise that will
    *     be resolved when the value has been set.
    */
-  createProvider<T>(staticId: StaticId<T>, initValue: T): NodeProvider<T>;
-  createProvider<T>(instanceId: InstanceId<T>, initValue: T, context: {}): NodeProvider<T>;
-  createProvider<T>(nodeId: NodeId<T>, initValue: T, context: {} = GLOBALS): NodeProvider<T> {
+  createProvider<T>(staticId: StaticId<T>, initValue: T): StaticNodeProvider<T>;
+  createProvider<T>(instanceId: InstanceId<T>, initValue: T): InstanceNodeProvider<T>;
+  createProvider<T>(nodeId: NodeId<T>, initValue: T):
+      StaticNodeProvider<T> | InstanceNodeProvider<T> {
     if (this.nodes_.has(nodeId)) {
       throw new Error(`Node ${nodeId} is already registered`);
     }
 
-    const node = new InputNode<T>();
-    node.set(context, this.currentTime_, initValue);
+    const node = new InputNode<T>(initValue);
     this.nodes_.set(nodeId, node);
 
-    const provider = (newValue: T): Promise<void> => {
-      return this.set_(nodeId, context, newValue);
-    };
-    return provider;
+    if (nodeId instanceof StaticId) {
+      return (newValue: T): Promise<void> => this.set_(nodeId, GLOBALS, newValue);
+    } else if (nodeId instanceof InstanceId) {
+      return (newValue: T, context: {}): Promise<void> => this.set_(nodeId, context, newValue);
+    } else {
+      throw assertUnreachable(nodeId);
+    }
   }
 
   private dependsOn_(sourceId: NodeId<any>, targetId: NodeId<any>): boolean {
@@ -144,7 +147,7 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
         times.getAt(0)!);
   }
 
-  private getNode_<T>(nodeId: NodeId<T>): GNode<T> {
+  getNode_<T>(nodeId: NodeId<T>): GNode<T> {
     const node = this.nodes_.get(nodeId);
     if (!node) {
       throw new Error(`Node for ${nodeId} cannot be found`);
@@ -187,6 +190,10 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
     }
 
     return ids.has(nodeId);
+  }
+
+  isRegistered(id: NodeId<any>): boolean {
+    return this.nodes_.has(id);
   }
 
   private onReady_<T, C>(nodeId: NodeId<T>, context: C, event: GraphEvent<T, C>): void {

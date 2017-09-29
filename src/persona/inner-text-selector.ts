@@ -15,7 +15,8 @@ export class InnerTextSelectorStub<T> extends SelectorStub<T> implements InnerTe
   constructor(
       private readonly elementSelector_: ElementSelectorStub<HTMLElement>,
       private readonly parser_: Parser<T>,
-      private readonly type_: Type<T>) {
+      private readonly type_: Type<T>,
+      private readonly defaultValue_: T) {
     super();
   }
 
@@ -27,7 +28,8 @@ export class InnerTextSelectorStub<T> extends SelectorStub<T> implements InnerTe
     return new InnerTextSelectorImpl(
         this.elementSelector_.resolve(allSelectors),
         this.parser_,
-        this.type_);
+        this.type_,
+        this.defaultValue_);
   }
 }
 
@@ -35,8 +37,9 @@ export class InnerTextSelectorImpl<T> extends SelectorImpl<T> implements InnerTe
   constructor(
       private readonly elementSelector_: ElementSelectorImpl<HTMLElement>,
       private readonly parser_: Parser<T>,
-      type: Type<T>) {
-    super(instanceId(`${elementSelector_.getSelector()}@innerText`, type));
+      type: Type<T>,
+      defaultValue: T) {
+    super(defaultValue, instanceId(`${elementSelector_.getSelector()}@innerText`, type));
   }
 
   getElementSelector(): ElementSelector<HTMLElement> {
@@ -48,7 +51,7 @@ export class InnerTextSelectorImpl<T> extends SelectorImpl<T> implements InnerTe
     return this.parser_.parse(element.innerText);
   }
 
-  setValue(value: T, root: ShadowRoot): void {
+  setValue_(value: T, root: ShadowRoot): void {
     const element = this.elementSelector_.getValue(root);
     element.innerText = this.parser_.stringify(value);
   }
@@ -57,11 +60,12 @@ export class InnerTextSelectorImpl<T> extends SelectorImpl<T> implements InnerTe
 export function innerTextSelector<T>(
     elementSelector: ElementSelector<HTMLElement>,
     parser: Parser<T>,
-    type: Type<T>): InnerTextSelector<T> {
+    type: Type<T>,
+    defaultValue: T): InnerTextSelector<T> {
   if (elementSelector instanceof ElementSelectorStub) {
-    return new InnerTextSelectorStub(elementSelector, parser, type);
+    return new InnerTextSelectorStub(elementSelector, parser, type, defaultValue);
   } else if (elementSelector instanceof ElementSelectorImpl) {
-    return new InnerTextSelectorImpl(elementSelector, parser, type);
+    return new InnerTextSelectorImpl(elementSelector, parser, type, defaultValue);
   } else {
     throw new Error(`Unhandled ElementSelector type ${elementSelector}`);
   }
