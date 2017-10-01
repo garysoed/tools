@@ -1,7 +1,6 @@
 /**
  * Configures a element.
  */
-import { ImmutableSet } from '../immutable/immutable-set';
 import { Parser } from '../interfaces/parser';
 
 export interface ElementConfig {
@@ -15,7 +14,7 @@ export interface ElementConfig {
   /**
    * Element constructor of the dependencies.
    */
-  dependencies?: ImmutableSet<gs.ICtor<any>>;
+  dependencies?: Iterable<gs.ICtor<any>>;
 
   /**
    * Tag name of the element.

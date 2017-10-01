@@ -1,3 +1,4 @@
+import { Jsons } from '../data';
 import { AssertionError } from '../error';
 import { Graph } from '../graph/graph';
 import { NodeId } from '../graph/node-id';
@@ -29,3 +30,5 @@ export const Debug = {
     return new DebugNode<T>(id, ImmutableMap.of(valueMap), parameters);
   },
 };
+
+Jsons.setValue(window, 'gs.tools.Graph.Debug', Debug);

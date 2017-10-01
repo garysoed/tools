@@ -525,6 +525,7 @@ describe('persona.Persona', () => {
           templateContent,
           injector,
           ctrl,
+          tag,
           [mockInputSelector1, mockInputSelector2],
           listenerSpecs,
           rendererSpecs);
@@ -610,6 +611,7 @@ describe('persona.Persona', () => {
           templateContent,
           injector,
           ctrl,
+          tag,
           [mockInputSelector],
           listenerSpecs,
           rendererSpecs);
@@ -668,6 +670,7 @@ describe('persona.Persona', () => {
           templateContent,
           injector,
           ctrl,
+          tag,
           [mockInputSelector],
           [],
           []);
@@ -720,6 +723,7 @@ describe('persona.Persona', () => {
           templateContent,
           injector,
           ctrl,
+          tag,
           [],
           listenerSpecs,
           rendererSpecs);
@@ -759,6 +763,7 @@ describe('persona.Persona', () => {
           templateContent,
           injector,
           ctrl,
+          tag,
           [],
           listenerSpecs,
           rendererSpecs);

@@ -264,11 +264,11 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
 
   /**
    * Registers the given provider function.
-   * @param staticId
+   * @param nodeId
    * @param provider
    */
   registerProvider<T>(
-      staticId: StaticId<T>,
+      nodeId: NodeId<T>,
       provider: Provider0<T>): void;
   registerProvider<T, P0>(
       staticId: StaticId<T>,
@@ -279,10 +279,6 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
       provider: Provider2<T, P0, P1>,
       arg0: StaticId<P0>,
       arg1: StaticId<P1>): void;
-
-  registerProvider<T>(
-      instanceId: InstanceId<T>,
-      provider: Provider0<T>): void;
   registerProvider<T, P0>(
       instanceId: InstanceId<T>,
       provider: Provider1<T, P0>,

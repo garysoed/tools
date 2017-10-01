@@ -43,6 +43,7 @@ export class PersonaImpl {
       templateStr: string,
       injector: Injector,
       ctrl: Ctrl,
+      tag: string,
       inputs: Iterable<Selector<any>>,
       listenerSpecs: Iterable<[PropertyKey, Iterable<ListenerSpec>]>,
       rendererSpecs: Iterable<[PropertyKey, RendererSpec]>): Function {
@@ -57,6 +58,8 @@ export class PersonaImpl {
       }
 
       connectedCallback(): void {
+        Log.onceId(LOGGER, tag);
+        Log.groupCollapsed(LOGGER, 'Setting up', tag);
         this.ctrl_ = injector.instantiate(ctrl);
         const shadowRoot = this.getShadowRoot_();
         this.ctrl_[__shadowRoot] = shadowRoot;
@@ -77,12 +80,14 @@ export class PersonaImpl {
             this));
 
         for (const [, selector] of idRendererMap) {
+          Log.debug(LOGGER, 'Rendering', selector);
           this.updateElement_(selector);
         }
 
         // Install the listeners.
         for (const [, specs] of listenerSpecs) {
           for (const {handler, listener, useCapture} of specs) {
+            Log.debug(LOGGER, 'Listening to', listener);
             this.ctrl_.addDisposable(
                 listener.start(shadowRoot, handler, this.ctrl_, useCapture));
           }
@@ -94,6 +99,8 @@ export class PersonaImpl {
         }
 
         this.dispatch_('gs-create', shadowRoot);
+        Log.groupEnd(LOGGER);
+        Log.onceEnd(LOGGER, tag);
       }
 
       disconnectedCallback(): void {
@@ -267,6 +274,7 @@ export class PersonaImpl {
         templateStr,
         injector,
         ctrl,
+        spec.tag,
         spec.inputs || [],
         listenerSpecs,
         rendererSpecs);

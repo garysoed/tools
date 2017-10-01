@@ -149,10 +149,11 @@ export class ElementRegistrar extends BaseDisposable {
       return Promise.resolve();
     }
 
-    const dependencies = config.dependencies || ImmutableSet.of([]);
-    const promises = dependencies.mapItem((dependency: gs.ICtor<BaseElement>) => {
-      return this.register(dependency);
-    });
+    const dependencies = config.dependencies || [];
+    const promises = ImmutableSet.of([...dependencies])
+        .mapItem((dependency: gs.ICtor<BaseElement>) => {
+          return this.register(dependency);
+        });
 
     try {
       await Promise.all(promises);

@@ -26,6 +26,8 @@ export class Log {
   private static COLOR_ENABLED_: boolean = true;
   private static ENABLED_LOG_LEVEL_: LogLevel = LogLevel.INFO;
 
+  private readonly currentIds_: string[] = [];
+  private readonly loggedIds_: Set<string> = new Set();
   private namespace_: string;
 
   /**
@@ -40,7 +42,10 @@ export class Log {
       logLevel: LogLevel,
       color: string,
       ...messages: any[]): void {
-    if (logLevel >= Log.ENABLED_LOG_LEVEL_) {
+    const currentId = this.currentIds_.length > 0
+        ? this.currentIds_[this.currentIds_.length - 1]
+        : null;
+    if ((!currentId || !this.loggedIds_.has(currentId)) && logLevel >= Log.ENABLED_LOG_LEVEL_) {
       const usedColor = Log.COLOR_ENABLED_ ? color : 'default';
       fn(
           `%c${this.namespace_}%c`,
@@ -91,6 +96,15 @@ export class Log {
 
   static of(namespace: string): Log {
     return new Log(namespace);
+  }
+
+  static onceEnd(log: Log, id: string): void {
+    log.loggedIds_.add(id);
+    log.currentIds_.pop();
+  }
+
+  static onceId(log: Log, id: string): void {
+    log.currentIds_.push(id);
   }
 
   static setColorEnabled(enabled: boolean): void {

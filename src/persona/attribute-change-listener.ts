@@ -58,6 +58,10 @@ export class AttributeChangeListener<T> implements Listener<'change'> {
       observer.disconnect();
     });
   }
+
+  toString(): string {
+    return `AttributeChangeListener(${this.attributeSelector_})`;
+  }
 }
 
 export function attributeChangeListener<T>(

@@ -34,6 +34,52 @@ describe('util.Log', () => {
 
       assert(callback).toNot.haveBeenCalled();
     });
+
+    it(`should do nothing if the current ID is already logged`, () => {
+      const callback = jasmine.createSpy('callback');
+      const id = 'id';
+
+      Log.setEnabledLevel(LogLevel.DEBUG);
+      const log = new Log('namespace');
+      log['currentIds_'].push(id);
+      log['loggedIds_'].add(id);
+
+      log['callIfEnabled_'](callback, LogLevel.DEBUG, 'message');
+
+      assert(callback).toNot.haveBeenCalled();
+    });
+
+    it(`should log if the current ID is not already logged`, () => {
+      const color = 'color';
+      const message = 'message';
+      const namespace = 'namespace';
+      const callback = jasmine.createSpy('callback');
+      const id = 'id';
+
+      Log.setEnabledLevel(LogLevel.DEBUG);
+      Log.setColorEnabled(true);
+      const log = new Log(namespace);
+      log['currentIds_'].push(id);
+      log['callIfEnabled_'](callback, LogLevel.ERROR, color, message);
+
+      assert(callback).to
+          .haveBeenCalledWith(`%c${namespace}%c`, `color: ${color}`, `color: default`, message);
+    });
+
+    it(`should log if there are no IDs`, () => {
+      const color = 'color';
+      const message = 'message';
+      const namespace = 'namespace';
+      const callback = jasmine.createSpy('callback');
+
+      Log.setEnabledLevel(LogLevel.DEBUG);
+      Log.setColorEnabled(true);
+      const log = new Log(namespace);
+      log['callIfEnabled_'](callback, LogLevel.ERROR, color, message);
+
+      assert(callback).to
+          .haveBeenCalledWith(`%c${namespace}%c`, `color: ${color}`, `color: default`, message);
+        });
   });
 
   describe('error', () => {
