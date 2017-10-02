@@ -55,7 +55,7 @@ export abstract class SelectorImpl<T> extends Selector<T> {
     };
   }
 
-  initAsInput(root: ShadowRoot, ctrl: BaseDisposableg, provider: InstanceNodeProvider<T>): void {
+  initAsInput(root: ShadowRoot, ctrl: BaseDisposable, provider: InstanceNodeProvider<T>): void {
     this.updateProvider_(root, ctrl, provider);
     const listener = this.getListener();
     ctrl.addDisposable(listener.start(
