@@ -1,17 +1,13 @@
 import { Type } from '../check';
 import { instanceId } from '../graph';
 import { Parser } from '../interfaces';
+import { AttributeChangeListener } from '../persona/attribute-change-listener';
 import {
-  ElementSelector,
   ElementSelectorImpl,
   ElementSelectorStub } from '../persona/element-selector';
-import { Selector, SelectorImpl, SelectorStub } from '../persona/selector';
-
-export interface AttributeSelector<T> extends Selector<T> {
-  getElementSelector(): ElementSelector<any>;
-
-  getName(): string;
-}
+import { Listener } from '../persona/listener';
+import { SelectorImpl, SelectorStub } from '../persona/selector';
+import { AttributeSelector, ElementSelector } from '../persona/selectors';
 
 export class AttributeSelectorStub<T> extends SelectorStub<T> implements AttributeSelector<T> {
   constructor(
@@ -53,6 +49,10 @@ export class AttributeSelectorImpl<T> extends SelectorImpl<T> implements Attribu
 
   getElementSelector(): ElementSelector<HTMLElement> {
     return this.elementSelector_;
+  }
+
+  getListener(): Listener<any> {
+    return new AttributeChangeListener(this);
   }
 
   getName(): string {

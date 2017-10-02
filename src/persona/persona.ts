@@ -8,9 +8,10 @@ import { Injector } from '../inject';
 import { DispatchFn, Event } from '../interfaces';
 import { ComponentSpec } from '../persona/component-spec';
 import { CustomElement } from '../persona/custom-element';
-import { dispatcherSelector, DispatcherSelector } from '../persona/dispatcher-selector';
+import { dispatcherSelector } from '../persona/dispatcher-selector';
 import { Listener } from '../persona/listener';
 import { Selector } from '../persona/selector';
+import { DispatcherSelector } from '../persona/selectors';
 import { shadowHostSelector } from '../persona/shadow-host-selector';
 import { __shadowRoot } from '../persona/shadow-root-symbol';
 import { isDescendantOf } from '../typescript';
@@ -44,10 +45,9 @@ export class PersonaImpl {
       injector: Injector,
       ctrl: Ctrl,
       tag: string,
-      inputs: Iterable<Selector<any>>,
+      inputs: Map<Selector<any>, InstanceNodeProvider<any>>,
       listenerSpecs: Iterable<[PropertyKey, Iterable<ListenerSpec>]>,
       rendererSpecs: Iterable<[PropertyKey, RendererSpec]>): Function {
-    const self = this;
     return class extends parentClass implements CustomElement {
       private ctrl_: BaseDisposable | null;
       private readonly dispatcher_: DispatcherSelector<DispatchFn<{}>> =
@@ -64,39 +64,9 @@ export class PersonaImpl {
         const shadowRoot = this.getShadowRoot_();
         this.ctrl_[__shadowRoot] = shadowRoot;
 
-        // Install the renderers.
-        const renderers = ImmutableMap.of(rendererSpecs)
-            .values()
-            .mapItem((spec: RendererSpec) => {
-              return [spec.selector.getId(), spec.selector] as [InstanceId<any>, Selector<any>];
-            });
-        const idRendererMap = ImmutableMap.of(renderers);
-
-        this.ctrl_.addDisposable(Graph.on(
-            'ready',
-            async (event: GraphEvent<any, any>) => {
-              this.onGraphReady_(idRendererMap, event);
-            },
-            this));
-
-        for (const [, selector] of idRendererMap) {
-          Log.debug(LOGGER, 'Rendering', selector);
-          this.updateElement_(selector);
-        }
-
-        // Install the listeners.
-        for (const [, specs] of listenerSpecs) {
-          for (const {handler, listener, useCapture} of specs) {
-            Log.debug(LOGGER, 'Listening to', listener);
-            this.ctrl_.addDisposable(
-                listener.start(shadowRoot, handler, this.ctrl_, useCapture));
-          }
-        }
-
-        // Initialize all the inputs
-        for (const selector of inputs) {
-          self.updateValue(selector, this.ctrl_);
-        }
+        this.installRenderers_(this.ctrl_);
+        this.installListeners_(this.ctrl_, shadowRoot);
+        this.installInputs_(this.ctrl_, shadowRoot);
 
         this.dispatch_('gs-create', shadowRoot);
         Log.groupEnd(LOGGER);
@@ -132,6 +102,43 @@ export class PersonaImpl {
         const shadow = this.attachShadow({mode: 'open'});
         shadow.innerHTML = templateStr || '';
         return shadow;
+      }
+
+      private installInputs_(ctrl: BaseDisposable, shadowRoot: ShadowRoot): void {
+        for (const [selector, provider] of inputs) {
+          selector.initAsInput(shadowRoot, ctrl, provider);
+        }
+      }
+
+      private installListeners_(ctrl: BaseDisposable, shadowRoot: ShadowRoot): void {
+        for (const [, specs] of listenerSpecs) {
+          for (const {handler, listener, useCapture} of specs) {
+            Log.debug(LOGGER, 'Listening to', listener);
+            ctrl.addDisposable(
+                listener.start(shadowRoot, handler, ctrl, useCapture));
+          }
+        }
+      }
+
+      private installRenderers_(ctrl: BaseDisposable): void {
+        const renderers = ImmutableMap.of(rendererSpecs)
+            .values()
+            .mapItem((spec: RendererSpec) => {
+              return [spec.selector.getId(), spec.selector] as [InstanceId<any>, Selector<any>];
+            });
+        const idRendererMap = ImmutableMap.of(renderers);
+
+        ctrl.addDisposable(Graph.on(
+            'ready',
+            async (event: GraphEvent<any, any>) => {
+              this.onGraphReady_(idRendererMap, event);
+            },
+            this));
+
+        for (const [, selector] of idRendererMap) {
+          Log.debug(LOGGER, 'Rendering', selector);
+          this.updateElement_(selector);
+        }
       }
 
       private onGraphReady_(
@@ -240,33 +247,10 @@ export class PersonaImpl {
       throw new Error(`No templates found for ${spec.templateKey}`);
     }
 
-    if (spec.dependencies) {
-      for (const dependency of spec.dependencies) {
-        this.register_(injector, templates, dependency as any as Ctrl);
-      }
-    }
-
-    if (spec.inputs) {
-      for (const selector of spec.inputs) {
-        if (!Graph.isRegistered(selector.getId())) {
-          this.inputProviders_.set(
-              selector,
-              Graph.createProvider(selector.getId(), selector.getDefaultValue()));
-        }
-      }
-    }
-
-    // Process the renderers.
-    const rendererSpecs = this.getAncestorSpecs_(ctrl, this.rendererSpecs_);
-    for (const [key, {parameters, selector}] of rendererSpecs) {
-      Graph.registerGenericProvider_(
-          selector.getId(),
-          ctrl.prototype[key],
-          ...parameters);
-    }
-
-    // Listeners.
-    const listenerSpecs = this.getAncestorSpecs_(ctrl, this.listenerSpecs_);
+    this.registerDependencies_(spec, injector, templates);
+    const inputProviders = this.registerInputs_(spec);
+    const rendererSpecs = this.registerRenderers_(ctrl);
+    const listenerSpecs = this.registerListeners_(ctrl);
 
     const parentClass: typeof HTMLElement = spec.parent ? spec.parent.class : HTMLElement;
     const CustomElement = this.createCustomElementClass_(
@@ -275,19 +259,11 @@ export class PersonaImpl {
         injector,
         ctrl,
         spec.tag,
-        spec.inputs || [],
+        inputProviders,
         listenerSpecs,
         rendererSpecs);
 
-    try {
-      if (spec.parent) {
-        this.customElements_.define(spec.tag, CustomElement, {extends: spec.parent.tag});
-      } else {
-        this.customElements_.define(spec.tag, CustomElement);
-      }
-    } catch (e) {
-      Log.error(LOGGER, `Error registering ${spec.tag}`, e);
-    }
+    this.registerCustomElement_(spec, CustomElement);
     Log.info(LOGGER, `Registered: [${spec.tag}]`);
   }
 
@@ -297,18 +273,60 @@ export class PersonaImpl {
     }
   }
 
-  async updateValue(selector: Selector<any>, ctrl: {}): Promise<void> {
-    const shadowRoot = this.getShadowRoot(ctrl);
-    if (!shadowRoot) {
-      throw AssertionError.condition('object', 'to be a controller', ctrl);
+  private registerCustomElement_(spec: ComponentSpec<any>, elementCtor: Function): void {
+    try {
+      if (spec.parent) {
+        this.customElements_.define(spec.tag, elementCtor, {extends: spec.parent.tag});
+      } else {
+        this.customElements_.define(spec.tag, elementCtor);
+      }
+    } catch (e) {
+      Log.error(LOGGER, `Error registering ${spec.tag}`, e);
     }
+  }
 
-    const provider = this.inputProviders_.get(selector);
-    if (!provider) {
-      throw AssertionError.condition(`Provider for ${selector}`, 'to exist', provider);
+  private registerDependencies_(
+      spec: ComponentSpec<any>,
+      injector: Injector,
+      templates: Templates): void {
+    if (spec.dependencies) {
+      for (const dependency of spec.dependencies) {
+        this.register_(injector, templates, dependency as any as Ctrl);
+      }
     }
+  }
 
-    provider(await selector.getValue(shadowRoot), ctrl);
+  private registerInputs_(
+      spec: ComponentSpec<any>): Map<Selector<any>, InstanceNodeProvider<any>> {
+    const inputProviders: Map<Selector<any>, InstanceNodeProvider<any>> = new Map();
+    if (spec.inputs) {
+      for (const selector of spec.inputs) {
+        const provider = this.inputProviders_.get(selector);
+        if (!provider) {
+          const newProvider = Graph.createProvider(selector.getId(), selector.getDefaultValue());
+          inputProviders.set(selector, newProvider);
+          this.inputProviders_.set(selector, newProvider);
+        } else {
+          inputProviders.set(selector, provider);
+        }
+      }
+    }
+    return inputProviders;
+  }
+
+  private registerListeners_(ctrl: Ctrl): ImmutableMap<PropertyKey, any> {
+    return this.getAncestorSpecs_(ctrl, this.listenerSpecs_);
+  }
+
+  private registerRenderers_(ctrl: Ctrl): ImmutableMap<PropertyKey, any> {
+    const rendererSpecs = this.getAncestorSpecs_(ctrl, this.rendererSpecs_);
+    for (const [key, {parameters, selector}] of rendererSpecs) {
+      Graph.registerGenericProvider_(
+          selector.getId(),
+          ctrl.prototype[key],
+          ...parameters);
+    }
+    return rendererSpecs;
   }
 }
 

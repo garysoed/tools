@@ -1,8 +1,9 @@
 import { DisposableFunction } from '../dispose';
 import { AssertionError } from '../error';
 import { Event } from '../interfaces';
-import { ChildrenSelector, ChildrenSelectorImpl } from '../persona/children-selector';
+import { ChildrenSelectorImpl } from '../persona/children-selector';
 import { Listener } from '../persona/listener';
+import { ChildrenSelector } from '../persona/selectors';
 
 export class ChildrenListener<E extends Element, T> implements Listener<'childrenchange'> {
   constructor(private readonly childrenSelector_: ChildrenSelectorImpl<E, T>) { }

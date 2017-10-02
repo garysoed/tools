@@ -1,8 +1,9 @@
 import { DisposableFunction } from '../dispose';
 import { AssertionError } from '../error';
 import { Event } from '../interfaces';
-import { ElementSelector, ElementSelectorImpl } from '../persona/element-selector';
+import { ElementSelectorImpl } from '../persona/element-selector';
 import { Listener } from '../persona/listener';
+import { ElementSelector } from '../persona/selectors';
 
 export class EventListener implements Listener<string> {
   constructor(

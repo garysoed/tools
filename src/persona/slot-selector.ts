@@ -3,18 +3,13 @@ import { AssertionError } from '../error';
 import { instanceId } from '../graph';
 import { ImmutableList } from '../immutable';
 import {
-  ElementSelector,
   ElementSelectorImpl,
   ElementSelectorStub } from '../persona/element-selector';
-import { Selector, SelectorImpl, SelectorStub } from '../persona/selector';
+import { Listener } from '../persona/listener';
+import { SelectorImpl, SelectorStub } from '../persona/selector';
+import { ElementSelector, SlotSelector } from '../persona/selectors';
 
 type SlotPair = {end: Node, start: Node};
-
-export interface SlotSelector extends Selector<SlotPair> {
-  getCommentName(): string;
-
-  getParentSelector(): ElementSelector<HTMLElement>;
-}
 
 export class SlotSelectorStub extends SelectorStub<SlotPair> implements SlotSelector {
   constructor(
@@ -57,6 +52,11 @@ export class SlotSelectorImpl extends SelectorImpl<SlotPair> implements SlotSele
 
   getCommentName(): string {
     return this.commentName_;
+  }
+
+  getListener(): Listener<any> {
+    // TODO: Implement
+    throw new Error('Unimplemented');
   }
 
   getParentSelector(): ElementSelector<HTMLElement> {

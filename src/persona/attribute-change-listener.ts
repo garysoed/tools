@@ -1,8 +1,9 @@
 import { DisposableFunction } from '../dispose';
 import { AssertionError } from '../error';
 import { Event } from '../interfaces';
-import { AttributeSelector, AttributeSelectorImpl } from '../persona/attribute-selector';
+import { AttributeSelectorImpl } from '../persona/attribute-selector';
 import { Listener } from '../persona/listener';
+import { AttributeSelector } from '../persona/selectors';
 
 export class AttributeChangeListener<T> implements Listener<'change'> {
   constructor(private readonly attributeSelector_: AttributeSelectorImpl<T>) { }

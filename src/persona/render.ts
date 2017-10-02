@@ -1,11 +1,9 @@
 import { BaseDisposable } from '../dispose';
 import { ANNOTATIONS } from '../graph/node-in';
 import { ImmutableSet } from '../immutable';
-import { AttributeSelector } from '../persona/attribute-selector';
-import { ChildrenSelector } from '../persona/children-selector';
-import { InnerTextSelector } from '../persona/inner-text-selector';
 import { Persona } from '../persona/persona';
 import { Selector } from '../persona/selector';
+import { AttributeSelector, ChildrenSelector, InnerTextSelector } from '../persona/selectors';
 
 export function createRenderDecorator<S extends Selector<any>>():
     (selector: S) => MethodDecorator {

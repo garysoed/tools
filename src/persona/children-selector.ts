@@ -2,15 +2,15 @@ import { FiniteIterableOfType, Type } from '../check';
 import { AssertionError } from '../error';
 import { instanceId } from '../graph';
 import { ImmutableList, ImmutableSet } from '../immutable';
-import { ElementSelector } from '../persona/element-selector';
-import { Selector, SelectorImpl, SelectorStub } from '../persona/selector';
-import { SlotSelector, SlotSelectorImpl, SlotSelectorStub } from '../persona/slot-selector';
+import { ChildrenListener } from '../persona/children-listener';
+import { Listener } from '../persona/listener';
+import { SelectorImpl, SelectorStub } from '../persona/selector';
+import { ChildrenSelector, ElementSelector, SlotSelector } from '../persona/selectors';
+import { SlotSelectorImpl, SlotSelectorStub } from '../persona/slot-selector';
 
 type Factory<E extends Element> = (document: Document) => E;
 type Getter<E extends Element, T> = (element: E) => T;
 type Setter<E extends Element, T> = (data: T, element: E) => void;
-
-export interface ChildrenSelector<T> extends Selector<ImmutableList<T>> { }
 
 export class ChildrenSelectorStub<E extends Element, T> extends
     SelectorStub<ImmutableList<T>> implements ChildrenSelector<T> {
@@ -76,6 +76,10 @@ export class ChildrenSelectorImpl<E extends Element, T> extends
       this.elementPool_.delete(element);
       return element;
     }
+  }
+
+  getListener(): Listener<any> {
+    return new ChildrenListener(this);
   }
 
   getParentSelector(): ElementSelector<HTMLElement> {

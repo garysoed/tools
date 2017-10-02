@@ -1,9 +1,9 @@
 export { attributeChangeListener } from './attribute-change-listener';
-export { attributeSelector, AttributeSelector } from './attribute-selector';
+export { attributeSelector } from './attribute-selector';
 export { childrenSelector } from './children-selector';
 export { component } from './component';
 export { dispatcherSelector } from './dispatcher-selector';
-export { elementSelector, ElementSelector } from './element-selector';
+export { elementSelector } from './element-selector';
 export { eventListener } from './event-listener';
 export { innerTextSelector } from './inner-text-selector';
 export { onDom } from './on-dom';

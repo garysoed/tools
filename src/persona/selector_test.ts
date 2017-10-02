@@ -1,13 +1,19 @@
-import { assert, Mocks, TestBase } from '../test-base';
+import { assert, Matchers, Mocks, TestBase } from '../test-base';
 TestBase.setup();
 
-import { GraphTime } from '../graph';
+import { NumberType } from '../check';
+import { GraphTime, instanceId } from '../graph';
+import { Listener } from '../persona/listener';
 import { __time, SelectorImpl } from '../persona/selector';
 import { __shadowRoot } from '../persona/shadow-root-symbol';
 
 class TestSelector extends SelectorImpl<any> {
   constructor() {
     super(12, Mocks.object('id'));
+  }
+
+  getListener(): Listener<any> {
+    throw new Error('Method not implemented.');
   }
 
   getValue(): any {
@@ -53,6 +59,30 @@ describe('persona.SelectorImpl', () => {
     });
   });
 
+  describe('initAsInput', () => {
+    it(`should initialize correctly`, () => {
+      const root = Mocks.object('root');
+      const mockCtrl = jasmine.createSpyObj('Ctrl', ['addDisposable']);
+      const provider = Mocks.object('provider');
+      const disposable = Mocks.object('disposable');
+      const mockListener = jasmine.createSpyObj('Listener', ['start']);
+      mockListener.start.and.returnValue(disposable);
+      spyOn(selector, 'getListener').and.returnValue(mockListener);
+
+      const updateProviderSpy = spyOn(selector, 'updateProvider_');
+
+      selector.initAsInput(root, mockCtrl, provider);
+      assert(selector['updateProvider_']).to.haveBeenCalledWith(root, mockCtrl, provider);
+      assert(mockCtrl.addDisposable).to.haveBeenCalledWith(disposable);
+      assert(mockListener.start).to
+          .haveBeenCalledWith(root, Matchers.anyFunction(), selector, false);
+
+      updateProviderSpy.calls.reset();
+      mockListener.start.calls.argsFor(0)[1]();
+      assert(selector['updateProvider_']).to.haveBeenCalledWith(root, mockCtrl, provider);
+    });
+  });
+
   describe('setValue', () => {
     it(`should update the value`, () => {
       const value = 123;
@@ -91,6 +121,53 @@ describe('persona.SelectorImpl', () => {
       selector.setValue(value, root, time);
       assert(selector['setValue_']).to.haveBeenCalledWith(value, root);
       assert(root[__time]).to.equal(time);
+    });
+  });
+
+  describe('updateProvider_', () => {
+    it(`should update the provider correctly`, () => {
+      const root = Mocks.object('root');
+      const ctrl = Mocks.object('ctrl');
+      const mockProvider = jasmine.createSpy('Provider');
+      const value = 123;
+      spyOn(selector, 'getValue').and.returnValue(value);
+      spyOn(selector, 'getId').and.returnValue(instanceId('id', NumberType));
+
+      selector['updateProvider_'](root, ctrl, mockProvider);
+      assert(mockProvider).to.haveBeenCalledWith(value, ctrl);
+      assert(selector.getValue).to.haveBeenCalledWith(root);
+    });
+
+    it(`should use the default value if the type of the value is incorrect`, () => {
+      const root = Mocks.object('root');
+      const ctrl = Mocks.object('ctrl');
+      const mockProvider = jasmine.createSpy('Provider');
+      const value = 'value';
+      spyOn(selector, 'getValue').and.returnValue(value);
+
+      const defaultValue = 123;
+      spyOn(selector, 'getDefaultValue').and.returnValue(defaultValue);
+      spyOn(selector, 'getId').and.returnValue(instanceId('id', NumberType));
+
+      selector['updateProvider_'](root, ctrl, mockProvider);
+      assert(mockProvider).to.haveBeenCalledWith(defaultValue, ctrl);
+      assert(selector.getValue).to.haveBeenCalledWith(root);
+    });
+
+    it(`should throw error if the type is incorrect`, () => {
+      const root = Mocks.object('root');
+      const ctrl = Mocks.object('ctrl');
+      const mockProvider = jasmine.createSpy('Provider');
+      const value = 'value';
+      spyOn(selector, 'getValue').and.returnValue(value);
+
+      spyOn(selector, 'getDefaultValue').and.returnValue(undefined);
+      spyOn(selector, 'getId').and.returnValue(instanceId('id', NumberType));
+
+      assert(() => {
+        selector['updateProvider_'](root, ctrl, mockProvider);
+      }).to.throwError(/value for input/);
+      assert(selector.getValue).to.haveBeenCalledWith(root);
     });
   });
 });

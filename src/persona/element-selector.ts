@@ -2,11 +2,10 @@ import { InstanceofType, Type } from '../check';
 import { Jsons } from '../data';
 import { instanceId } from '../graph';
 import { InstanceId } from '../graph/instance-id';
-import { Selector, SelectorImpl, SelectorStub } from '../persona/selector';
-
-export interface ElementSelector<T extends HTMLElement> extends Selector<T> {
-  getSelector(): string;
-}
+import { Listener } from '../persona/listener';
+import { SelectorImpl, SelectorStub } from '../persona/selector';
+import { ElementSelector } from '../persona/selectors';
+import { StubListener } from '../persona/stub-listener';
 
 export class ElementSelectorStub<T extends HTMLElement>
     extends SelectorStub<T> implements ElementSelector<T> {
@@ -32,6 +31,10 @@ export class ElementSelectorImpl<T extends HTMLElement>
       protected readonly type_: Type<T>,
       id: InstanceId<T>) {
     super(undefined, id);
+  }
+
+  getListener(): Listener<never> {
+    return new StubListener();
   }
 
   getSelector(): string {

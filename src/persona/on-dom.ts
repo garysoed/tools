@@ -1,10 +1,8 @@
 import { BaseDisposable } from '../dispose';
 import { attributeChangeListener, eventListener } from '../persona';
-import { AttributeSelector } from '../persona/attribute-selector';
 import { childrenListener } from '../persona/children-listener';
-import { ChildrenSelector } from '../persona/children-selector';
-import { ElementSelector } from '../persona/element-selector';
 import { Persona } from '../persona/persona';
+import { AttributeSelector, ChildrenSelector, ElementSelector } from '../persona/selectors';
 
 export function asBaseDisposableCtor(target: Object): typeof BaseDisposable {
   if (!(target instanceof BaseDisposable)) {

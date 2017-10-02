@@ -1,5 +1,8 @@
-import { GraphTime } from '../graph';
+import { BaseDisposable } from '../dispose';
+import { AssertionError } from '../error';
+import { GraphTime, InstanceNodeProvider } from '../graph';
 import { InstanceId } from '../graph/instance-id';
+import { Listener } from '../persona/listener';
 import { __shadowRoot } from '../persona/shadow-root-symbol';
 
 export const __time = Symbol('time');
@@ -11,9 +14,14 @@ export abstract class Selector<T> {
 
   abstract getId(): InstanceId<T>;
 
+  abstract getListener(): Listener<any>;
+
   abstract getProvider(): () => T | null;
 
   abstract getValue(root: ShadowRoot): T | null;
+
+  abstract initAsInput(
+      root: ShadowRoot, ctrl: BaseDisposable, provider: InstanceNodeProvider<T>): void;
 
   abstract setValue(value: T | null, root: ShadowRoot, time: GraphTime): void;
 
@@ -47,12 +55,37 @@ export abstract class SelectorImpl<T> extends Selector<T> {
     };
   }
 
+  initAsInput(root: ShadowRoot, ctrl: BaseDisposableg, provider: InstanceNodeProvider<T>): void {
+    this.updateProvider_(root, ctrl, provider);
+    const listener = this.getListener();
+    ctrl.addDisposable(listener.start(
+        root,
+        () => {
+          this.updateProvider_(root, ctrl, provider);
+        },
+        this,
+        false));
+  }
+
   setValue(value: T | null, root: ShadowRoot, time: GraphTime): void {
     const latestTime: GraphTime | undefined = root[__time];
     if (!latestTime || latestTime.before(time)) {
       this.setValue_(value, root);
       root[__time] = time;
     }
+  }
+
+  protected updateProvider_(
+      root: ShadowRoot,
+      ctrl: BaseDisposable,
+      provider: InstanceNodeProvider<T>): void {
+    const value = this.getValue(root);
+    const type = this.getId().getType();
+    const normalizedValue = type.check(value) ? value : this.getDefaultValue();
+    if (!type.check(normalizedValue)) {
+      throw AssertionError.type(`value for input ${this}`, type, normalizedValue);
+    }
+    provider(normalizedValue, ctrl);
   }
 }
 
@@ -62,6 +95,10 @@ export abstract class SelectorStub<T> extends Selector<T> {
   }
 
   getId(): InstanceId<T> {
+    return this.throwStub();
+  }
+
+  getListener(): Listener<T> {
     return this.throwStub();
   }
 
@@ -75,6 +112,10 @@ export abstract class SelectorStub<T> extends Selector<T> {
 
   getValue(): T | null {
     return this.throwStub();
+  }
+
+  initAsInput(): void {
+    this.throwStub();
   }
 
   abstract resolve(allSelectors: {}): SelectorImpl<T>;

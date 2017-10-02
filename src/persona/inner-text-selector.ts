@@ -2,14 +2,11 @@ import { Type } from '../check';
 import { instanceId } from '../graph';
 import { Parser } from '../interfaces';
 import {
-  ElementSelector,
   ElementSelectorImpl,
   ElementSelectorStub } from '../persona/element-selector';
-import { Selector, SelectorImpl, SelectorStub } from '../persona/selector';
-
-export interface InnerTextSelector<T> extends Selector<T> {
-  getElementSelector(): ElementSelector<HTMLElement>;
-}
+import { Listener } from '../persona/listener';
+import { SelectorImpl, SelectorStub } from '../persona/selector';
+import { ElementSelector, InnerTextSelector } from '../persona/selectors';
 
 export class InnerTextSelectorStub<T> extends SelectorStub<T> implements InnerTextSelector<T> {
   constructor(
@@ -44,6 +41,11 @@ export class InnerTextSelectorImpl<T> extends SelectorImpl<T> implements InnerTe
 
   getElementSelector(): ElementSelector<HTMLElement> {
     return this.elementSelector_;
+  }
+
+  getListener(): Listener<never> {
+    // TODO: implement
+    throw new Error('Unimplemented');
   }
 
   getValue(root: ShadowRoot): T | null {

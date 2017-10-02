@@ -3,14 +3,12 @@ import { InstanceofType } from '../check';
 import { instanceId } from '../graph';
 import { DispatchFn } from '../interfaces';
 import {
-  ElementSelector,
   ElementSelectorImpl,
   ElementSelectorStub } from '../persona/element-selector';
-import { Selector, SelectorImpl, SelectorStub } from '../persona/selector';
-
-export interface DispatcherSelector<T> extends Selector<T> {
-  getElementSelector(): ElementSelector<HTMLElement>;
-}
+import { Listener } from '../persona/listener';
+import { SelectorImpl, SelectorStub } from '../persona/selector';
+import { DispatcherSelector, ElementSelector } from '../persona/selectors';
+import { StubListener } from '../persona/stub-listener';
 
 export class DispatcherSelectorStub<T> extends
     SelectorStub<DispatchFn<T>> implements DispatcherSelector<DispatchFn<T>> {
@@ -38,6 +36,10 @@ export class DispatcherSelectorImpl<T> extends
 
   getElementSelector(): ElementSelector<HTMLElement> {
     return this.elementSelector_;
+  }
+
+  getListener(): Listener<any> {
+    return new StubListener();
   }
 
   getValue(root: ShadowRoot): DispatchFn<T> {
