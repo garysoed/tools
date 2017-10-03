@@ -47,7 +47,7 @@ describe('CustomElement', () => {
   });
 
   describe('connectedCallback', () => {
-    it(`should instantiate the ctrl correctly`, () => {
+    it(`should instantiate the ctrl correctly`, async () => {
       const mockCtrl = jasmine.createSpyObj('Ctrl', ['addDisposable']);
       mockInjector.instantiate.and.returnValue(mockCtrl);
 
@@ -55,11 +55,11 @@ describe('CustomElement', () => {
       spyOn(element, 'getShadowRoot_').and.returnValue(shadowRoot);
       spyOn(element, 'installRenderers_');
       spyOn(element, 'installListeners_');
-      spyOn(element, 'installInputs_');
+      spyOn(element, 'installInputs_').and.returnValue(Promise.resolve());
       spyOn(element, 'dispatch_');
 
-      element.connectedCallback();
-      assert(element['dispatch_']).to.haveBeenCalledWith('gs-create', shadowRoot);
+      await element.connectedCallback();
+      assert(element['dispatch_']).to.haveBeenCalledWith('gs-connected', shadowRoot);
       assert(element['installInputs_']).to.haveBeenCalledWith(mockCtrl, shadowRoot);
       assert(element['installListeners_']).to.haveBeenCalledWith(mockCtrl, shadowRoot);
       assert(element['installRenderers_']).to.haveBeenCalledWith(mockCtrl);
@@ -87,17 +87,19 @@ describe('CustomElement', () => {
   });
 
   describe('installInputs_', () => {
-    it(`should initialize all the selectors correctly`, () => {
+    it(`should initialize all the selectors correctly`, async () => {
       const ctrl = Mocks.object('ctrl');
       const shadowRoot = Mocks.object('shadowRoot');
       const mockSelector1 = jasmine.createSpyObj('Selector1', ['initAsInput']);
-      const mockSelector2 = jasmine.createSpyObj('Selector1', ['initAsInput']);
+      mockSelector1.initAsInput.and.returnValue(Promise.resolve());
+      const mockSelector2 = jasmine.createSpyObj('Selector2', ['initAsInput']);
+      mockSelector2.initAsInput.and.returnValue(Promise.resolve());
       const provider1 = Mocks.object('provider1');
       const provider2 = Mocks.object('provider2');
       inputMap.set(mockSelector1, provider1);
       inputMap.set(mockSelector2, provider2);
 
-      element['installInputs_'](ctrl, shadowRoot);
+      await element['installInputs_'](ctrl, shadowRoot);
       assert(mockSelector1.initAsInput).to.haveBeenCalledWith(shadowRoot, ctrl, provider1);
       assert(mockSelector2.initAsInput).to.haveBeenCalledWith(shadowRoot, ctrl, provider2);
     });

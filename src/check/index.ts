@@ -17,5 +17,6 @@ export { NullType } from './null-type';
 export { NullableType } from './nullable-type';
 export { NumberType } from './number-type';
 export { StringType } from './string-type';
+export { SymbolType } from './symbol-type';
 export { TupleOfType } from './tuple-of-type';
 export { UnionType } from './union-type';

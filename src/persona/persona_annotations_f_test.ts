@@ -86,7 +86,11 @@ describe('persona functional test with annotations', () => {
 
   it(`should react to event`, async () => {
     const el = document.createElement('gs-test');
+    const promise = new Promise((resolve: any) => {
+      el.addEventListener('gs-connected', resolve);
+    });
     document.body.appendChild(el);
+    await promise;
 
     assert(el['getCtrl']()).to.beAnInstanceOf(TestCtrl);
 

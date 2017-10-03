@@ -57,18 +57,18 @@ export class PersonaImpl {
         super();
       }
 
-      connectedCallback(): void {
+      async connectedCallback(): Promise<void> {
         Log.onceId(LOGGER, tag);
         Log.groupCollapsed(LOGGER, 'Setting up', tag);
         this.ctrl_ = injector.instantiate(ctrl);
         const shadowRoot = this.getShadowRoot_();
         this.ctrl_[__shadowRoot] = shadowRoot;
 
-        this.installRenderers_(this.ctrl_);
+        await this.installInputs_(this.ctrl_, shadowRoot);
         this.installListeners_(this.ctrl_, shadowRoot);
-        this.installInputs_(this.ctrl_, shadowRoot);
+        this.installRenderers_(this.ctrl_);
 
-        this.dispatch_('gs-create', shadowRoot);
+        this.dispatch_('gs-connected', shadowRoot);
         Log.groupEnd(LOGGER);
         Log.onceEnd(LOGGER, tag);
       }
@@ -104,10 +104,12 @@ export class PersonaImpl {
         return shadow;
       }
 
-      private installInputs_(ctrl: BaseDisposable, shadowRoot: ShadowRoot): void {
+      private installInputs_(ctrl: BaseDisposable, shadowRoot: ShadowRoot): Promise<void[]> {
+        const promises: Promise<void>[] = [];
         for (const [selector, provider] of inputs) {
-          selector.initAsInput(shadowRoot, ctrl, provider);
+          promises.push(selector.initAsInput(shadowRoot, ctrl, provider));
         }
+        return Promise.all(promises);
       }
 
       private installListeners_(ctrl: BaseDisposable, shadowRoot: ShadowRoot): void {

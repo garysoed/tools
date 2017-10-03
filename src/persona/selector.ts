@@ -21,7 +21,7 @@ export abstract class Selector<T> {
   abstract getValue(root: ShadowRoot): T | null;
 
   abstract initAsInput(
-      root: ShadowRoot, ctrl: BaseDisposable, provider: InstanceNodeProvider<T>): void;
+      root: ShadowRoot, ctrl: BaseDisposable, provider: InstanceNodeProvider<T>): Promise<void>;
 
   abstract setValue(value: T | null, root: ShadowRoot, time: GraphTime): void;
 
@@ -55,8 +55,10 @@ export abstract class SelectorImpl<T> extends Selector<T> {
     };
   }
 
-  initAsInput(root: ShadowRoot, ctrl: BaseDisposable, provider: InstanceNodeProvider<T>): void {
-    this.updateProvider_(root, ctrl, provider);
+  initAsInput(
+      root: ShadowRoot,
+      ctrl: BaseDisposable,
+      provider: InstanceNodeProvider<T>): Promise<void> {
     const listener = this.getListener();
     ctrl.addDisposable(listener.start(
         root,
@@ -65,6 +67,7 @@ export abstract class SelectorImpl<T> extends Selector<T> {
         },
         this,
         false));
+    return this.updateProvider_(root, ctrl, provider);
   }
 
   setValue(value: T | null, root: ShadowRoot, time: GraphTime): void {
@@ -78,14 +81,14 @@ export abstract class SelectorImpl<T> extends Selector<T> {
   protected updateProvider_(
       root: ShadowRoot,
       ctrl: BaseDisposable,
-      provider: InstanceNodeProvider<T>): void {
+      provider: InstanceNodeProvider<T>): Promise<void> {
     const value = this.getValue(root);
     const type = this.getId().getType();
     const normalizedValue = type.check(value) ? value : this.getDefaultValue();
     if (!type.check(normalizedValue)) {
       throw AssertionError.type(`value for input ${this}`, type, normalizedValue);
     }
-    provider(normalizedValue, ctrl);
+    return provider(normalizedValue, ctrl);
   }
 }
 
@@ -114,8 +117,8 @@ export abstract class SelectorStub<T> extends Selector<T> {
     return this.throwStub();
   }
 
-  initAsInput(): void {
-    this.throwStub();
+  initAsInput(): Promise<void> {
+    return this.throwStub();
   }
 
   abstract resolve(allSelectors: {}): SelectorImpl<T>;
