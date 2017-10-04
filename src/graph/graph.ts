@@ -24,6 +24,10 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
   private readonly setQueue_: (() => void)[] = [];
   private readonly transitiveDependencies_: Map<NodeId<any>, ImmutableSet<NodeId<any>>> = new Map();
 
+  clearAllNodesForTest(): void {
+    this.nodes_.clear();
+  }
+
   clearNodesForTests(nodeIds: Iterable<NodeId<any>>): void {
     for (const nodeId of nodeIds) {
       this.nodes_.delete(nodeId);

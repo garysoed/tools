@@ -176,8 +176,8 @@ describe('CustomElement', () => {
       spyOn(element, 'onGraphReady_');
 
       element['installRenderers_'](mockCtrl);
-      assert(element['updateElement_']).to.haveBeenCalledWith(mockSelector1);
-      assert(element['updateElement_']).to.haveBeenCalledWith(mockSelector2);
+      assert(element['updateElement_']).to.haveBeenCalledWith(mockCtrl, mockSelector1);
+      assert(element['updateElement_']).to.haveBeenCalledWith(mockCtrl, mockSelector2);
 
       assert(mockCtrl.addDisposable).to.haveBeenCalledWith(disposable);
       assert(Graph.on).to.haveBeenCalledWith('ready', Matchers.anyFunction(), element);
@@ -185,9 +185,9 @@ describe('CustomElement', () => {
       const eventDetails = Mocks.object('eventDetails');
       graphOnSpy.calls.argsFor(0)[1](eventDetails);
       assert(element['onGraphReady_']).to
-          .haveBeenCalledWith(Matchers.any(ImmutableMap), eventDetails);
+          .haveBeenCalledWith(mockCtrl, Matchers.any(ImmutableMap), eventDetails);
 
-      const map: ImmutableMap<any, any> = element['onGraphReady_'].calls.argsFor(0)[0];
+      const map: ImmutableMap<any, any> = element['onGraphReady_'].calls.argsFor(0)[1];
       assert(map).to.haveElements([
         [id1, mockSelector1],
         [id2, mockSelector2],
@@ -203,12 +203,11 @@ describe('CustomElement', () => {
       const selector = Mocks.object('selector');
       const map = new Map([[id, selector]]);
       const context = Mocks.object('context');
-      element['ctrl_'] = context;
 
       spyOn(element, 'updateElement_');
 
-      element['onGraphReady_'](map, {id, context});
-      assert(element['updateElement_']).to.haveBeenCalledWith(selector);
+      element['onGraphReady_'](context, map, {id, context});
+      assert(element['updateElement_']).to.haveBeenCalledWith(context, selector);
     });
 
     it(`should do nothing if there are no corresponding selectors`, () => {
@@ -217,11 +216,10 @@ describe('CustomElement', () => {
 
       const map = new Map();
       const context = Mocks.object('context');
-      element['ctrl_'] = context;
 
       spyOn(element, 'updateElement_');
 
-      element['onGraphReady_'](map, {id, context});
+      element['onGraphReady_'](context, map, {id, context});
       assert(element['updateElement_']).toNot.haveBeenCalled();
     });
 
@@ -232,11 +230,10 @@ describe('CustomElement', () => {
       const selector = Mocks.object('selector');
       const map = new Map([[id, selector]]);
       const context = Mocks.object('context');
-      element['ctrl_'] = context;
 
       spyOn(element, 'updateElement_');
 
-      element['onGraphReady_'](map, {id, context: Mocks.object('otherContext')});
+      element['onGraphReady_'](context, map, {id, context: Mocks.object('otherContext')});
       assert(element['updateElement_']).toNot.haveBeenCalled();
     });
 
@@ -246,11 +243,10 @@ describe('CustomElement', () => {
       const selector = Mocks.object('selector');
       const map = new Map([[id, selector]]);
       const context = Mocks.object('context');
-      element['ctrl_'] = context;
 
       spyOn(element, 'updateElement_');
 
-      element['onGraphReady_'](map, {id, context});
+      element['onGraphReady_'](context, map, {id, context});
       assert(element['updateElement_']).toNot.haveBeenCalled();
     });
   });
@@ -268,12 +264,10 @@ describe('CustomElement', () => {
       spyOn(element, 'getShadowRoot_').and.returnValue(shadowRoot);
 
       const ctrl = Mocks.object('ctrl');
-      element['ctrl_'] = ctrl;
-
       const timestamp = Mocks.object('timestamp');
       spyOn(Graph, 'getTimestamp').and.returnValue(timestamp);
 
-      await element['updateElement_'](mockSelector);
+      await element['updateElement_'](ctrl, mockSelector);
       assert(mockSelector.setValue).to.haveBeenCalledWith(value, shadowRoot, timestamp);
       assert(Graph.get).to.haveBeenCalledWith(id, timestamp, ctrl);
     });
@@ -472,6 +466,32 @@ describe('persona.Persona', () => {
       const ctrl = Mocks.object('ctrl');
 
       assert(persona.getShadowRoot(ctrl)).to.beNull();
+    });
+  });
+
+  describe('getValue', () => {
+    it(`should return the correct value`, () => {
+      const value = Mocks.object('value');
+      const mockSelector = jasmine.createSpyObj('Selector', ['getValue']);
+      mockSelector.getValue.and.returnValue(value);
+      const ctrl = Mocks.object('ctrl');
+
+      const shadowRoot = Mocks.object('shadowRoot');
+      spyOn(persona, 'getShadowRoot').and.returnValue(shadowRoot);
+
+      assert(persona.getValue(mockSelector, ctrl) as any).to.equal(value);
+      assert(mockSelector.getValue).to.haveBeenCalledWith(shadowRoot);
+      assert(persona.getShadowRoot).to.haveBeenCalledWith(ctrl);
+    });
+
+    it(`should throw error if the shadow root does not exist`, () => {
+      const selector = Mocks.object('selector');
+      const ctrl = Mocks.object('ctrl');
+      spyOn(persona, 'getShadowRoot').and.returnValue(null);
+
+      assert(() => {
+        persona.getValue(selector, ctrl);
+      }).to.throwError(/shadowRoot/);
     });
   });
 

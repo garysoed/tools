@@ -59,17 +59,17 @@ export class PersonaImpl {
 
       async connectedCallback(): Promise<void> {
         Log.onceId(LOGGER, tag);
-        Log.groupCollapsed(LOGGER, 'Setting up', tag);
-        this.ctrl_ = injector.instantiate(ctrl);
+        Log.debug(LOGGER, 'Setting up', tag);
+        const ctrlInstance = injector.instantiate(ctrl);
+        this.ctrl_ = ctrlInstance;
         const shadowRoot = this.getShadowRoot_();
         this.ctrl_[__shadowRoot] = shadowRoot;
 
-        await this.installInputs_(this.ctrl_, shadowRoot);
-        this.installListeners_(this.ctrl_, shadowRoot);
-        this.installRenderers_(this.ctrl_);
+        await this.installInputs_(ctrlInstance, shadowRoot);
+        this.installListeners_(ctrlInstance, shadowRoot);
+        this.installRenderers_(ctrlInstance);
 
         this.dispatch_('gs-connected', shadowRoot);
-        Log.groupEnd(LOGGER);
         Log.onceEnd(LOGGER, tag);
       }
 
@@ -133,35 +133,33 @@ export class PersonaImpl {
         ctrl.addDisposable(Graph.on(
             'ready',
             async (event: GraphEvent<any, any>) => {
-              this.onGraphReady_(idRendererMap, event);
+              this.onGraphReady_(ctrl, idRendererMap, event);
             },
             this));
 
         for (const [, selector] of idRendererMap) {
           Log.debug(LOGGER, 'Rendering', selector);
-          this.updateElement_(selector);
+          this.updateElement_(ctrl, selector);
         }
       }
 
       private onGraphReady_(
+          ctrlInstance: BaseDisposable,
           idSelectorMap: ImmutableMap<InstanceId<any>, Selector<any>>,
           event: GraphEvent<any, any>): void {
         const id = event.id;
-        if (id instanceof InstanceId && event.context === this.ctrl_) {
+        if (id instanceof InstanceId && event.context === ctrlInstance) {
           const selector = idSelectorMap.get(id);
           if (selector) {
-            this.updateElement_(selector);
+            this.updateElement_(ctrlInstance, selector);
           }
         }
       }
 
-      private async updateElement_(selector: Selector<any>): Promise<void> {
-        const ctrl = this.ctrl_;
-        if (!ctrl) {
-          throw AssertionError.generic(`Required ctrl cannot be found`);
-        }
+      private async updateElement_(
+          ctrlInstance: BaseDisposable, selector: Selector<any>): Promise<void> {
         const time = Graph.getTimestamp();
-        const value = await Graph.get(selector.getId(), time, ctrl);
+        const value = await Graph.get(selector.getId(), time, ctrlInstance);
         selector.setValue(value, this.getShadowRoot_(), time);
       }
     };
@@ -236,6 +234,14 @@ export class PersonaImpl {
       return null;
     }
     return root as ShadowRoot;
+  }
+
+  getValue<T>(selector: Selector<T>, ctrl: {}): T | null {
+    const shadowRoot = this.getShadowRoot(ctrl);
+    if (!shadowRoot) {
+      throw AssertionError.condition('shadowRoot', 'to exist', shadowRoot);
+    }
+    return selector.getValue(shadowRoot);
   }
 
   private register_(injector: Injector, templates: Templates, ctrl: Ctrl): void {
