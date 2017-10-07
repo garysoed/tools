@@ -10,6 +10,7 @@ ts_library(
     ],
     deps = [
       "//declarations/angularjs",
+      "//declarations/gapi",
       "//declarations/grecaptcha",
       "//declarations/jasmine",
       "//declarations/jasmine-ajax:jasmine_ajax",

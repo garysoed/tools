@@ -5,7 +5,7 @@ import { Searcher } from '../datamodel/searcher';
 import { Bus } from '../event';
 import { ImmutableList, ImmutableSet } from '../immutable';
 import { Monad } from '../interfaces';
-import { Storage as GsStorage } from '../store';
+import { EditableStorage as GsStorage } from '../store';
 import { Log } from '../util';
 
 type EventType = 'add' | 'remove' | 'edit';

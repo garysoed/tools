@@ -19,6 +19,12 @@ new_local_repository(
 )
 
 new_local_repository(
+    name = "types_gapi",
+    path = "./node_modules/@types/gapi",
+    build_file="bazel/@types/gapi.BUILD"
+)
+
+new_local_repository(
     name = "webpack",
     path = "./node_modules/webpack",
     build_file = "bazel/webpack/webpack.BUILD",

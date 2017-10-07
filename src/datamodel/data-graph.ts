@@ -3,7 +3,7 @@ import { Searcher } from '../datamodel';
 import { Graph, staticId } from '../graph';
 import { StaticId } from '../graph/static-id';
 import { ImmutableList, ImmutableSet } from '../immutable';
-import { Storage as GsStorage } from '../store';
+import { EditableStorage as GsStorage } from '../store';
 
 export interface DataGraph<D> {
   generateId(): Promise<string>;

@@ -22,12 +22,11 @@ class WhenBuilder {
       const callSpec = newCallSpecs.find((callSpec: CallSpec) => {
         let matches = true;
         for (let i = 0; i < callSpec.args.length && matches; i++) {
-          const jasmineMatches = callSpec.args[i].jasmineMatches;
-          const asymmetricMatch = callSpec.args[i].asymmetricMatch;
-          if (typeof jasmineMatches === 'function') {
-            matches = matches && jasmineMatches(args[i]);
-          } else if (typeof asymmetricMatch === 'function') {
-            matches = matches && asymmetricMatch(args[i]);
+          const arg = callSpec.args[i];
+          if (typeof arg.jasmineMatches === 'function') {
+            matches = matches && arg.jasmineMatches(args[i]);
+          } else if (typeof arg.asymmetricMatch === 'function') {
+            matches = matches && arg.asymmetricMatch(args[i]);
           } else {
             matches = matches && (callSpec.args[i] === args[i]);
           }

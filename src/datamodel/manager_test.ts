@@ -7,7 +7,7 @@ import { Searcher } from '../datamodel/searcher';
 import { ImmutableList } from '../immutable/immutable-list';
 import { ImmutableMap } from '../immutable/immutable-map';
 import { ImmutableSet } from '../immutable/immutable-set';
-import { Storage as GsStorage } from '../store/interfaces';
+import { EditableStorage as GsStorage } from '../store/interfaces';
 import { TestDispose } from '../testing/test-dispose';
 
 class TestManager extends Manager<any> {

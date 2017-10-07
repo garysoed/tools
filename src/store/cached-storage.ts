@@ -1,14 +1,14 @@
 import { BaseDisposable } from '../dispose';
 
 import { ImmutableSet } from '../immutable';
-import { Storage } from '../store/interfaces';
+import { EditableStorage } from '../store/interfaces';
 
 
-export class CachedStorage<T> extends BaseDisposable implements Storage<T> {
+export class CachedStorage<T> extends BaseDisposable implements EditableStorage<T> {
   private readonly cache_: Map<string, T>;
-  private readonly innerStorage_: Storage<T>;
+  private readonly innerStorage_: EditableStorage<T>;
 
-  constructor(innerStorage: Storage<T>) {
+  constructor(innerStorage: EditableStorage<T>) {
     super();
     this.cache_ = new Map<string, T>();
     this.innerStorage_ = innerStorage;
@@ -104,7 +104,7 @@ export class CachedStorage<T> extends BaseDisposable implements Storage<T> {
    * @param innerStorage The underlying storage.
    * @return New instance of Cached Storage.
    */
-  static of<T>(innerStorage: Storage<T>): CachedStorage<T> {
+  static of<T>(innerStorage: EditableStorage<T>): CachedStorage<T> {
     return new CachedStorage(innerStorage);
   }
 }

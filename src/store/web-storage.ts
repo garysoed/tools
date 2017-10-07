@@ -2,7 +2,7 @@ import { ImmutableSet } from '../immutable/immutable-set';
 import { Parser } from '../interfaces/parser';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { SimpleIdGenerator } from '../random/simple-id-generator';
-import { Storage as GsStorage } from '../store/interfaces';
+import { EditableStorage as GsStorage } from '../store/interfaces';
 
 
 export class WebStorage<T> implements GsStorage<T> {
