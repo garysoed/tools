@@ -26,3 +26,5 @@ export interface SlotSelector extends Selector<{end: Node, start: Node}> {
 
   getParentSelector(): ElementSelector<HTMLElement>;
 }
+
+export interface SwitchSelector<T> extends Selector<T> { }

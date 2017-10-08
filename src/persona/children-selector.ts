@@ -48,8 +48,9 @@ export class ChildrenSelectorImpl<E extends Element, T> extends
       private readonly childType_: Type<E>) {
     super(
         ImmutableList.of([]),
-        instanceId(`${slotSelector_.getParentSelector().getSelector()}@children`,
-        FiniteIterableOfType(childDataType_)));
+        instanceId(
+            `${slotSelector_.getParentSelector().getSelector()}@children`,
+            FiniteIterableOfType(childDataType_)));
   }
 
   private getChildElements_(root: ShadowRoot): ImmutableList<E> {

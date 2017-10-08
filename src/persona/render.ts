@@ -3,7 +3,11 @@ import { ANNOTATIONS } from '../graph/node-in';
 import { ImmutableSet } from '../immutable';
 import { Persona } from '../persona/persona';
 import { Selector } from '../persona/selector';
-import { AttributeSelector, ChildrenSelector, InnerTextSelector } from '../persona/selectors';
+import {
+  AttributeSelector,
+  ChildrenSelector,
+  InnerTextSelector,
+  SwitchSelector } from '../persona/selectors';
 
 export function createRenderDecorator<S extends Selector<any>>():
     (selector: S) => MethodDecorator {
@@ -18,7 +22,7 @@ export function createRenderDecorator<S extends Selector<any>>():
           .getAttachedValues()
           .get(propertyKey);
       const nodeInSet = nodeIns || ImmutableSet.of([]);
-      const parameters = [];
+      const parameters: any[] = [];
       for (const {id, index} of nodeInSet) {
         parameters[index] = id;
       }
@@ -36,4 +40,5 @@ export const render = {
   attribute: createRenderDecorator<AttributeSelector<any>>(),
   children: createRenderDecorator<ChildrenSelector<any>>(),
   innerText: createRenderDecorator<InnerTextSelector<any>>(),
+  switch: createRenderDecorator<SwitchSelector<any>>(),
 };
