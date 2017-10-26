@@ -54,7 +54,10 @@ export class Gapi {
     });
 
     if (this.signIn_) {
-      await gapi.auth2.getAuthInstance().signIn();
+      const authInstance = gapi.auth2.getAuthInstance();
+      if (!authInstance.isSignedIn.get()) {
+        await authInstance.signIn();
+      }
     }
     this.initialized_ = true;
     return gapi.client;

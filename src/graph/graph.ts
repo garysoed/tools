@@ -212,11 +212,15 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
     }
   }
 
-  private processSetQueue_(): void {
-    for (const setFn of this.setQueue_) {
-      setFn();
-    }
+  private async processSetQueue_(): Promise<void> {
+    const promises = this.setQueue_.map((setFn) => new Promise((resolve) => {
+      window.setTimeout(() => {
+        setFn();
+        resolve();
+      }, 0);
+    }));
     this.setQueue_.splice(0, this.setQueue_.length);
+    await Promise.all(promises);
   }
 
   refresh<T>(staticId: StaticId<T>): void;

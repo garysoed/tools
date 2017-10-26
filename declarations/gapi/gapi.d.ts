@@ -19,6 +19,7 @@ declare namespace gapi.auth2 {
   export function getAuthInstance(): Instance
 
   interface Instance {
+    isSignedIn: {get: () => boolean}
     signIn(): Promise<void>
   }
 }

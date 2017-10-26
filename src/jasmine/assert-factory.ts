@@ -16,7 +16,7 @@ export class AssertFactory<T> {
   }
 
   /**
-   * @return Instnace of the assert with check reversal.
+   * @return Instance of the assert with check reversal.
    */
   get toNot(): T {
     return this.provider_(true);

@@ -115,13 +115,45 @@ describe('net.Gapi', () => {
 
       mockClient.init.and.returnValue(Promise.resolve());
 
-      const mockAuthInstance = jasmine.createSpyObj('AuthInstance', ['signIn']);
+      const mockAuthInstance = jasmine.createSpyObj('AuthInstance', [ 'signIn']);
+      mockAuthInstance.isSignedIn = {get: () => false};
       mockAuthInstance.signIn.and.returnValue(Promise.resolve());
       mockAuth2.getAuthInstance.and.returnValue(mockAuthInstance);
 
       await assert(gapi.init()).to.resolveWith(mockClient);
       assert(gapi['initialized_']).to.beTrue();
       assert(mockAuthInstance.signIn).to.haveBeenCalledWith();
+      assert(mockClient.init).to.haveBeenCalledWith({
+        apiKey: API_KEY,
+        clientId: CLIENT_ID,
+        discoveryDocs: [doc],
+        scope: `${scope}`,
+      });
+      assert(mockGapi.load).to.haveBeenCalledWith('client:auth2', Matchers.anyFunction());
+    });
+
+    it(`should not sign in if already signed in`, async () => {
+      const doc = 'doc';
+      gapi.addDiscoveryDocs([doc]);
+
+      const scope = 'scope';
+      gapi.addScopes([scope]);
+      gapi.addSignIn();
+
+      Fakes.build(mockGapi.load)
+          .when(Matchers.anyString(), Matchers.anyFunction())
+              .call((_: any, handler: () => any) => handler());
+
+      mockClient.init.and.returnValue(Promise.resolve());
+
+      const mockAuthInstance = jasmine.createSpyObj('AuthInstance', ['signIn']);
+      mockAuthInstance.isSignedIn = {get: () => true};
+      mockAuthInstance.signIn.and.returnValue(Promise.resolve());
+      mockAuth2.getAuthInstance.and.returnValue(mockAuthInstance);
+
+      await assert(gapi.init()).to.resolveWith(mockClient);
+      assert(gapi['initialized_']).to.beTrue();
+      assert(mockAuthInstance.signIn).toNot.haveBeenCalled();
       assert(mockClient.init).to.haveBeenCalledWith({
         apiKey: API_KEY,
         clientId: CLIENT_ID,

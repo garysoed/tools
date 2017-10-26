@@ -455,12 +455,12 @@ describe('graph.Graph', () => {
   });
 
   describe('processSetQueue_', () => {
-    it(`should process all the items in the queue and clear it`, () => {
+    it(`should process all the items in the queue and clear it`, async () => {
       const mockSetFn1 = jasmine.createSpy('SetFn1');
       const mockSetFn2 = jasmine.createSpy('SetFn2');
       graph['setQueue_'].push(mockSetFn1, mockSetFn2);
 
-      graph['processSetQueue_']();
+      await graph['processSetQueue_']();
       assert(graph['setQueue_']).to.equal([]);
       assert(mockSetFn1).to.haveBeenCalledWith();
       assert(mockSetFn2).to.haveBeenCalledWith();

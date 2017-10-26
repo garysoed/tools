@@ -38,10 +38,13 @@ export class PromiseAssert<T> extends AnyAssert<Promise<T>> {
     }
   }
 
+  /**
+   * @param expected The expected value to resolve with.
+   * @return Promise that will be resolved with the resolved value.
+   */
   async resolveWith(expected: T): Promise<T> {
     const resolveValue = await this.promise_;
     this.getMatchers_(resolveValue).toEqual(expected);
     return resolveValue;
   }
 }
-// TODO: Mutable
