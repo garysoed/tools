@@ -1,6 +1,9 @@
-import { BaseDisposable } from '../dispose';
+import { BaseDisposable, DisposableFunction } from '../dispose';
+import { GLOBALS } from '../graph/g-node';
 import { GraphEvent } from '../graph/graph-event';
+import { InstanceId } from '../graph/instance-id';
 import { NodeId } from '../graph/node-id';
+import { StaticId } from '../graph/static-id';
 
 type Handler<T, C> = (event: GraphEvent<T, C>) => any;
 
@@ -15,22 +18,26 @@ export class GraphEventHandler extends BaseDisposable {
       context: {},
       id: NodeId<any>,
       type: 'change' | 'ready'): void {
-    const handlers = this.getHandler_(listeners, context, id) || new Set<Handler<any, any>>();
-    const event = {context, id: id, type};
+    const handlers = this.getHandlers_(listeners, context, id) || new Set<Handler<any, any>>();
+    const event = {context, id, type};
     for (const handler of handlers) {
       handler(event);
     }
   }
 
-  dispatchChange(context: {}, id: NodeId<any>): void {
+  dispatchChange(id: StaticId<any>): void;
+  dispatchChange(id: InstanceId<any>, context: {}): void;
+  dispatchChange(id: NodeId<any>, context: {} = GLOBALS): void {
     this.callHandlers_(this.onChangeListeners_, context, id, 'change');
   }
 
-  dispatchReady(context: {}, id: NodeId<any>): void {
-    this.callHandlers_(this.onChangeListeners_, context, id, 'ready');
+  dispatchReady(id: StaticId<any>): void;
+  dispatchReady(id: InstanceId<any>, context: {}): void;
+  dispatchReady(id: NodeId<any>, context: {} = GLOBALS): void {
+    this.callHandlers_(this.onReadyListeners_, context, id, 'ready');
   }
 
-  private getHandler_(
+  private getHandlers_(
       listeners: WeakMap<{}, Map<NodeId<any>, Set<Handler<any, any>>>>,
       context: {},
       id: NodeId<any>): Set<Handler<any, any>> | null {
@@ -64,27 +71,31 @@ export class GraphEventHandler extends BaseDisposable {
     }
   }
 
-  onChange<C>(context: C, id: NodeId<any>, handler: Handler<any, C>): () => void {
+  onChange<C>(id: StaticId<any>, handler: Handler<any, C>): DisposableFunction;
+  onChange<C>(id: InstanceId<any>, handler: Handler<any, C>, context: C): DisposableFunction;
+  onChange(id: NodeId<any>, handler: Handler<any, any>, context: {} = GLOBALS): DisposableFunction {
     this.modifyHandlers_(this.onChangeListeners_, context, id, (handlers) => handlers.add(handler));
 
-    return () => {
+    return DisposableFunction.of(() => {
       this.modifyHandlers_(
           this.onChangeListeners_,
           context,
           id,
           (handlers) => handlers.delete(handler));
-    };
+    });
   }
 
-  onReady<C>(context: C, id: NodeId<any>, handler: Handler<any, C>): () => void {
+  onReady<C>(id: StaticId<any>, handler: Handler<any, C>): DisposableFunction;
+  onReady<C>(id: InstanceId<any>, handler: Handler<any, C>, context: C): DisposableFunction;
+  onReady(id: NodeId<any>, handler: Handler<any, any>, context: {} = GLOBALS): DisposableFunction {
     this.modifyHandlers_(this.onReadyListeners_, context, id, (handlers) => handlers.add(handler));
 
-    return () => {
+    return DisposableFunction.of(() => {
       this.modifyHandlers_(
           this.onReadyListeners_,
           context,
           id,
           (handlers) => handlers.delete(handler));
-    };
+    });
   }
 }

@@ -2,14 +2,15 @@ import { assert, Fakes, Matchers, Mocks, TestBase } from '../test-base';
 TestBase.setup();
 
 import { NumberType } from '../check';
-import { BaseDisposable } from '../dispose';
+import { BaseDisposable, DisposableFunction } from '../dispose';
 import { Graph, instanceId, InstanceNodeProvider } from '../graph';
 import { InstanceId } from '../graph/instance-id';
-import { ImmutableMap, ImmutableSet } from '../immutable';
+import { ImmutableSet } from '../immutable';
 import { CustomElement } from '../persona/custom-element';
 import { PersonaImpl } from '../persona/persona';
 import { Selector } from '../persona/selector';
 import { __shadowRoot } from '../persona/shadow-root-symbol';
+import { TestDispose } from '../testing';
 
 describe('CustomElement', () => {
   const TEMPLATE_STR = 'templateStr';
@@ -159,9 +160,10 @@ describe('CustomElement', () => {
 
   describe('installRenderers_', () => {
     it(`should install the renderers correctly`, () => {
-      const mockCtrl = jasmine.createSpyObj('Ctrl', ['addDisposable']);
-      const id1 = 'id1';
-      const id2 = 'id2';
+      const mockCtrl = new BaseDisposable();
+      TestDispose.add(mockCtrl);
+      const id1 = Mocks.object('id1');
+      const id2 = Mocks.object('id2');
       const mockSelector1 = jasmine.createSpyObj('Selector1', ['getId']);
       mockSelector1.getId.and.returnValue(id1);
       const mockSelector2 = jasmine.createSpyObj('Selector2', ['getId']);
@@ -169,8 +171,8 @@ describe('CustomElement', () => {
       rendererSpecMap.set(Mocks.object('key1'), {selector: mockSelector1});
       rendererSpecMap.set(Mocks.object('key2'), {selector: mockSelector2});
 
-      const disposable = Mocks.object('disposable');
-      const graphOnSpy = spyOn(Graph, 'on').and.returnValue(disposable);
+      const graphOnSpy = spyOn(Graph, 'onReady')
+          .and.returnValue(DisposableFunction.of(() => undefined));
 
       spyOn(element, 'updateElement_');
       spyOn(element, 'onGraphReady_');
@@ -179,19 +181,14 @@ describe('CustomElement', () => {
       assert(element['updateElement_']).to.haveBeenCalledWith(mockCtrl, mockSelector1);
       assert(element['updateElement_']).to.haveBeenCalledWith(mockCtrl, mockSelector2);
 
-      assert(mockCtrl.addDisposable).to.haveBeenCalledWith(disposable);
-      assert(Graph.on).to.haveBeenCalledWith('ready', Matchers.anyFunction(), element);
+      assert(Graph.onReady).to.haveBeenCalledWith(mockCtrl, id1, Matchers.anyFunction());
+      assert(Graph.onReady).to.haveBeenCalledWith(mockCtrl, id2, Matchers.anyFunction());
 
-      const eventDetails = Mocks.object('eventDetails');
-      graphOnSpy.calls.argsFor(0)[1](eventDetails);
-      assert(element['onGraphReady_']).to
-          .haveBeenCalledWith(mockCtrl, Matchers.any(ImmutableMap), eventDetails);
+      graphOnSpy.calls.argsFor(0)[2]();
+      assert(element['onGraphReady_']).to.haveBeenCalledWith(mockCtrl, id1, mockSelector1);
 
-      const map: ImmutableMap<any, any> = element['onGraphReady_'].calls.argsFor(0)[1];
-      assert(map).to.haveElements([
-        [id1, mockSelector1],
-        [id2, mockSelector2],
-      ]);
+      graphOnSpy.calls.argsFor(1)[2]();
+      assert(element['onGraphReady_']).to.haveBeenCalledWith(mockCtrl, id2, mockSelector2);
     });
   });
 
@@ -201,52 +198,23 @@ describe('CustomElement', () => {
       Object.setPrototypeOf(id, InstanceId.prototype);
 
       const selector = Mocks.object('selector');
-      const map = new Map([[id, selector]]);
       const context = Mocks.object('context');
 
       spyOn(element, 'updateElement_');
 
-      element['onGraphReady_'](context, map, {id, context});
+      element['onGraphReady_'](context, id, selector);
       assert(element['updateElement_']).to.haveBeenCalledWith(context, selector);
-    });
-
-    it(`should do nothing if there are no corresponding selectors`, () => {
-      const id = Mocks.object('id');
-      Object.setPrototypeOf(id, InstanceId.prototype);
-
-      const map = new Map();
-      const context = Mocks.object('context');
-
-      spyOn(element, 'updateElement_');
-
-      element['onGraphReady_'](context, map, {id, context});
-      assert(element['updateElement_']).toNot.haveBeenCalled();
-    });
-
-    it(`should do nothing if the event context is not the ctrl`, () => {
-      const id = Mocks.object('id');
-      Object.setPrototypeOf(id, InstanceId.prototype);
-
-      const selector = Mocks.object('selector');
-      const map = new Map([[id, selector]]);
-      const context = Mocks.object('context');
-
-      spyOn(element, 'updateElement_');
-
-      element['onGraphReady_'](context, map, {id, context: Mocks.object('otherContext')});
-      assert(element['updateElement_']).toNot.haveBeenCalled();
     });
 
     it(`should do nothing if the id isn't InstanceId`, () => {
       const id = Mocks.object('id');
 
       const selector = Mocks.object('selector');
-      const map = new Map([[id, selector]]);
       const context = Mocks.object('context');
 
       spyOn(element, 'updateElement_');
 
-      element['onGraphReady_'](context, map, {id, context});
+      element['onGraphReady_'](context, id, selector);
       assert(element['updateElement_']).toNot.haveBeenCalled();
     });
   });

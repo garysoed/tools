@@ -3,6 +3,7 @@ TestBase.setup();
 
 import { InstanceofType, NumberType } from '../check';
 import { BaseDisposable } from '../dispose';
+import { Flags } from '../dispose/base-disposable';
 import { Graph, staticId, StaticNodeProvider } from '../graph';
 import { Injector } from '../inject';
 import { IntegerParser } from '../parse';
@@ -13,7 +14,6 @@ import {
   Persona,
   resolveSelectors} from '../persona';
 import { Templates } from '../webc';
-
 
 
 describe('persona functional test without annotations', () => {
@@ -60,6 +60,7 @@ describe('persona functional test without annotations', () => {
   });
 
   beforeEach(() => {
+    Flags.enableTracking = false;
     mockButtonClickCallback = jasmine.createSpy('ButtonClickCallback');
   });
 

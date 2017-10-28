@@ -1,6 +1,6 @@
 import { BaseDisposable } from '../dispose';
 import { AssertionError } from '../error';
-import { Graph, GraphEvent, InstanceNodeProvider } from '../graph';
+import { Graph, InstanceNodeProvider } from '../graph';
 import { InstanceId } from '../graph/instance-id';
 import { NodeId } from '../graph/node-id';
 import { ImmutableMap, ImmutableSet } from '../immutable';
@@ -130,30 +130,23 @@ export class PersonaImpl {
             });
         const idRendererMap = ImmutableMap.of(renderers);
 
-        ctrl.addDisposable(Graph.on(
-            'ready',
-            async (event: GraphEvent<any, any>) => {
-              this.onGraphReady_(ctrl, idRendererMap, event);
-            },
-            this));
+        for (const [id, selector] of idRendererMap) {
+          ctrl.addDisposable(Graph.onReady(
+              ctrl,
+              id,
+              () => this.onGraphReady_(ctrl, id, selector)));
 
-        for (const [, selector] of idRendererMap) {
           Log.debug(LOGGER, 'Rendering', selector);
           this.updateElement_(ctrl, selector);
         }
       }
 
       private onGraphReady_(
-          ctrlInstance: BaseDisposable,
-          idSelectorMap: ImmutableMap<InstanceId<any>, Selector<any>>,
-          event: GraphEvent<any, any>): void {
-        const id = event.id;
-        if (id instanceof InstanceId && event.context === ctrlInstance) {
-          const selector = idSelectorMap.get(id);
-          if (selector) {
-            this.updateElement_(ctrlInstance, selector);
-          }
+          ctrlInstance: BaseDisposable, id: NodeId<any>, selector: Selector<any>): void {
+        if (!(id instanceof InstanceId)) {
+          return;
         }
+        this.updateElement_(ctrlInstance, selector);
       }
 
       private async updateElement_(

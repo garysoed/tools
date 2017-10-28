@@ -1,6 +1,7 @@
-import { BaseDisposable } from '../dispose';
+import { BaseDisposable, DisposableFunction } from '../dispose';
 import { AssertionError } from '../error';
 import { GLOBALS, GNode } from '../graph/g-node';
+import { GraphEvent } from '../graph/graph-event';
 import { GraphEventHandler } from '../graph/graph-event-handler';
 import { GraphTime } from '../graph/graph-time';
 import { InnerNode } from '../graph/inner-node';
@@ -28,6 +29,10 @@ export class GraphImpl extends BaseDisposable {
     super();
     this.eventHandler_ = new GraphEventHandler();
     this.addDisposable(this.eventHandler_);
+  }
+
+  private assertNodeExist_(nodeId: NodeId<any>): void {
+    this.getNode_(nodeId);
   }
 
   clearAllNodesForTest(): void {
@@ -98,12 +103,12 @@ export class GraphImpl extends BaseDisposable {
     if (node instanceof InnerNode &&
         !this.isMonitored_(context, nodeId)) {
       for (const dependencyId of this.getTransitiveDependencies_(nodeId)) {
-        this.eventHandler_.onReady(
-            context,
-            dependencyId,
-            () => {
-              this.onReady_<T, any>(nodeId, context);
-            });
+        const handler = () => this.onReady_<T, any>(nodeId, context);
+        if (dependencyId instanceof StaticId) {
+          this.addDisposable(this.eventHandler_.onReady(dependencyId, handler));
+        } else {
+          this.addDisposable(this.eventHandler_.onReady(dependencyId, handler, context));
+        }
       }
       const ids = this.monitoredNodes_.get(context) || ImmutableSet.of([]);
       this.monitoredNodes_.set(context, ids.add(nodeId));
@@ -119,7 +124,11 @@ export class GraphImpl extends BaseDisposable {
     }
 
     if (!equals(resolvedCached, resolvedValue)) {
-      this.eventHandler_.dispatchChange(context, nodeId);
+      if (nodeId instanceof InstanceId) {
+        this.eventHandler_.dispatchChange(nodeId, context);
+      } else {
+        this.eventHandler_.dispatchChange(nodeId);
+      }
     }
 
     Log.debug(LOGGER, `executed: ${nodeId} ${resolvedValue}`);
@@ -156,7 +165,7 @@ export class GraphImpl extends BaseDisposable {
   getNode_<T>(nodeId: NodeId<T>): GNode<T> {
     const node = this.nodes_.get(nodeId);
     if (!node) {
-      throw new Error(`Node for ${nodeId} cannot be found`);
+      throw AssertionError.condition(`Node ${nodeId}`, 'exist', node);
     }
 
     return node;
@@ -202,6 +211,15 @@ export class GraphImpl extends BaseDisposable {
     return this.nodes_.has(id);
   }
 
+  onReady<C>(context: C, id: NodeId<any>, handler: (event: GraphEvent<any, C>) => any):
+      DisposableFunction {
+    if (id instanceof StaticId) {
+      return this.eventHandler_.onReady<C>(id, handler);
+    } else {
+      return this.eventHandler_.onReady<C>(id, handler, context);
+    }
+  }
+
   private onReady_<T, C>(nodeId: NodeId<T>, context: C): void {
     if (nodeId instanceof StaticId) {
       this.refresh(nodeId);
@@ -225,12 +243,13 @@ export class GraphImpl extends BaseDisposable {
 
   refresh<T>(staticId: StaticId<T>): void;
   refresh<T, C>(instanceId: InstanceId<T>, context: C): void;
-  refresh<T, C>(nodeId: StaticId<T> | InstanceId<T>, context: C | null = null): void {
-    const node = this.nodes_.get(nodeId);
-    if (!node) {
-      throw AssertionError.generic(`Cannot find node ${nodeId}`);
+  refresh<T>(nodeId: StaticId<T> | InstanceId<T>, context: {} = GLOBALS): void {
+    this.assertNodeExist_(nodeId);
+    if (nodeId instanceof StaticId) {
+      this.eventHandler_.dispatchReady(nodeId);
+    } else {
+      this.eventHandler_.dispatchReady(nodeId, context);
     }
-    this.eventHandler_.dispatchReady(context || GLOBALS, nodeId);
   }
 
   registerGenericProvider_<T>(
@@ -320,12 +339,11 @@ export class GraphImpl extends BaseDisposable {
         this.currentTime_ = newTime;
         if (nodeId instanceof StaticId) {
           this.refresh(nodeId);
-        } else if (nodeId instanceof InstanceId) {
-          this.refresh(nodeId, context);
+          this.eventHandler_.dispatchChange(nodeId);
         } else {
-          assertUnreachable(nodeId);
+          this.refresh(nodeId, context);
+          this.eventHandler_.dispatchChange(nodeId, context);
         }
-        this.eventHandler_.dispatchChange(context, nodeId);
         resolve();
       });
     });

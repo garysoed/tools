@@ -62,7 +62,7 @@ describe('graph.Graph', () => {
   });
 
   describe('get', () => {
-    it(`should return the correct value`, async () => {
+    it(`should return the correct value for static IDs`, async () => {
       const $ = {
         param1: staticId('param1', NumberType),
         param2: staticId('param2', NumberType),
@@ -97,7 +97,7 @@ describe('graph.Graph', () => {
 
       await assert(graph.get($.test, timestamp)).to.resolveWith(value);
       assert(mockNode.execute).to.haveBeenCalledWith(GLOBALS, [param1, param2], idealExecutionTime);
-      assert(graph['eventHandler_'].dispatchChange).to.haveBeenCalledWith(GLOBALS, $.test);
+      assert(graph['eventHandler_'].dispatchChange).to.haveBeenCalledWith($.test);
       assert(graph.get).to.haveBeenCalledWith($.param1, idealExecutionTime);
       assert(graph.get).to.haveBeenCalledWith($.param2, idealExecutionTime);
       assert(mockNode.getLatestCacheValue).to.haveBeenCalledWith(GLOBALS, idealExecutionTime);
@@ -140,8 +140,7 @@ describe('graph.Graph', () => {
       const timestamp = Mocks.object('timestamp');
       const idealExecutionTime = Mocks.object('idealExecutionTime');
 
-      const graphOnSpy = spyOn(graph['eventHandler_'], 'onReady')
-          .and.returnValue(jasmine.createSpyObj('disposable', ['dispose']));
+      const graphOnSpy = spyOn(graph['eventHandler_'], 'onReady');
       spyOn(graph, 'onReady_');
       spyOn(graph, 'getIdealExecutionTime_').and.returnValue(idealExecutionTime);
 
@@ -154,12 +153,12 @@ describe('graph.Graph', () => {
           .haveBeenCalledWith(instance, [param1, param2], idealExecutionTime);
       assert(graph['monitoredNodes_'].get(instance)!).to.haveElements([$.test]);
       assert(graph['eventHandler_'].onReady).to
-          .haveBeenCalledWith(instance, id1, Matchers.anyFunction());
+          .haveBeenCalledWith(id1, Matchers.anyFunction(), instance);
       assert(graph['eventHandler_'].onReady).to
-          .haveBeenCalledWith(instance, id2, Matchers.anyFunction());
+          .haveBeenCalledWith(id2, Matchers.anyFunction(), instance);
       assert(graph['getTransitiveDependencies_']).to.haveBeenCalledWith($.test);
 
-      graphOnSpy.calls.argsFor(0)[2]();
+      graphOnSpy.calls.argsFor(0)[1]();
       assert(graph['onReady_']).to.haveBeenCalledWith($.test, instance);
 
       assert(graph.get).to.haveBeenCalledWith($.param1, idealExecutionTime, instance);
@@ -203,7 +202,7 @@ describe('graph.Graph', () => {
       };
       const timestamp = Mocks.object('timestamp');
 
-      await assert(graph.get($.test, timestamp)).to.rejectWithError(/cannot be found/);
+      await assert(graph.get($.test, timestamp)).to.rejectWithError(/exist/);
     });
 
     it(`should not monitor if already monitored`, async () => {
@@ -349,7 +348,7 @@ describe('graph.Graph', () => {
     it(`should throw error if the node cannot be found`, () => {
       assert(() => {
         graph.getNode_(staticId('test', NumberType));
-      }).to.throwError(/cannot be found/);
+      }).to.throwError(/exist/);
     });
   });
 
