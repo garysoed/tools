@@ -1,8 +1,7 @@
 import { BaseDisposable } from '../dispose';
 import { AssertionError } from '../error';
-import { Bus } from '../event';
 import { GLOBALS, GNode } from '../graph/g-node';
-import { EventType, GraphEvent } from '../graph/graph-event';
+import { GraphEventHandler } from '../graph/graph-event-handler';
 import { GraphTime } from '../graph/graph-time';
 import { InnerNode } from '../graph/inner-node';
 import { InputNode } from '../graph/input-node';
@@ -17,12 +16,19 @@ import { Log } from '../util';
 
 const LOGGER: Log = Log.of('gs-tools.graph.Graph');
 
-export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
+export class GraphImpl extends BaseDisposable {
   private currentTime_: GraphTime = GraphTime.new();
+  private readonly eventHandler_: GraphEventHandler;
   private readonly monitoredNodes_: WeakMap<{}, ImmutableSet<NodeId<any>>> = new WeakMap();
   private readonly nodes_: Map<NodeId<any>, GNode<any>> = new Map();
   private readonly setQueue_: (() => void)[] = [];
   private readonly transitiveDependencies_: Map<NodeId<any>, ImmutableSet<NodeId<any>>> = new Map();
+
+  constructor() {
+    super();
+    this.eventHandler_ = new GraphEventHandler();
+    this.addDisposable(this.eventHandler_);
+  }
 
   clearAllNodesForTest(): void {
     this.nodes_.clear();
@@ -61,10 +67,6 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
     }
   }
 
-  private dependsOn_(sourceId: NodeId<any>, targetId: NodeId<any>): boolean {
-    return this.getTransitiveDependencies_(sourceId).has(targetId);
-  }
-
   /**
    * Gets the value associated with the given ID.
    * @param staticId
@@ -95,14 +97,14 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
 
     if (node instanceof InnerNode &&
         !this.isMonitored_(context, nodeId)) {
-      context.addDisposable(
-          this.on(
-              'ready',
-              (event: GraphEvent<T, any>) => {
-                this.onReady_<T, any>(nodeId, context, event);
-              },
-              this));
-
+      for (const dependencyId of this.getTransitiveDependencies_(nodeId)) {
+        this.eventHandler_.onReady(
+            context,
+            dependencyId,
+            () => {
+              this.onReady_<T, any>(nodeId, context);
+            });
+      }
       const ids = this.monitoredNodes_.get(context) || ImmutableSet.of([]);
       this.monitoredNodes_.set(context, ids.add(nodeId));
     }
@@ -117,7 +119,7 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
     }
 
     if (!equals(resolvedCached, resolvedValue)) {
-      this.dispatch({context, id: nodeId, type: 'change' as 'change'});
+      this.eventHandler_.dispatchChange(context, nodeId);
     }
 
     Log.debug(LOGGER, `executed: ${nodeId} ${resolvedValue}`);
@@ -200,15 +202,13 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
     return this.nodes_.has(id);
   }
 
-  private onReady_<T, C>(nodeId: NodeId<T>, context: C, event: GraphEvent<T, C>): void {
-    if (this.dependsOn_(nodeId, event.id)) {
-      if (nodeId instanceof StaticId) {
-        this.refresh(nodeId);
-      } else if (nodeId instanceof InstanceId) {
-        this.refresh(nodeId, context);
-      } else {
-        assertUnreachable(nodeId);
-      }
+  private onReady_<T, C>(nodeId: NodeId<T>, context: C): void {
+    if (nodeId instanceof StaticId) {
+      this.refresh(nodeId);
+    } else if (nodeId instanceof InstanceId) {
+      this.refresh(nodeId, context);
+    } else {
+      assertUnreachable(nodeId);
     }
   }
 
@@ -230,7 +230,7 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
     if (!node) {
       throw AssertionError.generic(`Cannot find node ${nodeId}`);
     }
-    this.dispatch({context, id: nodeId, type: 'ready'});
+    this.eventHandler_.dispatchReady(context || GLOBALS, nodeId);
   }
 
   registerGenericProvider_<T>(
@@ -315,19 +315,17 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
     const promise = new Promise<void>((resolve: () => void) => {
       this.setQueue_.push(() => {
         Log.debug(LOGGER, `set flush: ${nodeId} ${value}`);
-        const event = {context, id: nodeId, type: 'change' as 'change'};
-        this.dispatch(event, () => {
-          const newTime = this.currentTime_.increment();
-          node.set(context, newTime, value);
-          this.currentTime_ = newTime;
-          if (nodeId instanceof StaticId) {
-            this.refresh(nodeId);
-          } else if (nodeId instanceof InstanceId) {
-            this.refresh(nodeId, context);
-          } else {
-            assertUnreachable(nodeId);
-          }
-        });
+        const newTime = this.currentTime_.increment();
+        node.set(context, newTime, value);
+        this.currentTime_ = newTime;
+        if (nodeId instanceof StaticId) {
+          this.refresh(nodeId);
+        } else if (nodeId instanceof InstanceId) {
+          this.refresh(nodeId, context);
+        } else {
+          assertUnreachable(nodeId);
+        }
+        this.eventHandler_.dispatchChange(context, nodeId);
         resolve();
       });
     });
@@ -342,4 +340,4 @@ export class GraphImpl extends Bus<EventType, GraphEvent<any, any>> {
   }
 }
 
-export const Graph = new GraphImpl(LOGGER);
+export const Graph = new GraphImpl();

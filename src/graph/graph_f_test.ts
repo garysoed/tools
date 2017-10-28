@@ -1,21 +1,17 @@
-import { assert, Matchers, TestBase } from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
 import { NumberType } from '../check';
 import { BaseDisposable } from '../dispose';
 import { Flags } from '../dispose/base-disposable';
-import { eventDetails, listener } from '../event';
 import {
   Graph,
-  GraphEvent,
   instanceId,
   nodeIn,
   nodeOut,
-  onNodeReady,
   staticId } from '../graph';
 import { StaticNodeProvider } from '../graph/node-provider';
 import { TestDispose } from '../testing';
-import { Reflect } from '../util';
 
 const $ = {
   a: staticId<number>('a', NumberType),
@@ -174,73 +170,6 @@ describe('graph functional test', () => {
 
       await setPromise;
       assert(await Graph.get($a, Graph.getTimestamp(), test)).to.equal(7);
-    });
-  });
-
-  describe('with graph event handling', () => {
-    const $a = instanceId('a', NumberType);
-
-    @listener()
-    class TestClass extends BaseDisposable {
-      constructor(
-          private readonly b_: number,
-          private readonly aChangeCallback_: jasmine.Spy,
-          private readonly providesASpy_: jasmine.Spy) {
-        super();
-      }
-
-      @onNodeReady($a)
-      onAChange(@eventDetails() event: GraphEvent<number, this>): void {
-        this.aChangeCallback_(event);
-      }
-
-      @nodeOut($a)
-      providesA(@nodeIn($.c) c: number): number {
-        this.providesASpy_(c);
-        return this.b_ + c;
-      }
-    }
-
-    let providesC: StaticNodeProvider<number>;
-
-    beforeEach(() => {
-      Graph.clearNodesForTests([$.c]);
-      providesC = Graph.createProvider($.c, 2);
-    });
-
-    it(`should call the callback correctly`, async () => {
-      const mockCallback1 = jasmine.createSpy('Callback1');
-      const t1 = Reflect.construct(
-          TestClass,
-          [1, mockCallback1, jasmine.createSpy('ProvidesASpy1')]);
-      TestDispose.add(t1);
-
-      const mockCallback2 = jasmine.createSpy('Callback2');
-      const t2 = Reflect.construct(
-          TestClass,
-          [2, mockCallback2, jasmine.createSpy('ProvidesASpy1')]);
-      TestDispose.add(t2);
-
-      assert(await Promise.all([
-        Graph.get($a, Graph.getTimestamp(), t1),
-        Graph.get($a, Graph.getTimestamp(), t2),
-      ])).to.equal([3, 4]);
-
-      const promise1 = new Promise((resolve: any) => {
-        mockCallback1.and.callFake(resolve);
-      });
-
-      providesC(3);
-
-      await promise1;
-      assert(mockCallback1).to.haveBeenCalledWith(Matchers.objectContaining({
-        context: t1,
-        id: $a,
-      }));
-      assert(mockCallback2).to.haveBeenCalledWith(Matchers.objectContaining({
-        context: t2,
-        id: $a,
-      }));
     });
   });
 });

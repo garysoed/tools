@@ -10,14 +10,12 @@ import { InnerNode } from '../graph/inner-node';
 import { InputNode } from '../graph/input-node';
 import { ImmutableList, ImmutableSet } from '../immutable';
 import { TestDispose } from '../testing';
-import { Log } from '../util';
-
 
 describe('graph.Graph', () => {
   let graph: GraphImpl;
 
   beforeEach(() => {
-    graph = new GraphImpl(Log.of('test'));
+    graph = new GraphImpl();
     TestDispose.add(graph);
   });
 
@@ -63,24 +61,6 @@ describe('graph.Graph', () => {
     });
   });
 
-  describe('dependsOn_', () => {
-    it(`should return true if the nodeId depends on the given nodeId`, () => {
-      const node1 = Mocks.object('node1');
-      const node2 = Mocks.object('node2');
-      spyOn(graph, 'getTransitiveDependencies_').and.returnValue(ImmutableSet.of([node2]));
-
-      assert(graph['dependsOn_'](node1, node2)).to.beTrue();
-    });
-
-    it(`should return false if the first nodeId doesn't depend on the second one`, () => {
-      const node1 = Mocks.object('node1');
-      const node2 = Mocks.object('node2');
-      spyOn(graph, 'getTransitiveDependencies_').and.returnValue(ImmutableSet.of([]));
-
-      assert(graph['dependsOn_'](node1, node2)).to.beFalse();
-    });
-  });
-
   describe('get', () => {
     it(`should return the correct value`, async () => {
       const $ = {
@@ -111,12 +91,13 @@ describe('graph.Graph', () => {
       const timestamp = Mocks.object('timestamp');
       const idealExecutionTime = Mocks.object('idealExecutionTime');
 
-      spyOn(graph, 'dispatch');
+      spyOn(graph['eventHandler_'], 'dispatchChange');
       spyOn(graph, 'getIdealExecutionTime_').and.returnValue(idealExecutionTime);
+      spyOn(graph, 'getTransitiveDependencies_').and.returnValue(ImmutableSet.of([]));
 
       await assert(graph.get($.test, timestamp)).to.resolveWith(value);
       assert(mockNode.execute).to.haveBeenCalledWith(GLOBALS, [param1, param2], idealExecutionTime);
-      assert(graph.dispatch).to.haveBeenCalledWith({context: GLOBALS, id: $.test, type: 'change'});
+      assert(graph['eventHandler_'].dispatchChange).to.haveBeenCalledWith(GLOBALS, $.test);
       assert(graph.get).to.haveBeenCalledWith($.param1, idealExecutionTime);
       assert(graph.get).to.haveBeenCalledWith($.param2, idealExecutionTime);
       assert(mockNode.getLatestCacheValue).to.haveBeenCalledWith(GLOBALS, idealExecutionTime);
@@ -159,20 +140,27 @@ describe('graph.Graph', () => {
       const timestamp = Mocks.object('timestamp');
       const idealExecutionTime = Mocks.object('idealExecutionTime');
 
-      const graphOnSpy = spyOn(graph, 'on')
+      const graphOnSpy = spyOn(graph['eventHandler_'], 'onReady')
           .and.returnValue(jasmine.createSpyObj('disposable', ['dispose']));
       spyOn(graph, 'onReady_');
       spyOn(graph, 'getIdealExecutionTime_').and.returnValue(idealExecutionTime);
+
+      const id1 = Mocks.object('id1');
+      const id2 = Mocks.object('id2');
+      spyOn(graph, 'getTransitiveDependencies_').and.returnValue(ImmutableSet.of([id1, id2]));
 
       await assert(graph.get($.test, timestamp, instance)).to.resolveWith(value);
       assert(mockNode.execute).to
           .haveBeenCalledWith(instance, [param1, param2], idealExecutionTime);
       assert(graph['monitoredNodes_'].get(instance)!).to.haveElements([$.test]);
-      assert(graph.on).to.haveBeenCalledWith('ready', Matchers.anyFunction(), graph);
+      assert(graph['eventHandler_'].onReady).to
+          .haveBeenCalledWith(instance, id1, Matchers.anyFunction());
+      assert(graph['eventHandler_'].onReady).to
+          .haveBeenCalledWith(instance, id2, Matchers.anyFunction());
+      assert(graph['getTransitiveDependencies_']).to.haveBeenCalledWith($.test);
 
-      const event = Mocks.object('event');
-      graphOnSpy.calls.argsFor(0)[1](event);
-      assert(graph['onReady_']).to.haveBeenCalledWith($.test, instance, event);
+      graphOnSpy.calls.argsFor(0)[2]();
+      assert(graph['onReady_']).to.haveBeenCalledWith($.test, instance);
 
       assert(graph.get).to.haveBeenCalledWith($.param1, idealExecutionTime, instance);
       assert(graph.get).to.haveBeenCalledWith($.param2, idealExecutionTime, instance);
@@ -239,13 +227,13 @@ describe('graph.Graph', () => {
       Object.setPrototypeOf(mockNode, InnerNode.prototype);
       graph['nodes_'].set($test, mockNode);
 
-      spyOn(graph, 'on');
+      spyOn(graph['eventHandler_'], 'onReady');
       spyOn(graph, 'onReady_');
       spyOn(graph, 'isMonitored_').and.returnValue(true);
       const timestamp = Mocks.object('timestamp');
 
       await assert(graph.get($test, timestamp, instance)).to.resolveWith(value);
-      assert(graph.on).toNot.haveBeenCalled();
+      assert(graph['eventHandler_'].onReady).toNot.haveBeenCalled();
       assert(graph['isMonitored_']).to.haveBeenCalledWith(instance, $test);
     });
 
@@ -269,12 +257,12 @@ describe('graph.Graph', () => {
       mockNode.getParameterIds.and.returnValue(ImmutableList.of([]));
       graph['nodes_'].set($test, mockNode);
 
-      spyOn(graph, 'on');
+      spyOn(graph['eventHandler_'], 'onReady');
       spyOn(graph, 'onReady_');
       const timestamp = Mocks.object('timestamp');
 
       await assert(graph.get($test, timestamp, instance)).to.resolveWith(value);
-      assert(graph.on).toNot.haveBeenCalled();
+      assert(graph['eventHandler_'].onReady).toNot.haveBeenCalled();
     });
 
     it(`should not dispatch any events if the new value is the same as the cached one`,
@@ -294,7 +282,7 @@ describe('graph.Graph', () => {
       graph['nodes_'].set($.test, mockNode);
 
       spyOn(graph, 'isMonitored_').and.returnValue(true);
-      spyOn(graph, 'dispatch');
+      spyOn(graph['eventHandler_'], 'dispatchChange');
 
       const idealExecutionTime = Mocks.object('idealExecutionTime');
       spyOn(graph, 'getIdealExecutionTime_').and.returnValue(idealExecutionTime);
@@ -302,7 +290,7 @@ describe('graph.Graph', () => {
 
       await assert(graph.get($.test, timestamp)).to.resolveWith(value);
       assert(mockNode.execute).to.haveBeenCalledWith(GLOBALS, [], idealExecutionTime);
-      assert(graph.dispatch).toNot.haveBeenCalled();
+      assert(graph['eventHandler_'].dispatchChange).toNot.haveBeenCalled();
     });
   });
 
@@ -415,11 +403,9 @@ describe('graph.Graph', () => {
       graphEvent.id = paramId;
 
       spyOn(graph, 'refresh');
-      spyOn(graph, 'dependsOn_').and.returnValue(true);
 
-      graph['onReady_'](nodeId, context, graphEvent);
+      graph['onReady_'](nodeId, context);
       assert(graph.refresh).to.haveBeenCalledWith(nodeId, context);
-      assert(graph['dependsOn_']).to.haveBeenCalledWith(nodeId, paramId);
     });
 
     it(`should refresh the node for staticId`, () => {
@@ -430,27 +416,9 @@ describe('graph.Graph', () => {
       graphEvent.id = paramId;
 
       spyOn(graph, 'refresh');
-      spyOn(graph, 'dependsOn_').and.returnValue(true);
 
-      graph['onReady_'](nodeId, GLOBALS, graphEvent);
+      graph['onReady_'](nodeId, GLOBALS);
       assert(graph.refresh).to.haveBeenCalledWith(nodeId);
-      assert(graph['dependsOn_']).to.haveBeenCalledWith(nodeId, paramId);
-    });
-
-    it(`should do nothing if the changed ID is not a dependency`, () => {
-      const nodeId = instanceId('test', NumberType);
-      const paramId = staticId('param', NumberType);
-
-      const context = Mocks.object('context');
-      const graphEvent = Mocks.object('graphEvent');
-      graphEvent.id = paramId;
-
-      spyOn(graph, 'refresh');
-      spyOn(graph, 'dependsOn_').and.returnValue(false);
-
-      graph['onReady_'](nodeId, context, graphEvent);
-      assert(graph.refresh).toNot.haveBeenCalled();
-      assert(graph['dependsOn_']).to.haveBeenCalledWith(nodeId, paramId);
     });
   });
 
