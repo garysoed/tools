@@ -2,7 +2,7 @@ import { assert, Fakes, Matchers, Mocks, TestBase } from '../test-base';
 TestBase.setup();
 
 import { NumberType } from '../check';
-import { BaseDisposable } from '../dispose';
+import { BaseDisposable, DisposableFunction } from '../dispose';
 import { GraphTime, instanceId, staticId } from '../graph';
 import { GLOBALS } from '../graph/g-node';
 import { GraphImpl } from '../graph/graph';
@@ -140,7 +140,8 @@ describe('graph.Graph', () => {
       const timestamp = Mocks.object('timestamp');
       const idealExecutionTime = Mocks.object('idealExecutionTime');
 
-      const graphOnSpy = spyOn(graph['eventHandler_'], 'onReady');
+      const graphOnSpy = spyOn(graph['eventHandler_'], 'onReady').and
+          .returnValue(DisposableFunction.of(() => undefined));
       spyOn(graph, 'onReady_');
       spyOn(graph, 'getIdealExecutionTime_').and.returnValue(idealExecutionTime);
 
