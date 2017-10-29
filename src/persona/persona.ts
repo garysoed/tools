@@ -47,7 +47,8 @@ export class PersonaImpl {
       tag: string,
       inputs: Map<Selector<any>, InstanceNodeProvider<any>>,
       listenerSpecs: Iterable<[PropertyKey, Iterable<ListenerSpec>]>,
-      rendererSpecs: Iterable<[PropertyKey, RendererSpec]>): Function {
+      rendererSpecs: Iterable<[PropertyKey, RendererSpec]>,
+      defaultAttrs: Iterable<[string, string]> = new Map()): Function {
     return class extends parentClass implements CustomElement {
       private ctrl_: BaseDisposable | null;
       private readonly dispatcher_: DispatcherSelector<DispatchFn<{}>> =
@@ -55,6 +56,7 @@ export class PersonaImpl {
 
       constructor() {
         super();
+        this.setDefaultAttrs_();
       }
 
       async connectedCallback(): Promise<void> {
@@ -147,6 +149,14 @@ export class PersonaImpl {
           return;
         }
         this.updateElement_(ctrlInstance, selector);
+      }
+
+      private setDefaultAttrs_(): void {
+        for (const [key, value] of defaultAttrs) {
+          if (!this.hasAttribute(key)) {
+            this.setAttribute(key, value);
+          }
+        }
       }
 
       private async updateElement_(
@@ -262,7 +272,8 @@ export class PersonaImpl {
         spec.tag,
         inputProviders,
         listenerSpecs,
-        rendererSpecs);
+        rendererSpecs,
+        spec.defaultAttrs);
 
     this.registerCustomElement_(spec, CustomElement);
     Log.info(LOGGER, `Registered: [${spec.tag}]`);

@@ -20,6 +20,7 @@ describe('CustomElement', () => {
   let mockInjector: any;
   let listenerSpecMap: Map<any, any>;
   let rendererSpecMap: Map<any, any>;
+  let defaultAttrsMap: Map<string, string>;
   let inputMap: Map<Selector<any>, InstanceNodeProvider<any>>;
   let element: CustomElement & HTMLElement;
   let persona: PersonaImpl;
@@ -31,6 +32,7 @@ describe('CustomElement', () => {
     mockInjector = jasmine.createSpyObj('Injector', ['instantiate']);
     rendererSpecMap = new Map();
     listenerSpecMap = new Map();
+    defaultAttrsMap = new Map();
     inputMap = new Map();
     const elementCtor = persona['createCustomElementClass_'](
         HTMLElement,
@@ -40,7 +42,8 @@ describe('CustomElement', () => {
         TAG,
         inputMap,
         listenerSpecMap,
-        rendererSpecMap);
+        rendererSpecMap,
+        defaultAttrsMap);
 
     // Customized native HTML Element isn't supported yet, so we use a mock.
     element = Mocks.object('element');
@@ -216,6 +219,30 @@ describe('CustomElement', () => {
 
       element['onGraphReady_'](context, id, selector);
       assert(element['updateElement_']).toNot.haveBeenCalled();
+    });
+  });
+
+  describe('setDefaultAttrs_', () => {
+    it(`should set the default attributes`, () => {
+      defaultAttrsMap.set('a', '1');
+      defaultAttrsMap.set('b', '2');
+
+      spyOn(element, 'hasAttribute').and.returnValue(false);
+      spyOn(element, 'setAttribute');
+
+      element['setDefaultAttrs_']();
+      assert(element.setAttribute).to.haveBeenCalledWith('a', '1');
+      assert(element.setAttribute).to.haveBeenCalledWith('b', '2');
+    });
+
+    it(`should skip attributes that are already set`, () => {
+      defaultAttrsMap.set('a', '1');
+
+      spyOn(element, 'hasAttribute').and.returnValue(true);
+      spyOn(element, 'setAttribute');
+
+      element['setDefaultAttrs_']();
+      assert(element.setAttribute).toNot.haveBeenCalled();
     });
   });
 
@@ -479,7 +506,9 @@ describe('persona.Persona', () => {
       spyOn(persona, 'createCustomElementClass_').and.returnValue(customElementClass);
 
       const templateKey = 'templateKey';
+      const defaultAttrs = Mocks.object('defaultAttrs');
       const spec = {
+        defaultAttrs,
         parent: {
           class: parentCtor,
           tag: parentTag,
@@ -511,7 +540,8 @@ describe('persona.Persona', () => {
           tag,
           inputProviders,
           listenerSpecs,
-          rendererSpecs);
+          rendererSpecs,
+          defaultAttrs);
       assert(persona['registerListeners_']).to.haveBeenCalledWith(ctrl);
       assert(persona['registerRenderers_']).to.haveBeenCalledWith(ctrl);
       assert(persona['registerInputs_']).to.haveBeenCalledWith(spec);
@@ -562,7 +592,8 @@ describe('persona.Persona', () => {
           tag,
           inputProviders,
           listenerSpecs,
-          rendererSpecs);
+          rendererSpecs,
+          undefined);
       assert(persona['registerListeners_']).to.haveBeenCalledWith(ctrl);
       assert(persona['registerRenderers_']).to.haveBeenCalledWith(ctrl);
       assert(persona['registerInputs_']).to.haveBeenCalledWith(spec);

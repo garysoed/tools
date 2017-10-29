@@ -1,6 +1,7 @@
 import { BaseDisposable } from '../dispose';
 import { attributeChangeListener, eventListener } from '../persona';
 import { childrenListener } from '../persona/children-listener';
+import { Key, keystrokeListener, Options } from '../persona/keystroke-listener';
 import { Persona } from '../persona/persona';
 import { AttributeSelector, ChildrenSelector, ElementSelector } from '../persona/selectors';
 
@@ -38,6 +39,19 @@ export const onDom = {
           asBaseDisposableCtor(target),
           propertyKey,
           eventListener(selector, eventType),
+          useCapture);
+    };
+  },
+  keystroke(
+      selector: ElementSelector<any>,
+      key: Key,
+      options: Options = {},
+      useCapture: boolean = false): MethodDecorator {
+    return (target: Object, propertyKey: string | symbol) => {
+      Persona.defineListener(
+          asBaseDisposableCtor(target),
+          propertyKey,
+          keystrokeListener(selector, key, options),
           useCapture);
     };
   },

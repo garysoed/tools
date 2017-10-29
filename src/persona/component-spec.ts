@@ -7,6 +7,7 @@ type Ctor<T> = {
 type Ctorize<M> = {[C in keyof M]: Ctor<M[C]>};
 
 export type ComponentSpec<H extends keyof HTMLElementTagNameMap> = {
+  defaultAttrs?: Iterable<[string, string]>,
   dependencies?: Iterable<any>,
   inputs?: Iterable<Selector<any>>,
   parent?: {
