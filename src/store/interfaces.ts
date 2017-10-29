@@ -1,6 +1,6 @@
 import { ImmutableSet } from '../immutable/immutable-set';
 
-export interface Storage<T> {
+export interface Storage<TFull, TSummary = TFull> {
   /**
    * Checks if the object corresponding to the given ID exists in the storage.
    *
@@ -12,7 +12,7 @@ export interface Storage<T> {
   /**
    * @return Array of data in the storage.
    */
-  list(): Promise<ImmutableSet<T>>;
+  list(): Promise<ImmutableSet<TSummary>>;
 
   /**
    * @return IDs of the data in the storage.
@@ -26,10 +26,10 @@ export interface Storage<T> {
    * @return Promise that will be resolved with the object corresponding to the given ID, or null if
    *    the object does not exist.
    */
-  read(id: string): Promise<T | null>;
+  read(id: string): Promise<TFull | null>;
 }
 
-export interface EditableStorage<T> extends Storage<T> {
+export interface EditableStorage<TFull, TSummary = TFull> extends Storage<TFull, TSummary> {
 
   /**
    * Deletes the object corresponding to the given ID.
@@ -52,5 +52,5 @@ export interface EditableStorage<T> extends Storage<T> {
    * @param instance Object to update.
    * @return Promise that will be resolved when the update operation is completed.
    */
-  update(id: string, instance: T): Promise<void>;
+  update(id: string, instance: TFull): Promise<void>;
 }
