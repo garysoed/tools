@@ -5,5 +5,9 @@ export function EnumType<E>(enumType: gs.IEnum): Type<E> {
     check(target: any): target is E {
       return enumType[target] !== undefined;
     },
+
+    toString(): string {
+      return `Enum`;
+    },
   };
 }

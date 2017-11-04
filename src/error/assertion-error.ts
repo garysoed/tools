@@ -18,7 +18,7 @@ export class AssertionError extends Error {
     return new AssertionError(message);
   }
 
-  static instanceOf(field: string, expected: gs.ICtor<Object>, actual: Object): AssertionError {
+  static instanceOf(field: string, expected: gs.ICtor<Object>, actual: any): AssertionError {
     return AssertionError.condition(field, `be [${expected.name}]`, actual);
   }
 

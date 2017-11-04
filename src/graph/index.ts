@@ -1,4 +1,5 @@
 export { Debug } from './debug';
+export { FLAGS } from './flags';
 export { Graph } from './graph';
 export { GraphEvent } from './graph-event';
 export { GraphTime } from './graph-time';

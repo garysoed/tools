@@ -17,7 +17,7 @@ export interface DataGraph<D> {
   set(id: string, data: D): Promise<void>;
 }
 
-class DataGraphImpl<D> implements DataGraph<D> {
+export class DataGraphImpl<D> implements DataGraph<D> {
   constructor(
       protected readonly id_: StaticId<DataGraph<D>>,
       protected readonly searcher_: Searcher<D>,
@@ -53,7 +53,9 @@ class DataGraphImpl<D> implements DataGraph<D> {
 }
 
 export function registerDataGraph<D>(
-    searcher: Searcher<D>, storage: GsStorage<D>): StaticId<DataGraph<D>> {
+    name: string,
+    searcher: Searcher<D>,
+    storage: GsStorage<D>): StaticId<DataGraph<D>> {
   const id = staticId(name, InstanceofType(DataGraphImpl));
 
   const graph = new DataGraphImpl(id, searcher, storage);

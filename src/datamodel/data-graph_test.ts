@@ -15,7 +15,7 @@ describe('datamodel.registerDataGraph', () => {
 
     mockSearcher = jasmine.createSpyObj('Searcher', ['index', 'search']);
     mockStorage = jasmine.createSpyObj('Storage', ['generateId', 'list', 'read', 'update']);
-    dataGraphId = registerDataGraph(mockSearcher, mockStorage);
+    dataGraphId = registerDataGraph('test', mockSearcher, mockStorage);
   });
 
   describe('generateId', () => {

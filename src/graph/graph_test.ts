@@ -555,7 +555,7 @@ describe('graph.Graph', () => {
 
       assert(() => {
         graph['set_']($, context, 123);
-      }).to.throwError(/not an instance of InputNode/);
+      }).to.throwError(/InputNode/);
     });
   });
 });

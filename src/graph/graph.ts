@@ -1,5 +1,6 @@
 import { BaseDisposable, DisposableFunction } from '../dispose';
 import { AssertionError } from '../error';
+import { FLAGS } from '../graph/flags';
 import { GLOBALS, GNode } from '../graph/g-node';
 import { GraphEvent } from '../graph/graph-event';
 import { GraphEventHandler } from '../graph/graph-event-handler';
@@ -119,7 +120,7 @@ export class GraphImpl extends BaseDisposable {
 
     const cachedValue = latestCacheValue ? latestCacheValue[1] : null;
     const [resolvedCached, resolvedValue] = await Promise.all([cachedValue, value]);
-    if (!nodeId.getType().check(resolvedValue)) {
+    if (FLAGS.checkValueType && !nodeId.getType().check(resolvedValue)) {
       throw new Error(`Node for ${nodeId} returns the incorrect type. [${resolvedValue}]`);
     }
 
@@ -328,7 +329,7 @@ export class GraphImpl extends BaseDisposable {
 
     const node = this.nodes_.get(nodeId);
     if (!(node instanceof InputNode)) {
-      throw new Error(`Node ${nodeId} is not an instance of InputNode. [${node}]`);
+      throw AssertionError.instanceOf(`Node ${nodeId}`, InputNode, node);
     }
 
     const promise = new Promise<void>((resolve: () => void) => {
