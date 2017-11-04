@@ -4,7 +4,7 @@ TestBase.setup();
 import { NumberType } from '../check';
 import { GraphTime, instanceId } from '../graph';
 import { Listener } from '../persona/listener';
-import { __time, SelectorImpl } from '../persona/selector';
+import { SelectorImpl } from '../persona/selector';
 import { __shadowRoot } from '../persona/shadow-root-symbol';
 
 class TestSelector extends SelectorImpl<any> {
@@ -89,26 +89,26 @@ describe('persona.SelectorImpl', () => {
       const root = Mocks.object('root');
       const time = GraphTime.new();
       const newTime = time.increment();
-      root[__time] = time;
+      root[selector['__time_']] = time;
 
       spyOn(selector, 'setValue_');
 
       selector.setValue(value, root, newTime);
       assert(selector['setValue_']).to.haveBeenCalledWith(value, root);
-      assert(root[__time]).to.equal(newTime);
+      assert(root[selector['__time_']]).to.equal(newTime);
     });
 
     it(`should not update the value if the time is ancient`, () => {
       const value = 123;
       const root = Mocks.object('root');
       const time = GraphTime.new();
-      root[__time] = time;
+      root[selector['__time_']] = time;
 
       spyOn(selector, 'setValue_');
 
       selector.setValue(value, root, time);
       assert(selector['setValue_']).toNot.haveBeenCalled();
-      assert(root[__time]).to.equal(time);
+      assert(root[selector['__time_']]).to.equal(time);
     });
 
     it(`should update if there are no latest time`, () => {
@@ -120,7 +120,7 @@ describe('persona.SelectorImpl', () => {
 
       selector.setValue(value, root, time);
       assert(selector['setValue_']).to.haveBeenCalledWith(value, root);
-      assert(root[__time]).to.equal(time);
+      assert(root[selector['__time_']]).to.equal(time);
     });
   });
 

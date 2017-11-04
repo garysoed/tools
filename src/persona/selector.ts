@@ -5,8 +5,6 @@ import { InstanceId } from '../graph/instance-id';
 import { Listener } from '../persona/listener';
 import { __shadowRoot } from '../persona/shadow-root-symbol';
 
-export const __time = Symbol('time');
-
 export abstract class Selector<T> {
   constructor() { }
 
@@ -29,6 +27,8 @@ export abstract class Selector<T> {
 }
 
 export abstract class SelectorImpl<T> extends Selector<T> {
+  private readonly __time_: symbol = Symbol('time');
+
   constructor(
       private readonly defaultValue_: T | undefined,
       private readonly id_: InstanceId<T>) {
@@ -71,10 +71,10 @@ export abstract class SelectorImpl<T> extends Selector<T> {
   }
 
   setValue(value: T | null, root: ShadowRoot, time: GraphTime): void {
-    const latestTime: GraphTime | undefined = root[__time];
+    const latestTime: GraphTime | undefined = root[this.__time_];
     if (!latestTime || latestTime.before(time)) {
       this.setValue_(value, root);
-      root[__time] = time;
+      root[this.__time_] = time;
     }
   }
 
