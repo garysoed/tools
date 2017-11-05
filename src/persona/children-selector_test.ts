@@ -135,7 +135,7 @@ describe('persona.ChildrenSelectorImpl', () => {
 
       assert(() => {
         selector.getValue(root);
-      }).to.throwError(/be \[number\]/);
+      }).to.throwError(/be a \[number\]/);
       assert(selector['getChildElements_']).to.haveBeenCalledWith(root);
     });
   });

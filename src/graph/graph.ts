@@ -1,5 +1,5 @@
 import { BaseDisposable, DisposableFunction } from '../dispose';
-import { AssertionError } from '../error';
+import { Errors } from '../error';
 import { FLAGS } from '../graph/flags';
 import { GLOBALS, GNode } from '../graph/g-node';
 import { GraphEvent } from '../graph/graph-event';
@@ -166,7 +166,7 @@ export class GraphImpl extends BaseDisposable {
   getNode_<T>(nodeId: NodeId<T>): GNode<T> {
     const node = this.nodes_.get(nodeId);
     if (!node) {
-      throw AssertionError.condition(`Node ${nodeId}`, 'exist', node);
+      throw Errors.assert(`Node [${nodeId}]`).shouldExist().butWas(node);
     }
 
     return node;
@@ -184,7 +184,7 @@ export class GraphImpl extends BaseDisposable {
 
     const node = this.nodes_.get(nodeId);
     if (!node) {
-      throw AssertionError.generic(`Cannot find node for ${nodeId}`);
+      throw Errors.assert(`Node for [${nodeId}]`).shouldExist().butNot();
     }
 
     const dependencies: Set<NodeId<any>> = new Set();
@@ -260,14 +260,14 @@ export class GraphImpl extends BaseDisposable {
     const existingNode = this.nodes_.get(nodeId);
     if (existingNode) {
       if (!(existingNode instanceof InnerNode)) {
-        throw AssertionError.generic(`node for ${nodeId} is already registered as InputNode`);
+        throw Errors.assert(`Node for [${nodeId}]`).should('not be registered').butNot();
       }
 
       if (existingNode.getProvider().toString() !== provider.toString()) {
-        throw AssertionError.equals(
-            `reregistered node provider for ${nodeId}`,
-            existingNode.getProvider(),
-            provider);
+        throw Errors
+            .assert(`reregistered node provider for ${nodeId}`)
+            .shouldBe(existingNode.getProvider())
+            .butWas(provider);
       }
 
       const existingArgs = existingNode.getParameterIds();
@@ -277,10 +277,10 @@ export class GraphImpl extends BaseDisposable {
         const existingArg = existingArgs.getAt(i);
         const newArg = newArgs.getAt(i);
         if (existingArg !== newArg) {
-          throw AssertionError.equals(
-              `reregistered node parameter ${i} for ${nodeId}`,
-              existingArg,
-              newArg);
+          throw Errors
+              .assert(`reregistered node parameter ${i} for ${nodeId}`)
+              .shouldBe(existingArg)
+              .butNot();
         }
       }
       return;
@@ -329,7 +329,7 @@ export class GraphImpl extends BaseDisposable {
 
     const node = this.nodes_.get(nodeId);
     if (!(node instanceof InputNode)) {
-      throw AssertionError.instanceOf(`Node ${nodeId}`, InputNode, node);
+      throw Errors.assert(`Node ${nodeId}`).shouldBeAnInstanceOf(InputNode).butWas(node);
     }
 
     const promise = new Promise<void>((resolve: () => void) => {

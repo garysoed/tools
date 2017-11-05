@@ -1,5 +1,5 @@
 import { DisposableFunction } from '../dispose';
-import { AssertionError } from '../error';
+import { Errors } from '../error';
 import { Event } from '../interfaces';
 import { AttributeSelectorImpl } from '../persona/attribute-selector';
 import { Listener } from '../persona/listener';
@@ -46,7 +46,7 @@ export class AttributeChangeListener<T> implements Listener<'change'> {
     const elementSelector = this.attributeSelector_.getElementSelector();
     const element = elementSelector.getValue(root);
     if (!element) {
-      throw AssertionError.condition(`element for ${elementSelector}`, 'exist', element);
+      throw Errors.assert(`element for [${elementSelector}]`).shouldExist().butWas(element);
     }
     observer.observe(
         element,
@@ -68,7 +68,7 @@ export class AttributeChangeListener<T> implements Listener<'change'> {
 export function attributeChangeListener<T>(
     selector: AttributeSelector<T>): AttributeChangeListener<T> {
   if (!(selector instanceof AttributeSelectorImpl)) {
-    throw AssertionError.instanceOf('selector', AttributeSelectorImpl, selector);
+    throw Errors.assert('selector').shouldBeAnInstanceOf(AttributeSelectorImpl).butWas(selector);
   }
 
   return new AttributeChangeListener(selector);

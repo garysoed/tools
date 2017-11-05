@@ -1,5 +1,5 @@
 import { DisposableFunction } from '../dispose';
-import { AssertionError } from '../error';
+import { Errors } from '../error';
 import { Event } from '../interfaces';
 import { ElementSelectorImpl } from '../persona/element-selector';
 import { EventListener } from '../persona/event-listener';
@@ -64,7 +64,7 @@ export function keystrokeListener(
     key: Key,
     options: Options): KeystrokeListener {
   if (!(selector instanceof ElementSelectorImpl)) {
-    throw AssertionError.instanceOf('selector', ElementSelectorImpl, selector);
+    throw Errors.assert('selector').shouldBeAnInstanceOf(ElementSelectorImpl).butWas(selector);
   }
 
   return new KeystrokeListener(key, options, selector);

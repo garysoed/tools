@@ -523,7 +523,7 @@ describe('graph.Graph', () => {
 
       assert(() => {
         graph.registerProvider($, provider);
-      }).to.throwError(/already registered/);
+      }).to.throwError(/not be registered/);
     });
   });
 

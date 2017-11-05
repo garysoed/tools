@@ -1,1 +1,1 @@
-export { AssertionError } from './assertion-error';
+export { Errors } from './errors';

@@ -1,4 +1,4 @@
-import { AssertionError } from '../error';
+import { Errors } from '../error';
 
 type ValueSpec<T> = {context: {}, id: any, value: T};
 
@@ -7,7 +7,7 @@ let valueSpecs: ValueSpec<any>[] = [];
 
 function buildGraph(): void {
   if (!fakeGraph) {
-    throw AssertionError.generic(`TestGraph#setup hasn't been called yet!`);
+    throw Errors.assert('TestGraph#setup').should('haveBeenCalled').butNot();
   }
 
   fakeGraph.get.and.callFake((nodeId: any, _: any, context: {} | null = null) => {

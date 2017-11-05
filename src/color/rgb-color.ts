@@ -1,6 +1,6 @@
 import { BaseColor } from '../color/base-color';
 import { cache } from '../data/cache';
-import { AssertionError } from '../error';
+import { Errors } from '../error';
 
 
 export class RgbColor extends BaseColor {
@@ -108,39 +108,39 @@ export class RgbColor extends BaseColor {
    */
   static newInstance(red: number, green: number, blue: number): RgbColor {
     if (!Number.isInteger(red)) {
-      throw AssertionError.condition('red', 'be an integer', red);
+      throw Errors.assert('red').should('be an integer').butWas(red);
     }
 
     if (red > 255) {
-      throw AssertionError.condition('red', 'be <= 255', red);
+      throw Errors.assert('red').should('be <= 255').butWas(red);
     }
 
     if (red < 0) {
-      throw AssertionError.condition('red', 'be positive', red);
+      throw Errors.assert('red').should('be positive').butWas(red);
     }
 
     if (!Number.isInteger(blue)) {
-      throw AssertionError.condition('blue', 'be an integer', blue);
+      throw Errors.assert('blue').should('be an integer').butWas(blue);
     }
 
     if (blue > 255) {
-      throw AssertionError.condition('blue', 'be <= 255', blue);
+      throw Errors.assert('blue').should('be <= 255').butWas(blue);
     }
 
     if (blue < 0) {
-      throw AssertionError.condition('blue', 'be positive', blue);
+      throw Errors.assert('blue').should('be positive').butWas(blue);
     }
 
     if (!Number.isInteger(green)) {
-      throw AssertionError.condition('green', 'be an integer', green);
+      throw Errors.assert('green').should('be an integer').butWas(green);
     }
 
     if (green > 255) {
-      throw AssertionError.condition('green', 'be <= 255', green);
+      throw Errors.assert('green').should('be <= 255').butWas(green);
     }
 
     if (green < 0) {
-      throw AssertionError.condition('green', 'be positive', green);
+      throw Errors.assert('green').should('be positive').butWas(green);
     }
     return new RgbColor(red, green, blue);
   }

@@ -40,7 +40,7 @@ describe('graph.GNode', () => {
 
       assert(() => {
         node['addToCache_'](context, timestamp, value);
-      }).to.throwError(/not have timestamp/);
+      }).to.throwError(/have timestamp/);
     });
   });
 

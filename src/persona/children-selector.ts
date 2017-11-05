@@ -1,5 +1,5 @@
 import { FiniteIterableOfType, Type } from '../check';
-import { AssertionError } from '../error';
+import { Errors } from '../error';
 import { instanceId } from '../graph';
 import { ImmutableList, ImmutableSet } from '../immutable';
 import { ChildrenListener } from '../persona/children-listener';
@@ -60,7 +60,7 @@ export class ChildrenSelectorImpl<E extends Element, T> extends
     const elements: E[] = [];
     while (currentNode !== slot.end) {
       if (!this.childType_.check(currentNode)) {
-        throw AssertionError.type('child', this.childType_, currentNode);
+        throw Errors.assert('child').shouldBeA(this.childType_).butWas(currentNode);
       }
       elements.push(currentNode);
       currentNode = currentNode.nextSibling;
@@ -92,7 +92,7 @@ export class ChildrenSelectorImpl<E extends Element, T> extends
         .map((childElement: E, index: number) => {
           const data = this.getter_(childElement);
           if (!this.childDataType_.check(data)) {
-            throw AssertionError.type(`childData[${index}]`, this.childDataType_, data);
+            throw Errors.assert(`childData[${index}]`).shouldBeA(this.childDataType_).butWas(data);
           }
 
           return data;
@@ -105,7 +105,7 @@ export class ChildrenSelectorImpl<E extends Element, T> extends
     const {end: endNode, start: startNode} = this.slotSelector_.getValue(root);
     const parent = startNode.parentNode;
     if (!parent) {
-      throw AssertionError.condition('parent node', 'to exist', parent);
+      throw Errors.assert('parent node').shouldExist().butWas(parent);
     }
 
     // Insert enough elements if there are not enough.
@@ -126,7 +126,7 @@ export class ChildrenSelectorImpl<E extends Element, T> extends
     for (const [index, value] of valueArray.entries()) {
       const element = childElements.getAt(index);
       if (!element) {
-        throw AssertionError.condition(`child[${index}]`, 'to exist', element);
+        throw Errors.assert(`child[${index}]`).shouldExist().butWas(element);
       }
       this.setter_(value, element);
     }

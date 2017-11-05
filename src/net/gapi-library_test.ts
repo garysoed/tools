@@ -28,7 +28,7 @@ describe('net.GapiLibrary', () => {
     it(`should reject if the object does not exist`, async () => {
       mockGapi.init.and.returnValue(Promise.resolve({}));
 
-      await assert(library.get()).to.rejectWithError(/to exist/);
+      await assert(library.get()).to.rejectWithError(/should exist/);
       assert(mockGapi.init).to.haveBeenCalledWith();
     });
   });

@@ -86,7 +86,7 @@ describe('persona.SlotSelectorImpl', () => {
 
       assert(() => {
         selector.getValue(root);
-      }).to.throwError(/to exist/);
+      }).to.throwError(/should exist/);
     });
 
     it(`should throw error if the start node is not a comment`, () => {
@@ -100,7 +100,7 @@ describe('persona.SlotSelectorImpl', () => {
 
       assert(() => {
         selector.getValue(root);
-      }).to.throwError(/to exist/);
+      }).to.throwError(/should exist/);
     });
 
     it(`should throw error if the start node has the wrong name`, () => {
@@ -114,7 +114,7 @@ describe('persona.SlotSelectorImpl', () => {
 
       assert(() => {
         selector.getValue(root);
-      }).to.throwError(/to exist/);
+      }).to.throwError(/should exist/);
     });
 
     it(`should throw error if the parent element is null`, () => {
@@ -123,7 +123,7 @@ describe('persona.SlotSelectorImpl', () => {
 
       assert(() => {
         selector.getValue(root);
-      }).to.throwError(/not null/);
+      }).to.throwError(/should exist/);
     });
   });
 });

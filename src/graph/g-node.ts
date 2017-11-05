@@ -1,5 +1,5 @@
 import { BaseDisposable } from '../dispose';
-import { AssertionError } from '../error';
+import { Errors } from '../error';
 import { GraphTime } from '../graph/graph-time';
 import { NodeId } from '../graph/node-id';
 import { ImmutableList, ImmutableMap } from '../immutable';
@@ -14,7 +14,7 @@ export abstract class GNode<T> {
   protected addToCache_(context: {}, timestamp: GraphTime, value: T): void {
     const cache = this.getCache_(context);
     if (cache.has(timestamp)) {
-      throw AssertionError.condition(`cache`, `not have timestamp ${timestamp}`, cache);
+      throw Errors.assert(`cache`).should(`have timestamp ${timestamp}`).butWas(cache);
     }
     cache.set(timestamp, value);
   }

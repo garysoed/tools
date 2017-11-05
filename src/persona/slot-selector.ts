@@ -1,5 +1,5 @@
 import { HasPropertiesType, InstanceofType } from '../check';
-import { AssertionError } from '../error';
+import { Errors } from '../error';
 import { instanceId } from '../graph';
 import { ImmutableList } from '../immutable';
 import {
@@ -66,7 +66,7 @@ export class SlotSelectorImpl extends SelectorImpl<SlotPair> implements SlotSele
   getValue(root: ShadowRoot): SlotPair {
     const element = this.parentSelector_.getValue(root);
     if (!element) {
-      throw AssertionError.condition('parent element', 'not null', element);
+      throw Errors.assert('parent element').shouldExist().butWas(element);
     }
 
     const childNodes = ImmutableList.of(element.childNodes);
@@ -75,7 +75,7 @@ export class SlotSelectorImpl extends SelectorImpl<SlotPair> implements SlotSele
     });
 
     if (!startNode) {
-      throw AssertionError.generic(`Expected slot "${this.commentName_}" to exist`);
+      throw Errors.assert(`slot [${this.commentName_}]`).shouldExist().butWas(startNode);
     }
 
     const endCommentName = `${this.commentName_}End`;

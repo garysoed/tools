@@ -1,6 +1,6 @@
 import { BaseColor } from '../color/base-color';
 import { cache } from '../data';
-import { AssertionError } from '../error';
+import { Errors } from '../error';
 import { ImmutableList } from '../immutable';
 
 export class HslColor extends BaseColor {
@@ -107,11 +107,11 @@ export class HslColor extends BaseColor {
    */
   static newInstance(hue: number, saturation: number, lightness: number): HslColor {
     if (lightness > 1 || lightness < 0) {
-      throw AssertionError.condition('lightness', 'be >= 0 and <= 1', lightness);
+      throw Errors.assert('lightness').should('be >= 0 and <= 1').butWas(lightness);
     }
 
     if (saturation > 1 || saturation < 0) {
-      throw AssertionError.condition('saturation', 'be >= 0 and <= 1', saturation);
+      throw Errors.assert('saturation').should('be >= 0 and <= 1').butWas(saturation);
     }
     return new HslColor(hue % 360, saturation, lightness);
   }

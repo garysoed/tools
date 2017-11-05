@@ -1,4 +1,4 @@
-import { AssertionError } from '../error';
+import { Errors } from '../error';
 import { Gapi } from '../net/gapi';
 
 export class GapiLibrary<T> {
@@ -9,7 +9,7 @@ export class GapiLibrary<T> {
     const client = await this.gapi_.init();
     const obj = client[this.name_];
     if (!obj) {
-      throw AssertionError.condition(`gapi.${this.name_}`, 'to exist', obj);
+      throw Errors.assert(`gapi.${this.name_}`).shouldExist().butWas(obj);
     }
     return obj;
   }

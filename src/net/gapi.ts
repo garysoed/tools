@@ -1,5 +1,5 @@
 import { cache } from '../data';
-import { AssertionError } from '../error';
+import { Errors } from '../error';
 
 export class Gapi {
   private readonly discoveryDocs_: Set<string> = new Set();
@@ -13,7 +13,7 @@ export class Gapi {
 
   addDiscoveryDocs(docs: string[]): void {
     if (this.initialized_) {
-      throw AssertionError.condition('initialized', 'be false', this.initialized_);
+      throw Errors.assert('initialized').shouldBe(false).butWas(this.initialized_);
     }
 
     for (const doc of docs) {
@@ -23,7 +23,7 @@ export class Gapi {
 
   addScopes(scopes: string[]): void {
     if (this.initialized_) {
-      throw AssertionError.condition('initialized', 'be false', this.initialized_);
+      throw Errors.assert('initialized').shouldBe(false).butWas(this.initialized_);
     }
 
     for (const scope of scopes) {
@@ -33,7 +33,7 @@ export class Gapi {
 
   addSignIn(): void {
     if (this.initialized_) {
-      throw AssertionError.condition('initialized', 'be false', this.initialized_);
+      throw Errors.assert('initialized').shouldBe(false).butWas(this.initialized_);
     }
 
     this.signIn_ = true;

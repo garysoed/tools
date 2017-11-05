@@ -68,6 +68,6 @@ describe('async.atomic', () => {
     class Class {}
     assert(() => {
       decorator(Class.prototype, 'property', {});
-    }).to.throwError(/should be \[BaseDisposable\]/);
+    }).to.throwError(/should be an instance of \[BaseDisposable\]/);
   });
 });

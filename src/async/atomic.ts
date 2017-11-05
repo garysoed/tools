@@ -1,6 +1,6 @@
 import { BaseDisposable } from '../dispose/base-disposable';
 
-import { AssertionError } from '../error';
+import { Errors } from '../error';
 import { Sequencer } from './sequencer';
 
 export const __SEQUENCER: symbol = Symbol('sequencer');
@@ -16,7 +16,7 @@ export function atomic(): MethodDecorator {
       descriptor: TypedPropertyDescriptor<any>):
       TypedPropertyDescriptor<any> {
     if (!(target instanceof BaseDisposable)) {
-      throw AssertionError.instanceOf('target', BaseDisposable, target);
+      throw Errors.assert('target').shouldBeAnInstanceOf(BaseDisposable).butWas(target);
     }
 
     const originalFn = descriptor.value;

@@ -1,5 +1,5 @@
 import { BaseDisposable } from '../dispose';
-import { AssertionError } from '../error';
+import { Errors } from '../error';
 import { GraphTime, InstanceNodeProvider } from '../graph';
 import { InstanceId } from '../graph/instance-id';
 import { Listener } from '../persona/listener';
@@ -86,7 +86,7 @@ export abstract class SelectorImpl<T> extends Selector<T> {
     const type = this.getId().getType();
     const normalizedValue = type.check(value) ? value : this.getDefaultValue();
     if (!type.check(normalizedValue)) {
-      throw AssertionError.type(`value for input ${this}`, type, normalizedValue);
+      throw Errors.assert(`value for input [${this}]`).shouldBeA(type).butWas(normalizedValue);
     }
     return provider(normalizedValue, ctrl);
   }

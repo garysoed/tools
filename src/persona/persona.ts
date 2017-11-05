@@ -1,5 +1,5 @@
 import { BaseDisposable } from '../dispose';
-import { AssertionError } from '../error';
+import { Errors } from '../error';
 import { Graph, InstanceNodeProvider } from '../graph';
 import { InstanceId } from '../graph/instance-id';
 import { NodeId } from '../graph/node-id';
@@ -242,7 +242,7 @@ export class PersonaImpl {
   getValue<T>(selector: Selector<T>, ctrl: {}): T | null {
     const shadowRoot = this.getShadowRoot(ctrl);
     if (!shadowRoot) {
-      throw AssertionError.condition('shadowRoot', 'to exist', shadowRoot);
+      throw Errors.assert('shadowRoot').shouldExist().butWas(shadowRoot);
     }
     return selector.getValue(shadowRoot);
   }

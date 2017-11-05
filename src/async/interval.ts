@@ -1,4 +1,4 @@
-import { AssertionError } from '../error';
+import { Errors } from '../error';
 import { Bus } from '../event';
 import { Log } from '../util';
 
@@ -43,7 +43,7 @@ export class Interval extends Bus<IntervalEventType, IntervalEvent> {
    */
   start(): void {
     if (this.intervalId_ !== null) {
-      throw AssertionError.generic('Interval is already running, cannot start again');
+      throw Errors.assert(`interval ${this}`).should('not be running').butNot();
     }
     this.intervalId_ = window.setInterval(() => {
       this.dispatch({type: 'tick'});

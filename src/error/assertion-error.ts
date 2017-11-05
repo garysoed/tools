@@ -1,28 +1,51 @@
 import { Type } from '../check';
 
+export class AssertionShouldBuilder {
+  constructor(
+      private readonly fieldName_: string,
+      private readonly condition_: string) { }
+
+  butNot(): AssertionError {
+    return this.createAssertionError_('not');
+  }
+
+  butWas(actual: any): AssertionError {
+    return this.createAssertionError_(`was [${actual}]`);
+  }
+
+  private createAssertionError_(but: string): AssertionError {
+    return new AssertionError(
+        `[${this.fieldName_}] should ${this.condition_}, but ${but}`);
+  }
+}
+
+export class AssertionBuilder {
+  constructor(private readonly fieldName_: string) { }
+
+  should(condition: string): AssertionShouldBuilder {
+    return new AssertionShouldBuilder(this.fieldName_, condition);
+  }
+
+  shouldBe(expected: any): AssertionShouldBuilder {
+    return this.should(`be [${expected}]`);
+  }
+
+  shouldBeA(type: Type<any>): AssertionShouldBuilder {
+    return this.should(`be a [${type}]`);
+  }
+
+  shouldBeAnInstanceOf(expected: gs.ICtor<Object>): AssertionShouldBuilder {
+    return this.should(`be an instance of [${expected.name}]`);
+  }
+
+  shouldExist(): AssertionShouldBuilder {
+    return this.should('exist');
+  }
+}
+
 export class AssertionError extends Error {
   constructor(message: string) {
     super(`AssertionError: ${message}`);
     Object.setPrototypeOf(this, new.target.prototype);
-  }
-
-  static condition(field: string, expected: string, actual: any): AssertionError {
-    return AssertionError.generic(`[${field}] should ${expected}, but was [${actual}]`);
-  }
-
-  static equals(field: string, expected: any, actual: any): AssertionError {
-    return AssertionError.condition(field, `equal to [${expected}]`, actual);
-  }
-
-  static generic(message: string): AssertionError {
-    return new AssertionError(message);
-  }
-
-  static instanceOf(field: string, expected: gs.ICtor<Object>, actual: any): AssertionError {
-    return AssertionError.condition(field, `be [${expected.name}]`, actual);
-  }
-
-  static type(field: string, expected: Type<any>, actual: any): AssertionError {
-    return AssertionError.condition(field, `be [${expected}]`, actual);
   }
 }

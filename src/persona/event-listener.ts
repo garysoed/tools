@@ -1,5 +1,5 @@
 import { DisposableFunction } from '../dispose';
-import { AssertionError } from '../error';
+import { Errors } from '../error';
 import { Event } from '../interfaces';
 import { ElementSelectorImpl } from '../persona/element-selector';
 import { Listener } from '../persona/listener';
@@ -27,7 +27,7 @@ export class EventListener implements Listener<string> {
 export function eventListener(
     selector: ElementSelector<any>, eventType: string): EventListener {
   if (!(selector instanceof ElementSelectorImpl)) {
-    throw AssertionError.instanceOf('selector', ElementSelectorImpl, selector);
+    throw Errors.assert('selector').shouldBeAnInstanceOf(ElementSelectorImpl).butWas(selector);
   }
 
   return new EventListener(selector, eventType);

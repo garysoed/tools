@@ -1,5 +1,5 @@
 import { DisposableFunction } from '../dispose';
-import { AssertionError } from '../error';
+import { Errors } from '../error';
 import { Event } from '../interfaces';
 import { ChildrenSelectorImpl } from '../persona/children-selector';
 import { Listener } from '../persona/listener';
@@ -34,7 +34,7 @@ export class ChildrenListener<E extends Element, T> implements Listener<'childre
     const elementSelector = this.childrenSelector_.getParentSelector();
     const element = elementSelector.getValue(root);
     if (!element) {
-      throw AssertionError.condition(`element for ${elementSelector}`, 'exist', element);
+      throw Errors.assert(`element for ${elementSelector}`).shouldExist().butWas(element);
     }
     observer.observe(
         element,
@@ -50,7 +50,7 @@ export class ChildrenListener<E extends Element, T> implements Listener<'childre
 export function childrenListener<E extends Element, T>(
     selector: ChildrenSelector<T>): ChildrenListener<E, T> {
   if (!(selector instanceof ChildrenSelectorImpl)) {
-    throw AssertionError.instanceOf('selector', ChildrenSelectorImpl, selector);
+    throw Errors.assert('selector').shouldBeAnInstanceOf(ChildrenSelectorImpl).butWas(selector);
   }
 
   return new ChildrenListener(selector);

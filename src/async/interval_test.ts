@@ -42,7 +42,7 @@ describe('async.Interval', () => {
 
       assert(() => {
         interval.start();
-      }).to.throwError(/is already running/);
+      }).to.throwError(/not be running/);
     });
   });
 

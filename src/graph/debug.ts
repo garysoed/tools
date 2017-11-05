@@ -1,5 +1,5 @@
 import { Jsons } from '../data';
-import { AssertionError } from '../error';
+import { Errors } from '../error';
 import { Graph } from '../graph/graph';
 import { NodeId } from '../graph/node-id';
 import { ImmutableList, ImmutableMap } from '../immutable';
@@ -15,7 +15,7 @@ export const Debug = {
   trace<T>(id: NodeId<T>, context: {}): DebugNode<T> {
     const node = Graph.getNode_(id);
     if (!node) {
-      throw AssertionError.condition(`Node for ${id}`, 'to exist', node);
+      throw Errors.assert(`Node for [${id}]`).shouldExist().butWas(node);
     }
 
     const valueMap = new Map();
