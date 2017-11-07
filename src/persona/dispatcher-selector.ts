@@ -54,6 +54,10 @@ export class DispatcherSelectorImpl<T> extends
   setValue_(): void {
     throw new Error('Unsupported');
   }
+
+  toString(): string {
+    return `DispatcherSelector(${this.getId()})`;
+  }
 }
 
 export function dispatcherSelector<T>(

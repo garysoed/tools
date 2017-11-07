@@ -140,7 +140,7 @@ describe('persona.ChildrenSelectorImpl', () => {
     });
   });
 
-  describe('setValue', () => {
+  describe('setValue_', () => {
     it('should add all new entries', () => {
       const value1 = Mocks.object('value1');
       const value2 = Mocks.object('value2');
@@ -169,8 +169,8 @@ describe('persona.ChildrenSelectorImpl', () => {
       spyOn(selector, 'getElement_').and.returnValues(element1, element2);
 
       selector.setValue_(ImmutableList.of([value1, value2]), document as any);
-      assert(mockSetter).to.haveBeenCalledWith(value1, element1);
-      assert(mockSetter).to.haveBeenCalledWith(value2, element2);
+      assert(mockSetter).to.haveBeenCalledWith(value1, element1, 0, 2);
+      assert(mockSetter).to.haveBeenCalledWith(value2, element2, 1, 2);
       assert(parentEl).to.haveChildren([existingChild1, element1, element2, existingChild2]);
       assert(mockSlotSelector.getValue).to.haveBeenCalledWith(document);
     });
@@ -242,8 +242,8 @@ describe('persona.ChildrenSelectorImpl', () => {
       assert(parentEl.children.length).to.equal(2);
       assert(parentEl.children.item(0)).to.equal(child1);
       assert(parentEl.children.item(1)).to.equal(child2);
-      assert(mockSetter).to.haveBeenCalledWith(newData1, child1);
-      assert(mockSetter).to.haveBeenCalledWith(newData2, child2);
+      assert(mockSetter).to.haveBeenCalledWith(newData1, child1, 0, 2);
+      assert(mockSetter).to.haveBeenCalledWith(newData2, child2, 1, 2);
       assert(mockSlotSelector.getValue).to.haveBeenCalledWith(document);
     });
   });

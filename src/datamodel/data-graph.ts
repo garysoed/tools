@@ -1,6 +1,6 @@
 import { InstanceofType } from '../check';
 import { Searcher } from '../datamodel';
-import { Graph, staticId } from '../graph';
+import { Graph, staticId, StaticNodeProvider } from '../graph';
 import { StaticId } from '../graph/static-id';
 import { ImmutableList, ImmutableSet } from '../immutable';
 import { EditableStorage as GsStorage } from '../store';
@@ -18,11 +18,12 @@ export interface DataGraph<D> {
 }
 
 export class DataGraphImpl<D> implements DataGraph<D> {
+  protected provider_: StaticNodeProvider<DataGraphImpl<D>>;
+
   constructor(
       protected readonly id_: StaticId<DataGraph<D>>,
       protected readonly searcher_: Searcher<D>,
-      protected readonly storage_: GsStorage<D>) {
-  }
+      protected readonly storage_: GsStorage<D>) { }
 
   generateId(): Promise<string> {
     return this.storage_.generateId();
@@ -46,9 +47,13 @@ export class DataGraphImpl<D> implements DataGraph<D> {
       return;
     }
     await this.storage_.update(id, data);
-    this.searcher_.index(this.list());
+    await this.searcher_.index(this.list());
 
-    Graph.refresh(this.id_);
+    await this.provider_(this);
+  }
+
+  setProvider_(provider: StaticNodeProvider<DataGraphImpl<D>>): void {
+    this.provider_ = provider;
   }
 }
 
@@ -57,8 +62,8 @@ export function registerDataGraph<D>(
     searcher: Searcher<D>,
     storage: GsStorage<D>): StaticId<DataGraph<D>> {
   const id = staticId(name, InstanceofType(DataGraphImpl));
-
   const graph = new DataGraphImpl(id, searcher, storage);
-  Graph.registerProvider(id, () => graph);
+  const provider = Graph.createProvider(id, graph);
+  graph.setProvider_(provider);
   return id;
 }

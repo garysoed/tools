@@ -67,14 +67,13 @@ describe('datamodel.registerDataGraph', () => {
       const id = 'id';
       const data = Mocks.object('data');
 
-      spyOn(Graph, 'refresh');
-
       const list = Mocks.object('list');
       const graph = await Graph.get(dataGraphId, Graph.getTimestamp());
+      spyOn(graph, 'provider_');
       spyOn(graph, 'list').and.returnValue(list);
 
       await graph.set(id, data);
-      assert(Graph.refresh).to.haveBeenCalledWith(dataGraphId);
+      assert(graph['provider_']).to.haveBeenCalledWith(graph);
       assert(mockSearcher.index).to.haveBeenCalledWith(list);
       assert(mockStorage.update).to.haveBeenCalledWith(id, data);
       assert(mockStorage.read).to.haveBeenCalledWith(id);

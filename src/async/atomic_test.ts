@@ -17,29 +17,29 @@ describe('async.atomic', () => {
 
   it('should replace the descriptor with a function that sequence the annotated function',
       async () => {
-        class Class extends BaseDisposable {}
+    class Class extends BaseDisposable {}
 
-        const mockFunction = jasmine.createSpy('Function');
+    const mockFunction = jasmine.createSpy('Function');
 
-        const property = 'property';
-        const descriptor = Mocks.object('descriptor');
-        descriptor.value = mockFunction;
+    const property = 'property';
+    const descriptor = Mocks.object('descriptor');
+    descriptor.value = mockFunction;
 
-        const mockSequencer = jasmine.createSpyObj('Sequencer', ['dispose', 'run']);
-        mockSequencer.run.and.returnValue(Promise.resolve());
-        spyOn(Sequencer, 'newInstance').and.returnValue(mockSequencer);
+    const mockSequencer = jasmine.createSpyObj('Sequencer', ['dispose', 'run']);
+    mockSequencer.run.and.returnValue(Promise.resolve());
+    spyOn(Sequencer, 'newInstance').and.returnValue(mockSequencer);
 
-        const newDescriptor = decorator(Class.prototype, property, descriptor);
-        assert(newDescriptor).to.equal(descriptor);
+    const newDescriptor = decorator(Class.prototype, property, descriptor);
+    assert(newDescriptor).to.equal(descriptor);
 
-        const mockInstance = jasmine.createSpyObj('Instance', ['addDisposable']);
-        await descriptor.value.call(mockInstance, 1, 2);
+    const mockInstance = jasmine.createSpyObj('Instance', ['addDisposable']);
+    await descriptor.value.call(mockInstance, 1, 2);
 
-        assert(mockSequencer.run).to.haveBeenCalledWith(Matchers.anyFunction());
-        mockSequencer.run.calls.argsFor(0)[0]();
+    assert(mockSequencer.run).to.haveBeenCalledWith(Matchers.anyFunction());
+    mockSequencer.run.calls.argsFor(0)[0]();
 
-        assert(mockFunction).to.haveBeenCalledWith(1, 2);
-      });
+    assert(mockFunction).to.haveBeenCalledWith(1, 2);
+  });
 
   it('should reuse existing sequencer', async () => {
     class Class extends BaseDisposable {}

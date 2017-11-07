@@ -10,7 +10,7 @@ import { SlotSelectorImpl, SlotSelectorStub } from '../persona/slot-selector';
 
 type Factory<E extends Element> = (document: Document) => E;
 type Getter<E extends Element, T> = (element: E) => T;
-type Setter<E extends Element, T> = (data: T, element: E) => void;
+type Setter<E extends Element, T> = (data: T, element: E, index: number, count: number) => void;
 
 export class ChildrenSelectorStub<E extends Element, T> extends
     SelectorStub<ImmutableList<T>> implements ChildrenSelector<T> {
@@ -128,7 +128,7 @@ export class ChildrenSelectorImpl<E extends Element, T> extends
       if (!element) {
         throw Errors.assert(`child[${index}]`).shouldExist().butWas(element);
       }
-      this.setter_(value, element);
+      this.setter_(value, element, index, valueArray.size());
     }
   }
 }

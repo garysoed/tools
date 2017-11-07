@@ -212,6 +212,20 @@ export class GraphImpl extends BaseDisposable {
     return this.nodes_.has(id);
   }
 
+  onChange<C>(
+      id: InstanceId<any>,
+      handler: (event: GraphEvent<any, C>) => any,
+      context: C): DisposableFunction;
+  onChange<C>(id: StaticId<any>, handler: (event: GraphEvent<any, C>) => any): DisposableFunction;
+  onChange<C>(id: NodeId<any>, handler: (event: GraphEvent<any, C>) => any, context?: C):
+      DisposableFunction {
+    if (id instanceof StaticId) {
+      return this.eventHandler_.onChange<C>(id, handler);
+    } else {
+      return this.eventHandler_.onChange<C>(id, handler, context!);
+    }
+  }
+
   onReady<C>(context: C, id: NodeId<any>, handler: (event: GraphEvent<any, C>) => any):
       DisposableFunction {
     if (id instanceof StaticId) {
