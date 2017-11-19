@@ -40,15 +40,5 @@ describe('webc.Templates', () => {
       const templates = Templates.newInstance();
       assert(templates.getTemplate(key)).to.equal(templateString);
     });
-
-    it('should throw error if the key has already been registered', () => {
-      const key = 'key';
-
-      Templates.register(key, 'templateString1');
-
-      assert(() => {
-        Templates.register(key, 'templateString2');
-      }).to.throwError(/is already registered/);
-    });
   });
 });
