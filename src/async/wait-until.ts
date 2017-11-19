@@ -8,7 +8,7 @@ import { BaseListener } from '../event/base-listener';
  * Once the check function returns true, the promise that the waiter keeps will be resolved. If the
  * waiter is disposed before the check function calls true, the promise will be rejected.
  */
-class WaitUntil extends BaseListener {
+export class WaitUntil extends BaseListener {
   private readonly checkFn_: () => boolean;
   private readonly interval_: number;
   private promise_: Promise<void> | null;

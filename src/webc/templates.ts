@@ -1,4 +1,8 @@
-import { cache } from '../data/cache';
+import { Log } from '../util';
+
+import { cache } from '../data';
+
+const LOG = Log.of('gs-ui.webc.Templates');
 
 
 /**
@@ -39,7 +43,7 @@ export class Templates {
    */
   static register(key: string, templateStr: string): void {
     if (Templates.templates_.has(key)) {
-      throw new Error(`Key ${key} is already registered`);
+      Log.warn(LOG, `Key ${key} is already registered`);
     }
     Templates.templates_.set(key, templateStr);
   }
