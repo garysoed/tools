@@ -9,6 +9,8 @@ export interface AttributeSelector<T> extends Selector<T> {
 
 export interface ChildrenSelector<T> extends Selector<ImmutableList<T>> { }
 
+export interface ClassSelector extends Selector<boolean> { }
+
 export interface DispatcherSelector<T> extends Selector<T> {
   getElementSelector(): ElementSelector<HTMLElement>;
 }

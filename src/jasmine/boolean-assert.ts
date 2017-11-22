@@ -17,7 +17,7 @@ export class BooleanAssert extends BaseAssert {
     super(booleanValue, reversed, expect);
   }
 
-  be(value: boolean): void {
+  be(value: boolean | null): void {
     this.getMatchers_().toBe(value);
   }
 
