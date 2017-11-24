@@ -4,6 +4,10 @@ import { ImmutableList, ImmutableMap, ImmutableSet } from '../immutable';
 export class FakeDataGraph<T> implements DataGraph<T> {
   private readonly data_: Map<string, T> = new Map();
 
+  async delete(id: string): Promise<void> {
+    this.data_.delete(id);
+  }
+
   generateId(): Promise<string> {
     throw new Error('Method not implemented.');
   }

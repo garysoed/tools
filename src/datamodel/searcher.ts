@@ -1,8 +1,8 @@
+import { DataModel } from '../datamodel/data-model';
 import { ImmutableList } from '../immutable/immutable-list';
-import { ImmutableSet } from '../immutable/immutable-set';
 
-export interface Searcher<D> {
-  index(data: Promise<ImmutableSet<D>>): Promise<void>;
+export interface Searcher<D extends DataModel<any>> {
+  index(data: Promise<Iterable<D>>): Promise<void>;
 
   search(token: string): Promise<ImmutableList<D>>;
 }

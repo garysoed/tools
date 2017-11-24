@@ -1,11 +1,14 @@
 import { InstanceofType } from '../check';
-import { Searcher } from '../datamodel';
+import { DataModel } from '../datamodel/data-model';
+import { Searcher } from '../datamodel/searcher';
 import { Graph, staticId, StaticNodeProvider } from '../graph';
 import { StaticId } from '../graph/static-id';
 import { ImmutableList, ImmutableSet } from '../immutable';
 import { EditableStorage as GsStorage } from '../store';
 
 export interface DataGraph<D> {
+  delete(id: string): Promise<void>;
+
   generateId(): Promise<string>;
 
   get(id: string): Promise<D | null>;
@@ -17,13 +20,17 @@ export interface DataGraph<D> {
   set(id: string, data: D): Promise<void>;
 }
 
-export class DataGraphImpl<D> implements DataGraph<D> {
+export class DataGraphImpl<D extends DataModel<any>> implements DataGraph<D> {
   protected provider_: StaticNodeProvider<DataGraphImpl<D>>;
 
   constructor(
       protected readonly id_: StaticId<DataGraph<D>>,
       protected readonly searcher_: Searcher<D>,
       protected readonly storage_: GsStorage<D>) { }
+
+  delete(id: string): Promise<void> {
+    return this.storage_.delete(id);
+  }
 
   generateId(): Promise<string> {
     return this.storage_.generateId();
@@ -57,7 +64,7 @@ export class DataGraphImpl<D> implements DataGraph<D> {
   }
 }
 
-export function registerDataGraph<D>(
+export function registerDataGraph<D extends DataModel<any>>(
     name: string,
     searcher: Searcher<D>,
     storage: GsStorage<D>): StaticId<DataGraph<D>> {

@@ -15,6 +15,17 @@ export class Iterables {
     };
   }
 
+  static flatten<T>(iterables: Iterable<Iterable<T>>): Iterable<T> {
+    const output: T[] = [];
+    for (const iterable of iterables) {
+      for (const item of iterable) {
+        output.push(item);
+      }
+    }
+
+    return output;
+  }
+
   static of<T>(generator: () => Iterator<T>): Iterable<T>;
   static of<T>(iterator: Iterator<T>): Iterable<T>;
   static of<T>(data: Iterator<T> | (() => Iterator<T>)): Iterable<T> {

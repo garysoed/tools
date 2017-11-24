@@ -8,14 +8,26 @@ import { Graph, StaticId } from '../graph';
 describe('datamodel.registerDataGraph', () => {
   let mockSearcher: any;
   let mockStorage: any;
-  let dataGraphId: StaticId<DataGraph<number>>;
+  let dataGraphId: StaticId<DataGraph<any>>;
 
   beforeEach(() => {
     Flags.enableTracking = false;
 
     mockSearcher = jasmine.createSpyObj('Searcher', ['index', 'search']);
-    mockStorage = jasmine.createSpyObj('Storage', ['generateId', 'list', 'read', 'update']);
+    mockStorage = jasmine.createSpyObj(
+        'Storage', ['delete', 'generateId', 'list', 'read', 'update']);
     dataGraphId = registerDataGraph('test', mockSearcher, mockStorage);
+  });
+
+  describe('delete', () => {
+    it(`should delete correctly`, async () => {
+      const id = 'id';
+      mockStorage.delete.and.returnValue(Promise.resolve());
+
+      const graph = await Graph.get(dataGraphId, Graph.getTimestamp());
+      await graph.delete(id);
+      assert(mockStorage.delete).to.haveBeenCalledWith(id);
+    });
   });
 
   describe('generateId', () => {

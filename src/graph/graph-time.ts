@@ -1,3 +1,6 @@
+import { InstanceofType } from '../check';
+import { staticId } from '../graph/static-id';
+
 export class GraphTime {
   constructor(private readonly timestamp_: number) { }
 
@@ -34,3 +37,5 @@ export class GraphTime {
     return new GraphTime(0);
   }
 }
+
+export const $time = staticId('time', InstanceofType(GraphTime));

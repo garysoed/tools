@@ -4,13 +4,14 @@ import { FLAGS } from '../graph/flags';
 import { GLOBALS, GNode } from '../graph/g-node';
 import { GraphEvent } from '../graph/graph-event';
 import { GraphEventHandler } from '../graph/graph-event-handler';
-import { GraphTime } from '../graph/graph-time';
+import { $time, GraphTime } from '../graph/graph-time';
+import { GraphTimeNode } from '../graph/graph-time-node';
 import { InnerNode } from '../graph/inner-node';
 import { InputNode } from '../graph/input-node';
 import { InstanceId } from '../graph/instance-id';
 import { NodeId } from '../graph/node-id';
 import { InstanceNodeProvider, StaticNodeProvider } from '../graph/node-provider';
-import { Provider, Provider0, Provider1, Provider2 } from '../graph/provider';
+import { Provider, Provider0, Provider1, Provider2, Provider3 } from '../graph/provider';
 import { StaticId } from '../graph/static-id';
 import { ImmutableList, ImmutableSet } from '../immutable';
 import { assertUnreachable, equals } from '../typescript';
@@ -22,7 +23,7 @@ export class GraphImpl extends BaseDisposable {
   private currentTime_: GraphTime = GraphTime.new();
   private readonly eventHandler_: GraphEventHandler;
   private readonly monitoredNodes_: WeakMap<{}, ImmutableSet<NodeId<any>>> = new WeakMap();
-  private readonly nodes_: Map<NodeId<any>, GNode<any>> = new Map();
+  private readonly nodes_: Map<NodeId<any>, GNode<any>> = new Map([[$time, new GraphTimeNode()]]);
   private readonly setQueue_: (() => void)[] = [];
   private readonly transitiveDependencies_: Map<NodeId<any>, ImmutableSet<NodeId<any>>> = new Map();
 
@@ -85,6 +86,7 @@ export class GraphImpl extends BaseDisposable {
       nodeId: NodeId<T>, timestamp: GraphTime, context: BaseDisposable = GLOBALS): Promise<T> {
     // TODO: This needs a ticketing system.
     Log.debug(LOGGER, `getting: ${nodeId}`);
+
     const idealExecutionTime = nodeId instanceof StaticId ?
         this.getIdealExecutionTime_(nodeId, timestamp) :
         this.getIdealExecutionTime_(nodeId, timestamp, context);
@@ -312,6 +314,7 @@ export class GraphImpl extends BaseDisposable {
   registerProvider<T>(
       nodeId: NodeId<T>,
       provider: Provider0<T>): void;
+
   registerProvider<T, P0>(
       staticId: StaticId<T>,
       provider: Provider1<T, P0>,
@@ -321,6 +324,13 @@ export class GraphImpl extends BaseDisposable {
       provider: Provider2<T, P0, P1>,
       arg0: StaticId<P0>,
       arg1: StaticId<P1>): void;
+  registerProvider<T, P0, P1, P2>(
+      staticId: StaticId<T>,
+      provider: Provider3<T, P0, P1, P2>,
+      arg0: StaticId<P0>,
+      arg1: StaticId<P1>,
+      arg2: StaticId<P2>): void;
+
   registerProvider<T, P0>(
       instanceId: InstanceId<T>,
       provider: Provider1<T, P0>,
@@ -330,6 +340,12 @@ export class GraphImpl extends BaseDisposable {
       provider: Provider2<T, P0, P1>,
       arg0: NodeId<P0>,
       arg1: NodeId<P1>): void;
+  registerProvider<T, P0, P1, P2>(
+      instanceId: InstanceId<T>,
+      provider: Provider3<T, P0, P1, P2>,
+      arg0: NodeId<P0>,
+      arg1: NodeId<P1>,
+      arg2: NodeId<P2>): void;
 
   registerProvider<T>(
       nodeId: NodeId<T>,

@@ -17,6 +17,12 @@ describe('immutable.Iterables', () => {
     });
   });
 
+  describe('flatten', () => {
+    it(`should output correctly`, () => {
+      assert(Iterables.flatten(['a', [1, 2, 3], [['b'], 4]])).to.equal(['a', 1, 2, 3, ['b'], 4]);
+    });
+  });
+
   describe('of', () => {
     it('should return the correct iterable object when given an iterator', () => {
       function* generator(): IterableIterator<number> {

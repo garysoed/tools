@@ -2,7 +2,7 @@ export { Debug } from './debug';
 export { FLAGS } from './flags';
 export { Graph } from './graph';
 export { GraphEvent } from './graph-event';
-export { GraphTime } from './graph-time';
+export { $time, GraphTime } from './graph-time';
 export { InstanceNodeProvider, StaticNodeProvider } from './node-provider';
 export { instanceId, InstanceId } from './instance-id';
 export { nodeIn } from './node-in';

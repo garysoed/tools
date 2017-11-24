@@ -8,3 +8,4 @@ export { Manager, ManagerEvent } from './manager';
 export { DataGraph, registerDataGraph } from './data-graph';
 export { SearchIndex } from './search-index';
 export { Searcher } from './searcher';
+export { SimpleSearcher } from './simple-searcher';

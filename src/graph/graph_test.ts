@@ -292,6 +292,7 @@ describe('graph.Graph', () => {
       assert(mockNode.execute).to.haveBeenCalledWith(GLOBALS, [], idealExecutionTime);
       assert(graph['eventHandler_'].dispatchChange).toNot.haveBeenCalled();
     });
+
   });
 
   describe('getIdealExecutionTime_', () => {
