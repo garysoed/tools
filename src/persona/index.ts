@@ -1,6 +1,7 @@
 export { attributeChangeListener } from './attribute-change-listener';
 export { attributeSelector } from './attribute-selector';
 export { childrenSelector } from './children-selector';
+export { classSelector } from './class-selector';
 export { component } from './component';
 export { dispatcherSelector } from './dispatcher-selector';
 export { elementSelector } from './element-selector';

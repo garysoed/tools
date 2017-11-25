@@ -14,7 +14,7 @@ import { InstanceNodeProvider, StaticNodeProvider } from '../graph/node-provider
 import { Provider, Provider0, Provider1, Provider2, Provider3 } from '../graph/provider';
 import { StaticId } from '../graph/static-id';
 import { ImmutableList, ImmutableSet } from '../immutable';
-import { assertUnreachable, equals } from '../typescript';
+import { equals } from '../typescript';
 import { Log } from '../util';
 
 const LOGGER: Log = Log.of('gs-tools.graph.Graph');
@@ -67,10 +67,8 @@ export class GraphImpl extends BaseDisposable {
 
     if (nodeId instanceof StaticId) {
       return (newValue: T): Promise<void> => this.set_(nodeId, GLOBALS, newValue);
-    } else if (nodeId instanceof InstanceId) {
-      return (newValue: T, context: {}): Promise<void> => this.set_(nodeId, context, newValue);
     } else {
-      throw assertUnreachable(nodeId);
+      return (newValue: T, context: {}): Promise<void> => this.set_(nodeId, context, newValue);
     }
   }
 
@@ -136,6 +134,32 @@ export class GraphImpl extends BaseDisposable {
 
     Log.debug(LOGGER, `executed: ${nodeId} ${resolvedValue}`);
     return resolvedValue;
+  }
+
+  async getAll<T0>(
+      timestamp: GraphTime,
+      context: BaseDisposable,
+      nodeId: NodeId<T0>): Promise<[T0]>;
+  async getAll<T0, T1>(
+      timestamp: GraphTime,
+      context: BaseDisposable,
+      nodeId0: NodeId<T0>,
+      nodeId1: NodeId<T1>): Promise<[T0, T1]>;
+  async getAll<T0, T1, T2>(
+      timestamp: GraphTime,
+      context: BaseDisposable,
+      nodeId0: NodeId<T0>,
+      nodeId1: NodeId<T1>,
+      nodeId2: NodeId<T2>): Promise<[T0, T1, T2]>;
+  async getAll(
+      timestamp: GraphTime, context: BaseDisposable, ...nodeIds: NodeId<any>[]): Promise<any[]> {
+    return Promise.all(nodeIds.map((nodeId) => {
+      if (nodeId instanceof StaticId) {
+        return this.get(nodeId, timestamp);
+      } else {
+        return this.get(nodeId, timestamp, context);
+      }
+    }));
   }
 
   private getIdealExecutionTime_(staticId: StaticId<any>, timestamp: GraphTime): GraphTime;
@@ -240,10 +264,8 @@ export class GraphImpl extends BaseDisposable {
   private onReady_<T, C>(nodeId: NodeId<T>, context: C): void {
     if (nodeId instanceof StaticId) {
       this.refresh(nodeId);
-    } else if (nodeId instanceof InstanceId) {
-      this.refresh(nodeId, context);
     } else {
-      assertUnreachable(nodeId);
+      this.refresh(nodeId, context);
     }
   }
 
@@ -382,6 +404,17 @@ export class GraphImpl extends BaseDisposable {
     setTimeout(() => this.processSetQueue_(), 0);
 
     return promise;
+  }
+
+  // TODO: Move to TestGraph.
+  setForTest<T>(nodeId: NodeId<T>, initValue: T): void {
+    FLAGS.checkValueType = false;
+    Graph.clearNodesForTests([nodeId]);
+    if (nodeId instanceof StaticId) {
+      Graph.createProvider(nodeId, initValue);
+    } else {
+      Graph.createProvider(nodeId, initValue);
+    }
   }
 
   toString(): string {

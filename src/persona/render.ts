@@ -6,8 +6,9 @@ import { Selector } from '../persona/selector';
 import {
   AttributeSelector,
   ChildrenSelector,
+  ClassSelector,
   InnerTextSelector,
-  SwitchSelector } from '../persona/selectors';
+  SwitchSelector} from '../persona/selectors';
 
 export function createRenderDecorator<S extends Selector<any>>():
     (selector: S) => MethodDecorator {
@@ -39,6 +40,7 @@ export function createRenderDecorator<S extends Selector<any>>():
 export const render = {
   attribute: createRenderDecorator<AttributeSelector<any>>(),
   children: createRenderDecorator<ChildrenSelector<any>>(),
+  class: createRenderDecorator<ClassSelector>(),
   innerText: createRenderDecorator<InnerTextSelector<any>>(),
   switch: createRenderDecorator<SwitchSelector<any>>(),
 };
