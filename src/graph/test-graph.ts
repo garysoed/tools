@@ -14,6 +14,10 @@ export const TestGraph = {
     }
     FLAGS.checkValueType = originalCheckValueType;
     Graph['setQueue_'].splice(0, Graph['setQueue_'].length);
+
+    for (const disposable of Graph['disposables_']) {
+      disposable.dispose();
+    }
   },
 
   beforeEach(): void {
