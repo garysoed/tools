@@ -1,6 +1,5 @@
 import { Asyncs } from '../async/asyncs';
 
-
 /**
  * Test setup object for testing any code using code from the `async` directory.
  *

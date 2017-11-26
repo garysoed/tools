@@ -37,16 +37,6 @@ export class GraphImpl extends BaseDisposable {
     this.getNode_(nodeId);
   }
 
-  clearAllNodesForTest(): void {
-    this.nodes_.clear();
-  }
-
-  clearNodesForTests(nodeIds: Iterable<NodeId<any>>): void {
-    for (const nodeId of nodeIds) {
-      this.nodes_.delete(nodeId);
-    }
-  }
-
   /**
    * Creates a new provider.
    * @param staticId
@@ -404,17 +394,6 @@ export class GraphImpl extends BaseDisposable {
     setTimeout(() => this.processSetQueue_(), 0);
 
     return promise;
-  }
-
-  // TODO: Move to TestGraph.
-  setForTest<T>(nodeId: NodeId<T>, initValue: T): void {
-    FLAGS.checkValueType = false;
-    Graph.clearNodesForTests([nodeId]);
-    if (nodeId instanceof StaticId) {
-      Graph.createProvider(nodeId, initValue);
-    } else {
-      Graph.createProvider(nodeId, initValue);
-    }
   }
 
   toString(): string {

@@ -8,3 +8,4 @@ export { instanceId, InstanceId } from './instance-id';
 export { nodeIn } from './node-in';
 export { nodeOut } from './node-out';
 export { staticId, StaticId } from './static-id';
+export { TestGraph } from './test-graph';

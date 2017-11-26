@@ -1,8 +1,5 @@
-import { TestAsync } from './testing/test-async';
-import { TestDispose } from './testing/test-dispose';
-import { TestEvent } from './testing/test-event';
-import { TestJasmine } from './testing/test-jasmine';
-import { TestSetup } from './testing/test-setup';
+import { TestGraph } from './graph';
+import { TestAsync, TestDispose, TestEvent, TestJasmine, TestSetup } from './testing';
 import { Log, LogLevel } from './util/log';
 export { assert } from './jasmine/assert';
 export { assertColor } from './jasmine/assert-color';
@@ -14,6 +11,7 @@ const TEST_SETUP = new TestSetup([
   TestAsync,
   TestDispose,
   TestEvent,
+  TestGraph,
   TestJasmine,
 ]);
 

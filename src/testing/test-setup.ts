@@ -1,4 +1,4 @@
-import ITestSetup from './i-test-setup';
+import { ITestSetup } from './i-test-setup';
 
 /**
  * Sets up testing logic for your project.
@@ -73,4 +73,3 @@ export class TestSetup {
     });
   }
 }
-// TODO: Mutable

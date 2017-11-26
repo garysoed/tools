@@ -9,7 +9,8 @@ import {
   instanceId,
   nodeIn,
   nodeOut,
-  staticId } from '../graph';
+  staticId,
+  TestGraph} from '../graph';
 import { StaticNodeProvider } from '../graph/node-provider';
 import { TestDispose } from '../testing';
 
@@ -34,7 +35,7 @@ describe('graph functional test', () => {
     }
 
     beforeEach(() => {
-      Graph.clearNodesForTests([$.a, $.b, $.c]);
+      TestGraph.clear($.a, $.b, $.c);
       Graph.registerProvider<number, number>($.a, providesA, $.b);
       providesB = Graph.createProvider($.b, 3);
       providesC = Graph.createProvider($.c, 4);
@@ -77,10 +78,10 @@ describe('graph functional test', () => {
     }
     let providesC: StaticNodeProvider<number>;
 
+    Graph.registerProvider($a, TestClass.prototype.providesA, $b, $.c);
+    Graph.registerProvider($b, TestClass.prototype.providesB);
+
     beforeEach(() => {
-      Graph.clearNodesForTests([$a, $b, $.c]);
-      Graph.registerProvider($a, TestClass.prototype.providesA, $b, $.c);
-      Graph.registerProvider($b, TestClass.prototype.providesB);
       providesC = Graph.createProvider($.c, 3);
     });
 
@@ -124,6 +125,7 @@ describe('graph functional test', () => {
   });
 
   describe('with instance functions with annotations', () => {
+    let providesC: StaticNodeProvider<number>;
     const $a = instanceId('a', NumberType);
     const $b = instanceId('b', NumberType);
 
@@ -146,10 +148,8 @@ describe('graph functional test', () => {
       }
     }
 
-    let providesC: StaticNodeProvider<number>;
-
     beforeEach(() => {
-      Graph.clearNodesForTests([$.c]);
+      TestGraph.clear($.c);
       providesC = Graph.createProvider($.c, 3);
     });
 

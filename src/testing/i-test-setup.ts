@@ -1,7 +1,7 @@
 /**
  * Interface to implement for [[TestSetup]] code.
  */
-interface ITestSetup {
+export interface ITestSetup {
   /**
    * Runs the code in jasmine's `afterEach` logic.
    */
@@ -17,6 +17,3 @@ interface ITestSetup {
    */
   init(): void;
 }
-
-export default ITestSetup;
-// TODO: Mutable

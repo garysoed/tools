@@ -4,7 +4,7 @@ TestBase.setup();
 import { InstanceofType, NumberType } from '../check';
 import { BaseDisposable } from '../dispose';
 import { Flags } from '../dispose/base-disposable';
-import { Graph, staticId, StaticNodeProvider } from '../graph';
+import { Graph, staticId, StaticNodeProvider, TestGraph } from '../graph';
 import { Injector } from '../inject';
 import { IntegerParser } from '../parse';
 import {
@@ -65,7 +65,7 @@ describe('persona functional test without annotations', () => {
   });
 
   afterAll(() => {
-    Graph.clearNodesForTests([$.root.innerText.getId(), $.root.element.getId()]);
+    TestGraph.clear($.root.innerText.getId(), $.root.element.getId());
   });
 
   it(`should render data correctly`, async () => {
