@@ -2,14 +2,6 @@ declare namespace goog {
   export class Drive {
     readonly files: goog.drive.files.Api;
   }
-
-  export type Response<T> = {
-    readonly body: string,
-    readonly headers: {},
-    readonly result: T,
-    readonly status: number,
-    readonly statusText: string | null,
-  }
 }
 
 declare namespace goog.drive {
@@ -162,8 +154,8 @@ declare namespace goog.drive.files {
   };
 
   export class Api {
-    get(config: GetConfig): Promise<goog.Response<File>>
-    list(config: ListConfig): Promise<goog.Response<ListResponse>>
+    get(config: GetConfig): Promise<gapi.client.Response<File>>
+    list(config: ListConfig): Promise<gapi.client.Response<ListResponse>>
   }
 }
 

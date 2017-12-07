@@ -6,4 +6,5 @@ gs_tools(
     deps = [
       "//src/dispose",
       "//src/event",
+      "//src/random",
     ])

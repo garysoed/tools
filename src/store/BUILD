@@ -8,6 +8,7 @@ gs_tools(
       "//src/dispose",
       "//src/event",
       "//src/inject",
+      "//src/net",
       "//src/random",
     ])
 
