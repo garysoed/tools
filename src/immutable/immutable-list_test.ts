@@ -177,6 +177,8 @@ describe('immutable.ImmutableList', () => {
       assert(list.get(1)).to.equal(2);
       assert(list.get(2)).to.equal(3);
       assert(list.get(3)).to.equal(4);
+      assert(list.get(-1)).toNot.beDefined();
+      assert(list.get(6)).toNot.beDefined();
     });
   });
 
@@ -187,6 +189,9 @@ describe('immutable.ImmutableList', () => {
       assert(list.getAt(1)).to.equal(2);
       assert(list.getAt(2)).to.equal(3);
       assert(list.getAt(3)).to.equal(4);
+      assert(list.getAt(-1)).to.equal(4);
+      assert(list.getAt(-11)).toNot.beDefined();
+      assert(list.getAt(6)).toNot.beDefined();
     });
   });
 
@@ -307,6 +312,23 @@ describe('immutable.ImmutableList', () => {
   describe('size', () => {
     it('should return the correct length', () => {
       assert(ImmutableList.of([1, 2, 3, 4]).size()).to.equal(4);
+    });
+  });
+
+  describe('slice', () => {
+    fit(`should return the correct slice`, () => {
+      const list = ImmutableList.of([1, 2, 3, 4]);
+
+      assert(list.slice(1, 4)).to.haveElements([2, 3, 4]);
+      assert(list.slice(3, 1)).to.haveElements([]);
+      assert(list.slice(1, -1)).to.haveElements([2, 3]);
+      assert(list.slice(2, -1)).to.haveElements([3]);
+      assert(list.slice(2, -2)).to.haveElements([]);
+      assert(list.slice(0, 4, 2)).to.haveElements([1, 3]);
+      assert(list.slice(undefined, 1, -2)).to.haveElements([4]);
+      assert(list.slice(undefined, undefined, -1)).to.haveElements([4, 3, 2, 1]);
+      assert(list.slice(0, 1, -1)).to.haveElements([]);
+      assert(list.slice(1, 0, 1)).to.haveElements([]);
     });
   });
 

@@ -5,6 +5,7 @@ import {
   IntersectType,
   NumberType,
   Type } from '../check';
+import { Errors } from '../error';
 import { Orderings } from '../immutable/orderings';
 import { CompareResult, FiniteCollection, FiniteIndexed, Ordered, Ordering } from '../interfaces';
 import { assertUnreachable } from '../typescript';
@@ -171,7 +172,8 @@ export class ImmutableList<T> implements
   }
 
   getAt(index: number): T | undefined {
-    return this.get(index);
+    const normalizedIndex = index < 0 ? index + this.size() : index;
+    return this.get(normalizedIndex);
   }
 
   has(item: T): boolean {
@@ -256,6 +258,42 @@ export class ImmutableList<T> implements
 
   size(): number {
     return this.data_.length;
+  }
+
+  slice(start?: number, end?: number, step: number = 1): ImmutableList<T> {
+    if (step === 0) {
+      throw Errors.assert('step').shouldBe('not 0').butWas(step);
+    }
+
+    let normalizedEnd;
+    if (end === undefined) {
+      normalizedEnd = step > 0 ? this.data_.length : -1;
+    } else if (end < 0) {
+      normalizedEnd = end + this.data_.length;
+    } else {
+      normalizedEnd = end;
+    }
+
+    let normalizedStart;
+    if (start !== undefined) {
+      normalizedStart = start;
+    } else if (step > 0) {
+      normalizedStart = 0;
+    } else {
+      normalizedStart = this.data_.length - 1;
+    }
+
+    const sliceData = [];
+    let loopBound;
+    if (step > 0) {
+      loopBound = Math.min(this.data_.length, normalizedEnd);
+    } else {
+      loopBound = Math.max(-1, normalizedEnd);
+    }
+    for (let i = normalizedStart; step < 0 ? i > loopBound : i < loopBound; i += step) {
+      sliceData.push(this.data_[i]);
+    }
+    return new ImmutableList(sliceData);
   }
 
   some(check: (value: T, key: number) => boolean): boolean {
