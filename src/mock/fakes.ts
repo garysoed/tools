@@ -27,6 +27,8 @@ class WhenBuilder {
             matches = matches && arg.jasmineMatches(args[i]);
           } else if (typeof arg.asymmetricMatch === 'function') {
             matches = matches && arg.asymmetricMatch(args[i]);
+          } else if (typeof arg.matches === 'function') {
+            matches = matches && arg.matches(args[i]);
           } else {
             matches = matches && (callSpec.args[i] === args[i]);
           }

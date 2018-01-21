@@ -1,10 +1,20 @@
+import { Errors } from '../error';
 import { ImmutableList } from '../immutable';
 import { AbsolutePath } from '../path/absolute-path';
+import { AbsolutePathParser } from '../path/absolute-path-parser';
 import { Path } from '../path/path';
 import { RelativePath } from '../path/relative-path';
 import { assertUnreachable } from '../typescript';
 
 export class Paths {
+  static absolutePath(pathString: string): AbsolutePath {
+    const path = AbsolutePathParser.parse(pathString);
+    if (!path) {
+      throw Errors.assert('pathString').shouldBe('a valid absolute path').butWas(pathString);
+    }
+    return path;
+  }
+
   static getDirPath(path: AbsolutePath): AbsolutePath;
   static getDirPath(path: RelativePath): RelativePath;
   static getDirPath(path: AbsolutePath | RelativePath): Path {
@@ -36,12 +46,28 @@ export class Paths {
     }
 
     const upCount = thisParts.size() - commonCount;
-    const parts = [];
+    const parts: string[] = [];
     for (let i = 0; i < upCount; i++) {
       parts.push('..');
     }
 
     return new RelativePath(ImmutableList.of(parts).addAll(thatParts.slice(upCount)));
+  }
+
+  /**
+   * @param path Path to return the subpaths to.
+   * @return Subpaths to the root from the given path. For example, if path is '/a/b/c', this would
+   *     return ['/a/b/c', '/a/b', '/a', '/'].
+   */
+  static getSubPathsToRoot(path: AbsolutePath): ImmutableList<AbsolutePath> {
+    const subpaths: AbsolutePath[] = [];
+    let currentPath = path;
+    while (currentPath && currentPath.getParts().size() > 0) {
+      subpaths.push(currentPath);
+      currentPath = Paths.getDirPath(currentPath);
+    }
+
+    return ImmutableList.of(subpaths);
   }
 
   static join(root: AbsolutePath, ...paths: RelativePath[]): AbsolutePath;
@@ -70,7 +96,7 @@ export class Paths {
     const noEmptyParts = [...path.getParts().filter((part) => !!part)];
 
     // Removes all instances of '.' part except the first one.
-    const noCurrentParts = [];
+    const noCurrentParts: string[] = [];
     for (let i = 0; i < noEmptyParts.length; i++) {
       const part = noEmptyParts[i];
       if (i === 0 || part !== '.') {
@@ -81,7 +107,7 @@ export class Paths {
     // Copy all trailing '..' part.
     const nonDoubleDotEntry = ImmutableList.of(noCurrentParts).findEntry((part) => part !== '..');
     const nonDoubleIndex = nonDoubleDotEntry ? nonDoubleDotEntry[0] + 1 : 0;
-    const normalizedParts = [];
+    const normalizedParts: string[] = [];
     for (let i = 0; i < nonDoubleIndex; i++) {
       normalizedParts.push(noCurrentParts[i]);
     }

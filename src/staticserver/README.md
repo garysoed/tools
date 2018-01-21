@@ -3,7 +3,7 @@
 Usage:
 
 ```
-npm src/staticserver/server.js path/to/configuration
+node src/staticserver/server.js path/to/configuration
 ```
 
 Configuration file is a JSON file. The JSON object's key is the request parameter to match, while

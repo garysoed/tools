@@ -16,6 +16,7 @@ gs_tools(
       "//src/mock",
       "//src/net",
       "//src/path",
+      "//src/path/testing",
       "//src/parse",
       "//src/persona",
       "//src/random",
