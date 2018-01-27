@@ -531,6 +531,7 @@ describe('persona.Persona', () => {
       spyOn(persona, 'registerCustomElement_');
 
       persona['register_'](injector, mockTemplates, ctrl);
+      assert(persona['registeredSpecs_']).to.haveElements([ctrl]);
       assert(persona['registerCustomElement_']).to.haveBeenCalledWith(spec, customElementClass);
       assert(persona['createCustomElementClass_']).to.haveBeenCalledWith(
           parentCtor,
@@ -622,6 +623,22 @@ describe('persona.Persona', () => {
       const injector = Mocks.object('injector');
       const ctrl = Mocks.object('ctrl');
       const mockTemplates = jasmine.createSpyObj('Templates', ['getTemplate']);
+
+      persona['register_'](injector, mockTemplates, ctrl);
+      assert(mockCustomElements.define).toNot.haveBeenCalled();
+    });
+
+    it(`should do nothing if the ctrl is already registered`, () => {
+      const injector = Mocks.object('injector');
+      const ctrl = Mocks.object('ctrl');
+      const mockTemplates = jasmine.createSpyObj('Templates', ['getTemplate']);
+      persona['registeredSpecs_'].add(ctrl);
+
+      const spec = {
+        tag: 'tag',
+        templateKey: 'templateKey',
+      };
+      persona['componentSpecs_'].set(ctrl, spec);
 
       persona['register_'](injector, mockTemplates, ctrl);
       assert(mockCustomElements.define).toNot.haveBeenCalled();

@@ -34,6 +34,7 @@ export class PersonaImpl {
   private readonly inputProviders_: Map<Selector<any>, InstanceNodeProvider<any>> = new Map();
   private readonly listenerSpecs_:
       Map<typeof BaseDisposable, Map<PropertyKey, ImmutableSet<ListenerSpec>>> = new Map();
+  private readonly registeredSpecs_: Set<typeof BaseDisposable> = new Set();
   private readonly rendererSpecs_:
       Map<typeof BaseDisposable, Map<PropertyKey, RendererSpec>> = new Map();
 
@@ -248,6 +249,10 @@ export class PersonaImpl {
   }
 
   private register_(injector: Injector, templates: Templates, ctrl: Ctrl): void {
+    if (this.registeredSpecs_.has(ctrl)) {
+      return;
+    }
+
     const spec = this.componentSpecs_.get(ctrl);
     if (!spec) {
       return;
@@ -276,6 +281,7 @@ export class PersonaImpl {
         spec.defaultAttrs);
 
     this.registerCustomElement_(spec, CustomElement);
+    this.registeredSpecs_.add(ctrl);
     Log.info(LOGGER, `Registered: [${spec.tag}]`);
   }
 
