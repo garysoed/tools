@@ -16,7 +16,12 @@ export class ObjectParserImpl<T extends {}> implements Parser<{[K in keyof T]: T
       if (stringValue === undefined) {
         return null;
       }
-      output[key] = this.spec_[key].parse(stringValue);
+
+      const value = this.spec_[key].parse(stringValue);
+      if (!value) {
+        return null;
+      }
+      output[key] = value;
     }
     return output;
   }

@@ -10,13 +10,6 @@ import { Util } from '../webc/util';
 
 
 describe('webc.Handler', () => {
-  const SELECTOR = 'SELECTOR';
-  let handler: Handle;
-
-  beforeEach(() => {
-    handler = new Handle(SELECTOR);
-  });
-
   describe('configure', () => {
     it('should configure the handlers correctly', () => {
       const element = Mocks.object('element');

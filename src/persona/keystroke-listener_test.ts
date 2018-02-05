@@ -98,6 +98,7 @@ describe('persona.KeystrokeListener', () => {
           useCapture);
 
       const mockEvent = jasmine.createSpyObj('Event', ['stopPropagation']);
+      Object.setPrototypeOf(mockEvent, KeyboardEvent.prototype);
       startSpy.calls.argsFor(0)[1](mockEvent);
       assert(mockEvent.stopPropagation).to.haveBeenCalledWith();
       assert(mockHandler).to.haveBeenCalledWith({type: 'keystroke'});
@@ -122,6 +123,7 @@ describe('persona.KeystrokeListener', () => {
           useCapture);
 
       const mockEvent = jasmine.createSpyObj('Event', ['stopPropagation']);
+      Object.setPrototypeOf(mockEvent, KeyboardEvent.prototype);
       startSpy.calls.argsFor(0)[1](mockEvent);
       assert(mockEvent.stopPropagation).toNot.haveBeenCalled();
       assert(mockHandler).toNot.haveBeenCalledWith();

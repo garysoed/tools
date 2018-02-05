@@ -13,7 +13,7 @@ describe('data.Serializable', () => {
   @Serializable('composite')
   class CompositeClass {
     @Field('fieldA') a: any;
-    @Field('basic') basic: BasicClass;
+    @Field('basic') basic!: BasicClass;
   }
 
   @Serializable('default')

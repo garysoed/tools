@@ -135,7 +135,7 @@ export class Hook {
    */
   property(propertyName: string): PropertyDecorator {
     return this.createDecorator_(
-        (element: HTMLElement): DomBinder<any> => {
+        (element: Element): DomBinder<any> => {
           return PropertyBinder.of<any>(element, propertyName);
         });
   }

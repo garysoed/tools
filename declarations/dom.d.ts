@@ -13,8 +13,11 @@ interface AnimationOption {
   easing?: string
 }
 
-interface HTMLElement {
+interface Element {
   animate(keyframes: AnimationKeyframe[], options_: AnimationOption): EventTarget;
+}
+
+interface HTMLElement extends Element {
   getDistributedNodes(): HTMLElement[];
 }
 

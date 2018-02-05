@@ -10,7 +10,7 @@ import {
   CHILD_LIST_CHANGE_HANDLER,
   DIMENSION_CHANGE_HANDLER,
   EVENT_HANDLER,
-  onDom} from '../webc/on-dom';
+  onDom } from '../webc/on-dom';
 import { Util } from '../webc/util';
 
 

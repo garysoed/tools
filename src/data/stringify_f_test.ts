@@ -5,14 +5,14 @@ import { Stringify } from './stringify';
 
 
 class SimpleClass {
-  @Stringify.Property() a: number;
-  @Stringify.Property() b: string;
+  @Stringify.Property() a!: number;
+  @Stringify.Property() b!: string;
 }
 
 class ComplexClass {
-  @Stringify.Property() a: number;
-  @Stringify.Property() b: SimpleClass;
-  @Stringify.Property() c: string;
+  @Stringify.Property() a!: number;
+  @Stringify.Property() b!: SimpleClass;
+  @Stringify.Property() c!: string;
 }
 
 describe('data.Stringify - Functional', () => {

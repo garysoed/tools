@@ -7,14 +7,14 @@ import { Equals } from './equals';
 
 
 class SimpleClass {
-  @Equals.Property() a: number;
-  @Equals.Property() b: string;
-  ignored: string;
+  @Equals.Property() a!: number;
+  @Equals.Property() b!: string;
+  ignored!: string;
 }
 
 class ComplexClass {
-  @Equals.Property() a: number;
-  @Equals.Property() s: SimpleClass;
+  @Equals.Property() a!: number;
+  @Equals.Property() s!: SimpleClass;
 }
 
 describe('data.Equals - Functional', () => {

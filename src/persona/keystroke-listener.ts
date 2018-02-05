@@ -47,7 +47,11 @@ export class KeystrokeListener implements Listener<'keystroke'> {
       useCapture: boolean): DisposableFunction {
     return this.eventListener_.start(
         root,
-        (event: KeyboardEvent) => {
+        (event: Event<string>) => {
+          if (!(event instanceof KeyboardEvent)) {
+            return;
+          }
+
           if (!this.matches_(event)) {
             return;
           }

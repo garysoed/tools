@@ -51,7 +51,7 @@ export class PersonaImpl {
       rendererSpecs: Iterable<[PropertyKey, RendererSpec]>,
       defaultAttrs: Iterable<[string, string]> = new Map()): Function {
     return class extends parentClass implements CustomElement {
-      private ctrl_: BaseDisposable | null;
+      private ctrl_: BaseDisposable | null = null;
       private readonly dispatcher_: DispatcherSelector<DispatchFn<{}>> =
           dispatcherSelector<{}>(shadowHostSelector);
 

@@ -28,7 +28,8 @@ describe('store.WebStorage', () => {
       const indexes = storage['getIndexes_']();
 
       assert(indexes).to.haveElements([]);
-      assert(storage['updateIndexes_']).to.haveBeenCalledWith(Matchers.any(ImmutableSet));
+      assert(storage['updateIndexes_']).to.haveBeenCalledWith(
+          Matchers.any<ImmutableSet<string>>(ImmutableSet));
       assert(storage['updateIndexes_']['calls'].argsFor(0)[0] as ImmutableSet<any>)
           .to.haveElements([]);
       assert(mockStorage.getItem).to.haveBeenCalledWith(PREFIX);
@@ -75,7 +76,8 @@ describe('store.WebStorage', () => {
 
       assert(mockStorage.removeItem).to.haveBeenCalledWith(path);
       assert(storage['getPath_']).to.haveBeenCalledWith(id);
-      assert(storage['updateIndexes_']).to.haveBeenCalledWith(Matchers.any(ImmutableSet));
+      assert(storage['updateIndexes_']).to
+          .haveBeenCalledWith(Matchers.any<ImmutableSet<string>>(ImmutableSet));
       assert(storage['updateIndexes_']['calls'].argsFor(0)[0] as ImmutableSet<any>)
           .to.haveElements([]);
     });
@@ -214,7 +216,8 @@ describe('store.WebStorage', () => {
       await storage.update(id, object);
       assert(mockStorage.setItem).to.haveBeenCalledWith(path, stringValue);
       assert(mockParser.stringify).to.haveBeenCalledWith(object);
-      assert(storage['updateIndexes_']).to.haveBeenCalledWith(Matchers.any(ImmutableSet));
+      assert(storage['updateIndexes_']).to
+          .haveBeenCalledWith(Matchers.any<ImmutableSet<string>>(ImmutableSet));
       assert(storage['updateIndexes_']['calls'].argsFor(0)[0] as ImmutableSet<string>)
           .to.haveElements([oldId, id]);
     });

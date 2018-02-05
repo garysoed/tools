@@ -205,16 +205,6 @@ export class OrderedMap<K, V> implements
 
   insertAllAt(index: number, items: FiniteCollection<[K, V]> & Collection<[K, V]>):
       OrderedMap<K, V> {
-    // Go through the items to add, and count the number of existing items that come before the
-    // insertion index.
-    let preInsertionCount = 0;
-    for (const [key] of items) {
-      const existingIndex = this.keys_.indexOf(key);
-      if (existingIndex >= 0 && existingIndex < index) {
-        preInsertionCount++;
-      }
-    }
-
     const keysToInsert = ImmutableSet.of(items).mapItem(([key]: [K, V]) => key);
     const keysClone = ImmutableList.of(this.keys_).insertAllAt(index, keysToInsert);
     const mapClone = new Map(this.map_);

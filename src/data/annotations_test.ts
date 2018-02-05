@@ -85,14 +85,6 @@ describe('data.AnnotationsHandler', () => {
     });
   });
 
-  describe('createHash_', () => {
-    it('should create the hash value correctly', () => {
-      const ctor = Mocks.object('ctor');
-      const annotation = Symbol('annotation');
-      assert(AnnotationsHandler['createHash_'](ctor, annotation)).to.equal(`0_1`);
-    });
-  });
-
   describe('hasAnnotation', () => {
     it('should return true if the constructor has the given annotation', () => {
       const hash = 'hash';

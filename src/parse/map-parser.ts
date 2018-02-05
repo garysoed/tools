@@ -55,8 +55,8 @@ export class MapParserImpl<K, V> implements Parser<ImmutableMap<K, V | null>> {
       return null;
     }
 
-    return ImmutableMap.of<K, V | null>(
-        list.filterItem((item: [K, V] | null) => item !== null) as ImmutableList<[K, V | null]>);
+    const filteredList = list.filterItem((item: [K, V | null] | null) => item !== null);
+    return ImmutableMap.of<K, V | null>(filteredList as ImmutableList<[K, V | null]>);
   }
 
   stringify(value: ImmutableMap<K, V | null> | null): string {

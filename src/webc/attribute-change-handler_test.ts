@@ -10,7 +10,7 @@ import { ImmutableSet } from '../immutable/immutable-set';
 import {
   ATTR_CHANGE_ANNOTATIONS,
   AttributeChangeHandler,
-  AttributeChangeHandlerConfig as Config} from '../webc/attribute-change-handler';
+  AttributeChangeHandlerConfig as Config } from '../webc/attribute-change-handler';
 
 
 describe('webc.AttributeChangeHandler', () => {
@@ -57,8 +57,8 @@ describe('webc.AttributeChangeHandler', () => {
 
       assert(handler['onMutation_']).to.haveBeenCalledWith(
           mockInstance,
-          Matchers.any(ImmutableMap),
-          Matchers.any(ImmutableSet));
+          Matchers.any<any>(ImmutableMap),
+          Matchers.any<any>(ImmutableSet));
       assert([...onMutationSpy.calls.argsFor(0)[2]][0]).to.equal({
         addedNodes: {length: 0} as any as NodeList,
         attributeName: attributeName1,
@@ -73,8 +73,8 @@ describe('webc.AttributeChangeHandler', () => {
 
       assert(handler['onMutation_']).to.haveBeenCalledWith(
           mockInstance,
-          Matchers.any(ImmutableMap),
-          Matchers.any(ImmutableSet));
+          Matchers.any<any>(ImmutableMap),
+          Matchers.any<any>(ImmutableSet));
       assert([...onMutationSpy.calls.argsFor(1)[2]][0]).to.equal({
         addedNodes: {length: 0} as NodeList as any,
         attributeName: attributeName2,

@@ -1,11 +1,11 @@
-import { BaseDisposable, Flags, TRACKED_DISPOSABLES } from '../dispose/base-disposable';
+import { Flags, TRACKED_DISPOSABLES } from '../dispose/base-disposable';
 import { Disposable } from '../interfaces/disposable';
 
 
 /**
  * @hidden
  */
-const DISPOSABLES: BaseDisposable[] = [];
+const DISPOSABLES: Disposable[] = [];
 
 /**
  * Test setup object for testing any code using code from the `dispose` directory.
@@ -20,7 +20,7 @@ export const TestDispose = {
    * @param ...disposables Disposables to be disposed at the end of the test.
    */
   add(...disposables: Disposable[]): void {
-    disposables.forEach((disposable: BaseDisposable) => {
+    disposables.forEach((disposable: Disposable) => {
       DISPOSABLES.push(disposable);
     });
   },
@@ -29,7 +29,7 @@ export const TestDispose = {
    * Runs the code in jasmine's `afterEach` logic.
    */
   afterEach(): void {
-    DISPOSABLES.forEach((disposable: BaseDisposable) => disposable.dispose());
+    DISPOSABLES.forEach((disposable: Disposable) => disposable.dispose());
     Flags.enableTracking = false;
 
     expect(TRACKED_DISPOSABLES).toEqual([]);

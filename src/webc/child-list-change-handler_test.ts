@@ -81,8 +81,8 @@ describe('webc.ChildListChangeHandler', () => {
 
           assert(handler['onMutation_']).to.haveBeenCalledWith(
               mockInstance,
-              Matchers.any(ImmutableSet),
-              Matchers.any(ImmutableSet));
+              Matchers.any<ImmutableSet<string>>(ImmutableSet),
+              Matchers.any<ImmutableSet<MutationRecord>>(ImmutableSet));
           assert(onMutationSpy.calls.argsFor(0)[2] as ImmutableSet<any>).to.haveElements([
             Matchers.objectContaining({
               addedNodes: nodeList,
@@ -98,7 +98,7 @@ describe('webc.ChildListChangeHandler', () => {
           assert(mockObserver.observe).to.haveBeenCalledWith(targetEl, {childList: true});
 
           assert(handler['createMutationObserver_']).to
-              .haveBeenCalledWith(mockInstance, Matchers.any(ImmutableSet));
+              .haveBeenCalledWith(mockInstance, Matchers.any<ImmutableSet<string>>(ImmutableSet));
           assert(createObserverSpy.calls.argsFor(0)[1] as Set<string>).to
               .haveElements([handlerKey1, handlerKey2]);
         });

@@ -51,10 +51,10 @@ export class MonadUtil {
         });
 
     const rv = fn.apply(context, [...args]);
-    const monadMap = ImmutableMap.of(
+    const monadMap = ImmutableMap.of<any, MonadType<any>>(
         monadDataMap
             .values()
-            .mapItem(([monad, _, id]: [MonadType<any>, MonadFactory<any>, any]) => {
+            .mapItem(([monad, _, id]: [MonadType<any>, MonadFactory<any>, number, boolean]) => {
               return [id, monad] as [any, MonadType<any>];
             }));
     if (IterableType.check(rv)) {

@@ -15,7 +15,7 @@ export class ElementSelectorStub<T extends HTMLElement>
 
   resolve(allSelectors: {}): ElementSelectorImpl<T> {
     const value = Jsons.getValue(allSelectors, this.path_);
-    if (!InstanceofType(ElementSelectorImpl).check(value)) {
+    if (!InstanceofType<ElementSelectorImpl<T>>(ElementSelectorImpl).check(value)) {
       throw new Error(`Cannot resolve element selector. [${this.path_}] is [${value}], expecting `
           + `an element selector`);
     }

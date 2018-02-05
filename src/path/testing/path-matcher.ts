@@ -1,26 +1,8 @@
 import { Path } from '../../path';
-import { ITestSetup } from '../../testing';
+import { ITestSetup, Matcher, matcherTestSetup } from '../../testing';
 
-export class PathMatcher {
-  static readonly testSetup: ITestSetup = {
-    afterEach(): void {},
-
-    beforeEach(): void {
-      jasmine.addCustomEqualityTester((first: any, second: any): boolean | undefined => {
-        if (first instanceof PathMatcher) {
-          return first.matches(second);
-        }
-
-        if (second instanceof PathMatcher) {
-          return second.matches(first);
-        }
-
-        return undefined;
-      });
-    },
-
-    init(): void {},
-  };
+export class PathMatcher implements Matcher {
+  static readonly testSetup: ITestSetup = matcherTestSetup(PathMatcher);
 
   constructor(private readonly pathString_: string) { }
 
@@ -32,7 +14,7 @@ export class PathMatcher {
     return other.toString() === this.pathString_;
   }
 
-  static with(pathString: string): any {
-    return new PathMatcher(pathString);
+  static with(pathString: string): Path {
+    return new PathMatcher(pathString) as any as Path;
   }
 }

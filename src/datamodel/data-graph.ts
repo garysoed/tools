@@ -21,7 +21,7 @@ export interface DataGraph<D> {
 }
 
 export class DataGraphImpl<D extends DataModel<any>> implements DataGraph<D> {
-  protected provider_: StaticNodeProvider<DataGraphImpl<D>>;
+  protected provider_: StaticNodeProvider<DataGraphImpl<D>> | null = null;
 
   constructor(
       protected readonly id_: StaticId<DataGraph<D>>,
@@ -49,6 +49,11 @@ export class DataGraphImpl<D extends DataModel<any>> implements DataGraph<D> {
   }
 
   async set(id: string, data: D): Promise<void> {
+    const provider = this.provider_;
+    if (!provider) {
+      return;
+    }
+
     const existingItem = await this.storage_.read(id);
     if (existingItem === data) {
       return;
@@ -56,7 +61,7 @@ export class DataGraphImpl<D extends DataModel<any>> implements DataGraph<D> {
     await this.storage_.update(id, data);
     await this.searcher_.index(this.list());
 
-    await this.provider_(this);
+    await provider(this);
   }
 
   setProvider_(provider: StaticNodeProvider<DataGraphImpl<D>>): void {
@@ -68,7 +73,7 @@ export function registerDataGraph<D extends DataModel<any>>(
     name: string,
     searcher: Searcher<D>,
     storage: GsStorage<D>): StaticId<DataGraph<D>> {
-  const id = staticId(name, InstanceofType(DataGraphImpl));
+  const id = staticId<DataGraph<D>>(name, InstanceofType<DataGraph<D>>(DataGraphImpl));
   const graph = new DataGraphImpl(id, searcher, storage);
   const provider = Graph.createProvider(id, graph);
   graph.setProvider_(provider);

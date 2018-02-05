@@ -55,9 +55,9 @@ describe('webc.Dom', () => {
       const selector = 'selector';
       const config = {
         bridge,
+        endPadCount,
         selector,
         startPadCount,
-        endPadCount,
       };
 
       const monad = Mocks.object('monad');

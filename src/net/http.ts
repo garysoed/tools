@@ -76,7 +76,7 @@ class HttpGetRequest extends HttpRequest {
  * Represents an HTTP POST request.
  */
 class HttpPostRequest extends HttpRequest {
-  private formData_: string;
+  private formData_: string = '';
 
   /**
    * @param path Path to send the request to.

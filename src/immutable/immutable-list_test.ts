@@ -316,7 +316,7 @@ describe('immutable.ImmutableList', () => {
   });
 
   describe('slice', () => {
-    fit(`should return the correct slice`, () => {
+    it(`should return the correct slice`, () => {
       const list = ImmutableList.of([1, 2, 3, 4]);
 
       assert(list.slice(1, 4)).to.haveElements([2, 3, 4]);

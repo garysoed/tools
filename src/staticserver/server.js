@@ -1,3 +1,4 @@
+const chalk = require('chalk');
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -31,8 +32,9 @@ readFile(configFilePath)
       const app = express();
       const config = JSON.parse(configFileContent);
       for (const key of Object.getOwnPropertyNames(config)) {
+        const filePath = config[key];
+        console.log(`${chalk.cyan('CONFIG')} [${key}] -> [${filePath}]`);
         app.get(key, (req, resp) => {
-          const filePath = config[key];
           const normalizedPath = `${filePath}`.replace(
               /\$([a-zA-Z0-9_-]+)/g,
               (match, submatch) => {
@@ -40,14 +42,19 @@ readFile(configFilePath)
                 return param ? param : match;
               });
 
+          console.log(`${chalk.green(req.method)} [${req.originalUrl}] -> [${normalizedPath}]`);
           readFile(path.resolve(configFileDir, normalizedPath))
               .then((content) => {
                 resp.send(content);
-              }, (error) => console.error(error));
+              },
+              (error) => {
+                console.error(`${chalk.red('ERROR')} ${error.message}`);
+                console.error(error.stack);
+              });
         });
       }
 
-      app.listen(PORT, () => console.log(`GS Simple Static Server ready at port [${PORT}]`));
+      app.listen(PORT, () => console.log(`\n\nGS Simple Static Server ready at port [${PORT}]`));
     })
     .catch((error) => {
       console.error(`Error reading ${configFilePath}:`, error);
