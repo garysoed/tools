@@ -1,3 +1,4 @@
+import { Type } from '../check';
 import { CompareResult, FiniteCollection, Ordered, Ordering } from '../interfaces';
 import { ImmutableSet } from './immutable-set';
 import { Orderings } from './orderings';
@@ -83,6 +84,16 @@ export class OrderedSet<T> implements FiniteCollection<T>, Ordered<T> {
       }
     }
     return true;
+  }
+
+  filterByType<T2>(checker: Type<T2>): OrderedSet<T2> {
+    const newItems: T2[] = [];
+    for (const item of this) {
+      if (checker.check(item)) {
+        newItems.push(item);
+      }
+    }
+    return OrderedSet.of(newItems);
   }
 
   filterItem(checker: (item: T) => boolean): OrderedSet<T> {

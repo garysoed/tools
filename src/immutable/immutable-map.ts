@@ -1,4 +1,4 @@
-import { FiniteIterableType, InstanceofType } from '../check';
+import { FiniteIterableType, InstanceofType, Type } from '../check';
 import { FiniteCollection, FiniteIndexed, Ordering } from '../interfaces';
 import { ImmutableSet } from './immutable-set';
 import { OrderedMap } from './ordered-map';
@@ -78,6 +78,16 @@ export class ImmutableMap<K, V> implements
 
   filter(checker: (value: V, index: K) => boolean): ImmutableMap<K, V> {
     return this.filterItem(([key, value]: [K, V]) => checker(value, key));
+  }
+
+  filterByType<T2>(checker: Type<T2>): ImmutableSet<T2> {
+    const newItems: T2[] = [];
+    for (const item of this) {
+      if (checker.check(item)) {
+        newItems.push(item);
+      }
+    }
+    return ImmutableSet.of(newItems);
   }
 
   filterItem(checker: (item: [K, V]) => boolean): ImmutableMap<K, V> {
@@ -221,6 +231,7 @@ export class ImmutableMap<K, V> implements
   static of<K, V>(data: FiniteCollection<[K, V]>): ImmutableMap<K, V>;
   static of<K, V>(data: [K, V][]): ImmutableMap<K, V>;
   static of<K, V>(data: Map<K, V>): ImmutableMap<K, V>;
+  static of<V>(data: {[key: string]: V}): ImmutableMap<string, V>;
   static of(data: gs.IJson): ImmutableMap<string, any>;
   static of<K, V>(data: FiniteCollection<[K, V]> | [K, V][] | gs.IJson | Map<K, V>):
       ImmutableMap<any, any> {

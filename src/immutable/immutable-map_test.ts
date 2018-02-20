@@ -1,6 +1,7 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
+import { StringType, TupleOfType } from '../check';
 import { ImmutableMap } from '../immutable/immutable-map';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Orderings } from '../immutable/orderings';
@@ -114,6 +115,15 @@ describe('immutable.ImmutableMap', () => {
           .of([[0, 'a'], [1, 'b'], [2, 'c']])
           .filter((_: string, index: number) => (index % 2) === 0);
       assert(map).to.haveElements([[0, 'a'], [2, 'c']]);
+    });
+  });
+
+  describe('filterByType', () => {
+    it('should filter the items correctly', () => {
+      const map = ImmutableMap
+          .of([[0, 'a'], ['1', 'b'], ['2', 'c']])
+          .filterByType(TupleOfType([StringType, StringType]));
+      assert(map).to.haveElements([['1', 'b'], ['2', 'c']]);
     });
   });
 

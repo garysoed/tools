@@ -4,6 +4,7 @@ TestBase.setup();
 import { ImmutableList } from '../immutable/immutable-list';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Orderings } from '../immutable/orderings';
+import { NumberType } from '../check';
 
 
 describe('immutable.ImmutableList', () => {
@@ -119,6 +120,16 @@ describe('immutable.ImmutableList', () => {
       const list = ImmutableList.of([1, 2, 3, 4])
           .filter((item: number) => (item % 2) === 0);
       assert(list).to.haveElements([2, 4]);
+    });
+  });
+
+  describe('filterByType', () => {
+    it(`should return the correct list`, () => {
+      const list = ImmutableList
+          .of(['a', 1, 'b', 2, 'c', 3])
+          .filterByType(NumberType);
+
+      assert(list).to.haveElements([1, 2, 3]);
     });
   });
 

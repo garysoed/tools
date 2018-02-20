@@ -2,6 +2,7 @@ import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
 import { Orderings } from 'src/immutable/orderings';
+import { NumberType } from '../check';
 import { ImmutableSet } from '../immutable/immutable-set';
 
 
@@ -49,6 +50,15 @@ describe('immutable.ImmutableSet', () => {
 
     it('should return false if one element does not pass the check', () => {
       assert(ImmutableSet.of([1, 2, 3]).everyItem((i: number) => i !== 2)).to.beFalse();
+    });
+  });
+
+  describe('filterByType', () => {
+    it('should filter the items correctly', () => {
+      const set = ImmutableSet
+          .of([1, '2', 3, '4'])
+          .filterByType(NumberType);
+      assert(set).to.haveElements([1, 3]);
     });
   });
 

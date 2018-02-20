@@ -122,4 +122,18 @@ describe('path.Paths', () => {
       assert(normalized2).to.equal(PathMatcher.with('../c'));
     });
   });
+
+  describe('relativePath', () => {
+    it(`should return the correct path`, () => {
+      const path = Paths.relativePath('a/b/c');
+      assert(path).to.beAnInstanceOf(RelativePath);
+      assert(path).to.equal(PathMatcher.with('a/b/c'));
+    });
+
+    it(`should throw error if the path is not an relative path`, () => {
+      assert(() => {
+        Paths.relativePath('/a/b/c');
+      }).to.throwError(/valid relative path/);
+    });
+  });
 });

@@ -1,6 +1,7 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
+import { NumberType } from '../check';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { InfiniteList } from '../immutable/infinite-list';
 
@@ -52,6 +53,15 @@ describe('immutable.InfiniteList', () => {
             return (index % 2) === 0;
           });
       assert(list).to.startWith(['0', '2', '4', '6']);
+    });
+  });
+
+  describe('filterByType', () => {
+    it('should filter elements correctly', () => {
+      const list = InfiniteList
+          .of<string | number>((i: number) => (i % 2) === 0 ? i : 'a')
+          .filterByType(NumberType);
+      assert(list).to.startWith([0, 2, 4, 6]);
     });
   });
 

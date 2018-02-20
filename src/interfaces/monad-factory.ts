@@ -1,5 +1,5 @@
 import { Monad } from '../interfaces/monad';
 
-export interface MonadFactory<T>{
-  (instance: Object): Monad<T>;
+export interface MonadFactory<T> {
+  (instance: any): Monad<T>;
 }

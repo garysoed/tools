@@ -1,7 +1,11 @@
+import { Type } from '../check';
+
 /**
  * A collection of stuff. This can be finite or infinite
  */
 export interface Collection<T> extends Iterable<T> {
+  filterByType<T2>(checker: Type<T2>): Collection<T2>;
+
   /**
    * Filters the items in the collection.
    * @param checker Function that takes in the checked item and return true iff the item should be

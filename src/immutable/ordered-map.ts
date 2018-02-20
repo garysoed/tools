@@ -1,3 +1,4 @@
+import { Type } from '../check';
 import { ImmutableList } from '../immutable/immutable-list';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { OrderedSet } from '../immutable/ordered-set';
@@ -143,6 +144,16 @@ export class OrderedMap<K, V> implements
 
   filter(checker: (value: V, index: K) => boolean): OrderedMap<K, V> {
     return this.filterItem(([key, value]: [K, V]) => checker(value, key));
+  }
+
+  filterByType<T2>(checker: Type<T2>): OrderedSet<T2> {
+    const newItems: T2[] = [];
+    for (const item of this) {
+      if (checker.check(item)) {
+        newItems.push(item);
+      }
+    }
+    return OrderedSet.of(newItems);
   }
 
   filterItem(checker: (item: [K, V]) => boolean): OrderedMap<K, V> {

@@ -140,6 +140,16 @@ export class ImmutableList<T> implements
     return new ImmutableList(this.data_.filter(checker));
   }
 
+  filterByType<T2>(checker: Type<T2>): ImmutableList<T2> {
+    const newItems: T2[] = [];
+    for (const item of this) {
+      if (checker.check(item)) {
+        newItems.push(item);
+      }
+    }
+    return ImmutableList.of(newItems);
+  }
+
   filterItem(checker: (item: T) => boolean): ImmutableList<T> {
     return this.filter((value: T, _: number) => checker(value));
   }
@@ -283,7 +293,7 @@ export class ImmutableList<T> implements
       normalizedStart = this.data_.length - 1;
     }
 
-    const sliceData = [];
+    const sliceData: T[] = [];
     let loopBound;
     if (step > 0) {
       loopBound = Math.min(this.data_.length, normalizedEnd);

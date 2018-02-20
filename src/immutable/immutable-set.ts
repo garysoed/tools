@@ -1,3 +1,4 @@
+import { Type } from '../check';
 import { FiniteIterableType } from '../check/finite-iterable-type';
 import { InstanceofType } from '../check/instanceof-type';
 import { Iterables } from '../immutable/iterables';
@@ -53,6 +54,16 @@ export class ImmutableSet<T> implements FiniteCollection<T> {
       }
     }
     return true;
+  }
+
+  filterByType<T2>(checker: Type<T2>): ImmutableSet<T2> {
+    const newItems: T2[] = [];
+    for (const item of this) {
+      if (checker.check(item)) {
+        newItems.push(item);
+      }
+    }
+    return ImmutableSet.of(newItems);
   }
 
   filterItem(checker: (item: T) => boolean): ImmutableSet<T> {

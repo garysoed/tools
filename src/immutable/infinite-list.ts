@@ -1,3 +1,4 @@
+import { Type } from '../check';
 import { GeneratedLinkedList } from '../immutable/generated-linked-list';
 import { Iterables } from '../immutable/iterables';
 import { Collection } from '../interfaces/collection';
@@ -55,6 +56,17 @@ export class InfiniteList<T> implements Collection<T>, Indexed<number, T> {
 
           return checker(value, index) ? value : undefined;
         });
+  }
+
+  filterByType<T2>(checker: Type<T2>): InfiniteList<T2> {
+    return InfiniteList.of((index: number) => {
+      const item = this.generator_(index);
+      if (checker.check(item)) {
+        return item;
+      }
+
+      return undefined;
+    });
   }
 
   filterItem(checker: (item: T) => boolean): InfiniteList<T> {

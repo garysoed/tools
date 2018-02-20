@@ -1,6 +1,7 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
+import { NumberType } from '../check';
 import { GeneratedLinkedList } from '../immutable/generated-linked-list';
 import { Iterables } from '../immutable/iterables';
 
@@ -13,6 +14,26 @@ describe('immutable.GeneratedLinkedList', () => {
       i++;
     }
   }
+
+  describe('filterByType', () => {
+    it(`should filter the items correctly`, () => {
+      function* generateItems(): IterableIterator<number | string> {
+        let i = 0;
+        while (true) {
+          i++;
+          if ((i % 2) === 0) {
+            yield 'a';
+          } else {
+            yield i;
+          }
+        }
+      }
+
+      const list = new GeneratedLinkedList(Iterables.of(generateItems))
+          .filterByType(NumberType);
+      assert(list).to.startWith([1, 3, 5, 7]);
+    });
+  });
 
   describe('filterItem', () => {
     it('should exclude items that are excluded by the filter', () => {

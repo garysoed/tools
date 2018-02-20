@@ -4,6 +4,7 @@ import { AbsolutePath } from '../path/absolute-path';
 import { AbsolutePathParser } from '../path/absolute-path-parser';
 import { Path } from '../path/path';
 import { RelativePath } from '../path/relative-path';
+import { RelativePathParser } from '../path/relative-path-parser';
 import { assertUnreachable } from '../typescript';
 
 export class Paths {
@@ -130,5 +131,13 @@ export class Paths {
     } else {
       throw assertUnreachable(path);
     }
+  }
+
+  static relativePath(pathString: string): RelativePath {
+    const path = RelativePathParser.parse(pathString);
+    if (!path) {
+      throw Errors.assert('pathString').shouldBe('a valid relative path').butWas(pathString);
+    }
+    return path;
   }
 }

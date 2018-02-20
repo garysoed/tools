@@ -1,3 +1,4 @@
+import { Type } from '../check';
 import { GeneratedLinkedList } from '../immutable/generated-linked-list';
 import { Iterables } from '../immutable/iterables';
 import { Collection } from '../interfaces/collection';
@@ -47,6 +48,10 @@ export class InfiniteMap<K, V> implements Collection<[K, V]>, Indexed<K, V>, Ite
           return key;
         });
     return new InfiniteMap(filteredKeys, this.generator_);
+  }
+
+  filterByType<T2>(checker: Type<T2>): GeneratedLinkedList<T2> {
+    return this.entries().filterByType(checker);
   }
 
   filterItem(checker: (item: [K, V]) => boolean): InfiniteMap<K, V> {

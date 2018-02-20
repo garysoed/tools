@@ -1,6 +1,7 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
+import { NumberType, TupleOfType } from '../check';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { InfiniteMap } from '../immutable/infinite-map';
 import { Iterables } from '../immutable/iterables';
@@ -53,6 +54,15 @@ describe('immutable.InfiniteMap', () => {
             return (key % 2) === 0;
           });
       assert(map).to.startWith([[0, '0'], [2, '2'], [4, '4'], [6, '6']]);
+    });
+  });
+
+  describe('filterByType', () => {
+    it('should filter correctly', () => {
+      const map = InfiniteMap
+          .of(Iterables.of(generateInts), (i: number) => (i % 2) === 0 ? i : 'a')
+          .filterByType(TupleOfType([NumberType, NumberType]));
+      assert(map).to.startWith([[0, 0], [2, 2], [4, 4], [6, 6]]);
     });
   });
 
