@@ -1,10 +1,10 @@
 import { assert, Mocks, TestBase } from '../test-base';
 TestBase.setup();
 
+import { NumberType } from '../check';
 import { ImmutableList } from '../immutable/immutable-list';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Orderings } from '../immutable/orderings';
-import { NumberType } from '../check';
 
 
 describe('immutable.ImmutableList', () => {

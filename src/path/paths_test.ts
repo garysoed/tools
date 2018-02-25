@@ -34,6 +34,20 @@ describe('path.Paths', () => {
     });
   });
 
+  describe('getFilenameParts', () => {
+    it(`should handle simple file names`, () => {
+      assert(Paths.getFilenameParts('test.ext')).to.equal({extension: 'ext', name: 'test'});
+    });
+
+    it(`should handle file names with .`, () => {
+      assert(Paths.getFilenameParts('file.test.js')).to.equal({extension: 'js', name: 'file.test'});
+    });
+
+    it(`should handle file names with no extensions`, () => {
+      assert(Paths.getFilenameParts('BUILD')).to.equal({extension: '', name: 'BUILD'});
+    });
+  });
+
   describe('getItemName', () => {
     it(`should return the correct item name`, () => {
       assert(Paths.getItemName(PathParser.parse('a/b/c')!)).to.equal('c');
@@ -134,6 +148,23 @@ describe('path.Paths', () => {
       assert(() => {
         Paths.relativePath('/a/b/c');
       }).to.throwError(/valid relative path/);
+    });
+  });
+
+  describe('setFilenameExt', () => {
+    it(`should handle simple file names`, () => {
+      assert(Paths.setFilenameExt('test.ext', 'ext2')).to.equal('test.ext2');
+      assert(Paths.setFilenameExt('test.ext', '')).to.equal('test');
+    });
+
+    it(`should handle file names with .`, () => {
+      assert(Paths.setFilenameExt('file.test.js', 'ext2')).to.equal('file.test.ext2');
+      assert(Paths.setFilenameExt('file.test.js', '')).to.equal('file.test');
+    });
+
+    it(`should handle file names with no extensions`, () => {
+      assert(Paths.setFilenameExt('BUILD', 'ext2')).to.equal('BUILD.ext2');
+      assert(Paths.setFilenameExt('BUILD', '')).to.equal('BUILD');
     });
   });
 });

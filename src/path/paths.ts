@@ -29,6 +29,16 @@ export class Paths {
     }
   }
 
+  static getFilenameParts(filename: string): {extension: string, name: string} {
+    const parts = filename.split('.');
+    const extensionIndex = Math.max(1, parts.length - 1);
+    const extension = parts[extensionIndex] || '';
+    return {
+      extension,
+      name: parts.slice(0, extensionIndex).join('.'),
+    };
+  }
+
   static getItemName(path: Path): string | null {
     const parts = path.getParts();
     return parts.getAt(-1) || null;
@@ -139,5 +149,14 @@ export class Paths {
       throw Errors.assert('pathString').shouldBe('a valid relative path').butWas(pathString);
     }
     return path;
+  }
+
+  static setFilenameExt(filename: string, extension: string): string {
+    const {name} = Paths.getFilenameParts(filename);
+
+    if (!extension) {
+      return name;
+    }
+    return `${name}.${extension}`;
   }
 }
