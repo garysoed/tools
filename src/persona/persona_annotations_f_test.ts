@@ -14,7 +14,7 @@ import {
   onDom,
   Persona,
   render,
-  resolveSelectors} from '../persona';
+  resolveSelectors } from '../persona';
 import { Templates } from '../webc';
 
 

@@ -5,7 +5,7 @@ import { InstanceofType } from '../check';
 import {
   elementSelector,
   ElementSelectorImpl,
-  ElementSelectorStub} from '../persona/element-selector';
+  ElementSelectorStub } from '../persona/element-selector';
 
 function getShadowRoot(): ShadowRoot {
   return document.body.shadowRoot || document.body.attachShadow({mode: 'open'});

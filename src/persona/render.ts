@@ -8,7 +8,7 @@ import {
   ChildrenSelector,
   ClassSelector,
   InnerTextSelector,
-  SwitchSelector} from '../persona/selectors';
+  SwitchSelector } from '../persona/selectors';
 
 export function createRenderDecorator<S extends Selector<any>>():
     (selector: S) => MethodDecorator {
