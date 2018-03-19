@@ -7,5 +7,9 @@ export interface Tree<K, V, C extends Collection<V>> {
 
   getValue(): V;
 
+  postOrder(): Iterable<Tree<K, V, C>>;
+
+  preOrder(): Iterable<Tree<K, V, C>>;
+
   setValue(value: V): Tree<K, V, C>;
 }

@@ -20,3 +20,4 @@ export {
   ElementSelector,
   Selector } from './selector';
 export { Size } from './size';
+export { Tree } from './tree';

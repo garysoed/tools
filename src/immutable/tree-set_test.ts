@@ -74,6 +74,29 @@ describe('immutable.TreeSet', () => {
     });
   });
 
+  describe('map', () => {
+    it(`should map the tree correctly`, () => {
+      const newTree = root.map((node, parent) => {
+        const parentValue = parent ? parent.getValue() : 0;
+        return node.getValue() + parentValue;
+      });
+
+      assert(treeToJson(newTree)).to.equal({
+        children: [
+          {children: [], value: 3},
+          {
+            children: [
+              {children: [], value: 8},
+              {children: [], value: 9},
+            ],
+            value: 7,
+          },
+        ],
+        value: 2,
+      });
+    });
+  });
+
   describe('setValue', () => {
     it(`should update the value correctly`, () => {
       assert(treeToJson(root.setValue(6))).to.equal({

@@ -60,6 +60,32 @@ describe('immutable.TreeMap', () => {
     });
   });
 
+  describe('map', () => {
+    it(`should map correctly`, () => {
+      const newTree = root.map((node, key, parent) => {
+        const parentValue = parent ? parent.getValue() : 0;
+        return [`new${key}`, node.getValue() + parentValue] as [string, number];
+      });
+      assert(treeToJson(newTree)).to.equal({
+        '2': {
+          'newa': {
+            '3': {},
+          },
+          'newb': {
+            '7': {
+              'newc': {
+                '8': {},
+              },
+              'newd': {
+                '9': {},
+              },
+            },
+          },
+        },
+      });
+    });
+  });
+
   describe('set', () => {
     it(`should set the node correctly`, () => {
       assert(treeToJson(root.set('a', TreeMap.of(6)))).to.equal({
