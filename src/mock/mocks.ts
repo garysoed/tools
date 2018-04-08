@@ -82,7 +82,9 @@ export class Mocks {
    * @param name Name to identify the mock object.
    * @return The mock object instance.
    */
-  static object(name: string): any {
-    return {[__id]: name};
+  static object(name: string, objType: gs.ICtor<any> = Object): any {
+    const mock = {[__id]: name};
+    Object.setPrototypeOf(mock, objType.prototype);
+    return mock;
   }
 }

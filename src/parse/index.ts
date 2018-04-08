@@ -2,6 +2,7 @@ export { BooleanParser } from './boolean-parser';
 export { DataModelParser } from './data-model-parser';
 export { EnumParser } from './enum-parser';
 export { FloatParser } from './float-parser';
+export { FunctionParser } from './function-parser';
 export { HexParser } from './hex-parser';
 export { IntegerParser } from './integer-parser';
 export { JsonParser } from './json-parser';
