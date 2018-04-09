@@ -92,9 +92,9 @@ export class Paths {
     }
 
     if (root instanceof AbsolutePath) {
-      return new AbsolutePath(ImmutableList.of(srcParts));
+      return Paths.normalize(new AbsolutePath(ImmutableList.of(srcParts)));
     } else if (root instanceof RelativePath) {
-      return new RelativePath(ImmutableList.of(srcParts));
+      return Paths.normalize(new RelativePath(ImmutableList.of(srcParts)));
     } else {
       throw assertUnreachable(root);
     }

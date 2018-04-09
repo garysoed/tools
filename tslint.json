@@ -16,8 +16,8 @@
       true,
       {
         "limit": 100,
-        "ignore-pattern": "^import |^export {(.*?)}",
-      },
+        "ignore-pattern": "^import |^export {(.*?)}"
+      }
     ],
     "member-access": false,
     "member-ordering": [
