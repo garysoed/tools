@@ -26,6 +26,24 @@ describe('immutable.Orderings', () => {
     });
   });
 
+  describe('map', () => {
+    it(`should order the items correctly`, () => {
+      const a = {v: 1};
+      const b = {v: 2};
+      const list = ImmutableList.of([b, a]);
+
+      const sorted = list.sort(Orderings.map(item => `${item.v}`, Orderings.natural()));
+      assert(sorted).to.haveElements([a, b]);
+    });
+  });
+
+  describe('matches', () => {
+    it(`should order matching items at the start of the list`, () => {
+      const list = ImmutableList.of([1, 2, 3]);
+      assert(list.sort(Orderings.matches((v => v > 1)))).to.haveElements([2, 3, 1]);
+    });
+  });
+
   describe('isOneOf', () => {
     it(`should order matching items at the start of the list`, () => {
       const list = ImmutableList.of([1, 2, 3]);

@@ -17,7 +17,7 @@ export function HasPropertiesType<OBJ>(spec: {[KEY in keyof OBJ]: Type<OBJ[KEY]>
     },
 
     toString(): string {
-      const entries = [];
+      const entries: string[] = [];
       for (const key in spec) {
         entries.push(`${key}: ${spec[key]}`);
       }

@@ -1,14 +1,13 @@
 import { NumberType, StringType, Type } from '../check';
 import { ImmutableList } from '../immutable/immutable-list';
 import { CompareResult } from '../interfaces/compare-result';
-import { Finite } from '../interfaces/finite';
 import { Ordering } from '../interfaces/ordering';
 import { FloatParser } from '../parse/float-parser';
 
 const NATURAL_SPLIT_REGEXP = /([0-9]+)/;
 
 export const Orderings = {
-  compound<T>(orderings: Iterable<Ordering<T>> & Finite): Ordering<T> {
+  compound<T>(orderings: Iterable<Ordering<T>>): Ordering<T> {
     return (item1: T, item2: T): CompareResult => {
       for (const ordering of orderings) {
         const result = ordering(item1, item2);
@@ -20,21 +19,31 @@ export const Orderings = {
     };
   },
 
+  map<T1, T2>(mapFn: (input: T1) => T2, ordering: Ordering<T2>): Ordering<T1> {
+    return (item1: T1, item2: T1): CompareResult => {
+      return ordering(mapFn(item1), mapFn(item2));
+    };
+  },
+
+  matches<T>(matchFn: (input: T) => boolean): Ordering<T> {
+    return (item1: T, item2: T): CompareResult => {
+      const matches1 = matchFn(item1);
+      const matches2 = matchFn(item2);
+      if (matches1 === matches2) {
+        return 0;
+      }
+
+      return (matches1 && !matches2) ? -1 : 1;
+    };
+  },
+
   /**
    * Orders items matching the given list at the start of the list.
    * @param checked
    */
   isOneOf<T>(checked: Iterable<T>): Ordering<T> {
     const checkedSet = new Set(checked);
-    return (item1: T, item2: T): CompareResult => {
-      const has1 = checkedSet.has(item1);
-      const has2 = checkedSet.has(item2);
-      if (has1 === has2) {
-        return 0;
-      }
-
-      return (has1 && !has2) ? -1 : 1;
-    };
+    return Orderings.matches(item => checkedSet.has(item));
   },
 
   /**
@@ -97,7 +106,7 @@ export const Orderings = {
   /**
    * Order the items by the types.
    */
-  type(types: Iterable<Type<any>> & Finite): Ordering<any> {
+  type(types: Iterable<Type<any>>): Ordering<any> {
     return (item1: any, item2: any): CompareResult => {
       for (const type of types) {
         const passes1 = type.check(item1);
