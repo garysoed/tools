@@ -1,29 +1,21 @@
 import { BaseDisposable } from '../dispose';
 import { Errors } from '../error';
 import { Graph, InstanceNodeProvider } from '../graph';
-import { InstanceId } from '../graph/instance-id';
 import { NodeId } from '../graph/node-id';
 import { ImmutableMap, ImmutableSet } from '../immutable';
 import { Injector } from '../inject';
-import { DispatchFn, Event } from '../interfaces';
 import { ComponentSpec } from '../persona/component-spec';
-import { CustomElement } from '../persona/custom-element';
-import { dispatcherSelector } from '../persona/dispatcher-selector';
+import { CustomElement, CustomElementInternal } from '../persona/custom-element';
 import { Listener } from '../persona/listener';
+import { ListenerSpec } from '../persona/listener-spec';
 import { Selector } from '../persona/selector';
-import { DispatcherSelector } from '../persona/selectors';
-import { shadowHostSelector } from '../persona/shadow-host-selector';
 import { __shadowRoot } from '../persona/shadow-root-symbol';
 import { isDescendantOf } from '../typescript';
 import { Log } from '../util';
 import { Templates } from '../webc';
 
 type Ctrl = typeof BaseDisposable;
-type ListenerSpec = {
-  handler: (event: Event<any>) => any,
-  listener: Listener<any>,
-  useCapture: boolean,
-};
+
 type PropertyKey = string | symbol;
 type RendererSpec = {parameters: Iterable<NodeId<any>>, selector: Selector<any>};
 
@@ -50,121 +42,34 @@ export class PersonaImpl {
       listenerSpecs: Iterable<[PropertyKey, Iterable<ListenerSpec>]>,
       rendererSpecs: Iterable<[PropertyKey, RendererSpec]>,
       defaultAttrs: Iterable<[string, string]> = new Map()): Function {
-    return class extends parentClass implements CustomElement {
-      private ctrl_: BaseDisposable | null = null;
-      private readonly dispatcher_: DispatcherSelector<DispatchFn<{}>> =
-          dispatcherSelector<{}>(shadowHostSelector);
 
+    return class extends parentClass implements CustomElement {
+      private readonly customElement_: CustomElement;
       constructor() {
         super();
-        this.setDefaultAttrs_();
+
+        this.customElement_ = new CustomElementInternal(
+            ctrl,
+            defaultAttrs,
+            this,
+            injector,
+            inputs,
+            listenerSpecs,
+            rendererSpecs,
+            tag,
+            templateStr);
       }
 
-      async connectedCallback(): Promise<void> {
-        Log.onceId(LOGGER, tag);
-        Log.debug(LOGGER, 'Setting up', tag);
-        const ctrlInstance = injector.instantiate(ctrl);
-        this.ctrl_ = ctrlInstance;
-        const shadowRoot = this.getShadowRoot_();
-        this.ctrl_[__shadowRoot] = shadowRoot;
-
-        await this.installInputs_(ctrlInstance, shadowRoot);
-        this.installListeners_(ctrlInstance, shadowRoot);
-        this.installRenderers_(ctrlInstance);
-
-        this.dispatch_('gs-connected', shadowRoot);
-        Log.onceEnd(LOGGER, tag);
+      connectedCallback(): void {
+        return this.customElement_.connectedCallback();
       }
 
       disconnectedCallback(): void {
-        if (!this.ctrl_) {
-          return;
-        }
-
-        this.ctrl_.dispose();
-        this.ctrl_ = null;
-      }
-
-      private dispatch_(type: string, shadowRoot: ShadowRoot): void {
-        const dispatchFn = this.dispatcher_.getValue(shadowRoot);
-        if (!dispatchFn) {
-          throw new Error(`No dispatchFn found`);
-        }
-        dispatchFn(type, {});
+        return this.customElement_.disconnectedCallback();
       }
 
       getCtrl(): BaseDisposable | null {
-        return this.ctrl_;
-      }
-
-      private getShadowRoot_(): ShadowRoot {
-        const shadowRoot = this.shadowRoot;
-        if (shadowRoot) {
-          return shadowRoot;
-        }
-        const shadow = this.attachShadow({mode: 'open'});
-        shadow.innerHTML = templateStr || '';
-        return shadow;
-      }
-
-      private installInputs_(ctrl: BaseDisposable, shadowRoot: ShadowRoot): Promise<void[]> {
-        const promises: Promise<void>[] = [];
-        for (const [selector, provider] of inputs) {
-          promises.push(selector.initAsInput(shadowRoot, ctrl, provider));
-        }
-        return Promise.all(promises);
-      }
-
-      private installListeners_(ctrl: BaseDisposable, shadowRoot: ShadowRoot): void {
-        for (const [, specs] of listenerSpecs) {
-          for (const {handler, listener, useCapture} of specs) {
-            Log.debug(LOGGER, 'Listening to', listener);
-            ctrl.addDisposable(
-                listener.start(shadowRoot, handler, ctrl, useCapture));
-          }
-        }
-      }
-
-      private installRenderers_(ctrl: BaseDisposable): void {
-        const renderers = ImmutableMap.of(rendererSpecs)
-            .values()
-            .mapItem((spec: RendererSpec) => {
-              return [spec.selector.getId(), spec.selector] as [InstanceId<any>, Selector<any>];
-            });
-        const idRendererMap = ImmutableMap.of(renderers);
-
-        for (const [id, selector] of idRendererMap) {
-          ctrl.addDisposable(Graph.onReady(
-              ctrl,
-              id,
-              () => this.onGraphReady_(ctrl, id, selector)));
-
-          Log.debug(LOGGER, 'Rendering', selector);
-          this.updateElement_(ctrl, selector);
-        }
-      }
-
-      private onGraphReady_(
-          ctrlInstance: BaseDisposable, id: NodeId<any>, selector: Selector<any>): void {
-        if (!(id instanceof InstanceId)) {
-          return;
-        }
-        this.updateElement_(ctrlInstance, selector);
-      }
-
-      private setDefaultAttrs_(): void {
-        for (const [key, value] of defaultAttrs) {
-          if (!this.hasAttribute(key)) {
-            this.setAttribute(key, value);
-          }
-        }
-      }
-
-      private async updateElement_(
-          ctrlInstance: BaseDisposable, selector: Selector<any>): Promise<void> {
-        const time = Graph.getTimestamp();
-        const value = await Graph.get(selector.getId(), time, ctrlInstance);
-        selector.setValue(value, this.getShadowRoot_(), time);
+        return this.customElement_.getCtrl();
       }
     };
   }

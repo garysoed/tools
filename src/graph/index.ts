@@ -5,6 +5,7 @@ export { GraphEvent } from './graph-event';
 export { $time, GraphTime } from './graph-time';
 export { InstanceNodeProvider, StaticNodeProvider } from './node-provider';
 export { instanceId, InstanceId } from './instance-id';
+export { NodeId } from './node-id';
 export { nodeIn } from './node-in';
 export { nodeOut } from './node-out';
 export { staticId, StaticId } from './static-id';
