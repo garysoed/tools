@@ -51,7 +51,7 @@ export class ChildListChangeHandler implements Handler<ChildListChangeConfig> {
           previousSibling: null,
           removedNodes: {length: 0} as any as NodeList,
           target: targetEl,
-          type: 'childList',
+          type: 'childList' as any,
         }]));
     instance.addDisposable(DisposableFunction.of(() => {
       observer.disconnect();

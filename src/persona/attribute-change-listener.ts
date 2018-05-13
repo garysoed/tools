@@ -8,12 +8,12 @@ import { AttributeSelector } from '../persona/selectors';
 export class AttributeChangeListener<T> implements Listener<'change'> {
   constructor(private readonly attributeSelector_: AttributeSelectorImpl<T>) { }
 
-  private createMutationObserver_(callback: (records: Iterable<MutationRecord>) => void):
+  createMutationObserver_(callback: (records: Iterable<MutationRecord>) => void):
       MutationObserver {
     return new MutationObserver(callback);
   }
 
-  private onMutation_(
+  onMutation_(
       handler: (event: Event<'change'>) => any,
       context: any,
       records: Iterable<MutationRecord>): void {

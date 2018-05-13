@@ -21,7 +21,7 @@ export class ApiClient<Q extends gs.IJson, P> {
     this.responseType_ = responseType;
   }
 
-  private onMessage_(request: Q, message: gs.IJson): boolean {
+  onMessage_(request: Q, message: gs.IJson): boolean {
     return this.responseType_.check(message) && this.responseCheck_(request, message);
   }
 

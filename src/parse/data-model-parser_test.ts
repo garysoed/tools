@@ -7,13 +7,13 @@ import { ANNOTATIONS } from '../datamodel/field';
 import { ImmutableMap, ImmutableSet } from '../immutable';
 import { Parser } from '../interfaces';
 import { DataModelParser, JsonParser } from '../parse';
-import { TYPE_FIELD_ } from '../parse/data-model-parser';
+import { DataModelParserImpl, TYPE_FIELD_ } from '../parse/data-model-parser';
 
 describe('parse.DataModelParser', () => {
-  let parser: Parser<DataModel<any>>;
+  let parser: DataModelParserImpl<any>;
 
   beforeEach(() => {
-    parser = DataModelParser();
+    parser = DataModelParser() as DataModelParserImpl<any>;
   });
 
   describe('fromJson_', () => {

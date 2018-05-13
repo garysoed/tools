@@ -37,7 +37,7 @@ export class Log {
     this.namespace_ = namespace;
   }
 
-  private callIfEnabled_(
+  callIfEnabled_(
       fn: (message: string, ...args: any[]) => void,
       logLevel: LogLevel,
       color: string,

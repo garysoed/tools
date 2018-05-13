@@ -1,65 +1,50 @@
+load("//bazel/webpack:webpack_config.bzl", "WebpackConfig")
+load("//bazel/typescript:ts_config.bzl", "TsConfig")
+load("//bazel/typescript:ts_library.bzl", "TsFiles")
+
 def _ts_binary_impl(ctx):
-  files = set()
-  files += ctx.files.deps
+  input_files = [ctx.attr.webpack_config[WebpackConfig].config]
+  input_files += [ctx.attr.ts_config[TsConfig].config]
+  for ts_file in ctx.attr.ts_files:
+    for file in ts_file[TsFiles].files:
+      input_files += [file]
 
-  # Add the dependencies
-  for dep in ctx.attr.deps:
-    files += dep.ts_files
-
-  # Compile the ts files
-  paths = ' '.join([f.path for f in files])
-
-  compile_command = ' '.join([
-    'tsc',
-    '--baseUrl', '.',
-    '--target', ctx.attr.ts_target,
-    '--module', 'commonjs',
-    '--moduleResolution', 'node',
-    '--experimentalDecorators',
-    '--outDir', ctx.label.name,
-    '--noUnusedLocals',
-    '--noUnusedParameters',
-    '--rootDir', '.',
-    '--suppressImplicitAnyIndexErrors',
-    '--strict',
-    '--noResolve',
-    '--pretty',
-    paths
-  ])
-  tar_command = 'tar cf %s %s' % (ctx.outputs.out.path, ctx.label.name)
-
-  ctx.action(
-      command = "%s && %s" % (compile_command, tar_command),
-      inputs = list(files),
-      mnemonic = "CompilingTypescriptFiles",
-      outputs = [ctx.outputs.out],
-      progress_message = "Compiling Typescript Files",
-      use_default_shell_env = True)
+  ctx.actions.run_shell(
+      outputs = [ctx.outputs.bundle, ctx.outputs.map],
+      inputs = input_files,
+      command = "webpack",
+      env = {
+        "EXTRA_NODE_PATH": './' + ctx.bin_dir.path + ":./" + ctx.genfiles_dir.path,
+      },
+      tools = [ctx.]
+  )
 
 
 ts_binary = rule(
     implementation = _ts_binary_impl,
     attrs = {
-      "deps": attr.label_list(
+      "bundle": attr.output(
+          mandatory = True,
+      ),
+      "map": attr.output(
+          mandatory = True,
+      ),
+      "webpack_config": attr.label(
           allow_files = False,
           mandatory = True,
-          non_empty = True,
-          providers = ["ts_files"]),
-      "ts_target": attr.string(
-          default = "ES2015",
-          values = ["ES3", "ES5", "ES2015"]),
-      "_ts_bin": attr.label(
-          cfg = "host",
-          default = Label("@typescript//:tsc"),
-          executable = True,
-          single_file = True),
-      "_ts_lib": attr.label(
-          default = Label("@typescript//:tsc_lib"),
-          single_file = True)
+          providers = [WebpackConfig],
+      ),
+      "ts_config": attr.label(
+          allow_files = False,
+          mandatory = True,
+          providers = [TsConfig],
+      ),
+      "ts_files": attr.label_list(
+          allow_files = False,
+          mandatory = True,
+          non_empty = False,
+          providers = [TsFiles])
     },
-    outputs = {
-      "out": "%{name}.tar"
-    }
 )
 """Compiles the given `ts_library` targets.
 

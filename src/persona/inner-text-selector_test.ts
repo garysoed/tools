@@ -4,7 +4,7 @@ TestBase.setup();
 import { NumberType } from '../check';
 import { IntegerParser } from '../parse';
 import { elementSelector, innerTextSelector } from '../persona';
-import { ElementSelectorImpl } from '../persona/element-selector';
+import { ElementSelectorImpl, ElementSelectorStub } from '../persona/element-selector';
 import { InnerTextSelectorStub } from '../persona/inner-text-selector';
 
 function getShadowRoot(): ShadowRoot {
@@ -15,7 +15,8 @@ describe('avatar.InnerTextSelectorStub', () => {
   describe('resolve', () => {
     it(`should resolve correctly`, () => {
       const mockElementSelectorImpl = jasmine.createSpyObj('ElementSelectorImpl', ['getSelector']);
-      const mockElementSelector = elementSelector<HTMLElement>('path');
+      const mockElementSelector =
+          elementSelector<HTMLElement>('path') as ElementSelectorStub<HTMLElement>;
       const resolveSpy = spyOn(mockElementSelector, 'resolve').and
           .returnValue(mockElementSelectorImpl);
 

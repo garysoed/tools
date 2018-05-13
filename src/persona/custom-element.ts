@@ -65,7 +65,7 @@ export class CustomElementInternal implements CustomElement {
     this.ctrl_ = null;
   }
 
-  private dispatch_(type: string, shadowRoot: ShadowRoot): void {
+  dispatch_(type: string, shadowRoot: ShadowRoot): void {
     const dispatchFn = this.dispatcher_.getValue(shadowRoot);
     if (!dispatchFn) {
       throw new Error(`No dispatchFn found`);
@@ -77,7 +77,7 @@ export class CustomElementInternal implements CustomElement {
     return this.ctrl_;
   }
 
-  private getShadowRoot_(): ShadowRoot {
+  getShadowRoot_(): ShadowRoot {
     const shadowRoot = this.element_.shadowRoot;
     if (shadowRoot) {
       return shadowRoot;
@@ -87,7 +87,7 @@ export class CustomElementInternal implements CustomElement {
     return shadow;
   }
 
-  private installInputs_(ctrl: BaseDisposable, shadowRoot: ShadowRoot): Promise<void[]> {
+  installInputs_(ctrl: BaseDisposable, shadowRoot: ShadowRoot): Promise<void[]> {
     const promises: Promise<void>[] = [];
     for (const [selector, provider] of this.inputs_) {
       promises.push(selector.initAsInput(shadowRoot, ctrl, provider));
@@ -95,7 +95,7 @@ export class CustomElementInternal implements CustomElement {
     return Promise.all(promises);
   }
 
-  private installListeners_(ctrl: BaseDisposable, shadowRoot: ShadowRoot): void {
+  installListeners_(ctrl: BaseDisposable, shadowRoot: ShadowRoot): void {
     for (const [, specs] of this.listenerSpecs_) {
       for (const {handler, listener, useCapture} of specs) {
         Log.debug(LOGGER, 'Listening to', listener);
@@ -105,7 +105,7 @@ export class CustomElementInternal implements CustomElement {
     }
   }
 
-  private installRenderers_(ctrl: BaseDisposable): void {
+  installRenderers_(ctrl: BaseDisposable): void {
     const renderers = ImmutableMap.of(this.rendererSpecs_)
         .values()
         .mapItem((spec: RendererSpec) => {
@@ -124,7 +124,7 @@ export class CustomElementInternal implements CustomElement {
     }
   }
 
-  private onGraphReady_(
+  onGraphReady_(
       ctrlInstance: BaseDisposable, id: NodeId<any>, selector: Selector<any>): void {
     if (!(id instanceof InstanceId)) {
       return;
@@ -132,7 +132,7 @@ export class CustomElementInternal implements CustomElement {
     this.updateElement_(ctrlInstance, selector);
   }
 
-  private setDefaultAttrs_(): void {
+  setDefaultAttrs_(): void {
     for (const [key, value] of this.defaultAttrs_) {
       if (!this.element_.hasAttribute(key)) {
         this.element_.setAttribute(key, value);
@@ -140,7 +140,7 @@ export class CustomElementInternal implements CustomElement {
     }
   }
 
-  private async updateElement_(
+  async updateElement_(
       ctrlInstance: BaseDisposable, selector: Selector<any>): Promise<void> {
     const time = Graph.getTimestamp();
     const value = await Graph.get(selector.getId(), time, ctrlInstance);

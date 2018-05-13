@@ -9,7 +9,7 @@ export class InputNode<T> extends GNode<T> {
     super(ImmutableList.of([]));
   }
 
-  protected execute_(context: {}): T {
+  execute_(context: {}): T {
     const value = context[this.symbol_];
     return value === undefined ? this.initValue_ : value;
   }
@@ -20,7 +20,7 @@ export class InputNode<T> extends GNode<T> {
     this.addToCache_(normalizedContext, timestamp, value);
   }
 
-  private set_(context: {}, value: T): void {
+  set_(context: {}, value: T): void {
     context[this.symbol_] = value;
   }
 }

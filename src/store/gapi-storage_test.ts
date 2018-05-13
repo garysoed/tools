@@ -5,19 +5,19 @@ import { ImmutableList, ImmutableSet } from '../immutable';
 import { GapiStorage } from '../store';
 
 class TestGapiStorage extends GapiStorage<{}, {}, {}, {}, {}, {}> {
-  protected hasImpl_(_fn: any, _id: any): Promise<boolean> {
+  hasImpl_(_fn: any, _id: any): Promise<boolean> {
     throw new Error('Method not implemented.');
   }
 
-  protected listIdsImpl_(_fn: any): Promise<ImmutableSet<string>> {
+  listIdsImpl_(_fn: any): Promise<ImmutableSet<string>> {
     throw new Error('Method not implemented.');
   }
 
-  protected listImpl_(_fn: any): Promise<ImmutableSet<{}>> {
+  listImpl_(_fn: any): Promise<ImmutableSet<{}>> {
     throw new Error('Method not implemented.');
   }
 
-  protected readImpl_(_fn: any, _id: string): Promise<{} | null> {
+  readImpl_(_fn: any, _id: string): Promise<{} | null> {
     throw new Error('Method not implemented.');
   }
 }

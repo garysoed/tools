@@ -1,6 +1,6 @@
 package(default_visibility = ["//visibility:public"])
 
 filegroup(
-    name = "config_template",
-    srcs = ["config.template.js"],
+    name = "webpack_config_js_template",
+    srcs = ["webpack.config.js.template"],
 )

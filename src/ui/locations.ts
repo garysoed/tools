@@ -50,7 +50,7 @@ export class Locations {
   /**
    * @return Parts of the given path.
    */
-  private static getParts_(path: string): ImmutableList<string> {
+  static getParts_(path: string): ImmutableList<string> {
     return ImmutableList.of(Locations.normalizePath(path).split('/'))
         .filter((part: string) => {
           return part !== '.';

@@ -53,7 +53,7 @@ export class ChildrenSelectorImpl<E extends Element, T> extends
             FiniteIterableOfType(childDataType_)));
   }
 
-  private getChildElements_(root: ShadowRoot): ImmutableList<E> {
+  getChildElements_(root: ShadowRoot): ImmutableList<E> {
     const slot = this.slotSelector_.getValue(root);
     let currentNode = slot.start.nextSibling;
 
@@ -69,7 +69,7 @@ export class ChildrenSelectorImpl<E extends Element, T> extends
     return ImmutableList.of(elements);
   }
 
-  private getElement_(parentEl: Node): E {
+  getElement_(parentEl: Node): E {
     const element = [...ImmutableSet.of(this.elementPool_)][0];
     if (!element) {
       return this.factory_(parentEl.ownerDocument);

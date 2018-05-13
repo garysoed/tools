@@ -68,7 +68,7 @@ export class MonadUtil {
     }
   }
 
-  private static getMonadData_(context: any, key: string | symbol):
+  static getMonadData_(context: any, key: string | symbol):
       {eventIndexes: ImmutableSet<number>, monadData: ImmutableSet<MonadData>} {
     const monadData = MONAD_ANNOTATIONS.forCtor(context.constructor).getAttachedValues().get(key)
         || ImmutableSet.of([]);
@@ -77,7 +77,7 @@ export class MonadUtil {
     return {monadData, eventIndexes};
   }
 
-  private static updateMonads_(
+  static updateMonads_(
       monadMap: ImmutableMap<any, MonadType<any>>,
       newValues: Iterable<MonadValue<any>>): void  {
     for (const {id, value} of newValues) {

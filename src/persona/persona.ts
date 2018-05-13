@@ -32,7 +32,7 @@ export class PersonaImpl {
 
   constructor(private readonly customElements_: CustomElementRegistry) {}
 
-  private createCustomElementClass_(
+  createCustomElementClass_(
       parentClass: {prototype: HTMLElement, new (): HTMLElement},
       templateStr: string,
       injector: Injector,
@@ -112,7 +112,7 @@ export class PersonaImpl {
     this.rendererSpecs_.set(ctrl, propertyMap);
   }
 
-  private getAncestorSpecs_<T>(descendantCtor: Function, map: Map<Function, Map<PropertyKey, T>>):
+  getAncestorSpecs_<T>(descendantCtor: Function, map: Map<Function, Map<PropertyKey, T>>):
       ImmutableMap<PropertyKey, T> {
     const rv: Map<PropertyKey, {ctor: Function, value: T}> = new Map();
     for (const [ctor, entries] of map) {
@@ -153,7 +153,7 @@ export class PersonaImpl {
     return selector.getValue(shadowRoot);
   }
 
-  private register_(injector: Injector, templates: Templates, ctrl: Ctrl): void {
+  register_(injector: Injector, templates: Templates, ctrl: Ctrl): void {
     if (this.registeredSpecs_.has(ctrl)) {
       return;
     }
@@ -196,7 +196,7 @@ export class PersonaImpl {
     }
   }
 
-  private registerCustomElement_(spec: ComponentSpec<any>, elementCtor: Function): void {
+  registerCustomElement_(spec: ComponentSpec<any>, elementCtor: Function): void {
     try {
       if (spec.parent) {
         this.customElements_.define(spec.tag, elementCtor, {extends: spec.parent.tag});
@@ -208,7 +208,7 @@ export class PersonaImpl {
     }
   }
 
-  private registerDependencies_(
+  registerDependencies_(
       spec: ComponentSpec<any>,
       injector: Injector,
       templates: Templates): void {
@@ -219,7 +219,7 @@ export class PersonaImpl {
     }
   }
 
-  private registerInputs_(
+  registerInputs_(
       spec: ComponentSpec<any>): Map<Selector<any>, InstanceNodeProvider<any>> {
     const inputProviders: Map<Selector<any>, InstanceNodeProvider<any>> = new Map();
     if (spec.inputs) {
@@ -237,11 +237,11 @@ export class PersonaImpl {
     return inputProviders;
   }
 
-  private registerListeners_(ctrl: Ctrl): ImmutableMap<PropertyKey, any> {
+  registerListeners_(ctrl: Ctrl): ImmutableMap<PropertyKey, any> {
     return this.getAncestorSpecs_(ctrl, this.listenerSpecs_);
   }
 
-  private registerRenderers_(ctrl: Ctrl): ImmutableMap<PropertyKey, any> {
+  registerRenderers_(ctrl: Ctrl): ImmutableMap<PropertyKey, any> {
     const rendererSpecs = this.getAncestorSpecs_(ctrl, this.rendererSpecs_);
     for (const [key, {parameters, selector}] of rendererSpecs) {
       Graph.registerGenericProvider_(

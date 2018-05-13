@@ -11,7 +11,7 @@ export class GraphTimeNode extends GNode<GraphTime> {
     return timestamp;
   }
 
-  protected execute_(): GraphTime {
+  execute_(): GraphTime {
     throw new Error('Method not implemented.');
   }
 }

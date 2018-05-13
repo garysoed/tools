@@ -1,6 +1,4 @@
 declare namespace gapi {
-  const client: Client
-
   export type ClientInitConfig = {
     apiKey?: string,
     discoveryDocs?: string[],
@@ -11,7 +9,7 @@ declare namespace gapi {
   export interface Client {
     init(config: ClientInitConfig): Promise<void>;
 
-    newBatch<T>(): gapi.client.Batch<T>;
+    newBatch<T>(): gapi.client.HttpBatch;
   }
 
   interface User {
@@ -37,7 +35,7 @@ declare namespace gapi.auth2 {
 
 declare namespace gapi.client {
 
-  export interface Batch<T> extends PromiseLike<Response<ResponseMap<T>>> {
+  export interface HttpBatch extends PromiseLike<Response<ResponseMap<any>>> {
     add<T>(request: Request<T>, opt?: {id: string}): void;
   }
 

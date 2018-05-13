@@ -2,7 +2,7 @@ import { ImmutableSet } from '../immutable';
 import { GapiLibrary } from '../net';
 import { Storage } from '../store/interfaces';
 
-export type GapiRequestQueue<API, T> = (fn: (api: API) => gapi.client.Request<T>) => Promise<T>;
+export type GapiRequestQueue<API, T> = (fn: (api: API) => gapi.client.HttpRequest<T>) => Promise<T>;
 
 export abstract class GapiStorage<
     API,
@@ -18,7 +18,7 @@ export abstract class GapiStorage<
     return this.hasImpl_((fn) => this.queueRequest_(fn), id);
   }
 
-  protected abstract hasImpl_(queueRequest: GapiRequestQueue<API, HAS>, id: string):
+  abstract hasImpl_(queueRequest: GapiRequestQueue<API, HAS>, id: string):
       Promise<boolean>;
 
   list(): Promise<ImmutableSet<SUMMARY>> {
@@ -35,7 +35,7 @@ export abstract class GapiStorage<
   protected abstract listImpl_(queueRequest: GapiRequestQueue<API, LIST>):
       Promise<ImmutableSet<SUMMARY>>;
 
-  private async queueRequest_<T>(fn: (api: API) => gapi.client.Request<T>): Promise<T> {
+  async queueRequest_<T>(fn: (api: API) => gapi.client.HttpRequest<T>): Promise<T> {
     const lib = await this.lib_.get();
     return this.lib_.queueRequest(fn(lib));
   }

@@ -76,12 +76,7 @@
     "no-trailing-whitespace": true,
     "no-unnecessary-initializer": true,
     "no-unused-expression": false,
-    "no-unused-variable": [
-      true,
-      {
-        "ignore-pattern": "pipe.*"
-      }
-    ],
+    "no-unused-variable": true,
     "no-use-before-declare": true,
     "no-var-keyword": true,
     "no-var-requires": true,

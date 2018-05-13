@@ -13,12 +13,12 @@ export const __value = Symbol('value');
 
 export class SwitchSelectorStub<T> extends SelectorStub<T> implements SwitchSelector<T> {
   constructor(
-    private readonly factory_: Factory<T>,
-    private readonly slotSelector_: SlotSelectorStub,
-    private readonly dataType_: Type<T>,
-    private readonly defaultValue_: T) {
-  super();
-}
+      private readonly factory_: Factory<T>,
+      private readonly slotSelector_: SlotSelectorStub,
+      private readonly dataType_: Type<T>,
+      private readonly defaultValue_: T) {
+    super();
+  }
 
   resolve(allSelectors: {}): SwitchSelectorImpl<T> {
     return new SwitchSelectorImpl(
@@ -42,7 +42,7 @@ export class SwitchSelectorImpl<T> extends SelectorImpl<T> implements SwitchSele
             dataType_));
   }
 
-  private getCache_(root: ShadowRoot): Map<T, HTMLElement> {
+  getCache_(root: ShadowRoot): Map<T, HTMLElement> {
     const cache = root[__cache];
     if (cache) {
       return cache;
@@ -53,7 +53,7 @@ export class SwitchSelectorImpl<T> extends SelectorImpl<T> implements SwitchSele
     return newCache;
   }
 
-  private getElement_(root: ShadowRoot): HTMLElement | null {
+  getElement_(root: ShadowRoot): HTMLElement | null {
     const slot = this.slotSelector_.getValue(root);
     const el = slot.start.nextSibling;
     if (!el) {
@@ -83,7 +83,7 @@ export class SwitchSelectorImpl<T> extends SelectorImpl<T> implements SwitchSele
     return el[__value] || null;
   }
 
-  private setElement_(root: ShadowRoot, el: HTMLElement | null): void {
+  setElement_(root: ShadowRoot, el: HTMLElement | null): void {
     const slot = this.slotSelector_.getValue(root);
 
     const parentEl = slot.start.parentElement;
@@ -104,7 +104,7 @@ export class SwitchSelectorImpl<T> extends SelectorImpl<T> implements SwitchSele
     parentEl.insertBefore(el, slot.end);
   }
 
-  protected setValue_(value: T | null, root: ShadowRoot): void {
+  setValue_(value: T | null, root: ShadowRoot): void {
     if (this.getValue(root) === value) {
       return;
     }

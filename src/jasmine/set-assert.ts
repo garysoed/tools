@@ -16,7 +16,7 @@ export class SetAssert<V> extends AnyAssert<Set<V>> {
   constructor(
       setValue: Set<V>,
       reversed: boolean,
-      expect: (actual: any) => jasmine.Matchers) {
+      expect: (actual: any) => jasmine.Matchers<Set<V>>) {
     super(setValue, reversed, expect);
     this.setValue_ = setValue;
   }

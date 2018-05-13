@@ -59,7 +59,7 @@ export class ElementRegistrar extends BaseDisposable {
     Log.setEnabledLevel(origLogLevel);
   }
 
-  private getLifecycleConfig_(
+  getLifecycleConfig_(
       attributes: {[name: string]: Parser<any>},
       elementProvider: () => BaseDisposable,
       content: string): xtag.ILifecycleConfig {
@@ -126,7 +126,7 @@ export class ElementRegistrar extends BaseDisposable {
     };
   }
 
-  private getMethodsWithLifecycle_(
+  getMethodsWithLifecycle_(
       lifecycle: 'create' | 'insert' | 'remove',
       instance: Object): ImmutableSet<symbol | string> {
     return LIFECYCLE_ANNOTATIONS
@@ -200,7 +200,7 @@ export class ElementRegistrar extends BaseDisposable {
    * @param el The element containing the instance to run the function on.
    * @param callback The function to run on the instance.
    */
-  private static runOnInstance_(el: any, callback: (component: BaseDisposable) => void): any {
+  static runOnInstance_(el: any, callback: (component: BaseDisposable) => void): any {
     const instance = el[ElementRegistrar.__instance];
     if (InstanceofType(BaseDisposable).check(instance)) {
       return callback(instance);

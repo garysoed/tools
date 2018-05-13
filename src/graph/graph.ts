@@ -152,10 +152,10 @@ export class GraphImpl extends BaseDisposable {
     }));
   }
 
-  private getIdealExecutionTime_(staticId: StaticId<any>, timestamp: GraphTime): GraphTime;
-  private getIdealExecutionTime_(instanceId: InstanceId<any>, timestamp: GraphTime, context: {}):
+  getIdealExecutionTime_(staticId: StaticId<any>, timestamp: GraphTime): GraphTime;
+  getIdealExecutionTime_(instanceId: InstanceId<any>, timestamp: GraphTime, context: {}):
       GraphTime;
-  private getIdealExecutionTime_(
+  getIdealExecutionTime_(
       nodeId: NodeId<any>,
       timestamp: GraphTime,
       context: {} = GLOBALS): GraphTime {
@@ -192,7 +192,7 @@ export class GraphImpl extends BaseDisposable {
     return this.currentTime_;
   }
 
-  private getTransitiveDependencies_(nodeId: NodeId<any>): ImmutableSet<NodeId<any>> {
+  getTransitiveDependencies_(nodeId: NodeId<any>): ImmutableSet<NodeId<any>> {
     const existingDependencies = this.transitiveDependencies_.get(nodeId);
     if (existingDependencies) {
       return existingDependencies;
@@ -215,7 +215,7 @@ export class GraphImpl extends BaseDisposable {
     return deps;
   }
 
-  private isMonitored_(context: {}, nodeId: NodeId<any>): boolean {
+  isMonitored_(context: {}, nodeId: NodeId<any>): boolean {
     const ids = this.monitoredNodes_.get(context);
     if (!ids) {
       return false;
@@ -251,7 +251,7 @@ export class GraphImpl extends BaseDisposable {
     }
   }
 
-  private onReady_<T, C>(nodeId: NodeId<T>, context: C): void {
+  onReady_<T, C>(nodeId: NodeId<T>, context: C): void {
     if (nodeId instanceof StaticId) {
       this.refresh(nodeId);
     } else {
@@ -259,7 +259,7 @@ export class GraphImpl extends BaseDisposable {
     }
   }
 
-  private async processSetQueue_(): Promise<void> {
+  async processSetQueue_(): Promise<void> {
     const promises = this.setQueue_.map((setFn) => new Promise((resolve) => {
       window.setTimeout(() => {
         setFn();
@@ -366,7 +366,7 @@ export class GraphImpl extends BaseDisposable {
     this.registerGenericProvider_(nodeId, provider, ...args);
   }
 
-  private set_<T>(nodeId: NodeId<T>, context: {}, value: T): Promise<void> {
+  set_<T>(nodeId: NodeId<T>, context: {}, value: T): Promise<void> {
     Log.debug(LOGGER, `setting: ${nodeId} ${value}`);
 
     const node = this.nodes_.get(nodeId);

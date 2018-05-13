@@ -13,7 +13,7 @@ export class BooleanAssert extends BaseAssert {
   constructor(
       booleanValue: boolean,
       reversed: boolean,
-      expect: (actual: any) => jasmine.Matchers) {
+      expect: (actual: any) => jasmine.Matchers<boolean>) {
     super(booleanValue, reversed, expect);
   }
 

@@ -42,7 +42,7 @@ export class WaitUntil extends BaseListener {
     return promise;
   }
 
-  private onTick_(interval: Interval, resolve: () => void, reject: (error: Error) => void): void {
+  onTick_(interval: Interval, resolve: () => void, reject: (error: Error) => void): void {
     if (this.isDisposed()) {
       reject(new Error('Check function has not returned true when waiter is disposed'));
     } else if (this.checkFn_()) {

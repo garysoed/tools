@@ -77,7 +77,7 @@ export class ChildrenElementsBinder<T> implements DomBinder<T[]> {
   /**
    * @return A newly created element, or a reused element from the element pool.
    */
-  private getElement_(): Element {
+  getElement_(): Element {
     const element = [...ImmutableSet.of(this.elementPool_)][0];
     if (!element) {
       return this.dataHelper_.create(this.parentEl_.ownerDocument, this.instance_);

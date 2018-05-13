@@ -6,7 +6,7 @@ import { SimpleIdGenerator } from '../random';
 
 type Callback<T> = (result: T | Error) => void;
 
-export const QUEUED_REQUESTS: Map<gapi.client.Request<any>, Callback<any>> = new Map();
+export const QUEUED_REQUESTS: Map<gapi.client.HttpRequest<any>, Callback<any>> = new Map();
 const QUEUE_TIMEOUT_MS: number = 10;
 
 export class GapiLibrary<T> {
@@ -21,7 +21,7 @@ export class GapiLibrary<T> {
     return this.gapi_.init();
   }
 
-  private async flushRequests_(): Promise<void> {
+  async flushRequests_(): Promise<void> {
     const client = await this.client();
     const batch = client.newBatch();
     const idGenerator = new SimpleIdGenerator();
@@ -73,7 +73,7 @@ export class GapiLibrary<T> {
     return obj;
   }
 
-  queueRequest<T>(request: gapi.client.Request<T>): Promise<T> {
+  queueRequest<T>(request: gapi.client.HttpRequest<T>): Promise<T> {
     if (GapiLibrary.timeoutId_ === null) {
       GapiLibrary.timeoutId_ = this.window_.setTimeout(() => {
         this.flushRequests_();

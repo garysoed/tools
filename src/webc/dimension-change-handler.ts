@@ -45,7 +45,7 @@ export class DimensionChangeHandler implements Handler<DimensionChangeConfig> {
     return DIMENSION_CHANGE_ANNOTATIONS.forCtor(instance.constructor).getAttachedValues();
   }
 
-  private onDimensionChanged_(
+  onDimensionChanged_(
       this: DimensionChangeHandler,
       instance: BaseDisposable,
       handlerKeys: (string | symbol)[],

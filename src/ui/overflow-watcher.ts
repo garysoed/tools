@@ -72,7 +72,7 @@ class OverflowWatcher extends BaseListenableListener<EventType> {
   }
 
   // TODO(gs): Memoize this.
-  private getState_(): State {
+  getState_(): State {
     // TODO(gs): Support bottom / left / right
     const scrollTop = this.containerEl_.scrollTop;
     const relativeOffsetTop = Doms.relativeOffsetTop(this.element_, this.containerEl_);

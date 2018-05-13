@@ -51,7 +51,7 @@ class OnDom {
     Log.setEnabledLevel(previousLogLevel);
   }
 
-  private static configure_<T extends {selector: ElementSelector}>(
+  static configure_<T extends {selector: ElementSelector}>(
       parentElement: HTMLElement,
       instance: BaseDisposable,
       handler: Handler<T>): ImmutableSet<ElementSelector> {

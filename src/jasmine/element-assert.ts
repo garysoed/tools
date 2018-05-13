@@ -4,7 +4,10 @@ import { AnyAssert } from './any-assert';
 export class ElementAssert extends AnyAssert<Element> {
   private readonly elementValue_: Element;
 
-  constructor(elementValue: Element, reversed: boolean, expect: (actual: any) => jasmine.Matchers) {
+  constructor(
+      elementValue: Element,
+      reversed: boolean,
+      expect: (actual: any) => jasmine.Matchers<Element>) {
     super(elementValue, reversed, expect);
     this.elementValue_ = elementValue;
   }

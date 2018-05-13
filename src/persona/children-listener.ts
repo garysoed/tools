@@ -8,12 +8,12 @@ import { ChildrenSelector } from '../persona/selectors';
 export class ChildrenListener<E extends Element, T> implements Listener<'childrenchange'> {
   constructor(private readonly childrenSelector_: ChildrenSelectorImpl<E, T>) { }
 
-  private createMutationObserver_(callback: (records: Iterable<MutationRecord>) => void):
+  createMutationObserver_(callback: (records: Iterable<MutationRecord>) => void):
       MutationObserver {
     return new MutationObserver(callback);
   }
 
-  private onMutation_(
+  onMutation_(
       handler: (event: Event<'childrenchange'>) => any,
       context: any,
       records: Iterable<MutationRecord>): void {

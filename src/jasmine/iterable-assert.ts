@@ -10,7 +10,7 @@ export class IterableAssert<T> extends AnyAssert<Iterable<T>> {
   constructor(
       private iterableValue_: Iterable<T>,
       reversed: boolean,
-      expect: (actual: any) => jasmine.Matchers) {
+      expect: (actual: any) => jasmine.Matchers<Iterable<T>>) {
     super(iterableValue_, reversed, expect);
   }
 

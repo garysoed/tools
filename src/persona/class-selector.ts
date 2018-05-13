@@ -38,7 +38,7 @@ export class ClassSelectorImpl extends SelectorImpl<boolean> implements ClassSel
     return element.classList.contains(this.className_);
   }
 
-  protected setValue_(value: boolean | null, root: ShadowRoot): void {
+  setValue_(value: boolean | null, root: ShadowRoot): void {
     const element = this.elementSelector_.getValue(root);
     if (!element) {
       return;

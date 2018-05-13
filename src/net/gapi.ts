@@ -60,6 +60,6 @@ export class Gapi {
       }
     }
     this.initialized_ = true;
-    return gapi.client;
+    return gapi.client as any as gapi.Client;
   }
 }

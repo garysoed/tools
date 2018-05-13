@@ -13,7 +13,7 @@ export class StringAssert extends AnyAssert<string> {
   constructor(
       stringValue: string,
       reversed: boolean,
-      expect: (actual: any) => jasmine.Matchers) {
+      expect: (actual: any) => jasmine.Matchers<string>) {
     super(stringValue, reversed, expect);
   }
 

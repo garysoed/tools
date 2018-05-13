@@ -61,7 +61,7 @@ export abstract class HttpRequest extends BaseListener {
     });
   }
 
-  private static newRequest(): XMLHttpRequest {
+  static newRequest(): XMLHttpRequest {
     return new XMLHttpRequest();
   }
 }

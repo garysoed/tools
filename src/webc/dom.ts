@@ -40,7 +40,7 @@ export class Dom {
         });
   }
 
-  private createMonad_(factory: MonadFactory<any>): ParameterDecorator {
+  createMonad_(factory: MonadFactory<any>): ParameterDecorator {
     return this.setter_ ? monadOut(factory) : monad(factory);
   }
 
@@ -72,7 +72,7 @@ export class Dom {
         });
   }
 
-  private static requireTargetElement_(selector: ElementSelector, instance: Object): HTMLElement {
+  static requireTargetElement_(selector: ElementSelector, instance: Object): HTMLElement {
     const root = Util.getElement(instance);
     if (!root) {
       throw new Error(`Element not found for ${instance}`);

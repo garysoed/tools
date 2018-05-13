@@ -5,7 +5,7 @@ export class FiniteIterableAssert<T> extends IterableAssert<T> {
   constructor(
       private finiteIterableValue_: Finite & Iterable<T>,
       reversed: boolean,
-      expect: (actual: any) => jasmine.Matchers) {
+      expect: (actual: any) => jasmine.Matchers<Iterable<T>>) {
     super(finiteIterableValue_, reversed, expect);
   }
 

@@ -20,7 +20,7 @@ export abstract class Manager<D extends DataModel<any>>
     super(logger);
   }
 
-  private get_(id: string): Promise<D | null> {
+  get_(id: string): Promise<D | null> {
     return this.storage_.read(id);
   }
 
@@ -37,7 +37,7 @@ export abstract class Manager<D extends DataModel<any>>
     };
   }
 
-  private list_(): Promise<ImmutableSet<D>> {
+  list_(): Promise<ImmutableSet<D>> {
     return this.storage_.list();
   }
 
@@ -62,11 +62,11 @@ export abstract class Manager<D extends DataModel<any>>
     };
   }
 
-  private search_(this: Manager<D>, token: string): Promise<ImmutableList<D>> {
+  search_(this: Manager<D>, token: string): Promise<ImmutableList<D>> {
     return this.searcher_.search(token);
   }
 
-  private async update_(id: string, item: D): Promise<void> {
+  async update_(id: string, item: D): Promise<void> {
     const existingItem = await this.storage_.read(id);
     await this.storage_.update(id, item);
 

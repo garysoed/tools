@@ -38,7 +38,7 @@ export class Stringify {
    * @return The string representation of the fields. The first line will never have the
    *    indentation.
    */
-  private static formatField_(
+  static formatField_(
       field: Stringifiable,
       delimiter: string = ',',
       pad: string = '  ',
@@ -96,7 +96,7 @@ export class Stringify {
    * @param instance Instance whose fields should be collected and normalized.
    * @return JSON object containing the stringified and normalized fields.
    */
-  private static grabFields_(instance: any): Stringifiable {
+  static grabFields_(instance: any): Stringifiable {
     if (instance instanceof Object
         && ANNOTATIONS.hasAnnotation(instance.constructor)) {
       const record = {};

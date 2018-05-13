@@ -10,7 +10,7 @@ export class ArrayAssert<T> extends IterableAssert<T> {
   constructor(
       arrayValue: T[],
       reversed: boolean,
-      expect: (actual: any) => jasmine.Matchers) {
+      expect: (actual: any) => jasmine.Matchers<T[]>) {
     super(arrayValue, reversed, expect);
   }
 

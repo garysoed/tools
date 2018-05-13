@@ -105,7 +105,7 @@ export class PostMessageChannel extends BaseListener {
     return this.post_(new Message(MessageType.DATA, message));
   }
 
-  private post_(message: Message): Promise<void> {
+  post_(message: Message): Promise<void> {
     return Asyncs.run(() => {
       this.destWindow_.getEventTarget().postMessage(
           Serializer.toJSON(message),
@@ -132,7 +132,7 @@ export class PostMessageChannel extends BaseListener {
     return message.getPayload();
   }
 
-  private waitForMessage_(testFn: (message: Message) => boolean): Promise<Message> {
+  waitForMessage_(testFn: (message: Message) => boolean): Promise<Message> {
     const destWindowOrigin = PostMessageChannel.getOrigin(this.destWindow_.getEventTarget());
     return new Promise((resolve: Function) => {
       const unlistenFn = this.listenTo(
@@ -203,7 +203,7 @@ export class PostMessageChannel extends BaseListener {
     });
   }
 
-  private static of_(srcWindow: Window, destWindow: Window): PostMessageChannel {
+  static of_(srcWindow: Window, destWindow: Window): PostMessageChannel {
     return new PostMessageChannel(srcWindow, destWindow);
   }
 

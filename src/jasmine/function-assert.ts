@@ -10,7 +10,7 @@ export class FunctionAssert<T extends Function> extends AnyAssert<T> {
   constructor(
       functionValue: T,
       reversed: boolean,
-      expect: (actual: any) => jasmine.Matchers) {
+      expect: (actual: any) => jasmine.Matchers<T>) {
     super(functionValue, reversed, expect);
   }
 

@@ -20,7 +20,7 @@ describe('gs-tools.persona.CustomElementInternal', () => {
   let rendererSpecMap: Map<any, any>;
   let defaultAttrsMap: Map<string, string>;
   let inputMap: Map<Selector<any>, InstanceNodeProvider<any>>;
-  let customElement: CustomElement;
+  let customElement: CustomElementInternal;
 
   beforeEach(() => {
     mockInjector = jasmine.createSpyObj('Injector', ['instantiate']);

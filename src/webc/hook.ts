@@ -80,7 +80,7 @@ export class Hook {
    * @param binderFactory Factory that generates the binder.
    * @return The property decorator.
    */
-  private createDecorator_(
+  createDecorator_(
       binderFactory: (element: Element, instance: any) => DomBinder<any>): PropertyDecorator {
     const self = this;
     return function(target: Object, propertyKey: string | symbol): void {

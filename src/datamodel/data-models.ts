@@ -6,11 +6,11 @@ import { ImmutableMap } from '../immutable/immutable-map';
 export const __serializedName = Symbol('serializedName');
 
 export class DataModels {
-  private static createGetter_(instance: any, key: string | symbol): () => any {
+  static createGetter_(instance: any, key: string | symbol): () => any {
     return () => instance[key];
   }
 
-  private static createSetter_<T, I extends DataModel<any>>(
+  static createSetter_<T, I extends DataModel<any>>(
       ctor: new (...args: any[]) => I,
       instance: I,
       key: string | symbol,

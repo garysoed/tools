@@ -13,7 +13,7 @@ export class SetParserImpl<T> implements Parser<ImmutableSet<T | null>> {
   parse(input: string | null): ImmutableSet<T | null> | null {
     const list = this.listParser_.parse(input);
     if (!list) {
-      return list;
+      return null;
     }
 
     return ImmutableSet.of(list);

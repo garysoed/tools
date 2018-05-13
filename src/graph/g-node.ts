@@ -11,7 +11,7 @@ export abstract class GNode<T> {
 
   constructor(private readonly parameterIds_: ImmutableList<NodeId<any>>) { }
 
-  protected addToCache_(context: {}, timestamp: GraphTime, value: T): void {
+  addToCache_(context: {}, timestamp: GraphTime, value: T): void {
     const cache = this.getCache_(context);
     if (cache.has(timestamp)) {
       throw Errors.assert(`cache`).should(`have timestamp ${timestamp}`).butWas(cache);
@@ -31,7 +31,7 @@ export abstract class GNode<T> {
     return value;
   }
 
-  protected abstract execute_(context: {}, params: Iterable<any>): T;
+  abstract execute_(context: {}, params: Iterable<any>): T;
 
   getCache_(context: {}): Map<GraphTime, T> {
     const map = this.cacheMap_.get(context);

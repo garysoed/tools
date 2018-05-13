@@ -5,11 +5,11 @@ import { BaseIdGenerator } from '../random/base-id-generator';
 
 
 class TestIdGenerator extends BaseIdGenerator {
-  protected newId_(): string {
+  newId_(): string {
     return '';
   }
 
-  protected resolveConflict_(): string {
+  resolveConflict_(): string {
     return '';
   }
 }

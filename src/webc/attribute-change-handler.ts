@@ -83,7 +83,7 @@ export class AttributeChangeHandler implements Handler<AttributeChangeHandlerCon
             previousSibling: null,
             removedNodes: {length: 0} as any as NodeList,
             target: targetEl,
-            type: 'attributes',
+            type: 'attributes' as any,
           }]));
     }
     instance.addDisposable(DisposableFunction.of(() => {

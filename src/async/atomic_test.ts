@@ -1,3 +1,5 @@
+import 'jasmine';
+
 import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
@@ -52,7 +54,10 @@ describe('async.atomic', () => {
 
     const instance = Mocks.object('instance');
     instance[__SEQUENCER] = mockSequencer;
-    const decoratedFunction = decorator(Class.prototype, 'property', descriptor)!.value as Function;
+
+    const decoratorInstance =
+        decorator(Class.prototype, 'property', descriptor) as TypedPropertyDescriptor<any>;
+    const decoratedFunction = decoratorInstance.value as Function;
     await decoratedFunction.call(instance, 1, 2);
     assert(mockSequencer.run).to.haveBeenCalledWith(Matchers.anyFunction());
   });

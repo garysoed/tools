@@ -43,7 +43,7 @@ export class WebStorage<T> implements GsStorage<T> {
    * Returns the indexes in the storage.
    * @private
    */
-  private getIndexes_(): ImmutableSet<string> {
+  getIndexes_(): ImmutableSet<string> {
     let indexes = this.storage_.getItem(this.prefix_);
     if (indexes === null) {
       this.updateIndexes_(ImmutableSet.of([]));
@@ -56,7 +56,7 @@ export class WebStorage<T> implements GsStorage<T> {
    * @param key Key to base the path from.
    * @return The key with the specified prefix appended.
    */
-  private getPath_(key: string): string {
+  getPath_(key: string): string {
     return `${this.prefix_}/${key}`;
   }
 
@@ -135,7 +135,7 @@ export class WebStorage<T> implements GsStorage<T> {
    * @param indexes Indexes to update.
    * @private
    */
-  private updateIndexes_(indexes: ImmutableSet<string>): void {
+  updateIndexes_(indexes: ImmutableSet<string>): void {
     this.storage_.setItem(this.prefix_, JSON.stringify([...indexes]));
   }
 }

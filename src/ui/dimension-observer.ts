@@ -1,7 +1,7 @@
 import { Interval } from '../async/interval';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { DisposableFunction } from '../dispose/disposable-function';
-import { DisposableFunction as IDisposableFunction} from '../interfaces/disposable-function';
+import { DisposableFunction as IDisposableFunction } from '../interfaces/disposable-function';
 import { Reflect } from '../util/reflect';
 
 type ObservationData = {
@@ -28,7 +28,7 @@ export class DimensionObserver extends BaseDisposable {
     this.interval_.start();
   }
 
-  private hasChanged_(oldClientRect: ClientRect | null, newClientRect: ClientRect): boolean {
+  hasChanged_(oldClientRect: ClientRect | null, newClientRect: ClientRect): boolean {
     return !oldClientRect ||
         oldClientRect.bottom !== newClientRect.bottom ||
         oldClientRect.height !== newClientRect.height ||

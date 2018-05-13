@@ -40,7 +40,7 @@ export class ElementSwitchBinder<T> implements DomBinder<T> {
    * @param element The element whose enum value should be returned.
    * @return The enum value associated with the given element.
    */
-  private getEnumValue_(element: HTMLElement): T | null {
+  getEnumValue_(element: HTMLElement): T | null {
     const enumValue: T | null = element[__enumValue];
     if (enumValue !== undefined) {
       return enumValue;
@@ -92,7 +92,7 @@ export class ElementSwitchBinder<T> implements DomBinder<T> {
    * @param element The element to set.
    * @param isActive True iff the element is active.
    */
-  private setActive_(element: HTMLElement, isActive: boolean): void {
+  setActive_(element: HTMLElement, isActive: boolean): void {
     element.style.display = isActive ? '' : 'none';
   }
 

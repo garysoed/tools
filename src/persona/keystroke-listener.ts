@@ -23,7 +23,7 @@ export class KeystrokeListener implements Listener<'keystroke'> {
     this.eventListener_ = new EventListener(elementSelector, 'keydown');
   }
 
-  private matches_(event: KeyboardEvent): boolean {
+  matches_(event: KeyboardEvent): boolean {
     const {alt, ctrl, meta} = this.options_;
     if (alt !== undefined && alt !== event.altKey) {
       return false;

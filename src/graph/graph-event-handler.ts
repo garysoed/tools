@@ -13,7 +13,7 @@ export class GraphEventHandler extends BaseDisposable {
   private readonly onReadyListeners_: WeakMap<{}, Map<NodeId<any>, Set<Handler<any, any>>>>
       = new WeakMap();
 
-  private callHandlers_(
+  callHandlers_(
       listeners: WeakMap<{}, Map<NodeId<any>, Set<Handler<any, any>>>>,
       context: {},
       id: NodeId<any>,
@@ -37,7 +37,7 @@ export class GraphEventHandler extends BaseDisposable {
     this.callHandlers_(this.onReadyListeners_, context, id, 'ready');
   }
 
-  private getHandlers_(
+  getHandlers_(
       listeners: WeakMap<{}, Map<NodeId<any>, Set<Handler<any, any>>>>,
       context: {},
       id: NodeId<any>): Set<Handler<any, any>> | null {
@@ -49,7 +49,7 @@ export class GraphEventHandler extends BaseDisposable {
     return map.get(id) || null;
   }
 
-  private modifyHandlers_(
+  modifyHandlers_(
       listeners: WeakMap<{}, Map<NodeId<any>, Set<Handler<any, any>>>>,
       context: {},
       id: NodeId<any>,

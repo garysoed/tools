@@ -81,7 +81,7 @@ export class Handle {
     }
   }
 
-  private static configure_<T extends {selector: string | null}>(
+  static configure_<T extends {selector: string | null}>(
       parentElement: HTMLElement,
       instance: BaseDisposable,
       handler: Handler<T>): ImmutableSet<string | null> {

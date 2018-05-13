@@ -21,7 +21,7 @@ export class BaseListener extends BaseDisposable implements Listener {
     super.disposeInternal();
   }
 
-  private getHash_<E>(
+  getHash_<E>(
       listenable: BaseListenable<E>,
       eventType: E,
       callback: (payload?: any) => void,

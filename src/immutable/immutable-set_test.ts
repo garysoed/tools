@@ -1,9 +1,9 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import { Orderings } from 'src/immutable/orderings';
 import { NumberType } from '../check';
 import { ImmutableSet } from '../immutable/immutable-set';
+import { Orderings } from '../immutable/orderings';
 
 
 describe('immutable.ImmutableSet', () => {

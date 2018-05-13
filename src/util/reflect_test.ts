@@ -8,14 +8,18 @@ describe('Reflect', () => {
   describe('addInitializer', () => {
     it(`should call the original initializer if exists`, () => {
       class InitializedClass {
-        [Reflect.__initialize](): void { }
+        constructor(private readonly spy_: jasmine.Spy) { }
+
+        [Reflect.__initialize](instance: InitializedClass): void {
+          this.spy_(instance);
+        }
       }
 
       const mockInitializer = jasmine.createSpy('Initializer');
 
-      const initializerSpy = spyOn(InitializedClass.prototype, Reflect.__initialize);
+      const initializerSpy = jasmine.createSpy('initialized');
       Reflect.addInitializer(InitializedClass, mockInitializer);
-      const instance = Reflect.construct(InitializedClass, []);
+      const instance = Reflect.construct(InitializedClass, [initializerSpy]);
       assert(initializerSpy).to.haveBeenCalledWith(instance);
       assert(mockInitializer).to.haveBeenCalledWith(instance);
     });

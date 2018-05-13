@@ -23,7 +23,7 @@ export abstract class Selector<T> {
 
   abstract setValue(value: T | null, root: ShadowRoot, time: GraphTime): void;
 
-  protected abstract setValue_(value: T | null, root: ShadowRoot): void;
+  abstract setValue_(value: T | null, root: ShadowRoot): void;
 }
 
 export abstract class SelectorImpl<T> extends Selector<T> {
@@ -78,7 +78,7 @@ export abstract class SelectorImpl<T> extends Selector<T> {
     }
   }
 
-  protected updateProvider_(
+  updateProvider_(
       root: ShadowRoot,
       ctrl: BaseDisposable,
       provider: InstanceNodeProvider<T>): Promise<void> {

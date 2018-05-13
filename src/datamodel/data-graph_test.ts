@@ -80,8 +80,9 @@ describe('datamodel.registerDataGraph', () => {
       const data = Mocks.object('data');
 
       const list = Mocks.object('list');
+      const mockProvider = jasmine.createSpy('Provider');
       const graph = await Graph.get(dataGraphId, Graph.getTimestamp());
-      spyOn(graph, 'provider_');
+      graph['provider_'] = mockProvider;
       spyOn(graph, 'list').and.returnValue(list);
 
       await graph.set(id, data);

@@ -69,7 +69,7 @@ export class AnnotationsHandler<T> {
    * @param ctor The constructor to create the hash for.
    * @param annotation The annotation symbol to create the hash for.
    */
-  private static createHash_(ctor: any, annotation: symbol): string {
+  static createHash_(ctor: any, annotation: symbol): string {
     return `${hash(ctor)}_${hash(annotation)}`;
   }
 

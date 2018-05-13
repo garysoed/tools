@@ -5,7 +5,7 @@ export class PromiseAssert<T> extends AnyAssert<Promise<T>> {
       private readonly promise_: Promise<T>,
       private readonly fail_: (message: any) => void,
       reversed: boolean,
-      expect: (actual: any) => jasmine.Matchers) {
+      expect: (actual: any) => jasmine.Matchers<Promise<T>>) {
     super(promise_, reversed, expect);
     if (reversed) {
       throw new Error('Reversed is not supported for Promise asserts');

@@ -16,7 +16,7 @@ export class MapAssert<K, V> extends AnyAssert<Map<K, V>> {
   constructor(
       mapValue: Map<K, V>,
       reversed: boolean,
-      expect: (actual: any) => jasmine.Matchers) {
+      expect: (actual: any) => jasmine.Matchers<Map<K, V>>) {
     super(mapValue, reversed, expect);
     this.mapValue_ = mapValue;
   }

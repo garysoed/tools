@@ -21,7 +21,7 @@ export class ApiServer<Q, P extends gs.IJson> {
     this.requestType_ = requestType;
   }
 
-  private onMessage_(message: gs.IJson): boolean {
+  onMessage_(message: gs.IJson): boolean {
     if (this.requestType_.check(message)) {
       this.processRequest_(message)
           .then((response: P) => {

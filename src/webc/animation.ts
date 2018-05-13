@@ -7,12 +7,12 @@ import { ElementSelector } from '../interfaces/selector';
 import { EventDispatcher } from '../webc/event-dispatcher';
 import { Util } from '../webc/util';
 
-export type AnimationEventDetail = {id: symbol, keyframes: AnimationKeyframe[]};
+export type AnimationEventDetail = {id: symbol, keyframes: AnimationKeyFrame[]};
 
 export class Animation {
   constructor(
-      private readonly keyframes_: AnimationKeyframe[],
-      private readonly options_: AnimationOption,
+      private readonly keyframes_: AnimationKeyFrame[],
+      private readonly options_: AnimationOptions,
       private readonly id_: symbol) { }
 
   /**
@@ -21,7 +21,7 @@ export class Animation {
    * @param keyframe The keyframe object to append.
    * @return The new instance of Animation with the appended keyframe.
    */
-  appendKeyframe(keyframe: AnimationKeyframe): Animation {
+  appendKeyframe(keyframe: AnimationKeyFrame): Animation {
     const newKeyframes = this.keyframes_.slice(0);
     newKeyframes.push(keyframe);
     return Animation.newInstance(newKeyframes, this.options_, this.id_);
@@ -34,7 +34,7 @@ export class Animation {
    * @return The DOM Animation target corresponding to this animation.
    */
   applyTo(element: HTMLElement): EventTarget {
-    return element.animate(this.keyframes_, this.options_);
+    return element.animate(this.keyframes_, this.options_) as any;
   }
 
   start(instance: BaseDisposable, selector: ElementSelector): void {
@@ -44,7 +44,7 @@ export class Animation {
     }
     const targetEl = Util.requireSelector(selector, instanceEl);
     const animation = targetEl.animate(this.keyframes_, this.options_);
-    const listenableAnimation = ListenableDom.of(animation);
+    const listenableAnimation = ListenableDom.of(animation as any);
     instance.addDisposable(listenableAnimation);
 
     const eventDetail = {id: this.id_, keyframes: this.keyframes_};
@@ -64,8 +64,8 @@ export class Animation {
    * @return New instance of Animation object.
    */
   static newInstance(
-      keyframes: AnimationKeyframe[],
-      options: AnimationOption,
+      keyframes: AnimationKeyFrame[],
+      options: AnimationOptions,
       id: symbol): Animation {
     return new Animation(keyframes, options, id);
   }

@@ -1,12 +1,14 @@
+TsFiles = provider(fields=["files"])
+
 def _ts_library_impl(ctx):
-  files = set()
+  files = []
   files += ctx.files.srcs
 
   # Add the dependencies
   for dep in ctx.attr.deps:
-    files += dep.ts_files
+    files += dep[TsFiles].files
 
-  return struct(ts_files = files)
+  return [TsFiles(files = files)]
 
 #
 # Abstraction of a set of typescript files and their dependencies.
@@ -18,7 +20,7 @@ ts_library = rule(
       "deps": attr.label_list(
           allow_files = False,
           default = [],
-          providers = ["ts_files"])
+          providers = [TsFiles])
     },
     implementation = _ts_library_impl
 )

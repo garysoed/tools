@@ -6,8 +6,8 @@ import { JsonParser } from '../parse';
 
 export const TYPE_FIELD_ = '_type';
 
-class DataModelParserImpl<T extends DataModel<any>> implements Parser<T> {
-  private fromJson_<T extends DataModel<any>>(json: gs.IJson): T {
+export class DataModelParserImpl<T extends DataModel<any>> implements Parser<T> {
+  fromJson_<T extends DataModel<any>>(json: gs.IJson): T {
     const serializedName = json[TYPE_FIELD_];
     if (!serializedName) {
       throw new Error('No serialized names found');
@@ -16,7 +16,7 @@ class DataModelParserImpl<T extends DataModel<any>> implements Parser<T> {
     return this.fromJsonDataModel_(json, serializedName);
   }
 
-  private fromJsonDataModel_(json: gs.IJson, serializedName: string): any {
+  fromJsonDataModel_(json: gs.IJson, serializedName: string): any {
     const baseClass = Serializer.getRegisteredCtor(serializedName);
     if (!baseClass) {
       throw new Error(`No constructors found for ${serializedName}`);
@@ -52,7 +52,7 @@ class DataModelParserImpl<T extends DataModel<any>> implements Parser<T> {
     return JsonParser.stringify(value === null ? null : this.toJson_(value));
   }
 
-  private toJson_(obj: any): gs.IJson {
+  toJson_(obj: any): gs.IJson {
     const serializedName = DataModels.getSerializedName(obj);
     if (!serializedName) {
       throw new Error(`Object ${obj} was not created with DataModels or is not serializable`);
@@ -61,7 +61,7 @@ class DataModelParserImpl<T extends DataModel<any>> implements Parser<T> {
     return this.toJsonDataModel_(obj, serializedName);
   }
 
-  private toJsonDataModel_(obj: any, serializedName: string): gs.IJson {
+  toJsonDataModel_(obj: any, serializedName: string): gs.IJson {
     const json: object = {[TYPE_FIELD_]: serializedName};
     const baseClass = Serializer.getRegisteredCtor(serializedName);
 

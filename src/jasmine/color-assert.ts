@@ -5,7 +5,10 @@ import { AnyAssert } from '../jasmine/any-assert';
 export class ColorAssert extends AnyAssert<Color | null> {
   private readonly colorValue_: Color | null;
 
-  constructor(color: Color | null, reversed: boolean, expect: (actual: any) => jasmine.Matchers) {
+  constructor(
+      color: Color | null,
+      reversed: boolean,
+      expect: (actual: any) => jasmine.Matchers<Color | null>) {
     super(color, reversed, expect);
     this.colorValue_ = color;
   }
