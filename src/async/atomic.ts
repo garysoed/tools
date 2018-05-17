@@ -10,28 +10,31 @@ export const __SEQUENCER: symbol = Symbol('sequencer');
  * Annotates a method to indicate that only one instance of the method can be ran at a time.
  */
 export function atomic(): MethodDecorator {
-  return function(
+  return (
       target: Object,
       _: string | symbol,
       descriptor: TypedPropertyDescriptor<any>):
-      TypedPropertyDescriptor<any> {
+      TypedPropertyDescriptor<any> => {
     if (!(target instanceof BaseDisposable)) {
       throw Errors.assert('target').shouldBeAnInstanceOf(BaseDisposable).butWas(target);
     }
 
     const originalFn = descriptor.value;
-    if (originalFn !== undefined) {
+    if (originalFn) {
       descriptor.value = function(this: any, ...args: any[]): any {
-        if (!this[__SEQUENCER]) {
-          const sequencer = Sequencer.newInstance();
+        let sequencer: Sequencer = this[__SEQUENCER];
+        if (!sequencer) {
+          sequencer = new Sequencer();
           this[__SEQUENCER] = sequencer;
           (this as BaseDisposable).addDisposable(sequencer);
         }
-        return this[__SEQUENCER].run(() => {
-          return Promise.resolve(originalFn!.apply(this, args));
+
+        return sequencer.run(async () => {
+          return originalFn.apply(this, args);
         });
       };
     }
+
     return descriptor;
   };
 }

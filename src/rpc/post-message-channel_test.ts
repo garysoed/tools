@@ -1,7 +1,6 @@
 import { assert, Matchers, TestBase } from '../test-base';
 TestBase.setup();
 
-import { Asyncs } from '../async/asyncs';
 import { Serializer } from '../data/a-serializable';
 import { DomEvent } from '../event/dom-event';
 import { Fakes } from '../mock/fakes';
@@ -33,7 +32,6 @@ describe('rpc.PostMessageChannel', () => {
 
       channel['post_'](message);
 
-      assert(Asyncs.run).to.haveBeenCalledWith(Matchers.anyFunction());
       assert(mockDestWindow.postMessage).to.haveBeenCalledWith(json, origin);
       assert(PostMessageChannel.getOrigin).to.haveBeenCalledWith(mockSrcWindow);
       assert(Serializer.toJSON).to.haveBeenCalledWith(message);
@@ -204,7 +202,7 @@ describe('rpc.PostMessageChannel', () => {
 
       const postMessage = mockChannel.post_.calls.argsFor(0)[0];
       assert(postMessage.getType()).to.equal(MessageType.PING);
-      assert(postMessage.getPayload()).to.equal({ 'id': id });
+      assert(postMessage.getPayload()).to.equal({ id: id });
 
       // Check that the interval is cleared.
       assert(window.clearInterval).to.haveBeenCalledWith(intervalId);
@@ -220,7 +218,7 @@ describe('rpc.PostMessageChannel', () => {
       spyOn(Math, 'random').and.returnValue(id);
 
       await PostMessageChannel.open(mockSrcWindow, mockDestWindow);
-      const message = new Message(MessageType.ACK, { 'id': 456 });
+      const message = new Message(MessageType.ACK, { id: 456 });
       assert(mockChannel['waitForMessage_'].calls.argsFor(0)[0](message) as boolean)
           .to.beFalse();
     });
@@ -235,7 +233,7 @@ describe('rpc.PostMessageChannel', () => {
       spyOn(Math, 'random').and.returnValue(id);
 
       await PostMessageChannel.open(mockSrcWindow, mockDestWindow);
-      const message = new Message(MessageType.PING, { 'id': id });
+      const message = new Message(MessageType.PING, { id });
       assert(mockChannel['waitForMessage_'].calls.argsFor(0)[0](message) as boolean).to.beFalse();
     });
   });
@@ -256,7 +254,7 @@ describe('rpc.PostMessageChannel', () => {
       assert(mockSrcWindow.addEventListener)
           .to.haveBeenCalledWith('message', Matchers.anyFunction(), false);
       mockSrcWindow.addEventListener.calls.argsFor(0)[1]({
-        data: Serializer.toJSON(new Message(MessageType.PING, { 'id': id })),
+        data: Serializer.toJSON(new Message(MessageType.PING, { id })),
         getType: () => 'message',
         origin: expectedOrigin,
         source: mockDestWindow,
@@ -268,7 +266,7 @@ describe('rpc.PostMessageChannel', () => {
       assert(mockChannel.post_).to.haveBeenCalledWith(Matchers.any(Message));
       const postMessage = mockChannel.post_.calls.argsFor(0)[0];
       assert(postMessage.getType()).to.equal(MessageType.ACK);
-      assert(postMessage.getPayload()).to.equal({ 'id': id });
+      assert(postMessage.getPayload()).to.equal({ id });
 
       assert(PostMessageChannel['of_'])
           .to.haveBeenCalledWith(mockSrcWindow, mockDestWindow);
@@ -287,8 +285,8 @@ describe('rpc.PostMessageChannel', () => {
       const promise = PostMessageChannel.listen(mockSrcWindow, expectedOrigin);
       mockSrcWindow.addEventListener.calls.argsFor(0)[1]({
         data: {
-          'id': 123,
-          'type': 'PING',
+          id: 123,
+          type: 'PING',
         },
         origin: 'otherOrigin',
         source: mockDestWindow,

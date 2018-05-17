@@ -2,8 +2,17 @@ import { Errors } from '../error';
 import { Bus } from '../event';
 import { Log } from '../util';
 
+/**
+ * Type of event dispatched by Interval.
+ */
 export type IntervalEventType = 'tick';
-export type IntervalEvent = {type: IntervalEventType};
+
+/**
+ * Payload of events dispatched by Interval.
+ */
+export interface IntervalEvent {
+  type: IntervalEventType;
+}
 
 const LOGGER: Log = Log.of('gs-tools.async.Interval');
 
@@ -30,9 +39,6 @@ export class Interval extends Bus<IntervalEventType, IntervalEvent> {
     this.intervalId_ = null;
   }
 
-  /**
-   * @override
-   */
   disposeInternal(): void {
     super.disposeInternal();
     this.stop();
@@ -58,14 +64,5 @@ export class Interval extends Bus<IntervalEventType, IntervalEvent> {
       window.clearInterval(this.intervalId_);
       this.intervalId_ = null;
     }
-  }
-
-  /**
-   * Creates a new interval.
-   *
-   * @param interval Time between each tick, in millis.
-   */
-  static newInstance(interval: number): Interval {
-    return new Interval(interval);
   }
 }

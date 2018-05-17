@@ -1,13 +1,13 @@
 import 'jasmine';
 
-import { assert, Matchers, TestBase } from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
 import { BaseDisposable } from '../dispose/base-disposable';
 import { Mocks } from '../mock/mocks';
 
-import { __SEQUENCER, atomic } from './atomic';
-import { Sequencer } from './sequencer';
+import { TestDispose } from '../testing';
+import { atomic } from './atomic';
 
 
 describe('async.atomic', () => {
@@ -19,60 +19,56 @@ describe('async.atomic', () => {
 
   it('should replace the descriptor with a function that sequence the annotated function',
       async () => {
-    class Class extends BaseDisposable {}
+    /**
+     * Test class.
+     */
+    class TestClass extends BaseDisposable {
+      private lock_: boolean = false;
 
-    const mockFunction = jasmine.createSpy('Function');
+      constructor() {
+        super();
+      }
 
-    const property = 'property';
-    const descriptor = Mocks.object('descriptor');
-    descriptor.value = mockFunction;
+      @atomic()
+      async method(): Promise<void> {
+        assert(this.lock_).to.beFalse();
+        this.lock_ = true;
 
-    const mockSequencer = jasmine.createSpyObj('Sequencer', ['dispose', 'run']);
-    mockSequencer.run.and.returnValue(Promise.resolve());
-    spyOn(Sequencer, 'newInstance').and.returnValue(mockSequencer);
+        return new Promise<void>(resolve => {
+          window.setTimeout(() => {
+            this.lock_ = false;
+            resolve();
+          }, 0);
+        });
+      }
+    }
 
-    const newDescriptor = decorator(Class.prototype, property, descriptor);
-    assert(newDescriptor).to.equal(descriptor);
+    const testClass = new TestClass();
+    TestDispose.add(testClass);
 
-    const mockInstance = jasmine.createSpyObj('Instance', ['addDisposable']);
-    await descriptor.value.call(mockInstance, 1, 2);
-
-    assert(mockSequencer.run).to.haveBeenCalledWith(Matchers.anyFunction());
-    mockSequencer.run.calls.argsFor(0)[0]();
-
-    assert(mockFunction).to.haveBeenCalledWith(1, 2);
-  });
-
-  it('should reuse existing sequencer', async () => {
-    class Class extends BaseDisposable {}
-
-    const descriptor = Mocks.object('descriptor');
-    descriptor.value = () => {};
-
-    const mockSequencer = jasmine.createSpyObj('Sequencer', ['run']);
-    mockSequencer.run.and.returnValue(Promise.resolve());
-
-    const instance = Mocks.object('instance');
-    instance[__SEQUENCER] = mockSequencer;
-
-    const decoratorInstance =
-        decorator(Class.prototype, 'property', descriptor) as TypedPropertyDescriptor<any>;
-    const decoratedFunction = decoratorInstance.value as Function;
-    await decoratedFunction.call(instance, 1, 2);
-    assert(mockSequencer.run).to.haveBeenCalledWith(Matchers.anyFunction());
+    const call1Promise = testClass.method();
+    const call2Promise = testClass.method();
+    await call1Promise;
+    await call2Promise;
   });
 
   it('should not throw error if the descriptor has no values', () => {
-    class Class extends BaseDisposable {}
+    /**
+     * Test class.
+     */
+    class TestClass extends BaseDisposable {}
 
     const descriptor = Mocks.object('descriptor');
-    assert(decorator(Class.prototype, 'property', descriptor)).to.equal(descriptor);
+    assert(decorator(TestClass.prototype, 'property', descriptor)).to.equal(descriptor);
   });
 
   it('should throw error if the target is not an instance of BaseDisposable', () => {
-    class Class {}
+    /**
+     * Test class.
+     */
+    class TestClass { }
     assert(() => {
-      decorator(Class.prototype, 'property', {});
+      decorator(TestClass.prototype, 'property', {});
     }).to.throwError(/should be an instance of \[BaseDisposable\]/);
   });
 });

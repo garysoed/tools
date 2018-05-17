@@ -1,6 +1,6 @@
 import { TestGraph } from './graph';
 import { PathMatcher } from './path/testing';
-import { TestAsync, TestDispose, TestEvent, TestJasmine, TestSetup } from './testing';
+import { TestDispose, TestEvent, TestJasmine, TestSetup } from './testing';
 import { Log, LogLevel } from './util/log';
 export { assert } from './jasmine/assert';
 export { assertColor } from './jasmine/assert-color';
@@ -10,7 +10,6 @@ export { Mocks } from './mock/mocks';
 
 const TEST_SETUP = new TestSetup([
   PathMatcher.testSetup,
-  TestAsync,
   TestDispose,
   TestEvent,
   TestGraph,

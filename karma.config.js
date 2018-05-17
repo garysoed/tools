@@ -14,7 +14,7 @@ module.exports = function(config) {
       require("karma-sourcemap-loader")
     ],
     port: 8888,
-    reporters: ["dots", "progress"],
+    reporters: ["dots"],
     singleRun: false
   });
 };

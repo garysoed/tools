@@ -1,9 +1,9 @@
 import { assert, Mocks, TestBase } from '../test-base';
 TestBase.setup();
 
-import { Promises } from '../async/promises';
 import { TreeMap } from '../immutable';
 import { ImmutableSet } from '../immutable/immutable-set';
+import { forFiniteCollection, forTreeMap, withRetry } from './promises';
 
 
 describe('async.Promises', () => {
@@ -13,17 +13,28 @@ describe('async.Promises', () => {
       const value2 = Mocks.object('value2');
       const promise1 = Promise.resolve(value1);
       const promise2 = Promise.resolve(value2);
-      assert(await Promises.forFiniteCollection(ImmutableSet.of([promise1, promise2])))
+      assert(await forFiniteCollection(ImmutableSet.of([promise1, promise2])))
           .to.haveElements([value1, value2]);
     });
   });
 
   describe('forTreeMap', () => {
-    type JsonString = {[key: string]: JsonString};
+    /**
+     * Test interface.
+     */
+    interface JsonString {
+      [key: string]: JsonString;
+    }
 
+    /**
+     * Converts the given tree to JSON.
+     *
+     * @param treeMap Tree to convert.
+     * @return JSON representation of the given tree.
+     */
     function treeToJson(treeMap: TreeMap<string, number>): JsonString {
       const childrenJson = {};
-      const children = treeMap.getKeys().mapItem((key) => {
+      const children = treeMap.getKeys().mapItem(key => {
         return [key, treeMap.getChildNode(key)] as [string, TreeMap<string, number>];
       });
       for (const [key, node] of children) {
@@ -41,18 +52,18 @@ describe('async.Promises', () => {
               TreeMap.of<string, Promise<number>>(Promise.resolve(5))
                   .set('c', TreeMap.of(Promise.resolve(3)))
                   .set('d', TreeMap.of(Promise.resolve(4))));
-      assert(treeToJson(await Promises.forTreeMap(promiseTree))).to.equal({
-        '2': {
-          'a': {
-            '1': {},
+      assert(treeToJson(await forTreeMap(promiseTree))).to.equal({
+        2: {
+          a: {
+            1: {},
           },
-          'b': {
-            '5': {
-              'c': {
-                '3': {},
+          b: {
+            5: {
+              c: {
+                3: {},
               },
-              'd': {
-                '4': {},
+              d: {
+                4: {},
               },
             },
           },
@@ -78,13 +89,14 @@ describe('async.Promises', () => {
       mockRetryStrategy.onReject.and.callFake(async () => {
         if (retryCount === 0) {
           retryCount++;
+
           return mockRetryStrategy;
         }
 
         return null;
       });
 
-      assert(await Promises.withRetry(mockCallback, mockRetryStrategy)).to.equal(value);
+      assert(await withRetry(mockCallback, mockRetryStrategy)).to.equal(value);
       assert(retryCount).to.equal(1);
     });
 
@@ -98,13 +110,14 @@ describe('async.Promises', () => {
       mockRetryStrategy.onReject.and.callFake(async () => {
         if (retryCount === 0) {
           retryCount++;
+
           return mockRetryStrategy;
         }
 
         return null;
       });
 
-      assert(Promises.withRetry(mockCallback, mockRetryStrategy)).to
+      await assert(withRetry(mockCallback, mockRetryStrategy)).to
           .rejectWithError(new RegExp(errorMsg));
       assert(retryCount).to.equal(1);
     });

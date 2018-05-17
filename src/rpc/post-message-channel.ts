@@ -1,4 +1,3 @@
-import { Asyncs } from '../async/asyncs';
 import { Field, Serializable, Serializer } from '../data/a-serializable';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { BaseListener } from '../event/base-listener';
@@ -105,11 +104,14 @@ export class PostMessageChannel extends BaseListener {
     return this.post_(new Message(MessageType.DATA, message));
   }
 
-  post_(message: Message): Promise<void> {
-    return Asyncs.run(() => {
-      this.destWindow_.getEventTarget().postMessage(
-          Serializer.toJSON(message),
-          PostMessageChannel.getOrigin(this.srcWindow_.getEventTarget()));
+  async post_(message: Message): Promise<void> {
+    return new Promise<void>(resolve => {
+      this.srcWindow_.getEventTarget().setTimeout(() => {
+        this.destWindow_.getEventTarget().postMessage(
+            Serializer.toJSON(message),
+            PostMessageChannel.getOrigin(this.srcWindow_.getEventTarget()));
+        resolve();
+      }, 0);
     });
   }
 
@@ -129,6 +131,7 @@ export class PostMessageChannel extends BaseListener {
     const message = await this.waitForMessage_((message: Message) => {
       return (message.getType() === MessageType.DATA) && testFn(message.getPayload());
     });
+
     return message.getPayload();
   }
 
@@ -220,7 +223,7 @@ export class PostMessageChannel extends BaseListener {
     const channel = PostMessageChannel.of_(srcWindow, destWindow);
 
     const intervalId = window.setInterval(() => {
-      channel.post_(new Message(MessageType.PING, { id: id }));
+      channel.post_(new Message(MessageType.PING, { id }));
     }, 1000);
 
     await channel.waitForMessage_((message: Message) => {

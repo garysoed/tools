@@ -3,15 +3,15 @@ TestBase.setup();
 
 import { TestDispose } from '../testing/test-dispose';
 
-import { Sequencer } from '../async/sequencer';
 import { Mocks } from '../mock/mocks';
+import { Sequencer } from './sequencer';
 
 
 describe('async.Sequencer', () => {
   let sequencer: Sequencer;
 
   beforeEach(() => {
-    sequencer = Sequencer.newInstance();
+    sequencer = new Sequencer();
     TestDispose.add(sequencer);
   });
 

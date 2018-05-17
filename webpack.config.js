@@ -2,11 +2,11 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const glob = require("glob");
 
 module.exports = {
-  // entry: glob.sync("src/**/*_test.ts"),
-  entry: "./atomic_test.ts",
+  entry: glob.sync("./src/**/*_test.ts"),
+  // entry: "./src/async/atomic_test.ts",
   output: {
     filename: "bundle.js",
-    path: __dirname + "/dist"
+    path: __dirname + "/out"
   },
 
   // Enable sourcemaps for debugging webpack's output.
@@ -36,6 +36,8 @@ module.exports = {
   externals: {
     "jasmine": "jasmine"
   },
+
+  watch: true,
 
   plugins: [
     new UglifyJsPlugin({

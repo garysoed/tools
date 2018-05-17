@@ -1,6 +1,6 @@
 import { Interval } from '../async/interval';
+import { cache } from '../data/cache';
 import { BaseListener } from '../event/base-listener';
-
 
 /**
  * A waiter that keeps pinging the given check function to see when to stop waiting.
@@ -11,7 +11,6 @@ import { BaseListener } from '../event/base-listener';
 export class WaitUntil extends BaseListener {
   private readonly checkFn_: () => boolean;
   private readonly interval_: number;
-  private promise_: Promise<void> | null;
 
   /**
    * @param checkFn The function that returns true to tell the waiter to stop waiting and resolve
@@ -22,27 +21,26 @@ export class WaitUntil extends BaseListener {
     super();
     this.checkFn_ = checkFn;
     this.interval_ = interval;
-    this.promise_ = null;
   }
 
   /**
    * Promise that will be resolved when the check function has returned true.
    */
-  getPromise(): Promise<void> {
-    if (this.promise_ !== null) {
-      return this.promise_;
-    }
-    const promise = new Promise<void>((resolve: () => void, reject: (error: any) => void) => {
-      const interval = Interval.newInstance(this.interval_);
+  @cache()
+  async getPromise(): Promise<void> {
+    return new Promise<void>((resolve: () => void, reject: (error: any) => void) => {
+      const interval = new Interval(this.interval_);
       this.addDisposable(interval);
-      interval.on('tick', this.onTick_.bind(this, interval, resolve, reject), this);
+      this.addDisposable(
+          interval.on(
+              'tick',
+              () => this.onTick_(interval, resolve, reject),
+              this));
       interval.start();
     });
-    this.promise_ = promise;
-    return promise;
   }
 
-  onTick_(interval: Interval, resolve: () => void, reject: (error: Error) => void): void {
+  private onTick_(interval: Interval, resolve: () => void, reject: (error: Error) => void): void {
     if (this.isDisposed()) {
       reject(new Error('Check function has not returned true when waiter is disposed'));
     } else if (this.checkFn_()) {
@@ -50,18 +48,5 @@ export class WaitUntil extends BaseListener {
       resolve();
     }
   }
-
-  /**
-   * Creates a new instance of WaitUntil.
-   *
-   * @param checkFn The function that returns true to tell the waiter to stop waiting and resolve
-   *    the promise.
-   * @param interval The time, in millis, between each call to the checkFn. Defaults to 100ms.
-   */
-  static newInstance(checkFn: () => boolean, interval: number = 100): WaitUntil {
-    return new WaitUntil(checkFn, interval);
-  }
 }
 
-export default WaitUntil;
-// TODO: Mutable

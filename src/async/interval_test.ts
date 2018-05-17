@@ -10,7 +10,7 @@ describe('async.Interval', () => {
   let interval: Interval;
 
   beforeEach(() => {
-    interval = Interval.newInstance(INTERVAL);
+    interval = new Interval(INTERVAL);
     TestDispose.add(interval);
   });
 

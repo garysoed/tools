@@ -1,4 +1,4 @@
-import { Promises } from '../async';
+import { forFiniteCollection } from '../async/promises';
 import { DataAccess } from '../datamodel/data-access';
 import { DataModel } from '../datamodel/data-model';
 import { Searcher } from '../datamodel/searcher';
@@ -9,7 +9,10 @@ import { EditableStorage as GsStorage } from '../store';
 import { Log } from '../util';
 
 type EventType = 'add' | 'remove' | 'edit';
-export type ManagerEvent<T extends DataModel<any>> = {data: T, type: EventType};
+export interface ManagerEvent<T extends DataModel<any>> {
+  data: T;
+  type: EventType;
+}
 
 export abstract class Manager<D extends DataModel<any>>
     extends Bus<EventType, ManagerEvent<D>> {
@@ -26,6 +29,7 @@ export abstract class Manager<D extends DataModel<any>>
 
   idMonad(): Monad<Promise<string>> {
     const id = this.storage_.generateId();
+
     return {
       get: () => {
         return id;
@@ -51,13 +55,12 @@ export abstract class Manager<D extends DataModel<any>>
       },
 
       set: (dataAccess: DataAccess<D>) => {
-        return Promises
-            .forFiniteCollection(dataAccess
-                .getUpdateQueue()
-                .map((item: D, id: string) => {
-                  return this.update_(id, item);
-                })
-                .values());
+        return forFiniteCollection(dataAccess
+            .getUpdateQueue()
+            .map((item: D, id: string) => {
+              return this.update_(id, item);
+            })
+            .values());
       },
     };
   }

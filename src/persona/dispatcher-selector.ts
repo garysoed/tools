@@ -1,4 +1,3 @@
-import { Asyncs } from '../async/asyncs';
 import { InstanceofType } from '../check';
 import { instanceId } from '../graph';
 import { DispatchFn } from '../interfaces';
@@ -45,8 +44,9 @@ export class DispatcherSelectorImpl<T> extends
   getValue(root: ShadowRoot): DispatchFn<T> {
     const element = this.elementSelector_.getValue(root);
     return (name: string, payload: any = null) => {
-      return Asyncs.run(() => {
+      return new Promise(resolve => {
         element.dispatchEvent(new CustomEvent(name, {bubbles: true, detail: payload}));
+        resolve();
       });
     };
   }

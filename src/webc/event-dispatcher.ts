@@ -1,9 +1,8 @@
-import { Asyncs } from '../async/asyncs';
 import { DispatchFn } from '../interfaces/dispatch-fn';
 import { DomBinder } from '../interfaces/dom-binder';
 
 export class EventDispatcher implements DomBinder<DispatchFn<any>> {
-  constructor (private readonly element_: Element) { }
+  constructor(private readonly element_: Element) { }
 
   delete(): void {
     throw new Error('Delete is unsupported');
@@ -20,8 +19,11 @@ export class EventDispatcher implements DomBinder<DispatchFn<any>> {
   }
 
   static dispatchEvent(element: Element, name: string, payload: any = null): Promise<void> {
-    return Asyncs.run(() => {
-      EventDispatcher.dispatchEventNow(element, name, payload);
+    return new Promise(resolve => {
+      window.setTimeout(() => {
+        EventDispatcher.dispatchEventNow(element, name, payload);
+        resolve();
+      }, 0);
     });
   }
 

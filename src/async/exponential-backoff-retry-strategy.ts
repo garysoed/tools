@@ -1,5 +1,8 @@
 import { RetryStrategy } from './retry-strategy';
 
+/**
+ * Retry strategy with exponential backoff.
+ */
 export class ExponentialBackoffRetryStrategy implements RetryStrategy {
   constructor(
       private readonly multiplierMs_: number,
@@ -9,8 +12,8 @@ export class ExponentialBackoffRetryStrategy implements RetryStrategy {
       private readonly window_: Window = window,
       private readonly retryCount_: number = 0) { }
 
-  onReject(): Promise<ExponentialBackoffRetryStrategy> {
-    return new Promise((resolve) => {
+  async onReject(): Promise<ExponentialBackoffRetryStrategy> {
+    return new Promise<ExponentialBackoffRetryStrategy>(resolve => {
       const delayMs = Math.min(
           Math.random() * Math.pow(this.exponentBase_, this.retryCount_) * this.multiplierMs_
               + this.minTimeMs_,
