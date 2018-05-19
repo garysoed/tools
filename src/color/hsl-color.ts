@@ -15,47 +15,29 @@ export class HslColor extends BaseColor {
     this.lightness_ = lightness;
   }
 
-  /**
-   * @override
-   */
   @cache()
   getBlue(): number {
     return this.getRgb_()[2];
   }
 
-  /**
-   * @override
-   */
   @cache()
   getChroma(): number {
-    return (1 - Math.abs(2 * this.getLightness() - 1)) * this.getSaturation();
+    return (1 - Math.abs(this.getLightness() * 2 - 1)) * this.getSaturation();
   }
 
-  /**
-   * @override
-   */
   @cache()
   getGreen(): number {
     return this.getRgb_()[1];
   }
 
-  /**
-   * @override
-   */
   getHue(): number {
     return this.hue_;
   }
 
-  /**
-   * @override
-   */
   getLightness(): number {
     return this.lightness_;
   }
 
-  /**
-   * @override
-   */
   getRed(): number {
     return this.getRgb_()[0];
   }
@@ -89,12 +71,10 @@ export class HslColor extends BaseColor {
           return Math.round((value + min) * 255);
         });
     const [r, g, b] = [...components];
+
     return [r, g, b];
   }
 
-  /**
-   * @override
-   */
   getSaturation(): number {
     return this.saturation_;
   }
@@ -113,6 +93,7 @@ export class HslColor extends BaseColor {
     if (saturation > 1 || saturation < 0) {
       throw Errors.assert('saturation').should('be >= 0 and <= 1').butWas(saturation);
     }
+
     return new HslColor(hue % 360, saturation, lightness);
   }
 }

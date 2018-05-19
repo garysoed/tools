@@ -31,7 +31,7 @@ describe('async.atomic', () => {
 
       @atomic()
       async method(): Promise<void> {
-        assert(this.lock_).to.beFalse();
+        expect(this.lock_).toBe(false);
         this.lock_ = true;
 
         return new Promise<void>(resolve => {

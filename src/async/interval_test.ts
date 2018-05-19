@@ -1,4 +1,4 @@
-import { assert, Matchers, TestBase } from '../test-base';
+import { assert, Match, TestBase } from '../test-base';
 TestBase.setup();
 
 import { Interval } from '../async/interval';
@@ -31,7 +31,7 @@ describe('async.Interval', () => {
       interval.start();
 
       assert(interval['intervalId_']).to.equal(intervalId);
-      assert(window.setInterval).to.haveBeenCalledWith(Matchers.anyFunction(), INTERVAL);
+      assert(window.setInterval).to.haveBeenCalledWith(Match.anyFunction(), INTERVAL);
 
       spy.calls.argsFor(0)[0]();
       assert(interval.dispatch).to.haveBeenCalledWith({type: 'tick'});

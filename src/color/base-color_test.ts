@@ -1,9 +1,9 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import {BaseColor} from '../color/base-color';
+import { BaseColor } from '../color/base-color';
 
-
+// tslint:disable:prefer-function-over-method
 class TestColor extends BaseColor {
   getBlue(): number { return 0; }
 
@@ -19,6 +19,7 @@ class TestColor extends BaseColor {
 
   getSaturation(): number { return 0; }
 }
+// tslint:enable
 
 describe('color.BaseColor', () => {
   let color: BaseColor;

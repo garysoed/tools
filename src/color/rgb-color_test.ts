@@ -1,4 +1,4 @@
-import { assert, assertColor, TestBase } from '../test-base';
+import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
 import { RgbColor } from './rgb-color';
@@ -25,7 +25,7 @@ describe('color.RgbColor', () => {
 
   describe('saturation', () => {
     it('should return the correct value of saturation', () => {
-      assert(RgbColor.newInstance(126, 126, 184).getSaturation()).to.beCloseTo(0.290, 3);
+      assert(RgbColor.newInstance(126, 126, 184).getSaturation()).to.beCloseTo(0.29, 3);
     });
 
     it('should return 0 if the color is grey', () => {
@@ -35,7 +35,10 @@ describe('color.RgbColor', () => {
 
   describe('newInstance', () => {
     it('should create the correct color object', () => {
-      assertColor(RgbColor.newInstance(1, 23, 45)).to.haveRgb(1, 23, 45);
+      const rgb = RgbColor.newInstance(1, 23, 45);
+      assert(rgb.getRed()).to.be(1);
+      assert(rgb.getGreen()).to.be(23);
+      assert(rgb.getBlue()).to.be(45);
     });
 
     it('should throw error if red is not an integer', () => {

@@ -1,8 +1,9 @@
-import { ArrayOfType, NonNullType } from '../check';
-import { HslColor, RgbColor } from '../color';
+import { ArrayOfType, NonNullType } from 'gs-types/export';
 import { ImmutableList } from '../immutable';
 import { Color } from '../interfaces';
 import { FloatParser, HexParser, IntegerParser, PercentParser } from '../parse';
+import { HslColor } from './hsl-color';
+import { RgbColor } from './rgb-color';
 
 const RGB_REGEXP = /^rgb\((.*)\)$/;
 const RGBA_REGEXP = /^rgba\((.*)\)$/;
@@ -68,6 +69,7 @@ export const Colors = {
             .map((match: string, index: number) => {
               if (index === 0) {
                 const parsed = Number.parseInt(match);
+
                 return Number.isNaN(parsed) ? null : parsed;
               } else {
                 return PercentParser.parse(match);
@@ -81,6 +83,7 @@ export const Colors = {
             .map((match: string, index: number) => {
               if (index === 0) {
                 const parsed = Number.parseInt(match);
+
                 return Number.isNaN(parsed) ? null : parsed;
               } else {
                 return PercentParser.parse(match);
@@ -102,22 +105,25 @@ export const Colors = {
 
       const matches = hexMatches[1];
       let components: (number | null)[];
-      if (matches.length === 3 || matches.length === 4) {
-        const list = ImmutableList
-            .of(matches.split(''))
-            .map((match: string) => {
-              return HexParser.parse(match + match);
-            });
-        components = [...list];
-      } else if (matches.length === 6 || matches.length === 8) {
-        const list = ImmutableList
-            .of(matches.match(/../g)!)
-            .map((match: string) => {
-              return HexParser.parse(match);
-            });
-        components = [...list];
-      } else {
-        return null;
+      switch (matches.length) {
+        case 3:
+        case 4:
+          components = [...ImmutableList
+              .of(matches.split(''))
+              .map((match: string) => {
+                return HexParser.parse(match + match);
+              })];
+          break;
+        case 6:
+        case 8:
+          components = [...ImmutableList
+              .of(matches.match(/../g))
+              .map((match: string) => {
+                return HexParser.parse(match);
+              })];
+          break;
+        default:
+          return null;
       }
 
       if (!ArrayOfType(NonNullType<number>()).check(components)) {
@@ -126,6 +132,7 @@ export const Colors = {
         return RgbColor.newInstance(components[0], components[1], components[2]);
       }
     }
+
     return null;
   },
 
@@ -137,6 +144,7 @@ export const Colors = {
   getContrast(foreground: Color, background: Color): number {
     const fgLuminance = foreground.getLuminance();
     const bgLuminance = background.getLuminance();
+
     return (Math.max(fgLuminance, bgLuminance) + 0.05)
         / (Math.min(fgLuminance, bgLuminance) + 0.05);
   },
@@ -161,4 +169,3 @@ export const Colors = {
         Math.round(color1.getBlue() * amount + color2.getBlue() * (1 - amount)));
   },
 };
-// TODO: Mutable

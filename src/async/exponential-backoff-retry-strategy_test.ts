@@ -1,4 +1,4 @@
-import { assert, Matchers, TestBase } from '../test-base';
+import { assert, Match, TestBase } from '../test-base';
 TestBase.setup();
 
 import { ExponentialBackoffRetryStrategy } from './exponential-backoff-retry-strategy';
@@ -31,7 +31,7 @@ describe('async.ExponentialBackoffRetryStrategy', () => {
 
       const newStrategy = await strategy.onReject();
       assert(newStrategy['retryCount_']).to.equal(RETRY_COUNT + 1);
-      assert(mockWindow.setTimeout).to.haveBeenCalledWith(Matchers.anyFunction<() => void>(), 7);
+      assert(mockWindow.setTimeout).to.haveBeenCalledWith(Match.anyFunction<() => void>(), 7);
     });
 
     it(`should not exceed the max time`, async () => {
@@ -41,7 +41,7 @@ describe('async.ExponentialBackoffRetryStrategy', () => {
       const newStrategy = await strategy.onReject();
       assert(newStrategy['retryCount_']).to.equal(RETRY_COUNT + 1);
       assert(mockWindow.setTimeout).to
-          .haveBeenCalledWith(Matchers.anyFunction<() => void>(), MAX_TIME);
+          .haveBeenCalledWith(Match.anyFunction<() => void>(), MAX_TIME);
     });
   });
 });

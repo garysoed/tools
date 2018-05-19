@@ -2,9 +2,7 @@ import { TestGraph } from './graph';
 import { PathMatcher } from './path/testing';
 import { TestDispose, TestEvent, TestJasmine, TestSetup } from './testing';
 import { Log, LogLevel } from './util/log';
-export { assert } from './jasmine/assert';
-export { assertColor } from './jasmine/assert-color';
-export { Matchers } from './jasmine/matchers';
+export { assert, Match } from 'gs-testing/export/main';
 export { Fakes } from './mock/fakes';
 export { Mocks } from './mock/mocks';
 

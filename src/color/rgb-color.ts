@@ -15,31 +15,19 @@ export class RgbColor extends BaseColor {
     this.blue_ = blue;
   }
 
-  /**
-   * @override
-   */
   getBlue(): number {
     return this.blue_;
   }
 
-  /**
-   * @override
-   */
   @cache()
   getChroma(): number {
     return (this.getMax_() - this.getMin_()) / 255;
   }
 
-  /**
-   * @override
-   */
   getGreen(): number {
     return this.green_;
   }
 
-  /**
-   * @override
-   */
   @cache()
   getHue(): number {
     const chroma = this.getChroma();
@@ -53,22 +41,23 @@ export class RgbColor extends BaseColor {
     const max = this.getMax_();
 
     let h1;
-    if (max === red) {
-      h1 = ((green - blue) / chroma) % 6;
-    } else if (max === green) {
-      h1 = ((blue - red) / chroma) + 2;
-    } else if (max === blue) {
-      h1 = ((red - green) / chroma) + 4;
-    } else {
-      throw new Error(`Should not be able to reach here`);
+    switch (max) {
+      case red:
+        h1 = ((green - blue) / chroma) % 6;
+        break;
+      case green:
+        h1 = ((blue - red) / chroma) + 2;
+        break;
+      case blue:
+        h1 = ((red - green) / chroma) + 4;
+        break;
+      default:
+        throw new Error(`Should not be able to reach here`);
     }
 
     return h1 * 60;
   }
 
-  /**
-   * @override
-   */
   @cache()
   getLightness(): number {
     return (this.getMax_() + this.getMin_()) / 2 / 255;
@@ -84,19 +73,14 @@ export class RgbColor extends BaseColor {
     return Math.min(this.getRed(), this.getGreen(), this.getBlue());
   }
 
-  /**
-   * @override
-   */
   getRed(): number {
     return this.red_;
   }
 
-  /**
-   * @override
-   */
   @cache()
   getSaturation(): number {
-    const denominator = (1 - Math.abs(2 * this.getLightness() - 1));
+    const denominator = (1 - Math.abs(this.getLightness() * 2 - 1));
+
     return denominator === 0 ? 0 : this.getChroma() / denominator;
   }
 
@@ -142,6 +126,7 @@ export class RgbColor extends BaseColor {
     if (green < 0) {
       throw Errors.assert('green').should('be positive').butWas(green);
     }
+
     return new RgbColor(red, green, blue);
   }
 }
