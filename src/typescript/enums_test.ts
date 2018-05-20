@@ -3,7 +3,9 @@ TestBase.setup();
 
 import { Enums } from './enums';
 
-
+/**
+ * @test
+ */
 enum TestEnum {
   VALUE_A,
 }
@@ -17,6 +19,9 @@ describe('typescript.Enums', () => {
 
   describe('getAllValues_', () => {
     it('should return the correct set of values', () => {
+      /**
+       * @test
+       */
       enum Enum {A, B, C}
       assert(Enums.getAllValues<Enum>(Enum)).to.equal([Enum.A, Enum.B, Enum.C]);
     });

@@ -23,6 +23,7 @@ export class Enums {
    */
   static fromNumberString<E>(stringValue: string, enumSet: gs.IEnum): E {
     const nameString: string = enumSet[stringValue];
+
     return enumSet[nameString] as E;
   }
 
