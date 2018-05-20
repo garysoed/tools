@@ -2,31 +2,35 @@ import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
 import { Mocks } from '../mock/mocks';
+import { equals, Property } from './equals';
 
-import { Equals } from './equals';
-
-
+/**
+ * @test
+ */
 class SimpleClass {
-  @Equals.Property() a!: number;
-  @Equals.Property() b!: string;
+  @Property() a!: number;
+  @Property() b!: string;
   ignored!: string;
 }
 
+/**
+ * @test
+ */
 class ComplexClass {
-  @Equals.Property() a!: number;
-  @Equals.Property() s!: SimpleClass;
+  @Property() a!: number;
+  @Property() s!: SimpleClass;
 }
 
 describe('data.Equals - Functional', () => {
   it('should handle numbers correctly', () => {
-    assert(Equals.equals(123, 123)).to.beTrue();
-    assert(Equals.equals(123, 456)).to.beFalse();
+    assert(equals(123, 123)).to.beTrue();
+    assert(equals(123, 456)).to.beFalse();
   });
 
   it('should handle records correctly', () => {
     const object = Mocks.object('object');
-    assert(Equals.equals(object, object)).to.beTrue();
-    assert(Equals.equals({}, {})).to.beFalse();
+    assert(equals(object, object)).to.beTrue();
+    assert(equals({}, {})).to.beFalse();
   });
 
   it('should handle simple classes correctly', () => {
@@ -45,8 +49,8 @@ describe('data.Equals - Functional', () => {
     different.b = 'b';
     different.ignored = 'ignoredA1';
 
-    assert(Equals.equals(simple1, simple2)).to.beTrue();
-    assert(Equals.equals(simple1, different)).to.beFalse();
+    assert(equals(simple1, simple2)).to.beTrue();
+    assert(equals(simple1, different)).to.beFalse();
   });
 
   it('should handle complex classes correctly', () => {
@@ -71,7 +75,7 @@ describe('data.Equals - Functional', () => {
     different.s.b = 'different';
     different.s.ignored = 'ignoredC2';
 
-    assert(Equals.equals(complex1, complex2)).to.beTrue();
-    assert(Equals.equals(complex1, different)).to.beFalse();
+    assert(equals(complex1, complex2)).to.beTrue();
+    assert(equals(complex1, different)).to.beFalse();
   });
 });

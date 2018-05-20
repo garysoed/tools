@@ -23,7 +23,7 @@ describe('data.AnnotationsHandler', () => {
       const value = 123;
       handler.attachValueToProperty(key, value);
 
-      assert(handler['propertyValues_'].get(key)!).to.haveElements([value]);
+      assert(handler['propertyValues_'].get(key)).to.haveElements([value]);
     });
   });
 
@@ -62,8 +62,8 @@ describe('data.AnnotationsHandler', () => {
       spyOn(AnnotationsHandler, 'of').and.returnValue(mockParentHandler);
 
       const attachedValues = handler.getAttachedValues();
-      assert(attachedValues.get(key1)!).to.haveElements([value1]);
-      assert(attachedValues.get(key2)!).to.haveElements([value2]);
+      assert(attachedValues.get(key1)).to.haveElements([value1]);
+      assert(attachedValues.get(key2)).to.haveElements([value2]);
       assert(attachedValues.get(parent1)).to.equal(parentValues1);
       assert(attachedValues.get(parent2)).to.equal(parentValues2);
       assert(AnnotationsHandler.of).to.haveBeenCalledWith(__SYMBOL, parent);
@@ -80,8 +80,8 @@ describe('data.AnnotationsHandler', () => {
 
 
       const attachedValues = handler.getAttachedValues();
-      assert(attachedValues.get(key1)!).to.haveElements([value1]);
-      assert(attachedValues.get(key2)!).to.haveElements([value2]);
+      assert(attachedValues.get(key1)).to.haveElements([value1]);
+      assert(attachedValues.get(key2)).to.haveElements([value2]);
     });
   });
 
@@ -126,11 +126,11 @@ describe('data.AnnotationsHandler', () => {
       spyOn(Object, 'getPrototypeOf').and.returnValue(parentProto);
       spyOn(AnnotationsHandler, 'hasAnnotation').and.returnValue(false);
 
-      const handler = AnnotationsHandler.of(annotation, ctor);
-      assert(AnnotationsHandler['REGISTERED_ANNOTATIONS_'].get(hash)).to.be(handler);
+      const annotationsHandler = AnnotationsHandler.of(annotation, ctor);
+      assert(AnnotationsHandler['REGISTERED_ANNOTATIONS_'].get(hash)).to.be(annotationsHandler);
       assert(AnnotationsHandler['createHash_']).to.haveBeenCalledWith(ctor, annotation);
-      assert(handler['parent_']).to.equal(parentCtor);
-      assert(handler['annotation_']).to.equal(annotation);
+      assert(annotationsHandler['parent_']).to.equal(parentCtor);
+      assert(annotationsHandler['annotation_']).to.equal(annotation);
       assert(Object.getPrototypeOf).to.haveBeenCalledWith(ctor.prototype);
     });
 
@@ -141,11 +141,11 @@ describe('data.AnnotationsHandler', () => {
       spyOn(Object, 'getPrototypeOf').and.returnValue(null);
       spyOn(AnnotationsHandler, 'hasAnnotation').and.returnValue(false);
 
-      const handler = AnnotationsHandler.of(annotation, ctor);
-      assert(AnnotationsHandler['REGISTERED_ANNOTATIONS_'].get(hash)).to.be(handler);
+      const annotationsHandler = AnnotationsHandler.of(annotation, ctor);
+      assert(AnnotationsHandler['REGISTERED_ANNOTATIONS_'].get(hash)).to.be(annotationsHandler);
       assert(AnnotationsHandler['createHash_']).to.haveBeenCalledWith(ctor, annotation);
-      assert(handler['parent_']).to.equal(null);
-      assert(handler['annotation_']).to.equal(annotation);
+      assert(annotationsHandler['parent_']).to.equal(null);
+      assert(annotationsHandler['annotation_']).to.equal(annotation);
       assert(Object.getPrototypeOf).to.haveBeenCalledWith(ctor.prototype);
     });
 
@@ -172,8 +172,14 @@ describe('data.Annotations', () => {
   });
 
   describe('forCtor', () => {
+    /**
+     * @test
+     */
     class BaseClass {}
 
+    /**
+     * @test
+     */
     class SubClass extends BaseClass {}
 
     it('should create a correct instance of annotations handler', () => {

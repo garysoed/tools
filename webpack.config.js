@@ -2,7 +2,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const glob = require("glob");
 
 module.exports = {
-  entry: glob.sync("./src/+(async|color)/*_test.ts"),
+  entry: glob.sync("./src/+(async|color|data)/*_test.ts"),
   // entry: "./src/async/atomic_test.ts",
   output: {
     filename: "bundle.js",

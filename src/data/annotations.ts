@@ -9,19 +9,16 @@ import { hash } from '../util/hash';
  */
 export class AnnotationsHandler<T> {
   private static readonly REGISTERED_ANNOTATIONS_: Map<string, AnnotationsHandler<any>> = new Map();
-  private readonly annotation_: symbol;
-  private readonly parent_: any;
-  private readonly propertyValues_: Map<string | symbol, Set<T>>;
+  private readonly propertyValues_: Map<string | symbol, Set<T>> =
+      new Map<string | symbol, Set<T>>();
 
   /**
    * @param annotation The symbol to identify the annotation.
    * @param parent Pointer to the parent class to follow the annotation.
    */
-  constructor(annotation: symbol, parent: any) {
-    this.annotation_ = annotation;
-    this.parent_ = parent;
-    this.propertyValues_ = new Map<string | symbol, Set<T>>();
-  }
+  constructor(
+      private readonly annotation_: symbol,
+      private readonly parent_: any) { }
 
   /**
    * Adds the given value to the given property identifier.
@@ -59,6 +56,7 @@ export class AnnotationsHandler<T> {
       const parentAnnotationValues = AnnotationsHandler
           .of<T>(this.annotation_, this.parent_)
           .getAttachedValues();
+
       return fluentMappable.addAll(parentAnnotationValues);
     } else {
       return fluentMappable;
@@ -86,11 +84,10 @@ export class AnnotationsHandler<T> {
   /**
    * @param annotation The symbol to identify the annotation.
    * @param proto The prototype to add the annotation to.
-   * @param parent Pointer to the parent class to follow the annotation.
    */
   static of<T>(annotation: symbol, ctor: any): AnnotationsHandler<T> {
-    const hash = AnnotationsHandler.createHash_(ctor, annotation);
-    const handler = AnnotationsHandler.REGISTERED_ANNOTATIONS_.get(hash);
+    const hashValue = AnnotationsHandler.createHash_(ctor, annotation);
+    const handler = AnnotationsHandler.REGISTERED_ANNOTATIONS_.get(hashValue);
     if (handler !== undefined) {
       return handler;
     }
@@ -98,7 +95,8 @@ export class AnnotationsHandler<T> {
     const parentProto = Object.getPrototypeOf(ctor.prototype);
     const parent = parentProto === null ? null : parentProto.constructor;
     const newHandler = new AnnotationsHandler<T>(annotation, parent);
-    AnnotationsHandler.REGISTERED_ANNOTATIONS_.set(hash, newHandler);
+    AnnotationsHandler.REGISTERED_ANNOTATIONS_.set(hashValue, newHandler);
+
     return newHandler;
   }
 }
@@ -107,14 +105,10 @@ export class AnnotationsHandler<T> {
  * Generic class to manage annotations.
  */
 export class Annotations<T> {
-  private annotation_: symbol;
-
   /**
    * @param annotation The symbol to identify the annotation.
    */
-  constructor(annotation: symbol) {
-    this.annotation_ = annotation;
-  }
+  constructor(private readonly annotation_: symbol) { }
 
   /**
    * Creates a new handler for the given prototype.

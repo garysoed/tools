@@ -1,21 +1,32 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import { Field, Serializable, Serializer } from './a-serializable';
+import { Field } from './field';
+import { Serializable } from './serializable';
+import { fromJSON, toJSON } from './serializer';
 
 describe('data.Serializable', () => {
 
+  /**
+   * @test
+   */
   @Serializable('basic')
   class BasicClass {
     @Field('fieldA') a: any;
   }
 
+  /**
+   * @test
+   */
   @Serializable('composite')
   class CompositeClass {
     @Field('fieldA') a: any;
     @Field('basic') basic!: BasicClass;
   }
 
+  /**
+   * @test
+   */
   @Serializable('default')
   class DefaultValueClass {
     @Field('fieldA') a: any;
@@ -25,6 +36,9 @@ describe('data.Serializable', () => {
     }
   }
 
+  /**
+   * @test
+   */
   @Serializable('sub', BasicClass)
   class SubClass extends BasicClass {
     @Field('subField') subfield: any;
@@ -36,10 +50,10 @@ describe('data.Serializable', () => {
       const basic = new BasicClass();
       basic.a = value;
 
-      const serialized = Serializer.toJSON(basic);
-      assert(serialized).to.equal(jasmine.objectContaining({ 'fieldA': value }));
+      const serialized = toJSON(basic);
+      assert(serialized).to.equal(jasmine.objectContaining({fieldA: value}));
 
-      assert(Serializer.fromJSON(serialized).a).to.equal(value);
+      assert(fromJSON(serialized).a).to.equal(value);
     });
 
     it('should recursively convert the fields', () => {
@@ -52,15 +66,15 @@ describe('data.Serializable', () => {
       composite.a = compositeValue;
       composite.basic = basic;
 
-      const serialized = Serializer.toJSON(composite);
+      const serialized = toJSON(composite);
       assert(serialized).to.equal(jasmine.objectContaining({
-        'basic': jasmine.objectContaining({
-          'fieldA': basicValue,
+        basic: jasmine.objectContaining({
+          fieldA: basicValue,
         }),
-        'fieldA': compositeValue,
+        fieldA: compositeValue,
       }));
 
-      const deserialized = Serializer.fromJSON(serialized);
+      const deserialized = fromJSON(serialized);
       assert(deserialized.a).to.equal(compositeValue);
       assert(deserialized.basic).to.equal(basic);
     });
@@ -69,10 +83,10 @@ describe('data.Serializable', () => {
       const basic = new BasicClass();
       basic.a = null;
 
-      const serialized = Serializer.toJSON(basic);
-      assert(serialized).to.equal(jasmine.objectContaining({ 'fieldA': null }));
+      const serialized = toJSON(basic);
+      assert(serialized).to.equal(jasmine.objectContaining({ fieldA: null }));
 
-      assert(Serializer.fromJSON(serialized).a).to.equal(null);
+      assert(fromJSON(serialized).a).to.equal(null);
     });
 
     it('should handle non native non serializable fields', () => {
@@ -80,10 +94,10 @@ describe('data.Serializable', () => {
       const basic = new BasicClass();
       basic.a = value;
 
-      const serialized = Serializer.toJSON(basic);
-      assert(serialized).to.equal(jasmine.objectContaining({ 'fieldA': value }));
+      const serialized = toJSON(basic);
+      assert(serialized).to.equal(jasmine.objectContaining({ fieldA: value }));
 
-      assert(Serializer.fromJSON(serialized).a).to.equal(value);
+      assert(fromJSON(serialized).a).to.equal(value);
     });
 
     it('should handle arrays', () => {
@@ -94,12 +108,12 @@ describe('data.Serializable', () => {
       const composite = new CompositeClass();
       composite.a = [0, basic];
 
-      const serialized = Serializer.toJSON(composite);
+      const serialized = toJSON(composite);
       assert(serialized).to.equal(jasmine.objectContaining({
-        'fieldA': [0, jasmine.objectContaining({ 'fieldA': value })],
+        fieldA: [0, jasmine.objectContaining({ fieldA: value })],
       }));
 
-      const deserialized = Serializer.fromJSON(serialized);
+      const deserialized = fromJSON(serialized);
       assert(deserialized.a).to.equal([0, basic]);
     });
 
@@ -109,29 +123,29 @@ describe('data.Serializable', () => {
       basic.a = value;
 
       const composite = new CompositeClass();
-      composite.a = { 'basic': basic };
+      composite.a = { basic };
 
-      const serialized = Serializer.toJSON(composite);
+      const serialized = toJSON(composite);
       assert(serialized).to.equal(jasmine.objectContaining({
-        'fieldA': {
-          'basic': jasmine.objectContaining({
-            'fieldA': value,
+        fieldA: {
+          basic: jasmine.objectContaining({
+            fieldA: value,
           }),
         },
       }));
 
-      const deserialized = Serializer.fromJSON(serialized);
-      assert(deserialized.a).to.equal({ 'basic': basic });
+      const deserialized = fromJSON(serialized);
+      assert(deserialized.a).to.equal({ basic });
     });
 
     it('should ignore non existent fields', () => {
       const defaultValue = new DefaultValueClass();
       const value = defaultValue.a;
-      const json = Serializer.toJSON(defaultValue);
+      const json = toJSON(defaultValue);
 
-      delete json['fieldA'];
+      delete json.fieldA;
 
-      const deserialized = Serializer.fromJSON(json);
+      const deserialized = fromJSON(json);
       assert(deserialized.a).to.equal(value);
     });
 
@@ -142,13 +156,13 @@ describe('data.Serializable', () => {
       sub.a = value;
       sub.subfield = subValue;
 
-      const serialized = Serializer.toJSON(sub);
+      const serialized = toJSON(sub);
       assert(serialized).to.equal(jasmine.objectContaining({
-        'fieldA': value,
-        'subField': subValue,
+        fieldA: value,
+        subField: subValue,
       }));
 
-      const deserialized: SubClass = Serializer.fromJSON(serialized);
+      const deserialized: SubClass = fromJSON(serialized);
       assert(deserialized.a).to.equal(value);
       assert(deserialized.subfield).to.equal(subValue);
     });

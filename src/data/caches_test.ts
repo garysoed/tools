@@ -2,15 +2,14 @@ import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
 import { cache } from '../data/cache';
-import { Caches } from '../data/caches';
+import { clear, clearAll } from './caches';
 
 describe('data.Caches', () => {
+  /**
+   * @test
+   */
   class TestClass {
-    spy_: jasmine.Spy;
-
-    constructor(spy: jasmine.Spy) {
-      this.spy_ = spy;
-    }
+    constructor(readonly spy_: jasmine.Spy) { }
 
     @cache()
     method(): void {
@@ -37,7 +36,7 @@ describe('data.Caches', () => {
       spy.calls.reset();
       spy.and.returnValue(newValue);
 
-      Caches.clear(test, 'method');
+      clear(test, 'method');
       assert(spy).toNot.haveBeenCalled();
       assert(test.method()).to.equal(newValue);
       assert(spy).to.haveBeenCalledWith();
@@ -55,7 +54,7 @@ describe('data.Caches', () => {
       spy.calls.reset();
       spy.and.returnValue(newValue);
 
-      Caches.clearAll(test);
+      clearAll(test);
       assert(spy).toNot.haveBeenCalled();
       assert(test.method()).to.equal(newValue);
       assert(spy).to.haveBeenCalledWith();

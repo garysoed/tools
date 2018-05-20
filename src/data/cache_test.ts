@@ -5,12 +5,11 @@ import { cache } from '../data/cache';
 import { Fakes } from '../mock/fakes';
 
 describe('data.cache', () => {
+  /**
+   * @test
+   */
   class TestClass {
-    spy_: jasmine.Spy;
-
-    constructor(spy: jasmine.Spy) {
-      this.spy_ = spy;
-    }
+    constructor(readonly spy_: jasmine.Spy) { }
 
     @cache()
     add(a: any, b: any): number {
@@ -29,7 +28,7 @@ describe('data.cache', () => {
   }
 
   let test: TestClass;
-  let spy: any;
+  let spy: jasmine.Spy;
 
   beforeEach(() => {
     spy = jasmine.createSpy('spy');
@@ -48,7 +47,7 @@ describe('data.cache', () => {
   });
 
   it('should cache based on the args', () => {
-    Fakes.build(spy).call((a: any, b: any) => a + b);
+    Fakes.build(spy).call((a: number, b: number) => a + b);
     assert(test.add(1, 2)).to.equal(3);
     assert(test.add(1, 2)).to.equal(3);
     assert(spy).to.haveBeenCalledTimes(1);
