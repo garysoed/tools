@@ -1,16 +1,16 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import { Randomizer } from './randomizer';
+import { RandomizerImpl } from './randomizer';
 
 
 describe('random.Randomizer', () => {
   let mockRng: any;
-  let randomizer: Randomizer;
+  let randomizer: RandomizerImpl;
 
   beforeEach(() => {
     mockRng = jasmine.createSpyObj('Rng', ['next']);
-    randomizer = new Randomizer(mockRng);
+    randomizer = new RandomizerImpl(mockRng);
   });
 
   describe('intRange', () => {

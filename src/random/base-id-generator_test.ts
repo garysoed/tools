@@ -3,17 +3,18 @@ TestBase.setup();
 
 import { BaseIdGenerator } from '../random/base-id-generator';
 
-
+/**
+ * @test
+ */
 class TestIdGenerator extends BaseIdGenerator {
-  newId_(): string {
-    return '';
+  protected newId_(): string {
+    return `1`;
   }
 
-  resolveConflict_(): string {
-    return '';
+  protected resolveConflict_(id: string): string {
+    return `${parseInt(id, 10) + 1}`;
   }
 }
-
 
 describe('random.BaseIdGenerator', () => {
   let generator: BaseIdGenerator;
@@ -24,12 +25,7 @@ describe('random.BaseIdGenerator', () => {
 
   describe('generate', () => {
     it('should keep resolving ID conflict until it is different', () => {
-      spyOn(generator, 'newId_').and.returnValue('1');
-      spyOn(generator, 'resolveConflict_').and.returnValues('2', '3', '4');
-      assert(generator.generate(['1', '2', '3'])).to.equal('4');
-      assert(generator['resolveConflict_']).to.haveBeenCalledWith('1');
-      assert(generator['resolveConflict_']).to.haveBeenCalledWith('2');
-      assert(generator['resolveConflict_']).to.haveBeenCalledWith('3');
+      assert(generator.generate(['1', '2', '3'])).to.be('4');
     });
   });
 });

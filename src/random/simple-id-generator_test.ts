@@ -1,32 +1,24 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
+import { RandomizerImpl } from './randomizer';
 import { SimpleIdGenerator } from './simple-id-generator';
 
 
 describe('random.SimpleIdGenerator', () => {
   let generator: SimpleIdGenerator;
+  let mockRandom: jasmine.SpyObj<RandomizerImpl>;
 
   beforeEach(() => {
+    mockRandom = jasmine.createSpyObj('Random', ['shortId']);
     generator = new SimpleIdGenerator();
   });
 
-  describe('newId_', () => {
-    it('should generate an ID correctly', () => {
-      const id = 'id';
-      spyOn(generator['random_'], 'shortId').and.returnValue(id);
-      assert(generator['newId_']()).to.equal(id);
-    });
-  });
+  describe('generate', () => {
+    it(`should generate the ID correctly`, () => {
+      mockRandom.shortId.and.returnValue('id');
 
-  describe('resolveConflict', () => {
-    it('should resolve the conflicting ID correctly', () => {
-      const conflictingId = 'conflictingId';
-      const newId = 'newId';
-
-      spyOn(generator['random_'], 'shortId').and.returnValue(newId);
-
-      assert(generator.resolveConflict_(conflictingId)).to.equal(`${conflictingId}-${newId}`);
+      assert(generator.generate(['id', 'id-id', 'id-id-id'])).to.be('id-id-id-id');
     });
   });
 });

@@ -1,14 +1,13 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import { MathJs } from './math-js';
-
+import { MathRng } from './math-rng';
 
 describe('random.MathJs', () => {
-  let mathJs: MathJs;
+  let mathJs: MathRng;
 
   beforeEach(() => {
-    mathJs = new MathJs();
+    mathJs = new MathRng();
   });
 
   describe('next', () => {

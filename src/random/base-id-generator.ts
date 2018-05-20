@@ -1,3 +1,6 @@
+/**
+ * Base class of all ID generators.
+ */
 export abstract class BaseIdGenerator {
 
   /**
@@ -11,6 +14,7 @@ export abstract class BaseIdGenerator {
     while (existingSet.has(id)) {
       id = this.resolveConflict_(id);
     }
+
     return id;
   }
 
@@ -20,7 +24,7 @@ export abstract class BaseIdGenerator {
    *
    * @return The newly generated ID.
    */
-  abstract newId_(): string;
+  protected abstract newId_(): string;
 
   /**
    * Attempts to resolve a conflict for the given ID.
@@ -31,5 +35,5 @@ export abstract class BaseIdGenerator {
    * @param id The conflicting ID.
    * @return Best effort new ID.
    */
-  abstract resolveConflict_(id: string): string;
+  protected abstract resolveConflict_(id: string): string;
 }

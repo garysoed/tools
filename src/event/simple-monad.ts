@@ -1,7 +1,7 @@
 import { Monad } from '../interfaces/monad';
-import { Random } from '../random/randomizer';
+import { Randomizer } from '../random/randomizer';
 
-const RANDOM = Random();
+const RANDOM = Randomizer();
 
 export class SimpleMonad<T> implements Monad<T> {
   constructor(
