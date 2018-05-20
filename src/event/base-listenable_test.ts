@@ -1,9 +1,8 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
-import { Mocks } from '../mock/mocks';
+import { mockObject } from 'gs-testing/export/mock';
 import { TestDispose } from '../testing/test-dispose';
-
 import { BaseListenable } from './base-listenable';
 
 
@@ -22,7 +21,7 @@ describe('event.BaseListenable', () => {
       TestDispose.add(listenable.on(event, mockCallback, window));
       listenable.dispose();
 
-      listenable.dispatch(event, () => {});
+      listenable.dispatch(event, () => undefined);
 
       assert(mockCallback).toNot.haveBeenCalled();
     });
@@ -35,8 +34,8 @@ describe('event.BaseListenable', () => {
       const mockBubbleHandler = jasmine.createSpy('BubbleHandler');
       TestDispose.add(listenable.on(
           event,
-          (payload: any) => {
-            mockBubbleHandler(i, payload);
+          (eventPayload: any) => {
+            mockBubbleHandler(i, eventPayload);
           },
           window,
           false));
@@ -44,13 +43,13 @@ describe('event.BaseListenable', () => {
       const mockCaptureHandler = jasmine.createSpy('CaptureHandler');
       TestDispose.add(listenable.on(
           event,
-          (payload: any) => {
-            mockCaptureHandler(i, payload);
+          (eventPayload: any) => {
+            mockCaptureHandler(i, eventPayload);
           },
           window,
           true));
 
-      const payload = Mocks.object('payload');
+      const payload = mockObject('payload');
 
       listenable.dispatch(
           event,
@@ -65,7 +64,7 @@ describe('event.BaseListenable', () => {
 
     it('should handle case when no callbacks are registered', () => {
       assert(() => {
-        listenable.dispatch('event', () => {}, 'payload');
+        listenable.dispatch('event', () => undefined, 'payload');
       }).toNot.throw();
     });
   });
@@ -77,8 +76,8 @@ describe('event.BaseListenable', () => {
       const mockBubbleHandler = jasmine.createSpy('BubbleHandler');
       TestDispose.add(listenable.on(
           event,
-          (payload: any) => {
-            mockBubbleHandler(i, payload);
+          (eventPayload: any) => {
+            mockBubbleHandler(i, eventPayload);
           },
           window,
           false));
@@ -86,13 +85,13 @@ describe('event.BaseListenable', () => {
       const mockCaptureHandler = jasmine.createSpy('CaptureHandler');
       TestDispose.add(listenable.on(
           event,
-          (payload: any) => {
-            mockCaptureHandler(i, payload);
+          (eventPayload: any) => {
+            mockCaptureHandler(i, eventPayload);
           },
           window,
           true));
 
-      const payload = Mocks.object('payload');
+      const payload = mockObject('payload');
 
       const promise = listenable.dispatchAsync(
           event,
@@ -111,7 +110,7 @@ describe('event.BaseListenable', () => {
 
     it('should handle case when no callbacks are registered', () => {
       assert(() => {
-        listenable.dispatch('event', () => {}, 'payload');
+        listenable.dispatch('event', () => undefined, 'payload');
       }).toNot.throw();
     });
   });
@@ -124,7 +123,7 @@ describe('event.BaseListenable', () => {
       const disposableFunction = listenable.on(event, mockCallback, window);
       disposableFunction.dispose();
 
-      listenable.dispatch(event, () => {});
+      listenable.dispatch(event, () => undefined);
 
       assert(mockCallback).toNot.haveBeenCalled();
     });
@@ -136,13 +135,13 @@ describe('event.BaseListenable', () => {
       const event = 'event';
 
       const disposableFunction = listenable.once(event, mockCallback, window);
-      listenable.dispatch(event, () => {});
+      listenable.dispatch(event, () => undefined);
 
       assert(mockCallback).to.haveBeenCalledWith(null);
 
       // Dispatch the event again.
       mockCallback.calls.reset();
-      listenable.dispatch(event, () => {});
+      listenable.dispatch(event, () => undefined);
       assert(mockCallback).toNot.haveBeenCalled();
       assert(disposableFunction.isDisposed() as boolean).to.beTrue();
     });
@@ -154,7 +153,7 @@ describe('event.BaseListenable', () => {
       const disposableFunction = listenable.once(event, mockCallback, window);
       disposableFunction.dispose();
 
-      listenable.dispatch(event, () => {});
+      listenable.dispatch(event, () => undefined);
 
       assert(mockCallback).toNot.haveBeenCalled();
     });

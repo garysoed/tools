@@ -19,11 +19,10 @@ export const Flags = {
  * Base class of all disposable objects.
  */
 export class BaseDisposable implements Disposable {
-  private disposables_: Disposable[];
-  private isDisposed_: boolean;
+  private readonly disposables_: Disposable[] = [];
+  private isDisposed_: boolean = false;
 
   constructor() {
-    this.disposables_ = [];
     this.isDisposed_ = false;
     if (Flags.enableTracking) {
       TRACKED_DISPOSABLES.push(this);
@@ -65,6 +64,7 @@ export class BaseDisposable implements Disposable {
   /**
    * Override this method for custom logic that are ran during disposal.
    */
+  // tslint:disable-next-line:prefer-function-over-method
   protected disposeInternal(): void { /* noop */ }
 
   /**
@@ -74,4 +74,3 @@ export class BaseDisposable implements Disposable {
     return this.isDisposed_;
   }
 }
-// TODO: Mutable

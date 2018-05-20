@@ -4,9 +4,7 @@ load("//:defs.bzl", "gs_tools")
 
 gs_tools(
     deps = [
-      "//src/data",
       "//src/dispose",
-      "//src/mock",
       "//src/random",
       "//src/typescript",
     ])

@@ -5,19 +5,13 @@ import { DisposableFunction as IDisposableFunction } from '../interfaces/disposa
  * Wrapper around a function that executes the function when this object is disposed.
  */
 export class DisposableFunction extends BaseDisposable implements IDisposableFunction {
-  private fn_: Function;
-
   /**
    * @param fn Function to execute when this object is disposed.
    */
-  constructor(fn: () => void) {
+  constructor(private readonly fn_: () => void) {
     super();
-    this.fn_ = fn;
   }
 
-  /**
-   * @override
-   */
   disposeInternal(): void {
     this.run();
   }

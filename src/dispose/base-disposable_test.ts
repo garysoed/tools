@@ -3,13 +3,13 @@ TestBase.setup();
 
 import { BaseDisposable } from './base-disposable';
 
-
+/**
+ * @test
+ */
 class DisposableClass extends BaseDisposable {
-  private callback_: Function;
 
-  constructor(callback: Function) {
+  constructor(private readonly callback_: Function) {
     super();
-    this.callback_ = callback;
   }
 
   disposeInternal(): void {
