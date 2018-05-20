@@ -14,8 +14,8 @@ import { Listenable } from '../interfaces/listenable';
  * @param <T> Type of event that this class dispatches.
  */
 export class BaseListenable<T> extends BaseDisposable implements Listenable<T> {
-  private bubbleCallbacksMap_: Map<T, ((data: any) => void)[]> = new Map();
-  private captureCallbacksMap_: Map<T, ((data: any) => void)[]> = new Map();
+  private readonly bubbleCallbacksMap_: Map<T, ((data: any) => void)[]> = new Map();
+  private readonly captureCallbacksMap_: Map<T, ((data: any) => void)[]> = new Map();
 
   constructor() {
     super();
@@ -34,7 +34,7 @@ export class BaseListenable<T> extends BaseDisposable implements Listenable<T> {
    */
   dispatch(eventType: T, callback: () => void = () => undefined, payload: any = null): void {
     if (this.captureCallbacksMap_.has(eventType)) {
-      this.captureCallbacksMap_.get(eventType)!.forEach((handler: (data: any) => void) => {
+      this.captureCallbacksMap_.get(eventType).forEach((handler: (data: any) => void) => {
         handler(payload);
       });
     }
@@ -42,7 +42,7 @@ export class BaseListenable<T> extends BaseDisposable implements Listenable<T> {
     callback();
 
     if (this.bubbleCallbacksMap_.has(eventType)) {
-      this.bubbleCallbacksMap_.get(eventType)!.forEach((handler: (data: any) => void) => {
+      this.bubbleCallbacksMap_.get(eventType).forEach((handler: (data: any) => void) => {
         handler(payload);
       });
     }
@@ -50,10 +50,10 @@ export class BaseListenable<T> extends BaseDisposable implements Listenable<T> {
 
   async dispatchAsync(
       eventType: T,
-      callback: () => Promise<void> = () => Promise.resolve(),
+      callback: () => Promise<void> = async () => Promise.resolve(),
       payload: any = null): Promise<void> {
     if (this.captureCallbacksMap_.has(eventType)) {
-      this.captureCallbacksMap_.get(eventType)!.forEach((handler: (data: any) => void) => {
+      this.captureCallbacksMap_.get(eventType).forEach((handler: (data: any) => void) => {
         handler(payload);
       });
     }
@@ -61,15 +61,12 @@ export class BaseListenable<T> extends BaseDisposable implements Listenable<T> {
     await callback();
 
     if (this.bubbleCallbacksMap_.has(eventType)) {
-      this.bubbleCallbacksMap_.get(eventType)!.forEach((handler: (data: any) => void) => {
+      this.bubbleCallbacksMap_.get(eventType).forEach((handler: (data: any) => void) => {
         handler(payload);
       });
     }
   }
 
-  /**
-   * @override
-   */
   disposeInternal(): void {
     this.bubbleCallbacksMap_.clear();
     this.captureCallbacksMap_.clear();
@@ -95,11 +92,12 @@ export class BaseListenable<T> extends BaseDisposable implements Listenable<T> {
     }
     const callbacks = map.get(eventType);
     const boundCallback = callback.bind(context);
-    callbacks!.push(boundCallback);
+    callbacks.push(boundCallback);
+
     return new DisposableFunction(() => {
-      const index = callbacks!.indexOf(boundCallback);
+      const index = callbacks.indexOf(boundCallback);
       if (index >= 0) {
-        callbacks!.splice(index, 1);
+        callbacks.splice(index, 1);
       }
     });
   }
@@ -126,7 +124,7 @@ export class BaseListenable<T> extends BaseDisposable implements Listenable<T> {
         },
         this,
         useCapture);
+
     return disposableFunction;
   }
 }
-// TODO: Mutable

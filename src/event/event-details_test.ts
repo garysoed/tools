@@ -3,7 +3,9 @@ TestBase.setup();
 
 import { ANNOTATIONS, eventDetails } from '../event/event-details';
 
-
+/**
+ * @test
+ */
 class TestClass { }
 
 describe('event.eventDetails', () => {
@@ -11,7 +13,7 @@ describe('event.eventDetails', () => {
     const method = 'method';
     const index = 3;
     eventDetails()(TestClass.prototype, method, index);
-    assert(ANNOTATIONS.forCtor(TestClass).getAttachedValues().get(method)!)
+    assert(ANNOTATIONS.forCtor(TestClass).getAttachedValues().get(method))
         .to.haveElements([index]);
   });
 });

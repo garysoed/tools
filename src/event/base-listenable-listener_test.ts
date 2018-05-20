@@ -1,8 +1,8 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
+import { mockObject } from 'gs-testing/export/mock';
 import { BaseListenableListener } from '../event/base-listenable-listener';
-import { Mocks } from '../mock/mocks';
 import { TestDispose } from '../testing/test-dispose';
 
 
@@ -22,11 +22,11 @@ describe('event.BaseListenableListener', () => {
 
   describe('listenTo', () => {
     it('should call the event handler correctly', () => {
-      const listenable = Mocks.object('listenable');
+      const listenable = mockObject('listenable');
       const eventType = 'eventType';
-      const callback = Mocks.object('callback');
+      const callback = mockObject('callback');
       const useCapture = true;
-      const deregister = Mocks.object('deregister');
+      const deregister = mockObject('deregister');
 
       spyOn(listener['eventHandler_'], 'listenTo').and.returnValue(deregister);
 
@@ -38,9 +38,9 @@ describe('event.BaseListenableListener', () => {
 
   describe('unlistenFrom', () => {
     it('should call the event handler correctly', () => {
-      const listenable = Mocks.object('listenable');
+      const listenable = mockObject('listenable');
       const eventType = 'eventType';
-      const callback = Mocks.object('callback');
+      const callback = mockObject('callback');
       const useCapture = true;
 
       spyOn(listener['eventHandler_'], 'unlistenFrom');

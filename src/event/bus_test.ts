@@ -49,7 +49,7 @@ describe('event.Bus', () => {
 
     it('should handle case when no callbacks are registered', () => {
       assert(() => {
-        bus.dispatch('event', () => {});
+        bus.dispatch('event', () => undefined);
       }).toNot.throw();
     });
 

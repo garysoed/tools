@@ -1,11 +1,10 @@
-import { assert, Matchers, TestBase } from '../test-base';
+import { assert, Match, TestBase } from '../test-base';
 TestBase.setup();
 
-import { Mocks } from '../mock/mocks';
 import { TestDispose } from '../testing/test-dispose';
 
+import { mockObject } from 'gs-testing/export/mock';
 import { ListenableDom } from './listenable-dom';
-
 
 describe('event.ListenableDom', () => {
   let mockEventTarget: any;
@@ -23,11 +22,11 @@ describe('event.ListenableDom', () => {
     it('should use the event target for dispatching events', () => {
       const mockCallback = jasmine.createSpy('Callback');
       const eventType = 'eventType';
-      const payload = Mocks.object('payload');
+      const payload = mockObject('payload');
 
       listenable.dispatch(eventType, mockCallback, payload);
 
-      assert(mockEventTarget.dispatchEvent).to.haveBeenCalledWith(Matchers.any(Event));
+      assert(mockEventTarget.dispatchEvent).to.haveBeenCalledWith(Match.any(Event));
       const event = mockEventTarget.dispatchEvent.calls.argsFor(0)[0];
       assert(event['payload']).to.equal(payload);
       assert(event.bubbles as boolean).to.beTrue();
@@ -41,14 +40,14 @@ describe('event.ListenableDom', () => {
       const mockCallback = jasmine.createSpy('Callback');
       mockCallback.and.returnValue(Promise.resolve());
       const eventType = 'eventType';
-      const payload = Mocks.object('payload');
+      const payload = mockObject('payload');
 
       const promise = listenable.dispatchAsync(eventType, mockCallback, payload);
 
       assert(mockEventTarget.dispatchEvent).toNot.haveBeenCalled();
 
       await promise;
-      assert(mockEventTarget.dispatchEvent).to.haveBeenCalledWith(Matchers.any(Event));
+      assert(mockEventTarget.dispatchEvent).to.haveBeenCalledWith(Match.any(Event));
       const event = mockEventTarget.dispatchEvent.calls.argsFor(0)[0];
       assert(event['payload']).to.equal(payload);
       assert(event.bubbles as boolean).to.beTrue();
@@ -60,11 +59,11 @@ describe('event.ListenableDom', () => {
   describe('on', () => {
     it('should listen to the event target correctly', () => {
       const eventType = 'eventType';
-      const boundCallback = Mocks.object('boundCallback');
+      const boundCallback = mockObject('boundCallback');
       const mockCallback = jasmine.createSpyObj('Callback', ['bind']);
       mockCallback.bind.and.returnValue(boundCallback);
 
-      const instance = Mocks.object('instance');
+      const instance = mockObject('instance');
       const useCapture = true;
 
       const disposableFunction = listenable.on(eventType, mockCallback, instance, useCapture);

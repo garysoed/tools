@@ -4,6 +4,9 @@ import { BaseListenable } from '../event/base-listenable';
 import { Listener } from '../interfaces/listener';
 import { hash } from '../util/hash';
 
+/**
+ * Base class for all listener classes.
+ */
 export class BaseListener extends BaseDisposable implements Listener {
   private readonly context_: any;
   private readonly deregisterFns_: Map<string, DisposableFunction>;
@@ -42,6 +45,7 @@ export class BaseListener extends BaseDisposable implements Listener {
 
     const deregister = listenable.on(eventType, callback, this.context_, useCapture);
     this.deregisterFns_.set(hashValue, deregister);
+
     return deregister;
   }
 
@@ -58,4 +62,3 @@ export class BaseListener extends BaseDisposable implements Listener {
     }
   }
 }
-// TODO: Mutable

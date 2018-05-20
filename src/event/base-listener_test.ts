@@ -1,8 +1,8 @@
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
+import { mockObject } from 'gs-testing/export/mock';
 import { BaseListener } from '../event/base-listener';
-import { Mocks } from '../mock/mocks';
 import { TestDispose } from '../testing/test-dispose';
 import { hash } from '../util/hash';
 
@@ -12,7 +12,7 @@ describe('event.BaseListener', () => {
   let listener: BaseListener;
 
   beforeEach(() => {
-    context = Mocks.object('context');
+    context = mockObject('context');
     listener = new BaseListener(context);
     TestDispose.add(listener);
   });
@@ -39,9 +39,9 @@ describe('event.BaseListener', () => {
 
   describe('getHash_', () => {
     it('should return the correct hash', () => {
-      const listenable = Mocks.object('listenable');
+      const listenable = mockObject('listenable');
       const eventType = 'eventType';
-      const callback = Mocks.object('callback');
+      const callback = mockObject('callback');
       const useCapture = true;
 
       const hashListenable = hash(listenable);
@@ -61,7 +61,7 @@ describe('event.BaseListener', () => {
       mockListenable.on.and.returnValue(mockDeregister);
 
       const eventType = 'eventType';
-      const callback = Mocks.object('callback');
+      const callback = mockObject('callback');
       const useCapture = false;
       const hashValue = 'hashValue';
       spyOn(listener, 'getHash_').and.returnValue(hashValue);
@@ -81,7 +81,7 @@ describe('event.BaseListener', () => {
           const mockListenable = jasmine.createSpyObj('Listenable', ['on']);
 
           const eventType = 'eventType';
-          const callback = Mocks.object('callback');
+          const callback = mockObject('callback');
           const useCapture = false;
           const hashValue = 'hashValue';
           spyOn(listener, 'getHash_').and.returnValue(hashValue);
@@ -99,10 +99,10 @@ describe('event.BaseListener', () => {
 
   describe('unlistenFrom', () => {
     it('should deregister the corresponding deregister', () => {
-      const listenable = Mocks.object('listenable');
+      const listenable = mockObject('listenable');
 
       const eventType = 'eventType';
-      const callback = Mocks.object('callback');
+      const callback = mockObject('callback');
       const useCapture = false;
       const hashValue = 'hashValue';
       spyOn(listener, 'getHash_').and.returnValue(hashValue);
@@ -118,10 +118,10 @@ describe('event.BaseListener', () => {
     });
 
     it('should not throw error if there are no corresponding deregisters', () => {
-      const listenable = Mocks.object('listenable');
+      const listenable = mockObject('listenable');
 
       const eventType = 'eventType';
-      const callback = Mocks.object('callback');
+      const callback = mockObject('callback');
       const useCapture = false;
       spyOn(listener, 'getHash_').and.returnValue('hashValue');
 

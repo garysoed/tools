@@ -12,13 +12,10 @@ export class ListenableDom<T extends EventTarget> extends BaseListenable<string>
   /**
    * @param element The EventTarget to wrap.
    */
-  constructor(private eventTarget_: T) {
+  constructor(private readonly eventTarget_: T) {
     super();
   }
 
-  /**
-   * @override
-   */
   dispatch(
       eventType: string,
       callback: () => void = () => undefined,
@@ -32,7 +29,7 @@ export class ListenableDom<T extends EventTarget> extends BaseListenable<string>
 
   async dispatchAsync(
       eventType: string,
-      callback: () => Promise<void> = () => Promise.resolve(),
+      callback: () => Promise<void> = async () => Promise.resolve(),
       payload: any = null): Promise<void> {
     await callback();
 
@@ -48,9 +45,6 @@ export class ListenableDom<T extends EventTarget> extends BaseListenable<string>
     return this.eventTarget_;
   }
 
-  /**
-   * @override BaseListenable
-   */
   on(
       eventType: string,
       handler: (event: Event) => void,
@@ -58,6 +52,7 @@ export class ListenableDom<T extends EventTarget> extends BaseListenable<string>
       useCapture: boolean = false): DisposableFunction {
     const boundHandler = handler.bind(context);
     this.eventTarget_.addEventListener(eventType, boundHandler, useCapture);
+
     return new DisposableFunction(() => {
       this.eventTarget_.removeEventListener(eventType, boundHandler, useCapture);
     });
@@ -73,4 +68,3 @@ export class ListenableDom<T extends EventTarget> extends BaseListenable<string>
     return new ListenableDom<T>(element);
   }
 }
-// TODO: Mutable

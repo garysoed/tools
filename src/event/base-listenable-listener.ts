@@ -3,12 +3,14 @@ import { BaseListener } from '../event/base-listener';
 import { DisposableFunction } from '../interfaces/disposable-function';
 import { Listener } from '../interfaces/listener';
 
+/**
+ * Base class for all listeners that may dispatch events.
+ */
 export class BaseListenableListener<E> extends BaseListenable<E> implements Listener {
-  private readonly eventHandler_: Listener;
+  private readonly eventHandler_: Listener = new BaseListener(this);
 
   constructor() {
     super();
-    this.eventHandler_ = new BaseListener(this);
     this.addDisposable(this.eventHandler_);
   }
 
@@ -20,12 +22,11 @@ export class BaseListenableListener<E> extends BaseListenable<E> implements List
     return this.eventHandler_.listenTo(listenable, eventType, callback, useCapture);
   }
 
-  unlistenFrom<E>(
-      listenable: BaseListenable<E>,
-      eventType: E,
+  unlistenFrom<L>(
+      listenable: BaseListenable<L>,
+      eventType: L,
       callback: (payload?: any) => void,
       useCapture: boolean = false): void {
     this.eventHandler_.unlistenFrom(listenable, eventType, callback, useCapture);
   }
 }
-// TODO: Mutable

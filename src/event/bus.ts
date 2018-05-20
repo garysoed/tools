@@ -71,15 +71,16 @@ export class Bus<T, E extends Event<T>> extends BaseDisposable {
     } else {
       callbacks.push(boundCallback);
     }
+
     return new DisposableFunctionImpl(() => {
-      const callbacks = map.get(eventType);
-      if (callbacks === undefined) {
+      const storedCallbacks = map.get(eventType);
+      if (storedCallbacks === undefined) {
         return;
       }
 
-      const index = callbacks.indexOf(boundCallback);
+      const index = storedCallbacks.indexOf(boundCallback);
       if (index >= 0) {
-        callbacks.splice(index, 1);
+        storedCallbacks.splice(index, 1);
       }
     });
   }
