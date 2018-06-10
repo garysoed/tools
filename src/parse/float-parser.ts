@@ -1,4 +1,4 @@
-import { Parser } from '../interfaces/parser';
+import { Parser } from './parser';
 
 
 /**
@@ -16,6 +16,7 @@ export const FloatParser: Parser<number> = {
       return null;
     } else {
       const result = Number.parseFloat(input);
+
       return Number.isNaN(result) ? null : result;
     }
   },
@@ -30,6 +31,7 @@ export const FloatParser: Parser<number> = {
     if (value === null) {
       return '';
     }
+
     return value.toString(10);
   },
 };

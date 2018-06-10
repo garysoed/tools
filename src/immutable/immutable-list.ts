@@ -1,21 +1,15 @@
-import {
-  FiniteIterableType,
-  HasPropertyType,
-  InstanceofType,
-  IntersectType,
-  NumberType,
-  Type } from '../check';
+import { AnyType, HasPropertiesType, InstanceofType, IntersectType, IterableOfType, NumberType, Type } from 'gs-types/export';
 import { Errors } from '../error';
 import { Orderings } from '../immutable/orderings';
 import { CompareResult, FiniteCollection, FiniteIndexed, Ordered, Ordering } from '../interfaces';
-import { assertUnreachable } from '../typescript';
+import { assertUnreachable } from '../typescript/assert-unreachable';
 
-type ItemList<T> = { item: (index: number) => T, length: number };
+interface ItemList<T> { item(index: number): T; length: number; }
 function ItemListType<T>(): Type<ItemList<T>> {
-  return IntersectType.builder<ItemList<T>>()
-      .addType(HasPropertyType('item', InstanceofType(Function)))
-      .addType(HasPropertyType('length', NumberType))
-      .build();
+  return IntersectType<ItemList<T>>([
+    HasPropertiesType({item: InstanceofType(Function)}),
+    HasPropertiesType({length: NumberType}),
+  ]);
 }
 
 export class ImmutableList<T> implements
@@ -335,16 +329,14 @@ export class ImmutableList<T> implements
     return this;
   }
 
-  static of<T>(data: FiniteCollection<T>): ImmutableList<T>;
+  static of<T>(): ImmutableList<T>;
+  static of<T>(data: Iterable<T>): ImmutableList<T>;
   static of<T>(data: T[]): ImmutableList<T>;
   static of<DataTransferItem>(data: DataTransferItemList): ImmutableList<DataTransferItem>;
   static of<T>(data: ItemList<T>): ImmutableList<T>;
-  static of(
-      data: any[] |
-          FiniteCollection<any> |
-          ItemList<any> |
-          DataTransferItemList): ImmutableList<any> {
-    if (FiniteIterableType.check(data)) {
+  static of(data: any[] | Iterable<any> | ItemList<any> | DataTransferItemList = []):
+      ImmutableList<any> {
+    if (IterableOfType<any, Iterable<any>>(AnyType()).check(data)) {
       return new ImmutableList<any>([...data]);
     } else if (ItemListType<any>().check(data)) {
       const array: any[] = [];
@@ -352,14 +344,6 @@ export class ImmutableList<T> implements
         array.push(data.item(i));
       }
       return new ImmutableList(array);
-    } else if (data instanceof DataTransferItemList) {
-      const array: DataTransferItem[] = [];
-      for (let i = 0; i < data.length; i++) {
-        array.push(data[i]);
-      }
-      return new ImmutableList<DataTransferItem>(array);
-    } else if (data instanceof Array) {
-      return new ImmutableList<any>(data);
     } else {
       throw assertUnreachable(data);
     }

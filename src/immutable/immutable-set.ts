@@ -1,6 +1,4 @@
-import { Type } from '../check';
-import { FiniteIterableType } from '../check/finite-iterable-type';
-import { InstanceofType } from '../check/instanceof-type';
+import { AnyType, InstanceofType, IterableOfType, Type } from 'gs-types/export';
 import { Iterables } from '../immutable/iterables';
 import { OrderedSet } from '../immutable/ordered-set';
 import { Orderings } from '../immutable/orderings';
@@ -68,7 +66,7 @@ export class ImmutableSet<T> implements FiniteCollection<T> {
 
   filterItem(checker: (item: T) => boolean): ImmutableSet<T> {
     const iterable = this;
-    return new ImmutableSet(new Set(Iterables.of(function* (): IterableIterator<T> {
+    return new ImmutableSet(new Set(Iterables.of(function*(): IterableIterator<T> {
       for (const item of iterable) {
         if (checker(item)) {
           yield item;
@@ -92,7 +90,7 @@ export class ImmutableSet<T> implements FiniteCollection<T> {
 
   mapItem<R>(fn: (item: T) => R): ImmutableSet<R> {
     const iterable = this;
-    return new ImmutableSet(new Set(Iterables.of(function* (): IterableIterator<R> {
+    return new ImmutableSet(new Set(Iterables.of(function*(): IterableIterator<R> {
       for (const item of iterable) {
         yield fn(item);
       }
@@ -145,15 +143,17 @@ export class ImmutableSet<T> implements FiniteCollection<T> {
     return OrderedSet.of(arrayData.sort(compareFn));
   }
 
+  static of<T>(): ImmutableSet<T>;
+  static of<T>(data: Iterable<T>): ImmutableSet<T>;
   static of<T>(data: FiniteCollection<T>): ImmutableSet<T>;
   static of<T>(data: Set<T>): ImmutableSet<T>;
   static of<T>(data: T[]): ImmutableSet<T>;
-  static of<T>(data: Set<T> | T[] | FiniteCollection<T>): ImmutableSet<T> {
+  static of<T>(data: Set<T> | T[] | FiniteCollection<T> | Iterable<T> = []): ImmutableSet<T> {
     if (InstanceofType<Set<T>>(Set).check(data)) {
       return new ImmutableSet(data);
     } else if (InstanceofType<T[]>(Array).check(data)) {
       return new ImmutableSet(new Set(data));
-    } else if (FiniteIterableType.check(data)) {
+    } else if (IterableOfType(AnyType()).check(data)) {
       return new ImmutableSet(new Set(data));
     } else {
       throw assertUnreachable(data);

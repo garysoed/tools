@@ -1,4 +1,4 @@
-import { Type } from '../check';
+import { Type } from 'gs-types/export';
 
 /**
  * A collection of stuff. This can be finite or infinite

@@ -1,10 +1,3 @@
-import { Type } from '../check';
-import { instanceId } from '../graph';
-import { Listener } from '../persona/listener';
-import { SelectorImpl, SelectorStub } from '../persona/selector';
-import { SlotSelector, SwitchSelector } from '../persona/selectors';
-import { SlotSelectorImpl, SlotSelectorStub } from '../persona/slot-selector';
-import { StubListener } from '../persona/stub-listener';
 
 type Factory<T> = (document: Document, value: T) => HTMLElement;
 

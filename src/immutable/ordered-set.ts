@@ -1,4 +1,4 @@
-import { Type } from '../check';
+import { Type } from 'gs-types/export';
 import { CompareResult, FiniteCollection, Ordered, Ordering } from '../interfaces';
 import { ImmutableSet } from './immutable-set';
 import { Orderings } from './orderings';

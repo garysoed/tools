@@ -1,12 +1,20 @@
-import { DisposableFunction } from '../dispose';
-import { Errors } from '../error';
-import { Event } from '../interfaces';
-import { AttributeSelectorImpl } from '../persona/attribute-selector';
-import { Listener } from '../persona/listener';
-import { AttributeSelector } from '../persona/selectors';
+import { DisposableFunction } from 'gs-tools/export/dispose';
+import { Errors } from 'gs-tools/export/error';
+import { Event } from 'gs-tools/export/event';
+import { DomProvider } from './dom-provider';
+import { Listener } from './listener';
+
+// import { DisposableFunction } from '../dispose';
+// import { Errors } from '../error';
+// import { Event } from '../interfaces';
+// import { AttributeSelectorImpl } from '../persona/attribute-selector';
+// import { Listener } from '../persona/listener';
+// import { AttributeSelector } from '../persona/selectors';
 
 export class AttributeChangeListener<T> implements Listener<'change'> {
-  constructor(private readonly attributeSelector_: AttributeSelectorImpl<T>) { }
+  constructor(
+      private readonly attributeName_: string,
+      private readonly elementProvider_: DomProvider) { }
 
   createMutationObserver_(callback: (records: Iterable<MutationRecord>) => void):
       MutationObserver {
@@ -43,15 +51,14 @@ export class AttributeChangeListener<T> implements Listener<'change'> {
     const observer = this.createMutationObserver_((records: Iterable<MutationRecord>) => {
       this.onMutation_(handler, context, records);
     });
-    const elementSelector = this.attributeSelector_.getElementSelector();
-    const element = elementSelector.getValue(root);
+    const element = this.elementProvider_(root);
     if (!element) {
       throw Errors.assert(`element for [${elementSelector}]`).shouldExist().butWas(element);
     }
     observer.observe(
         element,
         {
-          attributeFilter: [this.attributeSelector_.getName()],
+          attributeFilter: [this.attributeName_],
           attributeOldValue: true,
           attributes: true,
         });

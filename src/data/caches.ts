@@ -45,7 +45,7 @@ function getCache_(instance: Object, propertyKey: string | symbol): Map<string, 
   return cache;
 }
 
-function getCaches_(target: Object): Map<string | symbol, Map<string, any>> {
+function getCaches_(target: any): Map<string | symbol, Map<string, any>> {
   if (target[__CACHES] !== undefined) {
     return target[__CACHES];
   } else {

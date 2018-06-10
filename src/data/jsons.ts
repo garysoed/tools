@@ -5,8 +5,12 @@
  */
 import { Errors } from '../error';
 
-export function clone<T extends gs.IJson>(original: gs.IJson): T {
-  const cloneObj = {};
+interface Json {
+  [key: string]: any;
+}
+
+export function clone<T extends Json>(original: Json): T {
+  const cloneObj: Json = {};
   for (const key in original) {
     if (original.hasOwnProperty(key)) {
       cloneObj[key] = original[key];
@@ -22,7 +26,7 @@ export function clone<T extends gs.IJson>(original: gs.IJson): T {
  * @param original The JSON to be cloned.
  * @return The cloned JSON.
  */
-export function deepClone(original: gs.IJson): gs.IJson {
+export function deepClone(original: Json): Json {
   return JSON.parse(JSON.stringify(original));
 }
 
@@ -33,7 +37,7 @@ export function deepClone(original: gs.IJson): gs.IJson {
  * @param path `.` separatedpath to the location of the value to obtain.
  * @return The value at the given location, or undefined if none exists.
  */
-export function getValue(json: gs.IJson, path: string): any {
+export function getValue(json: Json, path: string): any {
   const parts = path.split('.');
   let object = json;
   for (let i = 0; i < parts.length && !!object; i++) {
@@ -59,15 +63,14 @@ export function getValue(json: gs.IJson, path: string): any {
  * @param path `.` separated path to the location of the value to set.
  * @param value The value to set.
  */
-export function setValue(json: gs.IJson, path: string, value: any): void {
-  if (path === '') {
+export function setValue(json: Json, path: string, value: any): void {
+  const parts = path.split('.');
+  const propertyName = parts.pop();
+  if (!propertyName) {
     throw Errors.assert('path').should('not be empty').butWas(path);
   }
 
   let object = json;
-  const parts = path.split('.');
-  const propertyName: string = parts.pop();
-
   parts.forEach((part: string) => {
     if (object[part] === undefined) {
       object[part] = {};

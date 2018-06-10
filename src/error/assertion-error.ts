@@ -1,4 +1,4 @@
-import { Type } from '../check';
+import { Type } from 'gs-types/export';
 
 export class AssertionShouldBuilder {
   constructor(
@@ -34,7 +34,7 @@ export class AssertionBuilder {
     return this.should(`be a [${type}]`);
   }
 
-  shouldBeAnInstanceOf(expected: gs.ICtor<Object>): AssertionShouldBuilder {
+  shouldBeAnInstanceOf(expected: new (...args: any[]) => Object): AssertionShouldBuilder {
     return this.should(`be an instance of [${expected.name}]`);
   }
 

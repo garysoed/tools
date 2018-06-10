@@ -1,4 +1,4 @@
-import { Serializer } from '../data';
+import * as Serializer from '../data/serializer';
 import { DataModel, DataModels } from '../datamodel';
 import { ANNOTATIONS } from '../datamodel/field';
 import { Parser } from '../interfaces';
@@ -17,7 +17,7 @@ export class DataModelParserImpl<T extends DataModel<any>> implements Parser<T> 
   }
 
   fromJsonDataModel_(json: gs.IJson, serializedName: string): any {
-    const baseClass = Serializer.getRegisteredCtor(serializedName);
+    const baseClass = Serializer.getRegisteredCtor_(serializedName);
     if (!baseClass) {
       throw new Error(`No constructors found for ${serializedName}`);
     }
@@ -63,7 +63,7 @@ export class DataModelParserImpl<T extends DataModel<any>> implements Parser<T> 
 
   toJsonDataModel_(obj: any, serializedName: string): gs.IJson {
     const json: object = {[TYPE_FIELD_]: serializedName};
-    const baseClass = Serializer.getRegisteredCtor(serializedName);
+    const baseClass = Serializer.getRegisteredCtor_(serializedName);
 
     if (!baseClass) {
       throw new Error(`No constructors found for ${serializedName}`);
@@ -74,6 +74,7 @@ export class DataModelParserImpl<T extends DataModel<any>> implements Parser<T> 
         json[serializedFieldName] = parser.stringify(obj[key]);
       }
     }
+
     return json;
   }
 }

@@ -1,4 +1,4 @@
-import { Parser } from '../interfaces/parser';
+import { Parser } from './parser';
 
 
 /**

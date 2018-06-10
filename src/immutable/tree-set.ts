@@ -1,4 +1,4 @@
-import { cache } from '../data';
+import { cache } from '../data/cache';
 import { ImmutableList } from '../immutable/immutable-list';
 import { ImmutableMap } from '../immutable/immutable-map';
 import { ImmutableSet } from '../immutable/immutable-set';
@@ -54,7 +54,7 @@ export class TreeSet<V> implements Tree<V, V, ImmutableSet<V>> {
   @cache()
   postOrder(): ImmutableList<TreeSet<V>> {
     return this.childNodes_
-        .map((node) => node.postOrder())
+        .map(node => node.postOrder())
         .reduce((prevValue, value) => prevValue.addAll(value), ImmutableList.of<TreeSet<V>>([]))
         .add(this);
   }
@@ -62,7 +62,7 @@ export class TreeSet<V> implements Tree<V, V, ImmutableSet<V>> {
   @cache()
   preOrder(): ImmutableList<TreeSet<V>> {
     const descendants = this.childNodes_
-        .map((node) => node.preOrder())
+        .map(node => node.preOrder())
         .reduce((prevValue, value) => prevValue.addAll(value), ImmutableList.of<TreeSet<V>>([]));
     return ImmutableList.of([this, ...descendants]);
   }
@@ -73,7 +73,7 @@ export class TreeSet<V> implements Tree<V, V, ImmutableSet<V>> {
 
   static of<T>(value: T, children: Iterable<TreeSet<T>> = new Set()): TreeSet<T> {
     const mapContent = ImmutableSet.of([...children])
-        .mapItem((child) => [child.getValue(), child] as [T, TreeSet<T>]);
+        .mapItem(child => [child.getValue(), child] as [T, TreeSet<T>]);
     return new TreeSet(value, ImmutableMap.of(mapContent));
   }
 }

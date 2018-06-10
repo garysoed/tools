@@ -1,9 +1,11 @@
-import { HasPropertyType, InstanceofType, IterableType, StringType, Type } from '../check';
-import { assertUnreachable } from '../typescript';
+import { AnyType, HasPropertiesType, InstanceofType, IterableOfType, StringType, Type } from 'gs-types/export';
+import { assertUnreachable } from '../typescript/assert-unreachable';
 
 export class Iterables {
   static ITERATOR_TYPE: Type<Iterator<any>> =
-      HasPropertyType<Iterator<any>>('next', InstanceofType(Function));
+      HasPropertiesType<Iterator<any>>({
+        next: InstanceofType<(value?: any) => IteratorResult<any>>(Function),
+      });
 
   static clone<T>(iterable: Iterable<T>): Iterable<T> {
     return {
@@ -52,9 +54,9 @@ export class Iterables {
     for (let i = 0; i < array1.length; i++) {
       const item1 = array1[i];
       const item2 = array2[i];
-      if (IterableType.check(item1) &&
+      if (IterableOfType(AnyType()).check(item1) &&
           !StringType.check(item1) &&
-          IterableType.check(item2) &&
+          IterableOfType(AnyType()).check(item2) &&
           !StringType.check(item2) &&
           Iterables.unsafeEquals(item1, item2)) {
         continue;

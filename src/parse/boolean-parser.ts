@@ -1,5 +1,4 @@
-import { Parser } from '../interfaces';
-
+import { Parser } from './parser';
 
 /**
  * Attribute parser that handles boolean values.

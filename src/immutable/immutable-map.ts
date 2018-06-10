@@ -1,4 +1,4 @@
-import { FiniteIterableType, InstanceofType, Type } from '../check';
+import { AnyType, ArrayOfType, InstanceofType, IterableOfType, TupleOfType, Type } from 'gs-types/export';
 import { FiniteCollection, FiniteIndexed, Ordering } from '../interfaces';
 import { ImmutableSet } from './immutable-set';
 import { OrderedMap } from './ordered-map';
@@ -228,16 +228,18 @@ export class ImmutableMap<K, V> implements
         });
   }
 
+  static of<K, V>(): ImmutableMap<K, V>;
   static of<K, V>(data: FiniteCollection<[K, V]>): ImmutableMap<K, V>;
   static of<K, V>(data: [K, V][]): ImmutableMap<K, V>;
   static of<K, V>(data: Map<K, V>): ImmutableMap<K, V>;
   static of<V>(data: {[key: string]: V}): ImmutableMap<string, V>;
-  static of(data: gs.IJson): ImmutableMap<string, any>;
-  static of<K, V>(data: FiniteCollection<[K, V]> | [K, V][] | gs.IJson | Map<K, V>):
+  static of(data: {[key: string]: any}): ImmutableMap<string, any>;
+  static of<K, V>(
+        data: FiniteCollection<[K, V]> | [K, V][] | {[key: string]: any} | Map<K, V> = []):
       ImmutableMap<any, any> {
-    if (FiniteIterableType.check(data)) {
+    if (IterableOfType(AnyType()).check(data)) {
       return new ImmutableMap(new Map(data));
-    } else if (InstanceofType(Array).check(data)) {
+    } else if (ArrayOfType(TupleOfType<K, V>([AnyType(), AnyType()])).check(data)) {
       return new ImmutableMap(new Map(data));
     } else if (data instanceof Map) {
       return new ImmutableMap(new Map(data));

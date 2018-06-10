@@ -1,13 +1,8 @@
-import { BaseDisposable } from '../dispose';
-import { Errors } from '../error';
-import { GraphTime, InstanceNodeProvider } from '../graph';
-import { InstanceId } from '../graph/instance-id';
-import { Listener } from '../persona/listener';
-import { __shadowRoot } from '../persona/shadow-root-symbol';
+import { InstanceId } from 'grapevine/export/component';
+import { BaseDisposable } from 'gs-tools/export/dispose';
+import { Listener } from '../listener/listener';
 
 export abstract class Selector<T> {
-  constructor() { }
-
   abstract getDefaultValue(): T | undefined;
 
   abstract getId(): InstanceId<T>;
@@ -67,6 +62,7 @@ export abstract class SelectorImpl<T> extends Selector<T> {
         },
         this,
         false));
+
     return this.updateProvider_(root, ctrl, provider);
   }
 

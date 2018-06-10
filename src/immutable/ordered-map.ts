@@ -1,4 +1,4 @@
-import { Type } from '../check';
+import { Type } from 'gs-types/export';
 import { ImmutableList } from '../immutable/immutable-list';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { OrderedSet } from '../immutable/ordered-set';
@@ -246,7 +246,7 @@ export class OrderedMap<K, V> implements
   }
 
   mapItem<R>(fn: (item: [K, V]) => R): OrderedSet<R> {
-    return OrderedSet.of([...this.map_].map((entry: [K, V]) => fn(entry)));
+    return OrderedSet.of([...this.map_].map(fn));
   }
 
   max(ordering: Ordering<[K, V]>): [K, V] | null {

@@ -1,13 +1,13 @@
 import { DataBridge } from '../interfaces/data-bridge';
-import { Parser } from '../interfaces/parser';
+import { Parser } from '../parse/parser';
 
-export type AttributeSelector<T> = {name: string, parser: Parser<T>, selector: ElementSelector};
-export type ChildElementsSelector<T> = {
-  bridge: DataBridge<T>,
-  endPadCount?: number,
-  selector: ElementSelector,
-  startPadCount?: number,
-};
+export interface AttributeSelector<T> {name: string; parser: Parser<T>; selector: ElementSelector; }
+export interface ChildElementsSelector<T> {
+  bridge: DataBridge<T>;
+  endPadCount?: number;
+  selector: ElementSelector;
+  startPadCount?: number;
+}
 
 /**
  * Selector for an element relative to the element of the current custom element. 'parent' indicates
@@ -15,5 +15,5 @@ export type ChildElementsSelector<T> = {
  * current element.
  */
 export type ElementSelector = string | null | 'parent';
-export type InnerTextSelector<T> = {parser: Parser<T>, selector: ElementSelector};
+export interface InnerTextSelector<T> {parser: Parser<T>; selector: ElementSelector; }
 export type Selector = ElementSelector | AttributeSelector<any> | ChildElementsSelector<any>;

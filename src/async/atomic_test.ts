@@ -3,9 +3,8 @@ import 'jasmine';
 import { assert, TestBase } from '../test-base';
 TestBase.setup();
 
+import { should } from 'gs-testing/export/main';
 import { BaseDisposable } from '../dispose/base-disposable';
-import { Mocks } from '../mock/mocks';
-
 import { TestDispose } from '../testing';
 import { atomic } from './atomic';
 
@@ -17,7 +16,7 @@ describe('async.atomic', () => {
     decorator = atomic();
   });
 
-  it('should replace the descriptor with a function that sequence the annotated function',
+  should('should replace the descriptor with a function that sequence the annotated function',
       async () => {
     /**
      * Test class.
@@ -52,7 +51,7 @@ describe('async.atomic', () => {
     await call2Promise;
   });
 
-  it('should not throw error if the descriptor has no values', () => {
+  should('should not throw error if the descriptor has no values', () => {
     /**
      * Test class.
      */
@@ -62,7 +61,7 @@ describe('async.atomic', () => {
     assert(decorator(TestClass.prototype, 'property', descriptor)).to.equal(descriptor);
   });
 
-  it('should throw error if the target is not an instance of BaseDisposable', () => {
+  should('should throw error if the target is not an instance of BaseDisposable', () => {
     /**
      * Test class.
      */

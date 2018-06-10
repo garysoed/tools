@@ -1,4 +1,4 @@
-import { NumberType, StringType, Type } from '../check';
+import { NumberType, StringType, Type } from 'gs-types/export';
 import { ImmutableList } from '../immutable/immutable-list';
 import { CompareResult } from '../interfaces/compare-result';
 import { Ordering } from '../interfaces/ordering';

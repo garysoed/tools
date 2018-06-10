@@ -1,7 +1,6 @@
-import { assert, Fakes, Matchers, Mocks, TestBase } from '../test-base';
-TestBase.setup();
-
-import { Serializer } from '../data';
+import { assert, Match } from 'gs-testing/export/main';
+import { Fakes, Mocks } from 'gs-testing/export/mock';
+import * as Serializer from '../data/serializer';
 import { DataModel, DataModels } from '../datamodel';
 import { ANNOTATIONS } from '../datamodel/field';
 import { ImmutableMap, ImmutableSet } from '../immutable';
@@ -60,7 +59,7 @@ describe('parse.DataModelParser', () => {
           .when(jsonValue2).return(value2);
 
       const baseClass = Mocks.object('baseClass');
-      spyOn(Serializer, 'getRegisteredCtor').and.returnValue(baseClass);
+      spyOn(Serializer, 'getRegisteredCtor_').and.returnValue(baseClass);
 
       const instance = Mocks.object('instance');
       spyOn(DataModels, 'newInstance').and.returnValue(instance);
@@ -73,7 +72,7 @@ describe('parse.DataModelParser', () => {
       spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotations);
 
       assert(parser['fromJsonDataModel_'](json, serializedName)).to.equal(instance);
-      assert(instance).to.equal(Matchers.objectContaining({
+      assert(instance).to.equal(Match.objectContaining({
             [key1]: value1,
             [key2]: value2,
           }));
@@ -81,13 +80,13 @@ describe('parse.DataModelParser', () => {
       assert(mockParser.parse).to.haveBeenCalledWith(jsonValue2);
       assert(ANNOTATIONS.forCtor).to.haveBeenCalledWith(baseClass);
       assert(DataModels.newInstance).to.haveBeenCalledWith(baseClass);
-      assert(Serializer.getRegisteredCtor).to.haveBeenCalledWith(serializedName);
+      assert(Serializer.getRegisteredCtor_).to.haveBeenCalledWith(serializedName);
     });
 
     it(`should throw error if baseClass cannot be found`, () => {
       const json = Mocks.object('json');
       const serializedName = 'serializedName';
-      spyOn(Serializer, 'getRegisteredCtor').and.returnValue(null);
+      spyOn(Serializer, 'getRegisteredCtor_').and.returnValue(null);
       assert(() => {
         parser['fromJsonDataModel_'](json, serializedName);
       }).to.throwError(/No constructors/);
@@ -192,7 +191,7 @@ describe('parse.DataModelParser', () => {
       spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotations);
 
       const baseClass = Mocks.object('baseClass');
-      spyOn(Serializer, 'getRegisteredCtor').and.returnValue(baseClass);
+      spyOn(Serializer, 'getRegisteredCtor_').and.returnValue(baseClass);
 
       assert(parser['toJsonDataModel_'](obj, serializedName)).to.equal({
         [TYPE_FIELD_]: serializedName,
@@ -202,13 +201,13 @@ describe('parse.DataModelParser', () => {
       assert(mockParser.stringify).to.haveBeenCalledWith(value1);
       assert(mockParser.stringify).to.haveBeenCalledWith(value2);
       assert(ANNOTATIONS.forCtor).to.haveBeenCalledWith(baseClass);
-      assert(Serializer.getRegisteredCtor).to.haveBeenCalledWith(serializedName);
+      assert(Serializer.getRegisteredCtor_).to.haveBeenCalledWith(serializedName);
     });
 
     it(`should throw error if the baseClass cannot be found`, () => {
       const obj = Mocks.object('obj');
       const serializedName = 'serializedName';
-      spyOn(Serializer, 'getRegisteredCtor').and.returnValue(null);
+      spyOn(Serializer, 'getRegisteredCtor_').and.returnValue(null);
       assert(() => {
         parser['toJsonDataModel_'](obj, serializedName);
       }).to.throwError(/No constructors found/);
