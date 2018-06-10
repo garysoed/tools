@@ -1,6 +1,5 @@
-import { Parser } from '../interfaces/parser';
+import { Parser } from '../parse/parser';
 import { WebStorage } from '../store/web-storage';
-
 
 export class SessionStorage<T> extends WebStorage<T> {
   constructor(window: Window, prefix: string, parser: Parser<T>) {

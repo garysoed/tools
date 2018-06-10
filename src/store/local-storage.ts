@@ -1,4 +1,4 @@
-import { Parser } from '../interfaces/parser';
+import { Parser } from '../parse/parser';
 import { WebStorage } from './web-storage';
 
 

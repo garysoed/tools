@@ -1,8 +1,10 @@
-import { assert, Matchers, Mocks, TestBase } from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
+import { assert, Match } from 'gs-testing/export/main';
+import { Mocks } from 'gs-testing/export/mock';
 import { ImmutableList, ImmutableSet } from '../immutable';
-import { GapiStorage } from '../store';
+import { GapiStorage } from './gapi-storage';
 
 class TestGapiStorage extends GapiStorage<{}, {}, {}, {}, {}, {}> {
   hasImpl_(_fn: any, _id: any): Promise<boolean> {
@@ -40,7 +42,7 @@ describe('store.GapiStorage', () => {
       spyOn(storage, 'queueRequest_');
 
       assert(await storage.has(id)).to.be(result);
-      assert(storage['hasImpl_']).to.haveBeenCalledWith(Matchers.any(Function), id);
+      assert(storage['hasImpl_']).to.haveBeenCalledWith(Match.any(Function), id);
 
       const fn = Mocks.object('fn');
       hasImplSpy.calls.argsFor(0)[0](fn);
@@ -56,7 +58,7 @@ describe('store.GapiStorage', () => {
       spyOn(storage, 'queueRequest_');
 
       assert(await storage.list()).to.equal(result);
-      assert(storage['listImpl_']).to.haveBeenCalledWith(Matchers.any(Function));
+      assert(storage['listImpl_']).to.haveBeenCalledWith(Match.any(Function));
 
       const fn = Mocks.object('fn');
       listImplSpy.calls.argsFor(0)[0](fn);
@@ -73,7 +75,7 @@ describe('store.GapiStorage', () => {
       spyOn(storage, 'queueRequest_');
 
       assert(await storage.listIds()).to.equal(result);
-      assert(storage['listIdsImpl_']).to.haveBeenCalledWith(Matchers.any(Function));
+      assert(storage['listIdsImpl_']).to.haveBeenCalledWith(Match.any(Function));
 
       const fn = Mocks.object('fn');
       listIdsImplSpy.calls.argsFor(0)[0](fn);
@@ -103,7 +105,7 @@ describe('store.GapiStorage', () => {
       spyOn(storage, 'queueRequest_');
 
       assert(await storage.read(id)).to.equal(result);
-      assert(storage['readImpl_']).to.haveBeenCalledWith(Matchers.any(Function), id);
+      assert(storage['readImpl_']).to.haveBeenCalledWith(Match.any(Function), id);
 
       const fn = Mocks.object('fn');
       readImplSpy.calls.argsFor(0)[0](fn);

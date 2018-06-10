@@ -1,51 +1,57 @@
-import { assert, Matchers, TestBase } from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
+import { assert, Match } from 'gs-testing/export/main';
+import { Fakes, Mocks } from 'gs-testing/export/mock';
 import { ImmutableSet } from '../immutable/immutable-set';
-import { Fakes } from '../mock/fakes';
-import { Mocks } from '../mock/mocks';
+import { IntegerParser } from '../parse';
 import { WebStorage } from '../store/web-storage';
 
 
 describe('store.WebStorage', () => {
   const PREFIX = 'prefix';
-  let mockStorage: any;
-  let mockParser: any;
-  let storage: WebStorage<any>;
+  let storage: WebStorage<number>;
 
   beforeEach(() => {
-    mockParser = jasmine.createSpyObj('Parser', ['parse', 'stringify']);
-    mockStorage = jasmine.createSpyObj('Storage', ['getItem', 'removeItem', 'setItem']);
-    storage = new WebStorage<any>(mockStorage, PREFIX, mockParser);
+    localStorage.clear();
+    storage = new WebStorage(localStorage, PREFIX, IntegerParser);
+  });
+
+  describe('delete', () => {
+    it('should remove the correct object', async () => {
+      const id = 'id';
+      const path = `${PREFIX}/${id}`;
+      localStorage.setItem(PREFIX, JSON.stringify([id]));
+      localStorage.setItem(path, '123');
+
+      await storage.delete(id);
+
+      assert(localStorage.getItem(path)).to.beNull();
+      assert(localStorage.getItem(PREFIX)).to.be(JSON.stringify([]));
+    });
+
+    it('should reject if the ID does not exist', async () => {
+      await assert(storage.delete('id')).to.rejectWithError(/does not exist/);
+    });
   });
 
   describe('getIndexes_', () => {
     it('should initialize the indexes first', () => {
-      mockStorage.getItem.and.returnValues(null);
-
-      spyOn(storage, 'updateIndexes_');
-
       const indexes = storage['getIndexes_']();
 
       assert(indexes).to.haveElements([]);
-      assert(storage['updateIndexes_']).to.haveBeenCalledWith(
-          Matchers.any<ImmutableSet<string>>(ImmutableSet));
-      assert(storage['updateIndexes_']['calls'].argsFor(0)[0] as ImmutableSet<any>)
-          .to.haveElements([]);
-      assert(mockStorage.getItem).to.haveBeenCalledWith(PREFIX);
+      assert(localStorage.getItem(PREFIX)).to.equal(JSON.stringify([]));
     });
 
     it('should not reinitialize the indexes if exists', () => {
       const index = 'index';
       const indexes = [index];
-      mockStorage.getItem.and.returnValue(JSON.stringify(indexes));
-
-      spyOn(storage, 'updateIndexes_');
+      localStorage.setItem(PREFIX, JSON.stringify(indexes));
 
       const indexSet = storage['getIndexes_']();
 
       assert(indexSet).to.haveElements(indexes);
-      assert(storage['updateIndexes_']).toNot.haveBeenCalled();
+      assert(localStorage.getItem(PREFIX)).to.equal(JSON.stringify(indexes));
     });
   });
 
@@ -56,61 +62,18 @@ describe('store.WebStorage', () => {
     });
   });
 
-  describe('updateIndexes_', () => {
-    it('should update the storage correctly', () => {
-      const indexes = ['index'];
-      storage['updateIndexes_'](ImmutableSet.of(indexes));
-      assert(mockStorage.setItem).to.haveBeenCalledWith(PREFIX, JSON.stringify(indexes));
-    });
-  });
-
-  describe('delete', () => {
-    it('should remove the correct object', async () => {
-      const id = 'id';
-      const path = 'path';
-      spyOn(storage, 'getPath_').and.returnValue(path);
-      spyOn(storage, 'getIndexes_').and.returnValue(ImmutableSet.of([id]));
-      spyOn(storage, 'updateIndexes_');
-
-      await storage.delete(id);
-
-      assert(mockStorage.removeItem).to.haveBeenCalledWith(path);
-      assert(storage['getPath_']).to.haveBeenCalledWith(id);
-      assert(storage['updateIndexes_']).to
-          .haveBeenCalledWith(Matchers.any<ImmutableSet<string>>(ImmutableSet));
-      assert(storage['updateIndexes_']['calls'].argsFor(0)[0] as ImmutableSet<any>)
-          .to.haveElements([]);
-    });
-
-    it('should reject if the ID does not exist', async () => {
-      const id = 'id';
-      const path = 'path';
-      spyOn(storage, 'getPath_').and.returnValue(path);
-      spyOn(storage, 'getIndexes_').and.returnValue(new Set());
-      spyOn(storage, 'updateIndexes_');
-
-      await assert(storage.delete(id)).to.rejectWithError(/does not exist/);
-      assert(mockStorage.removeItem).toNot.haveBeenCalled();
-      assert(storage['updateIndexes_']).toNot.haveBeenCalled();
-    });
-  });
-
   describe('has', () => {
     it('should resolve with true if the object is in the storage', async () => {
       const id = 'id';
-      spyOn(storage, 'getIndexes_').and.returnValue(new Set([id]));
+      localStorage.setItem(PREFIX, JSON.stringify([id]));
 
-      const result = await storage.has(id);
-      assert(result).to.beTrue();
+      assert(await storage.has(id)).to.beTrue();
     });
 
     it('should resolve with false if the object is in the storage', async () => {
       const id = 'id';
 
-      spyOn(storage, 'getIndexes_').and.returnValue(new Set());
-
-      const result = await storage.has(id);
-      assert(result).to.beFalse();
+      assert(await storage.has(id)).to.beFalse();
     });
   });
 
@@ -142,94 +105,53 @@ describe('store.WebStorage', () => {
 
   describe('listIds', () => {
     it('should return the indexes', async () => {
-      const indexes = Mocks.object('indexes');
-      spyOn(storage, 'getIndexes_').and.returnValue(indexes);
+      const id1 = 'id1';
+      const id2 = 'id2';
+      const id3 = 'id3';
+      localStorage.setItem(PREFIX, JSON.stringify([id1, id2, id3]));
       const ids = await storage.listIds();
-      assert(ids).to.equal(indexes);
+      assert(ids).to.equal([id1, id2, id3]);
     });
   });
 
   describe('read', () => {
     it('should resolve with the object', async () => {
       const id = 'id';
-      const path = 'path';
+      const path = `${PREFIX}/${id}`;
       const stringValue = 'stringValue';
       const object = Mocks.object('object');
 
-      mockStorage.getItem.and.returnValue(stringValue);
-      spyOn(storage, 'getPath_').and.returnValue(path);
-      mockParser.parse.and.returnValue(object);
+      localStorage.setItem(path, '123');
 
-      const result = await storage.read(id);
-      assert(result).to.equal(object);
-      assert(mockParser.parse).to.haveBeenCalledWith(stringValue);
-      assert(mockStorage.getItem).to.haveBeenCalledWith(path);
-      assert(storage['getPath_']).to.haveBeenCalledWith(id);
+      assert(await storage.read(id)).to.equal(123);
     });
 
     it('should resolve with null if the object does not exist', async () => {
-      mockStorage.getItem.and.returnValue(null);
-      spyOn(storage, 'getPath_').and.returnValue('path');
-
-      const result = await storage.read('id');
-      assert(result).to.beNull();
-    });
-
-    it('should reject if there was an error', async () => {
-      const errorMsg = 'errorMsg';
-      mockStorage.getItem.and.throwError(errorMsg);
-      spyOn(storage, 'getPath_').and.returnValue('path');
-
-      await assert(storage.read('id')).to.rejectWithError(new RegExp(errorMsg));
-    });
-  });
-
-  describe('reserve', () => {
-    it('should reserve a new ID correctly', async () => {
-      const initialId = 'initialId';
-      const id1 = 'id1';
-      const id2 = 'id2';
-      const id3 = 'id3';
-      spyOn(storage['idGenerator_'], 'generate').and.returnValue(id3);
-      spyOn(storage, 'getIndexes_').and.returnValue(new Set([initialId, id1, id2]));
-
-      const id = await storage.generateId();
-      assert(id).to.equal(id3);
-      assert(storage['idGenerator_'].generate).to.haveBeenCalledWith([initialId, id1, id2]);
+      assert(await storage.read('id')).to.beNull();
     });
   });
 
   describe('update', () => {
     it('should store the correct object in the storage', async () => {
       const id = 'id';
-      const path = 'path';
-      const object = Mocks.object('object');
+      const path = `${PREFIX}/${id}`;
       const stringValue = 'stringValue';
       const oldId = 'oldId';
       const indexes = ImmutableSet.of([oldId]);
 
-      spyOn(storage, 'getIndexes_').and.returnValue(indexes);
-      spyOn(storage, 'updateIndexes_');
-      spyOn(storage, 'getPath_').and.returnValue(path);
-      mockParser.stringify.and.returnValue(stringValue);
+      localStorage.setItem(PREFIX, JSON.stringify([oldId]));
 
-      await storage.update(id, object);
-      assert(mockStorage.setItem).to.haveBeenCalledWith(path, stringValue);
-      assert(mockParser.stringify).to.haveBeenCalledWith(object);
-      assert(storage['updateIndexes_']).to
-          .haveBeenCalledWith(Matchers.any<ImmutableSet<string>>(ImmutableSet));
-      assert(storage['updateIndexes_']['calls'].argsFor(0)[0] as ImmutableSet<string>)
-          .to.haveElements([oldId, id]);
+      await storage.update(id, 123);
+      assert(localStorage.getItem(PREFIX)).to.be(JSON.stringify([oldId, id]));
+      assert(localStorage.getItem(path)).to.be('123');
     });
+  });
 
-    it('should reject if there was an error', async () => {
-      const errorMsg = 'errorMsg';
-
-      mockParser.stringify.and.throwError(errorMsg);
-      spyOn(storage, 'getIndexes_').and.returnValue(new Set());
-
-      await assert(storage.update('id', Mocks.object('object'))).to
-          .rejectWithError(new RegExp(errorMsg));
+  describe('updateIndexes_', () => {
+    it('should update the storage correctly', () => {
+      const indexes = ['index'];
+      storage['updateIndexes_'](ImmutableSet.of(indexes));
+      assert(localStorage.getItem(PREFIX)).to.be(JSON.stringify(indexes));
     });
   });
 });

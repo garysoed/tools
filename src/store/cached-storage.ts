@@ -1,8 +1,6 @@
-import { BaseDisposable } from '../dispose';
-
+import { BaseDisposable } from '../dispose/base-disposable';
 import { ImmutableSet } from '../immutable';
-import { EditableStorage } from '../store/interfaces';
-
+import { EditableStorage } from './editable-storage';
 
 export class CachedStorage<T> extends BaseDisposable implements EditableStorage<T> {
   private readonly cache_: Map<string, T>;
@@ -14,21 +12,16 @@ export class CachedStorage<T> extends BaseDisposable implements EditableStorage<
     this.innerStorage_ = innerStorage;
   }
 
-  /**
-   * @override
-   */
   delete(id: string): Promise<void> {
     const item = this.cache_.get(id);
     if (item !== undefined && item instanceof BaseDisposable) {
       item.dispose();
     }
     this.cache_.delete(id);
+
     return this.innerStorage_.delete(id);
   }
 
-  /**
-   * @override
-   */
   disposeInternal(): void {
     this.cache_
         .forEach((value: T) => {
@@ -39,23 +32,14 @@ export class CachedStorage<T> extends BaseDisposable implements EditableStorage<
     super.disposeInternal();
   }
 
-  /**
-   * @override
-   */
   generateId(): Promise<string> {
     return this.innerStorage_.generateId();
   }
 
-  /**
-   * @override
-   */
   has(id: string): Promise<boolean> {
     return this.innerStorage_.has(id);
   }
 
-  /**
-   * @override
-   */
   async list(): Promise<ImmutableSet<T>> {
     const ids = await this.listIds();
     const promises = ids
@@ -63,6 +47,7 @@ export class CachedStorage<T> extends BaseDisposable implements EditableStorage<
           return this.read(id);
         });
     const items = await Promise.all([...promises]);
+
     return ImmutableSet
         .of(items)
         .filterItem((item: T | null) => {
@@ -70,16 +55,10 @@ export class CachedStorage<T> extends BaseDisposable implements EditableStorage<
         }) as ImmutableSet<T>;
   }
 
-  /**
-   * @override
-   */
   listIds(): Promise<ImmutableSet<string>> {
     return this.innerStorage_.listIds();
   }
 
-  /**
-   * @override
-   */
   async read(id: string): Promise<T | null> {
     if (this.cache_.has(id)) {
       return this.cache_.get(id) || null;
@@ -89,12 +68,10 @@ export class CachedStorage<T> extends BaseDisposable implements EditableStorage<
     if (item !== null) {
       this.cache_.set(id, item);
     }
+
     return item;
   }
 
-  /**
-   * @override
-   */
   async update(id: string, instance: T): Promise<void> {
     await this.innerStorage_.update(id, instance);
     this.cache_.set(id, instance);

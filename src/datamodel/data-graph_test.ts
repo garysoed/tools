@@ -1,9 +1,8 @@
-import { assert, Mocks, TestBase } from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
 import { DataGraph, registerDataGraph } from '../datamodel';
 import { Flags } from '../dispose/base-disposable';
-import { Graph, StaticId } from '../graph';
 
 describe('datamodel.registerDataGraph', () => {
   let mockSearcher: any;

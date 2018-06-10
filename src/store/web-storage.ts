@@ -1,11 +1,11 @@
 import { ImmutableSet } from '../immutable/immutable-set';
-import { Parser } from '../interfaces/parser';
+import { Parser } from '../parse/parser';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { SimpleIdGenerator } from '../random/simple-id-generator';
-import { EditableStorage as GsStorage } from '../store/interfaces';
+import { EditableStorage } from './editable-storage';
 
 
-export class WebStorage<T> implements GsStorage<T> {
+export class WebStorage<T> implements EditableStorage<T> {
   private readonly idGenerator_: BaseIdGenerator;
 
   /**
@@ -19,9 +19,6 @@ export class WebStorage<T> implements GsStorage<T> {
     this.idGenerator_ = new SimpleIdGenerator();
   }
 
-  /**
-   * @override
-   */
   delete(id: string): Promise<void> {
     const indexes = this.getIndexes_();
     if (!indexes.has(id)) {
@@ -29,26 +26,24 @@ export class WebStorage<T> implements GsStorage<T> {
     }
     this.updateIndexes_(indexes.delete(id));
     this.storage_.removeItem(this.getPath_(id));
+
     return Promise.resolve();
   }
 
-  /**
-   * @override
-   */
   generateId(): Promise<string> {
     return Promise.resolve(this.idGenerator_.generate([...this.getIndexes_()]));
   }
 
   /**
    * Returns the indexes in the storage.
-   * @private
    */
-  getIndexes_(): ImmutableSet<string> {
+  private getIndexes_(): ImmutableSet<string> {
     let indexes = this.storage_.getItem(this.prefix_);
     if (indexes === null) {
       this.updateIndexes_(ImmutableSet.of([]));
       indexes = JSON.stringify([]);
     }
+
     return ImmutableSet.of(JSON.parse(indexes) as string[]);
   }
 
@@ -56,21 +51,16 @@ export class WebStorage<T> implements GsStorage<T> {
    * @param key Key to base the path from.
    * @return The key with the specified prefix appended.
    */
-  getPath_(key: string): string {
+  private getPath_(key: string): string {
     return `${this.prefix_}/${key}`;
   }
 
-  /**
-   * @override
-   */
   has(id: string): Promise<boolean> {
     const indexes = this.getIndexes_();
+
     return Promise.resolve(indexes.has(id));
   }
 
-  /**
-   * @override
-   */
   async list(): Promise<ImmutableSet<T>> {
     const ids = await this.listIds();
     const promises = ids
@@ -78,6 +68,7 @@ export class WebStorage<T> implements GsStorage<T> {
           return this.read(id);
         });
     const items = await Promise.all([...promises]);
+
     return ImmutableSet
         .of(items)
         .filterItem((item: T | null) => {
@@ -85,18 +76,13 @@ export class WebStorage<T> implements GsStorage<T> {
         }) as ImmutableSet<T>;
   }
 
-  /**
-   * @override
-   */
   listIds(): Promise<ImmutableSet<string>> {
     return Promise.resolve(this.getIndexes_());
   }
 
-  /**
-   * @override
-   */
   read(id: string): Promise<T | null> {
     const path = this.getPath_(id);
+
     return new Promise((resolve: (value: T | null) => void, reject: (cause: Error) => void) => {
       try {
         const stringValue = this.storage_.getItem(path);
@@ -111,9 +97,6 @@ export class WebStorage<T> implements GsStorage<T> {
     });
   }
 
-  /**
-   * @override
-   */
   update(id: string, instance: T): Promise<void> {
     const path = this.getPath_(id);
     const indexes = this.getIndexes_();
@@ -133,9 +116,8 @@ export class WebStorage<T> implements GsStorage<T> {
    * Updates the indexes with the given values.
    *
    * @param indexes Indexes to update.
-   * @private
    */
-  updateIndexes_(indexes: ImmutableSet<string>): void {
+  private updateIndexes_(indexes: ImmutableSet<string>): void {
     this.storage_.setItem(this.prefix_, JSON.stringify([...indexes]));
   }
 }

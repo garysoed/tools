@@ -1,8 +1,5 @@
-import { InstanceofType } from '../check';
 import { DataModel } from '../datamodel/data-model';
 import { Searcher } from '../datamodel/searcher';
-import { Graph, staticId, StaticNodeProvider } from '../graph';
-import { StaticId } from '../graph/static-id';
 import { ImmutableList, ImmutableSet } from '../immutable';
 import { EditableStorage as GsStorage } from '../store';
 
@@ -72,7 +69,7 @@ export class DataGraphImpl<D extends DataModel<any>> implements DataGraph<D> {
 export function registerDataGraph<D extends DataModel<any>>(
     name: string,
     searcher: Searcher<D>,
-    storage: GsStorage<D>): StaticId<DataGraph<D>> {
+    storage: GsStorage<D>): StaticSourceId<DataGraph<D>> {
   const id = staticId<DataGraph<D>>(name, InstanceofType<DataGraph<D>>(DataGraphImpl));
   const graph = new DataGraphImpl(id, searcher, storage);
   const provider = Graph.createProvider(id, graph);
