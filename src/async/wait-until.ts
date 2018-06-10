@@ -31,11 +31,10 @@ export class WaitUntil extends BaseListener {
     return new Promise<void>((resolve: () => void, reject: (error: any) => void) => {
       const interval = new Interval(this.interval_);
       this.addDisposable(interval);
-      this.addDisposable(
-          interval.on(
-              'tick',
-              () => this.onTick_(interval, resolve, reject),
-              this));
+      this.addDisposable(interval.on(
+          'tick',
+          () => this.onTick_(interval, resolve, reject),
+          this));
       interval.start();
     });
   }

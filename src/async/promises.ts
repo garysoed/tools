@@ -1,4 +1,5 @@
 import { RetryStrategy } from '../async/retry-strategy';
+import { Errors } from '../error';
 import { ImmutableMap, ImmutableSet, TreeMap } from '../immutable';
 import { FiniteCollection } from '../interfaces';
 
@@ -33,7 +34,14 @@ export async function forTreeMap<K, V>(tree: TreeMap<K, Promise<V>>): Promise<Tr
   const results = await Promise.all(promises);
   const resultsMap = ImmutableMap.of(results);
 
-  return tree.map((node, key) => [key, resultsMap.get(node)]);
+  return tree.map((node, key) => {
+    const mappedNode = resultsMap.get(node);
+    if (!mappedNode) {
+      throw Errors.assert(`mapped result for ${node}`).shouldExist().butNot();
+    }
+
+    return [key, mappedNode];
+  });
 }
 
 /**

@@ -1,7 +1,8 @@
-import { assert, TestBase } from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
-import { TestDispose } from '../testing/test-dispose';
+import { assert } from 'gs-testing/export/main';
+import { TestDispose } from '../dispose/testing/test-dispose';
 import { WaitUntil } from './wait-until';
 
 

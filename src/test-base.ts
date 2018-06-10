@@ -1,18 +1,16 @@
+import { runEnvironment } from 'gs-testing/export/main';
+import { TestDispose } from './dispose/testing/test-dispose';
 import { PathMatcher } from './path/testing';
-import { TestDispose, TestEvent, TestSetup } from './testing';
 import { Log, LogLevel } from './util/log';
-
-const TEST_SETUP = new TestSetup([
-  PathMatcher.testSetup,
-  TestDispose,
-  TestEvent,
-]);
 
 let initialized = false;
 export const TestBase = {
   setup(): void {
     if (!initialized) {
-      TEST_SETUP.setup();
+      runEnvironment([
+        PathMatcher.testSetup,
+        TestDispose,
+      ]);
       Log.setEnabledLevel(LogLevel.OFF);
       initialized = true;
     }

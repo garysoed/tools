@@ -9,4 +9,3 @@ export interface Disposable {
    */
   isDisposed(): boolean;
 }
-// TODO: Mutable

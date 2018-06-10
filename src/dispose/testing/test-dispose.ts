@@ -1,6 +1,6 @@
-import { Flags, TRACKED_DISPOSABLES } from '../dispose/base-disposable';
-import { Disposable } from '../interfaces/disposable';
-
+import { Environment } from 'gs-testing/export/main';
+import { Flags, TRACKED_DISPOSABLES } from '../base-disposable';
+import { Disposable } from '../disposable';
 
 /**
  * @hidden
@@ -14,7 +14,7 @@ const DISPOSABLES: Disposable[] = [];
  * need to be disposed manually (because they should be disposed through some flow not covered by
  * the test) can be disposed by using the [[add]] method.
  */
-export const TestDispose = {
+class TestDisposeImpl implements Environment {
   /**
    * Adds the given disposables to be disposed at the end of the test.
    * @param ...disposables Disposables to be disposed at the end of the test.
@@ -23,7 +23,7 @@ export const TestDispose = {
     disposables.forEach((disposable: Disposable) => {
       DISPOSABLES.push(disposable);
     });
-  },
+  }
 
   /**
    * Runs the code in jasmine's `afterEach` logic.
@@ -35,7 +35,7 @@ export const TestDispose = {
     expect(TRACKED_DISPOSABLES).toEqual([]);
 
     TRACKED_DISPOSABLES.splice(0, TRACKED_DISPOSABLES.length);
-  },
+  }
 
   /**
    * Runs the code in jasmine's `beforeEach` logic.
@@ -43,7 +43,6 @@ export const TestDispose = {
   beforeEach(): void {
     DISPOSABLES.splice(0, DISPOSABLES.length);
     Flags.enableTracking = true;
-  },
-
-  init(): void { },
-};
+  }
+}
+export const TestDispose = new TestDisposeImpl();

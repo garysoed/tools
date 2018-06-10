@@ -1,6 +1,8 @@
-import { assert, Mocks, TestBase } from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
+import { assert } from 'gs-testing/export/main';
+import { Mocks } from 'gs-testing/export/mock';
 import { TreeMap } from '../immutable';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { forFiniteCollection, forTreeMap, withRetry } from './promises';
@@ -33,7 +35,7 @@ describe('async.Promises', () => {
      * @return JSON representation of the given tree.
      */
     function treeToJson(treeMap: TreeMap<string, number>): JsonString {
-      const childrenJson = {};
+      const childrenJson: any = {};
       const children = treeMap.getKeys().mapItem(key => {
         return [key, treeMap.getChildNode(key)] as [string, TreeMap<string, number>];
       });

@@ -1,9 +1,9 @@
-import { assert, TestBase } from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
-import { TestDispose } from '../testing/test-dispose';
-
+import { assert } from 'gs-testing/export/main';
 import { DisposableFunction } from './disposable-function';
+import { TestDispose } from './testing/test-dispose';
 
 
 describe('dispose.DisposableFunction', () => {

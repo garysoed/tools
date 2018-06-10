@@ -1,6 +1,8 @@
-import { assert, Mocks, TestBase } from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
+import { assert } from 'gs-testing/export/main';
+import { Mocks } from 'gs-testing/export/mock';
 import { AllRetryStrategy } from '../async/retry-strategies';
 import { ImmutableSet } from '../immutable';
 

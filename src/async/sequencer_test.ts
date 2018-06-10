@@ -1,9 +1,9 @@
-import { assert, TestBase } from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
-import { TestDispose } from '../testing/test-dispose';
-
-import { Mocks } from '../mock/mocks';
+import { assert } from 'gs-testing/export/main';
+import { Mocks } from 'gs-testing/export/mock';
+import { TestDispose } from '../dispose/testing/test-dispose';
 import { Sequencer } from './sequencer';
 
 

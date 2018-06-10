@@ -1,11 +1,12 @@
 import 'jasmine';
 
-import { assert, TestBase } from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
-import { should } from 'gs-testing/export/main';
+import { assert, should } from 'gs-testing/export/main';
+import { Mocks } from 'gs-testing/export/mock';
 import { BaseDisposable } from '../dispose/base-disposable';
-import { TestDispose } from '../testing';
+import { TestDispose } from '../dispose/testing/test-dispose';
 import { atomic } from './atomic';
 
 

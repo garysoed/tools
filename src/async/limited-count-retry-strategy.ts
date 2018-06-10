@@ -6,7 +6,7 @@ import { RetryStrategy } from '../async/retry-strategy';
 export class LimitedCountRetryStrategy implements RetryStrategy {
   constructor(private readonly maxRetry_: number) { }
 
-  async onReject(): Promise<RetryStrategy | null> {
+  async onReject(): Promise<LimitedCountRetryStrategy | null> {
     if (this.maxRetry_ <= 0) {
       return null;
     }

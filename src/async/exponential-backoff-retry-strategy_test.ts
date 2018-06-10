@@ -1,6 +1,7 @@
-import { assert, Match, TestBase } from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
+import { assert, Match } from 'gs-testing/export/main';
 import { ExponentialBackoffRetryStrategy } from './exponential-backoff-retry-strategy';
 
 describe('async.ExponentialBackoffRetryStrategy', () => {

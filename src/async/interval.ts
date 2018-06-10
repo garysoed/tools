@@ -1,5 +1,5 @@
 import { Errors } from '../error';
-import { Bus } from '../event';
+import { Bus } from '../event/bus';
 import { Log } from '../util';
 
 /**

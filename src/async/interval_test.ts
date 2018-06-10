@@ -1,8 +1,9 @@
-import { assert, Match, TestBase } from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
+import { assert, Match } from 'gs-testing/export/main';
 import { Interval } from '../async/interval';
-import { TestDispose } from '../testing/test-dispose';
+import { TestDispose } from '../dispose/testing/test-dispose';
 
 
 describe('async.Interval', () => {

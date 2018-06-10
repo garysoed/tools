@@ -1,8 +1,8 @@
+import { Disposable } from './disposable';
+
 /**
  * Contains undisposed objects.
  */
-import { Disposable } from '../interfaces/disposable';
-
 export const TRACKED_DISPOSABLES: BaseDisposable[] = [];
 
 /**

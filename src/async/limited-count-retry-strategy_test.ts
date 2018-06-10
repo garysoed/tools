@@ -1,6 +1,7 @@
-import { assert, TestBase } from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
+import { assert } from 'gs-testing/export/main';
 import { LimitedCountRetryStrategy } from './limited-count-retry-strategy';
 
 describe('async.LimitedCountRetryStrategy', () => {
@@ -14,7 +15,8 @@ describe('async.LimitedCountRetryStrategy', () => {
   describe('onReject', () => {
     it(`should resolve with the correct strategy`, async () => {
       const newStrategy = await strategy.onReject();
-      assert(newStrategy['maxRetry_']).to.equal(MAX_RETRY - 1);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(newStrategy!['maxRetry_']).to.equal(MAX_RETRY - 1);
     });
 
     it(`should resolve with null if max retry is 0`, async () => {
