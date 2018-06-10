@@ -32,10 +32,10 @@ export function fromJSON(json: gs.IJson): any {
   } else if (json instanceof Array) {
     return json.map(fromJSON);
   } else if (json instanceof Object) {
-    const obj = {};
+    const obj: any = {};
     for (const key in json) {
       if (json.hasOwnProperty(key)) {
-        obj[key] = fromJSON(json[key]);
+        obj[key] = fromJSON((json as any)[key]);
       }
     }
 
@@ -77,8 +77,8 @@ export function getSerializedName_(ctor: any): string | null {
  * @internal
  */
 function initField_(obj: Object): void {
-  if (!obj[__FIELDS]) {
-    obj[__FIELDS] = new Map<string | symbol, string>();
+  if (!(obj as any)[__FIELDS]) {
+    (obj as any)[__FIELDS] = new Map<string | symbol, string>();
   }
 }
 
@@ -101,7 +101,7 @@ export function registerCtor_(name: string, ctor: Function, parent: any = null):
 export function registerField_(target: Object, propertyKey: string | symbol): void {
   // TODO(gs): Assert that the name does not start with _
   initField_(target);
-  target[__FIELDS].set(propertyKey, name);
+  (target as any)[__FIELDS].set(propertyKey, name);
 }
 
 /**
@@ -117,7 +117,7 @@ export function toJSON(obj: any): gs.IJson {
 
   const ctor = obj.constructor;
   if (!!ctor.prototype[__NAME]) {
-    const json = {[TYPE_FIELD]: ctor.prototype[__NAME]};
+    const json: any = {[TYPE_FIELD]: ctor.prototype[__NAME]};
     for (const [key, jsonKey] of getFields_(ctor)) {
       json[jsonKey] = toJSON(obj[key]);
     }
@@ -126,7 +126,7 @@ export function toJSON(obj: any): gs.IJson {
   } else if (obj instanceof Array) {
     return obj.map(toJSON);
   } else {
-    const json = {};
+    const json: any = {};
     for (const key in obj) {
       if (obj.hasOwnProperty(key)) {
         json[key] = toJSON(obj[key]);

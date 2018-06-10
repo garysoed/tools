@@ -1,6 +1,7 @@
-import { assert, TestBase } from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
+import { assert } from 'gs-testing/export/main';
 import { cache } from '../data/cache';
 import { clear, clearAll } from './caches';
 

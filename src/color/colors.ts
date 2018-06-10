@@ -1,7 +1,7 @@
 import { ArrayOfType, NonNullType } from 'gs-types/export';
 import { ImmutableList } from '../immutable';
-import { Color } from '../interfaces';
 import { FloatParser, HexParser, IntegerParser, PercentParser } from '../parse';
+import { Color } from './color';
 import { HslColor } from './hsl-color';
 import { RgbColor } from './rgb-color';
 
@@ -117,7 +117,7 @@ export const Colors = {
         case 6:
         case 8:
           components = [...ImmutableList
-              .of(matches.match(/../g))
+              .of(matches.match(/../g) || [])
               .map((match: string) => {
                 return HexParser.parse(match);
               })];

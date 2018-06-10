@@ -1,4 +1,4 @@
-import { cache } from '../data';
+import { cache } from '../data/cache';
 import { ImmutableList } from '../immutable';
 import { Color } from './color';
 

@@ -1,7 +1,5 @@
 /**
  * Various utility methods to work with JSONs.
- *
- * @TODO Turn this into Fluent
  */
 import { Errors } from '../error';
 

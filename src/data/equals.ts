@@ -14,7 +14,7 @@ export function equals<T>(a: T, b: T): boolean {
         .forCtor(a.constructor)
         .getAnnotatedProperties()
         .everyItem((field: symbol | string) => {
-          return equals(a[field], b[field]);
+          return equals((a as any)[field], (b as any)[field]);
         });
   } else {
     return a === b;

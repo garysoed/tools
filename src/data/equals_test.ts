@@ -1,10 +1,10 @@
-import { assert, TestBase } from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
+import { assert } from 'gs-testing/export/main';
+import { Fakes, Mocks } from 'gs-testing/export/mock';
 import * as Equals from '../data/equals';
 import { ImmutableSet } from '../immutable/immutable-set';
-import { Fakes } from '../mock/fakes';
-import { Mocks } from '../mock/mocks';
 
 
 describe('data.Equals', () => {

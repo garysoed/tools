@@ -1,6 +1,7 @@
-import { assert, TestBase } from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
+import { assert } from 'gs-testing/export/main';
 import { Color } from './color';
 import { Colors } from './colors';
 import { RgbColor } from './rgb-color';
@@ -24,11 +25,13 @@ function getHsl(color: Color): [number, number, number] {
 describe('namespace.Colors ', () => {
   describe('fromCssColor', () => {
     it('should handle legacy style RGB', () => {
-      assert(getRgb(Colors.fromCssColor('rgb(12,34,56)'))).to.equal([12, 34, 56]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getRgb(Colors.fromCssColor('rgb(12,34,56)')!)).to.equal([12, 34, 56]);
     });
 
     it('should handle legacy style RGB with white spaces', () => {
-      assert(getRgb(Colors.fromCssColor('rgb(12,   34, 56  )'))).to.equal([12, 34, 56]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getRgb(Colors.fromCssColor('rgb(12,   34, 56  )')!)).to.equal([12, 34, 56]);
     });
 
     it('should return null for RGB if one of the components is not a number', () => {
@@ -36,23 +39,28 @@ describe('namespace.Colors ', () => {
     });
 
     it('should handle legacy style RGBA', () => {
-      assert(getRgb(Colors.fromCssColor('rgba(12,34,56,.78)'))).to.equal([12, 34, 56]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getRgb(Colors.fromCssColor('rgba(12,34,56,.78)')!)).to.equal([12, 34, 56]);
     });
 
     it('should handle legacy style RGBA with white spaces', () => {
-      assert(getRgb(Colors.fromCssColor('rgba(  12,   34, 56,   .78  )'))).to.equal([12, 34, 56]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getRgb(Colors.fromCssColor('rgba(  12,   34, 56,   .78  )')!)).to.equal([12, 34, 56]);
     });
 
     it('should handle legacy style RGBA if one of the RGB components is not an integer', () => {
-      assert(getRgb(Colors.fromCssColor('rgba(12, 3.6, 56, .78)'))).to.equal([12, 4, 56]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getRgb(Colors.fromCssColor('rgba(12, 3.6, 56, .78)')!)).to.equal([12, 4, 56]);
     });
 
     it('should handle functional RGB', () => {
-      assert(getRgb(Colors.fromCssColor('rgb(12 34 56/0.78)'))).to.equal([12, 34, 56]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getRgb(Colors.fromCssColor('rgb(12 34 56/0.78)')!)).to.equal([12, 34, 56]);
     });
 
     it('should handle functional RGB with white spaces', () => {
-      assert(getRgb(Colors.fromCssColor('rgb(12    34  56  /   0.78)'))).to.equal([12, 34, 56]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getRgb(Colors.fromCssColor('rgb(12    34  56  /   0.78)')!)).to.equal([12, 34, 56]);
     });
 
     it('should return null for RGB if one of the components is not an integer', () => {
@@ -60,23 +68,28 @@ describe('namespace.Colors ', () => {
     });
 
     it('should handle functional RGBA', () => {
-      assert(getRgb(Colors.fromCssColor('rgba(12 34 56/.78)'))).to.equal([12, 34, 56]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getRgb(Colors.fromCssColor('rgba(12 34 56/.78)')!)).to.equal([12, 34, 56]);
     });
 
     it('should handle legacy style RGBA with white spaces', () => {
-      assert(getRgb(Colors.fromCssColor('rgba(12   34  56   / .78  )'))).to.equal([12, 34, 56]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getRgb(Colors.fromCssColor('rgba(12   34  56   / .78  )')!)).to.equal([12, 34, 56]);
     });
 
     it('should handle legacy style RGBA if one of the RGB components is not an integer', () => {
-      assert(getRgb(Colors.fromCssColor('rgba(12 3.6 56 / .78)'))).to.equal([12, 4, 56]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getRgb(Colors.fromCssColor('rgba(12 3.6 56 / .78)')!)).to.equal([12, 4, 56]);
     });
 
     it('should handle legacy style HSL', () => {
-      assert(getHsl(Colors.fromCssColor('hsl(12,34%,56%)'))).to.equal([12, 0.34, 0.56]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getHsl(Colors.fromCssColor('hsl(12,34%,56%)')!)).to.equal([12, 0.34, 0.56]);
     });
 
     it('should handle legacy style HSL with white spaces', () => {
-      assert(getHsl(Colors.fromCssColor('hsl(12,   34  %, 56  % )'))).to.equal([12, 0.34, 0.56]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getHsl(Colors.fromCssColor('hsl(12,   34  %, 56  % )')!)).to.equal([12, 0.34, 0.56]);
     });
 
     it('should return null for HSL if the saturation is not a percent', () => {
@@ -84,11 +97,13 @@ describe('namespace.Colors ', () => {
     });
 
     it('should handle legacy style HSLA', () => {
-      assert(getHsl(Colors.fromCssColor('hsla(12,34%,56%,.78)'))).to.equal([12, 0.34, 0.56]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getHsl(Colors.fromCssColor('hsla(12,34%,56%,.78)')!)).to.equal([12, 0.34, 0.56]);
     });
 
     it('should handle legacy style HSLA with white spaces', () => {
-      assert(getHsl(Colors.fromCssColor('hsla(  12,  34 %, 56  %,  .78  )'))).to
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getHsl(Colors.fromCssColor('hsla(  12,  34 %, 56  %,  .78  )')!)).to
           .equal([12, 0.34, 0.56]);
     });
 
@@ -97,11 +112,13 @@ describe('namespace.Colors ', () => {
     });
 
     it('should handle functional HSL', () => {
-      assert(getHsl(Colors.fromCssColor('hsl(12 34% 56%/0.78)'))).to.equal([12, 0.34, 0.56]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getHsl(Colors.fromCssColor('hsl(12 34% 56%/0.78)')!)).to.equal([12, 0.34, 0.56]);
     });
 
     it('should handle functional HSL with white spaces', () => {
-      assert(getHsl(Colors.fromCssColor('hsl(12    34%  56%  /   0.78)'))).to
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getHsl(Colors.fromCssColor('hsl(12    34%  56%  /   0.78)')!)).to
           .equal([12, 0.34, 0.56]);
     });
 
@@ -110,12 +127,14 @@ describe('namespace.Colors ', () => {
     });
 
     it('should handle functional HSLA', () => {
-      assert(getHsl(Colors.fromCssColor('hsla(12 34% 56%/.78)'))).to
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getHsl(Colors.fromCssColor('hsla(12 34% 56%/.78)')!)).to
           .equal([12, 0.34, 0.56]);
     });
 
     it('should handle legacy style HSLA with white spaces', () => {
-      assert(getHsl(Colors.fromCssColor('hsla(12   34%  56%   / .78  )'))).to
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getHsl(Colors.fromCssColor('hsla(12   34%  56%   / .78  )')!)).to
           .equal([12, 0.34, 0.56]);
     });
 
@@ -124,7 +143,8 @@ describe('namespace.Colors ', () => {
     });
 
     it('should handle hex strings', () => {
-      assert(getRgb(Colors.fromCssColor('#abcdef'))).to.equal([0xAB, 0xCD, 0xEF]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getRgb(Colors.fromCssColor('#abcdef')!)).to.equal([0xAB, 0xCD, 0xEF]);
     });
 
     it('should return null if one of the hex chars is invalid hex', () => {
@@ -132,7 +152,8 @@ describe('namespace.Colors ', () => {
     });
 
     it('should handle short hex strings', () => {
-      assert(getRgb(Colors.fromCssColor('#abc'))).to.equal([0xAA, 0xBB, 0xCC]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getRgb(Colors.fromCssColor('#abc')!)).to.equal([0xAA, 0xBB, 0xCC]);
     });
 
     it('should return null if one of the hex chars is invalid hex', () => {
@@ -140,7 +161,8 @@ describe('namespace.Colors ', () => {
     });
 
     it('should handle hex strings with alpha', () => {
-      assert(getRgb(Colors.fromCssColor('#abcdef12'))).to.equal([0xAB, 0xCD, 0xEF]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getRgb(Colors.fromCssColor('#abcdef12')!)).to.equal([0xAB, 0xCD, 0xEF]);
     });
 
     it('should return null if one of the hex chars is invalid hex', () => {
@@ -148,7 +170,8 @@ describe('namespace.Colors ', () => {
     });
 
     it('should handle short hex strings with alpha', () => {
-      assert(getRgb(Colors.fromCssColor('#abcd'))).to.equal([0xAA, 0xBB, 0xCC]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getRgb(Colors.fromCssColor('#abcd')!)).to.equal([0xAA, 0xBB, 0xCC]);
     });
 
     it('should return null if one of the hex chars is invalid hex', () => {

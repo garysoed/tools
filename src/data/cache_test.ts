@@ -1,8 +1,9 @@
-import { assert, TestBase } from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
+import { assert } from 'gs-testing/export/main';
+import { Fakes } from 'gs-testing/export/mock';
 import { cache } from '../data/cache';
-import { Fakes } from '../mock/fakes';
 
 describe('data.cache', () => {
   /**

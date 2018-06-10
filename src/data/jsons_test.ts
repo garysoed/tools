@@ -1,4 +1,5 @@
-import { assert, TestBase } from '../test-base';
+import { assert } from 'gs-testing/export/main';
+import { TestBase } from '../test-base';
 import { deepClone, getValue, setValue } from './jsons';
 TestBase.setup();
 

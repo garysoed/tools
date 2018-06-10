@@ -1,4 +1,5 @@
-import { assert, TestBase } from '../test-base';
+import { assert } from 'gs-testing/export/main';
+import { TestBase } from '../test-base';
 import { Property, toString } from './stringify';
 TestBase.setup();
 

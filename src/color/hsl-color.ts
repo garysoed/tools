@@ -1,5 +1,5 @@
 import { BaseColor } from '../color/base-color';
-import { cache } from '../data';
+import { cache } from '../data/cache';
 import { Errors } from '../error';
 import { ImmutableList } from '../immutable';
 

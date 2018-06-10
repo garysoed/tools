@@ -1,6 +1,7 @@
-import { assert, TestBase } from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
+import { assert } from 'gs-testing/export/main';
 import { BaseColor } from '../color/base-color';
 
 // tslint:disable:prefer-function-over-method

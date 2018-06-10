@@ -48,7 +48,8 @@ if (StringType.check(field)) {
 } else if (field instanceof Date) {
   lines.push(field.toLocaleString());
 } else if (field instanceof Function) {
-  return String(field).match(/^function [^\(]*\([^\)]*\)/)[0];
+  // tslint:disable-next-line:no-non-null-assertion
+  return String(field).match(/^function [^\(]*\([^\)]*\)/)![0];
 } else {
   lines.push('{');
   const entriesString = ImmutableMap
@@ -97,7 +98,7 @@ return lines.join(!!pad ? '\n' : '');
 function grabFields_(instance: any): Stringifiable {
 if (instance instanceof Object
     && ANNOTATIONS.hasAnnotation(instance.constructor)) {
-  const record = {};
+  const record: any = {};
   for (const field of ANNOTATIONS.forCtor(instance.constructor).getAnnotatedProperties()) {
     const stringifiedField = SymbolType.check(field) ? `[${field.toString()}]` : field;
     const value = grabFields_(instance[field]);

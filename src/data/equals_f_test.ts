@@ -1,7 +1,8 @@
-import { assert, TestBase } from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
-import { Mocks } from '../mock/mocks';
+import { assert } from 'gs-testing/export/main';
+import { Mocks } from 'gs-testing/export/mock';
 import { equals, Property } from './equals';
 
 /**

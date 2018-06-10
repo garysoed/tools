@@ -1,10 +1,10 @@
-import { assert, TestBase } from '../test-base';
+import { TestBase } from '../test-base';
 TestBase.setup();
 
+import { assert } from 'gs-testing/export/main';
+import { Mocks } from 'gs-testing/export/mock';
 import { Annotations, AnnotationsHandler } from '../data/annotations';
 import { ImmutableMap } from '../immutable/immutable-map';
-import { Mocks } from '../mock/mocks';
-
 
 describe('data.AnnotationsHandler', () => {
   const __SYMBOL = Symbol('symbol');
@@ -23,7 +23,8 @@ describe('data.AnnotationsHandler', () => {
       const value = 123;
       handler.attachValueToProperty(key, value);
 
-      assert(handler['propertyValues_'].get(key)).to.haveElements([value]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(handler['propertyValues_'].get(key)!).to.haveElements([value]);
     });
   });
 
@@ -62,8 +63,10 @@ describe('data.AnnotationsHandler', () => {
       spyOn(AnnotationsHandler, 'of').and.returnValue(mockParentHandler);
 
       const attachedValues = handler.getAttachedValues();
-      assert(attachedValues.get(key1)).to.haveElements([value1]);
-      assert(attachedValues.get(key2)).to.haveElements([value2]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(attachedValues.get(key1)!).to.haveElements([value1]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(attachedValues.get(key2)!).to.haveElements([value2]);
       assert(attachedValues.get(parent1)).to.equal(parentValues1);
       assert(attachedValues.get(parent2)).to.equal(parentValues2);
       assert(AnnotationsHandler.of).to.haveBeenCalledWith(__SYMBOL, parent);
@@ -80,8 +83,10 @@ describe('data.AnnotationsHandler', () => {
 
 
       const attachedValues = handler.getAttachedValues();
-      assert(attachedValues.get(key1)).to.haveElements([value1]);
-      assert(attachedValues.get(key2)).to.haveElements([value2]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(attachedValues.get(key1)!).to.haveElements([value1]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(attachedValues.get(key2)!).to.haveElements([value2]);
     });
   });
 
