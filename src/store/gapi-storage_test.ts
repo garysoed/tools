@@ -1,115 +1,133 @@
-import { TestBase } from 'gs-testing/export/main';
-TestBase.setup();
-
-import { assert, Match } from 'gs-testing/export/main';
+import { assert, match, should } from 'gs-testing/export/main';
+import { retryUntil } from 'gs-testing/export/main';
 import { mocks } from 'gs-testing/export/mock';
+import { createSpy, createSpyObject, fake, Spy, SpyObj } from 'gs-testing/export/spy';
+import { BehaviorSubject, Observable, of as observableOf } from 'rxjs';
 import { ImmutableList, ImmutableSet } from '../immutable';
-import { GapiStorage } from './gapi-storage';
+import { GapiLibrary } from '../net';
+import { GapiRequestQueue, GapiStorage } from './gapi-storage';
 
 class TestGapiStorage extends GapiStorage<{}, {}, {}, {}, {}, {}> {
-  hasImpl_(_fn: any, _id: any): Promise<boolean> {
-    throw new Error('Method not implemented.');
+  constructor(
+      library: GapiLibrary<{}>,
+      private readonly mockHasImpl_: Spy<Observable<boolean>, [GapiRequestQueue<{}, {}>, string]>,
+      private readonly mockListIdsImpl_:
+          Spy<Observable<ImmutableSet<string>>, [GapiRequestQueue<{}, {}>]>,
+      private readonly mockReadImpl_:
+          Spy<Observable<{}|null>, [GapiRequestQueue<{}, {}>, string]>,
+  ) {
+    super(library);
   }
 
-  listIdsImpl_(_fn: any): Promise<ImmutableSet<string>> {
-    throw new Error('Method not implemented.');
+  hasImpl_(queueRequest: GapiRequestQueue<{}, {}>, id: string): Observable<boolean> {
+    return this.mockHasImpl_(queueRequest, id);
   }
 
-  listImpl_(_fn: any): Promise<ImmutableSet<{}>> {
-    throw new Error('Method not implemented.');
+  listIdsImpl_(queueRequest: GapiRequestQueue<{}, {}>): Observable<ImmutableSet<string>> {
+    return this.mockListIdsImpl_(queueRequest);
   }
 
-  readImpl_(_fn: any, _id: string): Promise<{} | null> {
-    throw new Error('Method not implemented.');
+  readImpl_(queueRequest: GapiRequestQueue<{}, {}>, id: string): Observable<{} | null> {
+    return this.mockReadImpl_(queueRequest, id);
   }
 }
 
 describe('store.GapiStorage', () => {
-  let mockLibrary: any;
+  let mockLibrary: SpyObj<GapiLibrary<{}>>;
+  let mockHasImpl_: Spy<Observable<boolean>, [GapiRequestQueue<{}, {}>, string]>;
+  let mockListIdsImpl_: Spy<Observable<ImmutableSet<string>>, [GapiRequestQueue<{}, {}>]>;
+  let mockReadImpl_: Spy<Observable<{}|null>, [GapiRequestQueue<{}, {}>, string]>;
   let storage: TestGapiStorage;
 
   beforeEach(() => {
     mockLibrary = createSpyObject('Library', ['get', 'queueRequest']);
-    storage = new TestGapiStorage(mockLibrary);
+    mockHasImpl_ = createSpy('HasImpl_');
+    mockListIdsImpl_ = createSpy('ListIdsImpl_');
+    mockReadImpl_ = createSpy('ReadImpl_');
+    storage = new TestGapiStorage(mockLibrary, mockHasImpl_, mockListIdsImpl_, mockReadImpl_);
   });
 
   describe('has', () => {
-    should(`resolve correctly`, async () => {
+    should(`emit correctly`, async () => {
       const id = 'id';
-      const result = true;
 
-      const hasImplSpy = spyOn(storage, 'hasImpl_').and.returnValue(Promise.resolve(result));
-      spyOn(storage, 'queueRequest_');
+      fake(mockHasImpl_).always().return(observableOf(true));
 
-      assert(await storage.has(id)).to.be(result);
-      assert(storage['hasImpl_']).to.haveBeenCalledWith(Match.any(Function), id);
+      const hasSubject = new BehaviorSubject<boolean|null>(null);
+      storage.has(id).subscribe(hasSubject);
 
-      const fn = mocks.object('fn');
-      hasImplSpy.calls.argsFor(0)[0](fn);
-      assert(storage['queueRequest_']).to.haveBeenCalledWith(fn);
-    });
-  });
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(hasSubject.getValue()!).to.beTrue();
 
-  describe('list', () => {
-    should(`resolve correctly`, async () => {
-      const result = ImmutableList.of([{}]);
+      const requestQueueMatcher = match
+          .anyObjectThat<GapiRequestQueue<{}, {}>>()
+          .beAFunction();
+      assert(mockHasImpl_).to.haveBeenCalledWith(requestQueueMatcher, id);
 
-      const listImplSpy = spyOn(storage, 'listImpl_').and.returnValue(Promise.resolve(result));
-      spyOn(storage, 'queueRequest_');
+      const request = mocks.object('request');
+      fake(mockLibrary.queueRequest).always().return(Promise.resolve(request));
+      const lib = mocks.object('lib');
+      fake(mockLibrary.get).always().return(Promise.resolve(lib));
 
-      assert(await storage.list()).to.equal(result);
-      assert(storage['listImpl_']).to.haveBeenCalledWith(Match.any(Function));
-
-      const fn = mocks.object('fn');
-      listImplSpy.calls.argsFor(0)[0](fn);
-      assert(storage['queueRequest_']).to.haveBeenCalledWith(fn);
+      const mockFn = createSpy<gapi.client.HttpRequest<{}>, [{}]>('Fn');
+      requestQueueMatcher.getLastMatch()(mockFn);
+      await retryUntil(() => mockFn).to.equal(match.anySpyThat().haveBeenCalledWith(lib));
     });
   });
 
   describe('listIds', () => {
     should(`resolve correctly`, async () => {
-      const result = ImmutableList.of(['id']);
+      const listIds = ImmutableSet.of(['itemId']);
+      fake(mockListIdsImpl_).always().return(observableOf(listIds));
 
-      const listIdsImplSpy = spyOn(storage, 'listIdsImpl_').and
-          .returnValue(Promise.resolve(result));
-      spyOn(storage, 'queueRequest_');
+      const listIdsSubject = new BehaviorSubject<ImmutableSet<string>>(ImmutableSet.of());
+      storage.listIds().subscribe(listIdsSubject);
 
-      assert(await storage.listIds()).to.equal(result);
-      assert(storage['listIdsImpl_']).to.haveBeenCalledWith(Match.any(Function));
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(listIdsSubject.getValue()!).to.haveElements('itemId');
 
-      const fn = mocks.object('fn');
-      listIdsImplSpy.calls.argsFor(0)[0](fn);
-      assert(storage['queueRequest_']).to.haveBeenCalledWith(fn);
-    });
-  });
+      const requestQueueMatcher = match
+          .anyObjectThat<GapiRequestQueue<{}, {}>>()
+          .beAFunction();
+      assert(mockListIdsImpl_).to.haveBeenCalledWith(requestQueueMatcher);
 
-  describe('queueRequest_', () => {
-    should(`queue the request correctly`, async () => {
-      const result = mocks.object('result');
-      mockLibrary.queueRequest.and.returnValue(Promise.resolve(result));
-      const mockFn = createSpy('Fn');
+      const request = mocks.object('request');
+      fake(mockLibrary.queueRequest).always().return(Promise.resolve(request));
       const lib = mocks.object('lib');
-      mockLibrary.get.and.returnValue(Promise.resolve(lib));
+      fake(mockLibrary.get).always().return(Promise.resolve(lib));
 
-      assert(await storage['queueRequest_'](mockFn)).to.equal(result);
-      assert(mockFn).to.haveBeenCalledWith(lib);
+      const mockFn = createSpy<gapi.client.HttpRequest<{}>, [{}]>('Fn');
+      requestQueueMatcher.getLastMatch()(mockFn);
+      await retryUntil(() => mockFn).to.equal(match.anySpyThat().haveBeenCalledWith(lib));
     });
   });
 
   describe('read', () => {
     should(`resolve correctly`, async () => {
-      const result = mocks.object('result');
       const id = 'id';
+      const item = mocks.object('item');
 
-      const readImplSpy = spyOn(storage, 'readImpl_').and.returnValue(Promise.resolve(result));
-      spyOn(storage, 'queueRequest_');
+      fake(mockReadImpl_).always().return(observableOf(item));
 
-      assert(await storage.read(id)).to.equal(result);
-      assert(storage['readImpl_']).to.haveBeenCalledWith(Match.any(Function), id);
+      const readSubject = new BehaviorSubject<{}|null>(null);
+      storage.read(id).subscribe(readSubject);
 
-      const fn = mocks.object('fn');
-      readImplSpy.calls.argsFor(0)[0](fn);
-      assert(storage['queueRequest_']).to.haveBeenCalledWith(fn);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(readSubject.getValue()!).to.equal(item);
+
+      const requestQueueMatcher = match
+          .anyObjectThat<GapiRequestQueue<{}, {}>>()
+          .beAFunction();
+      assert(mockReadImpl_).to.haveBeenCalledWith(requestQueueMatcher, id);
+
+      const request = mocks.object('request');
+      fake(mockLibrary.queueRequest).always().return(Promise.resolve(request));
+      const lib = mocks.object('lib');
+      fake(mockLibrary.get).always().return(Promise.resolve(lib));
+
+      const mockFn = createSpy<gapi.client.HttpRequest<{}>, [{}]>('Fn');
+      requestQueueMatcher.getLastMatch()(mockFn);
+      await retryUntil(() => mockFn).to.equal(match.anySpyThat().haveBeenCalledWith(lib));
     });
   });
 });

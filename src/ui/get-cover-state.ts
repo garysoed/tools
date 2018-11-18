@@ -1,6 +1,3 @@
-import { BaseListenableListener } from '../event/base-listenable-listener';
-import { DomEvent } from '../event/dom-event';
-import { ListenableDom } from '../event/listenable-dom';
 import { Doms } from '../ui/doms';
 
 /**
@@ -23,6 +20,7 @@ export enum State {
   UNCOVERED,
 }
 
+// TODO: rxjs this
 export function getCoverState(containerEl: HTMLElement, targetEl: HTMLElement): State {
   // TODO(gs): Support bottom / left / right
   const scrollTop = containerEl.scrollTop;

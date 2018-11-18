@@ -1,0 +1,6 @@
+gs-tools
+  ☐ Fix compilation errors
+  ☐ Fix test errors
+  ☐ Clean up bazel
+  ☐ Delete the index.ts
+  ☐ Gather TODOs

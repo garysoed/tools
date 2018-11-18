@@ -1,37 +1,54 @@
-import { ImmutableSet } from '../immutable';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, share, shareReplay, switchMap } from 'rxjs/operators';
+import { ImmutableMap, ImmutableSet } from '../immutable';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { EditableStorage } from './editable-storage';
 
 export class InMemoryStorage<T> implements EditableStorage<T> {
-  private readonly data_: Map<string, T> = new Map();
+  private readonly data_: BehaviorSubject<ImmutableMap<string, T>> =
+      new BehaviorSubject(ImmutableMap.of());
 
   constructor(private readonly idGenerator_: BaseIdGenerator) { }
 
-  async delete(id: string): Promise<void> {
-    this.data_.delete(id);
+  delete(id: string): void {
+    this.data_.next(this.data_.getValue().deleteKey(id));
   }
 
-  async generateId(): Promise<string> {
-    return this.idGenerator_.generate(this.data_.keys());
+  generateId(): Observable<string> {
+    return this.data_
+        .pipe(
+            map(map => this.idGenerator_.generate(map.keys())),
+            shareReplay(1),
+        );
   }
 
-  async has(id: string): Promise<boolean> {
-    return this.data_.has(id);
+  has(id: string): Observable<boolean> {
+    return this.data_
+        .pipe(
+            map(map => map.hasKey(id)),
+            shareReplay(1),
+        );
   }
 
-  async list(): Promise<ImmutableSet<T>> {
-    return ImmutableSet.of(this.data_.values());
+  listIds(): Observable<ImmutableSet<string>> {
+    return this.data_
+        .pipe(
+            map(map => map.keys()),
+            shareReplay(1),
+        );
   }
 
-  async listIds(): Promise<ImmutableSet<string>> {
-    return ImmutableSet.of(this.data_.keys());
+  read(id: string): Observable<T|null> {
+    return this.data_
+        .pipe(
+            map(map => {
+              return map.get(id) || null;
+            }),
+            shareReplay(1),
+        );
   }
 
-  async read(id: string): Promise<T | null> {
-    return this.data_.get(id) || null;
-  }
-
-  async update(id: string, instance: T): Promise<void> {
-    this.data_.set(id, instance);
+  update(id: string, instance: T): void {
+    this.data_.next(this.data_.getValue().set(id, instance));
   }
 }

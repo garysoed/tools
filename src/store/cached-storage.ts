@@ -1,80 +1,70 @@
+import { combineLatest, Observable, of as observableOf } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { ImmutableSet } from '../immutable';
 import { EditableStorage } from './editable-storage';
 
 export class CachedStorage<T> extends BaseDisposable implements EditableStorage<T> {
-  private readonly cache_: Map<string, T>;
+  private readonly cache_: Map<string, Observable<T|null>> = new Map();
   private readonly innerStorage_: EditableStorage<T>;
 
   constructor(innerStorage: EditableStorage<T>) {
     super();
-    this.cache_ = new Map<string, T>();
     this.innerStorage_ = innerStorage;
   }
 
-  delete(id: string): Promise<void> {
+  delete(id: string): void {
     const item = this.cache_.get(id);
     if (item !== undefined && item instanceof BaseDisposable) {
       item.dispose();
     }
     this.cache_.delete(id);
-
-    return this.innerStorage_.delete(id);
+    this.innerStorage_.delete(id);
   }
 
   disposeInternal(): void {
-    this.cache_
-        .forEach((value: T) => {
-          if (value instanceof BaseDisposable) {
-            value.dispose();
-          }
-        });
+    const obsList = [...this.cache_.values()];
+    if (obsList.length > 0) {
+      combineLatest(obsList)
+          .pipe(take(1))
+          .subscribe(obs => {
+            for (const value of obs) {
+              if (value instanceof BaseDisposable) {
+                value.dispose();
+              }
+            }
+          });
+    }
     super.disposeInternal();
   }
 
-  generateId(): Promise<string> {
+  generateId(): Observable<string> {
     return this.innerStorage_.generateId();
   }
 
-  has(id: string): Promise<boolean> {
+  has(id: string): Observable<boolean> {
     return this.innerStorage_.has(id);
   }
 
-  async list(): Promise<ImmutableSet<T>> {
-    const ids = await this.listIds();
-    const promises = ids
-        .mapItem((id: string) => {
-          return this.read(id);
-        });
-    const items = await Promise.all([...promises]);
-
-    return ImmutableSet
-        .of(items)
-        .filterItem((item: T | null) => {
-          return item !== null;
-        }) as ImmutableSet<T>;
-  }
-
-  listIds(): Promise<ImmutableSet<string>> {
+  listIds(): Observable<ImmutableSet<string>> {
     return this.innerStorage_.listIds();
   }
 
-  async read(id: string): Promise<T | null> {
-    if (this.cache_.has(id)) {
-      return this.cache_.get(id) || null;
+  read(id: string): Observable<T|null> {
+    const cachedObs = this.cache_.get(id);
+    if (cachedObs) {
+      return cachedObs;
     }
 
-    const item = await this.innerStorage_.read(id);
-    if (item !== null) {
-      this.cache_.set(id, item);
-    }
+    const obs = this.innerStorage_.read(id);
+    this.cache_.set(id, obs);
 
-    return item;
+    return obs;
   }
 
-  async update(id: string, instance: T): Promise<void> {
-    await this.innerStorage_.update(id, instance);
-    this.cache_.set(id, instance);
+  update(id: string, instance: T): void {
+    this.innerStorage_.update(id, instance);
+    this.cache_.set(id, observableOf(instance));
   }
 
   /**

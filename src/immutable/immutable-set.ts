@@ -67,6 +67,8 @@ export class ImmutableSet<T> implements FiniteCollection<T> {
     return ImmutableSet.of(newItems);
   }
 
+  filterItem<T2 extends T>(checker: (item: T) => item is T2): ImmutableSet<T2>;
+  filterItem(checker: (item: T) => boolean): ImmutableSet<T>;
   filterItem(checker: (item: T) => boolean): ImmutableSet<T> {
     const iterable = this;
 

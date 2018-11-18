@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { ReadableStorage } from './readable-storage';
 
 export interface EditableStorage<TFull, TSummary = TFull> extends ReadableStorage<TFull, TSummary> {
@@ -6,22 +7,21 @@ export interface EditableStorage<TFull, TSummary = TFull> extends ReadableStorag
    * Deletes the object corresponding to the given ID.
    *
    * @param id ID of the object to delete.
-   * @return Promise that will be resolved when the deletion process is successful.
    */
-  delete(id: string): Promise<any>;
+  delete(id: string): void;
 
   /**
    * Reserves a new ID in the storage.
-   * @return Promise that will be resolved with the new ID.
+   * @return Observable that emits new IDs. The IDs emitted are guaranteed to be unique at the time
+   *     of emission.
    */
-  generateId(): Promise<string>;
+  generateId(): Observable<string>;
 
   /**
    * Updates the given object.
    *
    * @param id ID of the object to update.
    * @param instance Object to update.
-   * @return Promise that will be resolved when the update operation is completed.
    */
-  update(id: string, instance: TFull): Promise<any>;
+  update(id: string, instance: TFull): void;
 }
