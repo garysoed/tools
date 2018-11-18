@@ -1,6 +1,5 @@
-import { assert, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
-
+import { assert, should } from 'gs-testing/export/main';
+import { createSpyObject } from 'gs-testing/export/spy';
 import { RandomizerImpl } from './randomizer';
 
 

@@ -1,6 +1,4 @@
-import { assert, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
-
+import { assert, should } from 'gs-testing/export/main';
 import { MathRng } from './math-rng';
 
 describe('random.MathJs', () => {

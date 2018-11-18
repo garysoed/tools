@@ -1,39 +1,36 @@
-import { assert, Matchers, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
-
-import { Mocks } from '../mock/mocks';
-import { TestDispose } from '../testing/test-dispose';
-
-import { EventType, Recaptcha } from './recaptcha';
+import { assert, match, should } from 'gs-testing/export/main';
+import { mocks } from 'gs-testing/export/mock';
+import { createSpy, createSpyObject, fake, SpyObj } from 'gs-testing/export/spy';
+import { Recaptcha } from './recaptcha';
 
 
 describe('secure.Recaptcha', () => {
   const SITEKEY = 'sitekey';
-  const WIDGET_ID = 'widgetId';
+  const WIDGET_ID = 123;
   let recaptcha: Recaptcha;
   let mockElement: any;
-  let mockGrecaptcha: any;
+  let mockGrecaptcha: SpyObj<ReCaptchaV2.ReCaptcha>;
 
   beforeEach(() => {
-    mockElement = Mocks.object('Element');
+    mockElement = mocks.object('Element');
     mockGrecaptcha = createSpyObject('Grecaptcha', ['getResponse', 'render', 'reset']);
-    mockGrecaptcha.render.and.returnValue(WIDGET_ID);
+    fake(mockGrecaptcha.render).always().return(WIDGET_ID);
 
     recaptcha = Recaptcha.newInstance(mockGrecaptcha, mockElement, SITEKEY);
-    TestDispose.add(recaptcha);
   });
 
   should('call render correctly', () => {
     const callback = createSpy('Callback');
 
-    assert(mockGrecaptcha.render).to.haveBeenCalledWith(mockElement, {
-      callback: Matchers.anyFunction(),
-      sitekey: SITEKEY,
-    });
+    const callbackMatch = match.anyObjectThat<() => void>().beAFunction();
+    assert(mockGrecaptcha.render).to.haveBeenCalledWith(
+        mockElement,
+        match.anyObjectThat<ReCaptchaV2.Parameters>().haveProperties({
+          callback: callbackMatch,
+          sitekey: SITEKEY,
+        }));
 
-    TestDispose.add(recaptcha.on(EventType.NEW_RESPONSE, callback, window));
-
-    mockGrecaptcha.render.calls.argsFor(0)[1].callback();
+    callbackMatch.getLastMatch()();
     assert(callback).to.haveBeenCalledWith(null);
   });
 
@@ -47,7 +44,7 @@ describe('secure.Recaptcha', () => {
   describe('response', () => {
     should('return the response from the widget', () => {
       const response = 'response';
-      mockGrecaptcha.getResponse.and.returnValue(response);
+      fake(mockGrecaptcha.getResponse).always().return(response);
       assert(recaptcha.getResponse()).to.equal(response);
       assert(mockGrecaptcha.getResponse).to.haveBeenCalledWith(WIDGET_ID);
     });

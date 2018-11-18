@@ -1,6 +1,5 @@
-import { assert, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
-
+import { assert, should } from 'gs-testing/export/main';
+import { createSpyObject } from 'gs-testing/export/spy';
 import { RandomizerImpl } from './randomizer';
 import { SimpleIdGenerator } from './simple-id-generator';
 
@@ -18,7 +17,7 @@ describe('random.SimpleIdGenerator', () => {
     should(`generate the ID correctly`, () => {
       mockRandom.shortId.and.returnValue('id');
 
-      assert(generator.generate(['id', 'id-id', 'id-id-id'])).to.be('id-id-id-id');
+      assert(generator.generate(['id', 'id-id', 'id-id-id'])).to.equal('id-id-id-id');
     });
   });
 });

@@ -1,5 +1,4 @@
-import { assert, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
+import { assert, should } from 'gs-testing/export/main';
 
 import { Spec } from './spec';
 
@@ -22,19 +21,19 @@ describe('solver.Spec', () => {
     should('throw error if the end is smaller than the start', () => {
       assert(() => {
         Spec.newInstance(2, 1, 0);
-      }).to.throwError(/should not be greater than/);
+      }).to.throwErrorWithMessage(/should not be greater than/);
     });
 
     should('throw error if the delta is negative', () => {
       assert(() => {
         Spec.newInstance(0, -1, 2);
-      }).to.throwError(/should be > 0/);
+      }).to.throwErrorWithMessage(/should be > 0/);
     });
 
     should('throw error if the delta is zero', () => {
       assert(() => {
         Spec.newInstance(0, 0, 2);
-      }).to.throwError(/should be > 0/);
+      }).to.throwErrorWithMessage(/should be > 0/);
     });
   });
 });

@@ -21,9 +21,6 @@ for (let i = 97; i < 123; i++) {
  * Generates random objects.
  */
 export class RandomizerImpl {
-  /**
-   * @param rng
-   */
   constructor(private readonly rng_: Rng) { }
 
   /**

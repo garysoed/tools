@@ -1,90 +1,90 @@
-import { assert, Matchers, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
+// import { assert, Matchers, TestBase } from 'gs-testing/export/main';
+// TestBase.setup();
 
-import { Mocks } from '../mock/mocks';
-import { ApiClient } from '../rpc/api-client';
+// import { Mocks } from '../mock/mocks';
+// import { ApiClient } from '../rpc/api-client';
 
 
-describe('rpc.ApiClient', () => {
-  let mockChannel: any;
-  let mockResponseCheck: any;
-  let mockResponseType: any;
-  let client: ApiClient<any, any>;
+// describe('rpc.ApiClient', () => {
+//   let mockChannel: any;
+//   let mockResponseCheck: any;
+//   let mockResponseType: any;
+//   let client: ApiClient<any, any>;
 
-  beforeEach(() => {
-    mockChannel = createSpyObject('Channel', ['post', 'waitForMessage']);
-    mockResponseCheck = createSpy('ResponseCheck');
-    mockResponseType = createSpyObject('ResponseType', ['check']);
-    client = new ApiClient(mockChannel, mockResponseCheck, mockResponseType);
-  });
+//   beforeEach(() => {
+//     mockChannel = createSpyObject('Channel', ['post', 'waitForMessage']);
+//     mockResponseCheck = createSpy('ResponseCheck');
+//     mockResponseType = createSpyObject('ResponseType', ['check']);
+//     client = new ApiClient(mockChannel, mockResponseCheck, mockResponseType);
+//   });
 
-  describe('onMessage_', () => {
-    should('return true if the message the correct type and response', () => {
-      const request = Mocks.object('request');
-      const message = Mocks.object('message');
+//   describe('onMessage_', () => {
+//     should('return true if the message the correct type and response', () => {
+//       const request = Mocks.object('request');
+//       const message = Mocks.object('message');
 
-      mockResponseType.check.and.returnValue(true);
-      mockResponseCheck.and.returnValue(true);
+//       mockResponseType.check.and.returnValue(true);
+//       mockResponseCheck.and.returnValue(true);
 
-      assert(client['onMessage_'](request, message)).to.beTrue();
-      assert(mockResponseType.check).to.haveBeenCalledWith(message);
-      assert(mockResponseCheck).to.haveBeenCalledWith(request, message);
-    });
+//       assert(client['onMessage_'](request, message)).to.beTrue();
+//       assert(mockResponseType.check).to.haveBeenCalledWith(message);
+//       assert(mockResponseCheck).to.haveBeenCalledWith(request, message);
+//     });
 
-    should('return false if the message is the correct type but wrong response', () => {
-      const request = Mocks.object('request');
-      const message = Mocks.object('message');
+//     should('return false if the message is the correct type but wrong response', () => {
+//       const request = Mocks.object('request');
+//       const message = Mocks.object('message');
 
-      mockResponseType.check.and.returnValue(true);
-      mockResponseCheck.and.returnValue(false);
+//       mockResponseType.check.and.returnValue(true);
+//       mockResponseCheck.and.returnValue(false);
 
-      assert(client['onMessage_'](request, message)).to.beFalse();
-      assert(mockResponseType.check).to.haveBeenCalledWith(message);
-      assert(mockResponseCheck).to.haveBeenCalledWith(request, message);
-    });
+//       assert(client['onMessage_'](request, message)).to.beFalse();
+//       assert(mockResponseType.check).to.haveBeenCalledWith(message);
+//       assert(mockResponseCheck).to.haveBeenCalledWith(request, message);
+//     });
 
-    should('return false if the message is the wrong type', () => {
-      const request = Mocks.object('request');
-      const message = Mocks.object('message');
+//     should('return false if the message is the wrong type', () => {
+//       const request = Mocks.object('request');
+//       const message = Mocks.object('message');
 
-      mockResponseType.check.and.returnValue(false);
-      mockResponseCheck.and.returnValue(true);
+//       mockResponseType.check.and.returnValue(false);
+//       mockResponseCheck.and.returnValue(true);
 
-      assert(client['onMessage_'](request, message)).to.beFalse();
-      assert(mockResponseType.check).to.haveBeenCalledWith(message);
-    });
-  });
+//       assert(client['onMessage_'](request, message)).to.beFalse();
+//       assert(mockResponseType.check).to.haveBeenCalledWith(message);
+//     });
+//   });
 
-  describe('post', () => {
-    should('post the request, wait for message and return the correct response', async () => {
-      const request = Mocks.object('request');
-      spyOn(client, 'onMessage_');
+//   describe('post', () => {
+//     should('post the request, wait for message and return the correct response', async () => {
+//       const request = Mocks.object('request');
+//       spyOn(client, 'onMessage_');
 
-      const response = Mocks.object('response');
-      mockChannel.waitForMessage.and.returnValue(Promise.resolve(response));
-      mockResponseType.check.and.returnValue(true);
+//       const response = Mocks.object('response');
+//       mockChannel.waitForMessage.and.returnValue(Promise.resolve(response));
+//       mockResponseType.check.and.returnValue(true);
 
-      assert(await client.post(request)).to.equal(response);
-      assert(mockResponseType.check).to.haveBeenCalledWith(response);
+//       assert(await client.post(request)).to.equal(response);
+//       assert(mockResponseType.check).to.haveBeenCalledWith(response);
 
-      assert(mockChannel.waitForMessage).to.haveBeenCalledWith(Matchers.anyFunction());
+//       assert(mockChannel.waitForMessage).to.haveBeenCalledWith(Matchers.anyFunction());
 
-      const message = Mocks.object('message');
-      mockChannel.waitForMessage.calls.argsFor(0)[0](message);
-      assert(client['onMessage_']).to.haveBeenCalledWith(request, message);
-      assert(mockChannel.post).to.haveBeenCalledWith(request);
-    });
+//       const message = Mocks.object('message');
+//       mockChannel.waitForMessage.calls.argsFor(0)[0](message);
+//       assert(client['onMessage_']).to.haveBeenCalledWith(request, message);
+//       assert(mockChannel.post).to.haveBeenCalledWith(request);
+//     });
 
-    should('reject if the response type is incorrect', async () => {
-      const request = Mocks.object('request');
-      spyOn(client, 'onMessage_');
+//     should('reject if the response type is incorrect', async () => {
+//       const request = Mocks.object('request');
+//       spyOn(client, 'onMessage_');
 
-      const response = Mocks.object('response');
-      mockChannel.waitForMessage.and.returnValue(Promise.resolve(response));
-      mockResponseType.check.and.returnValue(false);
+//       const response = Mocks.object('response');
+//       mockChannel.waitForMessage.and.returnValue(Promise.resolve(response));
+//       mockResponseType.check.and.returnValue(false);
 
-      await assert(client.post(request)).to.rejectWithError(/inconsistent type/);
-      assert(mockResponseType.check).to.haveBeenCalledWith(response);
-    });
-  });
-});
+//       await assert(client.post(request)).to.rejectWithError(/inconsistent type/);
+//       assert(mockResponseType.check).to.haveBeenCalledWith(response);
+//     });
+//   });
+// });
