@@ -1,4 +1,4 @@
-import { assert, Matchers, Mocks, TestBase } from '../test-base';
+import { assert, Matchers, Mocks, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { DataAccess } from '../datamodel/data-access';
@@ -22,14 +22,14 @@ describe('datamodel.Manager', () => {
   let manager: TestManager;
 
   beforeEach(() => {
-    mockSearcher = jasmine.createSpyObj('Searcher', ['index', 'search']);
-    mockStorage = jasmine.createSpyObj('Storage', ['generateId', 'read', 'list', 'update']);
+    mockSearcher = createSpyObject('Searcher', ['index', 'search']);
+    mockStorage = createSpyObject('Storage', ['generateId', 'read', 'list', 'update']);
     manager = new TestManager(mockStorage, mockSearcher);
     TestDispose.add(manager);
   });
 
   describe('get_', () => {
-    it('should return the value returned by the storage', async () => {
+    should('return the value returned by the storage', async () => {
       const id = 'id';
       const value = Mocks.object('value');
       mockStorage.read.and.returnValue(Promise.resolve(value));
@@ -40,7 +40,7 @@ describe('datamodel.Manager', () => {
   });
 
   describe('idMonad', () => {
-    it(`should return monad with the correct get method`, async () => {
+    should(`return monad with the correct get method`, async () => {
       const itemId = 'itemId';
 
       mockStorage.generateId.and.returnValue(Promise.resolve(itemId));
@@ -54,7 +54,7 @@ describe('datamodel.Manager', () => {
   });
 
   describe('list_', () => {
-    it('should return the correct projects', async () => {
+    should('return the correct projects', async () => {
       const value1 = Mocks.object('value1');
       const value2 = Mocks.object('value2');
 
@@ -65,18 +65,18 @@ describe('datamodel.Manager', () => {
   });
 
   describe('monad', () => {
-    it(`should return monad with the correct get method`, () => {
+    should(`return monad with the correct get method`, () => {
       assert(manager.monad().get()).to.equal(Matchers.any(DataAccess));
     });
 
-    it(`should return monad with the correct set method`, async () => {
+    should(`return monad with the correct set method`, async () => {
       const item1 = Mocks.object('item1');
       const id1 = 'id1';
 
       const item2 = Mocks.object('item2');
       const id2 = 'id2';
 
-      const mockDataAccess = jasmine.createSpyObj('DataAccess', ['getUpdateQueue']);
+      const mockDataAccess = createSpyObject('DataAccess', ['getUpdateQueue']);
       mockDataAccess.getUpdateQueue.and.returnValue(ImmutableMap.of([[id1, item1], [id2, item2]]));
 
       spyOn(manager, 'update_');
@@ -88,7 +88,7 @@ describe('datamodel.Manager', () => {
   });
 
   describe('search_', () => {
-    it('should return the correct items', async () => {
+    should('return the correct items', async () => {
       const item1 = Mocks.object('item1');
       const item2 = Mocks.object('item2');
       mockSearcher.search.and.returnValue(Promise.resolve(ImmutableList.of([item1, item2])));
@@ -100,7 +100,7 @@ describe('datamodel.Manager', () => {
   });
 
   describe('update_', () => {
-    it(`should update the item and dispatch the 'add' event if new`, async () => {
+    should(`update the item and dispatch the 'add' event if new`, async () => {
       const id = 'id';
       const item = Mocks.object('item');
       const itemList = Mocks.object('itemList');
@@ -116,7 +116,7 @@ describe('datamodel.Manager', () => {
       assert(mockStorage.read).to.haveBeenCalledWith(id);
     });
 
-    it(`should update the item and dispatch the 'edit' event if not new`, async () => {
+    should(`update the item and dispatch the 'edit' event if not new`, async () => {
       const id = 'id';
       const item = Mocks.object('item');
       const itemList = Mocks.object('itemList');

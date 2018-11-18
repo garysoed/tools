@@ -1,4 +1,4 @@
-import { assert, Fakes, Matchers, Mocks, TestBase } from '../test-base';
+import { assert, Fakes, Matchers, Mocks, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { Gapi } from '../net';
@@ -13,9 +13,9 @@ describe('net.Gapi', () => {
   let gapi: Gapi;
 
   beforeEach(() => {
-    mockAuth2 = jasmine.createSpyObj('Auth2', ['getAuthInstance']);
-    mockClient = jasmine.createSpyObj('Client', ['init']);
-    mockGapi = jasmine.createSpyObj('Gapi', ['load']);
+    mockAuth2 = createSpyObject('Auth2', ['getAuthInstance']);
+    mockClient = createSpyObject('Client', ['init']);
+    mockGapi = createSpyObject('Gapi', ['load']);
     mockGapi.auth2 = mockAuth2;
     mockGapi.client = mockClient;
     window['gapi'] = mockGapi;
@@ -24,7 +24,7 @@ describe('net.Gapi', () => {
   });
 
   describe('addDiscoveryDocs', () => {
-    it(`should add the discovery docs`, () => {
+    should(`add the discovery docs`, () => {
       const doc1 = Mocks.object('doc1');
       const doc2 = Mocks.object('doc2');
 
@@ -32,7 +32,7 @@ describe('net.Gapi', () => {
       assert(gapi['discoveryDocs_']).to.haveElements([doc1, doc2]);
     });
 
-    it(`should throw error if initialized`, () => {
+    should(`throw error if initialized`, () => {
       gapi['initialized_'] = true;
 
       assert(() => {
@@ -42,7 +42,7 @@ describe('net.Gapi', () => {
   });
 
   describe('addScopes', () => {
-    it(`should add the scopes`, () => {
+    should(`add the scopes`, () => {
       const scope1 = Mocks.object('scope1');
       const scope2 = Mocks.object('scope2');
 
@@ -50,7 +50,7 @@ describe('net.Gapi', () => {
       assert(gapi['scopes_']).to.haveElements([scope1, scope2]);
     });
 
-    it(`should throw error if initialized`, () => {
+    should(`throw error if initialized`, () => {
       gapi['initialized_'] = true;
 
       assert(() => {
@@ -60,12 +60,12 @@ describe('net.Gapi', () => {
   });
 
   describe('addSignIn', () => {
-    it(`should set the sign in flag`, () => {
+    should(`set the sign in flag`, () => {
       gapi.addSignIn();
       assert(gapi['signIn_']).to.beTrue();
     });
 
-    it(`should throw error if initialized`, () => {
+    should(`throw error if initialized`, () => {
       gapi['initialized_'] = true;
 
       assert(() => {
@@ -75,7 +75,7 @@ describe('net.Gapi', () => {
   });
 
   describe('init', () => {
-    it(`should initialize correctly`, async () => {
+    should(`initialize correctly`, async () => {
       const doc1 = 'doc1';
       const doc2 = 'doc2';
       gapi.addDiscoveryDocs([doc1, doc2]);
@@ -101,7 +101,7 @@ describe('net.Gapi', () => {
       assert(mockGapi.load).to.haveBeenCalledWith('client:auth2', Matchers.anyFunction());
     });
 
-    it(`should initialize correctly if the sign in key was set`, async () => {
+    should(`initialize correctly if the sign in key was set`, async () => {
       const doc = 'doc';
       gapi.addDiscoveryDocs([doc]);
 
@@ -115,7 +115,7 @@ describe('net.Gapi', () => {
 
       mockClient.init.and.returnValue(Promise.resolve());
 
-      const mockAuthInstance = jasmine.createSpyObj('AuthInstance', [ 'signIn']);
+      const mockAuthInstance = createSpyObject('AuthInstance', [ 'signIn']);
       mockAuthInstance.isSignedIn = {get: () => false};
       mockAuthInstance.signIn.and.returnValue(Promise.resolve());
       mockAuth2.getAuthInstance.and.returnValue(mockAuthInstance);
@@ -132,7 +132,7 @@ describe('net.Gapi', () => {
       assert(mockGapi.load).to.haveBeenCalledWith('client:auth2', Matchers.anyFunction());
     });
 
-    it(`should not sign in if already signed in`, async () => {
+    should(`not sign in if already signed in`, async () => {
       const doc = 'doc';
       gapi.addDiscoveryDocs([doc]);
 
@@ -146,7 +146,7 @@ describe('net.Gapi', () => {
 
       mockClient.init.and.returnValue(Promise.resolve());
 
-      const mockAuthInstance = jasmine.createSpyObj('AuthInstance', ['signIn']);
+      const mockAuthInstance = createSpyObject('AuthInstance', ['signIn']);
       mockAuthInstance.isSignedIn = {get: () => true};
       mockAuthInstance.signIn.and.returnValue(Promise.resolve());
       mockAuth2.getAuthInstance.and.returnValue(mockAuthInstance);

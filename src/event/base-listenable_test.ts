@@ -1,4 +1,4 @@
-import { assert, TestBase } from '../test-base';
+import { assert, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { mockObject } from 'gs-testing/export/mock';
@@ -15,8 +15,8 @@ describe('event.BaseListenable', () => {
   });
 
   describe('dispose', () => {
-    it('should clear the callback map', () => {
-      const mockCallback = jasmine.createSpy('Callback');
+    should('clear the callback map', () => {
+      const mockCallback = createSpy('Callback');
       const event = 'event';
       TestDispose.add(listenable.on(event, mockCallback, window));
       listenable.dispose();
@@ -28,10 +28,10 @@ describe('event.BaseListenable', () => {
   });
 
   describe('dispatch', () => {
-    it('should call all the registered callbacks', () => {
+    should('call all the registered callbacks', () => {
       const event = 'event';
       let i = 0;
-      const mockBubbleHandler = jasmine.createSpy('BubbleHandler');
+      const mockBubbleHandler = createSpy('BubbleHandler');
       TestDispose.add(listenable.on(
           event,
           (eventPayload: any) => {
@@ -40,7 +40,7 @@ describe('event.BaseListenable', () => {
           window,
           false));
 
-      const mockCaptureHandler = jasmine.createSpy('CaptureHandler');
+      const mockCaptureHandler = createSpy('CaptureHandler');
       TestDispose.add(listenable.on(
           event,
           (eventPayload: any) => {
@@ -62,7 +62,7 @@ describe('event.BaseListenable', () => {
       assert(mockBubbleHandler).to.haveBeenCalledWith(1, payload);
     });
 
-    it('should handle case when no callbacks are registered', () => {
+    should('handle case when no callbacks are registered', () => {
       assert(() => {
         listenable.dispatch('event', () => undefined, 'payload');
       }).toNot.throw();
@@ -70,10 +70,10 @@ describe('event.BaseListenable', () => {
   });
 
   describe('dispatchAsync', () => {
-    it('should call all the registered callbacks', async () => {
+    should('call all the registered callbacks', async () => {
       const event = 'event';
       let i = 0;
-      const mockBubbleHandler = jasmine.createSpy('BubbleHandler');
+      const mockBubbleHandler = createSpy('BubbleHandler');
       TestDispose.add(listenable.on(
           event,
           (eventPayload: any) => {
@@ -82,7 +82,7 @@ describe('event.BaseListenable', () => {
           window,
           false));
 
-      const mockCaptureHandler = jasmine.createSpy('CaptureHandler');
+      const mockCaptureHandler = createSpy('CaptureHandler');
       TestDispose.add(listenable.on(
           event,
           (eventPayload: any) => {
@@ -108,7 +108,7 @@ describe('event.BaseListenable', () => {
       assert(mockBubbleHandler).to.haveBeenCalledWith(1, payload);
     });
 
-    it('should handle case when no callbacks are registered', () => {
+    should('handle case when no callbacks are registered', () => {
       assert(() => {
         listenable.dispatch('event', () => undefined, 'payload');
       }).toNot.throw();
@@ -116,8 +116,8 @@ describe('event.BaseListenable', () => {
   });
 
   describe('on', () => {
-    it('should return disposable function that stops listening to the event', () => {
-      const mockCallback = jasmine.createSpy('Callback');
+    should('return disposable function that stops listening to the event', () => {
+      const mockCallback = createSpy('Callback');
       const event = 'event';
 
       const disposableFunction = listenable.on(event, mockCallback, window);
@@ -130,8 +130,8 @@ describe('event.BaseListenable', () => {
   });
 
   describe('once', () => {
-    it('should listen to the event once', () => {
-      const mockCallback = jasmine.createSpy('Callback');
+    should('listen to the event once', () => {
+      const mockCallback = createSpy('Callback');
       const event = 'event';
 
       const disposableFunction = listenable.once(event, mockCallback, window);
@@ -146,8 +146,8 @@ describe('event.BaseListenable', () => {
       assert(disposableFunction.isDisposed() as boolean).to.beTrue();
     });
 
-    it('should return disposable function that stops listening to the event', () => {
-      const mockCallback = jasmine.createSpy('Callback');
+    should('return disposable function that stops listening to the event', () => {
+      const mockCallback = createSpy('Callback');
       const event = 'event';
 
       const disposableFunction = listenable.once(event, mockCallback, window);

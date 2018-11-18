@@ -1,15 +1,9 @@
 import { Type } from 'gs-types/export';
-import { ImmutableList } from '../immutable/immutable-list';
-import { ImmutableSet } from '../immutable/immutable-set';
-import { OrderedSet } from '../immutable/ordered-set';
-import { Orderings } from '../immutable/orderings';
-import {
-  Collection,
-  CompareResult,
-  FiniteCollection,
-  FiniteIndexed,
-  Ordered,
-  Ordering } from '../interfaces';
+import { Collection, CompareResult, FiniteCollection, FiniteIndexed, Ordered, Ordering } from '../interfaces';
+import { ImmutableList } from './immutable-list';
+import { ImmutableSet } from './immutable-set';
+import { OrderedSet } from './ordered-set';
+import { Orderings } from './orderings';
 
 export class OrderedMap<K, V> implements
     FiniteCollection<[K, V]>,
@@ -36,6 +30,7 @@ export class OrderedMap<K, V> implements
     keysClone.push(key);
     const mapClone = new Map(this.map_);
     mapClone.set(key, value);
+
     return new OrderedMap(keysClone, mapClone);
   }
 
@@ -47,6 +42,7 @@ export class OrderedMap<K, V> implements
       keysClone.push(key);
       mapClone.set(key, value);
     }
+
     return new OrderedMap(keysClone, mapClone);
   }
 
@@ -69,6 +65,7 @@ export class OrderedMap<K, V> implements
       }
       mapClone.delete(key);
     }
+
     return new OrderedMap(keysClone, mapClone);
   }
 
@@ -83,6 +80,7 @@ export class OrderedMap<K, V> implements
       }
       mapClone.delete(key);
     }
+
     return new OrderedMap(keysClone, mapClone);
   }
 
@@ -107,18 +105,25 @@ export class OrderedMap<K, V> implements
           if (value === undefined) {
             throw new Error(`Data inconsistency detected: ${key} has undefined value`);
           }
+
           return [key, value] as [K, V];
         });
   }
 
   equals(other: Ordered<[K, V]>): boolean {
-    if (this.size() !== other.size()) {
-      return false;
-    }
+    for (let i = 0; i < Math.max(this.size(), other.size()); i++) {
+      const thisEntry = this.getAt(i);
+      if (!thisEntry) {
+        return false;
+      }
 
-    for (let i = 0; i < this.size(); i++) {
-      const [thisKey, thisValue] = this.getAt(i)!;
-      const [otherKey, otherValue] = other.getAt(i)!;
+      const otherEntry = other.getAt(i);
+      if (!otherEntry) {
+        return false;
+      }
+
+      const [thisKey, thisValue] = thisEntry;
+      const [otherKey, otherValue] = otherEntry;
       if (thisKey !== otherKey || thisValue !== otherValue) {
         return false;
       }
@@ -139,6 +144,7 @@ export class OrderedMap<K, V> implements
         return false;
       }
     }
+
     return true;
   }
 
@@ -153,6 +159,7 @@ export class OrderedMap<K, V> implements
         newItems.push(item);
       }
     }
+
     return OrderedSet.of(newItems);
   }
 
@@ -160,6 +167,7 @@ export class OrderedMap<K, V> implements
     const filteredEntries = this.entries().filterItem(checker);
     const keysClone = filteredEntries.mapItem(([key, _]: [K, V]) => key);
     const mapClone = new Map([...filteredEntries]);
+
     return new OrderedMap([...keysClone], mapClone);
   }
 
@@ -175,16 +183,19 @@ export class OrderedMap<K, V> implements
         return [index, value];
       }
     }
+
     return null;
   }
 
   findKey(checker: (value: V, index: K) => boolean): K | null {
     const entry = this.findEntry(checker);
+
     return entry === null ? null : entry[0];
   }
 
   findValue(checker: (value: V, index: K) => boolean): V | null {
     const entry = this.findEntry(checker);
+
     return entry === null ? null : entry[1];
   }
 
@@ -222,6 +233,7 @@ export class OrderedMap<K, V> implements
     for (const [key, value] of items) {
       mapClone.set(key, value);
     }
+
     return new OrderedMap([...keysClone], mapClone);
   }
 
@@ -242,6 +254,7 @@ export class OrderedMap<K, V> implements
     for (const [key, value] of this.map_) {
       mapClone.set(key, fn(value, key));
     }
+
     return new OrderedMap(keysClone, mapClone);
   }
 
@@ -269,11 +282,20 @@ export class OrderedMap<K, V> implements
     return this.max(Orderings.reverse(ordering));
   }
 
+  pop(): OrderedMap<K, V> {
+    return this.deleteAt(this.map_.size - 1);
+  }
+
+  push(entry: [K, V]): OrderedMap<K, V> {
+    return this.insertAt(this.map_.size, entry);
+  }
+
   reduce<R>(fn: (prevValue: R, value: V, key: K) => R, init: R): R {
     let result = init;
     for (const [key, value] of this) {
       result = fn(result, value, key);
     }
+
     return result;
   }
 
@@ -291,6 +313,7 @@ export class OrderedMap<K, V> implements
     const keysClone = this.keys_.slice(0);
     const mapClone = new Map(this.map_);
     mapClone.set(key, value);
+
     return new OrderedMap(keysClone, mapClone);
   }
 
@@ -314,6 +337,7 @@ export class OrderedMap<K, V> implements
         return true;
       }
     }
+
     return false;
   }
 
@@ -327,8 +351,10 @@ export class OrderedMap<K, V> implements
       if (value2 === undefined) {
         throw new Error(`Data inconsistency detected: ${key2} has undefined value`);
       }
+
       return compareFn([key1, value1], [key2, value2]);
     });
+
     return new OrderedMap(keysClone, new Map(this.map_));
   }
 

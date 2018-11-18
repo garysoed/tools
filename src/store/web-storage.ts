@@ -89,7 +89,7 @@ export class WebStorage<T> implements EditableStorage<T> {
         if (stringValue === null) {
           resolve(null);
         } else {
-          resolve(this.parser_.parse(stringValue));
+          resolve(this.parser_.convertBackward(stringValue));
         }
       } catch (e) {
         reject(e);
@@ -104,7 +104,7 @@ export class WebStorage<T> implements EditableStorage<T> {
 
     return new Promise<void>((resolve: () => void, reject: (cause: Error) => void) => {
       try {
-        this.storage_.setItem(path, this.parser_.stringify(instance));
+        this.storage_.setItem(path, this.parser_.convertForward(instance) || '');
         resolve();
       } catch (e) {
         reject(e);

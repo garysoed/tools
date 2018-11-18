@@ -1,19 +1,21 @@
-import { Parser } from '../interfaces/parser';
+import { Parser } from './parser';
 
-export const JsonParser: Parser<gs.IJson> = {
-  parse(input: string | null): gs.IJson | null {
-    if (input === null || input === '') {
-      return null;
-    }
+export function JsonParser<T extends {}>(): Parser<T> {
+  return {
+    convertBackward(input: string|null): T|null {
+      if (input === null || input === '') {
+        return null;
+      }
 
-    return JSON.parse(input);
-  },
+      return JSON.parse(input);
+    },
 
-  stringify(value: gs.IJson | null): string {
-    if (value === null) {
-      return '';
-    }
+    convertForward(value: T|null): string {
+      if (value === null) {
+        return '';
+      }
 
-    return JSON.stringify(value);
-  },
-};
+      return JSON.stringify(value);
+    },
+  };
+}

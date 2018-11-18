@@ -1,17 +1,17 @@
-import { Parser } from '../interfaces/parser';
 import { Size, UNITS } from '../interfaces/size';
 import { FloatParser } from '../parse/float-parser';
+import { Parser } from './parser';
 
 export const SizeParser: Parser<Size> = {
-  parse(input: string | null): Size | null {
+  convertBackward(input: string | null): Size | null {
     if (!input) {
       return null;
     }
 
-    const unit = UNITS.find((unit) => input.endsWith(unit));
+    const unit = UNITS.find(unit => input.endsWith(unit));
     const unitLength = unit ? unit.length : 0;
     const size = input.substr(0, input.length - unitLength);
-    const parsedSize = FloatParser.parse(size);
+    const parsedSize = FloatParser.convertBackward(size);
     if (parsedSize === null) {
       return null;
     }
@@ -22,10 +22,11 @@ export const SizeParser: Parser<Size> = {
     };
   },
 
-  stringify(value: Size | null): string {
+  convertForward(value: Size | null): string {
     if (!value) {
       return '';
     }
-    return `${FloatParser.stringify(value.value)}${value.unit}`;
+
+    return `${FloatParser.convertForward(value.value)}${value.unit}`;
   },
 };

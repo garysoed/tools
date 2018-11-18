@@ -1,4 +1,4 @@
-import { assert, TestBase } from '../test-base';
+import { assert, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { mockObject } from 'gs-testing/export/mock';
@@ -15,13 +15,13 @@ describe('event.BaseListenableListener', () => {
   });
 
   describe('ctor', () => {
-    it('should initialize correctly', () => {
+    should('initialize correctly', () => {
       assert(listener['eventHandler_']['context_']).to.equal(listener);
     });
   });
 
   describe('listenTo', () => {
-    it('should call the event handler correctly', () => {
+    should('call the event handler correctly', () => {
       const listenable = mockObject('listenable');
       const eventType = 'eventType';
       const callback = mockObject('callback');
@@ -37,7 +37,7 @@ describe('event.BaseListenableListener', () => {
   });
 
   describe('unlistenFrom', () => {
-    it('should call the event handler correctly', () => {
+    should('call the event handler correctly', () => {
       const listenable = mockObject('listenable');
       const eventType = 'eventType';
       const callback = mockObject('callback');

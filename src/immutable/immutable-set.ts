@@ -1,11 +1,12 @@
 import { AnyType, InstanceofType, IterableOfType, Type } from 'gs-types/export';
-import { Iterables } from '../immutable/iterables';
-import { OrderedSet } from '../immutable/ordered-set';
-import { Orderings } from '../immutable/orderings';
 import { FiniteCollection } from '../interfaces/finite-collection';
 import { Ordering } from '../interfaces/ordering';
 import { assertUnreachable } from '../typescript/assert-unreachable';
+import { Iterables } from './iterables';
+import { OrderedSet } from './ordered-set';
+import { Orderings } from './orderings';
 
+// TODO: Add moirai to all these classes.
 export class ImmutableSet<T> implements FiniteCollection<T> {
   private readonly data_: Set<T>;
 
@@ -51,6 +52,7 @@ export class ImmutableSet<T> implements FiniteCollection<T> {
         return false;
       }
     }
+
     return true;
   }
 
@@ -61,11 +63,13 @@ export class ImmutableSet<T> implements FiniteCollection<T> {
         newItems.push(item);
       }
     }
+
     return ImmutableSet.of(newItems);
   }
 
   filterItem(checker: (item: T) => boolean): ImmutableSet<T> {
     const iterable = this;
+
     return new ImmutableSet(new Set(Iterables.of(function*(): IterableIterator<T> {
       for (const item of iterable) {
         if (checker(item)) {
@@ -81,6 +85,7 @@ export class ImmutableSet<T> implements FiniteCollection<T> {
         return item;
       }
     }
+
     return null;
   }
 
@@ -90,6 +95,7 @@ export class ImmutableSet<T> implements FiniteCollection<T> {
 
   mapItem<R>(fn: (item: T) => R): ImmutableSet<R> {
     const iterable = this;
+
     return new ImmutableSet(new Set(Iterables.of(function*(): IterableIterator<R> {
       for (const item of iterable) {
         yield fn(item);
@@ -122,6 +128,7 @@ export class ImmutableSet<T> implements FiniteCollection<T> {
     for (const item of this.data_) {
       result = fn(result, item);
     }
+
     return result;
   }
 
@@ -140,6 +147,7 @@ export class ImmutableSet<T> implements FiniteCollection<T> {
 
   sort(compareFn: Ordering<T>): OrderedSet<T> {
     const arrayData = Array.from(this.data_);
+
     return OrderedSet.of(arrayData.sort(compareFn));
   }
 

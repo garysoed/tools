@@ -1,8 +1,8 @@
-import { TestBase } from '../test-base';
+import { TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { assert, Match } from 'gs-testing/export/main';
-import { Mocks } from 'gs-testing/export/mock';
+import { mocks } from 'gs-testing/export/mock';
 import { ImmutableList, ImmutableSet } from '../immutable';
 import { GapiStorage } from './gapi-storage';
 
@@ -29,12 +29,12 @@ describe('store.GapiStorage', () => {
   let storage: TestGapiStorage;
 
   beforeEach(() => {
-    mockLibrary = jasmine.createSpyObj('Library', ['get', 'queueRequest']);
+    mockLibrary = createSpyObject('Library', ['get', 'queueRequest']);
     storage = new TestGapiStorage(mockLibrary);
   });
 
   describe('has', () => {
-    it(`should resolve correctly`, async () => {
+    should(`resolve correctly`, async () => {
       const id = 'id';
       const result = true;
 
@@ -44,14 +44,14 @@ describe('store.GapiStorage', () => {
       assert(await storage.has(id)).to.be(result);
       assert(storage['hasImpl_']).to.haveBeenCalledWith(Match.any(Function), id);
 
-      const fn = Mocks.object('fn');
+      const fn = mocks.object('fn');
       hasImplSpy.calls.argsFor(0)[0](fn);
       assert(storage['queueRequest_']).to.haveBeenCalledWith(fn);
     });
   });
 
   describe('list', () => {
-    it(`should resolve correctly`, async () => {
+    should(`resolve correctly`, async () => {
       const result = ImmutableList.of([{}]);
 
       const listImplSpy = spyOn(storage, 'listImpl_').and.returnValue(Promise.resolve(result));
@@ -60,14 +60,14 @@ describe('store.GapiStorage', () => {
       assert(await storage.list()).to.equal(result);
       assert(storage['listImpl_']).to.haveBeenCalledWith(Match.any(Function));
 
-      const fn = Mocks.object('fn');
+      const fn = mocks.object('fn');
       listImplSpy.calls.argsFor(0)[0](fn);
       assert(storage['queueRequest_']).to.haveBeenCalledWith(fn);
     });
   });
 
   describe('listIds', () => {
-    it(`should resolve correctly`, async () => {
+    should(`resolve correctly`, async () => {
       const result = ImmutableList.of(['id']);
 
       const listIdsImplSpy = spyOn(storage, 'listIdsImpl_').and
@@ -77,18 +77,18 @@ describe('store.GapiStorage', () => {
       assert(await storage.listIds()).to.equal(result);
       assert(storage['listIdsImpl_']).to.haveBeenCalledWith(Match.any(Function));
 
-      const fn = Mocks.object('fn');
+      const fn = mocks.object('fn');
       listIdsImplSpy.calls.argsFor(0)[0](fn);
       assert(storage['queueRequest_']).to.haveBeenCalledWith(fn);
     });
   });
 
   describe('queueRequest_', () => {
-    it(`should queue the request correctly`, async () => {
-      const result = Mocks.object('result');
+    should(`queue the request correctly`, async () => {
+      const result = mocks.object('result');
       mockLibrary.queueRequest.and.returnValue(Promise.resolve(result));
-      const mockFn = jasmine.createSpy('Fn');
-      const lib = Mocks.object('lib');
+      const mockFn = createSpy('Fn');
+      const lib = mocks.object('lib');
       mockLibrary.get.and.returnValue(Promise.resolve(lib));
 
       assert(await storage['queueRequest_'](mockFn)).to.equal(result);
@@ -97,8 +97,8 @@ describe('store.GapiStorage', () => {
   });
 
   describe('read', () => {
-    it(`should resolve correctly`, async () => {
-      const result = Mocks.object('result');
+    should(`resolve correctly`, async () => {
+      const result = mocks.object('result');
       const id = 'id';
 
       const readImplSpy = spyOn(storage, 'readImpl_').and.returnValue(Promise.resolve(result));
@@ -107,7 +107,7 @@ describe('store.GapiStorage', () => {
       assert(await storage.read(id)).to.equal(result);
       assert(storage['readImpl_']).to.haveBeenCalledWith(Match.any(Function), id);
 
-      const fn = Mocks.object('fn');
+      const fn = mocks.object('fn');
       readImplSpy.calls.argsFor(0)[0](fn);
       assert(storage['queueRequest_']).to.haveBeenCalledWith(fn);
     });

@@ -1,11 +1,9 @@
-import { TestBase } from '../test-base';
-TestBase.setup();
-
-import { assert, Match } from 'gs-testing/export/main';
-import { Fakes, Mocks } from 'gs-testing/export/mock';
+import { assert, should } from 'gs-testing/export/main';
+import { mocks } from 'gs-testing/export/mock';
 import { ImmutableSet } from '../immutable/immutable-set';
-import { IntegerParser } from '../parse';
+import { IntegerParser } from '../parse/integer-parser';
 import { WebStorage } from '../store/web-storage';
+import { fake, spy } from 'gs-testing/export/spy';
 
 
 describe('store.WebStorage', () => {
@@ -18,7 +16,7 @@ describe('store.WebStorage', () => {
   });
 
   describe('delete', () => {
-    it('should remove the correct object', async () => {
+    should('remove the correct object', async () => {
       const id = 'id';
       const path = `${PREFIX}/${id}`;
       localStorage.setItem(PREFIX, JSON.stringify([id]));
@@ -27,23 +25,23 @@ describe('store.WebStorage', () => {
       await storage.delete(id);
 
       assert(localStorage.getItem(path)).to.beNull();
-      assert(localStorage.getItem(PREFIX)).to.be(JSON.stringify([]));
+      assert(localStorage.getItem(PREFIX)).to.equal(JSON.stringify([]));
     });
 
-    it('should reject if the ID does not exist', async () => {
-      await assert(storage.delete('id')).to.rejectWithError(/does not exist/);
+    should('reject if the ID does not exist', async () => {
+      await assert(storage.delete('id')).to.rejectWithErrorMessage(/does not exist/);
     });
   });
 
   describe('getIndexes_', () => {
-    it('should initialize the indexes first', () => {
+    should('initialize the indexes first', () => {
       const indexes = storage['getIndexes_']();
 
       assert(indexes).to.haveElements([]);
       assert(localStorage.getItem(PREFIX)).to.equal(JSON.stringify([]));
     });
 
-    it('should not reinitialize the indexes if exists', () => {
+    should('not reinitialize the indexes if exists', () => {
       const index = 'index';
       const indexes = [index];
       localStorage.setItem(PREFIX, JSON.stringify(indexes));
@@ -56,21 +54,21 @@ describe('store.WebStorage', () => {
   });
 
   describe('getPath_', () => {
-    it('should return the correct path', () => {
+    should('return the correct path', () => {
       const key = 'key';
       assert(storage['getPath_'](key)).to.equal(`${PREFIX}/${key}`);
     });
   });
 
   describe('has', () => {
-    it('should resolve with true if the object is in the storage', async () => {
+    should('resolve with true if the object is in the storage', async () => {
       const id = 'id';
       localStorage.setItem(PREFIX, JSON.stringify([id]));
 
       assert(await storage.has(id)).to.beTrue();
     });
 
-    it('should resolve with false if the object is in the storage', async () => {
+    should('resolve with false if the object is in the storage', async () => {
       const id = 'id';
 
       assert(await storage.has(id)).to.beFalse();
@@ -78,14 +76,15 @@ describe('store.WebStorage', () => {
   });
 
   describe('list', () => {
-    it('should return the correct indexes', async () => {
+    should('return the correct indexes', async () => {
       const id1 = 'id1';
       const id2 = 'id2';
-      const item1 = Mocks.object('item1');
-      const item2 = Mocks.object('item2');
-      spyOn(storage, 'listIds').and.returnValue(Promise.resolve(ImmutableSet.of([id1, id2])));
-      Fakes.build(spyOn(storage, 'read'))
-          .when(id1).resolve(item1)
+      const item1 = mocks.object('item1');
+      const item2 = mocks.object('item2');
+      const listIdsSpy = spy(storage, 'listIds');
+      fake(listIdsSpy).always().return(Promise.resolve(ImmutableSet.of([id1, id2])));
+      fake(spy(storage, 'read'))
+          .when(id1).return(Promise.resolve(item1))
           .when(id2).resolve(item2);
 
       const values = await storage.list();
@@ -94,7 +93,7 @@ describe('store.WebStorage', () => {
       assert(storage.read).to.haveBeenCalledWith(id2);
     });
 
-    it('should filter out null items', async () => {
+    should('filter out null items', async () => {
       const id = 'id';
       spyOn(storage, 'listIds').and.returnValue(Promise.resolve(ImmutableSet.of([id])));
       spyOn(storage, 'read').and.returnValue(Promise.resolve(null));
@@ -104,7 +103,7 @@ describe('store.WebStorage', () => {
   });
 
   describe('listIds', () => {
-    it('should return the indexes', async () => {
+    should('return the indexes', async () => {
       const id1 = 'id1';
       const id2 = 'id2';
       const id3 = 'id3';
@@ -115,24 +114,24 @@ describe('store.WebStorage', () => {
   });
 
   describe('read', () => {
-    it('should resolve with the object', async () => {
+    should('resolve with the object', async () => {
       const id = 'id';
       const path = `${PREFIX}/${id}`;
       const stringValue = 'stringValue';
-      const object = Mocks.object('object');
+      const object = mocks.object('object');
 
       localStorage.setItem(path, '123');
 
       assert(await storage.read(id)).to.equal(123);
     });
 
-    it('should resolve with null if the object does not exist', async () => {
+    should('resolve with null if the object does not exist', async () => {
       assert(await storage.read('id')).to.beNull();
     });
   });
 
   describe('update', () => {
-    it('should store the correct object in the storage', async () => {
+    should('store the correct object in the storage', async () => {
       const id = 'id';
       const path = `${PREFIX}/${id}`;
       const stringValue = 'stringValue';
@@ -148,7 +147,7 @@ describe('store.WebStorage', () => {
   });
 
   describe('updateIndexes_', () => {
-    it('should update the storage correctly', () => {
+    should('update the storage correctly', () => {
       const indexes = ['index'];
       storage['updateIndexes_'](ImmutableSet.of(indexes));
       assert(localStorage.getItem(PREFIX)).to.be(JSON.stringify(indexes));

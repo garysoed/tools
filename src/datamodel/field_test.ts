@@ -1,10 +1,10 @@
-import { assert, Mocks, TestBase } from '../test-base';
+import { assert, Mocks, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { ANNOTATIONS, field } from '../datamodel/field';
 
 describe('datamodel.field', () => {
-  it(`should add the correct configuration`, () => {
+  should(`add the correct configuration`, () => {
     const fieldName = 'fieldName';
     const serializedFieldName = 'serializedFieldName';
     const eqFn = Mocks.object('eqFn');
@@ -14,7 +14,7 @@ describe('datamodel.field', () => {
     target.constructor = ctor;
 
     const propertyKey = 'propertyKey';
-    const mockAnnotations = jasmine.createSpyObj('Annotations', ['attachValueToProperty']);
+    const mockAnnotations = createSpyObject('Annotations', ['attachValueToProperty']);
     spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotations);
 
     field(fieldName, parser, serializedFieldName, eqFn)(target, propertyKey);

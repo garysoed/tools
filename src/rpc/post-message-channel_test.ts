@@ -1,4 +1,4 @@
-import { assert, Matchers, TestBase } from '../test-base';
+import { assert, Matchers, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { Serializer } from '../data/a-serializable';
@@ -15,14 +15,14 @@ describe('rpc.PostMessageChannel', () => {
   let channel: PostMessageChannel;
 
   beforeEach(() => {
-    mockDestWindow = jasmine.createSpyObj('DestWindow', ['postMessage']);
-    mockSrcWindow = jasmine.createSpyObj('SrcWindow', ['addEventListener', 'removeEventListener']);
+    mockDestWindow = createSpyObject('DestWindow', ['postMessage']);
+    mockSrcWindow = createSpyObject('SrcWindow', ['addEventListener', 'removeEventListener']);
     channel = new PostMessageChannel(mockSrcWindow, mockDestWindow);
     TestDispose.add(channel);
   });
 
   describe('post_', () => {
-    it('should post the message asynchronously', () => {
+    should('post the message asynchronously', () => {
       const origin = 'origin';
       const message = new Message(MessageType.PING, { 'id': 123 });
       const json = Mocks.object('json');
@@ -39,9 +39,9 @@ describe('rpc.PostMessageChannel', () => {
   });
 
   describe('waitForMessage_', () => {
-    it('should keep waiting for the test function to return true before resolving', async () => {
+    should('keep waiting for the test function to return true before resolving', async () => {
       const origin = 'origin';
-      const testFn = Fakes.build(jasmine.createSpy('testFn'))
+      const testFn = Fakes.build(createSpy('testFn'))
           .call((data: gs.IJson) => data['value']);
       const message1 = { 'value': false };
       const message2 = { 'value': true };
@@ -54,7 +54,7 @@ describe('rpc.PostMessageChannel', () => {
           .when(json2).return(message2)
           .else().return(null);
 
-      const mockDisposableFunction = jasmine.createSpyObj('DisposableFunction', ['dispose']);
+      const mockDisposableFunction = createSpyObject('DisposableFunction', ['dispose']);
       const listenToSpy = spyOn(channel, 'listenTo').and.returnValue(mockDisposableFunction);
 
       const promise = channel['waitForMessage_'](testFn);
@@ -74,9 +74,9 @@ describe('rpc.PostMessageChannel', () => {
       assert(mockDisposableFunction.dispose).to.haveBeenCalledWith();
     });
 
-    it('should ignore messages with non matching origin', async () => {
+    should('ignore messages with non matching origin', async () => {
       const origin = 'origin';
-      const testFn = Fakes.build(jasmine.createSpy('testFn'))
+      const testFn = Fakes.build(createSpy('testFn'))
           .call((data: gs.IJson) => data['value']);
       const message1 = { 'value': false };
       const message2 = { 'value': true };
@@ -89,7 +89,7 @@ describe('rpc.PostMessageChannel', () => {
           .when(json2).return(message2)
           .else().return(null);
 
-      const mockDisposableFunction = jasmine.createSpyObj('DisposableFunction', ['dispose']);
+      const mockDisposableFunction = createSpyObject('DisposableFunction', ['dispose']);
       const listenToSpy = spyOn(channel, 'listenTo').and.returnValue(mockDisposableFunction);
 
       const promise = channel['waitForMessage_'](testFn);
@@ -106,7 +106,7 @@ describe('rpc.PostMessageChannel', () => {
   });
 
   describe('post', () => {
-    it('should call post_ correctly', () => {
+    should('call post_ correctly', () => {
       const message = Mocks.object('message');
 
       const postSpy = spyOn(channel, 'post_');
@@ -122,8 +122,8 @@ describe('rpc.PostMessageChannel', () => {
   });
 
   describe('waitForMessage', () => {
-    it('should return the payload returned by waitForMessage_', async () => {
-      const testFn = jasmine.createSpy('testFn');
+    should('return the payload returned by waitForMessage_', async () => {
+      const testFn = createSpy('testFn');
       const returnedJson = Mocks.object('returnedJson');
       const message = new Message(MessageType.DATA, returnedJson);
 
@@ -133,8 +133,8 @@ describe('rpc.PostMessageChannel', () => {
       assert(json).to.equal(returnedJson);
     });
 
-    it('should call the testFn for testing', async () => {
-      const testFn = jasmine.createSpy('testFn').and.returnValue(true);
+    should('call the testFn for testing', async () => {
+      const testFn = createSpy('testFn').and.returnValue(true);
       const testPayload = Mocks.object('payload');
       const testMessage = new Message(MessageType.DATA, testPayload);
 
@@ -146,8 +146,8 @@ describe('rpc.PostMessageChannel', () => {
       assert(testFn).to.haveBeenCalledWith(testPayload);
     });
 
-    it('should ignore message with message type other than DATA', async () => {
-      const testFn = jasmine.createSpy('testFn').and.returnValue(true);
+    should('ignore message with message type other than DATA', async () => {
+      const testFn = createSpy('testFn').and.returnValue(true);
       const testPayload = Mocks.object('payload');
       const testMessage = new Message(MessageType.PING, testPayload);
 
@@ -161,7 +161,7 @@ describe('rpc.PostMessageChannel', () => {
   });
 
   describe('getOrigin', () => {
-    it('should return the correct URL', () => {
+    should('return the correct URL', () => {
       const protocol = 'protocol';
       const host = 'host';
 
@@ -173,10 +173,10 @@ describe('rpc.PostMessageChannel', () => {
   });
 
   describe('open', () => {
-    it('should return the channel object when established', async () => {
+    should('return the channel object when established', async () => {
       const id = 123;
       const intervalId = 456;
-      const mockChannel = jasmine.createSpyObj('Channel', ['post_', 'waitForMessage_']);
+      const mockChannel = createSpyObject('Channel', ['post_', 'waitForMessage_']);
       mockChannel['waitForMessage_'].and.returnValue(Promise.resolve());
 
       spyOn(PostMessageChannel, 'of_').and.returnValue(mockChannel);
@@ -208,9 +208,9 @@ describe('rpc.PostMessageChannel', () => {
       assert(window.clearInterval).to.haveBeenCalledWith(intervalId);
     });
 
-    it('should ignore message if the ID does not match', async () => {
+    should('ignore message if the ID does not match', async () => {
       const id = 123;
-      const mockChannel = jasmine.createSpyObj('Channel', ['post', 'waitForMessage_']);
+      const mockChannel = createSpyObject('Channel', ['post', 'waitForMessage_']);
       mockChannel['waitForMessage_'].and.returnValue(Promise.resolve());
 
       spyOn(PostMessageChannel, 'of_').and.returnValue(mockChannel);
@@ -223,9 +223,9 @@ describe('rpc.PostMessageChannel', () => {
           .to.beFalse();
     });
 
-    it('should ignore message if the message type is not ACK', async () => {
+    should('ignore message if the message type is not ACK', async () => {
       const id = 123;
-      const mockChannel = jasmine.createSpyObj('Channel', ['post', 'waitForMessage_']);
+      const mockChannel = createSpyObject('Channel', ['post', 'waitForMessage_']);
       mockChannel['waitForMessage_'].and.returnValue(Promise.resolve());
 
       spyOn(PostMessageChannel, 'of_').and.returnValue(mockChannel);
@@ -239,11 +239,11 @@ describe('rpc.PostMessageChannel', () => {
   });
 
   describe('listen', () => {
-    it('should return the channel object when established and respond correctly', async () => {
+    should('return the channel object when established and respond correctly', async () => {
       const id = 123;
       const timeoutId = 6780;
       const expectedOrigin = 'expectedOrigin';
-      const mockChannel = jasmine.createSpyObj('Channel', ['post_']);
+      const mockChannel = createSpyObject('Channel', ['post_']);
 
       spyOn(PostMessageChannel, 'of_').and.returnValue(mockChannel);
       spyOn(window, 'clearTimeout');
@@ -276,9 +276,9 @@ describe('rpc.PostMessageChannel', () => {
       assert(window.clearTimeout).to.haveBeenCalledWith(timeoutId);
     });
 
-    it('should ignore message if the origin does not match', async () => {
+    should('ignore message if the origin does not match', async () => {
       const expectedOrigin = 'expectedOrigin';
-      const mockChannel = jasmine.createSpyObj('Channel', ['post']);
+      const mockChannel = createSpyObject('Channel', ['post']);
 
       spyOn(PostMessageChannel, 'of_').and.returnValue(mockChannel);
 
@@ -296,9 +296,9 @@ describe('rpc.PostMessageChannel', () => {
       await assert(promise).to.reject();
     });
 
-    it('should ignore message if the type is not PING', async () => {
+    should('ignore message if the type is not PING', async () => {
       const expectedOrigin = 'expectedOrigin';
-      const mockChannel = jasmine.createSpyObj('Channel', ['post']);
+      const mockChannel = createSpyObject('Channel', ['post']);
 
       spyOn(PostMessageChannel, 'of_').and.returnValue(mockChannel);
 

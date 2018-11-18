@@ -1,15 +1,15 @@
 import { Annotations } from '../data/annotations';
-import { Parser } from '../interfaces/parser';
+import { Parser } from '../parse/parser';
 import { Cases } from '../string/cases';
 
 type EqualFn<T> = (item1: T, item2: T) => boolean;
-export type Config = {
-  eqFn: EqualFn<any>,
-  fieldName: string,
-  parser: Parser<any>,
-  serializedFieldName: string,
-};
-export const ANNOTATIONS: Annotations<Config> = Annotations.of<Config>(Symbol('field'));
+export interface Config {
+  eqFn: EqualFn<any>;
+  fieldName: string;
+  parser: Parser<any>;
+  serializedFieldName: string;
+}
+export const annotationKey: Annotations<Config> = Annotations.of<Config>(Symbol('field'));
 
 export function field<T>(
     fieldName: string,
@@ -18,7 +18,7 @@ export function field<T>(
     eqFn: EqualFn<T> = (item1: T, item2: T) => item1 === item2):
     PropertyDecorator {
   return (target: Object, propertyKey: string | symbol) => {
-    ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(
+    annotationKey.forCtor(target.constructor).attachValueToProperty(
         propertyKey,
         {
           eqFn,

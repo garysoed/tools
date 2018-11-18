@@ -1,5 +1,5 @@
-import { Finite } from '../interfaces/finite';
-import { FiniteCollection } from '../interfaces/finite-collection';
+import { Finite } from './finite';
+import { FiniteCollection } from './finite-collection';
 
 export interface Ordered<T> extends Finite {
   deleteAt(index: number): Ordered<T>;
@@ -11,6 +11,10 @@ export interface Ordered<T> extends Finite {
   insertAllAt(index: number, items: FiniteCollection<T>): Ordered<T>;
 
   insertAt(index: number, item: T): Ordered<T>;
+
+  pop(): Ordered<T>;
+
+  push(item: T): Ordered<T>;
 
   reverse(): Ordered<T>;
 

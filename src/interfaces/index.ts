@@ -1,7 +1,6 @@
 export { Collection } from './collection';
 export { CompareResult } from './compare-result';
 export { DispatchFn } from './dispatch-fn';
-export { Disposable } from './disposable';
 export { DomBinder } from './dom-binder';
 export { FiniteCollection } from './finite-collection';
 export { FiniteIndexed } from './finite-indexed';

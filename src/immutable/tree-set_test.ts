@@ -1,4 +1,4 @@
-import { assert, TestBase } from '../test-base';
+import { assert, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { TreeSet } from '../immutable';
@@ -26,7 +26,7 @@ describe('immutable.TreeSet', () => {
   });
 
   describe('add', () => {
-    it(`should add the node correctly`, () => {
+    should(`add the node correctly`, () => {
       assert(treeToJson(root.add(TreeSet.of(6)))).to.equal({
         children: [
           {children: [], value: 1},
@@ -45,7 +45,7 @@ describe('immutable.TreeSet', () => {
   });
 
   describe('delete', () => {
-    it(`should delete the node correctly`, () => {
+    should(`delete the node correctly`, () => {
       assert(treeToJson(root.delete(5))).to.equal({
         children: [
           {children: [], value: 1},
@@ -56,26 +56,26 @@ describe('immutable.TreeSet', () => {
   });
 
   describe('getChildNode', () => {
-    it(`should return the correct child node`, () => {
+    should(`return the correct child node`, () => {
       assert(treeToJson(root.getChildNode(1)!)).to.equal({
         children: [],
         value: 1,
       });
     });
 
-    it(`should return null if the key doesn't exist`, () => {
+    should(`return null if the key doesn't exist`, () => {
       assert(root.getChildNode(3)).to.beNull();
     });
   });
 
   describe('getChildren', () => {
-    it(`should return the correct children values`, () => {
+    should(`return the correct children values`, () => {
       assert(root.getChildren()).to.haveElements([1, 5]);
     });
   });
 
   describe('map', () => {
-    it(`should map the tree correctly`, () => {
+    should(`map the tree correctly`, () => {
       const newTree = root.map((node, parent) => {
         const parentValue = parent ? parent.getValue() : 0;
         return node.getValue() + parentValue;
@@ -98,7 +98,7 @@ describe('immutable.TreeSet', () => {
   });
 
   describe('setValue', () => {
-    it(`should update the value correctly`, () => {
+    should(`update the value correctly`, () => {
       assert(treeToJson(root.setValue(6))).to.equal({
         children: [
           {children: [], value: 1},

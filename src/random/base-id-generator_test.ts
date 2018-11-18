@@ -1,4 +1,4 @@
-import { assert, TestBase } from '../test-base';
+import { assert, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { BaseIdGenerator } from '../random/base-id-generator';
@@ -24,7 +24,7 @@ describe('random.BaseIdGenerator', () => {
   });
 
   describe('generate', () => {
-    it('should keep resolving ID conflict until it is different', () => {
+    should('keep resolving ID conflict until it is different', () => {
       assert(generator.generate(['1', '2', '3'])).to.be('4');
     });
   });

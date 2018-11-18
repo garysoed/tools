@@ -1,4 +1,4 @@
-import { assert, Matchers, TestBase } from '../test-base';
+import { assert, Matchers, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { Mocks } from '../mock/mocks';
@@ -12,14 +12,14 @@ describe('rpc.ApiClient', () => {
   let client: ApiClient<any, any>;
 
   beforeEach(() => {
-    mockChannel = jasmine.createSpyObj('Channel', ['post', 'waitForMessage']);
-    mockResponseCheck = jasmine.createSpy('ResponseCheck');
-    mockResponseType = jasmine.createSpyObj('ResponseType', ['check']);
+    mockChannel = createSpyObject('Channel', ['post', 'waitForMessage']);
+    mockResponseCheck = createSpy('ResponseCheck');
+    mockResponseType = createSpyObject('ResponseType', ['check']);
     client = new ApiClient(mockChannel, mockResponseCheck, mockResponseType);
   });
 
   describe('onMessage_', () => {
-    it('should return true if the message the correct type and response', () => {
+    should('return true if the message the correct type and response', () => {
       const request = Mocks.object('request');
       const message = Mocks.object('message');
 
@@ -31,7 +31,7 @@ describe('rpc.ApiClient', () => {
       assert(mockResponseCheck).to.haveBeenCalledWith(request, message);
     });
 
-    it('should return false if the message is the correct type but wrong response', () => {
+    should('return false if the message is the correct type but wrong response', () => {
       const request = Mocks.object('request');
       const message = Mocks.object('message');
 
@@ -43,7 +43,7 @@ describe('rpc.ApiClient', () => {
       assert(mockResponseCheck).to.haveBeenCalledWith(request, message);
     });
 
-    it('should return false if the message is the wrong type', () => {
+    should('return false if the message is the wrong type', () => {
       const request = Mocks.object('request');
       const message = Mocks.object('message');
 
@@ -56,7 +56,7 @@ describe('rpc.ApiClient', () => {
   });
 
   describe('post', () => {
-    it('should post the request, wait for message and return the correct response', async () => {
+    should('post the request, wait for message and return the correct response', async () => {
       const request = Mocks.object('request');
       spyOn(client, 'onMessage_');
 
@@ -75,7 +75,7 @@ describe('rpc.ApiClient', () => {
       assert(mockChannel.post).to.haveBeenCalledWith(request);
     });
 
-    it('should reject if the response type is incorrect', async () => {
+    should('reject if the response type is incorrect', async () => {
       const request = Mocks.object('request');
       spyOn(client, 'onMessage_');
 

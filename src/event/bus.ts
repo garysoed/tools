@@ -2,7 +2,6 @@ import { BaseDisposable } from '../dispose/base-disposable';
 import { DisposableFunction as DisposableFunctionImpl } from '../dispose/disposable-function';
 import { Event } from '../event/event';
 import { DisposableFunction } from '../interfaces/disposable-function';
-import { Log } from '../util/log';
 
 type Callback<T, E extends Event<T>> = (event: E) => void;
 
@@ -13,14 +12,13 @@ export class Bus<T, E extends Event<T>> extends BaseDisposable {
   private readonly bubbleCallbacksMap_: Map<T, Callback<T, E>[]> = new Map();
   private readonly captureCallbacksMap_: Map<T, Callback<T, E>[]> = new Map();
 
-  constructor(private readonly log_: Log) {
+  constructor() {
     super();
   }
 
   dispatch(event: E): undefined;
   dispatch<R>(event: E, callback: () => R): R;
   dispatch(event: E, callback: () => any = () => undefined): any {
-    Log.debug(this.log_, `dispatching: ${event.type}`);
     const bubbleCallbacks = this.bubbleCallbacksMap_.get(event.type);
     const captureCallbacks = this.captureCallbacksMap_.get(event.type);
     if (captureCallbacks !== undefined) {
@@ -28,7 +26,7 @@ export class Bus<T, E extends Event<T>> extends BaseDisposable {
         try {
           handler(event);
         } catch (e) {
-          Log.error(this.log_, e.message);
+          // noop
         }
       });
     }
@@ -40,8 +38,8 @@ export class Bus<T, E extends Event<T>> extends BaseDisposable {
         try {
           handler(event);
         } catch (e) {
-          Log.error(this.log_, e.message);
-        }
+          // noop
+         }
       });
     }
 
@@ -62,7 +60,6 @@ export class Bus<T, E extends Event<T>> extends BaseDisposable {
       callback: (payload?: any) => void,
       context: Object,
       useCapture: boolean = false): DisposableFunction {
-    Log.debug(this.log_, `listening to [${this}]: ${eventType}`);
     const map = useCapture ? this.captureCallbacksMap_ : this.bubbleCallbacksMap_;
     const callbacks = map.get(eventType);
     const boundCallback = callback.bind(context);

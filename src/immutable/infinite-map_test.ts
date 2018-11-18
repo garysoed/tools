@@ -1,4 +1,4 @@
-import { assert, TestBase } from '../test-base';
+import { assert, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { NumberType, TupleOfType } from '../check';
@@ -16,14 +16,14 @@ describe('immutable.InfiniteMap', () => {
   }
 
   describe('[Symbol.iterator]', () => {
-    it('should return the correct entries', () => {
+    should('return the correct entries', () => {
       const map = InfiniteMap.of(Iterables.of(generateInts), (i: number) => `${i}`);
       assert(map).to.startWith([[0, '0'], [1, '1'], [2, '2'], [3, '3']]);
     });
   });
 
   describe('deleteAllKey', () => {
-    it('should delete the keys correctly', () => {
+    should('delete the keys correctly', () => {
       const map = InfiniteMap
           .of(Iterables.of(generateInts), (i: number) => `${i}`)
           .deleteAllKeys(ImmutableSet.of([1, 2, 3]));
@@ -32,7 +32,7 @@ describe('immutable.InfiniteMap', () => {
   });
 
   describe('deleteKey', () => {
-    it('should delete the key correctly', () => {
+    should('delete the key correctly', () => {
       const map = InfiniteMap
           .of(Iterables.of(generateInts), (i: number) => `${i}`)
           .deleteKey(1);
@@ -41,14 +41,14 @@ describe('immutable.InfiniteMap', () => {
   });
 
   describe('entries', () => {
-    it('should return the correct entries', () => {
+    should('return the correct entries', () => {
       const map = InfiniteMap.of(Iterables.of(generateInts), (i: number) => `${i}`);
       assert(map.entries()).to.startWith([[0, '0'], [1, '1'], [2, '2'], [3, '3']]);
     });
   });
 
   describe('filter', () => {
-    it('should filter correctly', () => {
+    should('filter correctly', () => {
       const map = InfiniteMap.of(Iterables.of(generateInts), (i: number) => `${i}`)
           .filter((_: string, key: number) => {
             return (key % 2) === 0;
@@ -58,7 +58,7 @@ describe('immutable.InfiniteMap', () => {
   });
 
   describe('filterByType', () => {
-    it('should filter correctly', () => {
+    should('filter correctly', () => {
       const map = InfiniteMap
           .of(Iterables.of(generateInts), (i: number) => (i % 2) === 0 ? i : 'a')
           .filterByType(TupleOfType([NumberType, NumberType]));
@@ -67,7 +67,7 @@ describe('immutable.InfiniteMap', () => {
   });
 
   describe('filterItem', () => {
-    it('should filter correctly', () => {
+    should('filter correctly', () => {
       const map = InfiniteMap.of(Iterables.of(generateInts), (i: number) => `${i}`)
           .filterItem(([key, _]: [number, string]) => {
             return (key % 2) === 0;
@@ -77,7 +77,7 @@ describe('immutable.InfiniteMap', () => {
   });
 
   describe('get', () => {
-    it('should return the correct value', () => {
+    should('return the correct value', () => {
       const map = InfiniteMap.of(
           Iterables.of(generateInts),
           (i: number) => `${i}`);
@@ -89,7 +89,7 @@ describe('immutable.InfiniteMap', () => {
   });
 
   describe('keys', () => {
-    it('should return the correct keys', () => {
+    should('return the correct keys', () => {
       const map = InfiniteMap.of(
           Iterables.of(generateInts),
           (i: number) => `${i}`);
@@ -98,7 +98,7 @@ describe('immutable.InfiniteMap', () => {
   });
 
   describe('map', () => {
-    it('should map correctly', () => {
+    should('map correctly', () => {
       const map = InfiniteMap.of(Iterables.of(generateInts), (i: number) => `${i}`)
           .map((_: string, key: number) => {
             return (key % 2) === 0;
@@ -108,7 +108,7 @@ describe('immutable.InfiniteMap', () => {
   });
 
   describe('mapItem', () => {
-    it('should map correctly', () => {
+    should('map correctly', () => {
       const map = InfiniteMap.of(Iterables.of(generateInts), (i: number) => `${i}`)
           .mapItem(([key, _]: [number, string]) => {
             return (key % 2) === 0;
@@ -118,7 +118,7 @@ describe('immutable.InfiniteMap', () => {
   });
 
   describe('set', () => {
-    it('should set the value correctly', () => {
+    should('set the value correctly', () => {
       const value = 'value';
       const map = InfiniteMap.of(Iterables.of(generateInts), (i: number) => `${i}`)
           .set(2, value);
@@ -127,7 +127,7 @@ describe('immutable.InfiniteMap', () => {
   });
 
   describe('values', () => {
-    it('should return the correct values', () => {
+    should('return the correct values', () => {
       const map = InfiniteMap.of(Iterables.of(generateInts), (i: number) => `${i}`);
       assert(map.values()).to.startWith(['0', '1', '2', '3']);
     });

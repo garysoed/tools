@@ -1,4 +1,4 @@
-import { TestBase } from '../test-base';
+import { TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { assert } from 'gs-testing/export/main';
@@ -13,9 +13,9 @@ describe('datamodel.DataAccess', () => {
   let access: DataAccess<number>;
 
   beforeEach(() => {
-    mockGetter = jasmine.createSpy('Getter');
-    mockLister = jasmine.createSpy('Lister');
-    mockSearcher = jasmine.createSpy('Searcher');
+    mockGetter = createSpy('Getter');
+    mockLister = createSpy('Lister');
+    mockSearcher = createSpy('Searcher');
     access = new DataAccess<number>(
         mockGetter,
         mockLister,
@@ -24,7 +24,7 @@ describe('datamodel.DataAccess', () => {
   });
 
   describe('get', () => {
-    it(`should call the getter correctly`, async () => {
+    should(`call the getter correctly`, async () => {
       const id = 'id';
       const value = 123;
       mockGetter.and.returnValue(Promise.resolve(value));
@@ -34,7 +34,7 @@ describe('datamodel.DataAccess', () => {
   });
 
   describe('list', () => {
-    it(`should call the lister correctly`, async () => {
+    should(`call the lister correctly`, async () => {
       const value = 123;
       mockLister.and.returnValue(Promise.resolve(ImmutableList.of([value])));
       assert(await access.list()).to.haveElements([value]);
@@ -42,7 +42,7 @@ describe('datamodel.DataAccess', () => {
   });
 
   describe('queueUpdate', () => {
-    it(`should return a data access with the updated update queue`, () => {
+    should(`return a data access with the updated update queue`, () => {
       const id = 'id';
       const value = 123;
       const newAccess = access.queueUpdate(id, value);
@@ -51,7 +51,7 @@ describe('datamodel.DataAccess', () => {
   });
 
   describe('search', () => {
-    it(`should call the searcher correctly`, async () => {
+    should(`call the searcher correctly`, async () => {
       const id = 'id';
       const value = 123;
       mockSearcher.and.returnValue(Promise.resolve(ImmutableList.of([value])));

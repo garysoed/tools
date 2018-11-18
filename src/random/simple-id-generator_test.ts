@@ -1,4 +1,4 @@
-import { assert, TestBase } from '../test-base';
+import { assert, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { RandomizerImpl } from './randomizer';
@@ -10,12 +10,12 @@ describe('random.SimpleIdGenerator', () => {
   let mockRandom: jasmine.SpyObj<RandomizerImpl>;
 
   beforeEach(() => {
-    mockRandom = jasmine.createSpyObj('Random', ['shortId']);
+    mockRandom = createSpyObject('Random', ['shortId']);
     generator = new SimpleIdGenerator();
   });
 
   describe('generate', () => {
-    it(`should generate the ID correctly`, () => {
+    should(`generate the ID correctly`, () => {
       mockRandom.shortId.and.returnValue('id');
 
       assert(generator.generate(['id', 'id-id', 'id-id-id'])).to.be('id-id-id-id');

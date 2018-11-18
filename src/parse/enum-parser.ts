@@ -1,32 +1,34 @@
-import { Parser } from '../interfaces';
-import { Enums } from '../typescript';
+import { Enums } from '../typescript/enums';
+import { Parser } from './parser';
+
+/**
+ * Represents an enum.
+ */
+interface Enum {
+  [key: number]: string;
+}
 
 export class EnumParserImpl<E> implements Parser<E> {
-  private readonly enumSet_: gs.IEnum;
+  private readonly enumSet_: Enum;
 
   /**
    * @param enumType Type of enum to parse into.
    */
-  constructor(enumType: gs.IEnum) {
+  constructor(enumType: Enum) {
     this.enumSet_ = enumType;
   }
 
-  /**
-   * @override
-   */
-  parse(input: string | null): E | null {
+  convertBackward(input: string | null): E | null {
     if (input === null) {
       return null;
     }
 
     const result = Enums.fromLowerCaseString<E>(input, this.enumSet_);
+
     return result === undefined ? null : result;
   }
 
-  /**
-   * @override
-   */
-  stringify(value: E): string {
+  convertForward(value: E): string {
     return Enums.toLowerCaseString(value, this.enumSet_);
   }
 }
@@ -37,6 +39,6 @@ export class EnumParserImpl<E> implements Parser<E> {
  * @param <E> Type of enum to parse into.
  * @return The enum parser.
  */
-export function EnumParser<E>(enumType: gs.IEnum): EnumParserImpl<E> {
+export function EnumParser<E>(enumType: Enum): EnumParserImpl<E> {
   return new EnumParserImpl<E>(enumType);
 }

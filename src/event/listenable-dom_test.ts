@@ -1,4 +1,4 @@
-import { assert, Match, TestBase } from '../test-base';
+import { assert, Match, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { TestDispose } from '../testing/test-dispose';
@@ -11,7 +11,7 @@ describe('event.ListenableDom', () => {
   let listenable: ListenableDom<any>;
 
   beforeEach(() => {
-    mockEventTarget = jasmine.createSpyObj(
+    mockEventTarget = createSpyObject(
         'EventTarget',
         ['addEventListener', 'dispatchEvent', 'removeEventListener']);
     listenable = new ListenableDom(mockEventTarget);
@@ -19,8 +19,8 @@ describe('event.ListenableDom', () => {
   });
 
   describe('dispatch', () => {
-    it('should use the event target for dispatching events', () => {
-      const mockCallback = jasmine.createSpy('Callback');
+    should('use the event target for dispatching events', () => {
+      const mockCallback = createSpy('Callback');
       const eventType = 'eventType';
       const payload = mockObject('payload');
 
@@ -36,8 +36,8 @@ describe('event.ListenableDom', () => {
   });
 
   describe('dispatchAsync', () => {
-    it('should use the event target for dispatching events', async () => {
-      const mockCallback = jasmine.createSpy('Callback');
+    should('use the event target for dispatching events', async () => {
+      const mockCallback = createSpy('Callback');
       mockCallback.and.returnValue(Promise.resolve());
       const eventType = 'eventType';
       const payload = mockObject('payload');
@@ -57,10 +57,10 @@ describe('event.ListenableDom', () => {
   });
 
   describe('on', () => {
-    it('should listen to the event target correctly', () => {
+    should('listen to the event target correctly', () => {
       const eventType = 'eventType';
       const boundCallback = mockObject('boundCallback');
-      const mockCallback = jasmine.createSpyObj('Callback', ['bind']);
+      const mockCallback = createSpyObject('Callback', ['bind']);
       mockCallback.bind.and.returnValue(boundCallback);
 
       const instance = mockObject('instance');

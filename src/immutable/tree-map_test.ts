@@ -1,4 +1,4 @@
-import { assert, TestBase } from '../test-base';
+import { assert, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { TreeMap } from '../immutable';
@@ -31,7 +31,7 @@ describe('immutable.TreeMap', () => {
   });
 
   describe('delete', () => {
-    it(`should delete the node correctly`, () => {
+    should(`delete the node correctly`, () => {
       assert(treeToJson(root.delete('b'))).to.equal({
         '2': {
           'a': {
@@ -43,25 +43,25 @@ describe('immutable.TreeMap', () => {
   });
 
   describe('getChildNode', () => {
-    it(`should return the correct child node`, () => {
+    should(`return the correct child node`, () => {
       assert(treeToJson(root.getChildNode('a')!)).to.equal({
         '1': {},
       });
     });
 
-    it(`should return null if the key doesn't exist`, () => {
+    should(`return null if the key doesn't exist`, () => {
       assert(root.getChildNode('c')).to.beNull();
     });
   });
 
   describe('getChildren', () => {
-    it(`should return the correct children values`, () => {
+    should(`return the correct children values`, () => {
       assert(root.getChildren()).to.haveElements([1, 5]);
     });
   });
 
   describe('map', () => {
-    it(`should map correctly`, () => {
+    should(`map correctly`, () => {
       const newTree = root.map((node, key, parent) => {
         const parentValue = parent ? parent.getValue() : 0;
         return [`new${key}`, node.getValue() + parentValue] as [string, number];
@@ -87,7 +87,7 @@ describe('immutable.TreeMap', () => {
   });
 
   describe('set', () => {
-    it(`should set the node correctly`, () => {
+    should(`set the node correctly`, () => {
       assert(treeToJson(root.set('a', TreeMap.of(6)))).to.equal({
         '2': {
           'a': {
@@ -109,7 +109,7 @@ describe('immutable.TreeMap', () => {
   });
 
   describe('setValue', () => {
-    it(`should update the value correctly`, () => {
+    should(`update the value correctly`, () => {
       assert(treeToJson(root.setValue(6))).to.equal({
         '6': {
           'a': {

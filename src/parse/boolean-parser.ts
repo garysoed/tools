@@ -10,8 +10,21 @@ export const BooleanParser: Parser<boolean> = {
    * @param input The input string.
    * @return The parsed boolean value.
    */
-  parse(input: string| null): boolean | null {
-    return input !== null ? input.toLowerCase() !== 'false' : null;
+  convertBackward(input: string|null): boolean|null {
+    if (!input) {
+      return false;
+    }
+
+    const lowerCase = input.toLowerCase();
+    if (lowerCase === 'true') {
+      return true;
+    }
+
+    if (lowerCase === 'false') {
+      return false;
+    }
+
+    return null;
   },
 
   /**
@@ -20,7 +33,7 @@ export const BooleanParser: Parser<boolean> = {
    * @param value The boolean value to be converted to string.
    * @return The string representation of the boolean value.
    */
-  stringify(value: boolean): string {
+  convertForward(value: boolean): string {
     return value ? 'true' : 'false';
   },
 };

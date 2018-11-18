@@ -1,86 +1,51 @@
-import { assert, TestBase } from '../test-base';
-TestBase.setup();
+import { assert, should } from 'gs-testing/export/main';
 
-import { ImmutableList } from '../immutable/immutable-list';
-import { Fakes } from '../mock/fakes';
-import { Locations } from '../ui/locations';
+import { getMatches, getParts_, normalizePath } from './locations';
 
 
 describe('ui.Locations', () => {
   describe('getParts_', () => {
-    it('should split the normalized parts', () => {
-      const path = 'path';
-      const normalizedPath = '/a/./b/c';
+    should('split the normalized parts', () => {
+      const path = '/a/./b/c';
 
-      spyOn(Locations, 'normalizePath').and.returnValue(normalizedPath);
-
-      assert(Locations['getParts_'](path)).to.haveElements(['', 'a', 'b', 'c']);
-      assert(Locations.normalizePath).to.haveBeenCalledWith(path);
+      assert(getParts_(path)).to.haveElements(['', 'a', 'b', 'c']);
     });
   });
 
   describe('getMatches', () => {
-    it('should return the correct matches', () => {
-      const matcher = 'matcher';
-      const hash = 'hash';
-      Fakes.build(spyOn(Locations, 'getParts_'))
-          .when(matcher).return(ImmutableList.of([':a', '_', ':b']))
-          .when(hash).return(ImmutableList.of(['hello', '_', 'location']));
-
-      assert(Locations.getMatches(hash, matcher)!).to.haveElements([
+    should('return the correct matches', () => {
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getMatches('/hello/_/location', '/:a/_/:b')!).to.haveElements([
         ['a', 'hello'],
         ['b', 'location'],
       ]);
-      assert(Locations['getParts_']).to.haveBeenCalledWith(hash);
-      assert(Locations['getParts_']).to.haveBeenCalledWith(matcher);
     });
 
-    it('should return null if the matcher does not match the hash', () => {
-      const matcher = 'matcher';
-      const hash = 'hash';
-      Fakes.build(spyOn(Locations, 'getParts_'))
-          .when(matcher).return(ImmutableList.of([':a', '_', ':b']))
-          .when(hash).return(ImmutableList.of(['hello', '+']));
-
-      assert(Locations.getMatches(hash, matcher)).to.equal(null);
+    should('return null if the matcher does not match the hash', () => {
+      assert(getMatches('/hello/+', '/:a/_/:b')).to.beNull();
     });
 
-    it('should return the matches for exact match', () => {
-      const matcher = 'matcher';
-      const hash = 'hash';
-      Fakes.build(spyOn(Locations, 'getParts_'))
-          .when(matcher).return(ImmutableList.of([':a', '_', ':b']))
-          .when(hash).return(ImmutableList.of(['hello', '_', 'location']));
-
-      assert(Locations.getMatches(hash, `${matcher}$`)!).to.haveElements([
+    should('return the matches for exact match', () => {
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(getMatches('/hello/_/location', `/:a/_/:b$`)!).to.haveElements([
         ['a', 'hello'],
         ['b', 'location'],
       ]);
-      assert(Locations['getParts_']).to.haveBeenCalledWith(hash);
-      assert(Locations['getParts_']).to.haveBeenCalledWith(matcher);
     });
 
-    it('should return null for exact match if the number of parts are not the same', () => {
-      const matcher = 'matcher';
-      const hash = 'hash';
-      Fakes.build(spyOn(Locations, 'getParts_'))
-          .when(matcher).return(ImmutableList.of([':a', '_', ':b']))
-          .when(hash).return(ImmutableList.of([':a', '_']));
-
-      assert(Locations.getMatches(hash, `${matcher}$`)).to.beNull();
-      assert(Locations['getParts_']).to.haveBeenCalledWith(hash);
-      assert(Locations['getParts_']).to.haveBeenCalledWith(matcher);
+    should('return null for exact match if the number of parts are not the same', () => {
+      assert(getMatches('/hello/_', `/:a/_/:b$`)).to.beNull();
     });
 
   });
 
   describe('normalizePath', () => {
-    it('should add missing `/` at the start of the path', () => {
-      assert(Locations.normalizePath('path')).to.equal('/path');
+    should('add missing `/` at the start of the path', () => {
+      assert(normalizePath('path')).to.equal('/path');
     });
 
-    it('should remove extra `/` at the end of the path', () => {
-      assert(Locations.normalizePath('/path/')).to.equal('/path');
+    should('remove extra `/` at the end of the path', () => {
+      assert(normalizePath('/path/')).to.equal('/path');
     });
   });
 });

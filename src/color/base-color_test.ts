@@ -1,6 +1,3 @@
-import { TestBase } from '../test-base';
-TestBase.setup();
-
 import { assert } from 'gs-testing/export/main';
 import { BaseColor } from '../color/base-color';
 
@@ -30,7 +27,7 @@ describe('color.BaseColor', () => {
   });
 
   describe('getLuminance', () => {
-    it('should return the correct value of luminance', () => {
+    should('return the correct value of luminance', () => {
       spyOn(color, 'getRed').and.returnValue(126);
       spyOn(color, 'getGreen').and.returnValue(126);
       spyOn(color, 'getBlue').and.returnValue(184);

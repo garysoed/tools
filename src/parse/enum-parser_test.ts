@@ -1,8 +1,5 @@
-import { EnumParser } from '../parse';
-import { EnumParserImpl } from '../parse/enum-parser';
-import { assert, TestBase } from '../test-base';
-
-TestBase.setup();
+import { assert, should } from 'gs-testing/export/main';
+import { EnumParser, EnumParserImpl } from '../parse/enum-parser';
 
 enum Enum {
   A,
@@ -17,22 +14,22 @@ describe('parse.EnumParser', () => {
   });
 
   describe('parse', () => {
-    it('should return the correct enum', () => {
-      assert(parser.parse('a')).to.equal(Enum.A);
+    should('return the correct enum', () => {
+      assert(parser.convertBackward('a')).to.equal(Enum.A);
     });
 
-    it('should return null if the enum is invalid', () => {
-      assert(parser.parse('non_existent')).to.beNull();
+    should('return null if the enum is invalid', () => {
+      assert(parser.convertBackward('non_existent')).to.beNull();
     });
 
-    it('should return null if the input is null', () => {
-      assert(parser.parse(null)).to.beNull();
+    should('return null if the input is null', () => {
+      assert(parser.convertBackward(null)).to.beNull();
     });
   });
 
   describe('stringify', () => {
-    it('should return the correct string', () => {
-      assert(parser.stringify(Enum.A)).to.equal('a');
+    should('return the correct string', () => {
+      assert(parser.convertForward(Enum.A)).to.equal('a');
     });
   });
 });

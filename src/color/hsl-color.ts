@@ -1,7 +1,7 @@
-import { BaseColor } from '../color/base-color';
 import { cache } from '../data/cache';
 import { Errors } from '../error';
 import { ImmutableList } from '../immutable';
+import { BaseColor } from './base-color';
 
 export class HslColor extends BaseColor {
   private readonly hue_: number;

@@ -1,4 +1,4 @@
-import { assert, Matchers, TestBase } from '../test-base';
+import { assert, Matchers, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { DomEvent } from '../event/dom-event';
@@ -11,15 +11,15 @@ describe('net.Http', () => {
   let mockRequest: any;
 
   beforeEach(() => {
-    mockRequest = jasmine.createSpyObj('Request', ['open', 'send', 'setRequestHeader']);
+    mockRequest = createSpyObject('Request', ['open', 'send', 'setRequestHeader']);
     spyOn(HttpRequest, 'newRequest').and.returnValue(mockRequest);
   });
 
   describe('get', async () => {
-    it('should handle successful request correctly', async () => {
+    should('handle successful request correctly', async () => {
       const path = 'path';
       const expectedResponseText = 'responseText';
-      const mockListenableRequest = jasmine.createSpyObj('ListenableRequest', ['dispose']);
+      const mockListenableRequest = createSpyObject('ListenableRequest', ['dispose']);
 
       spyOn(ListenableDom, 'of').and.returnValue(mockListenableRequest);
 
@@ -41,10 +41,10 @@ describe('net.Http', () => {
       assert(responseText).to.equal(expectedResponseText);
     });
 
-    it('should handle unsuccessful request correctly', async () => {
+    should('handle unsuccessful request correctly', async () => {
       const status = 400;
       const error = 'error';
-      const mockListenableRequest = jasmine.createSpyObj('ListenableRequest', ['dispose']);
+      const mockListenableRequest = createSpyObject('ListenableRequest', ['dispose']);
 
       spyOn(ListenableDom, 'of').and.returnValue(mockListenableRequest);
       const getRequest = Http.get('path');
@@ -64,13 +64,13 @@ describe('net.Http', () => {
   });
 
   describe('post', () => {
-    it('should handle successful request correctly', async () => {
+    should('handle successful request correctly', async () => {
       const path = 'path';
       const formData = {
         'a': '1',
         'b': '2',
       };
-      const mockListenableRequest = jasmine.createSpyObj('ListenableRequest', ['dispose']);
+      const mockListenableRequest = createSpyObject('ListenableRequest', ['dispose']);
 
       spyOn(ListenableDom, 'of').and.returnValue(mockListenableRequest);
 
@@ -95,10 +95,10 @@ describe('net.Http', () => {
       assert(responseText).to.equal(expectedResponseText);
     });
 
-    it('should handle unsuccessful request correctly', async () => {
+    should('handle unsuccessful request correctly', async () => {
       const status = 400;
       const error = 'error';
-      const mockListenableRequest = jasmine.createSpyObj('ListenableRequest', ['dispose']);
+      const mockListenableRequest = createSpyObject('ListenableRequest', ['dispose']);
 
       spyOn(ListenableDom, 'of').and.returnValue(mockListenableRequest);
       const postRequest = Http.post('path');

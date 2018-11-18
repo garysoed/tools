@@ -1,5 +1,5 @@
-import { Finite } from '../interfaces/finite';
-import { Indexed } from '../interfaces/indexed';
+import { Finite } from './finite';
+import { Indexed } from './indexed';
 
 export interface FiniteIndexed<K, V> extends Finite, Indexed<K, V> {
   /**

@@ -3,19 +3,18 @@ export const HASHED_OBJECTS: WeakMap<Object, number> = new WeakMap();
 export const GLOBALS = {lastHash: 0};
 
 
-type MapLike<K, V> = {
+interface MapLike<K, V> {
   get(key: K): V | undefined;
   has(key: K): boolean;
   set(key: K, value: V): void;
-};
+}
 
-export function hash(object: Object): string;
 export function hash(object: any): string {
   const mapLike: MapLike<any, number> = object instanceof Object ? HASHED_OBJECTS : HASHED_VALUES;
   if (!mapLike.has(object)) {
     mapLike.set(object, GLOBALS.lastHash);
     GLOBALS.lastHash++;
   }
+
   return `${mapLike.get(object)}`;
 }
-// TODO: Mutable

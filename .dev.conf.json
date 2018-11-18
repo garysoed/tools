@@ -1,0 +1,8 @@
+{
+  "commands": [
+    {
+      "command": "link",
+      "actions": ["npm link gs-testing gs-types dev santa"]
+    }
+  ]
+}

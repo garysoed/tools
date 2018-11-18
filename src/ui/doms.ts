@@ -34,24 +34,8 @@ export class Doms {
       nodes.push(currentNode);
       currentNode = currentNode.nextSibling;
     }
-    return ImmutableList.of(nodes);
-  }
 
-  /**
-   * Returns the shadow host of the current element.
-   *
-   * The element must be the root element in the shadow DOM.
-   *
-   * @param element The element to returns its shadow host of.
-   * @return The shadow host, or null if not found, or if the element's parent node is not the
-   *    shadow root.
-   */
-  static getShadowHost(element: HTMLElement): HTMLElement | null {
-    const shadowRoot = element.parentNode;
-    if (shadowRoot === null) {
-      return null;
-    }
-    return shadowRoot.nodeType === 11 ? shadowRoot['host'] : null;
+    return ImmutableList.of(nodes);
   }
 
   /**
@@ -72,10 +56,9 @@ export class Doms {
    * @param start The DOM element to start with.
    * @return The iterable that navigates up the parent chain.
    */
-  static parentIterable(start: HTMLElement, bustShadow: boolean = false): Iterable<HTMLElement> {
+  static parentIterable(start: HTMLElement): Iterable<HTMLElement> {
     return Doms.domIterable(start, (fromEl: HTMLElement) => {
-      const parent = fromEl.parentElement;
-      return (parent === null && bustShadow) ? Doms.getShadowHost(fromEl) : parent;
+      return fromEl.parentElement;
     });
   }
 
@@ -104,7 +87,7 @@ export class Doms {
     if (!foundDestination) {
       throw Error('Cannot find offset ancestor. Check if the toElement has non static position');
     }
+
     return distance;
   }
 }
-// TODO: Mutable

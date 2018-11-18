@@ -1,4 +1,4 @@
-import { DataBridge } from '../interfaces/data-bridge';
+import { DataBridge } from './data-bridge';
 import { Parser } from '../parse/parser';
 
 export interface AttributeSelector<T> {name: string; parser: Parser<T>; selector: ElementSelector; }

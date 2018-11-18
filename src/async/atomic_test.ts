@@ -1,10 +1,7 @@
 import 'jasmine';
 
-import { TestBase } from '../test-base';
-TestBase.setup();
-
 import { assert, should } from 'gs-testing/export/main';
-import { Mocks } from 'gs-testing/export/mock';
+import { mocks } from 'gs-testing/export/mock';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { TestDispose } from '../dispose/testing/test-dispose';
 import { atomic } from './atomic';
@@ -58,7 +55,7 @@ describe('async.atomic', () => {
      */
     class TestClass extends BaseDisposable {}
 
-    const descriptor = Mocks.object('descriptor');
+    const descriptor = mocks.object('descriptor');
     assert(decorator(TestClass.prototype, 'property', descriptor)).to.equal(descriptor);
   });
 
@@ -69,6 +66,6 @@ describe('async.atomic', () => {
     class TestClass { }
     assert(() => {
       decorator(TestClass.prototype, 'property', {});
-    }).to.throwError(/should be an instance of \[BaseDisposable\]/);
+    }).to.throwErrorWithMessage(/should be an instance of \[BaseDisposable\]/);
   });
 });

@@ -1,4 +1,4 @@
-import { assert, Matchers, TestBase } from '../test-base';
+import { assert, Matchers, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { Mocks } from '../mock/mocks';
@@ -12,19 +12,19 @@ describe('rpc.ApiServer', () => {
   let server: ApiServer<any, any>;
 
   beforeEach(() => {
-    mockChannel = jasmine.createSpyObj('Channel', ['post', 'waitForMessage']);
-    mockProcessRequest = jasmine.createSpy('ProcessRequest');
-    mockRequestType = jasmine.createSpyObj('RequestType', ['check']);
+    mockChannel = createSpyObject('Channel', ['post', 'waitForMessage']);
+    mockProcessRequest = createSpy('ProcessRequest');
+    mockRequestType = createSpyObject('RequestType', ['check']);
     server = new ApiServer(mockChannel, mockProcessRequest, mockRequestType);
   });
 
   describe('onMessage_', () => {
-    it('should post the response correctly', () => {
+    should('post the response correctly', () => {
       const message = Mocks.object('message');
       mockRequestType.check.and.returnValue(true);
 
       const response = Mocks.object('response');
-      const mockPromise = jasmine.createSpyObj('Promise', ['then']);
+      const mockPromise = createSpyObject('Promise', ['then']);
       mockProcessRequest.and.returnValue(mockPromise);
 
       assert(server['onMessage_'](message)).to.beFalse();
@@ -36,7 +36,7 @@ describe('rpc.ApiServer', () => {
       assert(mockChannel.post).to.haveBeenCalledWith(response);
     });
 
-    it('should do nothing if the message is the wrong type', () => {
+    should('do nothing if the message is the wrong type', () => {
       const message = Mocks.object('message');
       mockRequestType.check.and.returnValue(false);
 
@@ -47,7 +47,7 @@ describe('rpc.ApiServer', () => {
   });
 
   describe('run', () => {
-    it('should wait for the message', () => {
+    should('wait for the message', () => {
       spyOn(server, 'onMessage_');
       server.run();
       assert(mockChannel.waitForMessage).to.haveBeenCalledWith(Matchers.anyFunction());

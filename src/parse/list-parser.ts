@@ -1,15 +1,15 @@
 import { ImmutableList } from '../immutable';
-import { Parser } from '../interfaces';
+import { Parser } from './parser';
 
-export class ListParserImpl<T> implements Parser<ImmutableList<T | null>> {
+export class ListParserImpl<T> implements Parser<ImmutableList<T>> {
   private readonly elementParser_: Parser<T>;
 
   constructor(elementParser: Parser<T>) {
     this.elementParser_ = elementParser;
   }
 
-  parse(input: string | null): ImmutableList<T | null> | null {
-    if (input === null) {
+  convertBackward(input: string|null): ImmutableList<T>|null {
+    if (!input) {
       return null;
     }
 
@@ -18,22 +18,29 @@ export class ListParserImpl<T> implements Parser<ImmutableList<T | null>> {
       return null;
     }
 
-    return ImmutableList
-        .of(array)
-        .map((element: string) => {
-          return this.elementParser_.parse(element);
-        });
+    const elements: T[] = [];
+    for (const element of array) {
+      const converted = this.elementParser_.convertBackward(element);
+      if (converted === null) {
+        return null;
+      }
+
+      elements.push(converted);
+    }
+
+    return ImmutableList.of(elements);
   }
 
-  stringify(value: ImmutableList<T | null> | null): string {
+  convertForward(value: ImmutableList<T>|null): string {
     if (value === null) {
       return '';
     }
 
     const list = value
-        .map((element: T | null) => {
-          return this.elementParser_.stringify(element);
+        .map((element: T) => {
+          return this.elementParser_.convertForward(element);
         });
+
     return JSON.stringify([...list]);
   }
 }

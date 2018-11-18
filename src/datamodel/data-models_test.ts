@@ -1,4 +1,4 @@
-import { assert, Fakes, Matchers, Mocks, TestBase } from '../test-base';
+import { assert, Fakes, Matchers, Mocks, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { Serializer } from '../data/a-serializable';
@@ -10,7 +10,7 @@ import { ImmutableSet } from '../immutable/immutable-set';
 
 describe('datamodel.DataModels', () => {
   describe('createGetter_', () => {
-    it(`should return function that returns the correct field`, () => {
+    should(`return function that returns the correct field`, () => {
       const value = Mocks.object('value');
       const key = 'key';
       const instance = Mocks.object('instance');
@@ -20,18 +20,18 @@ describe('datamodel.DataModels', () => {
   });
 
   describe('createSetter_', () => {
-    it(`should return a function that creates a new instance with the value`, () => {
+    should(`return a function that creates a new instance with the value`, () => {
       const ctor = Mocks.object('ctor');
       const instance = Mocks.object('instance');
       const key = 'key';
-      const mockEqFn = jasmine.createSpy('EqFn');
+      const mockEqFn = createSpy('EqFn');
       mockEqFn.and.returnValue(false);
 
       const newValue = Mocks.object('newValue');
       const value = Mocks.object('value');
       instance[key] = value;
 
-      const mockAnnotations = jasmine.createSpyObj('Annotations', ['getAttachedValues']);
+      const mockAnnotations = createSpyObject('Annotations', ['getAttachedValues']);
       mockAnnotations.getAttachedValues.and.returnValue(ImmutableMap.of([
         [key, 'value1'],
       ]));
@@ -49,19 +49,19 @@ describe('datamodel.DataModels', () => {
       assert(mockEqFn).to.haveBeenCalledWith(value, newValue);
     });
 
-    it(`should return a function that returns the same instance if the new value is the same`,
+    should(`return a function that returns the same instance if the new value is the same`,
         () => {
       const ctor = Mocks.object('ctor');
       const instance = Mocks.object('instance');
       const key = 'key';
-      const mockEqFn = jasmine.createSpy('EqFn');
+      const mockEqFn = createSpy('EqFn');
       mockEqFn.and.returnValue(true);
 
       const newValue = Mocks.object('newValue');
       const value = Mocks.object('value');
       instance[key] = value;
 
-      const mockAnnotations = jasmine.createSpyObj('Annotations', ['getAttachedValues']);
+      const mockAnnotations = createSpyObject('Annotations', ['getAttachedValues']);
       mockAnnotations.getAttachedValues.and.returnValue(ImmutableMap.of([
         [key, 'value1'],
       ]));
@@ -77,21 +77,21 @@ describe('datamodel.DataModels', () => {
   });
 
   describe('getSerializedName', () => {
-    it(`should return the serialized name`, () => {
+    should(`return the serialized name`, () => {
       const serializedName = 'serializedName';
       const obj = Mocks.object('obj');
       obj[__serializedName] = serializedName;
       assert(DataModels.getSerializedName(obj)).to.equal(serializedName);
     });
 
-    it(`should return null if the object has no serialized names`, () => {
+    should(`return null if the object has no serialized names`, () => {
       const obj = Mocks.object('obj');
       assert(DataModels.getSerializedName(obj)).to.beNull();
     });
   });
 
   describe('newInstance', () => {
-    it(`should create the methods correctly`, () => {
+    should(`create the methods correctly`, () => {
       abstract class TestClass {}
       const baseClass = TestClass as any;
       const key1 = 'key1';
@@ -112,7 +112,7 @@ describe('datamodel.DataModels', () => {
 
       const eqFn1 = Mocks.object('eqFn1');
       const eqFn2 = Mocks.object('eqFn2');
-      const mockAnnotations = jasmine.createSpyObj('Annotations', ['getAttachedValues']);
+      const mockAnnotations = createSpyObject('Annotations', ['getAttachedValues']);
       mockAnnotations.getAttachedValues.and.returnValue(ImmutableMap.of([
         [key1, ImmutableSet.of([{eqFn: eqFn1, fieldName: 'Field1'}])],
         [key2, ImmutableSet.of([{eqFn: eqFn2, fieldName: 'Field2'}])],
@@ -141,7 +141,7 @@ describe('datamodel.DataModels', () => {
       assert(ANNOTATIONS.forCtor).to.haveBeenCalledWith(TestClass);
     });
 
-    it(`should handle the case where the object is not serializable`, () => {
+    should(`handle the case where the object is not serializable`, () => {
       abstract class TestClass {}
       const baseClass = TestClass as any;
       const key1 = 'key1';
@@ -161,7 +161,7 @@ describe('datamodel.DataModels', () => {
 
       const eqFn1 = Mocks.object('eqFn1');
       const eqFn2 = Mocks.object('eqFn2');
-      const mockAnnotations = jasmine.createSpyObj('Annotations', ['getAttachedValues']);
+      const mockAnnotations = createSpyObject('Annotations', ['getAttachedValues']);
       mockAnnotations.getAttachedValues.and.returnValue(ImmutableMap.of([
         [key1, ImmutableSet.of([{eqFn: eqFn1, fieldName: 'Field1'}])],
         [key2, ImmutableSet.of([{eqFn: eqFn2, fieldName: 'Field2'}])],

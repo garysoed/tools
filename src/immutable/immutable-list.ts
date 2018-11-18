@@ -1,10 +1,14 @@
 import { AnyType, HasPropertiesType, InstanceofType, IntersectType, IterableOfType, NumberType, Type } from 'gs-types/export';
 import { Errors } from '../error';
-import { Orderings } from '../immutable/orderings';
 import { CompareResult, FiniteCollection, FiniteIndexed, Ordered, Ordering } from '../interfaces';
 import { assertUnreachable } from '../typescript/assert-unreachable';
+import { Orderings } from './orderings';
 
-interface ItemList<T> { item(index: number): T; length: number; }
+interface ItemList<T> {
+  length: number;
+  item(index: number): T;
+}
+
 function ItemListType<T>(): Type<ItemList<T>> {
   return IntersectType<ItemList<T>>([
     HasPropertiesType({item: InstanceofType(Function)}),
@@ -29,6 +33,7 @@ export class ImmutableList<T> implements
   add(item: T): ImmutableList<T> {
     const clone = this.data_.slice(0);
     clone.push(item);
+
     return new ImmutableList(clone);
   }
 
@@ -37,6 +42,7 @@ export class ImmutableList<T> implements
     for (const item of items) {
       clone.push(item);
     }
+
     return new ImmutableList(clone);
   }
 
@@ -47,6 +53,7 @@ export class ImmutableList<T> implements
       return this;
     } else {
       clone.splice(index, 1);
+
       return new ImmutableList(clone);
     }
   }
@@ -59,6 +66,7 @@ export class ImmutableList<T> implements
         clone.splice(index, 1);
       }
     }
+
     return new ImmutableList(clone);
   }
 
@@ -81,6 +89,7 @@ export class ImmutableList<T> implements
     for (const index of toDeleteIndexes.reverse()) {
       clone.splice(index, 1);
     }
+
     return new ImmutableList(clone);
   }
 
@@ -91,6 +100,7 @@ export class ImmutableList<T> implements
   deleteKey(key: number): ImmutableList<T> {
     const clone = this.data_.slice(0);
     clone.splice(key, 1);
+
     return new ImmutableList(clone);
   }
 
@@ -98,6 +108,7 @@ export class ImmutableList<T> implements
     const clone = this.data_.map((value: T, index: number) => {
       return [index, value] as [number, T];
     });
+
     return new ImmutableList(clone);
   }
 
@@ -121,6 +132,7 @@ export class ImmutableList<T> implements
         return false;
       }
     }
+
     return true;
   }
 
@@ -130,6 +142,8 @@ export class ImmutableList<T> implements
     });
   }
 
+  filter<S extends T>(checker: (value: T, index: number) => value is S): ImmutableList<S>;
+  filter(checker: (value: T, index: number) => boolean): ImmutableList<T>;
   filter(checker: (value: T, index: number) => boolean): ImmutableList<T> {
     return new ImmutableList(this.data_.filter(checker));
   }
@@ -141,9 +155,12 @@ export class ImmutableList<T> implements
         newItems.push(item);
       }
     }
+
     return ImmutableList.of(newItems);
   }
 
+  filterItem<S extends T>(checker: (value: T) => value is S): ImmutableList<S>;
+  filterItem(checker: (value: T) => boolean): ImmutableList<T>;
   filterItem(checker: (item: T) => boolean): ImmutableList<T> {
     return this.filter((value: T, _: number) => checker(value));
   }
@@ -158,16 +175,19 @@ export class ImmutableList<T> implements
         return [index, value];
       }
     }
+
     return null;
   }
 
   findKey(checker: (value: T, index: number) => boolean): number | null {
     const entry = this.findEntry(checker);
+
     return entry === null ? null : entry[0];
   }
 
   findValue(checker: (value: T, index: number) => boolean): T | null {
     const entry = this.findEntry(checker);
+
     return entry === null ? null : entry[1];
   }
 
@@ -177,6 +197,7 @@ export class ImmutableList<T> implements
 
   getAt(index: number): T | undefined {
     const normalizedIndex = index < 0 ? index + this.size() : index;
+
     return this.get(normalizedIndex);
   }
 
@@ -195,12 +216,14 @@ export class ImmutableList<T> implements
     }
     const clone = this.data_.slice(0);
     clone.splice(index, 0, ...toAdds);
+
     return new ImmutableList(clone);
   }
 
   insertAt(index: number, item: T): ImmutableList<T> {
     const clone = this.data_.slice(0);
     clone.splice(index, 0, item);
+
     return new ImmutableList(clone);
   }
 
@@ -236,6 +259,14 @@ export class ImmutableList<T> implements
     return this.max(Orderings.reverse(ordering));
   }
 
+  pop(): ImmutableList<T> {
+    return this.deleteAt(this.data_.length - 1);
+  }
+
+  push(item: T): ImmutableList<T> {
+    return this.insertAt(this.data_.length, item);
+  }
+
   reduce<R>(fn: (prevValue: R, value: T, key: number) => R, init: R): R {
     return this.data_.reduce(fn, init);
   }
@@ -253,6 +284,7 @@ export class ImmutableList<T> implements
   set(index: number, item: T): ImmutableList<T> {
     const clone = this.data_.slice(0);
     clone[index] = item;
+
     return new ImmutableList(clone);
   }
 
@@ -297,6 +329,7 @@ export class ImmutableList<T> implements
     for (let i = normalizedStart; step < 0 ? i > loopBound : i < loopBound; i += step) {
       sliceData.push(this.data_[i]);
     }
+
     return new ImmutableList(sliceData);
   }
 
@@ -306,6 +339,7 @@ export class ImmutableList<T> implements
         return true;
       }
     }
+
     return false;
   }
 
@@ -317,11 +351,13 @@ export class ImmutableList<T> implements
 
   sort(compareFn: (item1: T, item2: T) => CompareResult): ImmutableList<T> {
     const clone = this.data_.slice(0);
+
     return new ImmutableList(clone.sort(compareFn));
   }
 
   toString(): string {
     const items = this.mapItem((item: T) => `${item}`);
+
     return `[${[...items].join(', ')}]`;
   }
 
@@ -330,10 +366,8 @@ export class ImmutableList<T> implements
   }
 
   static of<T>(): ImmutableList<T>;
-  static of<T>(data: Iterable<T>): ImmutableList<T>;
-  static of<T>(data: T[]): ImmutableList<T>;
+  static of<T>(data: Iterable<T>|T[]|ItemList<T>): ImmutableList<T>;
   static of<DataTransferItem>(data: DataTransferItemList): ImmutableList<DataTransferItem>;
-  static of<T>(data: ItemList<T>): ImmutableList<T>;
   static of(data: any[] | Iterable<any> | ItemList<any> | DataTransferItemList = []):
       ImmutableList<any> {
     if (IterableOfType<any, Iterable<any>>(AnyType()).check(data)) {
@@ -343,9 +377,13 @@ export class ImmutableList<T> implements
       for (let i = 0; i < data.length; i++) {
         array.push(data.item(i));
       }
+
       return new ImmutableList(array);
     } else {
       throw assertUnreachable(data);
     }
   }
 }
+
+
+

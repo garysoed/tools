@@ -1,8 +1,8 @@
-import { TestBase } from '../test-base';
+import { TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { assert } from 'gs-testing/export/main';
-import { Mocks } from 'gs-testing/export/mock';
+import { mocks } from 'gs-testing/export/mock';
 import { Annotations, AnnotationsHandler } from '../data/annotations';
 import { ImmutableMap } from '../immutable/immutable-map';
 
@@ -12,13 +12,13 @@ describe('data.AnnotationsHandler', () => {
   let handler: AnnotationsHandler<number>;
 
   beforeEach(() => {
-    parent = Mocks.object('parent');
+    parent = mocks.object('parent');
     handler = new AnnotationsHandler<number>(__SYMBOL, parent);
     AnnotationsHandler['REGISTERED_ANNOTATIONS_'].clear();
   });
 
   describe('attachValueToProperty', () => {
-    it('should add the field value correctly', () => {
+    should('add the field value correctly', () => {
       const key = 'key';
       const value = 123;
       handler.attachValueToProperty(key, value);
@@ -29,7 +29,7 @@ describe('data.AnnotationsHandler', () => {
   });
 
   describe('getAnnotatedProperties', () => {
-    it('should return the correct field names', () => {
+    should('return the correct field names', () => {
       const key1 = 'key1';
       const key2 = 'key2';
       const map = ImmutableMap.of([[key1, 123], [key2, 456]]);
@@ -41,7 +41,7 @@ describe('data.AnnotationsHandler', () => {
   });
 
   describe('getAttachedValues', () => {
-    it('should return the correct map', () => {
+    should('return the correct map', () => {
       const key1 = 'key1';
       const key2 = 'key2';
       const value1 = 789;
@@ -51,13 +51,13 @@ describe('data.AnnotationsHandler', () => {
 
       const parent1 = 'parent1';
       const parent2 = 'parent2';
-      const parentValues1 = Mocks.object('parentValues1');
-      const parentValues2 = Mocks.object('parentValues2');
+      const parentValues1 = mocks.object('parentValues1');
+      const parentValues2 = mocks.object('parentValues2');
       const parentMap = new Map<string, number>();
       parentMap.set(parent1, parentValues1);
       parentMap.set(parent2, parentValues2);
 
-      const mockParentHandler = jasmine.createSpyObj('ParentHandler', ['getAttachedValues']);
+      const mockParentHandler = createSpyObject('ParentHandler', ['getAttachedValues']);
       mockParentHandler.getAttachedValues.and.returnValue(parentMap);
 
       spyOn(AnnotationsHandler, 'of').and.returnValue(mockParentHandler);
@@ -72,7 +72,7 @@ describe('data.AnnotationsHandler', () => {
       assert(AnnotationsHandler.of).to.haveBeenCalledWith(__SYMBOL, parent);
     });
 
-    it('should work if there are no parent class', () => {
+    should('work if there are no parent class', () => {
       const key1 = 'key1';
       const key2 = 'key2';
       const value1 = 789;
@@ -91,22 +91,22 @@ describe('data.AnnotationsHandler', () => {
   });
 
   describe('hasAnnotation', () => {
-    it('should return true if the constructor has the given annotation', () => {
+    should('return true if the constructor has the given annotation', () => {
       const hash = 'hash';
       spyOn(AnnotationsHandler, 'createHash_').and.returnValue(hash);
 
-      const annotationHandler = Mocks.object('annotationHandler');
+      const annotationHandler = mocks.object('annotationHandler');
       AnnotationsHandler['REGISTERED_ANNOTATIONS_'].set(hash, annotationHandler);
 
-      const ctor = Mocks.object('ctor');
-      const annotation = Mocks.object('annotation');
+      const ctor = mocks.object('ctor');
+      const annotation = mocks.object('annotation');
       assert(AnnotationsHandler.hasAnnotation(ctor, annotation)).to.beTrue();
       assert(AnnotationsHandler['createHash_']).to.haveBeenCalledWith(ctor, annotation);
     });
 
-    it('should return false if the constructor does not have the given annotation', () => {
-      const ctor = Mocks.object('ctor');
-      const annotation = Mocks.object('annotation');
+    should('return false if the constructor does not have the given annotation', () => {
+      const ctor = mocks.object('ctor');
+      const annotation = mocks.object('annotation');
       assert(AnnotationsHandler.hasAnnotation(ctor, annotation)).to.beFalse();
     });
   });
@@ -116,13 +116,13 @@ describe('data.AnnotationsHandler', () => {
     let annotation: symbol;
 
     beforeEach(() => {
-      ctor = Mocks.object('ctor');
+      ctor = mocks.object('ctor');
       annotation = Symbol('annotation');
     });
 
-    it('should create a new handler if one does not exist', () => {
-      const parentCtor = Mocks.object('parentCtor');
-      const parentProto = Mocks.object('parentProto');
+    should('create a new handler if one does not exist', () => {
+      const parentCtor = mocks.object('parentCtor');
+      const parentProto = mocks.object('parentProto');
       parentProto.constructor = parentCtor;
 
       const hash = 'hash';
@@ -139,7 +139,7 @@ describe('data.AnnotationsHandler', () => {
       assert(Object.getPrototypeOf).to.haveBeenCalledWith(ctor.prototype);
     });
 
-    it('should not add the parent constructor if there is none', () => {
+    should('not add the parent constructor if there is none', () => {
       const hash = 'hash';
       spyOn(AnnotationsHandler, 'createHash_').and.returnValue(hash);
 
@@ -154,11 +154,11 @@ describe('data.AnnotationsHandler', () => {
       assert(Object.getPrototypeOf).to.haveBeenCalledWith(ctor.prototype);
     });
 
-    it('should reuse an existing annotations handler', () => {
+    should('reuse an existing annotations handler', () => {
       const hash = 'hash';
       spyOn(AnnotationsHandler, 'createHash_').and.returnValue(hash);
 
-      const cachedHandler = Mocks.object('cachedHandler');
+      const cachedHandler = mocks.object('cachedHandler');
       AnnotationsHandler['REGISTERED_ANNOTATIONS_'].set(hash, cachedHandler);
 
       assert(AnnotationsHandler.of(annotation, ctor)).to.be(cachedHandler);
@@ -187,16 +187,16 @@ describe('data.Annotations', () => {
      */
     class SubClass extends BaseClass {}
 
-    it('should create a correct instance of annotations handler', () => {
-      const handler = Mocks.object('handler');
+    should('create a correct instance of annotations handler', () => {
+      const handler = mocks.object('handler');
       spyOn(AnnotationsHandler, 'of').and.returnValue(handler);
 
       assert(annotations.forCtor(BaseClass)).to.equal(handler);
       assert(AnnotationsHandler.of).to.haveBeenCalledWith(__SYMBOL, BaseClass);
     });
 
-    it('should specify the parent class correctly', () => {
-      const handler = Mocks.object('handler');
+    should('specify the parent class correctly', () => {
+      const handler = mocks.object('handler');
       spyOn(AnnotationsHandler, 'of').and.returnValue(handler);
 
       assert(annotations.forCtor(SubClass)).to.equal(handler);
@@ -205,16 +205,16 @@ describe('data.Annotations', () => {
   });
 
   describe('hasAnnotation', () => {
-    it('should return true if the prototype has the given annotation', () => {
-      const proto = Mocks.object('proto');
+    should('return true if the prototype has the given annotation', () => {
+      const proto = mocks.object('proto');
       spyOn(AnnotationsHandler, 'hasAnnotation').and.returnValue(true);
 
       assert(annotations.hasAnnotation(proto)).to.beTrue();
       assert(AnnotationsHandler.hasAnnotation).to.haveBeenCalledWith(proto, __SYMBOL);
     });
 
-    it('should return false if the prototype does not have the given annotation', () => {
-      const proto = Mocks.object('proto');
+    should('return false if the prototype does not have the given annotation', () => {
+      const proto = mocks.object('proto');
       spyOn(AnnotationsHandler, 'hasAnnotation').and.returnValue(false);
 
       assert(annotations.hasAnnotation(proto)).to.beFalse();

@@ -1,6 +1,6 @@
-import { Serializer } from '../data/a-serializable';
+import { getSerializedName_ } from '../data/serializer';
 import { DataModel } from '../datamodel/data-model';
-import { ANNOTATIONS } from '../datamodel/field';
+import { annotationKey as ANNOTATIONS } from '../datamodel/field';
 import { ImmutableMap } from '../immutable/immutable-map';
 
 export const __serializedName = Symbol('serializedName');
@@ -16,17 +16,18 @@ export class DataModels {
       key: string | symbol,
       eqFn: (item1: T, item2: T) => boolean): (newValue: T) => I {
     return (newValue: T) => {
-      if (eqFn(instance[key], newValue)) {
+      if (eqFn((instance as any)[key], newValue)) {
         return instance;
       }
 
       // Clone the instance.
       const newInstance = DataModels.newInstance<I>(ctor);
-      for (const [key] of ANNOTATIONS.forCtor(ctor).getAttachedValues()) {
-        newInstance[key] = instance[key];
+      for (const [annotationKey] of ANNOTATIONS.forCtor(ctor).getAttachedValues()) {
+        (newInstance as any)[annotationKey] = (instance as any)[annotationKey];
       }
 
-      newInstance[key] = newValue;
+      (newInstance as any)[key] = newValue;
+
       return newInstance;
     };
   }
@@ -42,20 +43,20 @@ export class DataModels {
     const instance = (new GenClass()) as T;
     for (const [key, configs] of ANNOTATIONS.forCtor(baseClass).getAttachedValues()) {
       for (const {eqFn, fieldName} of configs) {
-        instance[`get${fieldName}`] = DataModels.createGetter_(instance, key);
-        instance[`set${fieldName}`] = DataModels
+        (instance as any)[`get${fieldName}`] = DataModels.createGetter_(instance, key);
+        (instance as any)[`set${fieldName}`] = DataModels
             .createSetter_<any, T>(baseClass, instance, key, eqFn);
       }
 
       const initValue = init.get(key);
       if (initValue !== undefined) {
-        instance[key] = initValue;
+        (instance as any)[key] = initValue;
       }
     }
 
-    const serializedName = Serializer.getSerializedName(baseClass.prototype);
+    const serializedName = getSerializedName_(baseClass.prototype);
     if (serializedName) {
-      instance[__serializedName] = serializedName;
+      (instance as any)[__serializedName] = serializedName;
     }
 
     return instance;

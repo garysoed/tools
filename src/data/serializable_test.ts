@@ -1,4 +1,4 @@
-import { TestBase } from '../test-base';
+import { TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { assert } from 'gs-testing/export/main';
@@ -46,7 +46,7 @@ describe('data.Serializable', () => {
   }
 
   describe('toJSON, fromJSON', () => {
-    it('should handle basic class', () => {
+    should('handle basic class', () => {
       const value = 'value';
       const basic = new BasicClass();
       basic.a = value;
@@ -57,7 +57,7 @@ describe('data.Serializable', () => {
       assert(fromJSON(serialized).a).to.equal(value);
     });
 
-    it('should recursively convert the fields', () => {
+    should('recursively convert the fields', () => {
       const basicValue = 'basicValue';
       const compositeValue = 'compositeValue';
       const basic = new BasicClass();
@@ -80,7 +80,7 @@ describe('data.Serializable', () => {
       assert(deserialized.basic).to.equal(basic);
     });
 
-    it('should handle null fields', () => {
+    should('handle null fields', () => {
       const basic = new BasicClass();
       basic.a = null;
 
@@ -90,7 +90,7 @@ describe('data.Serializable', () => {
       assert(fromJSON(serialized).a).to.equal(null);
     });
 
-    it('should handle non native non serializable fields', () => {
+    should('handle non native non serializable fields', () => {
       const value = { value: 'value' };
       const basic = new BasicClass();
       basic.a = value;
@@ -101,7 +101,7 @@ describe('data.Serializable', () => {
       assert(fromJSON(serialized).a).to.equal(value);
     });
 
-    it('should handle arrays', () => {
+    should('handle arrays', () => {
       const value = 'basicValue';
       const basic = new BasicClass();
       basic.a = value;
@@ -118,7 +118,7 @@ describe('data.Serializable', () => {
       assert(deserialized.a).to.equal([0, basic]);
     });
 
-    it('should handle maps', () => {
+    should('handle maps', () => {
       const value = 'basicValue';
       const basic = new BasicClass();
       basic.a = value;
@@ -139,7 +139,7 @@ describe('data.Serializable', () => {
       assert(deserialized.a).to.equal({ basic });
     });
 
-    it('should ignore non existent fields', () => {
+    should('ignore non existent fields', () => {
       const defaultValue = new DefaultValueClass();
       const value = defaultValue.a;
       const json = toJSON(defaultValue);
@@ -150,7 +150,7 @@ describe('data.Serializable', () => {
       assert(deserialized.a).to.equal(value);
     });
 
-    it('should handle subclasses', () => {
+    should('handle subclasses', () => {
       const value = 'value';
       const subValue = 'subValue';
       const sub = new SubClass();

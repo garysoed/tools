@@ -1,9 +1,9 @@
-import { Parser } from '../interfaces/parser';
+import { Parser } from './parser';
 
 export class FunctionParser<F extends Function> implements Parser<F> {
   constructor(private readonly paramCount_: number | null) { }
 
-  parse(input: string | null): F | null {
+  convertBackward(input: string | null): F | null {
     if (input === null) {
       return null;
     }
@@ -20,10 +20,11 @@ export class FunctionParser<F extends Function> implements Parser<F> {
     if (this.paramCount_ !== null && fn.length !== this.paramCount_) {
       return null;
     }
+
     return fn;
   }
 
-  stringify(value: F | null): string {
+  convertForward(value: F | null): string {
     if (value === null) {
       return '';
     }

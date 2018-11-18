@@ -1,5 +1,4 @@
-import { assert, TestBase } from '../test-base';
-TestBase.setup();
+import { assert, should } from 'gs-testing/export/main';
 
 import { ImmutableSet } from '../immutable/immutable-set';
 import { SetParser, SetParserImpl } from '../parse/set-parser';
@@ -13,28 +12,29 @@ describe('parse.SetParser', () => {
     parser = SetParser<string>(StringParser);
   });
 
-  describe('parse', () => {
-    it('should parse correctly', () => {
+  describe('convertBackward', () => {
+    should('parse correctly', () => {
       const item1 = 'item1';
       const item2 = 'item2';
-      assert(parser.parse(`["${item1}","${item2}"]`)!).to.haveElements([item1, item2]);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(parser.convertBackward(`["${item1}","${item2}"]`)!).to.haveElements([item1, item2]);
     });
 
-    it('should return null if the input is null', () => {
-      assert(parser.parse(null)).to.beNull();
+    should('return null if the input is null', () => {
+      assert(parser.convertBackward(null)).to.beNull();
     });
   });
 
-  describe('stringify', () => {
-    it('should stringify correctly', () => {
+  describe('convertForward', () => {
+    should('stringify correctly', () => {
       const item1 = 'item1';
       const item2 = 'item2';
-      assert(parser.stringify(ImmutableSet.of([item1, item2])))
+      assert(parser.convertForward(ImmutableSet.of([item1, item2])))
           .to.equal(`["${item1}","${item2}"]`);
     });
 
-    it('should return empty string if value is null', () => {
-      assert(parser.stringify(null)).to.equal('');
+    should('return empty string if value is null', () => {
+      assert(parser.convertForward(null)).to.equal('');
     });
   });
 });

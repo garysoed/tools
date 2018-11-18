@@ -1,4 +1,4 @@
-import { assert, Matchers, Mocks, TestBase } from '../test-base';
+import { assert, Matchers, Mocks, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { GapiLibrary } from '../net';
@@ -13,19 +13,19 @@ describe('net.GapiLibrary', () => {
   let library: GapiLibrary<number>;
 
   beforeEach(() => {
-    mockGapi = jasmine.createSpyObj(
+    mockGapi = createSpyObject(
         'Gapi',
         ['addDiscoveryDocs', 'addScopes', 'addSignIn', 'init']);
-    mockWindow = jasmine.createSpyObj('Window', ['clearTimeout', 'setTimeout']);
+    mockWindow = createSpyObject('Window', ['clearTimeout', 'setTimeout']);
     library = new GapiLibrary(mockGapi, NAME, mockWindow);
     QUEUED_REQUESTS.clear();
     GapiLibrary['timeoutId_'] = null;
   });
 
   describe('flushRequests_', () => {
-    it(`should call the callback on all the queued callbacks`, async () => {
-      const mockCallback1 = jasmine.createSpy('Callback1');
-      const mockCallback2 = jasmine.createSpy('Callback2');
+    should(`call the callback on all the queued callbacks`, async () => {
+      const mockCallback1 = createSpy('Callback1');
+      const mockCallback2 = createSpy('Callback2');
       const request1 = Mocks.object('request1');
       const request2 = Mocks.object('request2');
       QUEUED_REQUESTS.set(request1, mockCallback1);
@@ -36,7 +36,7 @@ describe('net.GapiLibrary', () => {
       const responseMap = new Map([[request1, result1], [request2, result2]]);
 
       const batches = new Map();
-      const mockBatchAdd = jasmine.createSpy('BatchAdd').and
+      const mockBatchAdd = createSpy('BatchAdd').and
           .callFake((request: any, config: {id: any}) => batches.set(request, config.id));
 
       const mockBatch = new Promise((resolve) => {
@@ -60,7 +60,7 @@ describe('net.GapiLibrary', () => {
       });
       mockBatch['add'] = mockBatchAdd;
 
-      const mockClient = jasmine.createSpyObj('Client', ['newBatch']);
+      const mockClient = createSpyObject('Client', ['newBatch']);
       mockClient.newBatch.and.returnValue(Promise.resolve(mockBatch));
       spyOn(library, 'client').and.returnValue(Promise.resolve(mockClient));
 
@@ -72,9 +72,9 @@ describe('net.GapiLibrary', () => {
       assert(QUEUED_REQUESTS).to.haveEntries([]);
     });
 
-    it(`should handle errors correctly on failed requests`, async () => {
-      const mockCallback1 = jasmine.createSpy('Callback1');
-      const mockCallback2 = jasmine.createSpy('Callback2');
+    should(`handle errors correctly on failed requests`, async () => {
+      const mockCallback1 = createSpy('Callback1');
+      const mockCallback2 = createSpy('Callback2');
       const request1 = Mocks.object('request1');
       const request2 = Mocks.object('request2');
       QUEUED_REQUESTS.set(request1, mockCallback1);
@@ -85,7 +85,7 @@ describe('net.GapiLibrary', () => {
       const responseMap = new Map([[request1, result1], [request2, result2]]);
 
       const batches = new Map();
-      const mockBatchAdd = jasmine.createSpy('BatchAdd').and
+      const mockBatchAdd = createSpy('BatchAdd').and
           .callFake((request: any, config: {id: any}) => batches.set(request, config.id));
 
       const mockBatch = new Promise((resolve) => {
@@ -109,7 +109,7 @@ describe('net.GapiLibrary', () => {
       });
       mockBatch['add'] = mockBatchAdd;
 
-      const mockClient = jasmine.createSpyObj('Client', ['newBatch']);
+      const mockClient = createSpyObject('Client', ['newBatch']);
       mockClient.newBatch.and.returnValue(Promise.resolve(mockBatch));
       spyOn(library, 'client').and.returnValue(Promise.resolve(mockClient));
 
@@ -121,22 +121,22 @@ describe('net.GapiLibrary', () => {
       assert(QUEUED_REQUESTS).to.haveEntries([]);
     });
 
-    it(`should pass errors on all callbacks if the entire batch fails`, async () => {
-      const mockCallback1 = jasmine.createSpy('Callback1');
-      const mockCallback2 = jasmine.createSpy('Callback2');
+    should(`pass errors on all callbacks if the entire batch fails`, async () => {
+      const mockCallback1 = createSpy('Callback1');
+      const mockCallback2 = createSpy('Callback2');
       const request1 = Mocks.object('request1');
       const request2 = Mocks.object('request2');
       QUEUED_REQUESTS.set(request1, mockCallback1);
       QUEUED_REQUESTS.set(request2, mockCallback2);
 
-      const mockBatchAdd = jasmine.createSpy('BatchAdd');
+      const mockBatchAdd = createSpy('BatchAdd');
 
       const mockBatch = Promise.resolve({
         status: 500,
       });
       mockBatch['add'] = mockBatchAdd;
 
-      const mockClient = jasmine.createSpyObj('Client', ['newBatch']);
+      const mockClient = createSpyObject('Client', ['newBatch']);
       mockClient.newBatch.and.returnValue(Promise.resolve(mockBatch));
       spyOn(library, 'client').and.returnValue(Promise.resolve(mockClient));
 
@@ -148,17 +148,17 @@ describe('net.GapiLibrary', () => {
       assert(QUEUED_REQUESTS).to.haveEntries([]);
     });
 
-    it(`should clear the previous timeout IDs`, async () => {
+    should(`clear the previous timeout IDs`, async () => {
       const existingTimeoutId = 123;
       GapiLibrary['timeoutId_'] = existingTimeoutId;
 
-      const mockBatchAdd = jasmine.createSpy('BatchAdd');
+      const mockBatchAdd = createSpy('BatchAdd');
       const mockBatch = Promise.resolve({
         status: 500,
       });
       mockBatch['add'] = mockBatchAdd;
 
-      const mockClient = jasmine.createSpyObj('Client', ['newBatch']);
+      const mockClient = createSpyObject('Client', ['newBatch']);
       mockClient.newBatch.and.returnValue(Promise.resolve(mockBatch));
       spyOn(library, 'client').and.returnValue(Promise.resolve(mockClient));
 
@@ -169,7 +169,7 @@ describe('net.GapiLibrary', () => {
   });
 
   describe('get', () => {
-    it(`should resolve with the correct object`, async () => {
+    should(`resolve with the correct object`, async () => {
       const obj = Mocks.object('obj');
       mockGapi.init.and.returnValue(Promise.resolve({[NAME]: obj}));
 
@@ -177,7 +177,7 @@ describe('net.GapiLibrary', () => {
       assert(mockGapi.init).to.haveBeenCalledWith();
     });
 
-    it(`should reject if the object does not exist`, async () => {
+    should(`reject if the object does not exist`, async () => {
       mockGapi.init.and.returnValue(Promise.resolve({}));
 
       await assert(library.get()).to.rejectWithError(/should exist/);
@@ -186,7 +186,7 @@ describe('net.GapiLibrary', () => {
   });
 
   describe('queueRequest', () => {
-    it(`should resolve correctly when the queued callback has been called`, async () => {
+    should(`resolve correctly when the queued callback has been called`, async () => {
       const request = Mocks.object('request');
       const result = Mocks.object('result');
       const timeoutId = 123;
@@ -203,7 +203,7 @@ describe('net.GapiLibrary', () => {
       assert(library['flushRequests_']).to.haveBeenCalledWith();
     });
 
-    it(`should reject correctly when the queued callback has been called with an Error`,
+    should(`reject correctly when the queued callback has been called with an Error`,
         async () => {
       const request = Mocks.object('request');
       const result = new Error('error');
@@ -221,7 +221,7 @@ describe('net.GapiLibrary', () => {
       assert(library['flushRequests_']).to.haveBeenCalledWith();
     });
 
-    it(`should not set the timeout if it already exists`, async () => {
+    should(`not set the timeout if it already exists`, async () => {
       const request = Mocks.object('request');
       const timeoutId = 123;
       GapiLibrary['timeoutId_'] = timeoutId;
@@ -236,7 +236,7 @@ describe('net.GapiLibrary', () => {
   });
 
   describe('static create', () => {
-    it(`should resolve with the library correctly`, async () => {
+    should(`resolve with the library correctly`, async () => {
       const name = 'name';
       const discoveryDocs = Mocks.object('discoveryDocs');
       const scopes = Mocks.object('scopes');
@@ -253,7 +253,7 @@ describe('net.GapiLibrary', () => {
       assert(mockGapi.addScopes).to.haveBeenCalledWith(scopes);
     });
 
-    it(`should sign in if set`, async () => {
+    should(`sign in if set`, async () => {
       const name = 'name';
       const discoveryDocs = Mocks.object('discoveryDocs');
       const scopes = Mocks.object('scopes');

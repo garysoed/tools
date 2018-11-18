@@ -1,4 +1,4 @@
-import { TestBase } from '../test-base';
+import { TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { assert } from 'gs-testing/export/main';
@@ -32,11 +32,11 @@ describe('data.cache', () => {
   let spy: jasmine.Spy;
 
   beforeEach(() => {
-    spy = jasmine.createSpy('spy');
+    spy = createSpy('spy');
     test = new TestClass(spy);
   });
 
-  it('should cache the method', () => {
+  should('cache the method', () => {
     const value = 'value';
     spy.and.returnValue(value);
 
@@ -47,7 +47,7 @@ describe('data.cache', () => {
     assert(spy).toNot.haveBeenCalled();
   });
 
-  it('should cache based on the args', () => {
+  should('cache based on the args', () => {
     Fakes.build(spy).call((a: number, b: number) => a + b);
     assert(test.add(1, 2)).to.equal(3);
     assert(test.add(1, 2)).to.equal(3);

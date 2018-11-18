@@ -1,8 +1,8 @@
 import { NumberType, StringType, Type } from 'gs-types/export';
-import { ImmutableList } from '../immutable/immutable-list';
 import { CompareResult } from '../interfaces/compare-result';
 import { Ordering } from '../interfaces/ordering';
 import { FloatParser } from '../parse/float-parser';
+import { ImmutableList } from './immutable-list';
 
 const NATURAL_SPLIT_REGEXP = /([0-9]+)/;
 
@@ -15,6 +15,7 @@ export const Orderings = {
           return result;
         }
       }
+
       return 0;
     };
   },
@@ -39,10 +40,10 @@ export const Orderings = {
 
   /**
    * Orders items matching the given list at the start of the list.
-   * @param checked
    */
   isOneOf<T>(checked: Iterable<T>): Ordering<T> {
     const checkedSet = new Set(checked);
+
     return Orderings.matches(item => checkedSet.has(item));
   },
 
@@ -61,7 +62,8 @@ export const Orderings = {
           ]));
 
       function normalize(str: string): number | string {
-        const parsed = FloatParser.parse(str);
+        const parsed = FloatParser.convertBackward(str);
+
         return parsed === null ? str : parsed;
       }
 
@@ -71,6 +73,7 @@ export const Orderings = {
           return result;
         }
       }
+
       return 0;
     };
   },

@@ -1,4 +1,4 @@
-import { MonadValue } from '../interfaces/monad-value';
+import { MonadValue } from './monad-value';
 
 export interface MonadSetter<T> {
   readonly value: T;

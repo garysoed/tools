@@ -1,4 +1,4 @@
-import { AssertionBuilder } from '../error/assertion-error';
+import { AssertionBuilder } from './assertion-error';
 
 export const Errors = {
   assert(fieldName: string): AssertionBuilder {

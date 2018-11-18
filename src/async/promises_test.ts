@@ -1,8 +1,6 @@
-import { TestBase } from '../test-base';
-TestBase.setup();
-
-import { assert } from 'gs-testing/export/main';
-import { Mocks } from 'gs-testing/export/mock';
+import { assert, should } from 'gs-testing/export/main';
+import { mocks } from 'gs-testing/export/mock';
+import { createSpy, createSpyObject, fake } from 'gs-testing/export/spy';
 import { TreeMap } from '../immutable';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { forFiniteCollection, forTreeMap, withRetry } from './promises';
@@ -10,9 +8,9 @@ import { forFiniteCollection, forTreeMap, withRetry } from './promises';
 
 describe('async.Promises', () => {
   describe('forFiniteCollection', () => {
-    it(`should transform the collection correctly`, async () => {
-      const value1 = Mocks.object('value1');
-      const value2 = Mocks.object('value2');
+    should(`transform the collection correctly`, async () => {
+      const value1 = mocks.object('value1');
+      const value2 = mocks.object('value2');
       const promise1 = Promise.resolve(value1);
       const promise2 = Promise.resolve(value2);
       assert(await forFiniteCollection(ImmutableSet.of([promise1, promise2])))
@@ -46,7 +44,7 @@ describe('async.Promises', () => {
       return {[`${treeMap.getValue()}`]: childrenJson};
     }
 
-    it(`should resolve the values correctly`, async () => {
+    should(`resolve the values correctly`, async () => {
       const promiseTree = TreeMap.of<string, Promise<number>>(Promise.resolve(2))
           .set('a', TreeMap.of(Promise.resolve(1)))
           .set(
@@ -75,19 +73,19 @@ describe('async.Promises', () => {
   });
 
   describe('withRetry', () => {
-    it(`should retry correctly`, async () => {
+    should(`retry correctly`, async () => {
       let retryCount = 0;
       const value = 'value';
-      const mockCallback = jasmine.createSpy('Callback');
-      mockCallback.and.callFake(() => {
+      const callbackSpy = createSpy<Promise<{}>, []>('Callback');
+      fake(callbackSpy).always().call(() => {
         if (retryCount === 0) {
           throw new Error('expected error');
         }
 
-        return value;
+        return Promise.resolve(value);
       });
 
-      const mockRetryStrategy = jasmine.createSpyObj('RetryStrategy', ['onReject']);
+      const mockRetryStrategy = createSpyObject('RetryStrategy', ['onReject']);
       mockRetryStrategy.onReject.and.callFake(async () => {
         if (retryCount === 0) {
           retryCount++;
@@ -98,17 +96,17 @@ describe('async.Promises', () => {
         return null;
       });
 
-      assert(await withRetry(mockCallback, mockRetryStrategy)).to.equal(value);
+      assert(await withRetry(callbackSpy, mockRetryStrategy)).to.equal(value);
       assert(retryCount).to.equal(1);
     });
 
-    it(`should reject if the last retry does not succeed`, async () => {
+    should(`reject if the last retry does not succeed`, async () => {
       let retryCount = 0;
-      const mockCallback = jasmine.createSpy('Callback');
+      const callbackSpy = createSpy<Promise<{}>, []>('Callback');
       const errorMsg = 'errorMsg';
-      mockCallback.and.throwError(errorMsg);
+      fake(callbackSpy).always().throwError(new Error(errorMsg));
 
-      const mockRetryStrategy = jasmine.createSpyObj('RetryStrategy', ['onReject']);
+      const mockRetryStrategy = createSpyObject('RetryStrategy', ['onReject']);
       mockRetryStrategy.onReject.and.callFake(async () => {
         if (retryCount === 0) {
           retryCount++;
@@ -119,8 +117,8 @@ describe('async.Promises', () => {
         return null;
       });
 
-      await assert(withRetry(mockCallback, mockRetryStrategy)).to
-          .rejectWithError(new RegExp(errorMsg));
+      await assert(withRetry(callbackSpy, mockRetryStrategy)).to
+          .rejectWithErrorMessage(new RegExp(errorMsg));
       assert(retryCount).to.equal(1);
     });
   });

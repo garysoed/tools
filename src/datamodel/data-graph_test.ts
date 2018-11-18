@@ -1,4 +1,4 @@
-import { TestBase } from '../test-base';
+import { TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { DataGraph, registerDataGraph } from '../datamodel';
@@ -12,14 +12,14 @@ describe('datamodel.registerDataGraph', () => {
   beforeEach(() => {
     Flags.enableTracking = false;
 
-    mockSearcher = jasmine.createSpyObj('Searcher', ['index', 'search']);
-    mockStorage = jasmine.createSpyObj(
+    mockSearcher = createSpyObject('Searcher', ['index', 'search']);
+    mockStorage = createSpyObject(
         'Storage', ['delete', 'generateId', 'list', 'read', 'update']);
     dataGraphId = registerDataGraph('test', mockSearcher, mockStorage);
   });
 
   describe('delete', () => {
-    it(`should delete correctly`, async () => {
+    should(`delete correctly`, async () => {
       const id = 'id';
       mockStorage.delete.and.returnValue(Promise.resolve());
 
@@ -30,7 +30,7 @@ describe('datamodel.registerDataGraph', () => {
   });
 
   describe('generateId', () => {
-    it(`should return the generated ID`, async () => {
+    should(`return the generated ID`, async () => {
       const id = 'id';
       mockStorage.generateId.and.returnValue(id);
 
@@ -40,7 +40,7 @@ describe('datamodel.registerDataGraph', () => {
   });
 
   describe('get', () => {
-    it(`should return the correct object`, async () => {
+    should(`return the correct object`, async () => {
       const id = 'id';
       const object = Mocks.object('object');
       mockStorage.read.and.returnValue(object);
@@ -52,7 +52,7 @@ describe('datamodel.registerDataGraph', () => {
   });
 
   describe('list', () => {
-    it(`should return the correct list`, async () => {
+    should(`return the correct list`, async () => {
       const list = Mocks.object('list');
       mockStorage.list.and.returnValue(list);
 
@@ -62,7 +62,7 @@ describe('datamodel.registerDataGraph', () => {
   });
 
   describe('search', () => {
-    it(`should return the correct results`, async () => {
+    should(`return the correct results`, async () => {
       const token = 'token';
       const list = Mocks.object('list');
       mockSearcher.search.and.returnValue(list);
@@ -74,12 +74,12 @@ describe('datamodel.registerDataGraph', () => {
   });
 
   describe('set', () => {
-    it(`should refresh the graph`, async () => {
+    should(`refresh the graph`, async () => {
       const id = 'id';
       const data = Mocks.object('data');
 
       const list = Mocks.object('list');
-      const mockProvider = jasmine.createSpy('Provider');
+      const mockProvider = createSpy('Provider');
       const graph = await Graph.get(dataGraphId, Graph.getTimestamp());
       graph['provider_'] = mockProvider;
       spyOn(graph, 'list').and.returnValue(list);
@@ -91,7 +91,7 @@ describe('datamodel.registerDataGraph', () => {
       assert(mockStorage.read).to.haveBeenCalledWith(id);
     });
 
-    it(`should do nothing if the existing item is the same as the data`, async () => {
+    should(`do nothing if the existing item is the same as the data`, async () => {
       const id = 'id';
       const data = Mocks.object('data');
 

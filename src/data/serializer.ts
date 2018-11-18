@@ -12,7 +12,7 @@ const TYPE_FIELD = '_type';
  * @param json The JSON object to convert.
  * @return The known [[Serializable]] object converted from the JSON object.
  */
-export function fromJSON(json: gs.IJson): any {
+export function fromJSON(json: {[key: string]: any}): any {
   if (!json) {
     return json;
   }
@@ -110,7 +110,7 @@ export function registerField_(target: Object, propertyKey: string | symbol): vo
  * @param obj The [[Serializable]] object to convert.
  * @return The JSON object corresponding to the [[Serializable]] object.
  */
-export function toJSON(obj: any): gs.IJson {
+export function toJSON(obj: any): {[key: string]: any} {
   if (!(obj instanceof Object)) {
     return obj;
   }

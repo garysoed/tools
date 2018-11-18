@@ -1,4 +1,4 @@
-import { assert, TestBase } from '../test-base';
+import { assert, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { bind } from './a-bind';
@@ -8,7 +8,7 @@ import { Injector } from './injector';
 class TestClass { }
 
 describe('inject.Bind', () => {
-  it('should bind the constructor correctly', () => {
+  should('bind the constructor correctly', () => {
     const name = 'name';
 
     spyOn(Injector, 'bind');
@@ -17,7 +17,7 @@ describe('inject.Bind', () => {
     assert(Injector.bind).to.haveBeenCalledWith(TestClass, name);
   });
 
-  it('should use the constructor name if the name is not given', () => {
+  should('use the constructor name if the name is not given', () => {
     spyOn(Injector, 'bind');
 
     bind()(TestClass);

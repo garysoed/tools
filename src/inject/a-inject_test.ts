@@ -1,4 +1,4 @@
-import { assert, TestBase } from '../test-base';
+import { assert, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { Mocks } from '../mock/mocks';
@@ -11,7 +11,7 @@ class TestClass {}
 
 
 describe('inject.Inject', () => {
-  it('should register the parameter correctly', () => {
+  should('register the parameter correctly', () => {
     const name = 'name';
     const index = 12;
     const fakeMetadata = new Map<number, string>();
@@ -27,7 +27,7 @@ describe('inject.Inject', () => {
     assert(InjectMetadata.newInstance).to.haveBeenCalledWith(name, defaultValue);
   });
 
-  it('should use the parameter name if not specified', () => {
+  should('use the parameter name if not specified', () => {
     const propertyName = 'propertyName';
     const index = 12;
     const fakeMetadata = new Map<number, string>();
@@ -42,7 +42,7 @@ describe('inject.Inject', () => {
     assert(InjectMetadata.newInstance).to.haveBeenCalledWith(propertyName, undefined);
   });
 
-  it('should throw error if the target is not a constructor', () => {
+  should('throw error if the target is not a constructor', () => {
     assert(() => {
       inject()(Mocks.object('target'), 'propertyName', 12);
     }).to.throwError(/is not a constructor/);

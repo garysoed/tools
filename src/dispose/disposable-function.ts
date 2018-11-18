@@ -1,5 +1,5 @@
-import { BaseDisposable } from '../dispose/base-disposable';
 import { DisposableFunction as IDisposableFunction } from '../interfaces/disposable-function';
+import { BaseDisposable } from './base-disposable';
 
 /**
  * Wrapper around a function that executes the function when this object is disposed.

@@ -1,17 +1,17 @@
 import { ImmutableList } from '../immutable/immutable-list';
 import { ImmutableSet } from '../immutable/immutable-set';
-import { Parser } from '../interfaces/parser';
-import { ListParser } from '../parse/list-parser';
+import { ListParser } from './list-parser';
+import { Parser } from './parser';
 
-export class SetParserImpl<T> implements Parser<ImmutableSet<T | null>> {
-  private readonly listParser_: Parser<ImmutableList<T | null>>;
+export class SetParserImpl<T> implements Parser<ImmutableSet<T|null>> {
+  private readonly listParser_: Parser<ImmutableList<T|null>>;
 
   constructor(elementParser: Parser<T>) {
     this.listParser_ = ListParser<T>(elementParser);
   }
 
-  parse(input: string | null): ImmutableSet<T | null> | null {
-    const list = this.listParser_.parse(input);
+  convertBackward(input: string|null): ImmutableSet<T|null>|null {
+    const list = this.listParser_.convertBackward(input);
     if (!list) {
       return null;
     }
@@ -19,12 +19,12 @@ export class SetParserImpl<T> implements Parser<ImmutableSet<T | null>> {
     return ImmutableSet.of(list);
   }
 
-  stringify(value: ImmutableSet<T | null> | null): string {
+  convertForward(value: ImmutableSet<T|null>|null): string|null {
     if (value === null) {
       return '';
     }
 
-    return this.listParser_.stringify(ImmutableList.of(value));
+    return this.listParser_.convertForward(ImmutableList.of(value));
   }
 }
 

@@ -1,4 +1,4 @@
-import { assert, TestBase } from '../test-base';
+import { assert, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { mockObject } from 'gs-testing/export/mock';
@@ -18,7 +18,7 @@ describe('event.BaseListener', () => {
   });
 
   describe('ctor', () => {
-    it('should default the context to current object if not given', () => {
+    should('default the context to current object if not given', () => {
       listener = new BaseListener();
       TestDispose.add(listener);
       assert(listener['context_']).to.equal(listener);
@@ -26,9 +26,9 @@ describe('event.BaseListener', () => {
   });
 
   describe('disposeInternal', () => {
-    it('should dispose all the deregister functions', () => {
-      const mockDeregister1 = jasmine.createSpyObj('Deregister1', ['dispose']);
-      const mockDeregister2 = jasmine.createSpyObj('Deregister2', ['dispose']);
+    should('dispose all the deregister functions', () => {
+      const mockDeregister1 = createSpyObject('Deregister1', ['dispose']);
+      const mockDeregister2 = createSpyObject('Deregister2', ['dispose']);
       listener['deregisterFns_'].set('hash1', mockDeregister1);
       listener['deregisterFns_'].set('hash2', mockDeregister2);
       listener.dispose();
@@ -38,7 +38,7 @@ describe('event.BaseListener', () => {
   });
 
   describe('getHash_', () => {
-    it('should return the correct hash', () => {
+    should('return the correct hash', () => {
       const listenable = mockObject('listenable');
       const eventType = 'eventType';
       const callback = mockObject('callback');
@@ -55,9 +55,9 @@ describe('event.BaseListener', () => {
   });
 
   describe('listenTo', () => {
-    it('should listen to the listenable correctly and return the deregister function', () => {
-      const mockDeregister = jasmine.createSpyObj('Deregister', ['dispose']);
-      const mockListenable = jasmine.createSpyObj('Listenable', ['on']);
+    should('listen to the listenable correctly and return the deregister function', () => {
+      const mockDeregister = createSpyObject('Deregister', ['dispose']);
+      const mockListenable = createSpyObject('Listenable', ['on']);
       mockListenable.on.and.returnValue(mockDeregister);
 
       const eventType = 'eventType';
@@ -75,10 +75,10 @@ describe('event.BaseListener', () => {
           .haveBeenCalledWith(mockListenable, eventType, callback, useCapture);
     });
 
-    it('should not listen to the listenable and return the deregister function if already ' +
+    should('not listen to the listenable and return the deregister function if already ' +
         'listened to',
         () => {
-          const mockListenable = jasmine.createSpyObj('Listenable', ['on']);
+          const mockListenable = createSpyObject('Listenable', ['on']);
 
           const eventType = 'eventType';
           const callback = mockObject('callback');
@@ -86,7 +86,7 @@ describe('event.BaseListener', () => {
           const hashValue = 'hashValue';
           spyOn(listener, 'getHash_').and.returnValue(hashValue);
 
-          const mockDeregister = jasmine.createSpyObj('Deregister', ['dispose']);
+          const mockDeregister = createSpyObject('Deregister', ['dispose']);
           listener['deregisterFns_'].set(hashValue, mockDeregister);
 
           assert(listener.listenTo(mockListenable, eventType, callback, useCapture)).to
@@ -98,7 +98,7 @@ describe('event.BaseListener', () => {
   });
 
   describe('unlistenFrom', () => {
-    it('should deregister the corresponding deregister', () => {
+    should('deregister the corresponding deregister', () => {
       const listenable = mockObject('listenable');
 
       const eventType = 'eventType';
@@ -107,7 +107,7 @@ describe('event.BaseListener', () => {
       const hashValue = 'hashValue';
       spyOn(listener, 'getHash_').and.returnValue(hashValue);
 
-      const mockDeregister = jasmine.createSpyObj('Deregister', ['dispose']);
+      const mockDeregister = createSpyObject('Deregister', ['dispose']);
       listener['deregisterFns_'].set(hashValue, mockDeregister);
 
       listener.unlistenFrom(listenable, eventType, callback, useCapture);
@@ -117,7 +117,7 @@ describe('event.BaseListener', () => {
           .haveBeenCalledWith(listenable, eventType, callback, useCapture);
     });
 
-    it('should not throw error if there are no corresponding deregisters', () => {
+    should('not throw error if there are no corresponding deregisters', () => {
       const listenable = mockObject('listenable');
 
       const eventType = 'eventType';

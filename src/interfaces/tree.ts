@@ -1,4 +1,4 @@
-import { Collection } from '../interfaces';
+import { Collection } from '.';
 
 export interface Tree<K, V, C extends Collection<V>> {
   getChildNode(key: K): Tree<K, V, C> | null;

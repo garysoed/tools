@@ -1,41 +1,41 @@
-import { assert, TestBase } from '../test-base';
-TestBase.setup();
-
-import { IntegerParser, ObjectParser, StringParser } from '../parse';
+import { assert, should } from 'gs-testing/export/main';
+import { IntegerParser } from './integer-parser';
+import { ObjectParser } from './object-parser';
+import { StringParser } from './string-parser';
 
 
 describe('parser.ObjectParser', () => {
-  describe('parse', () => {
-    it(`should parse correctly`, () => {
+  describe('convertBackward', () => {
+    should(`parse correctly`, () => {
       const parser = ObjectParser({a: StringParser, b: IntegerParser});
 
-      assert(parser.parse('{"a":"abc","b":"123"}')).to.equal({a: 'abc', b: 123});
+      assert(parser.convertBackward('{"a":"abc","b":"123"}')).to.equal({a: 'abc', b: 123});
     });
 
-    it(`should return null if the key does not exist`, () => {
+    should(`return null if the key does not exist`, () => {
       const parser = ObjectParser({a: StringParser, b: IntegerParser});
 
-      assert(parser.parse('{"a":"abc"}')).to.beNull();
+      assert(parser.convertBackward('{"a":"abc"}')).to.beNull();
     });
 
-    it(`should return null if not a json`, () => {
+    should(`return null if not a json`, () => {
       const parser = ObjectParser({a: StringParser, b: IntegerParser});
 
-      assert(parser.parse('[]')).to.beNull();
+      assert(parser.convertBackward('[]')).to.beNull();
     });
   });
 
-  describe('stringify', () => {
-    it(`should stringify correctly`, () => {
+  describe('convertForward', () => {
+    should(`stringify correctly`, () => {
       const parser = ObjectParser({a: StringParser, b: IntegerParser});
 
-      assert(parser.stringify({a: 'abc', b: 123})).to.equal('{"a":"abc","b":"123"}');
+      assert(parser.convertForward({a: 'abc', b: 123})).to.equal('{"a":"abc","b":"123"}');
     });
 
-    it(`should return '' if the value is null`, () => {
+    should(`return '' if the value is null`, () => {
       const parser = ObjectParser({a: StringParser, b: IntegerParser});
 
-      assert(parser.stringify(null)).to.equal('');
+      assert(parser.convertForward(null)).to.equal('');
     });
   });
 });

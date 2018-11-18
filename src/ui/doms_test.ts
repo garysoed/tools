@@ -1,7 +1,5 @@
-import { assert, TestBase } from '../test-base';
-TestBase.setup();
-
-import { Fakes } from '../mock/fakes';
+import { assert, should } from 'gs-testing/export/main';
+import { createSpy, fake } from 'gs-testing/export/spy';
 import { Doms } from '../ui/doms';
 
 
@@ -18,16 +16,16 @@ describe('ui.Doms', () => {
   });
 
   describe('domsIterable', () => {
-    it('should return the correct iterable', () => {
+    should('return the correct iterable', () => {
       const element1 = document.createElement('a');
       const element2 = document.createElement('b');
       const element3 = document.createElement('div');
 
-      const mockCallback = Fakes.build(jasmine.createSpy('Callback'))
+      const mockCallback = fake(createSpy<HTMLElement|null, [HTMLElement]>('Callback'))
           .when(element1).return(element2)
           .when(element2).return(element3)
           .when(element3).return(null)
-          .else().return(null);
+          .always().return(null);
 
       assert(Doms.domIterable(element1, mockCallback)).to.startWith([
         element1,
@@ -38,7 +36,7 @@ describe('ui.Doms', () => {
   });
 
   describe('getNextSiblings', () => {
-    it(`should return the siblings correctly`, () => {
+    should(`return the siblings correctly`, () => {
       const element1 = document.createElement('div');
       const element2 = document.createElement('div');
       const element3 = document.createElement('div');
@@ -53,25 +51,8 @@ describe('ui.Doms', () => {
     });
   });
 
-  describe('getShadowHost', () => {
-    it('should return the shadow host', () => {
-      const host = document.createElement('div');
-      const fromEl = document.createElement('div');
-      const shadowRoot = host['createShadowRoot']();
-      shadowRoot.appendChild(fromEl);
-      assert(Doms.getShadowHost(fromEl)).to.equal(host);
-    });
-
-    it('should return null if the parent node is not a shadow root', () => {
-      const host = document.createElement('div');
-      const fromEl = document.createElement('div');
-      host.appendChild(fromEl);
-      assert(Doms.getShadowHost(fromEl)).to.beNull();
-    });
-  });
-
   describe('offsetParentIterable', () => {
-    it('should create the correct iterable', () => {
+    should('create the correct iterable', () => {
       const fromEl = document.createElement('div');
       const parentEl = document.createElement('div');
       parentEl.appendChild(fromEl);
@@ -92,7 +73,7 @@ describe('ui.Doms', () => {
   });
 
   describe('parentIterable', () => {
-    it('should create the correct iterable', () => {
+    should('create the correct iterable', () => {
       const fromEl = document.createElement('div');
       const parentEl = document.createElement('div');
       parentEl.appendChild(fromEl);
@@ -107,32 +88,14 @@ describe('ui.Doms', () => {
         ancestorEl,
         rootEl,
         document.body,
-        document.documentElement,
-      ]);
-    });
-
-    it('should iterate through shadow root', () => {
-      const host = document.createElement('div');
-      const parentEl = document.createElement('div');
-      const fromEl = document.createElement('div');
-      const shadowRoot = host['createShadowRoot']();
-      shadowRoot.appendChild(parentEl);
-      parentEl.appendChild(fromEl);
-      rootEl.appendChild(host);
-
-      assert(Doms.parentIterable(fromEl, true)).to.startWith([
-        fromEl,
-        parentEl,
-        host,
-        rootEl,
-        document.body,
-        document.documentElement,
+        // tslint:disable-next-line:no-non-null-assertion
+        document.documentElement!,
       ]);
     });
   });
 
   describe('relativeOffsetTop', () => {
-    it('should return the relative top distance between the two given elements', () => {
+    should('return the relative top distance between the two given elements', () => {
       const fromEl = document.createElement('div');
       const parentEl = document.createElement('div');
       parentEl.style.paddingTop = '40px';
@@ -147,7 +110,7 @@ describe('ui.Doms', () => {
       assert(Doms.relativeOffsetTop(fromEl, toEl)).to.equal(60);
     });
 
-    it('should throw error if the to element is statically positioned', () => {
+    should('throw error if the to element is statically positioned', () => {
       const fromEl = document.createElement('div');
       const parentEl = document.createElement('div');
       const toEl = document.createElement('div');
@@ -157,10 +120,10 @@ describe('ui.Doms', () => {
 
       assert(() => {
         Doms.relativeOffsetTop(fromEl, toEl);
-      }).to.throwError(/offset ancestor/);
+      }).to.throwErrorWithMessage(/offset ancestor/);
     });
 
-    it('should throw error if the to element is not an ancestor of the from element', () => {
+    should('throw error if the to element is not an ancestor of the from element', () => {
       const fromEl = document.createElement('div');
       const toEl = document.createElement('div');
 
@@ -168,7 +131,7 @@ describe('ui.Doms', () => {
 
       assert(() => {
         Doms.relativeOffsetTop(fromEl, toEl);
-      }).to.throwError(/offset ancestor/);
+      }).to.throwErrorWithMessage(/offset ancestor/);
     });
   });
 });

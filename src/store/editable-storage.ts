@@ -8,7 +8,7 @@ export interface EditableStorage<TFull, TSummary = TFull> extends ReadableStorag
    * @param id ID of the object to delete.
    * @return Promise that will be resolved when the deletion process is successful.
    */
-  delete(id: string): Promise<void>;
+  delete(id: string): Promise<any>;
 
   /**
    * Reserves a new ID in the storage.
@@ -23,5 +23,5 @@ export interface EditableStorage<TFull, TSummary = TFull> extends ReadableStorag
    * @param instance Object to update.
    * @return Promise that will be resolved when the update operation is completed.
    */
-  update(id: string, instance: TFull): Promise<void>;
+  update(id: string, instance: TFull): Promise<any>;
 }

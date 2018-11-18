@@ -23,6 +23,7 @@ export class OrderedSet<T> implements FiniteCollection<T>, Ordered<T> {
 
     const clone = this.data_.slice(0);
     clone.push(item);
+
     return new OrderedSet(clone);
   }
 
@@ -32,6 +33,7 @@ export class OrderedSet<T> implements FiniteCollection<T>, Ordered<T> {
     for (const item of itemsToAdd) {
       clone.push(item);
     }
+
     return new OrderedSet(clone);
   }
 
@@ -43,6 +45,7 @@ export class OrderedSet<T> implements FiniteCollection<T>, Ordered<T> {
 
     const clone = this.data_.slice(0);
     clone.splice(index, 1);
+
     return new OrderedSet(clone);
   }
 
@@ -54,12 +57,14 @@ export class OrderedSet<T> implements FiniteCollection<T>, Ordered<T> {
         clone.splice(index, 1);
       }
     }
+
     return new OrderedSet(clone);
   }
 
   deleteAt(index: number): OrderedSet<T> {
     const clone = this.data_.slice(0);
     clone.splice(index, 1);
+
     return new OrderedSet(clone);
   }
 
@@ -83,6 +88,7 @@ export class OrderedSet<T> implements FiniteCollection<T>, Ordered<T> {
         return false;
       }
     }
+
     return true;
   }
 
@@ -93,6 +99,7 @@ export class OrderedSet<T> implements FiniteCollection<T>, Ordered<T> {
         newItems.push(item);
       }
     }
+
     return OrderedSet.of(newItems);
   }
 
@@ -108,6 +115,7 @@ export class OrderedSet<T> implements FiniteCollection<T>, Ordered<T> {
         return item;
       }
     }
+
     return null;
   }
 
@@ -132,6 +140,7 @@ export class OrderedSet<T> implements FiniteCollection<T>, Ordered<T> {
 
     const clone = [...this.deleteAll(items)];
     clone.splice(index - preInsertionCount, 0, ...items);
+
     return new OrderedSet<T>(clone);
   }
 
@@ -165,6 +174,14 @@ export class OrderedSet<T> implements FiniteCollection<T>, Ordered<T> {
     return this.max(Orderings.reverse(ordering));
   }
 
+  pop(): OrderedSet<T> {
+    return this.deleteAt(this.data_.length - 1);
+  }
+
+  push(item: T): OrderedSet<T> {
+    return this.insertAt(this.data_.length, item);
+  }
+
   reduceItem<R>(fn: (prevItem: R, item: T) => R, init: R): R {
     return this.data_.reduce((prev: R, curr: T) => {
       return fn(prev, curr);
@@ -189,12 +206,14 @@ export class OrderedSet<T> implements FiniteCollection<T>, Ordered<T> {
         return true;
       }
     }
+
     return false;
   }
 
   sort(compareFn: (item1: T, item2: T) => CompareResult): OrderedSet<T> {
     const clone = this.data_.slice(0);
     clone.sort(compareFn);
+
     return new OrderedSet<T>(clone);
   }
 
@@ -207,6 +226,7 @@ export class OrderedSet<T> implements FiniteCollection<T>, Ordered<T> {
         uniques.push(item);
       }
     }
+
     return new OrderedSet(uniques);
   }
 }

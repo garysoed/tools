@@ -1,4 +1,4 @@
-import { assert, TestBase } from '../test-base';
+import { assert, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { ANNOTATIONS, eventDetails } from '../event/event-details';
@@ -9,7 +9,7 @@ import { ANNOTATIONS, eventDetails } from '../event/event-details';
 class TestClass { }
 
 describe('event.eventDetails', () => {
-  it('should add the annotation correctly', () => {
+  should('add the annotation correctly', () => {
     const method = 'method';
     const index = 3;
     eventDetails()(TestClass.prototype, method, index);

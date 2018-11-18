@@ -1,5 +1,4 @@
-import { assert, TestBase } from '../test-base';
-TestBase.setup();
+import { assert, should } from 'gs-testing/export/main';
 
 import { Enums } from './enums';
 
@@ -12,13 +11,13 @@ enum TestEnum {
 
 describe('typescript.Enums', () => {
   describe('fromLowerCaseString', () => {
-    it('should return the correct enum', () => {
+    should('return the correct enum', () => {
       assert(Enums.fromLowerCaseString<TestEnum>('value_a', TestEnum)).to.equal(TestEnum.VALUE_A);
     });
   });
 
   describe('getAllValues_', () => {
-    it('should return the correct set of values', () => {
+    should('return the correct set of values', () => {
       /**
        * @test
        */
@@ -28,7 +27,7 @@ describe('typescript.Enums', () => {
   });
 
   describe('toLowerCaseString', () => {
-    it('should return the correct string', () => {
+    should('return the correct string', () => {
       assert(Enums.toLowerCaseString(TestEnum.VALUE_A, TestEnum)).to.equal('value_a');
     });
   });

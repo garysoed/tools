@@ -1,5 +1,5 @@
-import { Collection } from '../interfaces/collection';
-import { FiniteCollection } from '../interfaces/finite-collection';
+import { Collection } from './collection';
+import { FiniteCollection } from './finite-collection';
 
 export interface Indexed<I, T> {
   deleteAllKeys(keys: FiniteCollection<I>): Indexed<I, T>;

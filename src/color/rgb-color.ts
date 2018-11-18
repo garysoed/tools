@@ -1,6 +1,6 @@
-import { BaseColor } from '../color/base-color';
 import { cache } from '../data/cache';
 import { Errors } from '../error';
+import { BaseColor } from './base-color';
 
 
 export class RgbColor extends BaseColor {
@@ -43,13 +43,13 @@ export class RgbColor extends BaseColor {
     let h1;
     switch (max) {
       case red:
-        h1 = ((green - blue) / chroma) % 6;
+        h1 = ((green - blue) / chroma / 255) % 6;
         break;
       case green:
-        h1 = ((blue - red) / chroma) + 2;
+        h1 = ((blue - red) / chroma / 255) + 2;
         break;
       case blue:
-        h1 = ((red - green) / chroma) + 4;
+        h1 = ((red - green) / chroma / 255) + 4;
         break;
       default:
         throw new Error(`Should not be able to reach here`);

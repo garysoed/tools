@@ -1,4 +1,4 @@
-import { AnyType, ArrayOfType, InstanceofType, IterableOfType, TupleOfType, Type } from 'gs-types/export';
+import { AnyType, ArrayOfType, IterableOfType, TupleOfType, Type } from 'gs-types/export';
 import { FiniteCollection, FiniteIndexed, Ordering } from '../interfaces';
 import { ImmutableSet } from './immutable-set';
 import { OrderedMap } from './ordered-map';
@@ -26,12 +26,14 @@ export class ImmutableMap<K, V> implements
     for (const [key, value] of items) {
       clone.set(key, value);
     }
+
     return new ImmutableMap(clone);
   }
 
   delete([key, _]: [K, V]): ImmutableMap<K, V> {
     const clone = new Map(this.data_);
     clone.delete(key);
+
     return new ImmutableMap(clone);
   }
 
@@ -40,6 +42,7 @@ export class ImmutableMap<K, V> implements
     for (const [key, _] of items) {
       clone.delete(key);
     }
+
     return new ImmutableMap(clone);
   }
 
@@ -48,12 +51,14 @@ export class ImmutableMap<K, V> implements
     for (const key of keys) {
       clone.delete(key);
     }
+
     return new ImmutableMap(clone);
   }
 
   deleteKey(key: K): ImmutableMap<K, V> {
     const clone = new Map(this.data_);
     clone.delete(key);
+
     return new ImmutableMap(clone);
   }
 
@@ -73,6 +78,7 @@ export class ImmutableMap<K, V> implements
         return false;
       }
     }
+
     return true;
   }
 
@@ -87,6 +93,7 @@ export class ImmutableMap<K, V> implements
         newItems.push(item);
       }
     }
+
     return ImmutableSet.of(newItems);
   }
 
@@ -143,6 +150,7 @@ export class ImmutableMap<K, V> implements
         .mapItem(([key, value]: [K, V]) => {
           return [key, fn(value, key)] as [K, R];
         });
+
     return ImmutableMap.of(mappedEntries);
   }
 
@@ -151,6 +159,7 @@ export class ImmutableMap<K, V> implements
         .mapItem(([key, value]: [K, V]) => {
           return fn([key, value]);
         });
+
     return ImmutableSet.of(mappedEntries);
   }
 
@@ -179,18 +188,20 @@ export class ImmutableMap<K, V> implements
     for (const [key, value] of this.data_) {
       result = fn(result, value, key);
     }
+
     return result;
   }
 
   reduceItem<R>(fn: (prevItem: R, item: [K, V]) => R, init: R): R {
     return this.reduce((prevValue: R, value: V, key: K) => {
       return fn(prevValue, [key, value]);
-    }, init);
+    },                 init);
   }
 
   set(key: K, item: V): ImmutableMap<K, V> {
     const clone = new Map(this.data_);
     clone.set(key, item);
+
     return new ImmutableMap(clone);
   }
 
@@ -214,11 +225,16 @@ export class ImmutableMap<K, V> implements
         return true;
       }
     }
+
     return false;
   }
 
   sort(ordering: Ordering<[K, V]>): OrderedMap<K, V> {
     return OrderedMap.of([...this.entries().sort(ordering)]);
+  }
+
+  toString(): string {
+    return `ImmutableMap()`;
   }
 
   values(): ImmutableSet<V> {

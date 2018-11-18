@@ -1,4 +1,4 @@
-import { assert, TestBase } from '../test-base';
+import { assert, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { Bus } from '../event/bus';
@@ -15,11 +15,11 @@ describe('event.Bus', () => {
   });
 
   describe('dispatch', () => {
-    it('should call all the registered callbacks', () => {
+    should('call all the registered callbacks', () => {
       const eventType = 'testevent';
       const event = {type: eventType};
       let i = 0;
-      const mockBubbleHandler = jasmine.createSpy('BubbleHandler');
+      const mockBubbleHandler = createSpy('BubbleHandler');
       TestDispose.add(bus.on(
           eventType,
           (payload: any) => {
@@ -28,7 +28,7 @@ describe('event.Bus', () => {
           window,
           false));
 
-      const mockCaptureHandler = jasmine.createSpy('CaptureHandler');
+      const mockCaptureHandler = createSpy('CaptureHandler');
       TestDispose.add(bus.on(
           eventType,
           (payload: any) => {
@@ -47,13 +47,13 @@ describe('event.Bus', () => {
       assert(mockBubbleHandler).to.haveBeenCalledWith(1, event);
     });
 
-    it('should handle case when no callbacks are registered', () => {
+    should('handle case when no callbacks are registered', () => {
       assert(() => {
         bus.dispatch('event', () => undefined);
       }).toNot.throw();
     });
 
-    it('should not throw error if one of the handlers throws', () => {
+    should('not throw error if one of the handlers throws', () => {
       const eventType = 'testevent';
       const event = {type: eventType};
       TestDispose.add(bus.on(
@@ -71,8 +71,8 @@ describe('event.Bus', () => {
   });
 
   describe('on', () => {
-    it('should return disposable function that stops listening to the event', () => {
-      const mockCallback = jasmine.createSpy('Callback');
+    should('return disposable function that stops listening to the event', () => {
+      const mockCallback = createSpy('Callback');
       const event = 'event';
 
       const disposableFunction = bus.on(event, mockCallback, window);

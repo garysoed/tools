@@ -1,8 +1,6 @@
-import { TestBase } from '../test-base';
-TestBase.setup();
-
-import { assert } from 'gs-testing/export/main';
-import { Mocks } from 'gs-testing/export/mock';
+import { assert, should } from 'gs-testing/export/main';
+import { mocks } from 'gs-testing/export/mock';
+import { createSpy, fake, Spy } from 'gs-testing/export/spy';
 import { TestDispose } from '../dispose/testing/test-dispose';
 import { Sequencer } from './sequencer';
 
@@ -16,27 +14,27 @@ describe('async.Sequencer', () => {
   });
 
   describe('run', () => {
-    let mockOperation: any;
+    let mockOperation: Spy<Promise<any>, []>;
 
     beforeEach(() => {
-      mockOperation = jasmine.createSpy('Operation');
+      mockOperation = createSpy('Operation');
     });
 
-    it('should return promise that is ran after the operation has completed', async () => {
-      mockOperation.and.returnValue(Promise.resolve());
+    should(`return promise that is ran after the operation has completed`, async () => {
+      fake(mockOperation).always().return(Promise.resolve());
       await sequencer.run(mockOperation);
       assert(mockOperation).to.haveBeenCalledWith();
     });
 
-    it('should not run the operation if the sequencer is disposed', async () => {
+    should(`not run the operation if the sequencer is disposed`, async () => {
       sequencer.dispose();
       await sequencer.run(mockOperation);
       assert(mockOperation).toNot.haveBeenCalled();
     });
 
-    it('should return promise that is ran after the operation has rejected', async () => {
-      const error = Mocks.object('error');
-      mockOperation.and.returnValue(Promise.reject(error));
+    should(`return promise that is ran after the operation has rejected`, async () => {
+      const error = mocks.object('error');
+      fake(mockOperation).always().return(Promise.reject(error));
       try {
         await sequencer.run(mockOperation);
       } catch (e) {

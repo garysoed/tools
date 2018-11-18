@@ -1,31 +1,30 @@
-import { assert, TestBase } from '../test-base';
-TestBase.setup();
+import { assert, should } from 'gs-testing/export/main';
 
 import { JsonParser } from '../parse/json-parser';
 
 
 describe('parse.JsonParser', () => {
-  describe('parse', () => {
-    it(`should parse correctly`, () => {
-      assert(JsonParser.parse('{"a":1,"b":{"c":"2"}}')).to.equal({a: 1, b: {c: '2'}});
+  describe('convertBackward', () => {
+    should(`parse correctly`, () => {
+      assert(JsonParser().convertBackward('{"a":1,"b":{"c":"2"}}')).to.equal({a: 1, b: {c: '2'}});
     });
 
-    it(`should return null for null inputs`, () => {
-      assert(JsonParser.parse(null)).to.beNull();
+    should(`return null for null inputs`, () => {
+      assert(JsonParser().convertBackward(null)).to.beNull();
     });
 
-    it(`should return null for ''`, () => {
-      assert(JsonParser.parse('')).to.beNull();
+    should(`return null for ''`, () => {
+      assert(JsonParser().convertBackward('')).to.beNull();
     });
   });
 
-  describe('stringify', () => {
-    it(`should stringify correctly`, () => {
-      assert(JsonParser.stringify({a: 1, b: {c: '2'}})).to.equal('{"a":1,"b":{"c":"2"}}');
+  describe('convertForward', () => {
+    should(`stringify correctly`, () => {
+      assert(JsonParser().convertForward({a: 1, b: {c: '2'}})).to.equal('{"a":1,"b":{"c":"2"}}');
     });
 
-    it(`should return '' for null`, () => {
-      assert(JsonParser.stringify(null)).to.equal('');
+    should(`return '' for null`, () => {
+      assert(JsonParser().convertForward(null)).to.equal('');
     });
   });
 });

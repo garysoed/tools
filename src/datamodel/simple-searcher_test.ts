@@ -1,4 +1,4 @@
-import { assert, Mocks, TestBase } from '../test-base';
+import { assert, Mocks, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { SimpleSearcher } from '../datamodel';
@@ -12,15 +12,15 @@ describe('datamodel.SimpleSearcher', () => {
   });
 
   describe('index', () => {
-    it(`should add the items correctly`, async () => {
+    should(`add the items correctly`, async () => {
       const index1 = 'index1';
-      const mockItem11 = jasmine.createSpyObj('Item11', ['getSearchIndex']);
+      const mockItem11 = createSpyObject('Item11', ['getSearchIndex']);
       mockItem11.getSearchIndex.and.returnValue(index1);
-      const mockItem12 = jasmine.createSpyObj('Item12', ['getSearchIndex']);
+      const mockItem12 = createSpyObject('Item12', ['getSearchIndex']);
       mockItem12.getSearchIndex.and.returnValue(index1);
 
       const index2 = 'index2';
-      const mockItem2 = jasmine.createSpyObj('Item2', ['getSearchIndex']);
+      const mockItem2 = createSpyObject('Item2', ['getSearchIndex']);
       mockItem2.getSearchIndex.and.returnValue(index2);
 
       const data = [mockItem11, mockItem12, mockItem2];
@@ -34,7 +34,7 @@ describe('datamodel.SimpleSearcher', () => {
   });
 
   describe('search', () => {
-    it(`should return the value correctly`, async () => {
+    should(`return the value correctly`, async () => {
       const token = 'token';
       const item1 = Mocks.object('item1');
       const item2 = Mocks.object('item2');
@@ -43,7 +43,7 @@ describe('datamodel.SimpleSearcher', () => {
       assert(await searcher.search(token)).to.haveElements([item1, item2]);
     });
 
-    it(`should return empty if the token does not exist`, async () => {
+    should(`return empty if the token does not exist`, async () => {
       assert(await searcher.search('token')).to.haveElements([]);
     });
   });

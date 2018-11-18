@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import { Disposable } from './disposable';
 
 /**
@@ -19,7 +20,7 @@ export const Flags = {
  * Base class of all disposable objects.
  */
 export class BaseDisposable implements Disposable {
-  private readonly disposables_: Disposable[] = [];
+  private readonly disposableHandlers_: (() => void)[] = [];
   private isDisposed_: boolean = false;
 
   constructor() {
@@ -36,7 +37,13 @@ export class BaseDisposable implements Disposable {
    */
   addDisposable(...disposables: Disposable[]): void {
     disposables.forEach((disposable: Disposable) => {
-      this.disposables_.push(disposable);
+      this.disposableHandlers_.push(() => disposable.dispose());
+    });
+  }
+
+  addSubscription(...subscriptions: Subscription[]): void {
+    subscriptions.forEach(subscription => {
+      this.disposableHandlers_.push(() => subscription.unsubscribe());
     });
   }
 
@@ -49,7 +56,7 @@ export class BaseDisposable implements Disposable {
     }
 
     this.disposeInternal();
-    this.disposables_.forEach((disposable: Disposable) => disposable.dispose());
+    this.disposableHandlers_.forEach(handler => handler());
 
     if (Flags.enableTracking) {
       const index = TRACKED_DISPOSABLES.indexOf(this);

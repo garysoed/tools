@@ -1,7 +1,9 @@
 import { ImmutableMap } from '../immutable/immutable-map';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { hash } from '../util/hash';
+import { ImmutableList } from '../immutable/immutable-list';
 
+export const __class = Symbol('class');
 
 /**
  * Generic class to manage annotations.
@@ -45,21 +47,26 @@ export class AnnotationsHandler<T> {
   /**
    * @return Map of property name to the value attached to that property.
    */
-  getAttachedValues(): ImmutableMap<string | symbol, ImmutableSet<T>> {
-    const entries: [string | symbol, ImmutableSet<T>][] = [];
+  getAttachedValues(): ImmutableMap<string|symbol, ImmutableList<T>> {
+    const entries: Array<[string|symbol, ImmutableList<T>]> = [];
     for (const [key, values] of this.propertyValues_) {
-      entries.push([key, ImmutableSet.of(values)] as [string | symbol, ImmutableSet<T>]);
+      entries.push([key, ImmutableList.of(values)] as [string|symbol, ImmutableList<T>]);
     }
 
-    const fluentMappable = ImmutableMap.of(entries);
+    const map = new Map(entries);
     if (this.parent_ !== null) {
       const parentAnnotationValues = AnnotationsHandler
           .of<T>(this.annotation_, this.parent_)
           .getAttachedValues();
 
-      return fluentMappable.addAll(parentAnnotationValues);
+      for (const [key, set] of parentAnnotationValues) {
+        const existingSet = map.get(key) || ImmutableList.of([]);
+        map.set(key, existingSet.addAll(set));
+      }
+
+      return ImmutableMap.of(map);
     } else {
-      return fluentMappable;
+      return ImmutableMap.of(map);
     }
   }
 

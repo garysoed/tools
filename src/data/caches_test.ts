@@ -1,4 +1,4 @@
-import { TestBase } from '../test-base';
+import { TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { assert } from 'gs-testing/export/main';
@@ -22,12 +22,12 @@ describe('data.Caches', () => {
   let spy: any;
 
   beforeEach(() => {
-    spy = jasmine.createSpy('spy');
+    spy = createSpy('spy');
     test = new TestClass(spy);
   });
 
   describe('clear', () => {
-    it('should clear the cache', () => {
+    should('clear the cache', () => {
       const value = 'value';
       spy.and.returnValue(value);
 
@@ -45,7 +45,7 @@ describe('data.Caches', () => {
   });
 
   describe('clearAll', () => {
-    it('should clear all the cache', () => {
+    should('clear all the cache', () => {
       const value = 'value';
       spy.and.returnValue(value);
 

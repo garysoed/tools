@@ -25,6 +25,7 @@ export class Cases {
             return `${value[0].toUpperCase()}${value.substring(1)}`;
           }
         });
+
     return [...list].join('');
   }
 
@@ -47,6 +48,7 @@ export class Cases {
         .map((value: string) => {
           return `${value[0].toUpperCase()}${value.substring(1)}`;
         });
+
     return [...list].join('');
   }
 
@@ -60,6 +62,7 @@ export class Cases {
         .map((value: string) => {
           return value.toUpperCase();
         });
+
     return [...list].join('_');
   }
 
@@ -98,6 +101,7 @@ export class Cases {
             return word.toLowerCase();
           });
     }
+
     return new Cases(words);
   }
 }

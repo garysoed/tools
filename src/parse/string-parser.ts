@@ -11,15 +11,14 @@ export const StringParser: Parser<string> = {
    * @param input The input string.
    * @return The string value.
    */
-  parse(input: string | null): string | null {
+  convertForward(input: string | null): string | null {
     return input;
   },
 
   /**
-   * @param value
    * @return The string value.
    */
-  stringify(value: string): string {
+  convertBackward(value: string): string {
     return value;
   },
 };

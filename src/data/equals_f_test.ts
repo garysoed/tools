@@ -1,8 +1,8 @@
-import { TestBase } from '../test-base';
+import { TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { assert } from 'gs-testing/export/main';
-import { Mocks } from 'gs-testing/export/mock';
+import { mocks } from 'gs-testing/export/mock';
 import { equals, Property } from './equals';
 
 /**
@@ -23,18 +23,18 @@ class ComplexClass {
 }
 
 describe('data.Equals - Functional', () => {
-  it('should handle numbers correctly', () => {
+  should('handle numbers correctly', () => {
     assert(equals(123, 123)).to.beTrue();
     assert(equals(123, 456)).to.beFalse();
   });
 
-  it('should handle records correctly', () => {
-    const object = Mocks.object('object');
+  should('handle records correctly', () => {
+    const object = mocks.object('object');
     assert(equals(object, object)).to.beTrue();
     assert(equals({}, {})).to.beFalse();
   });
 
-  it('should handle simple classes correctly', () => {
+  should('handle simple classes correctly', () => {
     const simple1 = new SimpleClass();
     simple1.a = 123;
     simple1.b = 'b';
@@ -54,7 +54,7 @@ describe('data.Equals - Functional', () => {
     assert(equals(simple1, different)).to.beFalse();
   });
 
-  it('should handle complex classes correctly', () => {
+  should('handle complex classes correctly', () => {
     const complex1 = new ComplexClass();
     complex1.a = 456;
     complex1.s = new SimpleClass();

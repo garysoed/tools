@@ -1,7 +1,7 @@
-import { Collection } from '../interfaces/collection';
-import { Finite } from '../interfaces/finite';
-import { Ordered } from '../interfaces/ordered';
-import { Ordering } from '../interfaces/ordering';
+import { Collection } from './collection';
+import { Finite } from './finite';
+import { Ordered } from './ordered';
+import { Ordering } from './ordering';
 
 /**
  * A collection that has a finite size.

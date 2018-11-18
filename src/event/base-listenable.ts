@@ -33,18 +33,14 @@ export class BaseListenable<T> extends BaseDisposable implements Listenable<T> {
    * @param payload Any payloads that are associated with the event, if any.
    */
   dispatch(eventType: T, callback: () => void = () => undefined, payload: any = null): void {
-    if (this.captureCallbacksMap_.has(eventType)) {
-      this.captureCallbacksMap_.get(eventType).forEach((handler: (data: any) => void) => {
-        handler(payload);
-      });
+    for (const handler of this.captureCallbacksMap_.get(eventType) || []) {
+      handler(payload);
     }
 
     callback();
 
-    if (this.bubbleCallbacksMap_.has(eventType)) {
-      this.bubbleCallbacksMap_.get(eventType).forEach((handler: (data: any) => void) => {
-        handler(payload);
-      });
+    for (const handler of this.bubbleCallbacksMap_.get(eventType) || []) {
+      handler(payload);
     }
   }
 
@@ -52,18 +48,14 @@ export class BaseListenable<T> extends BaseDisposable implements Listenable<T> {
       eventType: T,
       callback: () => Promise<void> = async () => Promise.resolve(),
       payload: any = null): Promise<void> {
-    if (this.captureCallbacksMap_.has(eventType)) {
-      this.captureCallbacksMap_.get(eventType).forEach((handler: (data: any) => void) => {
-        handler(payload);
-      });
+    for (const handler of this.captureCallbacksMap_.get(eventType) || []) {
+      handler(payload);
     }
 
     await callback();
 
-    if (this.bubbleCallbacksMap_.has(eventType)) {
-      this.bubbleCallbacksMap_.get(eventType).forEach((handler: (data: any) => void) => {
-        handler(payload);
-      });
+    for (const handler of this.bubbleCallbacksMap_.get(eventType) || []) {
+      handler(payload);
     }
   }
 
@@ -87,12 +79,10 @@ export class BaseListenable<T> extends BaseDisposable implements Listenable<T> {
       context: Object,
       useCapture: boolean = false): DisposableFunction {
     const map = useCapture ? this.captureCallbacksMap_ : this.bubbleCallbacksMap_;
-    if (!map.has(eventType)) {
-      map.set(eventType, []);
-    }
-    const callbacks = map.get(eventType);
+    const callbacks = map.get(eventType) || [];
     const boundCallback = callback.bind(context);
     callbacks.push(boundCallback);
+    map.set(eventType, callbacks);
 
     return new DisposableFunction(() => {
       const index = callbacks.indexOf(boundCallback);

@@ -1,4 +1,4 @@
-import { TestBase } from '../test-base';
+import { TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { assert } from 'gs-testing/export/main';
@@ -20,9 +20,9 @@ class DisposableClass extends BaseDisposable {
 
 describe('dispose.BaseDisposable', () => {
   describe('dispose', () => {
-    it('should call dispose internal and dispose added disposables', () => {
-      const mockDisposable = jasmine.createSpyObj('Disposable', ['dispose']);
-      const callback = jasmine.createSpy('callback');
+    should('call dispose internal and dispose added disposables', () => {
+      const mockDisposable = createSpyObject('Disposable', ['dispose']);
+      const callback = createSpy('callback');
       const disposable = new DisposableClass(callback);
 
       disposable.addDisposable(mockDisposable);
@@ -34,8 +34,8 @@ describe('dispose.BaseDisposable', () => {
     });
   });
 
-  it('should be noop if already disposed', () => {
-    const callback = jasmine.createSpy('callback');
+  should('be noop if already disposed', () => {
+    const callback = createSpy('callback');
     const disposable = new DisposableClass(callback);
 
     disposable.dispose();

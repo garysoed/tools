@@ -1,6 +1,9 @@
 import { ArrayOfType, NonNullType } from 'gs-types/export';
 import { ImmutableList } from '../immutable';
-import { FloatParser, HexParser, IntegerParser, PercentParser } from '../parse';
+import { FloatParser } from '../parse/float-parser';
+import { HexParser } from '../parse/hex-parser';
+import { IntegerParser } from '../parse/integer-parser';
+import { PercentParser } from '../parse/percent-parser';
 import { Color } from './color';
 import { HslColor } from './hsl-color';
 import { RgbColor } from './rgb-color';
@@ -35,7 +38,9 @@ export const Colors = {
         const list = ImmutableList
             .of(matchString.replace(/ /g, '').split(','))
             .map((match: string, index: number) => {
-              return index <= 2 ? IntegerParser.parse(match) : FloatParser.parse(match);
+              return index <= 2 ?
+                  IntegerParser.convertBackward(match) :
+                  FloatParser.convertBackward(match);
             });
         components = [...list];
       } else {
@@ -43,7 +48,7 @@ export const Colors = {
         const list = ImmutableList
             .of(rgbString.replace(/ +/g, ' ').trim().split(' '))
             .map((match: string) => {
-              return IntegerParser.parse(match.trim());
+              return IntegerParser.convertBackward(match.trim());
             });
         components = [...list];
       }
@@ -72,7 +77,7 @@ export const Colors = {
 
                 return Number.isNaN(parsed) ? null : parsed;
               } else {
-                return PercentParser.parse(match);
+                return PercentParser.convertBackward(match);
               }
             });
         components = [...list];
@@ -86,7 +91,7 @@ export const Colors = {
 
                 return Number.isNaN(parsed) ? null : parsed;
               } else {
-                return PercentParser.parse(match);
+                return PercentParser.convertBackward(match);
               }
             });
         components = [...list];
@@ -111,7 +116,7 @@ export const Colors = {
           components = [...ImmutableList
               .of(matches.split(''))
               .map((match: string) => {
-                return HexParser.parse(match + match);
+                return HexParser.convertBackward(match + match);
               })];
           break;
         case 6:
@@ -119,7 +124,7 @@ export const Colors = {
           components = [...ImmutableList
               .of(matches.match(/../g) || [])
               .map((match: string) => {
-                return HexParser.parse(match);
+                return HexParser.convertBackward(match);
               })];
           break;
         default:
@@ -167,5 +172,34 @@ export const Colors = {
         Math.round(color1.getRed() * amount + color2.getRed() * (1 - amount)),
         Math.round(color1.getGreen() * amount + color2.getGreen() * (1 - amount)),
         Math.round(color1.getBlue() * amount + color2.getBlue() * (1 - amount)));
+  },
+
+  neonize(color: Color, ratio: number): Color {
+    const targets = [
+      RgbColor.newInstance(255, 0, 0),
+      RgbColor.newInstance(255, 255, 0),
+      RgbColor.newInstance(0, 255, 0),
+      RgbColor.newInstance(0, 255, 255),
+      RgbColor.newInstance(0, 0, 255),
+      RgbColor.newInstance(255, 0, 255),
+    ];
+
+    const colorHue = color.getHue();
+
+    let minHueDiff = Number.POSITIVE_INFINITY;
+    let selectedTarget = null;
+    for (const target of targets) {
+      const hueDiff = Math.abs(target.getHue() - colorHue);
+      if (hueDiff < minHueDiff) {
+        minHueDiff = hueDiff;
+        selectedTarget = target;
+      }
+    }
+
+    if (!selectedTarget) {
+      return color;
+    }
+
+    return Colors.mix(selectedTarget, color, ratio);
   },
 };

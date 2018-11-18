@@ -10,7 +10,7 @@ export class Enums {
    * @param enumSet The set of enum values.
    * @return The enum value corresponding to the enum name.
    */
-  static fromLowerCaseString<E>(stringValue: string, enumSet: gs.IEnum): E {
+  static fromLowerCaseString<E>(stringValue: string, enumSet: any): E {
     return enumSet[stringValue.toUpperCase()];
   }
 
@@ -21,7 +21,7 @@ export class Enums {
    * @param enumSet The set of enum values.
    * @return The enum value corresponding to the enum number.
    */
-  static fromNumberString<E>(stringValue: string, enumSet: gs.IEnum): E {
+  static fromNumberString<E>(stringValue: string, enumSet: any): E {
     const nameString: string = enumSet[stringValue];
 
     return enumSet[nameString] as E;
@@ -33,7 +33,7 @@ export class Enums {
    * @param enumSet Enum whose values should be returned.
    * @return Array of enum values.
    */
-  static getAllValues<E>(enumSet: gs.IEnum): E[] {
+  static getAllValues<E>(enumSet: any): E[] {
     const values: E[] = [];
     let index = 0;
     while (enumSet[index] !== undefined) {
@@ -51,7 +51,7 @@ export class Enums {
    * @param enumSet The set of enum values.
    * @return The lower case version of the enum name that corresponds to the enum value.
    */
-  static toLowerCaseString(enumValue: any, enumSet: gs.IEnum): string {
+  static toLowerCaseString(enumValue: any, enumSet: any): string {
     return enumSet[enumValue].toLowerCase();
   }
 }

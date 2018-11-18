@@ -1,7 +1,5 @@
-import { TestBase } from '../test-base';
-TestBase.setup();
-
-import { assert, Match } from 'gs-testing/export/main';
+import { assert, match, should } from 'gs-testing/export/main';
+import { createSpyObject, fake, spy, SpyObj } from 'gs-testing/export/spy';
 import { ExponentialBackoffRetryStrategy } from './exponential-backoff-retry-strategy';
 
 describe('async.ExponentialBackoffRetryStrategy', () => {
@@ -12,10 +10,10 @@ describe('async.ExponentialBackoffRetryStrategy', () => {
   const RETRY_COUNT = 2;
 
   let strategy: ExponentialBackoffRetryStrategy;
-  let mockWindow: any;
+  let mockWindow: SpyObj<Window>;
 
   beforeEach(() => {
-    mockWindow = jasmine.createSpyObj('Window', ['setTimeout']);
+    mockWindow = createSpyObject('Window', ['setTimeout']);
     strategy = new ExponentialBackoffRetryStrategy(
         MULTIPLIER,
         EXPONENT_BASE,
@@ -26,23 +24,24 @@ describe('async.ExponentialBackoffRetryStrategy', () => {
   });
 
   describe('onReject', () => {
-    it(`should resolve after the correct delay`, async () => {
-      mockWindow.setTimeout.and.callFake((callback: any) => callback());
-      spyOn(Math, 'random').and.returnValue(1 / 6);
-
-      const newStrategy = await strategy.onReject();
-      assert(newStrategy['retryCount_']).to.equal(RETRY_COUNT + 1);
-      assert(mockWindow.setTimeout).to.haveBeenCalledWith(Match.anyFunction<() => void>(), 7);
-    });
-
-    it(`should not exceed the max time`, async () => {
-      mockWindow.setTimeout.and.callFake((callback: any) => callback());
-      spyOn(Math, 'random').and.returnValue(1);
+    should(`resolve after the correct delay`, async () => {
+      fake(mockWindow.setTimeout).always().call((callback: any) => callback());
+      fake(spy(Math, 'random')).always().return(1 / 6);
 
       const newStrategy = await strategy.onReject();
       assert(newStrategy['retryCount_']).to.equal(RETRY_COUNT + 1);
       assert(mockWindow.setTimeout).to
-          .haveBeenCalledWith(Match.anyFunction<() => void>(), MAX_TIME);
+          .haveBeenCalledWith(match.anyObjectThat().beAnInstanceOf(Function), 7);
+    });
+
+    should(`not exceed the max time`, async () => {
+      fake(mockWindow.setTimeout).always().call((callback: any) => callback());
+      fake(spy(Math, 'random')).always().return(1);
+
+      const newStrategy = await strategy.onReject();
+      assert(newStrategy['retryCount_']).to.equal(RETRY_COUNT + 1);
+      assert(mockWindow.setTimeout).to
+          .haveBeenCalledWith(match.anyObjectThat().beAnInstanceOf(Function), MAX_TIME);
     });
   });
 });

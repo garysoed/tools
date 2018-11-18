@@ -1,4 +1,4 @@
-import { TestBase } from '../test-base';
+import { TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { assert } from 'gs-testing/export/main';
@@ -11,20 +11,20 @@ describe('dispose.DisposableFunction', () => {
   let disposableFunction: DisposableFunction;
 
   beforeEach(() => {
-    mockFunction = jasmine.createSpy('Function');
+    mockFunction = createSpy('Function');
     disposableFunction = new DisposableFunction(mockFunction);
     TestDispose.add(disposableFunction);
   });
 
   describe('dispose', () => {
-    it('should run the given function', () => {
+    should('run the given function', () => {
       disposableFunction.dispose();
       assert(mockFunction).to.haveBeenCalledWith();
     });
   });
 
   describe('run', () => {
-    it('should run the given function', () => {
+    should('run the given function', () => {
       disposableFunction.run();
       assert(mockFunction).to.haveBeenCalledWith();
     });

@@ -1,5 +1,5 @@
 import { assert } from 'gs-testing/export/main';
-import { TestBase } from '../test-base';
+import { TestBase } from 'gs-testing/export/main';
 import { Property, toString } from './stringify';
 TestBase.setup();
 
@@ -21,24 +21,24 @@ class ComplexClass {
 }
 
 describe('data.Stringify - Functional', () => {
-  it('should stringify numbers correctly', () => {
+  should('stringify numbers correctly', () => {
     assert(toString(123)).to.equal('123');
   });
 
-  it('should stringify dates correctly', () => {
+  should('stringify dates correctly', () => {
     const date = new Date(123);
     assert(toString(date)).to.equal(date.toLocaleString());
   });
 
-  it('should stringify strings correctly', () => {
+  should('stringify strings correctly', () => {
     assert(toString('string')).to.equal('"string"');
   });
 
-  it('should stringify booleans correctly', () => {
+  should('stringify booleans correctly', () => {
     assert(toString(true)).to.equal('true');
   });
 
-  it('should stringify simple objects correctly with single line', () => {
+  should('stringify simple objects correctly with single line', () => {
     const simple = new SimpleClass();
     simple.a = 123;
     simple.b = 'b';
@@ -46,7 +46,7 @@ describe('data.Stringify - Functional', () => {
         .to.equal('{a: 123|b: "b"}');
   });
 
-  it('should stringify complex objects correctly with single line', () => {
+  should('stringify complex objects correctly with single line', () => {
     const simple = new SimpleClass();
     simple.a = 5123;
     simple.b = 'sb';
@@ -58,7 +58,7 @@ describe('data.Stringify - Functional', () => {
         .to.equal('{a: 123|b: {a: 5123|b: "sb"}|c: "c"}');
   });
 
-  it('should stringify simple objects correctly with multiline', () => {
+  should('stringify simple objects correctly with multiline', () => {
     const simple = new SimpleClass();
     simple.a = 123;
     simple.b = 'b';
@@ -71,7 +71,7 @@ describe('data.Stringify - Functional', () => {
         ].join('\n'));
   });
 
-  it('should stringify complex objects correctly with multi line', () => {
+  should('stringify complex objects correctly with multi line', () => {
     const simple = new SimpleClass();
     simple.a = 5123;
     simple.b = 'sb';

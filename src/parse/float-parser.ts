@@ -11,7 +11,7 @@ export const FloatParser: Parser<number> = {
    * @param input The input string.
    * @return The parsed float value, or NaN if it cannot be parsed.
    */
-  parse(input: string | null): number | null {
+  convertBackward(input: string | null): number | null {
     if (input === null) {
       return null;
     } else {
@@ -27,7 +27,7 @@ export const FloatParser: Parser<number> = {
    * @param value The number to be converted to string.
    * @return The string representation of the given number.
    */
-  stringify(value: number | null): string {
+  convertForward(value: number | null): string {
     if (value === null) {
       return '';
     }
@@ -35,4 +35,3 @@ export const FloatParser: Parser<number> = {
     return value.toString(10);
   },
 };
-// TODO: Mutable

@@ -1,72 +1,73 @@
-import { assert, TestBase } from '../test-base';
-TestBase.setup();
+import { assert, should } from 'gs-testing/export/main';
 
-import { FunctionParser } from '../parse';
+import { FunctionParser } from './function-parser';
 
 
 describe('parse.FunctionParser', () => {
   describe('parse', () => {
-    it(`should return the correct function`, () => {
+    should(`return the correct function`, () => {
       const fnString = 'function test(a) { return 1 + a; }';
       const parser = FunctionParser.oneParam();
 
-      assert(parser.parse(fnString)!(3)).to.equal(4);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(parser.convertBackward(fnString)!(3)).to.equal(4);
     });
 
-    it(`should return null if the param count does not match`, () => {
+    should(`return null if the param count does not match`, () => {
       const fnString = 'function test(a) { return 1 + a; }';
       const parser = FunctionParser.noParam();
 
-      assert(parser.parse(fnString)).to.beNull();
+      assert(parser.convertBackward(fnString)).to.beNull();
     });
 
-    it(`should handle any number of param counts`, () => {
+    should(`handle any number of param counts`, () => {
       const fnString = 'function test(a) { return 1 + a; }';
       const parser = FunctionParser.anyParams();
 
-      assert(parser.parse(fnString)!(2)).to.equal(3);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(parser.convertBackward(fnString)!(2)).to.equal(3);
     });
 
-    it(`should return null if not a function`, () => {
+    should(`return null if not a function`, () => {
       const fnString = '123';
       const parser = FunctionParser.anyParams();
 
-      assert(parser.parse(fnString)).to.beNull();
+      assert(parser.convertBackward(fnString)).to.beNull();
     });
 
-    it(`should return null for null inputs`, () => {
+    should(`return null for null inputs`, () => {
       const parser = FunctionParser.anyParams();
 
-      assert(parser.parse(null)).to.beNull();
+      assert(parser.convertBackward(null)).to.beNull();
     });
   });
 
   describe('stringify', () => {
-    it(`should return the correct value`, () => {
-      const fn = function test(a: any) { return 1 + a; };
+    should(`return the correct value`, () => {
+      const fn = function test(a: any): any { return a + 1; };
       const parser = FunctionParser.oneParam();
 
-      assert(parser.stringify(fn)).to.equal('function test(a) { return 1 + a; }');
+      assert(parser.convertForward(fn)).to.equal('function test(a) { return a + 1; }');
     });
 
-    it(`should return '' if param count does not match`, () => {
-      const fn = function test() { return 1; };
+    should(`return '' if param count does not match`, () => {
+      const fn = function test(): number { return 1; };
       const parser = FunctionParser.oneParam();
 
-      assert(parser.stringify(fn)).to.equal('');
+      assert(parser.convertForward(fn)).to.equal('');
     });
 
-    it(`should handle any number of params`, () => {
-      const fn = function test(a: any) { return 1 + a; };
+    should(`handle any number of params`, () => {
+      const fn = function test(a: any): any { return a + 1; };
       const parser = FunctionParser.anyParams();
 
-      assert(parser.stringify(fn)).to.equal('function test(a) { return 1 + a; }');
+      assert(parser.convertForward(fn)).to.equal('function test(a) { return a + 1; }');
     });
 
-    it(`should return empty string if null`, () => {
+    should(`return empty string if null`, () => {
       const parser = FunctionParser.anyParams();
 
-      assert(parser.stringify(null)).to.equal('');
+      assert(parser.convertForward(null)).to.equal('');
     });
   });
 });

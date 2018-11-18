@@ -1,4 +1,4 @@
-import { assert, Matchers, TestBase } from '../test-base';
+import { assert, Matchers, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { InjectUtil } from '../inject/inject-util';
@@ -19,10 +19,10 @@ describe('inject.Injector', () => {
   });
 
   describe('getBoundValue', () => {
-    it('should instantiate the constructor correctly', () => {
+    should('instantiate the constructor correctly', () => {
       const bindKey = 'bindKey';
       const mockInstance = Mocks.object('Instance');
-      const mockProvider = jasmine.createSpy('Provider');
+      const mockProvider = createSpy('Provider');
       mockProvider.and.returnValue(mockInstance);
       mockBindings.set(bindKey, mockProvider);
 
@@ -31,7 +31,7 @@ describe('inject.Injector', () => {
       assert(injector['instances_'].get(bindKey)).to.equal(mockInstance);
     });
 
-    it('should return the cached value', () => {
+    should('return the cached value', () => {
       const cachedInstance = Mocks.object('cachedInstance');
       const bindKey = 'bindKey';
       injector['instances_'].set(bindKey, cachedInstance);
@@ -39,13 +39,13 @@ describe('inject.Injector', () => {
       assert(injector.getBoundValue(bindKey)).to.be(cachedInstance);
     });
 
-    it('should throw error if the bind key does not exist', () => {
+    should('throw error if the bind key does not exist', () => {
       assert(() => {
         injector.getBoundValue('bindKey');
       }).to.throwError(/No value bound to key/);
     });
 
-    it('should return undefined if the key does not exist and it is optional', () => {
+    should('return undefined if the key does not exist and it is optional', () => {
       assert(injector.getBoundValue('bindKey', true)).toNot.beDefined();
     });
   });
@@ -55,7 +55,7 @@ describe('inject.Injector', () => {
       constructor(_a: string, _b: string) { }
     }
 
-    it('should return the parameters correctly', () => {
+    should('return the parameters correctly', () => {
       const metadata1 = {getKeyName: () => 'key1', isOptional: () => true};
       const metadata2 = {getKeyName: () => 'key2', isOptional: () => false};
       const mockValue1 = Mocks.object('Value1');
@@ -78,7 +78,7 @@ describe('inject.Injector', () => {
       assert(InjectUtil.getMetadataMap).to.haveBeenCalledWith(TestClass);
     });
 
-    it('should use the extra arguments to override the parameters', () => {
+    should('use the extra arguments to override the parameters', () => {
       const mockValue1 = Mocks.object('Value1');
       const mockValue2 = Mocks.object('Value2');
       spyOn(InjectUtil, 'getMetadataMap').and.returnValue(new Map<number, string>());
@@ -88,7 +88,7 @@ describe('inject.Injector', () => {
       assert(InjectUtil.getMetadataMap).to.haveBeenCalledWith(TestClass);
     });
 
-    it('should throw error if an index is not in the metadata', () => {
+    should('throw error if an index is not in the metadata', () => {
       spyOn(InjectUtil, 'getMetadataMap').and.returnValue(new Map<number, string>());
 
       assert(() => {
@@ -100,7 +100,7 @@ describe('inject.Injector', () => {
   describe('instantiate', () => {
     class TestClass {}
 
-    it('should instantiate the constructor correctly', () => {
+    should('instantiate the constructor correctly', () => {
       const mockExtraArguments = Mocks.object('ExtraArguments');
       const mockParameters = Mocks.object('Parameters');
       const mockInstance = Mocks.object('Instance');
@@ -117,10 +117,10 @@ describe('inject.Injector', () => {
   describe('bind', () => {
     class TestClass { }
 
-    it('should bind the correct provider', () => {
+    should('bind the correct provider', () => {
       const bindKey = 'bindKey';
       const mockInstance = Mocks.object('Instance');
-      const mockInjector = jasmine.createSpyObj('Injector', ['instantiate']);
+      const mockInjector = createSpyObject('Injector', ['instantiate']);
       mockInjector.instantiate.and.returnValue(mockInstance);
 
       const bindProviderSpy = spyOn(Injector, 'bindProvider');
@@ -134,7 +134,7 @@ describe('inject.Injector', () => {
   });
 
   describe('bindProvider', () => {
-    it('should set the BINDINGS_ map correctly', () => {
+    should('set the BINDINGS_ map correctly', () => {
       const mockProvider = Mocks.object('Provider');
       const bindKey = 'bindKey';
       Injector.bindProvider(mockProvider, bindKey);
@@ -143,7 +143,7 @@ describe('inject.Injector', () => {
       assert(Injector['BINDINGS_'].get(bindKey)).to.equal(mockProvider);
     });
 
-    it('should throw error if the binding key is already bound', () => {
+    should('throw error if the binding key is already bound', () => {
       const mockProvider = Mocks.object('Provider');
       const bindKey = 'bindKey';
       Injector.bind(mockProvider, bindKey);
@@ -153,7 +153,7 @@ describe('inject.Injector', () => {
       }).to.throwError(/is already bound/);
     });
 
-    it('should throw error if the binding key is a reserved key', () => {
+    should('throw error if the binding key is a reserved key', () => {
       assert(() => {
         Injector.bind(Mocks.object('Provider'), '$gsInjector');
       }).to.throwError(/is a reserved key/);

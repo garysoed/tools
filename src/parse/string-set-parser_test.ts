@@ -1,23 +1,22 @@
-import { assert, TestBase } from '../test-base';
-TestBase.setup();
+import { assert, should } from 'gs-testing/export/main';
 
 import { StringSetParser } from '../parse/string-set-parser';
 
 
 describe('parse.StringSetParser', () => {
-  describe('parse', () => {
-    it(`should return the string if it is in the set`, () => {
-      assert(StringSetParser(['a', 'b']).parse('a')).to.equal('a');
+  describe('convertBackward', () => {
+    should(`return the string if it is in the set`, () => {
+      assert(StringSetParser(['a', 'b']).convertBackward('a')).to.equal('a');
     });
 
-    it(`should return null if the string is not in the set`, () => {
-      assert(StringSetParser(['a', 'b']).parse('c')).to.beNull();
+    should(`return null if the string is not in the set`, () => {
+      assert(StringSetParser(['a', 'b']).convertBackward('c')).to.beNull();
     });
   });
 
-  describe('stringify', () => {
-    it(`should return the string`, () => {
-      assert(StringSetParser(['a', 'b']).stringify('a')).to.equal('a');
+  describe('convertForward', () => {
+    should(`return the string`, () => {
+      assert(StringSetParser(['a', 'b']).convertForward('a')).to.equal('a');
     });
   });
 });

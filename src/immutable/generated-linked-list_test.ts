@@ -1,4 +1,4 @@
-import { assert, TestBase } from '../test-base';
+import { assert, TestBase } from 'gs-testing/export/main';
 TestBase.setup();
 
 import { NumberType } from '../check';
@@ -16,7 +16,7 @@ describe('immutable.GeneratedLinkedList', () => {
   }
 
   describe('filterByType', () => {
-    it(`should filter the items correctly`, () => {
+    should(`filter the items correctly`, () => {
       function* generateItems(): IterableIterator<number | string> {
         let i = 0;
         while (true) {
@@ -36,7 +36,7 @@ describe('immutable.GeneratedLinkedList', () => {
   });
 
   describe('filterItem', () => {
-    it('should exclude items that are excluded by the filter', () => {
+    should('exclude items that are excluded by the filter', () => {
       const list = new GeneratedLinkedList(Iterables.of(generateInts))
           .filterItem((n: number) => {
             return (n % 2) === 0;
@@ -46,7 +46,7 @@ describe('immutable.GeneratedLinkedList', () => {
   });
 
   describe('mapItem', () => {
-    it('should map correctly', () => {
+    should('map correctly', () => {
       const list = new GeneratedLinkedList(Iterables.of(generateInts))
           .mapItem((n: number) => {
             return `${n}`;

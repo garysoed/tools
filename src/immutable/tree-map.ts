@@ -1,8 +1,8 @@
-import { InstanceofType, NonNullType, TupleOfType } from '../check';
-import { cache } from '../data';
-import { ImmutableList } from '../immutable/immutable-list';
-import { ImmutableMap } from '../immutable/immutable-map';
-import { ImmutableSet } from '../immutable/immutable-set';
+import { InstanceofType, NonNullType, TupleOfType } from 'gs-types/export';
+import { cache } from '../data/cache';
+import { ImmutableList } from './immutable-list';
+import { ImmutableMap } from './immutable-map';
+import { ImmutableSet } from './immutable-set';
 import { Collection } from '../interfaces';
 import { Tree } from '../interfaces/tree';
 
@@ -57,7 +57,7 @@ export class TreeMap<K, V> implements Tree<K, V, ImmutableSet<V>> {
   @cache()
   postOrder(): ImmutableList<TreeMap<K, V>> {
     return this.childNodes_
-        .map((node) => node.postOrder())
+        .map(node => node.postOrder())
         .reduce((prevValue, value) => prevValue.addAll(value), ImmutableList.of<TreeMap<K, V>>([]))
         .add(this);
   }
@@ -65,7 +65,7 @@ export class TreeMap<K, V> implements Tree<K, V, ImmutableSet<V>> {
   @cache()
   preOrder(): ImmutableList<TreeMap<K, V>> {
     const descendants = this.childNodes_
-        .map((node) => node.preOrder())
+        .map(node => node.preOrder())
         .reduce((prevValue, value) => prevValue.addAll(value), ImmutableList.of<TreeMap<K, V>>([]));
     return ImmutableList.of([this, ...descendants]);
   }

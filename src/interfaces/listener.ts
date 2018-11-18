@@ -1,4 +1,4 @@
-import { Disposable } from '../interfaces/disposable';
+import { Disposable } from '../dispose/disposable';
 import { DisposableFunction } from '../interfaces/disposable-function';
 import { Listenable } from '../interfaces/listenable';
 
