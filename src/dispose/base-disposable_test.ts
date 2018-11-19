@@ -1,7 +1,5 @@
-import { TestBase } from 'gs-testing/export/main';
-
-
-import { assert } from 'gs-testing/export/main';
+import { assert, should } from 'gs-testing/export/main';
+import { createSpy, createSpyInstance, resetCalls } from 'gs-testing/export/spy';
 import { BaseDisposable } from './base-disposable';
 
 /**
@@ -21,7 +19,7 @@ class DisposableClass extends BaseDisposable {
 describe('dispose.BaseDisposable', () => {
   describe('dispose', () => {
     should('call dispose internal and dispose added disposables', () => {
-      const mockDisposable = createSpyObject('Disposable', ['dispose']);
+      const mockDisposable = createSpyInstance(BaseDisposable);
       const callback = createSpy('callback');
       const disposable = new DisposableClass(callback);
 
@@ -39,7 +37,7 @@ describe('dispose.BaseDisposable', () => {
     const disposable = new DisposableClass(callback);
 
     disposable.dispose();
-    callback.calls.reset();
+    resetCalls(callback);
 
     disposable.dispose();
     assert(callback).toNot.haveBeenCalled();

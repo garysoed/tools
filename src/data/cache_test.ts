@@ -1,8 +1,5 @@
-import { TestBase } from 'gs-testing/export/main';
-
-
-import { assert } from 'gs-testing/export/main';
-import { Fakes } from 'gs-testing/export/mock';
+import { assert, should } from 'gs-testing/export/main';
+import { createSpy, fake, resetCalls, Spy } from 'gs-testing/export/spy';
 import { cache } from '../data/cache';
 
 describe('data.cache', () => {
@@ -10,50 +7,50 @@ describe('data.cache', () => {
    * @test
    */
   class TestClass {
-    constructor(readonly spy_: jasmine.Spy) { }
+    constructor(
+        readonly spyAdd_: Spy<number, [number, number]>,
+        readonly spyGetProperty_: Spy<number, []>,
+    ) { }
 
     @cache()
-    add(a: any, b: any): number {
-      return this.spy_(a, b);
+    add(a: number, b: number): number {
+      return this.spyAdd_(a, b);
     }
 
     @cache()
-    getProperty(): any {
-      return this.spy_();
-    }
-
-    @cache()
-    method(): void {
-      return this.spy_();
+    getProperty(): number {
+      return this.spyGetProperty_();
     }
   }
 
   let test: TestClass;
-  let spy: jasmine.Spy;
+  let spyAdd: Spy<number, [number, number]>;
+  let spyGetProperty: Spy<number, []>;
 
   beforeEach(() => {
-    spy = createSpy('spy');
-    test = new TestClass(spy);
+    spyAdd = createSpy('spyAdd');
+    spyGetProperty = createSpy('spyGetProperty');
+    test = new TestClass(spyAdd, spyGetProperty);
   });
 
   should('cache the method', () => {
-    const value = 'value';
-    spy.and.returnValue(value);
+    const value = 123;
+    fake(spyGetProperty).always().return(value);
 
-    assert(test.method()).to.equal(value);
+    assert(test.getProperty()).to.equal(value);
 
-    spy.calls.reset();
-    assert(test.method()).to.equal(value);
-    assert(spy).toNot.haveBeenCalled();
+    resetCalls(spyGetProperty);
+    assert(test.getProperty()).to.equal(value);
+    assert(spyGetProperty).toNot.haveBeenCalled();
   });
 
   should('cache based on the args', () => {
-    Fakes.build(spy).call((a: number, b: number) => a + b);
+    fake(spyAdd).always().call((a, b) => a + b);
     assert(test.add(1, 2)).to.equal(3);
     assert(test.add(1, 2)).to.equal(3);
-    assert(spy).to.haveBeenCalledTimes(1);
+    assert(spyAdd).to.haveBeenCalled(1);
 
-    spy.calls.reset();
+    resetCalls(spyAdd);
     assert(test.add(1, 3)).to.equal(4);
   });
 });

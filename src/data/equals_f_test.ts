@@ -1,7 +1,4 @@
-import { TestBase } from 'gs-testing/export/main';
-
-
-import { assert } from 'gs-testing/export/main';
+import { assert, should } from 'gs-testing/export/main';
 import { mocks } from 'gs-testing/export/mock';
 import { equals, Property } from './equals';
 

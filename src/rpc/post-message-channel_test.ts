@@ -27,8 +27,8 @@
 //       const message = new Message(MessageType.PING, { 'id': 123 });
 //       const json = mocks.object('json');
 
-//       spyOn(PostMessageChannel, 'getOrigin').and.returnValue(origin);
-//       spyOn(Serializer, 'toJSON').and.returnValue(json);
+//       spy(PostMessageChannel, 'getOrigin').and.returnValue(origin);
+//       spy(Serializer, 'toJSON').and.returnValue(json);
 
 //       channel['post_'](message);
 
@@ -48,14 +48,14 @@
 //       const json1 = mocks.object('json1');
 //       const json2 = mocks.object('json2');
 
-//       spyOn(PostMessageChannel, 'getOrigin').and.returnValue(origin);
-//       Fakes.build(spyOn(Serializer, 'fromJSON'))
+//       spy(PostMessageChannel, 'getOrigin').and.returnValue(origin);
+//       Fakes.build(spy(Serializer, 'fromJSON'))
 //           .when(json1).return(message1)
 //           .when(json2).return(message2)
 //           .else().return(null);
 
 //       const mockDisposableFunction = createSpyObject('DisposableFunction', ['dispose']);
-//       const listenToSpy = spyOn(channel, 'listenTo').and.returnValue(mockDisposableFunction);
+//       const listenToSpy = spy(channel, 'listenTo').and.returnValue(mockDisposableFunction);
 
 //       const promise = channel['waitForMessage_'](testFn);
 
@@ -83,14 +83,14 @@
 //       const json1 = mocks.object('json1');
 //       const json2 = mocks.object('json2');
 
-//       spyOn(PostMessageChannel, 'getOrigin').and.returnValue(origin);
-//       Fakes.build(spyOn(Serializer, 'fromJSON'))
+//       spy(PostMessageChannel, 'getOrigin').and.returnValue(origin);
+//       Fakes.build(spy(Serializer, 'fromJSON'))
 //           .when(json1).return(message1)
 //           .when(json2).return(message2)
 //           .else().return(null);
 
 //       const mockDisposableFunction = createSpyObject('DisposableFunction', ['dispose']);
-//       const listenToSpy = spyOn(channel, 'listenTo').and.returnValue(mockDisposableFunction);
+//       const listenToSpy = spy(channel, 'listenTo').and.returnValue(mockDisposableFunction);
 
 //       const promise = channel['waitForMessage_'](testFn);
 
@@ -109,7 +109,7 @@
 //     should('call post_ correctly', () => {
 //       const message = mocks.object('message');
 
-//       const postSpy = spyOn(channel, 'post_');
+//       const postSpy = spy(channel, 'post_');
 
 //       channel.post(message);
 
@@ -127,7 +127,7 @@
 //       const returnedJson = mocks.object('returnedJson');
 //       const message = new Message(MessageType.DATA, returnedJson);
 
-//       spyOn(channel, 'waitForMessage_').and.returnValue(Promise.resolve(message));
+//       spy(channel, 'waitForMessage_').and.returnValue(Promise.resolve(message));
 
 //       const json = await channel.waitForMessage(testFn);
 //       assert(json).to.equal(returnedJson);
@@ -138,7 +138,7 @@
 //       const testPayload = mocks.object('payload');
 //       const testMessage = new Message(MessageType.DATA, testPayload);
 
-//       const waitSpy = spyOn(channel, 'waitForMessage_')
+//       const waitSpy = spy(channel, 'waitForMessage_')
 //           .and.returnValue(Promise.resolve(testMessage));
 
 //       await channel.waitForMessage(testFn);
@@ -151,7 +151,7 @@
 //       const testPayload = mocks.object('payload');
 //       const testMessage = new Message(MessageType.PING, testPayload);
 
-//       const waitSpy = spyOn(channel, 'waitForMessage_').and
+//       const waitSpy = spy(channel, 'waitForMessage_').and
 //           .returnValue(Promise.resolve(testMessage));
 
 //       await channel.waitForMessage(testFn);
@@ -179,11 +179,11 @@
 //       const mockChannel = createSpyObject('Channel', ['post_', 'waitForMessage_']);
 //       mockChannel['waitForMessage_'].and.returnValue(Promise.resolve());
 
-//       spyOn(PostMessageChannel, 'of_').and.returnValue(mockChannel);
-//       spyOn(Math, 'random').and.returnValue(id);
+//       spy(PostMessageChannel, 'of_').and.returnValue(mockChannel);
+//       spy(Math, 'random').and.returnValue(id);
 
-//       const setIntervalSpy = spyOn(window, 'setInterval').and.returnValue(intervalId);
-//       spyOn(window, 'clearInterval');
+//       const setIntervalSpy = spy(window, 'setInterval').and.returnValue(intervalId);
+//       spy(window, 'clearInterval');
 
 //       const channel = await PostMessageChannel.open(mockSrcWindow, mockDestWindow);
 //       assert(channel).to.equal(mockChannel);
@@ -213,9 +213,9 @@
 //       const mockChannel = createSpyObject('Channel', ['post', 'waitForMessage_']);
 //       mockChannel['waitForMessage_'].and.returnValue(Promise.resolve());
 
-//       spyOn(PostMessageChannel, 'of_').and.returnValue(mockChannel);
+//       spy(PostMessageChannel, 'of_').and.returnValue(mockChannel);
 
-//       spyOn(Math, 'random').and.returnValue(id);
+//       spy(Math, 'random').and.returnValue(id);
 
 //       await PostMessageChannel.open(mockSrcWindow, mockDestWindow);
 //       const message = new Message(MessageType.ACK, { id: 456 });
@@ -228,9 +228,9 @@
 //       const mockChannel = createSpyObject('Channel', ['post', 'waitForMessage_']);
 //       mockChannel['waitForMessage_'].and.returnValue(Promise.resolve());
 
-//       spyOn(PostMessageChannel, 'of_').and.returnValue(mockChannel);
+//       spy(PostMessageChannel, 'of_').and.returnValue(mockChannel);
 
-//       spyOn(Math, 'random').and.returnValue(id);
+//       spy(Math, 'random').and.returnValue(id);
 
 //       await PostMessageChannel.open(mockSrcWindow, mockDestWindow);
 //       const message = new Message(MessageType.PING, { id });
@@ -245,9 +245,9 @@
 //       const expectedOrigin = 'expectedOrigin';
 //       const mockChannel = createSpyObject('Channel', ['post_']);
 
-//       spyOn(PostMessageChannel, 'of_').and.returnValue(mockChannel);
-//       spyOn(window, 'clearTimeout');
-//       spyOn(window, 'setTimeout').and.returnValue(timeoutId);
+//       spy(PostMessageChannel, 'of_').and.returnValue(mockChannel);
+//       spy(window, 'clearTimeout');
+//       spy(window, 'setTimeout').and.returnValue(timeoutId);
 
 //       const promise = PostMessageChannel.listen(mockSrcWindow, expectedOrigin);
 
@@ -280,7 +280,7 @@
 //       const expectedOrigin = 'expectedOrigin';
 //       const mockChannel = createSpyObject('Channel', ['post']);
 
-//       spyOn(PostMessageChannel, 'of_').and.returnValue(mockChannel);
+//       spy(PostMessageChannel, 'of_').and.returnValue(mockChannel);
 
 //       const promise = PostMessageChannel.listen(mockSrcWindow, expectedOrigin);
 //       mockSrcWindow.addEventListener.calls.argsFor(0)[1]({
@@ -300,7 +300,7 @@
 //       const expectedOrigin = 'expectedOrigin';
 //       const mockChannel = createSpyObject('Channel', ['post']);
 
-//       spyOn(PostMessageChannel, 'of_').and.returnValue(mockChannel);
+//       spy(PostMessageChannel, 'of_').and.returnValue(mockChannel);
 
 //       const promise = PostMessageChannel.listen(mockSrcWindow, expectedOrigin);
 

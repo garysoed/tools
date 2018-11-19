@@ -1,4 +1,5 @@
-import { assert } from 'gs-testing/export/main';
+import { assert, should } from 'gs-testing/export/main';
+import { fake, spy } from 'gs-testing/export/spy';
 import { BaseColor } from '../color/base-color';
 
 // tslint:disable:prefer-function-over-method
@@ -28,9 +29,9 @@ describe('color.BaseColor', () => {
 
   describe('getLuminance', () => {
     should('return the correct value of luminance', () => {
-      spyOn(color, 'getRed').and.returnValue(126);
-      spyOn(color, 'getGreen').and.returnValue(126);
-      spyOn(color, 'getBlue').and.returnValue(184);
+      fake(spy(color, 'getRed')).always().return(126);
+      fake(spy(color, 'getGreen')).always().return(126);
+      fake(spy(color, 'getBlue')).always().return(184);
       assert(color.getLuminance()).to.beCloseTo(0.23, 2);
     });
   });

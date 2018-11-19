@@ -1,7 +1,5 @@
-import { TestBase } from 'gs-testing/export/main';
-
-
-import { assert } from 'gs-testing/export/main';
+import { assert, should } from 'gs-testing/export/main';
+import { createSpy, fake, resetCalls, Spy } from 'gs-testing/export/spy';
 import { cache } from '../data/cache';
 import { clear, clearAll } from './caches';
 
@@ -10,16 +8,16 @@ describe('data.Caches', () => {
    * @test
    */
   class TestClass {
-    constructor(readonly spy_: jasmine.Spy) { }
+    constructor(readonly spy_: Spy<string, []>) { }
 
     @cache()
-    method(): void {
+    method(): string {
       return this.spy_();
     }
   }
 
   let test: TestClass;
-  let spy: any;
+  let spy: Spy<string, []>;
 
   beforeEach(() => {
     spy = createSpy('spy');
@@ -29,13 +27,13 @@ describe('data.Caches', () => {
   describe('clear', () => {
     should('clear the cache', () => {
       const value = 'value';
-      spy.and.returnValue(value);
+      fake(spy).always().return(value);
 
       assert(test.method()).to.equal(value);
 
       const newValue = 'newValue';
-      spy.calls.reset();
-      spy.and.returnValue(newValue);
+      resetCalls(spy);
+      fake(spy).always().return(newValue);
 
       clear(test, 'method');
       assert(spy).toNot.haveBeenCalled();
@@ -47,13 +45,13 @@ describe('data.Caches', () => {
   describe('clearAll', () => {
     should('clear all the cache', () => {
       const value = 'value';
-      spy.and.returnValue(value);
+      fake(spy).always().return(value);
 
       assert(test.method()).to.equal(value);
 
       const newValue = 'newValue';
-      spy.calls.reset();
-      spy.and.returnValue(newValue);
+      resetCalls(spy);
+      fake(spy).always().return(newValue);
 
       clearAll(test);
       assert(spy).toNot.haveBeenCalled();

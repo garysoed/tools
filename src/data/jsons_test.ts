@@ -1,8 +1,5 @@
-import { assert } from 'gs-testing/export/main';
-import { TestBase } from 'gs-testing/export/main';
+import { assert, should } from 'gs-testing/export/main';
 import { deepClone, getValue, setValue } from './jsons';
-
-
 
 describe('data.Jsons', () => {
   describe('deepClone', () => {
@@ -12,7 +9,7 @@ describe('data.Jsons', () => {
       };
       const clone = deepClone(original);
       assert(clone).to.equal(original);
-      assert(clone).toNot.be(original);
+      assert(clone).toNot.equal(original);
     });
   });
 

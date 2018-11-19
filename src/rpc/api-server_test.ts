@@ -48,7 +48,7 @@
 
 //   describe('run', () => {
 //     should('wait for the message', () => {
-//       spyOn(server, 'onMessage_');
+//       spy(server, 'onMessage_');
 //       server.run();
 //       assert(mockChannel.waitForMessage).to.haveBeenCalledWith(Matchers.anyFunction());
 

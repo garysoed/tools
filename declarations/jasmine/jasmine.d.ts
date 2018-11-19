@@ -35,7 +35,7 @@
 
 // declare function fail(e?: any): void;
 
-// declare function spyOn(object: any, method: string): jasmine.Spy;
+// declare function spy(object: any, method: string): jasmine.Spy;
 
 // declare function runs(asyncMethod: Function): void;
 // declare function waitsFor(latchMethod: () => boolean, failureMessage?: string, timeout?: number): void;
@@ -375,7 +375,7 @@
 //         execute(onComplete?: () => void): any;
 //         addBeforesAndAftersToQueue(): void;
 //         explodes(): void;
-//         spyOn(obj: any, methodName: string, ignoreMethodDoesntExist: boolean): Spy;
+//         spy(obj: any, methodName: string, ignoreMethodDoesntExist: boolean): Spy;
 //         removeAllSpies(): void;
 //     }
 

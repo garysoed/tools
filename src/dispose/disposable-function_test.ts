@@ -1,13 +1,11 @@
-import { TestBase } from 'gs-testing/export/main';
-
-
-import { assert } from 'gs-testing/export/main';
+import { assert, should } from 'gs-testing/export/main';
+import { createSpy, Spy } from 'gs-testing/export/spy';
 import { DisposableFunction } from './disposable-function';
 import { TestDispose } from './testing/test-dispose';
 
 
 describe('dispose.DisposableFunction', () => {
-  let mockFunction: any;
+  let mockFunction: Spy;
   let disposableFunction: DisposableFunction;
 
   beforeEach(() => {

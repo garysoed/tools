@@ -58,7 +58,7 @@
 //   describe('post', () => {
 //     should('post the request, wait for message and return the correct response', async () => {
 //       const request = mocks.object('request');
-//       spyOn(client, 'onMessage_');
+//       spy(client, 'onMessage_');
 
 //       const response = mocks.object('response');
 //       mockChannel.waitForMessage.and.returnValue(Promise.resolve(response));
@@ -77,7 +77,7 @@
 
 //     should('reject if the response type is incorrect', async () => {
 //       const request = mocks.object('request');
-//       spyOn(client, 'onMessage_');
+//       spy(client, 'onMessage_');
 
 //       const response = mocks.object('response');
 //       mockChannel.waitForMessage.and.returnValue(Promise.resolve(response));
