@@ -1,4 +1,5 @@
 import { assert, should } from 'gs-testing/export/main';
+import { fake, spy } from 'gs-testing/export/spy';
 import { MathRng } from './math-rng';
 
 describe('random.MathJs', () => {
@@ -11,7 +12,7 @@ describe('random.MathJs', () => {
   describe('next', () => {
     should('return the value returned from Math.random', () => {
       const value = 123;
-      spy(Math, 'random').and.returnValue(value);
+      fake(spy(Math, 'random')).always().return(value);
 
       assert(mathJs.next()).to.equal(value);
     });
