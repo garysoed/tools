@@ -1,5 +1,5 @@
-import { assert, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
+import { assert } from 'gs-testing/export/main';
+
 
 import { ANNOTATIONS, eventDetails } from '../event/event-details';
 

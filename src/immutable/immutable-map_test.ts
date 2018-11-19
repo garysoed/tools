@@ -1,7 +1,5 @@
-import { assert, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
-
-import { StringType, TupleOfType } from '../check';
+import { assert, should } from 'gs-testing/export/main';
+import { StringType, TupleOfType } from 'gs-types/export';
 import { ImmutableMap } from '../immutable/immutable-map';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Orderings } from '../immutable/orderings';
@@ -10,7 +8,7 @@ import { Orderings } from '../immutable/orderings';
 describe('immutable.ImmutableMap', () => {
   describe('[Symbol.iterator]', () => {
     should('return the correct data', () => {
-      const entries: [number, string][] = [[0, 'a'], [1, 'b'], [2, 'c']];
+      const entries: Array<[number, string]> = [[0, 'a'], [1, 'b'], [2, 'c']];
       assert(ImmutableMap.of(entries)).to.haveElements(entries);
     });
   });
@@ -80,7 +78,7 @@ describe('immutable.ImmutableMap', () => {
 
   describe('entries', () => {
     should('return the correct data', () => {
-      const entries: [number, string][] = [[0, 'a'], [1, 'b'], [2, 'c']];
+      const entries: Array<[number, string]> = [[0, 'a'], [1, 'b'], [2, 'c']];
       assert(ImmutableMap.of(entries).entries()).to.haveElements(entries);
     });
   });
@@ -244,7 +242,7 @@ describe('immutable.ImmutableMap', () => {
 
   describe('keys', () => {
     should('return the correct keys', () => {
-      const entries: [number, string][] = [[0, 'a'], [1, 'b'], [2, 'c']];
+      const entries: Array<[number, string]> = [[0, 'a'], [1, 'b'], [2, 'c']];
       assert(ImmutableMap.of(entries).keys()).to.haveElements([0, 1, 2]);
     });
   });
@@ -300,10 +298,10 @@ describe('immutable.ImmutableMap', () => {
   describe('reduce', () => {
     should('return the correct value', () => {
       const result = ImmutableMap
-          .of([[0, 'a'], [1, 'b'], [2, 'c']] as [number, string][])
+          .of([[0, 'a'], [1, 'b'], [2, 'c']] as Array<[number, string]>)
           .reduce((prev: string, index: string, key: number) => {
             return `${prev},${key}${index}`;
-          }, '@');
+          },      '@');
       assert(result).to.equal(`@,0a,1b,2c`);
     });
   });
@@ -311,10 +309,10 @@ describe('immutable.ImmutableMap', () => {
   describe('reduceItem', () => {
     should('return the correct value', () => {
       const result = ImmutableMap
-          .of([[0, 'a'], [1, 'b'], [2, 'c']] as [number, string][])
+          .of([[0, 'a'], [1, 'b'], [2, 'c']] as Array<[number, string]>)
           .reduceItem((prev: string, [key, index]: [number, string]) => {
             return `${prev},${key}${index}`;
-          }, '@');
+          },          '@');
       assert(result).to.equal(`@,0a,1b,2c`);
     });
   });
@@ -371,24 +369,24 @@ describe('immutable.ImmutableMap', () => {
 
   describe('values', () => {
     should('return the correct data', () => {
-      const entries: [number, string][] = [[0, 'a'], [1, 'b'], [2, 'c']];
+      const entries: Array<[number, string]> = [[0, 'a'], [1, 'b'], [2, 'c']];
       assert(ImmutableMap.of(entries).values()).to.haveElements(['a', 'b', 'c']);
     });
   });
 
   describe('of', () => {
     should('create the map correctly from finite iterable', () => {
-      const entries: [number, string][] = [[0, 'a'], [1, 'b'], [2, 'c']];
+      const entries: Array<[number, string]> = [[0, 'a'], [1, 'b'], [2, 'c']];
       assert(ImmutableMap.of(ImmutableMap.of(entries))).to.haveElements(entries);
     });
 
     should('create the map correctly from entries array', () => {
-      const entries: [number, string][] = [[0, 'a'], [1, 'b'], [2, 'c']];
+      const entries: Array<[number, string]> = [[0, 'a'], [1, 'b'], [2, 'c']];
       assert(ImmutableMap.of(entries)).to.haveElements(entries);
     });
 
     should('create the map correctly from map', () => {
-      const entries: [number, string][] = [[0, 'a'], [1, 'b'], [2, 'c']];
+      const entries: Array<[number, string]> = [[0, 'a'], [1, 'b'], [2, 'c']];
       assert(ImmutableMap.of(new Map(entries))).to.haveElements(entries);
     });
 

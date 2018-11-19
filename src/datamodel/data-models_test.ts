@@ -1,5 +1,5 @@
 import { assert, Fakes, Matchers, Mocks, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
+
 
 import { Serializer } from '../data/a-serializable';
 import { __serializedName, DataModels } from '../datamodel/data-models';
@@ -11,9 +11,9 @@ import { ImmutableSet } from '../immutable/immutable-set';
 describe('datamodel.DataModels', () => {
   describe('createGetter_', () => {
     should(`return function that returns the correct field`, () => {
-      const value = Mocks.object('value');
+      const value = mocks.object('value');
       const key = 'key';
-      const instance = Mocks.object('instance');
+      const instance = mocks.object('instance');
       instance[key] = value;
       assert(DataModels['createGetter_'](instance, key)()).to.equal(value);
     });
@@ -21,14 +21,14 @@ describe('datamodel.DataModels', () => {
 
   describe('createSetter_', () => {
     should(`return a function that creates a new instance with the value`, () => {
-      const ctor = Mocks.object('ctor');
-      const instance = Mocks.object('instance');
+      const ctor = mocks.object('ctor');
+      const instance = mocks.object('instance');
       const key = 'key';
       const mockEqFn = createSpy('EqFn');
       mockEqFn.and.returnValue(false);
 
-      const newValue = Mocks.object('newValue');
-      const value = Mocks.object('value');
+      const newValue = mocks.object('newValue');
+      const value = mocks.object('value');
       instance[key] = value;
 
       const mockAnnotations = createSpyObject('Annotations', ['getAttachedValues']);
@@ -37,7 +37,7 @@ describe('datamodel.DataModels', () => {
       ]));
       spyOn(ANNOTATIONS, 'forCtor').and.returnValue(mockAnnotations);
 
-      const newInstance = Mocks.object('newInstance');
+      const newInstance = mocks.object('newInstance');
       spyOn(DataModels, 'newInstance').and.returnValue(newInstance);
 
       const actualInstance = DataModels['createSetter_'](ctor, instance, key, mockEqFn)(newValue);
@@ -51,14 +51,14 @@ describe('datamodel.DataModels', () => {
 
     should(`return a function that returns the same instance if the new value is the same`,
         () => {
-      const ctor = Mocks.object('ctor');
-      const instance = Mocks.object('instance');
+      const ctor = mocks.object('ctor');
+      const instance = mocks.object('instance');
       const key = 'key';
       const mockEqFn = createSpy('EqFn');
       mockEqFn.and.returnValue(true);
 
-      const newValue = Mocks.object('newValue');
-      const value = Mocks.object('value');
+      const newValue = mocks.object('newValue');
+      const value = mocks.object('value');
       instance[key] = value;
 
       const mockAnnotations = createSpyObject('Annotations', ['getAttachedValues']);
@@ -79,13 +79,13 @@ describe('datamodel.DataModels', () => {
   describe('getSerializedName', () => {
     should(`return the serialized name`, () => {
       const serializedName = 'serializedName';
-      const obj = Mocks.object('obj');
+      const obj = mocks.object('obj');
       obj[__serializedName] = serializedName;
       assert(DataModels.getSerializedName(obj)).to.equal(serializedName);
     });
 
     should(`return null if the object has no serialized names`, () => {
-      const obj = Mocks.object('obj');
+      const obj = mocks.object('obj');
       assert(DataModels.getSerializedName(obj)).to.beNull();
     });
   });
@@ -95,23 +95,23 @@ describe('datamodel.DataModels', () => {
       abstract class TestClass {}
       const baseClass = TestClass as any;
       const key1 = 'key1';
-      const initValue1 = Mocks.object('initValue1');
+      const initValue1 = mocks.object('initValue1');
       const key2 = 'key2';
 
-      const getter1 = Mocks.object('getter1');
-      const getter2 = Mocks.object('getter2');
+      const getter1 = mocks.object('getter1');
+      const getter2 = mocks.object('getter2');
       Fakes.build(spyOn(DataModels, 'createGetter_'))
           .when(Matchers.anyThing(), key1).return(getter1)
           .when(Matchers.anyThing(), key2).return(getter2);
 
-      const setter1 = Mocks.object('setter1');
-      const setter2 = Mocks.object('setter2');
+      const setter1 = mocks.object('setter1');
+      const setter2 = mocks.object('setter2');
       Fakes.build(spyOn(DataModels, 'createSetter_'))
           .when(Matchers.anyThing(), Matchers.anyThing(), key1).return(setter1)
           .when(Matchers.anyThing(), Matchers.anyThing(), key2).return(setter2);
 
-      const eqFn1 = Mocks.object('eqFn1');
-      const eqFn2 = Mocks.object('eqFn2');
+      const eqFn1 = mocks.object('eqFn1');
+      const eqFn2 = mocks.object('eqFn2');
       const mockAnnotations = createSpyObject('Annotations', ['getAttachedValues']);
       mockAnnotations.getAttachedValues.and.returnValue(ImmutableMap.of([
         [key1, ImmutableSet.of([{eqFn: eqFn1, fieldName: 'Field1'}])],
@@ -147,20 +147,20 @@ describe('datamodel.DataModels', () => {
       const key1 = 'key1';
       const key2 = 'key2';
 
-      const getter1 = Mocks.object('getter1');
-      const getter2 = Mocks.object('getter2');
+      const getter1 = mocks.object('getter1');
+      const getter2 = mocks.object('getter2');
       Fakes.build(spyOn(DataModels, 'createGetter_'))
           .when(Matchers.anyThing(), key1).return(getter1)
           .when(Matchers.anyThing(), key2).return(getter2);
 
-      const setter1 = Mocks.object('setter1');
-      const setter2 = Mocks.object('setter2');
+      const setter1 = mocks.object('setter1');
+      const setter2 = mocks.object('setter2');
       Fakes.build(spyOn(DataModels, 'createSetter_'))
           .when(Matchers.anyThing(), Matchers.anyThing(), key1).return(setter1)
           .when(Matchers.anyThing(), Matchers.anyThing(), key2).return(setter2);
 
-      const eqFn1 = Mocks.object('eqFn1');
-      const eqFn2 = Mocks.object('eqFn2');
+      const eqFn1 = mocks.object('eqFn1');
+      const eqFn2 = mocks.object('eqFn2');
       const mockAnnotations = createSpyObject('Annotations', ['getAttachedValues']);
       mockAnnotations.getAttachedValues.and.returnValue(ImmutableMap.of([
         [key1, ImmutableSet.of([{eqFn: eqFn1, fieldName: 'Field1'}])],

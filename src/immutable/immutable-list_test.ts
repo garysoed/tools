@@ -1,7 +1,6 @@
-import { assert, Mocks, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
-
-import { NumberType } from '../check';
+import { assert, should } from 'gs-testing/export/main';
+import { mocks } from 'gs-testing/export/mock';
+import { NumberType } from 'gs-types/export';
 import { ImmutableList } from '../immutable/immutable-list';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Orderings } from '../immutable/orderings';
@@ -410,10 +409,10 @@ describe('immutable.ImmutableList', () => {
 
     should(`create the list correctly from DataTransferItemLists`, () => {
       const items = [
-        Mocks.object('DataTransferItem1'),
-        Mocks.object('DataTransferItem2'),
-        Mocks.object('DataTransferItem3'),
-        Mocks.object('DataTransferItem4'),
+        mocks.object<DataTransferItem>('DataTransferItem1'),
+        mocks.object<DataTransferItem>('DataTransferItem2'),
+        mocks.object<DataTransferItem>('DataTransferItem3'),
+        mocks.object<DataTransferItem>('DataTransferItem4'),
       ];
       assert(ImmutableList.of(items as any as DataTransferItemList)).to.haveElements(items);
     });

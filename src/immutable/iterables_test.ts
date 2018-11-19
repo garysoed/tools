@@ -1,6 +1,4 @@
-import { assert, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
-
+import { assert, should } from 'gs-testing/export/main';
 import { Iterables } from '../immutable';
 
 describe('immutable.Iterables', () => {

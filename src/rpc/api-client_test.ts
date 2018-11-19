@@ -1,5 +1,5 @@
 // import { assert, Matchers, TestBase } from 'gs-testing/export/main';
-// TestBase.setup();
+//
 
 // import { Mocks } from '../mock/mocks';
 // import { ApiClient } from '../rpc/api-client';
@@ -20,8 +20,8 @@
 
 //   describe('onMessage_', () => {
 //     should('return true if the message the correct type and response', () => {
-//       const request = Mocks.object('request');
-//       const message = Mocks.object('message');
+//       const request = mocks.object('request');
+//       const message = mocks.object('message');
 
 //       mockResponseType.check.and.returnValue(true);
 //       mockResponseCheck.and.returnValue(true);
@@ -32,8 +32,8 @@
 //     });
 
 //     should('return false if the message is the correct type but wrong response', () => {
-//       const request = Mocks.object('request');
-//       const message = Mocks.object('message');
+//       const request = mocks.object('request');
+//       const message = mocks.object('message');
 
 //       mockResponseType.check.and.returnValue(true);
 //       mockResponseCheck.and.returnValue(false);
@@ -44,8 +44,8 @@
 //     });
 
 //     should('return false if the message is the wrong type', () => {
-//       const request = Mocks.object('request');
-//       const message = Mocks.object('message');
+//       const request = mocks.object('request');
+//       const message = mocks.object('message');
 
 //       mockResponseType.check.and.returnValue(false);
 //       mockResponseCheck.and.returnValue(true);
@@ -57,10 +57,10 @@
 
 //   describe('post', () => {
 //     should('post the request, wait for message and return the correct response', async () => {
-//       const request = Mocks.object('request');
+//       const request = mocks.object('request');
 //       spyOn(client, 'onMessage_');
 
-//       const response = Mocks.object('response');
+//       const response = mocks.object('response');
 //       mockChannel.waitForMessage.and.returnValue(Promise.resolve(response));
 //       mockResponseType.check.and.returnValue(true);
 
@@ -69,17 +69,17 @@
 
 //       assert(mockChannel.waitForMessage).to.haveBeenCalledWith(Matchers.anyFunction());
 
-//       const message = Mocks.object('message');
+//       const message = mocks.object('message');
 //       mockChannel.waitForMessage.calls.argsFor(0)[0](message);
 //       assert(client['onMessage_']).to.haveBeenCalledWith(request, message);
 //       assert(mockChannel.post).to.haveBeenCalledWith(request);
 //     });
 
 //     should('reject if the response type is incorrect', async () => {
-//       const request = Mocks.object('request');
+//       const request = mocks.object('request');
 //       spyOn(client, 'onMessage_');
 
-//       const response = Mocks.object('response');
+//       const response = mocks.object('response');
 //       mockChannel.waitForMessage.and.returnValue(Promise.resolve(response));
 //       mockResponseType.check.and.returnValue(false);
 

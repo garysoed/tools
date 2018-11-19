@@ -1,9 +1,10 @@
-import { assert, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
-
+import { assert, should } from 'gs-testing/export/main';
 import { TreeSet } from '../immutable';
 
-type JsonTree = {children: JsonTree[], value: number};
+interface JsonTree {
+  children: JsonTree[];
+  value: number;
+}
 
 function treeToJson(treeSet: TreeSet<number>): JsonTree {
   const childrenJson = [];

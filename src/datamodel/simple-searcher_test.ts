@@ -1,5 +1,5 @@
 import { assert, Mocks, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
+
 
 import { SimpleSearcher } from '../datamodel';
 
@@ -36,8 +36,8 @@ describe('datamodel.SimpleSearcher', () => {
   describe('search', () => {
     should(`return the value correctly`, async () => {
       const token = 'token';
-      const item1 = Mocks.object('item1');
-      const item2 = Mocks.object('item2');
+      const item1 = mocks.object('item1');
+      const item2 = mocks.object('item2');
       searcher['index_'].set(token, [item1, item2]);
 
       assert(await searcher.search(token)).to.haveElements([item1, item2]);

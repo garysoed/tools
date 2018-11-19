@@ -1,7 +1,5 @@
-import { assert, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
-
-import { NumberType } from '../check';
+import { assert, should } from 'gs-testing/export/main';
+import { NumberType } from 'gs-types/export';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Orderings } from '../immutable/orderings';
 
@@ -130,7 +128,7 @@ describe('immutable.ImmutableSet', () => {
           .of([1, 2, 3, 4])
           .reduceItem((prev: number, item: number) => {
             return prev + item;
-          }, 2);
+          },          2);
       assert(result).to.equal(12);
     });
   });

@@ -1,5 +1,5 @@
-import { assert, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
+import { assert } from 'gs-testing/export/main';
+
 
 import { Bus } from '../event/bus';
 import { TestDispose } from '../testing/test-dispose';

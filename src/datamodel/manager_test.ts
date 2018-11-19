@@ -1,5 +1,5 @@
 import { assert, Matchers, Mocks, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
+
 
 import { DataAccess } from '../datamodel/data-access';
 import { Manager } from '../datamodel/manager';
@@ -12,7 +12,7 @@ import { TestDispose } from '../testing/test-dispose';
 
 class TestManager extends Manager<any> {
   constructor(storage: GsStorage<any>, searcher: Searcher<any>) {
-    super(storage, searcher, Mocks.object('logger'));
+    super(storage, searcher, mocks.object('logger'));
   }
 }
 
@@ -31,7 +31,7 @@ describe('datamodel.Manager', () => {
   describe('get_', () => {
     should('return the value returned by the storage', async () => {
       const id = 'id';
-      const value = Mocks.object('value');
+      const value = mocks.object('value');
       mockStorage.read.and.returnValue(Promise.resolve(value));
 
       assert(await manager['get_'](id)).to.equal(value);
@@ -55,8 +55,8 @@ describe('datamodel.Manager', () => {
 
   describe('list_', () => {
     should('return the correct projects', async () => {
-      const value1 = Mocks.object('value1');
-      const value2 = Mocks.object('value2');
+      const value1 = mocks.object('value1');
+      const value2 = mocks.object('value2');
 
       mockStorage.list.and.returnValue(Promise.resolve(ImmutableSet.of([value1, value2])));
 
@@ -70,10 +70,10 @@ describe('datamodel.Manager', () => {
     });
 
     should(`return monad with the correct set method`, async () => {
-      const item1 = Mocks.object('item1');
+      const item1 = mocks.object('item1');
       const id1 = 'id1';
 
-      const item2 = Mocks.object('item2');
+      const item2 = mocks.object('item2');
       const id2 = 'id2';
 
       const mockDataAccess = createSpyObject('DataAccess', ['getUpdateQueue']);
@@ -89,8 +89,8 @@ describe('datamodel.Manager', () => {
 
   describe('search_', () => {
     should('return the correct items', async () => {
-      const item1 = Mocks.object('item1');
-      const item2 = Mocks.object('item2');
+      const item1 = mocks.object('item1');
+      const item2 = mocks.object('item2');
       mockSearcher.search.and.returnValue(Promise.resolve(ImmutableList.of([item1, item2])));
 
       const token = 'token';
@@ -102,8 +102,8 @@ describe('datamodel.Manager', () => {
   describe('update_', () => {
     should(`update the item and dispatch the 'add' event if new`, async () => {
       const id = 'id';
-      const item = Mocks.object('item');
-      const itemList = Mocks.object('itemList');
+      const item = mocks.object('item');
+      const itemList = mocks.object('itemList');
       spyOn(manager, 'list_').and.returnValue(itemList);
 
       mockStorage.read.and.returnValue(null);
@@ -118,11 +118,11 @@ describe('datamodel.Manager', () => {
 
     should(`update the item and dispatch the 'edit' event if not new`, async () => {
       const id = 'id';
-      const item = Mocks.object('item');
-      const itemList = Mocks.object('itemList');
+      const item = mocks.object('item');
+      const itemList = mocks.object('itemList');
       spyOn(manager, 'list_').and.returnValue(itemList);
 
-      mockStorage.read.and.returnValue(Mocks.object('OldItem'));
+      mockStorage.read.and.returnValue(mocks.object('OldItem'));
       spyOn(manager, 'dispatch');
 
       await manager['update_'](id, item);

@@ -1,10 +1,10 @@
 import { InstanceofType, NonNullType, TupleOfType } from 'gs-types/export';
 import { cache } from '../data/cache';
+import { Collection } from '../interfaces';
+import { Tree } from '../interfaces/tree';
 import { ImmutableList } from './immutable-list';
 import { ImmutableMap } from './immutable-map';
 import { ImmutableSet } from './immutable-set';
-import { Collection } from '../interfaces';
-import { Tree } from '../interfaces/tree';
 
 type MapFn<K, V, K2, V2> =
     (node: TreeMap<K, V>, key: K | null, parent: TreeMap<K, V> | null) => [K2 | null, V2];
@@ -85,7 +85,7 @@ export class TreeMap<K, V> implements Tree<K, V, ImmutableSet<V>> {
   }
 
   static async promiseAll<K, V>(tree: TreeMap<K, Promise<V>>): Promise<TreeMap<K, V>> {
-    const promises: Promise<[Tree<K, Promise<V>, Collection<Promise<V>>>, V]>[] = [];
+    const promises: Array<Promise<[Tree<K, Promise<V>, Collection<Promise<V>>>, V]>> = [];
     for (const node of tree.postOrder()) {
       promises.push(Promise.all([node, node.getValue()]));
     }

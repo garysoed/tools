@@ -1,8 +1,6 @@
-import { assert, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
-
-import { Mocks } from '../mock/mocks';
-
+import { assert, should } from 'gs-testing/export/main';
+import { mocks } from 'gs-testing/export/mock';
+import { fake, spy } from 'gs-testing/export/spy';
 import { inject } from './a-inject';
 import { InjectMetadata } from './inject-metadata';
 import { InjectUtil } from './inject-util';
@@ -14,37 +12,43 @@ describe('inject.Inject', () => {
   should('register the parameter correctly', () => {
     const name = 'name';
     const index = 12;
-    const fakeMetadata = new Map<number, string>();
-    const injectMetadata = Mocks.object('injectMetadata');
-    const defaultValue = Mocks.object('defaultValue');
+    const fakeMetadata = new Map<number, InjectMetadata>();
+    const injectMetadata = mocks.object<InjectMetadata>('injectMetadata');
+    const isOptional = true;
 
-    spyOn(InjectUtil, 'getMetadataMap').and.returnValue(fakeMetadata);
-    spyOn(InjectMetadata, 'newInstance').and.returnValue(injectMetadata);
+    const getMetadataMapSpy = spy(InjectUtil, 'getMetadataMap');
+    fake(getMetadataMapSpy).always().return(fakeMetadata);
 
-    inject(name, defaultValue)(TestClass, 'propertyName', index);
+    const newInstanceSpy = spy(InjectMetadata, 'newInstance');
+    fake(newInstanceSpy).always().return(injectMetadata);
 
-    assert(fakeMetadata).to.haveEntries([[index, injectMetadata]]);
-    assert(InjectMetadata.newInstance).to.haveBeenCalledWith(name, defaultValue);
+    inject(name, isOptional)(TestClass, 'propertyName', index);
+
+    assert(fakeMetadata).to.haveElements([[index, injectMetadata]]);
+    assert(newInstanceSpy).to.haveBeenCalledWith(name, isOptional);
   });
 
   should('use the parameter name if not specified', () => {
     const propertyName = 'propertyName';
     const index = 12;
-    const fakeMetadata = new Map<number, string>();
-    const injectMetadata = Mocks.object('injectMetadata');
+    const fakeMetadata = new Map<number, InjectMetadata>();
+    const injectMetadata = mocks.object<InjectMetadata>('injectMetadata');
 
-    spyOn(InjectUtil, 'getMetadataMap').and.returnValue(fakeMetadata);
-    spyOn(InjectMetadata, 'newInstance').and.returnValue(injectMetadata);
+    const getMetadataMapSpy = spy(InjectUtil, 'getMetadataMap');
+    fake(getMetadataMapSpy).always().return(fakeMetadata);
+
+    const newInstanceSpy = spy(InjectMetadata, 'newInstance');
+    fake(newInstanceSpy).always().return(injectMetadata);
 
     inject()(TestClass, propertyName, index);
 
-    assert(fakeMetadata).to.haveEntries([[index, injectMetadata]]);
-    assert(InjectMetadata.newInstance).to.haveBeenCalledWith(propertyName, undefined);
+    assert(fakeMetadata).to.haveElements([[index, injectMetadata]]);
+    assert(newInstanceSpy).to.haveBeenCalledWith(propertyName, undefined);
   });
 
   should('throw error if the target is not a constructor', () => {
     assert(() => {
-      inject()(Mocks.object('target'), 'propertyName', 12);
-    }).to.throwError(/is not a constructor/);
+      inject()(mocks.object('target'), 'propertyName', 12);
+    }).to.throwErrorWithMessage(/is not a constructor/);
   });
 });

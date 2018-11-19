@@ -1,5 +1,5 @@
 import { assert, Match, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
+
 
 import { TestDispose } from '../testing/test-dispose';
 

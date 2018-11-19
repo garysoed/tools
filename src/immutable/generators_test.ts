@@ -1,6 +1,4 @@
-import { assert, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
-
+import { assert, should } from 'gs-testing/export/main';
 import { Generators } from '../immutable/generators';
 
 
@@ -13,7 +11,7 @@ describe('immutable.Generators', () => {
     should('throw error if "to" is less than "from"', () => {
       assert(() => {
         for (const _ of Generators.ranged(10, 3, 3)) { }
-      }).to.throwError(/must be <=/);
+      }).to.throwErrorWithMessage(/must be <=/);
     });
   });
 });

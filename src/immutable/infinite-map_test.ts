@@ -1,7 +1,5 @@
-import { assert, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
-
-import { NumberType, TupleOfType } from '../check';
+import { assert, should } from 'gs-testing/export/main';
+import { NumberType, TupleOfType } from 'gs-types/export';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { InfiniteMap } from '../immutable/infinite-map';
 import { Iterables } from '../immutable/iterables';

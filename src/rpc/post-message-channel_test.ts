@@ -1,5 +1,5 @@
 // import { assert, Matchers, TestBase } from 'gs-testing/export/main';
-// TestBase.setup();
+//
 
 // import { Serializer } from '../data/a-serializable';
 // import { DomEvent } from '../event/dom-event';
@@ -25,7 +25,7 @@
 //     should('post the message asynchronously', () => {
 //       const origin = 'origin';
 //       const message = new Message(MessageType.PING, { 'id': 123 });
-//       const json = Mocks.object('json');
+//       const json = mocks.object('json');
 
 //       spyOn(PostMessageChannel, 'getOrigin').and.returnValue(origin);
 //       spyOn(Serializer, 'toJSON').and.returnValue(json);
@@ -45,8 +45,8 @@
 //           .call((data: gs.IJson) => data['value']);
 //       const message1 = { 'value': false };
 //       const message2 = { 'value': true };
-//       const json1 = Mocks.object('json1');
-//       const json2 = Mocks.object('json2');
+//       const json1 = mocks.object('json1');
+//       const json2 = mocks.object('json2');
 
 //       spyOn(PostMessageChannel, 'getOrigin').and.returnValue(origin);
 //       Fakes.build(spyOn(Serializer, 'fromJSON'))
@@ -80,8 +80,8 @@
 //           .call((data: gs.IJson) => data['value']);
 //       const message1 = { 'value': false };
 //       const message2 = { 'value': true };
-//       const json1 = Mocks.object('json1');
-//       const json2 = Mocks.object('json2');
+//       const json1 = mocks.object('json1');
+//       const json2 = mocks.object('json2');
 
 //       spyOn(PostMessageChannel, 'getOrigin').and.returnValue(origin);
 //       Fakes.build(spyOn(Serializer, 'fromJSON'))
@@ -107,7 +107,7 @@
 
 //   describe('post', () => {
 //     should('call post_ correctly', () => {
-//       const message = Mocks.object('message');
+//       const message = mocks.object('message');
 
 //       const postSpy = spyOn(channel, 'post_');
 
@@ -124,7 +124,7 @@
 //   describe('waitForMessage', () => {
 //     should('return the payload returned by waitForMessage_', async () => {
 //       const testFn = createSpy('testFn');
-//       const returnedJson = Mocks.object('returnedJson');
+//       const returnedJson = mocks.object('returnedJson');
 //       const message = new Message(MessageType.DATA, returnedJson);
 
 //       spyOn(channel, 'waitForMessage_').and.returnValue(Promise.resolve(message));
@@ -135,7 +135,7 @@
 
 //     should('call the testFn for testing', async () => {
 //       const testFn = createSpy('testFn').and.returnValue(true);
-//       const testPayload = Mocks.object('payload');
+//       const testPayload = mocks.object('payload');
 //       const testMessage = new Message(MessageType.DATA, testPayload);
 
 //       const waitSpy = spyOn(channel, 'waitForMessage_')
@@ -148,7 +148,7 @@
 
 //     should('ignore message with message type other than DATA', async () => {
 //       const testFn = createSpy('testFn').and.returnValue(true);
-//       const testPayload = Mocks.object('payload');
+//       const testPayload = mocks.object('payload');
 //       const testMessage = new Message(MessageType.PING, testPayload);
 
 //       const waitSpy = spyOn(channel, 'waitForMessage_').and
@@ -165,7 +165,7 @@
 //       const protocol = 'protocol';
 //       const host = 'host';
 
-//       const mockWindow = Mocks.object('window');
+//       const mockWindow = mocks.object('window');
 //       mockWindow.location = { host: host, protocol: protocol };
 //       assert(PostMessageChannel.getOrigin(mockWindow))
 //           .to.equal(`${protocol}//${host}`);

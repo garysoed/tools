@@ -1,7 +1,5 @@
-import { assert, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
-
-import { NumberType } from '../check';
+import { assert, should } from 'gs-testing/export/main';
+import { NumberType } from 'gs-types/export';
 import { GeneratedLinkedList } from '../immutable/generated-linked-list';
 import { Iterables } from '../immutable/iterables';
 

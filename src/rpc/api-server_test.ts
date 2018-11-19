@@ -1,5 +1,5 @@
 // import { assert, Matchers, TestBase } from 'gs-testing/export/main';
-// TestBase.setup();
+//
 
 // import { Mocks } from '../mock/mocks';
 // import { ApiServer } from '../rpc/api-server';
@@ -20,10 +20,10 @@
 
 //   describe('onMessage_', () => {
 //     should('post the response correctly', () => {
-//       const message = Mocks.object('message');
+//       const message = mocks.object('message');
 //       mockRequestType.check.and.returnValue(true);
 
-//       const response = Mocks.object('response');
+//       const response = mocks.object('response');
 //       const mockPromise = createSpyObject('Promise', ['then']);
 //       mockProcessRequest.and.returnValue(mockPromise);
 
@@ -37,7 +37,7 @@
 //     });
 
 //     should('do nothing if the message is the wrong type', () => {
-//       const message = Mocks.object('message');
+//       const message = mocks.object('message');
 //       mockRequestType.check.and.returnValue(false);
 
 //       assert(server['onMessage_'](message)).to.beFalse();
@@ -52,7 +52,7 @@
 //       server.run();
 //       assert(mockChannel.waitForMessage).to.haveBeenCalledWith(Matchers.anyFunction());
 
-//       const message = Mocks.object('message');
+//       const message = mocks.object('message');
 //       mockChannel.waitForMessage.calls.argsFor(0)[0](message);
 //       assert(server['onMessage_']).to.haveBeenCalledWith(message);
 //     });

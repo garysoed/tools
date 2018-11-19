@@ -1,6 +1,4 @@
-import { assert, Matchers, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
-
+import { assert, match, should } from 'gs-testing/export/main';
 import { Vector2d } from '../immutable/vector2d';
 
 
@@ -8,7 +6,7 @@ describe('immutable.Vector2d', () => {
   describe('add', () => {
     should(`add the vectors correctly`, () => {
       assert(Vector2d.of(1, 2).add(Vector2d.of(3, 4))).to
-          .equal(Matchers.objectContaining({x: 4, y: 6}));
+          .equal(match.anyObjectThat().haveProperties({x: 4, y: 6}));
     });
   });
 
@@ -26,7 +24,8 @@ describe('immutable.Vector2d', () => {
 
   describe('mult', () => {
     should(`multiply with a constant correctly`, () => {
-      assert(Vector2d.of(1, 2).mult(3)).to.equal(Matchers.objectContaining({x: 3, y: 6}));
+      assert(Vector2d.of(1, 2).mult(3)).to
+          .equal(match.anyObjectThat().haveProperties({x: 3, y: 6}));
     });
   });
 });

@@ -1,4 +1,4 @@
-import { Type } from '../check';
+import { Type } from 'gs-types/export';
 import { Iterables } from '../immutable/iterables';
 import { Collection } from '../interfaces/collection';
 

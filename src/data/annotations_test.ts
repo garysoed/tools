@@ -1,5 +1,5 @@
 import { TestBase } from 'gs-testing/export/main';
-TestBase.setup();
+
 
 import { assert } from 'gs-testing/export/main';
 import { mocks } from 'gs-testing/export/mock';

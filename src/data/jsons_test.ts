@@ -1,7 +1,7 @@
 import { assert } from 'gs-testing/export/main';
 import { TestBase } from 'gs-testing/export/main';
 import { deepClone, getValue, setValue } from './jsons';
-TestBase.setup();
+
 
 
 describe('data.Jsons', () => {
@@ -46,7 +46,7 @@ describe('data.Jsons', () => {
     should('throw error when the path is empty', () => {
       assert(() => {
         setValue({ }, '', 123);
-      }).to.throwError(/not be empty/);
+      }).to.throwErrorWithMessage(/not be empty/);
     });
   });
 });

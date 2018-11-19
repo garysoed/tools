@@ -1,17 +1,18 @@
-import { assert, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
-
+import { assert, should } from 'gs-testing/export/main';
 import { TreeMap } from '../immutable';
 
-type JsonString = {[key: string]: JsonString};
+interface JsonString {
+  [key: string]: JsonString;
+}
 
 function treeToJson(treeMap: TreeMap<string, number>): JsonString {
   const childrenJson = {};
-  const children = treeMap.getKeys().mapItem((key) => {
+  const children = treeMap.getKeys().mapItem(key => {
     return [key, treeMap.getChildNode(key)] as [string, TreeMap<string, number>];
   });
   for (const [key, node] of children) {
-    childrenJson[key] = treeToJson(node);
+    // TODO: Remove typecast
+    (childrenJson as any)[key] = treeToJson(node);
   }
 
   return {[`${treeMap.getValue()}`]: childrenJson};
@@ -33,9 +34,9 @@ describe('immutable.TreeMap', () => {
   describe('delete', () => {
     should(`delete the node correctly`, () => {
       assert(treeToJson(root.delete('b'))).to.equal({
-        '2': {
-          'a': {
-            '1': {},
+        2: {
+          a: {
+            1: {},
           },
         },
       });
@@ -44,8 +45,9 @@ describe('immutable.TreeMap', () => {
 
   describe('getChildNode', () => {
     should(`return the correct child node`, () => {
+      // tslint:disable-next-line:no-non-null-assertion
       assert(treeToJson(root.getChildNode('a')!)).to.equal({
-        '1': {},
+        1: {},
       });
     });
 
@@ -67,17 +69,17 @@ describe('immutable.TreeMap', () => {
         return [`new${key}`, node.getValue() + parentValue] as [string, number];
       });
       assert(treeToJson(newTree)).to.equal({
-        '2': {
-          'newa': {
-            '3': {},
+        2: {
+          newa: {
+            3: {},
           },
-          'newb': {
-            '7': {
-              'newc': {
-                '8': {},
+          newb: {
+            7: {
+              newc: {
+                8: {},
               },
-              'newd': {
-                '9': {},
+              newd: {
+                9: {},
               },
             },
           },
@@ -89,17 +91,17 @@ describe('immutable.TreeMap', () => {
   describe('set', () => {
     should(`set the node correctly`, () => {
       assert(treeToJson(root.set('a', TreeMap.of(6)))).to.equal({
-        '2': {
-          'a': {
-            '6': {},
+        2: {
+          a: {
+            6: {},
           },
-          'b': {
-            '5': {
-              'c': {
-                '3': {},
+          b: {
+            5: {
+              c: {
+                3: {},
               },
-              'd': {
-                '4': {},
+              d: {
+                4: {},
               },
             },
           },
@@ -111,17 +113,17 @@ describe('immutable.TreeMap', () => {
   describe('setValue', () => {
     should(`update the value correctly`, () => {
       assert(treeToJson(root.setValue(6))).to.equal({
-        '6': {
-          'a': {
-            '1': {},
+        6: {
+          a: {
+            1: {},
           },
-          'b': {
-            '5': {
-              'c': {
-                '3': {},
+          b: {
+            5: {
+              c: {
+                3: {},
               },
-              'd': {
-                '4': {},
+              d: {
+                4: {},
               },
             },
           },

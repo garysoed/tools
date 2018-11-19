@@ -1,4 +1,4 @@
-import { Type } from '../check';
+import { Type } from 'gs-types/export';
 import { GeneratedLinkedList } from '../immutable/generated-linked-list';
 import { Iterables } from '../immutable/iterables';
 import { Collection } from '../interfaces/collection';

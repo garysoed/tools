@@ -1,7 +1,5 @@
-import { assert, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
-
-import { StringType, TupleOfType } from '../check';
+import { assert, should } from 'gs-testing/export/main';
+import { StringType, TupleOfType } from 'gs-types/export';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { OrderedMap } from '../immutable/ordered-map';
 import { Orderings } from '../immutable/orderings';
@@ -10,7 +8,7 @@ import { Orderings } from '../immutable/orderings';
 describe('immutable.OrderedMap', () => {
   describe('[Symbol.iterator]', () => {
     should('return the correct data', () => {
-      const entries: [number, string][] = [[0, 'a'], [1, 'b'], [2, 'c']];
+      const entries: Array<[number, string]> = [[0, 'a'], [1, 'b'], [2, 'c']];
       assert(OrderedMap.of(entries)).to.haveElements(entries);
     });
   });
@@ -122,7 +120,7 @@ describe('immutable.OrderedMap', () => {
 
   describe('entries', () => {
     should('return the correct data', () => {
-      const entries: [number, string][] = [[0, 'a'], [1, 'b'], [2, 'c']];
+      const entries: Array<[number, string]> = [[0, 'a'], [1, 'b'], [2, 'c']];
       assert(OrderedMap.of(entries).entries()).to.haveElements(entries);
     });
   });
@@ -324,7 +322,7 @@ describe('immutable.OrderedMap', () => {
     should('insert the items correctly', () => {
       const map = OrderedMap
           .of([[0, 'a'], [1, 'b'], [2, 'c']])
-          .insertAllAt(1, ImmutableSet.of([[3, 'd'], [4, 'e']] as [number, string][]));
+          .insertAllAt(1, ImmutableSet.of([[3, 'd'], [4, 'e']] as Array<[number, string]>));
       assert(map).to.haveElements([[0, 'a'], [3, 'd'], [4, 'e'], [1, 'b'], [2, 'c']]);
     });
   });
@@ -340,7 +338,7 @@ describe('immutable.OrderedMap', () => {
 
   describe('keys', () => {
     should('return the correct keys', () => {
-      const entries: [number, string][] = [[0, 'a'], [1, 'b'], [2, 'c']];
+      const entries: Array<[number, string]> = [[0, 'a'], [1, 'b'], [2, 'c']];
       assert(OrderedMap.of(entries).keys()).to.haveElements([0, 1, 2]);
     });
   });
@@ -396,10 +394,10 @@ describe('immutable.OrderedMap', () => {
   describe('reduce', () => {
     should('return the correct value', () => {
       const result = OrderedMap
-          .of([[0, 'a'], [1, 'b'], [2, 'c']] as [number, string][])
+          .of([[0, 'a'], [1, 'b'], [2, 'c']] as Array<[number, string]>)
           .reduce((prev: string, index: string, key: number) => {
             return `${prev},${key}${index}`;
-          }, '@');
+          },      '@');
       assert(result).to.equal(`@,0a,1b,2c`);
     });
   });
@@ -407,17 +405,17 @@ describe('immutable.OrderedMap', () => {
   describe('reduceItem', () => {
     should('return the correct value', () => {
       const result = OrderedMap
-          .of([[0, 'a'], [1, 'b'], [2, 'c']] as [number, string][])
+          .of([[0, 'a'], [1, 'b'], [2, 'c']] as Array<[number, string]>)
           .reduceItem((prev: string, [key, index]: [number, string]) => {
             return `${prev},${key}${index}`;
-          }, '@');
+          },          '@');
       assert(result).to.equal(`@,0a,1b,2c`);
     });
   });
 
   describe('reverse', () => {
     should('return the correct value', () => {
-      const entries: [number, string][] = [[0, 'a'], [1, 'b'], [2, 'c']];
+      const entries: Array<[number, string]> = [[0, 'a'], [1, 'b'], [2, 'c']];
       assert(OrderedMap.of(entries).reverse()).to.haveElements([[2, 'c'], [1, 'b'], [0, 'a']]);
     });
   });
@@ -489,19 +487,19 @@ describe('immutable.OrderedMap', () => {
 
   describe('values', () => {
     should('return the correct data', () => {
-      const entries: [number, string][] = [[0, 'a'], [1, 'b'], [2, 'c']];
+      const entries: Array<[number, string]> = [[0, 'a'], [1, 'b'], [2, 'c']];
       assert(OrderedMap.of(entries).values()).to.haveElements(['a', 'b', 'c']);
     });
   });
 
   describe('of', () => {
     should('create the map correctly from entries array', () => {
-      const entries: [number, string][] = [[0, 'a'], [1, 'b'], [2, 'c']];
+      const entries: Array<[number, string]> = [[0, 'a'], [1, 'b'], [2, 'c']];
       assert(OrderedMap.of(entries)).to.haveElements(entries);
     });
 
     should('dedupe entries', () => {
-      const entries: [number, string][] = [[0, 'a'], [1, 'b'], [2, 'c'], [2, 'd']];
+      const entries: Array<[number, string]> = [[0, 'a'], [1, 'b'], [2, 'c'], [2, 'd']];
       assert(OrderedMap.of(entries)).to.haveElements([[0, 'a'], [1, 'b'], [2, 'c']]);
     });
   });

@@ -19,7 +19,7 @@ Example:
 
 ```typescript
 import { assert, Matchers, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
+
 
 import { Validate } from 'external/gs_tools/src/util';
 

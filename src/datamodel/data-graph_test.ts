@@ -1,5 +1,5 @@
 import { TestBase } from 'gs-testing/export/main';
-TestBase.setup();
+
 
 import { DataGraph, registerDataGraph } from '../datamodel';
 import { Flags } from '../dispose/base-disposable';
@@ -42,7 +42,7 @@ describe('datamodel.registerDataGraph', () => {
   describe('get', () => {
     should(`return the correct object`, async () => {
       const id = 'id';
-      const object = Mocks.object('object');
+      const object = mocks.object('object');
       mockStorage.read.and.returnValue(object);
 
       const graph = await Graph.get(dataGraphId, Graph.getTimestamp());
@@ -53,7 +53,7 @@ describe('datamodel.registerDataGraph', () => {
 
   describe('list', () => {
     should(`return the correct list`, async () => {
-      const list = Mocks.object('list');
+      const list = mocks.object('list');
       mockStorage.list.and.returnValue(list);
 
       const graph = await Graph.get(dataGraphId, Graph.getTimestamp());
@@ -64,7 +64,7 @@ describe('datamodel.registerDataGraph', () => {
   describe('search', () => {
     should(`return the correct results`, async () => {
       const token = 'token';
-      const list = Mocks.object('list');
+      const list = mocks.object('list');
       mockSearcher.search.and.returnValue(list);
 
       const graph = await Graph.get(dataGraphId, Graph.getTimestamp());
@@ -76,9 +76,9 @@ describe('datamodel.registerDataGraph', () => {
   describe('set', () => {
     should(`refresh the graph`, async () => {
       const id = 'id';
-      const data = Mocks.object('data');
+      const data = mocks.object('data');
 
-      const list = Mocks.object('list');
+      const list = mocks.object('list');
       const mockProvider = createSpy('Provider');
       const graph = await Graph.get(dataGraphId, Graph.getTimestamp());
       graph['provider_'] = mockProvider;
@@ -93,7 +93,7 @@ describe('datamodel.registerDataGraph', () => {
 
     should(`do nothing if the existing item is the same as the data`, async () => {
       const id = 'id';
-      const data = Mocks.object('data');
+      const data = mocks.object('data');
 
       mockStorage.read.and.returnValue(data);
       spyOn(Graph, 'refresh');

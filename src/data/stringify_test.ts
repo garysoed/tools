@@ -1,7 +1,7 @@
 import { assert } from 'gs-testing/export/main';
 import { TestBase } from 'gs-testing/export/main';
 import { Property, toString } from './stringify';
-TestBase.setup();
+
 
 /**
  * @test

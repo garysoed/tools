@@ -1,9 +1,7 @@
-import { assert, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
-
-import { NumberType } from '../check';
+import { assert, should } from 'gs-testing/export/main';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { InfiniteList } from '../immutable/infinite-list';
+import { NumberType } from 'gs-types/export';
 
 
 describe('immutable.InfiniteList', () => {

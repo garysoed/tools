@@ -16,10 +16,10 @@ export class InjectUtil {
    *    value is the binding key for that parameter index.
    */
   static getMetadataMap(ctor: gs.ICtor<any>): Map<number, InjectMetadata> {
-    if (ctor[__METADATA] === undefined) {
-      ctor[__METADATA] = new Map<number, InjectMetadata>();
+    // TODO: Don't typecast.
+    if ((ctor as any)[__METADATA] === undefined) {
+      (ctor as any)[__METADATA] = new Map<number, InjectMetadata>();
     }
-    return ctor[__METADATA];
+    return (ctor as any)[__METADATA];
   }
 }
-// TODO: Mutable

@@ -1,11 +1,9 @@
-import { assert, Matchers, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
-
+import { assert, match, should } from 'gs-testing/export/main';
+import { mocks } from 'gs-testing/export/mock';
+import { createSpy, createSpyInstance, fake, spy } from 'gs-testing/export/spy';
 import { InjectUtil } from '../inject/inject-util';
 import { Injector } from '../inject/injector';
-import { Fakes } from '../mock/fakes';
-import { Mocks } from '../mock/mocks';
-import { Reflect } from '../util/reflect';
+import { InjectMetadata } from './inject-metadata';
 
 
 describe('inject.Injector', () => {
@@ -21,9 +19,9 @@ describe('inject.Injector', () => {
   describe('getBoundValue', () => {
     should('instantiate the constructor correctly', () => {
       const bindKey = 'bindKey';
-      const mockInstance = Mocks.object('Instance');
+      const mockInstance = mocks.object('Instance');
       const mockProvider = createSpy('Provider');
-      mockProvider.and.returnValue(mockInstance);
+      fake(mockProvider).always().return(mockInstance);
       mockBindings.set(bindKey, mockProvider);
 
       assert(injector.getBoundValue(bindKey)).to.equal(mockInstance);
@@ -32,17 +30,17 @@ describe('inject.Injector', () => {
     });
 
     should('return the cached value', () => {
-      const cachedInstance = Mocks.object('cachedInstance');
+      const cachedInstance = mocks.object('cachedInstance');
       const bindKey = 'bindKey';
       injector['instances_'].set(bindKey, cachedInstance);
 
-      assert(injector.getBoundValue(bindKey)).to.be(cachedInstance);
+      assert(injector.getBoundValue(bindKey)).to.equal(cachedInstance);
     });
 
     should('throw error if the bind key does not exist', () => {
       assert(() => {
         injector.getBoundValue('bindKey');
-      }).to.throwError(/No value bound to key/);
+      }).to.throwErrorWithMessage(/No value bound to key/);
     });
 
     should('return undefined if the key does not exist and it is optional', () => {
@@ -58,42 +56,45 @@ describe('inject.Injector', () => {
     should('return the parameters correctly', () => {
       const metadata1 = {getKeyName: () => 'key1', isOptional: () => true};
       const metadata2 = {getKeyName: () => 'key2', isOptional: () => false};
-      const mockValue1 = Mocks.object('Value1');
-      const mockValue2 = Mocks.object('Value2');
+      const mockValue1 = mocks.object('Value1');
+      const mockValue2 = mocks.object('Value2');
       const metadata = new Map<number, any>();
       metadata.set(0, metadata1);
       metadata.set(1, metadata2);
-      spyOn(InjectUtil, 'getMetadataMap').and.returnValue(metadata);
+      const getMetadataMapSpy = spy(InjectUtil, 'getMetadataMap');
+      fake(getMetadataMapSpy).always().return(metadata);
 
-      Fakes.build(spyOn(injector, 'getBoundValue'))
+      const getBoundValueSpy = spy(injector, 'getBoundValue');
+      fake(getBoundValueSpy)
           .when(metadata1.getKeyName()).return(mockValue1)
           .when(metadata2.getKeyName()).return(mockValue2)
-          .else().return(null);
+          .always().return(null);
 
       assert(injector.getParameters(TestClass)).to.equal([mockValue1, mockValue2]);
-      assert(injector.getBoundValue).to
+      assert(getBoundValueSpy).to
           .haveBeenCalledWith(metadata1.getKeyName(), metadata1.isOptional());
-      assert(injector.getBoundValue).to
+      assert(getBoundValueSpy).to
           .haveBeenCalledWith(metadata2.getKeyName(), metadata2.isOptional());
-      assert(InjectUtil.getMetadataMap).to.haveBeenCalledWith(TestClass);
+      assert(getMetadataMapSpy).to.haveBeenCalledWith(TestClass);
     });
 
     should('use the extra arguments to override the parameters', () => {
-      const mockValue1 = Mocks.object('Value1');
-      const mockValue2 = Mocks.object('Value2');
-      spyOn(InjectUtil, 'getMetadataMap').and.returnValue(new Map<number, string>());
+      const mockValue1 = mocks.object('Value1');
+      const mockValue2 = mocks.object('Value2');
+      const getMetadataMapSpy = spy(InjectUtil, 'getMetadataMap');
+      fake(getMetadataMapSpy).always().return(new Map<number, InjectMetadata>());
 
       const parameters = injector.getParameters(TestClass, {0: mockValue1, 1: mockValue2});
       assert(parameters).to.equal([mockValue1, mockValue2]);
-      assert(InjectUtil.getMetadataMap).to.haveBeenCalledWith(TestClass);
+      assert(getMetadataMapSpy).to.haveBeenCalledWith(TestClass);
     });
 
     should('throw error if an index is not in the metadata', () => {
-      spyOn(InjectUtil, 'getMetadataMap').and.returnValue(new Map<number, string>());
+      fake(spy(InjectUtil, 'getMetadataMap')).always().return(new Map<number, InjectMetadata>());
 
       assert(() => {
         injector.getParameters(TestClass);
-      }).to.throwError(/Cannot find injection candidate/);
+      }).to.throwErrorWithMessage(/Cannot find injection candidate/);
     });
   });
 
@@ -101,16 +102,18 @@ describe('inject.Injector', () => {
     class TestClass {}
 
     should('instantiate the constructor correctly', () => {
-      const mockExtraArguments = Mocks.object('ExtraArguments');
-      const mockParameters = Mocks.object('Parameters');
-      const mockInstance = Mocks.object('Instance');
+      const mockExtraArguments = mocks.object('ExtraArguments');
+      const mockParameters = mocks.object<any[]>('Parameters');
+      const mockInstance = mocks.object('Instance');
 
-      spyOn(injector, 'getParameters').and.returnValue(mockParameters);
-      spyOn(Reflect, 'construct').and.returnValue(mockInstance);
+      const getParametersSpy = spy(injector, 'getParameters');
+      fake(getParametersSpy).always().return(mockParameters);
+      const constructSpy = spy(Reflect, 'construct');
+      fake(constructSpy).always().return(mockInstance);
 
       assert(injector.instantiate(TestClass, mockExtraArguments)).to.equal(mockInstance);
-      assert(injector.getParameters).to.haveBeenCalledWith(TestClass, mockExtraArguments);
-      assert(Reflect.construct).to.haveBeenCalledWith(TestClass, mockParameters);
+      assert(getParametersSpy).to.haveBeenCalledWith(TestClass, mockExtraArguments);
+      assert(constructSpy).to.haveBeenCalledWith(TestClass, mockParameters);
     });
   });
 
@@ -119,23 +122,24 @@ describe('inject.Injector', () => {
 
     should('bind the correct provider', () => {
       const bindKey = 'bindKey';
-      const mockInstance = Mocks.object('Instance');
-      const mockInjector = createSpyObject('Injector', ['instantiate']);
-      mockInjector.instantiate.and.returnValue(mockInstance);
+      const mockInstance = mocks.object('Instance');
+      const mockInjector = createSpyInstance(Injector);
+      fake(mockInjector.instantiate).always().return(mockInstance);
 
-      const bindProviderSpy = spyOn(Injector, 'bindProvider');
+      const bindProviderSpy = spy(Injector, 'bindProvider');
 
       Injector.bind(TestClass, bindKey);
-      assert(Injector.bindProvider).to.haveBeenCalledWith(Matchers.anyFunction(), bindKey);
+      const functionMatcher = match.anyThat<(injector: Injector) => any>().beAFunction();
+      assert(bindProviderSpy).to.haveBeenCalledWith(functionMatcher, bindKey);
 
-      assert(bindProviderSpy.calls.argsFor(0)[0](mockInjector)).to.equal(mockInstance);
+      assert(functionMatcher.getLastMatch()).to.equal(mockInstance);
       assert(mockInjector.instantiate).to.haveBeenCalledWith(TestClass);
     });
   });
 
   describe('bindProvider', () => {
     should('set the BINDINGS_ map correctly', () => {
-      const mockProvider = Mocks.object('Provider');
+      const mockProvider = mocks.object<(injector: Injector) => any>('Provider');
       const bindKey = 'bindKey';
       Injector.bindProvider(mockProvider, bindKey);
 
@@ -144,19 +148,19 @@ describe('inject.Injector', () => {
     });
 
     should('throw error if the binding key is already bound', () => {
-      const mockProvider = Mocks.object('Provider');
+      const mockProvider = mocks.object<gs.ICtor<any>>('Provider');
       const bindKey = 'bindKey';
       Injector.bind(mockProvider, bindKey);
 
       assert(() => {
         Injector.bind(mockProvider, bindKey);
-      }).to.throwError(/is already bound/);
+      }).to.throwErrorWithMessage(/is already bound/);
     });
 
     should('throw error if the binding key is a reserved key', () => {
       assert(() => {
-        Injector.bind(Mocks.object('Provider'), '$gsInjector');
-      }).to.throwError(/is a reserved key/);
+        Injector.bind(mocks.object('Provider'), '$gsInjector');
+      }).to.throwErrorWithMessage(/is a reserved key/);
     });
   });
 });

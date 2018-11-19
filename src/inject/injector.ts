@@ -1,5 +1,3 @@
-import { Reflect } from '../util/reflect';
-
 import { InjectUtil } from './inject-util';
 
 
@@ -106,7 +104,7 @@ export class Injector {
     }
 
     if (!isOptional && !Injector.BINDINGS_.has(bindKey)) {
-      throw new Error(`No value bound to key ${bindKey}`);
+      throw new Error(`No value bound to key ${bindKey.toString()}`);
     }
     const provider = Injector.BINDINGS_.has(bindKey)
         ? Injector.BINDINGS_.get(bindKey) : () => undefined;
@@ -187,7 +185,7 @@ export class Injector {
       provider: Provider<any>,
       bindKey: BindKey): void {
     if (Injector.BINDINGS_.has(bindKey)) {
-      throw new Error(`Binding ${bindKey} is already bound`);
+      throw new Error(`Binding ${bindKey.toString()} is already bound`);
     }
 
     if (bindKey === INJECTOR_BIND_KEY_) {

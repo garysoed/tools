@@ -1,5 +1,5 @@
-import { assert, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
+import { assert } from 'gs-testing/export/main';
+
 
 import { Serializable } from '../data/a-serializable';
 import { DataModel } from '../datamodel/data-model';

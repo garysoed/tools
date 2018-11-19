@@ -1,8 +1,8 @@
 import { cache } from '../data/cache';
+import { Tree } from '../interfaces/tree';
 import { ImmutableList } from './immutable-list';
 import { ImmutableMap } from './immutable-map';
 import { ImmutableSet } from './immutable-set';
-import { Tree } from '../interfaces/tree';
 
 type MapFn<V, V2> = (node: TreeSet<V>, parent: TreeSet<V> | null) => V2;
 
