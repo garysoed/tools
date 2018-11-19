@@ -1,10 +1,10 @@
 import { ImmutableList } from '../immutable';
-import { Parser } from '../interfaces';
+import { Parser } from '../parse/parser';
 import { AbsolutePath } from '../path/absolute-path';
 import { Path } from '../path/path';
 
 export const AbsolutePathParser: Parser<AbsolutePath> = {
-  parse(input: string | null): AbsolutePath | null {
+  convertBackward(input: string | null): AbsolutePath | null {
     if (!input) {
       return null;
     }
@@ -19,7 +19,7 @@ export const AbsolutePathParser: Parser<AbsolutePath> = {
     return new AbsolutePath(ImmutableList.of(parts.slice(1)));
   },
 
-  stringify(value: AbsolutePath | null): string {
+  convertForward(value: AbsolutePath | null): string {
     if (!value) {
       return '';
     }

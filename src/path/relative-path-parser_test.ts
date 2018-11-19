@@ -1,37 +1,36 @@
-import { assert, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
-
+import { assert, should } from 'gs-testing/export/main';
 import { ImmutableList } from '../immutable';
 import { RelativePath, RelativePathParser } from '../path';
 
 
 describe('path.RelativePathParser', () => {
-  describe('parse', () => {
+  describe('convertBackward', () => {
     should(`return the correct path`, () => {
-      assert(RelativePathParser.parse('a/b/c')!.toString()).to.equal('a/b/c');
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(RelativePathParser.convertBackward('a/b/c')!.toString()).to.equal('a/b/c');
     });
 
     should(`return null if the path is absolute`, () => {
-      assert(RelativePathParser.parse('/a/b/c')).to.beNull();
+      assert(RelativePathParser.convertBackward('/a/b/c')).to.beNull();
     });
 
     should(`return null if the string is empty`, () => {
-      assert(RelativePathParser.parse('')).to.beNull();
+      assert(RelativePathParser.convertBackward('')).to.beNull();
     });
 
     should(`return null if the input is null`, () => {
-      assert(RelativePathParser.parse(null)).to.beNull();
+      assert(RelativePathParser.convertBackward(null)).to.beNull();
     });
   });
 
-  describe('stringify', () => {
+  describe('convertForward', () => {
     should(`return the correct string`, () => {
-      assert(RelativePathParser.stringify(new RelativePath(ImmutableList.of(['a', 'b', 'c']))))
+      assert(RelativePathParser.convertForward(new RelativePath(ImmutableList.of(['a', 'b', 'c']))))
           .to.equal('a/b/c');
     });
 
     should(`return empty string if value is null`, () => {
-      assert(RelativePathParser.stringify(null)).to.equal('');
+      assert(RelativePathParser.convertForward(null)).to.equal('');
     });
   });
 });

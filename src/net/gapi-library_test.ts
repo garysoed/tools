@@ -1,15 +1,16 @@
-import { assert, Matchers, Mocks, TestBase } from 'gs-testing/export/main';
-TestBase.setup();
-
-import { GapiLibrary } from '../net';
-import { GapiError } from '../net/gapi-error';
-import { QUEUED_REQUESTS } from '../net/gapi-library';
+import { assert, match, should } from 'gs-testing/export/main';
+import { mocks } from 'gs-testing/export/mock';
+import { createSpy, createSpyObject, fake, SpyObj } from 'gs-testing/export/spy';
+import { spy } from 'gs-testing/export/spy';
+import { Gapi } from './gapi';
+import { GapiError } from './gapi-error';
+import { GapiLibrary, QUEUED_REQUESTS } from './gapi-library';
 
 
 describe('net.GapiLibrary', () => {
-  const NAME: string = 'name';
-  let mockGapi: any;
-  let mockWindow: any;
+  const NAME = 'name';
+  let mockGapi: SpyObj<Gapi>;
+  let mockWindow: SpyObj<Window>;
   let library: GapiLibrary<number>;
 
   beforeEach(() => {
@@ -26,20 +27,22 @@ describe('net.GapiLibrary', () => {
     should(`call the callback on all the queued callbacks`, async () => {
       const mockCallback1 = createSpy('Callback1');
       const mockCallback2 = createSpy('Callback2');
-      const request1 = Mocks.object('request1');
-      const request2 = Mocks.object('request2');
+      const request1 = mocks.object<gapi.client.HttpRequest<any>>('request1');
+      const request2 = mocks.object<gapi.client.HttpRequest<any>>('request2');
       QUEUED_REQUESTS.set(request1, mockCallback1);
       QUEUED_REQUESTS.set(request2, mockCallback2);
 
-      const result1 = Mocks.object('result1');
-      const result2 = Mocks.object('result2');
+      const result1 = mocks.object('result1');
+      const result2 = mocks.object('result2');
       const responseMap = new Map([[request1, result1], [request2, result2]]);
 
       const batches = new Map();
-      const mockBatchAdd = createSpy('BatchAdd').and
-          .callFake((request: any, config: {id: any}) => batches.set(request, config.id));
+      const mockBatchAdd = createSpy<void, [gapi.client.HttpRequest<any>, {id: string}]>(
+          'BatchAdd');
+      fake(mockBatchAdd).always()
+          .call((request: any, config: {id: any}) => batches.set(request, config.id));
 
-      const mockBatch = new Promise((resolve) => {
+      const mockBatch = new Promise(resolve => {
         const intervalId = window.setInterval(() => {
           const result = {};
           for (const [request, response] of responseMap) {
@@ -48,7 +51,7 @@ describe('net.GapiLibrary', () => {
               return;
             }
 
-            result[batchId] = {result: response, status: 200};
+            (result as any)[batchId] = {result: response, status: 200};
           }
 
           window.clearInterval(intervalId);
@@ -56,39 +59,42 @@ describe('net.GapiLibrary', () => {
             result,
             status: 200,
           });
-        }, 0);
+        },                                    0);
       });
-      mockBatch['add'] = mockBatchAdd;
+      (mockBatch as any)['add'] = mockBatchAdd;
 
-      const mockClient = createSpyObject('Client', ['newBatch']);
-      mockClient.newBatch.and.returnValue(Promise.resolve(mockBatch));
-      spyOn(library, 'client').and.returnValue(Promise.resolve(mockClient));
+      const mockClient = createSpyObject<gapi.Client>('Client', ['newBatch']);
+      // TODO: Remove typecast.
+      fake(mockClient.newBatch).always().return(Promise.resolve(mockBatch) as any);
+      fake(spy(library, 'client')).always().return(Promise.resolve(mockClient));
 
       await library['flushRequests_']();
       assert(mockCallback1).to.haveBeenCalledWith(result1);
       assert(mockCallback2).to.haveBeenCalledWith(result2);
-      assert(mockBatchAdd).to.haveBeenCalledWith(request1, Matchers.any(Object));
-      assert(mockBatchAdd).to.haveBeenCalledWith(request2, Matchers.any(Object));
-      assert(QUEUED_REQUESTS).to.haveEntries([]);
+      assert(mockBatchAdd).to.haveBeenCalledWith(request1, match.anyThing());
+      assert(mockBatchAdd).to.haveBeenCalledWith(request2, match.anyThing());
+      assert(QUEUED_REQUESTS).to.haveElements([]);
     });
 
     should(`handle errors correctly on failed requests`, async () => {
       const mockCallback1 = createSpy('Callback1');
       const mockCallback2 = createSpy('Callback2');
-      const request1 = Mocks.object('request1');
-      const request2 = Mocks.object('request2');
+      const request1 = mocks.object<gapi.client.HttpRequest<any>>('request1');
+      const request2 = mocks.object<gapi.client.HttpRequest<any>>('request2');
       QUEUED_REQUESTS.set(request1, mockCallback1);
       QUEUED_REQUESTS.set(request2, mockCallback2);
 
-      const result1 = Mocks.object('result1');
-      const result2 = Mocks.object('result2');
+      const result1 = mocks.object('result1');
+      const result2 = mocks.object('result2');
       const responseMap = new Map([[request1, result1], [request2, result2]]);
 
       const batches = new Map();
-      const mockBatchAdd = createSpy('BatchAdd').and
-          .callFake((request: any, config: {id: any}) => batches.set(request, config.id));
+      const mockBatchAdd = createSpy<void, [gapi.client.HttpRequest<any>, {id: string}]>(
+          'BatchAdd');
+      fake(mockBatchAdd).always()
+          .call((request: any, config: {id: any}) => batches.set(request, config.id));
 
-      const mockBatch = new Promise((resolve) => {
+      const mockBatch = new Promise(resolve => {
         const intervalId = window.setInterval(() => {
           const result = {};
           for (const [request, response] of responseMap) {
@@ -97,7 +103,7 @@ describe('net.GapiLibrary', () => {
               return;
             }
 
-            result[batchId] = {result: response, status: 500};
+            (result as any)[batchId] = {result: response, status: 500};
           }
 
           window.clearInterval(intervalId);
@@ -105,27 +111,28 @@ describe('net.GapiLibrary', () => {
             result,
             status: 200,
           });
-        }, 0);
+        },                                    0);
       });
-      mockBatch['add'] = mockBatchAdd;
+      (mockBatch as any)['add'] = mockBatchAdd;
 
-      const mockClient = createSpyObject('Client', ['newBatch']);
-      mockClient.newBatch.and.returnValue(Promise.resolve(mockBatch));
-      spyOn(library, 'client').and.returnValue(Promise.resolve(mockClient));
+      const mockClient = createSpyObject<gapi.Client>('Client', ['newBatch']);
+      // TODO: Remove typecast.
+      fake(mockClient.newBatch).always().return(Promise.resolve(mockBatch) as any);
+      fake(spy(library, 'client')).always().return(Promise.resolve(mockClient));
 
       await library['flushRequests_']();
-      assert(mockCallback1).to.haveBeenCalledWith(Matchers.any(GapiError));
-      assert(mockCallback2).to.haveBeenCalledWith(Matchers.any(GapiError));
-      assert(mockBatchAdd).to.haveBeenCalledWith(request1, Matchers.any(Object));
-      assert(mockBatchAdd).to.haveBeenCalledWith(request2, Matchers.any(Object));
-      assert(QUEUED_REQUESTS).to.haveEntries([]);
+      assert(mockCallback1).to.haveBeenCalledWith(match.anyObjectThat().beAnInstanceOf(GapiError));
+      assert(mockCallback2).to.haveBeenCalledWith(match.anyObjectThat().beAnInstanceOf(GapiError));
+      assert(mockBatchAdd).to.haveBeenCalledWith(request1, match.anyThing());
+      assert(mockBatchAdd).to.haveBeenCalledWith(request2, match.anyThing());
+      assert(QUEUED_REQUESTS).to.haveElements([]);
     });
 
     should(`pass errors on all callbacks if the entire batch fails`, async () => {
       const mockCallback1 = createSpy('Callback1');
       const mockCallback2 = createSpy('Callback2');
-      const request1 = Mocks.object('request1');
-      const request2 = Mocks.object('request2');
+      const request1 = mocks.object<gapi.client.HttpRequest<any>>('request1');
+      const request2 = mocks.object<gapi.client.HttpRequest<any>>('request2');
       QUEUED_REQUESTS.set(request1, mockCallback1);
       QUEUED_REQUESTS.set(request2, mockCallback2);
 
@@ -134,18 +141,19 @@ describe('net.GapiLibrary', () => {
       const mockBatch = Promise.resolve({
         status: 500,
       });
-      mockBatch['add'] = mockBatchAdd;
+      (mockBatch as any)['add'] = mockBatchAdd;
 
-      const mockClient = createSpyObject('Client', ['newBatch']);
-      mockClient.newBatch.and.returnValue(Promise.resolve(mockBatch));
-      spyOn(library, 'client').and.returnValue(Promise.resolve(mockClient));
+      const mockClient = createSpyObject<gapi.Client>('Client', ['newBatch']);
+      // TODO: Remove typecast.
+      fake(mockClient.newBatch).always().return(Promise.resolve(mockBatch) as any);
+      fake(spy(library, 'client')).always().return(Promise.resolve(mockClient));
 
       await library['flushRequests_']();
-      assert(mockCallback1).to.haveBeenCalledWith(Matchers.any(GapiError));
-      assert(mockCallback2).to.haveBeenCalledWith(Matchers.any(GapiError));
-      assert(mockBatchAdd).to.haveBeenCalledWith(request1, Matchers.any(Object));
-      assert(mockBatchAdd).to.haveBeenCalledWith(request2, Matchers.any(Object));
-      assert(QUEUED_REQUESTS).to.haveEntries([]);
+      assert(mockCallback1).to.haveBeenCalledWith(match.anyObjectThat().beAnInstanceOf(GapiError));
+      assert(mockCallback2).to.haveBeenCalledWith(match.anyObjectThat().beAnInstanceOf(GapiError));
+      assert(mockBatchAdd).to.haveBeenCalledWith(request1, match.anyThing());
+      assert(mockBatchAdd).to.haveBeenCalledWith(request2, match.anyThing());
+      assert(QUEUED_REQUESTS).to.haveElements([]);
     });
 
     should(`clear the previous timeout IDs`, async () => {
@@ -156,11 +164,12 @@ describe('net.GapiLibrary', () => {
       const mockBatch = Promise.resolve({
         status: 500,
       });
-      mockBatch['add'] = mockBatchAdd;
+      (mockBatch as any)['add'] = mockBatchAdd;
 
-      const mockClient = createSpyObject('Client', ['newBatch']);
-      mockClient.newBatch.and.returnValue(Promise.resolve(mockBatch));
-      spyOn(library, 'client').and.returnValue(Promise.resolve(mockClient));
+      const mockClient = createSpyObject<gapi.Client>('Client', ['newBatch']);
+      // TODO: Remove typecast.
+      fake(mockClient.newBatch).always().return(Promise.resolve(mockBatch) as any);
+      fake(spy(library, 'client')).always().return(Promise.resolve(mockClient));
 
       await library['flushRequests_']();
       assert(mockWindow.clearTimeout).to.haveBeenCalledWith(existingTimeoutId);
@@ -170,63 +179,76 @@ describe('net.GapiLibrary', () => {
 
   describe('get', () => {
     should(`resolve with the correct object`, async () => {
-      const obj = Mocks.object('obj');
-      mockGapi.init.and.returnValue(Promise.resolve({[NAME]: obj}));
+      const obj = 123;
+
+      // TODO: Remove typecast
+      fake(mockGapi.init).always().return(Promise.resolve({[NAME]: obj} as any));
 
       await assert(library.get()).to.resolveWith(obj);
       assert(mockGapi.init).to.haveBeenCalledWith();
     });
 
     should(`reject if the object does not exist`, async () => {
-      mockGapi.init.and.returnValue(Promise.resolve({}));
+      // TODO: Remove typecast
+      fake(mockGapi.init).always().return(Promise.resolve({} as any));
 
-      await assert(library.get()).to.rejectWithError(/should exist/);
+      await assert(library.get()).to.rejectWithErrorMessage(/should exist/);
       assert(mockGapi.init).to.haveBeenCalledWith();
     });
   });
 
   describe('queueRequest', () => {
     should(`resolve correctly when the queued callback has been called`, async () => {
-      const request = Mocks.object('request');
-      const result = Mocks.object('result');
+      const request = mocks.object<gapi.client.HttpRequest<any>>('request');
+      const result = mocks.object('result');
       const timeoutId = 123;
-      mockWindow.setTimeout.and.returnValue(timeoutId);
+      fake(mockWindow.setTimeout).always().call(fn => {
+        fn();
 
-      spyOn(library, 'flushRequests_');
+        return timeoutId;
+      });
+
+      // TODO: Make flushRequests_ private
+      const flushRequestsSpy = spy(library, 'flushRequests_');
 
       const promise = library.queueRequest(request);
+      // tslint:disable-next-line:no-non-null-assertion
       QUEUED_REQUESTS.get(request)!(result);
       assert(await promise).to.equal(result);
 
       assert(GapiLibrary['timeoutId_']).to.equal(timeoutId);
-      mockWindow.setTimeout.calls.argsFor(0)[0]();
-      assert(library['flushRequests_']).to.haveBeenCalledWith();
+      assert(flushRequestsSpy).to.haveBeenCalledWith();
     });
 
     should(`reject correctly when the queued callback has been called with an Error`,
-        async () => {
-      const request = Mocks.object('request');
+           async () => {
+      const request = mocks.object<gapi.client.HttpRequest<any>>('request');
       const result = new Error('error');
       const timeoutId = 123;
-      mockWindow.setTimeout.and.returnValue(timeoutId);
+      fake(mockWindow.setTimeout).always().call(fn => {
+        fn();
 
-      spyOn(library, 'flushRequests_');
+        return timeoutId;
+      });
+
+      // TODO: Make flushRequests_ private
+      const flushRequestsSpy = spy(library, 'flushRequests_');
 
       const promise = library.queueRequest(request);
+      // tslint:disable-next-line:no-non-null-assertion
       QUEUED_REQUESTS.get(request)!(result);
-      await assert(promise).to.rejectWithError(/error/);
+      await assert(promise).to.rejectWithErrorMessage(/error/);
 
       assert(GapiLibrary['timeoutId_']).to.equal(timeoutId);
-      mockWindow.setTimeout.calls.argsFor(0)[0]();
-      assert(library['flushRequests_']).to.haveBeenCalledWith();
+      assert(flushRequestsSpy).to.haveBeenCalledWith();
     });
 
     should(`not set the timeout if it already exists`, async () => {
-      const request = Mocks.object('request');
+      const request = mocks.object<gapi.client.HttpRequest<any>>('request');
       const timeoutId = 123;
       GapiLibrary['timeoutId_'] = timeoutId;
 
-      spyOn(library, 'flushRequests_');
+      spy(library, 'flushRequests_');
 
       library.queueRequest(request);
 
@@ -238,8 +260,8 @@ describe('net.GapiLibrary', () => {
   describe('static create', () => {
     should(`resolve with the library correctly`, async () => {
       const name = 'name';
-      const discoveryDocs = Mocks.object('discoveryDocs');
-      const scopes = Mocks.object('scopes');
+      const discoveryDocs = ['discoveryDocs'];
+      const scopes = ['scopes'];
 
       const library = await GapiLibrary.create(
           mockGapi,
@@ -255,8 +277,8 @@ describe('net.GapiLibrary', () => {
 
     should(`sign in if set`, async () => {
       const name = 'name';
-      const discoveryDocs = Mocks.object('discoveryDocs');
-      const scopes = Mocks.object('scopes');
+      const discoveryDocs = ['discoveryDocs'];
+      const scopes = ['scopes'];
 
       const library = await GapiLibrary.create(
           mockGapi,

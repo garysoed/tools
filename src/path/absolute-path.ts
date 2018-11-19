@@ -1,4 +1,4 @@
-import { cache } from '../data';
+import { cache } from '../data/cache';
 import { Path } from '../path/path';
 
 export class AbsolutePath extends Path {

@@ -1,38 +1,37 @@
-import { assert } from 'gs-testing/export/main';
+// tslint:disable:no-non-null-assertion
+import { assert, should } from 'gs-testing/export/main';
 import { AbsolutePath, PathParser, Paths, RelativePath } from '../path';
-import { PathMatcher } from '../path/testing';
-import { TestBase } from 'gs-testing/export/main';
-
-TestBase.setup();
 
 describe('path.Paths', () => {
   describe('absolutePath', () => {
     should(`return the correct path`, () => {
       const path = Paths.absolutePath('/a/b/c');
       assert(path).to.beAnInstanceOf(AbsolutePath);
-      assert(path).to.equal(PathMatcher.with('/a/b/c'));
+      assert(path.toString()).to.equal('/a/b/c');
     });
 
     should(`throw error if the path is not an absolute path`, () => {
       assert(() => {
         Paths.absolutePath('a/b/c');
-      }).to.throwError(/valid absolute path/);
+      }).to.throwErrorWithMessage(/valid absolute path/);
     });
   });
 
   describe('getDirPath', () => {
     should(`return the correct directory for absolute paths`, () => {
-      const dirPath = Paths.getDirPath(PathParser.parse('/a/b/c')!);
+      // tslint:disable-next-line:no-non-null-assertion
+      const dirPath = Paths.getDirPath(PathParser.convertBackward('/a/b/c')!);
 
       assert(dirPath).to.beAnInstanceOf(AbsolutePath);
-      assert(dirPath).to.equal(PathMatcher.with('/a/b'));
+      assert(dirPath.toString()).to.equal('/a/b');
     });
 
     should(`return the correct directory for relative paths`, () => {
-      const dirPath = Paths.getDirPath(PathParser.parse('a/b/c')!);
+      // tslint:disable-next-line:no-non-null-assertion
+      const dirPath = Paths.getDirPath(PathParser.convertBackward('a/b/c')!);
 
       assert(dirPath).to.beAnInstanceOf(RelativePath);
-      assert(dirPath).to.equal(PathMatcher.with('a/b'));
+      assert(dirPath).to.equal('a/b');
     });
   });
 
@@ -52,90 +51,94 @@ describe('path.Paths', () => {
 
   describe('getItemName', () => {
     should(`return the correct item name`, () => {
-      assert(Paths.getItemName(PathParser.parse('a/b/c')!)).to.equal('c');
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(Paths.getItemName(PathParser.convertBackward('a/b/c')!)).to.equal('c');
     });
 
     should(`return null if path is root`, () => {
-      assert(Paths.getItemName(PathParser.parse('/')!)).to.beNull();
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(Paths.getItemName(PathParser.convertBackward('/')!)).to.beNull();
     });
   });
 
   describe('getRelativePath', () => {
     should(`return the correct relative path`, () => {
-      const src = PathParser.parse('/a/b/c/d')!;
-      const dest = PathParser.parse('/a/b/e')!;
+      // tslint:disable-next-line:no-non-null-assertion
+      const src = PathParser.convertBackward('/a/b/c/d')!;
+      // tslint:disable-next-line:no-non-null-assertion
+      const dest = PathParser.convertBackward('/a/b/e')!;
       const relative = Paths.getRelativePath(src, dest);
 
-      assert(relative).to.equal(PathMatcher.with('../../e'));
+      assert(relative).to.equal('../../e');
     });
   });
 
   describe('join', () => {
     should(`handle absolute path correctly`, () => {
       const joined = Paths.join(
-          PathParser.parse('/a/b')!,
-          PathParser.parse('c/d')!,
-          PathParser.parse('e')!);
+          PathParser.convertBackward('/a/b')!,
+          PathParser.convertBackward('c/d')!,
+          PathParser.convertBackward('e')!);
       assert(joined).to.beAnInstanceOf(AbsolutePath);
-      assert(joined).to.equal(PathMatcher.with('/a/b/c/d/e'));
+      assert(joined).to.equal('/a/b/c/d/e');
     });
 
     should(`handle relative path correctly`, () => {
       const joined = Paths.join(
-          PathParser.parse('a/b')!,
-          PathParser.parse('c/d')!,
-          PathParser.parse('e')!);
+          PathParser.convertBackward('a/b')!,
+          PathParser.convertBackward('c/d')!,
+          PathParser.convertBackward('e')!);
       assert(joined).to.beAnInstanceOf(RelativePath);
-      assert(joined).to.equal(PathMatcher.with('a/b/c/d/e'));
+      assert(joined).to.equal('a/b/c/d/e');
     });
   });
 
   describe('normalize', () => {
     should(`remove all instances of empty parts for absolute paths`, () => {
-      const normalized = Paths.normalize(PathParser.parse('/a//b/c//')!);
+      const normalized = Paths.normalize(PathParser.convertBackward('/a//b/c//')!);
 
       assert(normalized).to.beAnInstanceOf(AbsolutePath);
-      assert(normalized).to.equal(PathMatcher.with('/a/b/c'));
+      assert(normalized).to.equal('/a/b/c');
     });
 
     should(`remove all instances of empty parts for relative paths`, () => {
-      const normalized = Paths.normalize(PathParser.parse('a//b/c//')!);
+      const normalized = Paths.normalize(PathParser.convertBackward('a//b/c//')!);
 
       assert(normalized).to.beAnInstanceOf(RelativePath);
-      assert(normalized).to.equal(PathMatcher.with('a/b/c'));
+      assert(normalized).to.equal('a/b/c');
     });
 
     should(`remove all instances of '.'`, () => {
-      const normalized = Paths.normalize(PathParser.parse('/a/./b/c/./')!);
+      const normalized = Paths.normalize(PathParser.convertBackward('/a/./b/c/./')!);
 
       assert(normalized).to.beAnInstanceOf(AbsolutePath);
-      assert(normalized).to.equal(PathMatcher.with('/a/b/c'));
+      assert(normalized).to.equal('/a/b/c');
     });
 
     should(`remove all instances of '.' except the beginning one`, () => {
-      const normalized = Paths.normalize(PathParser.parse('./a/./b/c/./')!);
+      const normalized = Paths.normalize(PathParser.convertBackward('./a/./b/c/./')!);
 
       assert(normalized).to.beAnInstanceOf(RelativePath);
-      assert(normalized).to.equal(PathMatcher.with('./a/b/c'));
+      assert(normalized).to.equal('./a/b/c');
     });
 
     should(`process '..' correctly for absolute paths`, () => {
-      const normalized = Paths.normalize(PathParser.parse('/a/b/c/../../b/../c/d/..')!);
+      const normalized = Paths.normalize(PathParser.convertBackward('/a/b/c/../../b/../c/d/..')!);
 
       assert(normalized).to.beAnInstanceOf(AbsolutePath);
-      assert(normalized).to.equal(PathMatcher.with('/a/c'));
+      assert(normalized).to.equal('/a/c');
     });
 
     should(`process '..' correctly for relative paths`, () => {
-      const normalized1 = Paths.normalize(PathParser.parse('../../a/../../b/../c/d/..')!);
+      const normalized1 = Paths.normalize(PathParser.convertBackward('../../a/../../b/../c/d/..')!);
 
       assert(normalized1).to.beAnInstanceOf(RelativePath);
-      assert(normalized1).to.equal(PathMatcher.with('c'));
+      assert(normalized1).to.equal('c');
 
-      const normalized2 = Paths.normalize(PathParser.parse('a/../../b/../c/d/..')!);
+      const normalized2 = Paths.normalize(PathParser.convertBackward('a/../../b/../c/d/..')!);
 
       assert(normalized2).to.beAnInstanceOf(RelativePath);
-      assert(normalized2).to.equal(PathMatcher.with('../c'));
+      assert(normalized2).to.equal('../c');
     });
   });
 
@@ -143,13 +146,13 @@ describe('path.Paths', () => {
     should(`return the correct path`, () => {
       const path = Paths.relativePath('a/b/c');
       assert(path).to.beAnInstanceOf(RelativePath);
-      assert(path).to.equal(PathMatcher.with('a/b/c'));
+      assert(path).to.equal('a/b/c');
     });
 
     should(`throw error if the path is not an relative path`, () => {
       assert(() => {
         Paths.relativePath('/a/b/c');
-      }).to.throwError(/valid relative path/);
+      }).to.throwErrorWithMessage(/valid relative path/);
     });
   });
 

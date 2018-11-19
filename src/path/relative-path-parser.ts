@@ -1,10 +1,10 @@
 import { ImmutableList } from '../immutable';
-import { Parser } from '../interfaces';
+import { Parser } from '../parse/parser';
 import { Path } from '../path/path';
 import { RelativePath } from '../path/relative-path';
 
 export const RelativePathParser: Parser<RelativePath> = {
-  parse(input: string | null): RelativePath | null {
+  convertBackward(input: string | null): RelativePath | null {
     if (!input) {
       return null;
     }
@@ -19,7 +19,7 @@ export const RelativePathParser: Parser<RelativePath> = {
     return new RelativePath(ImmutableList.of(parts));
   },
 
-  stringify(value: RelativePath | null): string {
+  convertForward(value: RelativePath | null): string {
     if (!value) {
       return '';
     }

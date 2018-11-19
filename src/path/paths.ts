@@ -5,11 +5,11 @@ import { AbsolutePathParser } from '../path/absolute-path-parser';
 import { Path } from '../path/path';
 import { RelativePath } from '../path/relative-path';
 import { RelativePathParser } from '../path/relative-path-parser';
-import { assertUnreachable } from '../typescript';
+import { assertUnreachable } from '../typescript/assert-unreachable';
 
 export class Paths {
   static absolutePath(pathString: string): AbsolutePath {
-    const path = AbsolutePathParser.parse(pathString);
+    const path = AbsolutePathParser.convertBackward(pathString);
     if (!path) {
       throw Errors.assert('pathString').shouldBe('a valid absolute path').butWas(pathString);
     }
@@ -104,7 +104,7 @@ export class Paths {
   static normalize(path: RelativePath): RelativePath;
   static normalize(path: AbsolutePath | RelativePath): Path {
     // Removes all instances of '' parts.
-    const noEmptyParts = [...path.getParts().filter((part) => !!part)];
+    const noEmptyParts = [...path.getParts().filter(part => !!part)];
 
     // Removes all instances of '.' part except the first one.
     const noCurrentParts: string[] = [];
@@ -116,7 +116,7 @@ export class Paths {
     }
 
     // Copy all trailing '..' part.
-    const nonDoubleDotEntry = ImmutableList.of(noCurrentParts).findEntry((part) => part !== '..');
+    const nonDoubleDotEntry = ImmutableList.of(noCurrentParts).findEntry(part => part !== '..');
     const nonDoubleIndex = nonDoubleDotEntry ? nonDoubleDotEntry[0] + 1 : 0;
     const normalizedParts: string[] = [];
     for (let i = 0; i < nonDoubleIndex; i++) {
@@ -144,7 +144,7 @@ export class Paths {
   }
 
   static relativePath(pathString: string): RelativePath {
-    const path = RelativePathParser.parse(pathString);
+    const path = RelativePathParser.convertBackward(pathString);
     if (!path) {
       throw Errors.assert('pathString').shouldBe('a valid relative path').butWas(pathString);
     }

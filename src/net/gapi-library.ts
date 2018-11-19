@@ -2,12 +2,12 @@ import { Errors } from '../error';
 import { ImmutableMap } from '../immutable';
 import { Gapi } from '../net/gapi';
 import { GapiError } from '../net/gapi-error';
-import { SimpleIdGenerator } from '../random';
+import { SimpleIdGenerator } from '../random/simple-id-generator';
 
 type Callback<T> = (result: T | Error) => void;
 
 export const QUEUED_REQUESTS: Map<gapi.client.HttpRequest<any>, Callback<any>> = new Map();
-const QUEUE_TIMEOUT_MS: number = 10;
+const QUEUE_TIMEOUT_MS = 10;
 
 export class GapiLibrary<T> {
   private static timeoutId_: null | number = null;
@@ -66,7 +66,8 @@ export class GapiLibrary<T> {
 
   async get(): Promise<T> {
     const client = await this.client();
-    const obj = client[this.name_];
+    // TODO: See if we can skip the typecast
+    const obj = (client as any)[this.name_];
     if (!obj) {
       throw Errors.assert(`gapi.${this.name_}`).shouldExist().butWas(obj);
     }
@@ -77,11 +78,11 @@ export class GapiLibrary<T> {
     if (GapiLibrary.timeoutId_ === null) {
       GapiLibrary.timeoutId_ = this.window_.setTimeout(() => {
         this.flushRequests_();
-      }, QUEUE_TIMEOUT_MS);
+      },                                               QUEUE_TIMEOUT_MS);
     }
 
     return new Promise((resolve, reject) => {
-      QUEUED_REQUESTS.set(request, (result) => {
+      QUEUED_REQUESTS.set(request, result => {
         if (result instanceof Error) {
           reject(result);
         } else {

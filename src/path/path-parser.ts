@@ -1,14 +1,14 @@
-import { Parser } from '../interfaces';
+import { Parser } from '../parse/parser';
 import { AbsolutePathParser } from '../path/absolute-path-parser';
 import { Path } from '../path/path';
 import { RelativePathParser } from '../path/relative-path-parser';
 
 export const PathParser: Parser<Path> = {
-  parse(input: string | null): Path | null {
-    return RelativePathParser.parse(input) || AbsolutePathParser.parse(input);
+  convertBackward(input: string | null): Path | null {
+    return RelativePathParser.convertBackward(input) || AbsolutePathParser.convertBackward(input);
   },
 
-  stringify(value: Path | null): string {
+  convertForward(value: Path | null): string {
     if (!value) {
       return '';
     }
