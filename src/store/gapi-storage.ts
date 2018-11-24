@@ -12,8 +12,7 @@ export abstract class GapiStorage<
     HAS,
     LIST_ID,
     READ,
-    FULL,
-    SUMMARY = FULL> implements ReadableStorage<FULL, SUMMARY> {
+    FULL> implements ReadableStorage<FULL> {
   constructor(private readonly lib_: GapiLibrary<API>) { }
 
   has(id: string): Observable<boolean> {

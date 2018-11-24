@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map, share, shareReplay, switchMap } from 'rxjs/operators';
+import { map, shareReplay } from 'rxjs/operators';
 import { ImmutableMap, ImmutableSet } from '../immutable';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { EditableStorage } from './editable-storage';

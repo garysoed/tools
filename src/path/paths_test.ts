@@ -37,11 +37,11 @@ describe('path.Paths', () => {
 
   describe('getFilenameParts', () => {
     should(`handle simple file names`, () => {
-      assert(Paths.getFilenameParts('test.ext')).to.equal({extension: 'ext', name: 'test'});
+      assert(Paths.getFilenameParts('test.ext')).to.equal({extension: 'ext', name: 'test('});
     });
 
     should(`handle file names with .`, () => {
-      assert(Paths.getFilenameParts('file.test.js')).to.equal({extension: 'js', name: 'file.test'});
+      assert(Paths.getFilenameParts('file.test.js')).to.equal({extension: 'js', name: 'file.test('});
     });
 
     should(`handle file names with no extensions`, () => {
@@ -159,12 +159,12 @@ describe('path.Paths', () => {
   describe('setFilenameExt', () => {
     should(`handle simple file names`, () => {
       assert(Paths.setFilenameExt('test.ext', 'ext2')).to.equal('test.ext2');
-      assert(Paths.setFilenameExt('test.ext', '')).to.equal('test');
+      assert(Paths.setFilenameExt('test.ext', '')).to.equal('test(');
     });
 
     should(`handle file names with .`, () => {
       assert(Paths.setFilenameExt('file.test.js', 'ext2')).to.equal('file.test.ext2');
-      assert(Paths.setFilenameExt('file.test.js', '')).to.equal('file.test');
+      assert(Paths.setFilenameExt('file.test.js', '')).to.equal('file.test(');
     });
 
     should(`handle file names with no extensions`, () => {

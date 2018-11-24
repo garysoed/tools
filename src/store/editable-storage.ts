@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { ReadableStorage } from './readable-storage';
 
-export interface EditableStorage<TFull, TSummary = TFull> extends ReadableStorage<TFull, TSummary> {
+export interface EditableStorage<TFull> extends ReadableStorage<TFull> {
 
   /**
    * Deletes the object corresponding to the given ID.

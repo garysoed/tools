@@ -245,9 +245,7 @@ export class ImmutableMap<K, V> implements
   }
 
   static of<K, V>(): ImmutableMap<K, V>;
-  static of<K, V>(data: FiniteCollection<[K, V]>): ImmutableMap<K, V>;
-  static of<K, V>(data: [K, V][]): ImmutableMap<K, V>;
-  static of<K, V>(data: Map<K, V>): ImmutableMap<K, V>;
+  static of<K, V>(data: FiniteCollection<[K, V]>|Iterable<[K, V]>): ImmutableMap<K, V>;
   static of<V>(data: {[key: string]: V}): ImmutableMap<string, V>;
   static of(data: {[key: string]: any}): ImmutableMap<string, any>;
   static of<K, V>(

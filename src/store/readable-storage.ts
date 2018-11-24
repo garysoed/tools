@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { ImmutableSet } from '../immutable/immutable-set';
 
-export interface ReadableStorage<TFull, TSummary = TFull> {
+export interface ReadableStorage<TFull> {
   /**
    * Checks if the object corresponding to the given ID exists in the storage.
    *
