@@ -1,4 +1,4 @@
-import { assert, should } from 'gs-testing/export/main';
+import { assert, should, test } from 'gs-testing/export/main';
 import { Color } from './color';
 import { Colors } from './colors';
 import { RgbColor } from './rgb-color';
@@ -19,16 +19,17 @@ function getHsl(color: Color): [number, number, number] {
   ];
 }
 
-describe('namespace.Colors ', () => {
-  describe('fromCssColor', () => {
+test('namespace.Colors ', () => {
+  test('fromCssColor', () => {
     should('handle legacy style RGB', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getRgb(Colors.fromCssColor('rgb(12,34,56)')!)).to.equal([12, 34, 56]);
+      assert(getRgb(Colors.fromCssColor('rgb(12,34,56)')!)).to.haveExactElements([12, 34, 56]);
     });
 
     should('handle legacy style RGB with white spaces', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getRgb(Colors.fromCssColor('rgb(12,   34, 56  )')!)).to.equal([12, 34, 56]);
+      assert(getRgb(Colors.fromCssColor('rgb(12,   34, 56  )')!)).to
+          .haveExactElements([12, 34, 56]);
     });
 
     should('return null for RGB if one of the components is not a number', () => {
@@ -37,17 +38,19 @@ describe('namespace.Colors ', () => {
 
     should('handle legacy style RGBA', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getRgb(Colors.fromCssColor('rgba(12,34,56,.78)')!)).to.equal([12, 34, 56]);
+      assert(getRgb(Colors.fromCssColor('rgba(12,34,56,.78)')!)).to.haveExactElements([12, 34, 56]);
     });
 
     should('handle legacy style RGBA with white spaces', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getRgb(Colors.fromCssColor('rgba(  12,   34, 56,   .78  )')!)).to.equal([12, 34, 56]);
+      assert(getRgb(Colors.fromCssColor('rgba(  12,   34, 56,   .78  )')!)).to
+          .haveExactElements([12, 34, 56]);
     });
 
     should('handle legacy style RGBA if one of the RGB components is not an integer', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getRgb(Colors.fromCssColor('rgba(12, 3.6, 56, .78)')!)).to.equal([12, 4, 56]);
+      assert(getRgb(Colors.fromCssColor('rgba(12, 3.6, 56, .78)')!)).to
+          .haveExactElements([12, 4, 56]);
     });
 
     should('handle functional RGB', () => {
@@ -141,7 +144,7 @@ describe('namespace.Colors ', () => {
 
     should('handle hex strings', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getRgb(Colors.fromCssColor('#abcdef')!)).to.equal([0xAB, 0xCD, 0xEF]);
+      assert(getRgb(Colors.fromCssColor('#abcdef')!)).to.haveExactElements([0xAB, 0xCD, 0xEF]);
     });
 
     should('return null if one of the hex chars is invalid hex', () => {
@@ -150,7 +153,7 @@ describe('namespace.Colors ', () => {
 
     should('handle short hex strings', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getRgb(Colors.fromCssColor('#abc')!)).to.equal([0xAA, 0xBB, 0xCC]);
+      assert(getRgb(Colors.fromCssColor('#abc')!)).to.haveExactElements([0xAA, 0xBB, 0xCC]);
     });
 
     should('return null if one of the hex chars is invalid hex', () => {
@@ -159,7 +162,7 @@ describe('namespace.Colors ', () => {
 
     should('handle hex strings with alpha', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getRgb(Colors.fromCssColor('#abcdef12')!)).to.equal([0xAB, 0xCD, 0xEF]);
+      assert(getRgb(Colors.fromCssColor('#abcdef12')!)).to.haveExactElements([0xAB, 0xCD, 0xEF]);
     });
 
     should('return null if one of the hex chars is invalid hex', () => {
@@ -168,7 +171,7 @@ describe('namespace.Colors ', () => {
 
     should('handle short hex strings with alpha', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getRgb(Colors.fromCssColor('#abcd')!)).to.equal([0xAA, 0xBB, 0xCC]);
+      assert(getRgb(Colors.fromCssColor('#abcd')!)).to.haveExactElements([0xAA, 0xBB, 0xCC]);
     });
 
     should('return null if one of the hex chars is invalid hex', () => {
@@ -184,7 +187,7 @@ describe('namespace.Colors ', () => {
     });
   });
 
-  describe('getContrast', () => {
+  test('getContrast', () => {
     should('return the correct contrast ratio', () => {
       const foreground = RgbColor.newInstance(0x12, 0x34, 0x56);
       const background = RgbColor.newInstance(0x78, 0x9A, 0xBC);
@@ -192,12 +195,12 @@ describe('namespace.Colors ', () => {
     });
   });
 
-  describe('mix', () => {
+  test('mix', () => {
     should('return the correct color', () => {
       const color1 = RgbColor.newInstance(0x12, 0x34, 0x56);
       const color2 = RgbColor.newInstance(0x78, 0x9A, 0xBC);
       const mix = Colors.mix(color1, color2, 0.75);
-      assert(getRgb(mix)).to.equal([44, 78, 112]);
+      assert(getRgb(mix)).to.haveExactElements([44, 78, 112]);
     });
   });
 });

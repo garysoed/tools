@@ -1,13 +1,12 @@
-import { assert, match, should } from 'gs-testing/export/main';
-import { retryUntil } from 'gs-testing/export/main';
+import { assert, match, retryUntil, should } from 'gs-testing/export/main';
 import { mocks } from 'gs-testing/export/mock';
 import { createSpy, createSpyObject, fake, Spy, SpyObj } from 'gs-testing/export/spy';
 import { BehaviorSubject, Observable, of as observableOf } from 'rxjs';
-import { ImmutableList, ImmutableSet } from '../immutable';
+import { ImmutableSet } from '../immutable';
 import { GapiLibrary } from '../net';
 import { GapiRequestQueue, GapiStorage } from './gapi-storage';
 
-class TestGapiStorage extends GapiStorage<{}, {}, {}, {}, {}, {}> {
+class TestGapiStorage extends GapiStorage<{}, {}, {}, {}, {}> {
   constructor(
       library: GapiLibrary<{}>,
       private readonly mockHasImpl_: Spy<Observable<boolean>, [GapiRequestQueue<{}, {}>, string]>,
