@@ -1,8 +1,8 @@
-import { assert, should } from 'gs-testing/export/main';
+import { assert, match, should, test } from 'gs-testing/export/main';
 import { anyParamsFunctionConverter, noParamFunctionConverter, oneParamFunctionConverter } from './function-converter';
 
-describe('serializer.FunctionConverter', () => {
-  describe('convertBackward', () => {
+test('serializer.FunctionConverter', () => {
+  test('convertBackward', () => {
     should(`return the correct function`, () => {
       const fnString = 'function test(a) { return 1 + a; }';
       const parser = oneParamFunctionConverter();
@@ -40,13 +40,15 @@ describe('serializer.FunctionConverter', () => {
     });
   });
 
-  describe('convertForward', () => {
+  test('convertForward', () => {
     should(`return the correct value`, () => {
       const fn = function test(a: any): any { return a + 1; };
       const parser = oneParamFunctionConverter();
 
       assert(parser.convertForward(fn)).to
-          .haveProperties({result: 'function test(a) { return a + 1; }'});
+          .haveProperties({
+            result: match.anyStringThat().match(/function test\(a\)/),
+          });
     });
 
     should(`fail if param count does not match`, () => {
@@ -61,7 +63,9 @@ describe('serializer.FunctionConverter', () => {
       const parser = anyParamsFunctionConverter();
 
       assert(parser.convertForward(fn)).to
-          .haveProperties({result: 'function test(a) { return a + 1; }'});
+          .haveProperties({
+            result: match.anyStringThat().match(/function test\(a\)/),
+          });
     });
   });
 });

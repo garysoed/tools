@@ -152,7 +152,8 @@ describe('immutable.ImmutableList', () => {
 
   describe('findEntry', () => {
     should('return the first matching entry', () => {
-      assert(ImmutableList.of([1, 2, 3]).findEntry((n: number) => n >= 2)).to.equal([1, 2]);
+      assert(ImmutableList.of([1, 2, 3]).findEntry((n: number) => n >= 2)).to
+          .haveExactElements([1, 2]);
     });
 
     should('return null if there are no matches', () => {

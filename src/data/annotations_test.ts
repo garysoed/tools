@@ -1,22 +1,22 @@
-import { assert, should } from 'gs-testing/export/main';
+import { assert, should, setup, test } from 'gs-testing/export/main';
 import { mocks } from 'gs-testing/export/mock';
 import { createSpyInstance, createSpyObject, fake, spy } from 'gs-testing/export/spy';
 import { Annotations, AnnotationsHandler } from '../data/annotations';
 import { ImmutableList } from '../immutable';
 import { ImmutableMap } from '../immutable/immutable-map';
 
-describe('data.AnnotationsHandler', () => {
+test('data.AnnotationsHandler', () => {
   const __SYMBOL = Symbol('symbol');
   let parent: any;
   let handler: AnnotationsHandler<number>;
 
-  beforeEach(() => {
+  setup(() => {
     parent = mocks.object('parent');
     handler = new AnnotationsHandler<number>(__SYMBOL, parent);
     AnnotationsHandler['REGISTERED_ANNOTATIONS_'].clear();
   });
 
-  describe('attachValueToProperty', () => {
+  test('attachValueToProperty', () => {
     should('add the field value correctly', () => {
       const key = 'key';
       const value = 123;
@@ -27,7 +27,7 @@ describe('data.AnnotationsHandler', () => {
     });
   });
 
-  describe('getAnnotatedProperties', () => {
+  test('getAnnotatedProperties', () => {
     should('return the correct field names', () => {
       const key1 = 'key1';
       const key2 = 'key2';
@@ -42,7 +42,7 @@ describe('data.AnnotationsHandler', () => {
     });
   });
 
-  describe('getAttachedValues', () => {
+  test('getAttachedValues', () => {
     should('return the correct map', () => {
       const key1 = 'key1';
       const key2 = 'key2';
@@ -71,8 +71,10 @@ describe('data.AnnotationsHandler', () => {
       assert(attachedValues.get(key1)!).to.haveElements([value1]);
       // tslint:disable-next-line:no-non-null-assertion
       assert(attachedValues.get(key2)!).to.haveElements([value2]);
-      assert(attachedValues.get(parent1)).to.equal(parentValues1);
-      assert(attachedValues.get(parent2)).to.equal(parentValues2);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(attachedValues.get(parent1)!).to.haveElements(parentValues1);
+      // tslint:disable-next-line:no-non-null-assertion
+      assert(attachedValues.get(parent2)!).to.haveElements(parentValues2);
       assert(annotationsOfSpy).to.haveBeenCalledWith(__SYMBOL, parent);
     });
 
@@ -94,7 +96,7 @@ describe('data.AnnotationsHandler', () => {
     });
   });
 
-  describe('hasAnnotation', () => {
+  test('hasAnnotation', () => {
     should('return true if the constructor has the given annotation', () => {
       const hash = 'hash';
       const createHashSpy = spy(AnnotationsHandler, 'createHash_');
@@ -116,13 +118,13 @@ describe('data.AnnotationsHandler', () => {
     });
   });
 
-  describe('of', () => {
+  test('of', () => {
     class ParentClass {}
 
     class TestClass extends ParentClass {}
     let annotation: symbol;
 
-    beforeEach(() => {
+    setup(() => {
       annotation = Symbol('annotation');
     });
 
@@ -148,10 +150,10 @@ describe('data.AnnotationsHandler', () => {
 
       fake(spy(AnnotationsHandler, 'hasAnnotation')).always().return(false);
 
-      const annotationsHandler = AnnotationsHandler.of(annotation, ParentClass);
+      const annotationsHandler = AnnotationsHandler.of(annotation, Object);
       assert(AnnotationsHandler['REGISTERED_ANNOTATIONS_'].get(hash)).to.equal(annotationsHandler);
-      assert(createHashSpy).to.haveBeenCalledWith(ParentClass, annotation);
-      assert(annotationsHandler['parent_']).to.equal(null);
+      assert(createHashSpy).to.haveBeenCalledWith(Object, annotation);
+      assert(annotationsHandler['parent_']).to.beNull();
       assert(annotationsHandler['annotation_']).to.equal(annotation);
     });
 
@@ -170,15 +172,15 @@ describe('data.AnnotationsHandler', () => {
   });
 });
 
-describe('data.Annotations', () => {
+test('data.Annotations', () => {
   const __SYMBOL = Symbol('symbol');
   let annotations: Annotations<number>;
 
-  beforeEach(() => {
+  setup(() => {
     annotations = new Annotations<number>(__SYMBOL);
   });
 
-  describe('forCtor', () => {
+  test('forCtor', () => {
     /**
      * @test
      */
@@ -208,7 +210,7 @@ describe('data.Annotations', () => {
     });
   });
 
-  describe('hasAnnotation', () => {
+  test('hasAnnotation', () => {
     should('return true if the prototype has the given annotation', () => {
       const proto = mocks.object('proto');
       const hasAnnotationSpy = spy(AnnotationsHandler, 'hasAnnotation');

@@ -1,11 +1,15 @@
-import { assert, should } from 'gs-testing/export/main';
-import { BehaviorSubject } from 'rxjs';
+import { assert, should, test } from 'gs-testing/export/main';
+import { BehaviorSubject, fromEvent } from 'rxjs';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { IntegerParser } from '../parse/integer-parser';
 import { INDEXES_PARSER, WebStorage } from '../store/web-storage';
 
+function setStorage(storage: Storage, key: string, value: string): void {
+  storage.setItem(key, value);
+  window.dispatchEvent(new StorageEvent('storage'));
+}
 
-describe('store.WebStorage', () => {
+test('store.WebStorage', () => {
   const PREFIX = 'store.WebStorage.prefix';
   let storage: WebStorage<number>;
 
@@ -18,28 +22,36 @@ describe('store.WebStorage', () => {
     localStorage.clear();
   });
 
-  describe('delete', () => {
+  test('delete', () => {
     should('remove the correct object', () => {
       const id = 'id';
       const path = `${PREFIX}/${id}`;
-      localStorage.setItem(PREFIX, INDEXES_PARSER.convertForward(ImmutableSet.of([id])) || '');
-      localStorage.setItem(path, '123');
+      setStorage(localStorage, PREFIX, INDEXES_PARSER.convertForward(ImmutableSet.of([id])) || '');
+      setStorage(localStorage, path, '123');
+
+      const idsSubject = new BehaviorSubject(ImmutableSet.of<string>());
+      storage.listIds().subscribe(idsSubject);
+
+      const itemSubject = new BehaviorSubject<number|null>(null);
+      storage.read(id).subscribe(itemSubject);
 
       storage.delete(id);
 
       assert(localStorage.getItem(path)).to.beNull();
       assert(localStorage.getItem(PREFIX)).to.equal(JSON.stringify([]));
+      assert(idsSubject.getValue()).to.beEmpty();
+      assert(itemSubject.getValue()).to.beNull();
     });
   });
 
-  describe('has', () => {
+  test('has', () => {
     should('resolve with true if the object is in the storage', () => {
       const id = 'id';
 
       const hasSubject = new BehaviorSubject<boolean|null>(null);
       storage.has(id).subscribe(hasSubject);
 
-      localStorage.setItem(PREFIX, INDEXES_PARSER.convertForward(ImmutableSet.of([id])) || '');
+      setStorage(localStorage, PREFIX, INDEXES_PARSER.convertForward(ImmutableSet.of([id])) || '');
 
       assert(hasSubject.getValue()).to.beTrue();
     });
@@ -54,8 +66,8 @@ describe('store.WebStorage', () => {
     });
   });
 
-  describe('listIds', () => {
-    should('return the indexes', () => {
+  test('listIds', () => {
+    should('return the indexes', async () => {
       const id1 = 'id1';
       const id2 = 'id2';
       const id3 = 'id3';
@@ -63,15 +75,17 @@ describe('store.WebStorage', () => {
       const idsSubject = new BehaviorSubject<ImmutableSet<string>>(ImmutableSet.of());
       storage.listIds().subscribe(idsSubject);
 
-      localStorage.setItem(
+      setStorage(
+          localStorage,
           PREFIX,
-          INDEXES_PARSER.convertForward(ImmutableSet.of([id1, id2, id3])) || '');
+          INDEXES_PARSER.convertForward(ImmutableSet.of([id1, id2, id3])) || '',
+      );
 
       assert(idsSubject.getValue()).to.haveElements([id1, id2, id3]);
     });
   });
 
-  describe('read', () => {
+  test('read', () => {
     should('resolve with the object', () => {
       const id = 'id';
       const path = `${PREFIX}/${id}`;
@@ -79,7 +93,7 @@ describe('store.WebStorage', () => {
       const itemSubject = new BehaviorSubject<number|null>(null);
       storage.read(id).subscribe(itemSubject);
 
-      localStorage.setItem(path, '123');
+      setStorage(localStorage, path, '123');
 
       assert(itemSubject.getValue()).to.equal(123);
     });
@@ -91,13 +105,17 @@ describe('store.WebStorage', () => {
     });
   });
 
-  describe('update', () => {
+  test('update', () => {
     should('store the correct object in the storage', () => {
       const id = 'id';
       const path = `${PREFIX}/${id}`;
       const oldId = 'oldId';
 
-      localStorage.setItem(PREFIX, INDEXES_PARSER.convertForward(ImmutableSet.of(['oldId'])) || '');
+      setStorage(
+          localStorage,
+          PREFIX,
+          INDEXES_PARSER.convertForward(ImmutableSet.of(['oldId'])) || '',
+      );
 
       const idsSubject = new BehaviorSubject(ImmutableSet.of<string>());
       storage.listIds().subscribe(idsSubject);

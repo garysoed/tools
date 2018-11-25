@@ -1,5 +1,5 @@
 import { fromEvent, Observable } from 'rxjs';
-import { map, shareReplay, startWith, take } from 'rxjs/operators';
+import { map, shareReplay, startWith, take, tap } from 'rxjs/operators';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { Parser } from '../parse/parser';
 import { SetParser } from '../parse/set-parser';
@@ -7,11 +7,13 @@ import { StringParser } from '../parse/string-parser';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { SimpleIdGenerator } from '../random/simple-id-generator';
 import { EditableStorage } from './editable-storage';
+import { Invalidator } from './invalidator';
 
 export const INDEXES_PARSER = SetParser(StringParser);
 
 export class WebStorage<T> implements EditableStorage<T> {
   private readonly idGenerator_: BaseIdGenerator;
+  private readonly invalidator_: Invalidator;
   private readonly storageIdsObs_: Observable<ImmutableSet<string>>;
 
   /**
@@ -21,9 +23,12 @@ export class WebStorage<T> implements EditableStorage<T> {
   constructor(
       private readonly storage_: Storage,
       private readonly prefix_: string,
-      private readonly parser_: Parser<T>) {
-    this.storageIdsObs_ = createStorageIdsObs_(storage_, prefix_);
+      private readonly parser_: Parser<T>,
+  ) {
+    const invalidator = new Invalidator(fromEvent(window, 'storage'));
+    this.storageIdsObs_ = createStorageIdsObs_(storage_, prefix_, invalidator.getObservable());
     this.idGenerator_ = new SimpleIdGenerator();
+    this.invalidator_ = invalidator;
   }
 
   delete(id: string): void {
@@ -31,6 +36,8 @@ export class WebStorage<T> implements EditableStorage<T> {
         .pipe(take(1))
         .subscribe(ids => {
           this.storage_.setItem(this.prefix_, INDEXES_PARSER.convertForward(ids.delete(id)) || '');
+          this.storage_.removeItem(getPath_(id, this.prefix_));
+          this.invalidator_.invalidate();
         });
   }
 
@@ -55,7 +62,12 @@ export class WebStorage<T> implements EditableStorage<T> {
   }
 
   read(id: string): Observable<T|null> {
-    return createStorageObs_(this.storage_, id, this.prefix_, this.parser_);
+    return this.invalidator_.getObservable()
+        .pipe(
+            map(() => getItem_(this.storage_, id, this.prefix_, this.parser_)),
+            startWith(getItem_(this.storage_, id, this.prefix_, this.parser_)),
+            shareReplay(1),
+        );
   }
 
   update(id: string, instance: T): void {
@@ -69,6 +81,7 @@ export class WebStorage<T> implements EditableStorage<T> {
           );
 
           this.storage_.setItem(path, this.parser_.convertForward(instance) || '');
+          this.invalidator_.invalidate();
         });
   }
 }
@@ -76,25 +89,12 @@ export class WebStorage<T> implements EditableStorage<T> {
 function createStorageIdsObs_(
     storage: Storage,
     prefix: string,
+    invalidatorObs: Observable<unknown>,
 ): Observable<ImmutableSet<string>> {
-  return fromEvent(window, 'storage')
+  return invalidatorObs
       .pipe(
           map(() => getIndexes_(storage, prefix)),
           startWith(getIndexes_(storage, prefix)),
-          shareReplay(1),
-      );
-}
-
-function createStorageObs_<T>(
-    storage: Storage,
-    id: string,
-    prefix: string,
-    parser: Parser<T>,
-): Observable<T|null> {
-  return fromEvent(window, 'storage')
-      .pipe(
-          map(() => getItem_(storage, id, prefix, parser)),
-          startWith(getItem_(storage, id, prefix, parser)),
           shareReplay(1),
       );
 }

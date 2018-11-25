@@ -1,7 +1,9 @@
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const glob = require("glob");
+const path = require('path');
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const smp = new SpeedMeasurePlugin();
 
-module.exports = {
+module.exports = smp.wrap({
   entry: glob.sync("./src/**/*_test.ts"),
   // entry: "./src/async/atomic_test.ts",
   output: {
@@ -13,6 +15,11 @@ module.exports = {
   devtool: "source-map",
 
   resolve: {
+    alias: {
+      'gs-testing': path.resolve('./node_modules/gs-testing'),
+      'gs-types': path.resolve('./node_modules/gs-types'),
+      'nabu': path.resolve('./node_modules/nabu'),
+    },
     // Add '.ts' and '.tsx' as resolvable extensions.
     extensions: [".ts", ".tsx", ".js", ".json"]
   },
@@ -38,15 +45,4 @@ module.exports = {
   },
 
   watch: true,
-
-  plugins: [
-    new UglifyJsPlugin({
-      uglifyOptions: {
-        keep_classnames: true,
-        keep_fnames: true,
-        mangle: false,
-      },
-      sourceMap: true,
-    }),
-  ]
-};
+});

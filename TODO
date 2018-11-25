@@ -1,5 +1,5 @@
 gs-tools
-  ☐ Fix compilation errors
+  ✔ Fix compilation errors @done
   ☐ Fix test errors
   ☐ Clean up bazel
   ☐ Clean up BUILD files
@@ -7,3 +7,4 @@ gs-tools
   ☐ Delete custom gs. types.
   ☐ Delete async/
   ☐ Gather TODOs
+  ☐ TS Docs

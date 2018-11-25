@@ -1,10 +1,11 @@
-import { assert, should } from 'gs-testing/export/main';
-import { createSpyObject } from 'gs-testing/export/spy';
+import { assert, should, test } from 'gs-testing/export/main';
+import { createSpyObject, fake, SpyObj } from 'gs-testing/export/spy';
 import { RandomizerImpl } from './randomizer';
+import { Rng } from './rng';
 
 
-describe('random.Randomizer', () => {
-  let mockRng: any;
+test('random.Randomizer', () => {
+  let mockRng: SpyObj<Rng>;
   let randomizer: RandomizerImpl;
 
   beforeEach(() => {
@@ -12,23 +13,23 @@ describe('random.Randomizer', () => {
     randomizer = new RandomizerImpl(mockRng);
   });
 
-  describe('intRange', () => {
+  test('intRange', () => {
     should('return the correct integer from the range', () => {
-      mockRng.next.and.returnValue(0.4);
+      fake(mockRng.next).always().return(0.4);
       assert(randomizer.intRange(0, 10)).to.equal(4);
     });
   });
 
-  describe('list', () => {
+  test('list', () => {
     should('return the correct member of the list', () => {
-      mockRng.next.and.returnValue(0.6);
+      fake(mockRng.next).always().return(0.6);
       assert(randomizer.list(['a', 'b', 'c', 'd', 'e'])).to.equal('d');
     });
   });
 
-  describe('shortId', () => {
+  test('shortId', () => {
     should('generate the correct ID', () => {
-      mockRng.next.and.returnValues(0 / 62, 10 / 62, 11 / 62, 12 / 62, 36 / 62);
+      fake(mockRng.next).always().returnValues(0 / 62, 10 / 62, 11 / 62, 12 / 62, 36 / 62);
       assert(randomizer.shortId()).to.equal('0ABCa');
     });
   });

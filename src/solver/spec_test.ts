@@ -1,16 +1,16 @@
-import { assert, should } from 'gs-testing/export/main';
+import { assert, should, test } from 'gs-testing/export/main';
 
 import { Spec } from './spec';
 
 
-describe('solver.Spec', () => {
-  describe('generateValues', () => {
+test('solver.Spec', () => {
+  test('generateValues', () => {
     should('generate the correct values', () => {
-      assert(Spec.newInstance(0, 0.5, 2).generateValues()).to.equal([0, 0.5, 1, 1.5]);
+      assert(Spec.newInstance(0, 0.5, 2).generateValues()).to.haveExactElements([0, 0.5, 1, 1.5]);
     });
   });
 
-  describe('newInstance', () => {
+  test('newInstance', () => {
     should('create the correct Spec instance', () => {
       const spec = Spec.newInstance(0, 1, 2);
       assert(spec.getStart()).to.equal(0);

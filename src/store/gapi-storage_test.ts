@@ -1,4 +1,4 @@
-import { assert, match, retryUntil, should } from 'gs-testing/export/main';
+import { assert, match, retryUntil, should, test } from 'gs-testing/export/main';
 import { mocks } from 'gs-testing/export/mock';
 import { createSpy, createSpyObject, fake, Spy, SpyObj } from 'gs-testing/export/spy';
 import { BehaviorSubject, Observable, of as observableOf } from 'rxjs';
@@ -31,7 +31,7 @@ class TestGapiStorage extends GapiStorage<{}, {}, {}, {}, {}> {
   }
 }
 
-describe('store.GapiStorage', () => {
+test('store.GapiStorage', () => {
   let mockLibrary: SpyObj<GapiLibrary<{}>>;
   let mockHasImpl_: Spy<Observable<boolean>, [GapiRequestQueue<{}, {}>, string]>;
   let mockListIdsImpl_: Spy<Observable<ImmutableSet<string>>, [GapiRequestQueue<{}, {}>]>;
@@ -46,7 +46,7 @@ describe('store.GapiStorage', () => {
     storage = new TestGapiStorage(mockLibrary, mockHasImpl_, mockListIdsImpl_, mockReadImpl_);
   });
 
-  describe('has', () => {
+  test('has', () => {
     should(`emit correctly`, async () => {
       const id = 'id';
 
@@ -74,7 +74,7 @@ describe('store.GapiStorage', () => {
     });
   });
 
-  describe('listIds', () => {
+  test('listIds', () => {
     should(`resolve correctly`, async () => {
       const listIds = ImmutableSet.of(['itemId']);
       fake(mockListIdsImpl_).always().return(observableOf(listIds));
@@ -101,7 +101,7 @@ describe('store.GapiStorage', () => {
     });
   });
 
-  describe('read', () => {
+  test('read', () => {
     should(`resolve correctly`, async () => {
       const id = 'id';
       const item = mocks.object('item');

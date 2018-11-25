@@ -1,8 +1,8 @@
-import { assert, should } from 'gs-testing/export/main';
+import { assert, match, should, test } from 'gs-testing/export/main';
 import { Iterables } from '../immutable';
 
-describe('immutable.Iterables', () => {
-  describe('clone', () => {
+test('immutable.Iterables', () => {
+  test('clone', () => {
     should('return the correct clone', () => {
       function* generator(): IterableIterator<number> {
         let i = 0;
@@ -15,13 +15,20 @@ describe('immutable.Iterables', () => {
     });
   });
 
-  describe('flatten', () => {
+  test('flatten', () => {
     should(`output correctly`, () => {
-      assert(Iterables.flatten(['a', [1, 2, 3], [['b'], 4]])).to.equal(['a', 1, 2, 3, ['b'], 4]);
+      assert(Iterables.flatten(['a', [1, 2, 3], [['b'], 4]])).to.startWith([
+        'a',
+        1,
+        2,
+        3,
+        match.anyArrayThat().haveExactElements(['b']),
+        4,
+      ]);
     });
   });
 
-  describe('of', () => {
+  test('of', () => {
     should('return the correct iterable object when given an iterator', () => {
       function* generator(): IterableIterator<number> {
         let i = 0;
@@ -45,7 +52,7 @@ describe('immutable.Iterables', () => {
     });
   });
 
-  describe('unsafeEquals', () => {
+  test('unsafeEquals', () => {
     should(`return true if the two iterables are recursively the same`, () => {
       const iterable1 = ['a', [1, 2, 3], 'c'];
       const iterable2 = ['a', [1, 2, 3], 'c'];

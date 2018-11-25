@@ -12,10 +12,12 @@ module.exports = function(config) {
     plugins: [
       require("karma-jasmine"),
       require("karma-sourcemap-loader"),
+      require("karma-chrome-launcher"),
       require("dev/karma-reporter"),
     ],
     port: 8888,
     reporters: ["gs"],
+    browsers: ['ChromeHeadless'],
     singleRun: false
   });
 };

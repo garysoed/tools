@@ -1,11 +1,11 @@
-import { assert, should } from 'gs-testing/export/main';
+import { assert, match, should, test } from 'gs-testing/export/main';
+import { NumberType } from 'gs-types/export';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { InfiniteList } from '../immutable/infinite-list';
-import { NumberType } from 'gs-types/export';
 
 
-describe('immutable.InfiniteList', () => {
-  describe('[Symbol.iterator]', () => {
+test('immutable.InfiniteList', () => {
+  test('[Symbol.iterator]', () => {
     should('return the correct elements', () => {
       const list = InfiniteList.of<string>((i: number) => `${i}`);
       assert(list).to.startWith(['0', '1', '2', '3']);
@@ -17,7 +17,7 @@ describe('immutable.InfiniteList', () => {
     });
   });
 
-  describe('deleteAllKeys', () => {
+  test('deleteAllKeys', () => {
     should('delete all the keys specified', () => {
       const list = InfiniteList.of<string>((i: number) => `${i}`)
           .deleteAllKeys(ImmutableSet.of([1, 3]));
@@ -25,26 +25,36 @@ describe('immutable.InfiniteList', () => {
     });
   });
 
-  describe('deleteKey', () => {
+  test('deleteKey', () => {
     should('delete the specified key', () => {
       const list = InfiniteList.of<string>((i: number) => `${i}`).deleteKey(1);
       assert(list).to.startWith(['0', '2', '3', '4']);
     });
   });
 
-  describe('entries', () => {
+  test('entries', () => {
     should('return the correct entries', () => {
       const list = InfiniteList.of<string>((i: number) => `${i}`);
-      assert(list.entries()).to.startWith([[0, '0'], [1, '1'], [2, '2'], [3, '3']]);
+      assert(list.entries()).to.startWith([
+        match.anyTupleThat<[number, string]>().haveExactElements([0, '0']),
+        match.anyTupleThat<[number, string]>().haveExactElements([1, '1']),
+        match.anyTupleThat<[number, string]>().haveExactElements([2, '2']),
+        match.anyTupleThat<[number, string]>().haveExactElements([3, '3']),
+      ]);
     });
 
     should('skip undefined elements', () => {
       const list = InfiniteList.of<string>((i: number) => (i % 2) === 0 ? `${i}` : undefined);
-      assert(list.entries()).to.startWith([[0, '0'], [2, '2'], [4, '4'], [6, '6']]);
+      assert(list.entries()).to.startWith([
+        match.anyTupleThat<[number, string]>().haveExactElements([0, '0']),
+        match.anyTupleThat<[number, string]>().haveExactElements([2, '2']),
+        match.anyTupleThat<[number, string]>().haveExactElements([4, '4']),
+        match.anyTupleThat<[number, string]>().haveExactElements([6, '6']),
+      ]);
     });
   });
 
-  describe('filter', () => {
+  test('filter', () => {
     should('filter elements correctly', () => {
       const list = InfiniteList.of<string>((i: number) => `${i}`)
           .filter((_: string, index: number) => {
@@ -54,7 +64,7 @@ describe('immutable.InfiniteList', () => {
     });
   });
 
-  describe('filterByType', () => {
+  test('filterByType', () => {
     should('filter elements correctly', () => {
       const list = InfiniteList
           .of<string | number>((i: number) => (i % 2) === 0 ? i : 'a')
@@ -63,7 +73,7 @@ describe('immutable.InfiniteList', () => {
     });
   });
 
-  describe('filterItem', () => {
+  test('filterItem', () => {
     should('filter elements correctly', () => {
       const list = InfiniteList.of<string>((i: number) => `${i}`)
           .filterItem((item: string) => {
@@ -73,7 +83,7 @@ describe('immutable.InfiniteList', () => {
     });
   });
 
-  describe('get', () => {
+  test('get', () => {
     should('return elements correctly', () => {
       const list = InfiniteList.of<string>((i: number) => `${i}`);
       assert(list.get(0)).to.equal('0');
@@ -83,7 +93,7 @@ describe('immutable.InfiniteList', () => {
     });
   });
 
-  describe('keys', () => {
+  test('keys', () => {
     should('return the keys correctly', () => {
       const list = InfiniteList.of<string>((i: number) => `${i}`);
       assert(list.keys()).to.startWith([0, 1, 2, 3]);
@@ -95,7 +105,7 @@ describe('immutable.InfiniteList', () => {
     });
   });
 
-  describe('map', () => {
+  test('map', () => {
     should('map the values correctly', () => {
       const list = InfiniteList.of<string>((i: number) => `${i}`)
           .map((item: string, index: number) => {
@@ -105,7 +115,7 @@ describe('immutable.InfiniteList', () => {
     });
   });
 
-  describe('mapItem', () => {
+  test('mapItem', () => {
     should('map the values correctly', () => {
       const list = InfiniteList.of<string>((i: number) => `${i}`)
           .map((item: string) => {
@@ -115,7 +125,7 @@ describe('immutable.InfiniteList', () => {
     });
   });
 
-  describe('set', () => {
+  test('set', () => {
     should('set the element correctly', () => {
       const value = 'value';
       const list = InfiniteList.of<string>((i: number) => `${i}`).set(2, value);
@@ -123,7 +133,7 @@ describe('immutable.InfiniteList', () => {
     });
   });
 
-  describe('values', () => {
+  test('values', () => {
     should('return the values correctly', () => {
       const list = InfiniteList.of<string>((i: number) => `${i}`);
       assert(list.values()).to.startWith(['0', '1', '2', '3']);

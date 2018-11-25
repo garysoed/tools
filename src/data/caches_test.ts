@@ -1,9 +1,9 @@
-import { assert, should } from 'gs-testing/export/main';
+import { assert, should, test } from 'gs-testing/export/main';
 import { createSpy, fake, resetCalls, Spy } from 'gs-testing/export/spy';
 import { cache } from '../data/cache';
 import { clear, clearAll } from './caches';
 
-describe('data.Caches', () => {
+test('data.Caches', () => {
   /**
    * @test
    */
@@ -16,46 +16,46 @@ describe('data.Caches', () => {
     }
   }
 
-  let test: TestClass;
+  let testInstance: TestClass;
   let spy: Spy<string, []>;
 
   beforeEach(() => {
     spy = createSpy('spy');
-    test = new TestClass(spy);
+    testInstance = new TestClass(spy);
   });
 
-  describe('clear', () => {
+  test('clear', () => {
     should('clear the cache', () => {
       const value = 'value';
       fake(spy).always().return(value);
 
-      assert(test.method()).to.equal(value);
+      assert(testInstance.method()).to.equal(value);
 
       const newValue = 'newValue';
       resetCalls(spy);
       fake(spy).always().return(newValue);
 
-      clear(test, 'method');
+      clear(testInstance, 'method');
       assert(spy).toNot.haveBeenCalled();
-      assert(test.method()).to.equal(newValue);
+      assert(testInstance.method()).to.equal(newValue);
       assert(spy).to.haveBeenCalledWith();
     });
   });
 
-  describe('clearAll', () => {
+  test('clearAll', () => {
     should('clear all the cache', () => {
       const value = 'value';
       fake(spy).always().return(value);
 
-      assert(test.method()).to.equal(value);
+      assert(testInstance.method()).to.equal(value);
 
       const newValue = 'newValue';
       resetCalls(spy);
       fake(spy).always().return(newValue);
 
-      clearAll(test);
+      clearAll(testInstance);
       assert(spy).toNot.haveBeenCalled();
-      assert(test.method()).to.equal(newValue);
+      assert(testInstance.method()).to.equal(newValue);
       assert(spy).to.haveBeenCalledWith();
     });
   });

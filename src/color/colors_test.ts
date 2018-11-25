@@ -55,12 +55,13 @@ test('namespace.Colors ', () => {
 
     should('handle functional RGB', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getRgb(Colors.fromCssColor('rgb(12 34 56/0.78)')!)).to.equal([12, 34, 56]);
+      assert(getRgb(Colors.fromCssColor('rgb(12 34 56/0.78)')!)).to.haveExactElements([12, 34, 56]);
     });
 
     should('handle functional RGB with white spaces', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getRgb(Colors.fromCssColor('rgb(12    34  56  /   0.78)')!)).to.equal([12, 34, 56]);
+      assert(getRgb(Colors.fromCssColor('rgb(12    34  56  /   0.78)')!)).to
+          .haveExactElements([12, 34, 56]);
     });
 
     should('return null for RGB if one of the components is not an integer', () => {
@@ -69,27 +70,31 @@ test('namespace.Colors ', () => {
 
     should('handle functional RGBA', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getRgb(Colors.fromCssColor('rgba(12 34 56/.78)')!)).to.equal([12, 34, 56]);
+      assert(getRgb(Colors.fromCssColor('rgba(12 34 56/.78)')!)).to.haveExactElements([12, 34, 56]);
     });
 
     should('handle legacy style RGBA with white spaces', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getRgb(Colors.fromCssColor('rgba(12   34  56   / .78  )')!)).to.equal([12, 34, 56]);
+      assert(getRgb(Colors.fromCssColor('rgba(12   34  56   / .78  )')!)).to
+          .haveExactElements([12, 34, 56]);
     });
 
     should('handle legacy style RGBA if one of the RGB components is not an integer', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getRgb(Colors.fromCssColor('rgba(12 3.6 56 / .78)')!)).to.equal([12, 4, 56]);
+      assert(getRgb(Colors.fromCssColor('rgba(12 3.6 56 / .78)')!)).to
+          .haveExactElements([12, 4, 56]);
     });
 
     should('handle legacy style HSL', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getHsl(Colors.fromCssColor('hsl(12,34%,56%)')!)).to.equal([12, 0.34, 0.56]);
+      assert(getHsl(Colors.fromCssColor('hsl(12,34%,56%)')!)).to
+          .haveExactElements([12, 0.34, 0.56]);
     });
 
     should('handle legacy style HSL with white spaces', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getHsl(Colors.fromCssColor('hsl(12,   34  %, 56  % )')!)).to.equal([12, 0.34, 0.56]);
+      assert(getHsl(Colors.fromCssColor('hsl(12,   34  %, 56  % )')!)).to
+          .haveExactElements([12, 0.34, 0.56]);
     });
 
     should('return null for HSL if the saturation is not a percent', () => {
@@ -98,13 +103,14 @@ test('namespace.Colors ', () => {
 
     should('handle legacy style HSLA', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getHsl(Colors.fromCssColor('hsla(12,34%,56%,.78)')!)).to.equal([12, 0.34, 0.56]);
+      assert(getHsl(Colors.fromCssColor('hsla(12,34%,56%,.78)')!)).to
+          .haveExactElements([12, 0.34, 0.56]);
     });
 
     should('handle legacy style HSLA with white spaces', () => {
       // tslint:disable-next-line:no-non-null-assertion
       assert(getHsl(Colors.fromCssColor('hsla(  12,  34 %, 56  %,  .78  )')!)).to
-          .equal([12, 0.34, 0.56]);
+          .haveExactElements([12, 0.34, 0.56]);
     });
 
     should('return null if the saturation is not a percent', () => {
@@ -113,13 +119,14 @@ test('namespace.Colors ', () => {
 
     should('handle functional HSL', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getHsl(Colors.fromCssColor('hsl(12 34% 56%/0.78)')!)).to.equal([12, 0.34, 0.56]);
+      assert(getHsl(Colors.fromCssColor('hsl(12 34% 56%/0.78)')!)).to
+          .haveExactElements([12, 0.34, 0.56]);
     });
 
     should('handle functional HSL with white spaces', () => {
       // tslint:disable-next-line:no-non-null-assertion
       assert(getHsl(Colors.fromCssColor('hsl(12    34%  56%  /   0.78)')!)).to
-          .equal([12, 0.34, 0.56]);
+          .haveExactElements([12, 0.34, 0.56]);
     });
 
     should('return null for HSL if the saturation is not a percent', () => {
@@ -129,13 +136,13 @@ test('namespace.Colors ', () => {
     should('handle functional HSLA', () => {
       // tslint:disable-next-line:no-non-null-assertion
       assert(getHsl(Colors.fromCssColor('hsla(12 34% 56%/.78)')!)).to
-          .equal([12, 0.34, 0.56]);
+          .haveExactElements([12, 0.34, 0.56]);
     });
 
     should('handle legacy style HSLA with white spaces', () => {
       // tslint:disable-next-line:no-non-null-assertion
       assert(getHsl(Colors.fromCssColor('hsla(12   34%  56%   / .78  )')!)).to
-          .equal([12, 0.34, 0.56]);
+          .haveExactElements([12, 0.34, 0.56]);
     });
 
     should('return null if the saturation is not a percent', () => {

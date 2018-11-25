@@ -4,7 +4,7 @@ import { InjectUtil } from '../inject/inject-util';
 
 
 export function inject(name: (string|null) = null, isOptional?: boolean): ParameterDecorator {
-  return function(target: Object, propertyKey: string | symbol, parameterIndex: number): void {
+  return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
     // TODO: Make Ctor type
     if (AnyType<gs.ICtor<any>>().check(target)) {
       const bindKey = name || propertyKey;

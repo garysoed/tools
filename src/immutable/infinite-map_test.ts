@@ -1,11 +1,11 @@
-import { assert, should } from 'gs-testing/export/main';
+import { assert, match, should, test } from 'gs-testing/export/main';
 import { NumberType, TupleOfType } from 'gs-types/export';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { InfiniteMap } from '../immutable/infinite-map';
 import { Iterables } from '../immutable/iterables';
 
 
-describe('immutable.InfiniteMap', () => {
+test('immutable.InfiniteMap', () => {
   function* generateInts(): IterableIterator<number> {
     let i = 0;
     while (true) {
@@ -13,68 +13,103 @@ describe('immutable.InfiniteMap', () => {
     }
   }
 
-  describe('[Symbol.iterator]', () => {
+  test('[Symbol.iterator]', () => {
     should('return the correct entries', () => {
       const map = InfiniteMap.of(Iterables.of(generateInts), (i: number) => `${i}`);
-      assert(map).to.startWith([[0, '0'], [1, '1'], [2, '2'], [3, '3']]);
+      assert(map).to.startWith([
+        match.anyTupleThat<[number, string]>().haveExactElements([0, '0']),
+        match.anyTupleThat<[number, string]>().haveExactElements([1, '1']),
+        match.anyTupleThat<[number, string]>().haveExactElements([2, '2']),
+        match.anyTupleThat<[number, string]>().haveExactElements([3, '3']),
+      ]);
     });
   });
 
-  describe('deleteAllKey', () => {
+  test('deleteAllKey', () => {
     should('delete the keys correctly', () => {
       const map = InfiniteMap
           .of(Iterables.of(generateInts), (i: number) => `${i}`)
           .deleteAllKeys(ImmutableSet.of([1, 2, 3]));
-      assert(map).to.startWith([[0, '0'], [4, '4'], [5, '5'], [6, '6']]);
+      assert(map).to.startWith([
+        match.anyTupleThat<[number, string]>().haveExactElements([0, '0']),
+        match.anyTupleThat<[number, string]>().haveExactElements([4, '4']),
+        match.anyTupleThat<[number, string]>().haveExactElements([5, '5']),
+        match.anyTupleThat<[number, string]>().haveExactElements([6, '6']),
+      ]);
     });
   });
 
-  describe('deleteKey', () => {
+  test('deleteKey', () => {
     should('delete the key correctly', () => {
       const map = InfiniteMap
           .of(Iterables.of(generateInts), (i: number) => `${i}`)
           .deleteKey(1);
-      assert(map).to.startWith([[0, '0'], [2, '2'], [3, '3'], [4, '4']]);
+      assert(map).to.startWith([
+        match.anyTupleThat<[number, string]>().haveExactElements([0, '0']),
+        match.anyTupleThat<[number, string]>().haveExactElements([2, '2']),
+        match.anyTupleThat<[number, string]>().haveExactElements([3, '3']),
+        match.anyTupleThat<[number, string]>().haveExactElements([4, '4']),
+      ]);
     });
   });
 
-  describe('entries', () => {
+  test('entries', () => {
     should('return the correct entries', () => {
       const map = InfiniteMap.of(Iterables.of(generateInts), (i: number) => `${i}`);
-      assert(map.entries()).to.startWith([[0, '0'], [1, '1'], [2, '2'], [3, '3']]);
+      assert(map).to.startWith([
+        match.anyTupleThat<[number, string]>().haveExactElements([0, '0']),
+        match.anyTupleThat<[number, string]>().haveExactElements([1, '1']),
+        match.anyTupleThat<[number, string]>().haveExactElements([2, '2']),
+        match.anyTupleThat<[number, string]>().haveExactElements([3, '3']),
+      ]);
     });
   });
 
-  describe('filter', () => {
+  test('filter', () => {
     should('filter correctly', () => {
       const map = InfiniteMap.of(Iterables.of(generateInts), (i: number) => `${i}`)
           .filter((_: string, key: number) => {
             return (key % 2) === 0;
           });
-      assert(map).to.startWith([[0, '0'], [2, '2'], [4, '4'], [6, '6']]);
+      assert(map).to.startWith([
+        match.anyTupleThat<[number, string]>().haveExactElements([0, '0']),
+        match.anyTupleThat<[number, string]>().haveExactElements([2, '2']),
+        match.anyTupleThat<[number, string]>().haveExactElements([4, '4']),
+        match.anyTupleThat<[number, string]>().haveExactElements([6, '6']),
+      ]);
     });
   });
 
-  describe('filterByType', () => {
+  test('filterByType', () => {
     should('filter correctly', () => {
       const map = InfiniteMap
           .of(Iterables.of(generateInts), (i: number) => (i % 2) === 0 ? i : 'a')
           .filterByType(TupleOfType([NumberType, NumberType]));
-      assert(map).to.startWith([[0, 0], [2, 2], [4, 4], [6, 6]]);
+      assert(map).to.startWith([
+        match.anyTupleThat<[number, number]>().haveExactElements([0, 0]),
+        match.anyTupleThat<[number, number]>().haveExactElements([2, 2]),
+        match.anyTupleThat<[number, number]>().haveExactElements([4, 4]),
+        match.anyTupleThat<[number, number]>().haveExactElements([6, 6]),
+      ]);
     });
   });
 
-  describe('filterItem', () => {
+  test('filterItem', () => {
     should('filter correctly', () => {
       const map = InfiniteMap.of(Iterables.of(generateInts), (i: number) => `${i}`)
           .filterItem(([key, _]: [number, string]) => {
             return (key % 2) === 0;
           });
-      assert(map).to.startWith([[0, '0'], [2, '2'], [4, '4'], [6, '6']]);
+      assert(map).to.startWith([
+        match.anyTupleThat<[number, string]>().haveExactElements([0, '0']),
+        match.anyTupleThat<[number, string]>().haveExactElements([2, '2']),
+        match.anyTupleThat<[number, string]>().haveExactElements([4, '4']),
+        match.anyTupleThat<[number, string]>().haveExactElements([6, '6']),
+      ]);
     });
   });
 
-  describe('get', () => {
+  test('get', () => {
     should('return the correct value', () => {
       const map = InfiniteMap.of(
           Iterables.of(generateInts),
@@ -86,7 +121,7 @@ describe('immutable.InfiniteMap', () => {
     });
   });
 
-  describe('keys', () => {
+  test('keys', () => {
     should('return the correct keys', () => {
       const map = InfiniteMap.of(
           Iterables.of(generateInts),
@@ -95,36 +130,46 @@ describe('immutable.InfiniteMap', () => {
     });
   });
 
-  describe('map', () => {
+  test('map', () => {
     should('map correctly', () => {
       const map = InfiniteMap.of(Iterables.of(generateInts), (i: number) => `${i}`)
           .map((_: string, key: number) => {
             return (key % 2) === 0;
           });
-      assert(map).to.startWith([[0, true], [1, false], [2, true], [3, false]]);
+      assert(map).to.startWith([
+        match.anyTupleThat<[number, boolean]>().haveExactElements([0, true]),
+        match.anyTupleThat<[number, boolean]>().haveExactElements([1, false]),
+        match.anyTupleThat<[number, boolean]>().haveExactElements([2, true]),
+        match.anyTupleThat<[number, boolean]>().haveExactElements([3, false]),
+      ]);
     });
   });
 
-  describe('mapItem', () => {
+  test('mapItem', () => {
     should('map correctly', () => {
-      const map = InfiniteMap.of(Iterables.of(generateInts), (i: number) => `${i}`)
+      const list = InfiniteMap.of(Iterables.of(generateInts), (i: number) => `${i}`)
           .mapItem(([key, _]: [number, string]) => {
             return (key % 2) === 0;
           });
-      assert(map).to.startWith([true, false, true, false]);
+      assert(list).to.startWith([true, false, true, false]);
     });
   });
 
-  describe('set', () => {
+  test('set', () => {
     should('set the value correctly', () => {
       const value = 'value';
       const map = InfiniteMap.of(Iterables.of(generateInts), (i: number) => `${i}`)
           .set(2, value);
-      assert(map).to.startWith([[0, '0'], [1, '1'], [2, value], [3, '3']]);
+      assert(map).to.startWith([
+        match.anyTupleThat<[number, string]>().haveExactElements([0, '0']),
+        match.anyTupleThat<[number, string]>().haveExactElements([1, '1']),
+        match.anyTupleThat<[number, string]>().haveExactElements([2, value]),
+        match.anyTupleThat<[number, string]>().haveExactElements([3, '3']),
+      ]);
     });
   });
 
-  describe('values', () => {
+  test('values', () => {
     should('return the correct values', () => {
       const map = InfiniteMap.of(Iterables.of(generateInts), (i: number) => `${i}`);
       assert(map.values()).to.startWith(['0', '1', '2', '3']);
