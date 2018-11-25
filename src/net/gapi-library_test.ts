@@ -1,7 +1,6 @@
 import { assert, match, should } from 'gs-testing/export/main';
 import { mocks } from 'gs-testing/export/mock';
-import { createSpy, createSpyObject, fake, SpyObj } from 'gs-testing/export/spy';
-import { spy } from 'gs-testing/export/spy';
+import { createSpy, createSpyObject, fake, spy, SpyObj } from 'gs-testing/export/spy';
 import { Gapi } from './gapi';
 import { GapiError } from './gapi-error';
 import { GapiLibrary, QUEUED_REQUESTS } from './gapi-library';

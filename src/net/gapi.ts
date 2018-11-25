@@ -41,7 +41,7 @@ export class Gapi {
 
   @cache()
   async init(): Promise<gapi.Client> {
-    await new Promise((resolve: () => void) => {
+    await new Promise(resolve => {
       gapi.load('client:auth2', () => {
         resolve();
       });
@@ -60,6 +60,7 @@ export class Gapi {
       }
     }
     this.initialized_ = true;
+
     return gapi.client as any as gapi.Client;
   }
 }

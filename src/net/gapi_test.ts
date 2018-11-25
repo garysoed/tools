@@ -1,15 +1,23 @@
-import { assert, match, should } from 'gs-testing/export/main';
+import { assert, match, should, test } from 'gs-testing/export/main';
 import { createSpyObject, fake, Spy, SpyObj } from 'gs-testing/export/spy';
 import { Gapi } from '../net';
 
+interface Auth2Type {
+  getAuthInstance(): gapi.auth2.Instance;
+}
+interface GapiType {
+  auth2: Auth2Type;
+  client: gapi.Client;
+  load(lib: string, handler: () => void): void;
+}
 
-describe('net.Gapi', () => {
+test('net.Gapi', () => {
   const API_KEY = 'apiKey';
   const CLIENT_ID = 'clientId';
   // TODO: Remove the any types here.
-  let mockAuth2: any;
+  let mockAuth2: SpyObj<Auth2Type>;
   let mockClient: SpyObj<gapi.Client>;
-  let mockGapi: any;
+  let mockGapi: SpyObj<GapiType>;
   let gapi: Gapi;
 
   beforeEach(() => {
@@ -25,7 +33,7 @@ describe('net.Gapi', () => {
     gapi = new Gapi(API_KEY, CLIENT_ID);
   });
 
-  describe('addDiscoveryDocs', () => {
+  test('addDiscoveryDocs', () => {
     should(`add the discovery docs`, () => {
       const doc1 = 'doc1';
       const doc2 = 'doc2';
@@ -43,7 +51,7 @@ describe('net.Gapi', () => {
     });
   });
 
-  describe('addScopes', () => {
+  test('addScopes', () => {
     should(`add the scopes`, () => {
       const scope1 = 'scope1';
       const scope2 = 'scope2';
@@ -61,7 +69,7 @@ describe('net.Gapi', () => {
     });
   });
 
-  describe('addSignIn', () => {
+  test('addSignIn', () => {
     should(`set the sign in flag`, () => {
       gapi.addSignIn();
       assert(gapi['signIn_']).to.beTrue();
@@ -76,7 +84,7 @@ describe('net.Gapi', () => {
     });
   });
 
-  describe('init', () => {
+  test('init', () => {
     should(`initialize correctly`, async () => {
       const doc1 = 'doc1';
       const doc2 = 'doc2';
@@ -88,20 +96,19 @@ describe('net.Gapi', () => {
 
       // TODO: Figure out the correct type.
       const mockGapiLoad = mockGapi.load as Spy<any, [any, () => any]>;
-      fake(mockGapiLoad)
-          .when(match.anyThat().beAnInstanceOf(String), match.anyThat<() => any>().beAFunction())
-          .call((_: any, handler: () => any) => handler());
+      fake(mockGapiLoad).always().call((_: any, handler: () => any) => handler());
 
       fake(mockClient.init).always().return(Promise.resolve());
 
       await assert(gapi.init()).to.resolveWith(mockClient);
       assert(gapi['initialized_']).to.beTrue();
-      assert(mockClient.init).to.haveBeenCalledWith({
-        apiKey: API_KEY,
-        clientId: CLIENT_ID,
-        discoveryDocs: [doc1, doc2],
-        scope: `${scope1} ${scope2}`,
-      });
+      assert(mockClient.init).to.haveBeenCalledWith(
+          match.anyObjectThat<gapi.ClientInitConfig>().haveProperties({
+            apiKey: API_KEY,
+            clientId: CLIENT_ID,
+            discoveryDocs: match.anyArrayThat().haveExactElements([doc1, doc2]),
+            scope: `${scope1} ${scope2}`,
+          }));
       assert(mockGapiLoad).to.haveBeenCalledWith(
           'client:auth2',
           match.anyThat<() => any>().beAFunction(),
@@ -118,9 +125,7 @@ describe('net.Gapi', () => {
 
       // TODO: Figure out the correct type.
       const mockGapiLoad = mockGapi.load as Spy<any, [any, () => any]>;
-      fake(mockGapiLoad)
-          .when(match.anyThat().beAnInstanceOf(String), match.anyThat<() => any>().beAFunction())
-          .call((_: any, handler: () => any) => handler());
+      fake(mockGapiLoad).always().call((_: any, handler: () => any) => handler());
 
       fake(mockClient.init).always().return(Promise.resolve());
 
@@ -130,17 +135,18 @@ describe('net.Gapi', () => {
       );
       mockAuthInstance.isSignedIn = {get: () => false};
       fake(mockAuthInstance.signIn).always().return(Promise.resolve());
-      mockAuth2.getAuthInstance.and.returnValue(mockAuthInstance);
+      fake(mockAuth2.getAuthInstance).always().return(mockAuthInstance);
 
       await assert(gapi.init()).to.resolveWith(mockClient);
       assert(gapi['initialized_']).to.beTrue();
       assert(mockAuthInstance.signIn).to.haveBeenCalledWith();
-      assert(mockClient.init).to.haveBeenCalledWith({
-        apiKey: API_KEY,
-        clientId: CLIENT_ID,
-        discoveryDocs: [doc],
-        scope: `${scope}`,
-      });
+      assert(mockClient.init).to.haveBeenCalledWith(
+          match.anyObjectThat<gapi.ClientInitConfig>().haveProperties({
+            apiKey: API_KEY,
+            clientId: CLIENT_ID,
+            discoveryDocs: match.anyArrayThat().haveExactElements([doc]),
+            scope: `${scope}`,
+          }));
       assert(mockGapiLoad).to.haveBeenCalledWith(
           'client:auth2',
           match.anyThat<() => any>().beAFunction(),
@@ -157,9 +163,7 @@ describe('net.Gapi', () => {
 
       // TODO: Figure out the correct type.
       const mockGapiLoad = mockGapi.load as Spy<any, [any, () => any]>;
-      fake(mockGapiLoad)
-          .when(match.anyThat().beAnInstanceOf(String), match.anyThat<() => any>().beAFunction())
-          .call((_: any, handler: () => any) => handler());
+      fake(mockGapiLoad).always().call((_: any, handler: () => any) => handler());
 
       fake(mockClient.init).always().return(Promise.resolve());
 
@@ -169,17 +173,18 @@ describe('net.Gapi', () => {
       );
       mockAuthInstance.isSignedIn = {get: () => true};
       fake(mockAuthInstance.signIn).always().return(Promise.resolve());
-      mockAuth2.getAuthInstance.and.returnValue(mockAuthInstance);
+      fake(mockAuth2.getAuthInstance).always().return(mockAuthInstance);
 
       await assert(gapi.init()).to.resolveWith(mockClient);
       assert(gapi['initialized_']).to.beTrue();
       assert(mockAuthInstance.signIn).toNot.haveBeenCalled();
-      assert(mockClient.init).to.haveBeenCalledWith({
-        apiKey: API_KEY,
-        clientId: CLIENT_ID,
-        discoveryDocs: [doc],
-        scope: `${scope}`,
-      });
+      assert(mockClient.init).to.haveBeenCalledWith(
+          match.anyObjectThat<gapi.ClientInitConfig>().haveProperties({
+            apiKey: API_KEY,
+            clientId: CLIENT_ID,
+            discoveryDocs: match.anyArrayThat().haveExactElements([doc]),
+            scope: `${scope}`,
+          }));
       assert(mockGapiLoad).to.haveBeenCalledWith(
           'client:auth2',
           match.anyThat<() => any>().beAFunction(),
