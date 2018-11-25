@@ -1,4 +1,4 @@
-import { assert, should, test } from 'gs-testing/export/main';
+import { assert, match, should, test } from 'gs-testing/export/main';
 import { deepClone, getValue, setValue } from './jsons';
 
 test('data.Jsons', () => {
@@ -8,7 +8,9 @@ test('data.Jsons', () => {
         a: { b: 2 },
       };
       const clone = deepClone(original);
-      assert(clone).to.equal(original);
+      assert(clone).to.haveProperties({
+        a: match.anyObjectThat().haveProperties({b: 2}),
+      });
       assert(clone).toNot.equal(original);
     });
   });
@@ -30,8 +32,10 @@ test('data.Jsons', () => {
       const innerObj = { };
       const obj = { a: innerObj };
       setValue(obj, 'a.b.c', 123);
-      assert(obj).to.haveProperties({a: innerObj});
-      assert(innerObj).to.haveProperties({b: {c: 123}});
+      assert(obj).to.haveProperties({a: match.anyObjectThat().haveProperties({})});
+      assert(innerObj).to.haveProperties({
+        b: match.anyObjectThat().haveProperties({c: 123}),
+      });
     });
 
     should('handle a single value', () => {

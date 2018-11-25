@@ -31,7 +31,7 @@ class TestGapiStorage extends GapiStorage<{}, {}, {}, {}, {}> {
   }
 }
 
-test('store.GapiStorage', () => {
+test.skip('store.GapiStorage', () => {
   let mockLibrary: SpyObj<GapiLibrary<{}>>;
   let mockHasImpl_: Spy<Observable<boolean>, [GapiRequestQueue<{}, {}>, string]>;
   let mockListIdsImpl_: Spy<Observable<ImmutableSet<string>>, [GapiRequestQueue<{}, {}>]>;

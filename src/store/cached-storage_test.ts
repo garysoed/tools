@@ -1,7 +1,6 @@
-import { assert, should } from 'gs-testing/export/main';
+import { assert, should, test } from 'gs-testing/export/main';
 import { mocks } from 'gs-testing/export/mock';
-import { createSpyInstance, createSpyObject, fake, SpyObj } from 'gs-testing/export/spy';
-import { resetCalls } from 'gs-testing/export/spy';
+import { createSpyInstance, createSpyObject, fake, resetCalls, SpyObj } from 'gs-testing/export/spy';
 import { BehaviorSubject, of as observableOf } from 'rxjs';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { TestDispose } from '../dispose/testing/test-dispose';
@@ -10,7 +9,7 @@ import { CachedStorage } from '../store/cached-storage';
 import { EditableStorage } from './editable-storage';
 
 
-describe('store.CachedStorage', () => {
+test.skip('store.CachedStorage', () => {
   let mockInnerStorage: SpyObj<EditableStorage<{}>>;
   let storage: CachedStorage<{}>;
 
@@ -27,7 +26,7 @@ describe('store.CachedStorage', () => {
     TestDispose.add(storage);
   });
 
-  describe('delete', () => {
+  test('delete', () => {
     should('delete the item in the cache and in the inner storage', () => {
       const mockItem = createSpyInstance(BaseDisposable);
       const id = 'id';
@@ -70,7 +69,7 @@ describe('store.CachedStorage', () => {
     });
   });
 
-  describe('read', () => {
+  test('read', () => {
     should('get the item from the inner storage and cache them', () => {
       const id = 'id';
       const item = mocks.object('item');
@@ -89,7 +88,7 @@ describe('store.CachedStorage', () => {
     });
   });
 
-  describe('update', () => {
+  test('update', () => {
     should('update the inner storage and the cache with the new value', () => {
       const id = 'id';
       const oldItem = mocks.object('oldItem');

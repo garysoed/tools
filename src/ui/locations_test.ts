@@ -1,10 +1,9 @@
-import { assert, should } from 'gs-testing/export/main';
-
+import { assert, match, should, test } from 'gs-testing/export/main';
 import { getMatches, getParts_, normalizePath } from './locations';
 
 
-describe('ui.Locations', () => {
-  describe('getParts_', () => {
+test('ui.Locations', () => {
+  test('getParts_', () => {
     should('split the normalized parts', () => {
       const path = '/a/./b/c';
 
@@ -12,12 +11,12 @@ describe('ui.Locations', () => {
     });
   });
 
-  describe('getMatches', () => {
+  test('getMatches', () => {
     should('return the correct matches', () => {
       // tslint:disable-next-line:no-non-null-assertion
       assert(getMatches('/hello/_/location', '/:a/_/:b')!).to.haveElements([
-        ['a', 'hello'],
-        ['b', 'location'],
+        match.anyTupleThat<[string, string]>().haveExactElements(['a', 'hello']),
+        match.anyTupleThat<[string, string]>().haveExactElements(['b', 'location']),
       ]);
     });
 
@@ -28,8 +27,8 @@ describe('ui.Locations', () => {
     should('return the matches for exact match', () => {
       // tslint:disable-next-line:no-non-null-assertion
       assert(getMatches('/hello/_/location', `/:a/_/:b$`)!).to.haveElements([
-        ['a', 'hello'],
-        ['b', 'location'],
+        match.anyTupleThat<[string, string]>().haveExactElements(['a', 'hello']),
+        match.anyTupleThat<[string, string]>().haveExactElements(['b', 'location']),
       ]);
     });
 
@@ -39,7 +38,7 @@ describe('ui.Locations', () => {
 
   });
 
-  describe('normalizePath', () => {
+  test('normalizePath', () => {
     should('add missing `/` at the start of the path', () => {
       assert(normalizePath('path')).to.equal('/path');
     });

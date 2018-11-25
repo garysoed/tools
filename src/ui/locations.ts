@@ -34,12 +34,12 @@ export function getMatches(path: string, matcher: string): ImmutableMap<string, 
   const matches: {[key: string]: string} = {};
   for (let i = 0; i < matcherParts.size(); i++) {
     const matchPart = matcherParts.getAt(i);
-    if (!matchPart) {
+    if (matchPart === undefined) {
       return null;
     }
 
     const hashPart = hashParts.getAt(i);
-    if (!hashPart) {
+    if (hashPart === undefined) {
       return null;
     }
 

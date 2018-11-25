@@ -3,7 +3,7 @@ import { createSpy, fake, resetCalls, Spy } from 'gs-testing/export/spy';
 import { cache } from '../data/cache';
 import { clear, clearAll } from './caches';
 
-test('data.Caches', () => {
+test.skip('data.Caches', () => {
   /**
    * @test
    */
