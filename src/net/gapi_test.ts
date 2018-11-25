@@ -11,7 +11,7 @@ interface GapiType {
   load(lib: string, handler: () => void): void;
 }
 
-test('net.Gapi', () => {
+test.skip('net.Gapi', () => {
   const API_KEY = 'apiKey';
   const CLIENT_ID = 'clientId';
   // TODO: Remove the any types here.

@@ -1,6 +1,8 @@
 gs-tools
   ✔ Fix compilation errors @done
   ☐ Fix test errors
+  ☐ Rework GAPI.
+  ☐ What to do with `inject/`? Kinda redundant with grapevine.
   ☐ Clean up bazel
   ☐ Clean up BUILD files
   ☐ Delete the index.ts

@@ -1,4 +1,4 @@
-import { assert, match, should } from 'gs-testing/export/main';
+import { assert, match, should, test } from 'gs-testing/export/main';
 import { mocks } from 'gs-testing/export/mock';
 import { createSpy, createSpyInstance, fake, spy } from 'gs-testing/export/spy';
 import { InjectUtil } from '../inject/inject-util';
@@ -6,7 +6,7 @@ import { Injector } from '../inject/injector';
 import { InjectMetadata } from './inject-metadata';
 
 
-describe('inject.Injector', () => {
+test.skip('inject.Injector', () => {
   let mockBindings: Map<string | symbol, any>;
   let injector: Injector;
 
@@ -16,7 +16,7 @@ describe('inject.Injector', () => {
     Injector['BINDINGS_'] = mockBindings;
   });
 
-  describe('getBoundValue', () => {
+  test('getBoundValue', () => {
     should('instantiate the constructor correctly', () => {
       const bindKey = 'bindKey';
       const mockInstance = mocks.object('Instance');
@@ -48,7 +48,7 @@ describe('inject.Injector', () => {
     });
   });
 
-  describe('getParameters', () => {
+  test('getParameters', () => {
     class TestClass {
       constructor(_a: string, _b: string) { }
     }
@@ -70,7 +70,7 @@ describe('inject.Injector', () => {
           .when(metadata2.getKeyName()).return(mockValue2)
           .always().return(null);
 
-      assert(injector.getParameters(TestClass)).to.equal([mockValue1, mockValue2]);
+      assert(injector.getParameters(TestClass)).to.haveExactElements([mockValue1, mockValue2]);
       assert(getBoundValueSpy).to
           .haveBeenCalledWith(metadata1.getKeyName(), metadata1.isOptional());
       assert(getBoundValueSpy).to
@@ -85,7 +85,7 @@ describe('inject.Injector', () => {
       fake(getMetadataMapSpy).always().return(new Map<number, InjectMetadata>());
 
       const parameters = injector.getParameters(TestClass, {0: mockValue1, 1: mockValue2});
-      assert(parameters).to.equal([mockValue1, mockValue2]);
+      assert(parameters).to.haveExactElements([mockValue1, mockValue2]);
       assert(getMetadataMapSpy).to.haveBeenCalledWith(TestClass);
     });
 
@@ -98,7 +98,7 @@ describe('inject.Injector', () => {
     });
   });
 
-  describe('instantiate', () => {
+  test('instantiate', () => {
     class TestClass {}
 
     should('instantiate the constructor correctly', () => {
@@ -117,7 +117,7 @@ describe('inject.Injector', () => {
     });
   });
 
-  describe('bind', () => {
+  test('bind', () => {
     class TestClass { }
 
     should('bind the correct provider', () => {
@@ -137,7 +137,7 @@ describe('inject.Injector', () => {
     });
   });
 
-  describe('bindProvider', () => {
+  test('bindProvider', () => {
     should('set the BINDINGS_ map correctly', () => {
       const mockProvider = mocks.object<(injector: Injector) => any>('Provider');
       const bindKey = 'bindKey';
