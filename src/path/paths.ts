@@ -1,19 +1,20 @@
 import { Errors } from '../error';
 import { ImmutableList } from '../immutable';
 import { AbsolutePath } from '../path/absolute-path';
-import { AbsolutePathParser } from '../path/absolute-path-parser';
 import { Path } from '../path/path';
 import { RelativePath } from '../path/relative-path';
-import { RelativePathParser } from '../path/relative-path-parser';
 import { assertUnreachable } from '../typescript/assert-unreachable';
+import { absolutePathParser } from './absolute-path-parser';
+import { relativePathParser } from './relative-path-parser';
 
 export class Paths {
   static absolutePath(pathString: string): AbsolutePath {
-    const path = AbsolutePathParser.convertBackward(pathString);
-    if (!path) {
+    const result = absolutePathParser().convertBackward(pathString);
+    if (!result.success) {
       throw Errors.assert('pathString').shouldBe('a valid absolute path').butWas(pathString);
     }
-    return path;
+
+    return result.result;
   }
 
   static getDirPath(path: AbsolutePath): AbsolutePath;
@@ -33,6 +34,7 @@ export class Paths {
     const parts = filename.split('.');
     const extensionIndex = Math.max(1, parts.length - 1);
     const extension = parts[extensionIndex] || '';
+
     return {
       extension,
       name: parts.slice(0, extensionIndex).join('.'),
@@ -41,6 +43,7 @@ export class Paths {
 
   static getItemName(path: Path): string | null {
     const parts = path.getParts();
+
     return parts.getAt(-1) || null;
   }
 
@@ -144,11 +147,12 @@ export class Paths {
   }
 
   static relativePath(pathString: string): RelativePath {
-    const path = RelativePathParser.convertBackward(pathString);
-    if (!path) {
+    const result = relativePathParser().convertBackward(pathString);
+    if (!result.success) {
       throw Errors.assert('pathString').shouldBe('a valid relative path').butWas(pathString);
     }
-    return path;
+
+    return result.result;
   }
 
   static setFilenameExt(filename: string, extension: string): string {
@@ -157,6 +161,7 @@ export class Paths {
     if (!extension) {
       return name;
     }
+
     return `${name}.${extension}`;
   }
 }

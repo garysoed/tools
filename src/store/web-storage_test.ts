@@ -1,7 +1,9 @@
 import { assert, should, test } from 'gs-testing/export/main';
-import { BehaviorSubject, fromEvent } from 'rxjs';
+import { binary } from 'nabu/export/grammar';
+import { compose, identity, strict } from 'nabu/export/util';
+import { BehaviorSubject } from 'rxjs';
 import { ImmutableSet } from '../immutable/immutable-set';
-import { IntegerParser } from '../parse/integer-parser';
+import { integerConverter } from '../serializer/integer-converter';
 import { INDEXES_PARSER, WebStorage } from '../store/web-storage';
 
 function setStorage(storage: Storage, key: string, value: string): void {
@@ -11,11 +13,13 @@ function setStorage(storage: Storage, key: string, value: string): void {
 
 test('store.WebStorage', () => {
   const PREFIX = 'store.WebStorage.prefix';
+  const INDEXES_BINARY_CONVERTER = strict(compose(INDEXES_PARSER, binary()));
+  const ITEM_BINARY_CONVERTER = strict(compose(integerConverter(), binary()));
   let storage: WebStorage<number>;
 
   beforeEach(() => {
     localStorage.clear();
-    storage = new WebStorage(localStorage, PREFIX, IntegerParser);
+    storage = new WebStorage(localStorage, PREFIX, identity<number>());
   });
 
   afterEach(() => {
@@ -26,8 +30,12 @@ test('store.WebStorage', () => {
     should('remove the correct object', () => {
       const id = 'id';
       const path = `${PREFIX}/${id}`;
-      setStorage(localStorage, PREFIX, INDEXES_PARSER.convertForward(ImmutableSet.of([id])) || '');
-      setStorage(localStorage, path, '123');
+      setStorage(
+          localStorage,
+          PREFIX,
+          INDEXES_BINARY_CONVERTER.convertForward(ImmutableSet.of([id])),
+      );
+      setStorage(localStorage, path, ITEM_BINARY_CONVERTER.convertForward(123));
 
       const idsSubject = new BehaviorSubject(ImmutableSet.of<string>());
       storage.listIds().subscribe(idsSubject);
@@ -38,7 +46,8 @@ test('store.WebStorage', () => {
       storage.delete(id);
 
       assert(localStorage.getItem(path)).to.beNull();
-      assert(localStorage.getItem(PREFIX)).to.equal(JSON.stringify([]));
+      assert(localStorage.getItem(PREFIX)).to
+          .equal(INDEXES_BINARY_CONVERTER.convertForward(ImmutableSet.of([])));
       assert(idsSubject.getValue()).to.beEmpty();
       assert(itemSubject.getValue()).to.beNull();
     });
@@ -51,7 +60,11 @@ test('store.WebStorage', () => {
       const hasSubject = new BehaviorSubject<boolean|null>(null);
       storage.has(id).subscribe(hasSubject);
 
-      setStorage(localStorage, PREFIX, INDEXES_PARSER.convertForward(ImmutableSet.of([id])) || '');
+      setStorage(
+          localStorage,
+          PREFIX,
+          INDEXES_BINARY_CONVERTER.convertForward(ImmutableSet.of([id])),
+      );
 
       assert(hasSubject.getValue()).to.beTrue();
     });
@@ -78,7 +91,7 @@ test('store.WebStorage', () => {
       setStorage(
           localStorage,
           PREFIX,
-          INDEXES_PARSER.convertForward(ImmutableSet.of([id1, id2, id3])) || '',
+          INDEXES_BINARY_CONVERTER.convertForward(ImmutableSet.of([id1, id2, id3])),
       );
 
       assert(idsSubject.getValue()).to.haveElements([id1, id2, id3]);
@@ -93,7 +106,7 @@ test('store.WebStorage', () => {
       const itemSubject = new BehaviorSubject<number|null>(null);
       storage.read(id).subscribe(itemSubject);
 
-      setStorage(localStorage, path, '123');
+      setStorage(localStorage, path, ITEM_BINARY_CONVERTER.convertForward(123));
 
       assert(itemSubject.getValue()).to.equal(123);
     });
@@ -114,7 +127,7 @@ test('store.WebStorage', () => {
       setStorage(
           localStorage,
           PREFIX,
-          INDEXES_PARSER.convertForward(ImmutableSet.of(['oldId'])) || '',
+          INDEXES_BINARY_CONVERTER.convertForward(ImmutableSet.of(['oldId'])),
       );
 
       const idsSubject = new BehaviorSubject(ImmutableSet.of<string>());
@@ -126,7 +139,7 @@ test('store.WebStorage', () => {
       storage.update(id, 123);
       assert(idsSubject.getValue()).to.haveElements([oldId, id]);
       assert(itemSubject.getValue()).to.equal(123);
-      assert(localStorage.getItem(path)).to.equal('123');
+      assert(localStorage.getItem(path)).to.equal(ITEM_BINARY_CONVERTER.convertForward(123));
     });
   });
 });

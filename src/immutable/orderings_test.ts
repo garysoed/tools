@@ -1,12 +1,12 @@
-import { assert, should } from 'gs-testing/export/main';
+import { assert, should, test } from 'gs-testing/export/main';
 import { NumberType } from 'gs-types/export';
 import { ImmutableList } from '../immutable/immutable-list';
 import { Orderings } from '../immutable/orderings';
 import { CompareResult } from '../interfaces/compare-result';
 
 
-describe('immutable.Orderings', () => {
-  describe('compound', () => {
+test('immutable.Orderings', () => {
+  test('compound', () => {
     should(`use the first ordering and use the subsequent ones for tie breaking`, () => {
       const ordering = Orderings.compound(ImmutableList.of([
         () => 0 as CompareResult,
@@ -24,7 +24,7 @@ describe('immutable.Orderings', () => {
     });
   });
 
-  describe('map', () => {
+  test('map', () => {
     should(`order the items correctly`, () => {
       const a = {v: 1};
       const b = {v: 2};
@@ -35,21 +35,21 @@ describe('immutable.Orderings', () => {
     });
   });
 
-  describe('matches', () => {
+  test('matches', () => {
     should(`order matching items at the start of the list`, () => {
       const list = ImmutableList.of([1, 2, 3]);
       assert(list.sort(Orderings.matches((v => v > 1)))).to.haveElements([2, 3, 1]);
     });
   });
 
-  describe('isOneOf', () => {
+  test('isOneOf', () => {
     should(`order matching items at the start of the list`, () => {
       const list = ImmutableList.of([1, 2, 3]);
       assert(list.sort(Orderings.isOneOf([3]))).to.haveElements([3, 1, 2]);
     });
   });
 
-  describe('natural', () => {
+  test('natural', () => {
     should(`put 'a' before 'b'`, () => {
       assert(Orderings.natural()('a', 'b')).to.equal(-1);
     });
@@ -71,7 +71,7 @@ describe('immutable.Orderings', () => {
     });
   });
 
-  describe('normal', () => {
+  test('normal', () => {
     should(`return -1 if the first item is smaller than the second`, () => {
       assert(Orderings.normal()(1, 2)).to.equal(-1);
     });
@@ -85,7 +85,7 @@ describe('immutable.Orderings', () => {
     });
   });
 
-  describe('reverse', () => {
+  test('reverse', () => {
     should(`return 1 if the first item is smaller than the second`, () => {
       assert(Orderings.reverse(Orderings.normal())(2, 1)).to.equal(-1);
     });
@@ -99,7 +99,7 @@ describe('immutable.Orderings', () => {
     });
   });
 
-  describe('type', () => {
+  test('type', () => {
     should(`return -1 if the first item is earlier in the type list`, () => {
       assert(Orderings.type(ImmutableList.of([NumberType]))('a', 1)).to.equal(1);
     });

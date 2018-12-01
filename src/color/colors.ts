@@ -1,9 +1,11 @@
 import { ArrayOfType, NonNullType } from 'gs-types/export';
+import { human } from 'nabu/export/grammar';
+import { Result } from 'nabu/export/main';
+import { compose, strict } from 'nabu/export/util';
 import { ImmutableList } from '../immutable';
-import { FloatParser } from '../parse/float-parser';
-import { HexParser } from '../parse/hex-parser';
-import { IntegerParser } from '../parse/integer-parser';
-import { PercentParser } from '../parse/percent-parser';
+import { floatConverter } from '../serializer/float-converter';
+import { integerConverter } from '../serializer/integer-converter';
+import { percentConverter } from '../serializer/percent-converter';
 import { Color } from './color';
 import { HslColor } from './hsl-color';
 import { RgbColor } from './rgb-color';
@@ -12,8 +14,134 @@ const RGB_REGEXP = /^rgb\((.*)\)$/;
 const RGBA_REGEXP = /^rgba\((.*)\)$/;
 const HSL_REGEXP = /^hsl\((.*)\)$/;
 const HSLA_REGEXP = /^hsla\((.*)\)$/;
-const HEX_REGEXP = /^#(.{3,8})$/;
+const HEX_REGEXP = /^#([0-9abcdef]{3,8})$/;
 
+const INTEGER_PARSER = compose(integerConverter(), human());
+const FLOAT_PARSER = compose(floatConverter(), human());
+const PERCENT_PARSER = percentConverter();
+
+function fromRgb(cssColor: string): Color|null {
+  const rgbMatches = RGB_REGEXP.exec(cssColor);
+  const rgbaMatches = RGBA_REGEXP.exec(cssColor);
+  const matches = rgbMatches === null ? rgbaMatches : rgbMatches;
+  if (matches === null) {
+    return null;
+  }
+
+  const matchString = matches[1];
+  let results: Array<Result<number>>;
+  if (matchString.indexOf('/') < 0) {
+    const list = ImmutableList
+        .of(matchString.replace(/ /g, '').split(','))
+        .map((match: string, index: number) => {
+          return index <= 2 ?
+              INTEGER_PARSER.convertBackward(match) :
+              FLOAT_PARSER.convertBackward(match);
+        });
+    results = [...list];
+  } else {
+    const [rgbString] = matchString.split('/');
+    const list = ImmutableList
+        .of(rgbString.replace(/ +/g, ' ').trim().split(' '))
+        .map((match: string) => {
+          return INTEGER_PARSER.convertBackward(match.trim());
+        });
+    results = [...list];
+  }
+
+  const resultR = results[0];
+  const resultG = results[1];
+  const resultB = results[2];
+  if (!resultR.success || !resultG.success || !resultB.success) {
+    return null;
+  }
+
+  return RgbColor.newInstance(resultR.result, resultG.result, resultB.result);
+}
+
+function fromHsl(cssColor: string): Color|null {
+  const hslMatches = HSL_REGEXP.exec(cssColor);
+  const hslaMatches = HSLA_REGEXP.exec(cssColor);
+  const matches = hslMatches === null ? hslaMatches : hslMatches;
+  if (matches === null) {
+    return null;
+  }
+
+  const matchString = matches[1];
+  let results: Array<Result<number>>;
+  if (matchString.indexOf('/') < 0) {
+    const list = ImmutableList
+        .of(matchString.replace(/ /g, '').split(',').slice(0, 3))
+        .map((match: string, index: number) => {
+          if (index === 0) {
+            return INTEGER_PARSER.convertBackward(match);
+          } else {
+            return PERCENT_PARSER.convertBackward(match);
+          }
+        });
+    results = [...list];
+  } else {
+    const [hslString] = matchString.split('/');
+    const list = ImmutableList
+        .of(hslString.replace(/ +/g, ' ').trim().split(' '))
+        .map((match: string, index: number) => {
+          if (index === 0) {
+            return INTEGER_PARSER.convertBackward(match);
+          } else {
+            return PERCENT_PARSER.convertBackward(match);
+          }
+        });
+    results = [...list];
+  }
+
+  const resultH = results[0];
+  const resultS = results[1];
+  const resultL = results[2];
+  if (!resultH.success || !resultS.success || !resultL.success) {
+    return null;
+  }
+
+  return HslColor.newInstance(resultH.result, resultS.result, resultL.result);
+}
+
+function fromHex(cssColor: string): Color|null {
+  const hexMatches = HEX_REGEXP.exec(cssColor);
+  if (hexMatches === null) {
+    return null;
+  }
+
+  const matches = hexMatches[1];
+  let components: number[];
+  switch (matches.length) {
+    case 3:
+    case 4:
+      components = [...ImmutableList
+          .of(matches.split(''))
+          .map((match: string) => {
+            return Number.parseInt(`0x${match}${match}`, 16);
+          })];
+      break;
+    case 6:
+    case 8:
+      components = [...ImmutableList
+          .of(matches.match(/../g) || [])
+          .map((match: string) => {
+            return Number.parseInt(`0x${match}`, 16);
+          })];
+      break;
+    default:
+      return null;
+  }
+
+  const r = components[0];
+  const g = components[1];
+  const b = components[2];
+  if (isNaN(r) || isNaN(g) || isNaN(b)) {
+    return null;
+  }
+
+  return RgbColor.newInstance(r, g, b);
+}
 
 export const Colors = {
   /**
@@ -23,119 +151,13 @@ export const Colors = {
    * @param cssColor CSS color string.
    * @return The Color object created from the CSS color string, or null if the string is invalid.
    */
-  fromCssColor(cssColor: string): Color | null {
+  fromCssColor(cssColor: string): Color|null {
     if (RGB_REGEXP.test(cssColor) || RGBA_REGEXP.test(cssColor)) {
-      const rgbMatches = RGB_REGEXP.exec(cssColor);
-      const rgbaMatches = RGBA_REGEXP.exec(cssColor);
-      const matches = rgbMatches === null ? rgbaMatches : rgbMatches;
-      if (matches === null) {
-        return null;
-      }
-
-      const matchString = matches[1];
-      let components: (number | null)[];
-      if (matchString.indexOf('/') < 0) {
-        const list = ImmutableList
-            .of(matchString.replace(/ /g, '').split(','))
-            .map((match: string, index: number) => {
-              return index <= 2 ?
-                  IntegerParser.convertBackward(match) :
-                  FloatParser.convertBackward(match);
-            });
-        components = [...list];
-      } else {
-        const [rgbString] = matchString.split('/');
-        const list = ImmutableList
-            .of(rgbString.replace(/ +/g, ' ').trim().split(' '))
-            .map((match: string) => {
-              return IntegerParser.convertBackward(match.trim());
-            });
-        components = [...list];
-      }
-
-      if (!ArrayOfType(NonNullType<number>()).check(components)) {
-        return null;
-      } else {
-        return RgbColor.newInstance(components[0], components[1], components[2]);
-      }
+      return fromRgb(cssColor);
     } else if (HSL_REGEXP.test(cssColor) || HSLA_REGEXP.test(cssColor)) {
-      const hslMatches = HSL_REGEXP.exec(cssColor);
-      const hslaMatches = HSLA_REGEXP.exec(cssColor);
-      const matches = hslMatches === null ? hslaMatches : hslMatches;
-      if (matches === null) {
-        return null;
-      }
-
-      const matchString = matches[1];
-      let components: (number | null)[];
-      if (matchString.indexOf('/') < 0) {
-        const list = ImmutableList
-            .of(matchString.replace(/ /g, '').split(',').slice(0, 3))
-            .map((match: string, index: number) => {
-              if (index === 0) {
-                const parsed = Number.parseInt(match);
-
-                return Number.isNaN(parsed) ? null : parsed;
-              } else {
-                return PercentParser.convertBackward(match);
-              }
-            });
-        components = [...list];
-      } else {
-        const [hslString] = matchString.split('/');
-        const list = ImmutableList
-            .of(hslString.replace(/ +/g, ' ').trim().split(' '))
-            .map((match: string, index: number) => {
-              if (index === 0) {
-                const parsed = Number.parseInt(match);
-
-                return Number.isNaN(parsed) ? null : parsed;
-              } else {
-                return PercentParser.convertBackward(match);
-              }
-            });
-        components = [...list];
-      }
-
-      if (!ArrayOfType(NonNullType<number>()).check(components)) {
-        return null;
-      } else {
-        return HslColor.newInstance(components[0], components[1], components[2]);
-      }
+      return fromHsl(cssColor);
     } else if (HEX_REGEXP.test(cssColor)) {
-      const hexMatches = HEX_REGEXP.exec(cssColor);
-      if (hexMatches === null) {
-        return null;
-      }
-
-      const matches = hexMatches[1];
-      let components: (number | null)[];
-      switch (matches.length) {
-        case 3:
-        case 4:
-          components = [...ImmutableList
-              .of(matches.split(''))
-              .map((match: string) => {
-                return HexParser.convertBackward(match + match);
-              })];
-          break;
-        case 6:
-        case 8:
-          components = [...ImmutableList
-              .of(matches.match(/../g) || [])
-              .map((match: string) => {
-                return HexParser.convertBackward(match);
-              })];
-          break;
-        default:
-          return null;
-      }
-
-      if (!ArrayOfType(NonNullType<number>()).check(components)) {
-        return null;
-      } else {
-        return RgbColor.newInstance(components[0], components[1], components[2]);
-      }
+      return fromHex(cssColor);
     }
 
     return null;

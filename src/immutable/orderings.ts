@@ -1,7 +1,7 @@
 import { NumberType, StringType, Type } from 'gs-types/export';
 import { CompareResult } from '../interfaces/compare-result';
 import { Ordering } from '../interfaces/ordering';
-import { FloatParser } from '../parse/float-parser';
+import { floatConverter } from '../serializer/float-converter';
 import { ImmutableList } from './immutable-list';
 
 const NATURAL_SPLIT_REGEXP = /([0-9]+)/;
@@ -61,10 +61,10 @@ export const Orderings = {
             Orderings.normal(),
           ]));
 
-      function normalize(str: string): number | string {
-        const parsed = FloatParser.convertBackward(str);
+      function normalize(str: string): number|string {
+        const parseResult = parseFloat(str);
 
-        return parsed === null ? str : parsed;
+        return isNaN(parseResult) ? str : parseResult;
       }
 
       for (let i = 0; i < maxLength; i++) {

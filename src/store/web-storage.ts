@@ -1,18 +1,21 @@
+import { binary } from 'nabu/export/grammar';
+import { Converter, Serializable } from 'nabu/export/main';
+import { compose, identity, strict, StrictConverter } from 'nabu/export/util';
 import { fromEvent, Observable } from 'rxjs';
-import { map, shareReplay, startWith, take, tap } from 'rxjs/operators';
+import { map, shareReplay, startWith, take } from 'rxjs/operators';
 import { ImmutableSet } from '../immutable/immutable-set';
-import { Parser } from '../parse/parser';
-import { SetParser } from '../parse/set-parser';
-import { StringParser } from '../parse/string-parser';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { SimpleIdGenerator } from '../random/simple-id-generator';
+import { setConverter } from '../serializer/set-converter';
 import { EditableStorage } from './editable-storage';
 import { Invalidator } from './invalidator';
 
-export const INDEXES_PARSER = SetParser(StringParser);
+export const INDEXES_PARSER = setConverter<string>(identity<string>());
 
 export class WebStorage<T> implements EditableStorage<T> {
-  private readonly idGenerator_: BaseIdGenerator;
+  private readonly converter_: StrictConverter<T, string>;
+  private readonly idGenerator_: BaseIdGenerator = new SimpleIdGenerator();
+  private readonly indexesConverter_: StrictConverter<ImmutableSet<string>, string>;
   private readonly invalidator_: Invalidator;
   private readonly storageIdsObs_: Observable<ImmutableSet<string>>;
 
@@ -23,11 +26,18 @@ export class WebStorage<T> implements EditableStorage<T> {
   constructor(
       private readonly storage_: Storage,
       private readonly prefix_: string,
-      private readonly parser_: Parser<T>,
+      converter: Converter<T, Serializable>,
   ) {
     const invalidator = new Invalidator(fromEvent(window, 'storage'));
-    this.storageIdsObs_ = createStorageIdsObs_(storage_, prefix_, invalidator.getObservable());
-    this.idGenerator_ = new SimpleIdGenerator();
+    const binaryGrammar = binary();
+    this.converter_ = strict(compose(converter, binaryGrammar));
+    this.indexesConverter_ = strict(compose(INDEXES_PARSER, binaryGrammar));
+    this.storageIdsObs_ = createStorageIdsObs_(
+        storage_,
+        prefix_,
+        invalidator.getObservable(),
+        this.indexesConverter_,
+    );
     this.invalidator_ = invalidator;
   }
 
@@ -35,7 +45,8 @@ export class WebStorage<T> implements EditableStorage<T> {
     this.storageIdsObs_
         .pipe(take(1))
         .subscribe(ids => {
-          this.storage_.setItem(this.prefix_, INDEXES_PARSER.convertForward(ids.delete(id)) || '');
+          const result = this.indexesConverter_.convertForward(ids.delete(id));
+          this.storage_.setItem(this.prefix_, result);
           this.storage_.removeItem(getPath_(id, this.prefix_));
           this.invalidator_.invalidate();
         });
@@ -64,8 +75,8 @@ export class WebStorage<T> implements EditableStorage<T> {
   read(id: string): Observable<T|null> {
     return this.invalidator_.getObservable()
         .pipe(
-            map(() => getItem_(this.storage_, id, this.prefix_, this.parser_)),
-            startWith(getItem_(this.storage_, id, this.prefix_, this.parser_)),
+            map(() => getItem_(this.storage_, id, this.prefix_, this.converter_)),
+            startWith(getItem_(this.storage_, id, this.prefix_, this.converter_)),
             shareReplay(1),
         );
   }
@@ -75,12 +86,11 @@ export class WebStorage<T> implements EditableStorage<T> {
     this.listIds()
         .pipe(take(1))
         .subscribe(indexes => {
-          this.storage_.setItem(
-              this.prefix_,
-              INDEXES_PARSER.convertForward(indexes.add(id)) || '',
-          );
+          const indexesResult = this.indexesConverter_.convertForward(indexes.add(id));
+          this.storage_.setItem(this.prefix_, indexesResult);
 
-          this.storage_.setItem(path, this.parser_.convertForward(instance) || '');
+          const itemResult = this.converter_.convertForward(instance);
+          this.storage_.setItem(path, itemResult);
           this.invalidator_.invalidate();
         });
   }
@@ -90,23 +100,42 @@ function createStorageIdsObs_(
     storage: Storage,
     prefix: string,
     invalidatorObs: Observable<unknown>,
+    indexesConverter: StrictConverter<ImmutableSet<string>, string>,
 ): Observable<ImmutableSet<string>> {
   return invalidatorObs
       .pipe(
-          map(() => getIndexes_(storage, prefix)),
-          startWith(getIndexes_(storage, prefix)),
+          map(() => getIndexes_(storage, prefix, indexesConverter)),
+          startWith(getIndexes_(storage, prefix, indexesConverter)),
           shareReplay(1),
       );
 }
 
-function getIndexes_(storage: Storage, prefix: string): ImmutableSet<string> {
-  const set = INDEXES_PARSER.convertBackward(storage.getItem(prefix)) || ImmutableSet.of([]);
+function getIndexes_(
+    storage: Storage,
+    prefix: string,
+    indexesConverter: StrictConverter<ImmutableSet<string>, string>,
+): ImmutableSet<string> {
+  const indexesStr = storage.getItem(prefix);
+  if (!indexesStr) {
+    return ImmutableSet.of();
+  }
+
+  const set = indexesConverter.convertBackward(indexesStr);
 
   return set.filterItem((id): id is string => !!id);
 }
 
-function getItem_<T>(storage: Storage, id: string, prefix: string, parser: Parser<T>): T|null {
-  return parser.convertBackward(storage.getItem(getPath_(id, prefix)));
+function getItem_<T>(
+    storage: Storage,
+    id: string,
+    prefix: string,
+    converter: StrictConverter<T, string>): T|null {
+  const itemStr = storage.getItem(getPath_(id, prefix));
+  if (!itemStr) {
+    return null;
+  }
+
+  return converter.convertBackward(itemStr);
 }
 
 function getPath_(key: string, prefix: string): string {

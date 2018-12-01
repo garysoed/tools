@@ -1,18 +1,19 @@
-import { Parser } from '../parse/parser';
-import { AbsolutePathParser } from '../path/absolute-path-parser';
+import { Converter, Result } from 'nabu/export/main';
+import { firstSuccess } from 'nabu/export/util';
+import { absolutePathParser } from '../path/absolute-path-parser';
 import { Path } from '../path/path';
-import { RelativePathParser } from '../path/relative-path-parser';
+import { relativePathParser } from '../path/relative-path-parser';
 
-export const PathParser: Parser<Path> = {
-  convertBackward(input: string | null): Path | null {
-    return RelativePathParser.convertBackward(input) || AbsolutePathParser.convertBackward(input);
-  },
+class PathParser implements Converter<Path, string> {
+  convertBackward(value: string): Result<Path> {
+    return firstSuccess(relativePathParser(), absolutePathParser()).convertBackward(value);
+  }
 
-  convertForward(value: Path | null): string {
-    if (!value) {
-      return '';
-    }
+  convertForward(input: Path): Result<string> {
+    return {result: input.toString(), success: true};
+  }
+}
 
-    return value.toString();
-  },
-};
+export function pathParser(): Converter<Path, string> {
+  return new PathParser();
+}

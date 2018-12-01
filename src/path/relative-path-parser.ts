@@ -1,29 +1,29 @@
+import { Converter, Result } from 'nabu/export/main';
 import { ImmutableList } from '../immutable';
-import { Parser } from '../parse/parser';
 import { Path } from '../path/path';
 import { RelativePath } from '../path/relative-path';
 
-export const RelativePathParser: Parser<RelativePath> = {
-  convertBackward(input: string | null): RelativePath | null {
+class RelativePathParser implements Converter<RelativePath, string> {
+  convertBackward(input: string): Result<RelativePath> {
     if (!input) {
-      return null;
+      return {success: false};
     }
 
     const parts = input.split(Path.SEPARATOR);
 
     if (parts[0] === '') {
       // This is an abolute path.
-      return null;
+      return {success: false};
     }
 
-    return new RelativePath(ImmutableList.of(parts));
-  },
+    return {result: new RelativePath(ImmutableList.of(parts)), success: true};
+  }
 
-  convertForward(value: RelativePath | null): string {
-    if (!value) {
-      return '';
-    }
+  convertForward(input: RelativePath): Result<string> {
+    return {result: input.toString(), success: true};
+  }
+}
 
-    return value.toString();
-  },
-};
+export function relativePathParser(): RelativePathParser {
+  return new RelativePathParser();
+}

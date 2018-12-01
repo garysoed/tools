@@ -1,38 +1,31 @@
-import { assert, should } from 'gs-testing/export/main';
+import { assert, should, test } from 'gs-testing/export/main';
 
+import { SuccessResult } from 'nabu/export/main';
 import { ImmutableList } from '../immutable';
-import { AbsolutePathParser } from '../path';
 import { AbsolutePath } from '../path/absolute-path';
+import { absolutePathParser } from './absolute-path-parser';
 
-
-describe('path.AbsolutePathParser', () => {
-  describe('convertBackward', () => {
+test('path.AbsolutePathParser', () => {
+  test('convertBackward', () => {
     should(`return the correct path`, () => {
-      // tslint:disable-next-line:no-non-null-assertion
-      assert(AbsolutePathParser.convertBackward('/a/b/c')!.toString()).to.equal('/a/b/c');
+      const result = absolutePathParser().convertBackward('/a/b/c') as SuccessResult<AbsolutePath>;
+      assert(result.result.toString()).to.equal('/a/b/c');
     });
 
-    should(`return null if the path is not absolute`, () => {
-      assert(AbsolutePathParser.convertBackward('a/b/c')).to.beNull();
+    should(`fail if the path is not absolute`, () => {
+      assert(absolutePathParser().convertBackward('a/b/c')).to.haveProperties({success: false});
     });
 
-    should(`return null if the string is empty`, () => {
-      assert(AbsolutePathParser.convertBackward('')).to.beNull();
-    });
-
-    should(`return null if the input is null`, () => {
-      assert(AbsolutePathParser.convertBackward(null)).to.beNull();
+    should(`fail if the string is empty`, () => {
+      assert(absolutePathParser().convertBackward('')).to.haveProperties({success: false});
     });
   });
 
-  describe('convertForward', () => {
+  test('convertForward', () => {
     should(`return the correct string`, () => {
-      assert(AbsolutePathParser.convertForward(new AbsolutePath(ImmutableList.of(['a', 'b', 'c']))))
-          .to.equal('/a/b/c');
-    });
-
-    should(`return empty string if value is null`, () => {
-      assert(AbsolutePathParser.convertForward(null)).to.equal('');
+      const result = absolutePathParser()
+          .convertForward(new AbsolutePath(ImmutableList.of(['a', 'b', 'c'])));
+      assert(result).to.haveProperties({result: '/a/b/c'});
     });
   });
 });

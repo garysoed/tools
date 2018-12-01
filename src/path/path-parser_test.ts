@@ -1,12 +1,14 @@
-import { assert, should } from 'gs-testing/export/main';
+import { assert, should, test } from 'gs-testing/export/main';
+import { strict } from 'nabu/export/util';
+import { AbsolutePath } from './absolute-path';
+import { pathParser } from './path-parser';
+import { RelativePath } from './relative-path';
 
-import { AbsolutePath, PathParser, RelativePath } from '../path';
 
-
-describe('path.PathParser', () => {
-  describe('convertBackward', () => {
+test('path.PathParser', () => {
+  test('convertBackward', () => {
     should(`parse absolute paths correctly`, () => {
-      const path = PathParser.convertBackward('/a/b/c');
+      const path = strict(pathParser()).convertBackward('/a/b/c');
 
       assert(path).to.beAnInstanceOf(AbsolutePath);
       // tslint:disable-next-line:no-non-null-assertion
@@ -14,17 +16,17 @@ describe('path.PathParser', () => {
     });
 
     should(`parse relative paths correctly`, () => {
-      const path = PathParser.convertBackward('a/b/c');
+      const path = strict(pathParser()).convertBackward('a/b/c');
 
       assert(path).to.beAnInstanceOf(RelativePath);
       // tslint:disable-next-line:no-non-null-assertion
       assert(path!.toString()).to.equal('a/b/c');
     });
 
-    should(`return null if the string is not a valid path`, () => {
-      const path = PathParser.convertBackward('');
+    should(`fail if the string is not a valid path`, () => {
+      const path = pathParser().convertBackward('');
 
-      assert(path).to.beNull();
+      assert(path).to.haveProperties({success: false});
     });
   });
 });

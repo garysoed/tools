@@ -1,13 +1,20 @@
-import { Parser } from '../parse/parser';
+import { Converter, Serializable } from 'nabu/export/main';
 import { WebStorage } from './web-storage';
 
-
 export class LocalStorage<T> extends WebStorage<T> {
-  constructor(window: Window, prefix: string, parser: Parser<T>) {
-    super(window.localStorage, prefix, parser);
+  constructor(
+      window: Window,
+      prefix: string,
+      converter: Converter<T, Serializable>,
+  ) {
+    super(window.localStorage, prefix, converter);
   }
 
-  static of<T>(window: Window, prefix: string, parser: Parser<T>): LocalStorage<T> {
-    return new LocalStorage(window, prefix, parser);
+  static of<T>(
+      window: Window,
+      prefix: string,
+      converter: Converter<T, Serializable>,
+  ): LocalStorage<T> {
+    return new LocalStorage(window, prefix, converter);
   }
 }
