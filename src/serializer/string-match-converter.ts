@@ -1,15 +1,11 @@
-import { Converter, Result, Serializable } from 'nabu/export/main';
+import { Converter, Result } from 'nabu/export/main';
 import { ImmutableSet } from '../immutable/immutable-set';
 
 
-class StringMatchConverter<T extends string> implements Converter<T, Serializable> {
+class StringMatchConverter<T extends string> implements Converter<T, string> {
   constructor(private readonly acceptableValues_: ImmutableSet<T>) { }
 
-  convertBackward(value: Serializable): Result<T> {
-    if (typeof value !== 'string') {
-      return {success: false};
-    }
-
+  convertBackward(value: string): Result<T> {
     const isAcceptable = this.acceptableValues_.has(value as T);
     if (!isAcceptable) {
       return {success: false};
@@ -18,7 +14,7 @@ class StringMatchConverter<T extends string> implements Converter<T, Serializabl
     return {result: value as T, success: true};
   }
 
-  convertForward(input: T): Result<Serializable> {
+  convertForward(input: T): Result<string> {
     const isAcceptable = this.acceptableValues_.has(input);
     if (!isAcceptable) {
       return {success: false};
