@@ -1,4 +1,4 @@
-import { assert, should, setup, test } from 'gs-testing/export/main';
+import { assert, setup, should, test } from 'gs-testing/export/main';
 import { mocks } from 'gs-testing/export/mock';
 import { createSpyInstance, createSpyObject, fake, spy } from 'gs-testing/export/spy';
 import { Annotations, AnnotationsHandler } from '../data/annotations';

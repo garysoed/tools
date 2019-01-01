@@ -1,7 +1,7 @@
+import { ImmutableList } from '../immutable/immutable-list';
 import { ImmutableMap } from '../immutable/immutable-map';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { hash } from '../util/hash';
-import { ImmutableList } from '../immutable/immutable-list';
 
 export const __class = Symbol('class');
 
