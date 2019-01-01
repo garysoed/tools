@@ -20,7 +20,7 @@ test('serializer.IsSerializableConverter', () => {
   });
 
   test('convertBackward', () => {
-    should.only(`convert correctly`, () => {
+    should(`convert correctly`, () => {
       const data = {a: 1, b: 2};
       assert(strict(converter).convertBackward(data)).to.haveProperties({
         data: match.anyObjectThat().haveProperties(data),
@@ -29,7 +29,7 @@ test('serializer.IsSerializableConverter', () => {
   });
 
   test('convertForward', () => {
-    should.only(`convert correctly`, () => {
+    should(`convert correctly`, () => {
       const data = {a: 1, b: 2};
       assert(strict(converter).convertForward(new TestClass(data)) as {}).to.haveProperties(data);
     });
