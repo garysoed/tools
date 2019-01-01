@@ -1,5 +1,5 @@
 import { assert, match, should, test } from 'gs-testing/export/main';
-import { TreeMap } from '../immutable';
+import { TreeMap } from '.';
 
 interface JsonString {
   [key: string]: JsonString;

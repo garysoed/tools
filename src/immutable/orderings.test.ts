@@ -1,7 +1,7 @@
 import { assert, should, test } from 'gs-testing/export/main';
 import { NumberType } from 'gs-types/export';
-import { ImmutableList } from '../immutable/immutable-list';
-import { Orderings } from '../immutable/orderings';
+import { ImmutableList } from './immutable-list';
+import { Orderings } from './orderings';
 import { CompareResult } from '../interfaces/compare-result';
 
 

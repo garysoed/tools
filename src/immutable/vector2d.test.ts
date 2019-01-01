@@ -1,5 +1,5 @@
 import { assert, match, should } from 'gs-testing/export/main';
-import { Vector2d } from '../immutable/vector2d';
+import { Vector2d } from './vector2d';
 
 
 describe('immutable.Vector2d', () => {

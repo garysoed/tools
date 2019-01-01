@@ -1,8 +1,8 @@
 import { assert, should, test } from 'gs-testing/export/main';
 import { StringType, TupleOfType } from 'gs-types/export';
-import { ImmutableMap } from '../immutable/immutable-map';
-import { ImmutableSet } from '../immutable/immutable-set';
-import { Orderings } from '../immutable/orderings';
+import { ImmutableMap } from './immutable-map';
+import { ImmutableSet } from './immutable-set';
+import { Orderings } from './orderings';
 
 
 test('immutable.ImmutableMap', () => {

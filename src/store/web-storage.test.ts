@@ -4,7 +4,7 @@ import { compose, identity, strict } from 'nabu/export/util';
 import { BehaviorSubject } from 'rxjs';
 import { ImmutableSet } from '../immutable/immutable-set';
 import { integerConverter } from '../serializer/integer-converter';
-import { INDEXES_PARSER, WebStorage } from '../store/web-storage';
+import { INDEXES_PARSER, WebStorage } from './web-storage';
 
 function setStorage(storage: Storage, key: string, value: string): void {
   storage.setItem(key, value);

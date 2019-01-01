@@ -1,5 +1,5 @@
 import { assert, should } from 'gs-testing/export/main';
-import { Generators } from '../immutable/generators';
+import { Generators } from './generators';
 
 
 describe('immutable.Generators', () => {

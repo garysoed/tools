@@ -1,5 +1,5 @@
 import { assert, should } from 'gs-testing/export/main';
-import { BaseIdGenerator } from '../random/base-id-generator';
+import { BaseIdGenerator } from './base-id-generator';
 
 /**
  * @test

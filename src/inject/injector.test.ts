@@ -1,8 +1,8 @@
 import { assert, match, should, test } from 'gs-testing/export/main';
 import { mocks } from 'gs-testing/export/mock';
 import { createSpy, createSpyInstance, fake, spy } from 'gs-testing/export/spy';
-import { InjectUtil } from '../inject/inject-util';
-import { Injector } from '../inject/injector';
+import { InjectUtil } from './inject-util';
+import { Injector } from './injector';
 import { InjectMetadata } from './inject-metadata';
 
 

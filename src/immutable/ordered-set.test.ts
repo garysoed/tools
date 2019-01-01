@@ -1,8 +1,8 @@
 import { assert, should } from 'gs-testing/export/main';
 import { NumberType } from 'gs-types/export';
-import { ImmutableSet } from '../immutable/immutable-set';
-import { OrderedSet } from '../immutable/ordered-set';
-import { Orderings } from '../immutable/orderings';
+import { ImmutableSet } from './immutable-set';
+import { OrderedSet } from './ordered-set';
+import { Orderings } from './orderings';
 
 
 describe('immutable.OrderedSet', () => {

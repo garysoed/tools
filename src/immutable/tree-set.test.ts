@@ -1,5 +1,5 @@
 import { assert, match, should, test } from 'gs-testing/export/main';
-import { TreeSet } from '../immutable';
+import { TreeSet } from '.';
 
 interface JsonTree {
   children: JsonTree[];

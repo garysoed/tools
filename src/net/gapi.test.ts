@@ -1,6 +1,6 @@
 import { assert, match, should, test } from 'gs-testing/export/main';
 import { createSpyObject, fake, Spy, SpyObj } from 'gs-testing/export/spy';
-import { Gapi } from '../net';
+import { Gapi } from '.';
 
 interface Auth2Type {
   getAuthInstance(): gapi.auth2.Instance;

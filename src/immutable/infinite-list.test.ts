@@ -1,7 +1,7 @@
 import { assert, match, should, test } from 'gs-testing/export/main';
 import { NumberType } from 'gs-types/export';
-import { ImmutableSet } from '../immutable/immutable-set';
-import { InfiniteList } from '../immutable/infinite-list';
+import { ImmutableSet } from './immutable-set';
+import { InfiniteList } from './infinite-list';
 
 
 test('immutable.InfiniteList', () => {

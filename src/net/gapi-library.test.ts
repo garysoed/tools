@@ -202,7 +202,9 @@ describe('net.GapiLibrary', () => {
       const result = mocks.object('result');
       const timeoutId = 123;
       fake(mockWindow.setTimeout).always().call(fn => {
-        fn();
+        if (fn instanceof Function) {
+          fn();
+        }
 
         return timeoutId;
       });
@@ -225,7 +227,9 @@ describe('net.GapiLibrary', () => {
       const result = new Error('error');
       const timeoutId = 123;
       fake(mockWindow.setTimeout).always().call(fn => {
-        fn();
+        if (fn instanceof Function) {
+          fn();
+        }
 
         return timeoutId;
       });

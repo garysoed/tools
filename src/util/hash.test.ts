@@ -1,6 +1,6 @@
 import { assert, should } from 'gs-testing/export/main';
 import { mocks } from 'gs-testing/export/mock';
-import { GLOBALS, hash, HASHED_OBJECTS, HASHED_VALUES } from '../util/hash';
+import { GLOBALS, hash, HASHED_OBJECTS, HASHED_VALUES } from './hash';
 
 
 describe('util.hash', () => {

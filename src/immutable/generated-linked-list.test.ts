@@ -1,7 +1,7 @@
 import { assert, should } from 'gs-testing/export/main';
 import { NumberType } from 'gs-types/export';
-import { GeneratedLinkedList } from '../immutable/generated-linked-list';
-import { Iterables } from '../immutable/iterables';
+import { GeneratedLinkedList } from './generated-linked-list';
+import { Iterables } from './iterables';
 
 
 describe('immutable.GeneratedLinkedList', () => {

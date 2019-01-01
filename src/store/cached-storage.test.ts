@@ -5,7 +5,7 @@ import { BehaviorSubject, of as observableOf } from 'rxjs';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { TestDispose } from '../dispose/testing/test-dispose';
 import { ImmutableSet } from '../immutable/immutable-set';
-import { CachedStorage } from '../store/cached-storage';
+import { CachedStorage } from './cached-storage';
 import { EditableStorage } from './editable-storage';
 
 

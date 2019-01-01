@@ -1,8 +1,8 @@
 import { assert, match, should, test } from 'gs-testing/export/main';
 import { NumberType, TupleOfType } from 'gs-types/export';
-import { ImmutableSet } from '../immutable/immutable-set';
-import { InfiniteMap } from '../immutable/infinite-map';
-import { Iterables } from '../immutable/iterables';
+import { ImmutableSet } from './immutable-set';
+import { InfiniteMap } from './infinite-map';
+import { Iterables } from './iterables';
 
 
 test('immutable.InfiniteMap', () => {

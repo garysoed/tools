@@ -2,7 +2,7 @@ import { assert, should, test } from 'gs-testing/export/main';
 
 import { SuccessResult } from 'nabu/export/main';
 import { ImmutableList } from '../immutable';
-import { AbsolutePath } from '../path/absolute-path';
+import { AbsolutePath } from './absolute-path';
 import { absolutePathParser } from './absolute-path-parser';
 
 test('path.AbsolutePathParser', () => {

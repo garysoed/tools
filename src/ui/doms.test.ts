@@ -1,6 +1,6 @@
 import { assert, should } from 'gs-testing/export/main';
 import { createSpy, fake } from 'gs-testing/export/spy';
-import { Doms } from '../ui/doms';
+import { Doms } from './doms';
 
 
 describe('ui.Doms', () => {

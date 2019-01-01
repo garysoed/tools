@@ -1,7 +1,7 @@
 import { assert, should } from 'gs-testing/export/main';
 
 import { ImmutableList } from '../immutable/immutable-list';
-import { Cases } from '../string/cases';
+import { Cases } from './cases';
 
 
 describe('string.Cases', () => {

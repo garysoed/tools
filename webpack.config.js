@@ -4,8 +4,7 @@ const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 const smp = new SpeedMeasurePlugin();
 
 module.exports = smp.wrap({
-  entry: glob.sync("./src/**/*_test.ts"),
-  // entry: "./src/async/atomic_test.ts",
+  entry: glob.sync("./src/**/*.test.ts"),
   output: {
     filename: "bundle.js",
     path: __dirname + "/out"

@@ -1,9 +1,9 @@
 import { assert, should } from 'gs-testing/export/main';
 import { mocks } from 'gs-testing/export/mock';
 import { NumberType } from 'gs-types/export';
-import { ImmutableList } from '../immutable/immutable-list';
-import { ImmutableSet } from '../immutable/immutable-set';
-import { Orderings } from '../immutable/orderings';
+import { ImmutableList } from './immutable-list';
+import { ImmutableSet } from './immutable-set';
+import { Orderings } from './orderings';
 
 
 describe('immutable.ImmutableList', () => {

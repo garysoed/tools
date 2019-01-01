@@ -1,5 +1,5 @@
 import { assert, match, should, test } from 'gs-testing/export/main';
-import { Iterables } from '../immutable';
+import { Iterables } from '.';
 
 test('immutable.Iterables', () => {
   test('clone', () => {
