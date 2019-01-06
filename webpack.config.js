@@ -15,10 +15,10 @@ module.exports = smp.wrap({
 
   resolve: {
     alias: {
-      'gs-testing': path.resolve('./node_modules/gs-testing'),
-      'gs-types': path.resolve('./node_modules/gs-types'),
-      'nabu': path.resolve('./node_modules/nabu'),
-      'rxjs': path.resolve('./node_modules/rxjs'),
+      'gs-testing': path.resolve(__dirname, './node_modules/gs-testing'),
+      'gs-types': path.resolve(__dirname, './node_modules/gs-types'),
+      'nabu': path.resolve(__dirname, './node_modules/nabu'),
+      'rxjs': path.resolve(__dirname, './node_modules/rxjs'),
     },
     // Add '.ts' and '.tsx' as resolvable extensions.
     extensions: [".ts", ".tsx", ".js", ".json"]
