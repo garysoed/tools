@@ -9,19 +9,19 @@ type Annotator<A extends any[], D> =
     <TF extends Function>(target: TF, ...args: A) => AnnotationResult<D, TF>;
 
 export class ClassAnnotation<D, A extends any[]> {
-  private readonly dataMap: Map<Function, D> = new Map<Function, D>();
+  private readonly dataMap: Map<Function, D[]> = new Map<Function, D[]>();
 
   constructor(
       private readonly annotator: Annotator<A, D>,
   ) { }
 
-  getAttachedValues(ctorFn: Function): ImmutableList<[Function, D]> {
-    const entries: Array<[Function, D]> = [];
+  getAttachedValues(ctorFn: Function): ImmutableList<[Function, ImmutableList<D>]> {
+    const entries: Array<[Function, ImmutableList<D>]> = [];
     let currentCtor = ctorFn;
     while (currentCtor !== null) {
-      const data = this.dataMap.get(currentCtor);
-      if (data !== undefined) {
-        entries.push([currentCtor, data]);
+      const dataList = this.dataMap.get(currentCtor);
+      if (dataList !== undefined) {
+        entries.push([currentCtor, ImmutableList.of(dataList)]);
       }
 
       currentCtor = Object.getPrototypeOf(currentCtor);
@@ -34,7 +34,9 @@ export class ClassAnnotation<D, A extends any[]> {
     return (...args: A) => {
       return <TF extends Function>(target: TF) => {
         const {data, newTarget} = this.annotator(target, ...args);
-        this.dataMap.set(target, data);
+        const dataList = this.dataMap.get(target) || [];
+        dataList.push(data);
+        this.dataMap.set(target, dataList);
 
         return newTarget;
       };
