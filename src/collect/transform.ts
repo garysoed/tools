@@ -1,4 +1,4 @@
-import { Operator } from './operators/operator';
+type Operator<F, T> = (from: F) => T;
 
 export function transform<F, T>(
     start: F,

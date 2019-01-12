@@ -11,12 +11,12 @@ test('collect.operators.deleteAt', () => {
   });
 
   should(`delete the item correctly`, () => {
-    assert(list.transform(deleteAt<number>(0))()).to.startWith([2, 3, 4]);
-    assert(list.transform(deleteAt<number>(1))()).to.startWith([1, 3, 4]);
+    assert([...list.transform(deleteAt(0, 3))()]).to.haveExactElements([2, 3]);
+    assert([...list.transform(deleteAt(1))()]).to.haveExactElements([1, 3, 4]);
   });
 
   should(`do nothing if the index is out of bound`, () => {
-    assert(list.transform(deleteAt<number>(-1))()).to.startWith([1, 2, 3, 4]);
-    assert(list.transform(deleteAt<number>(4))()).to.startWith([1, 2, 3, 4]);
+    assert([...list.transform(deleteAt(-1))()]).to.haveExactElements([1, 2, 3, 4]);
+    assert([...list.transform(deleteAt(4))()]).to.haveExactElements([1, 2, 3, 4]);
   });
 });

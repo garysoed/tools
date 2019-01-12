@@ -1,6 +1,7 @@
 import { TypedGenerator } from './operators/typed-generator';
-import { Operator } from './operators/operator';
 import { transform } from './transform';
+
+type Operator<F, T> = (from: F) => T;
 
 export abstract class BaseCollection<T> {
   abstract iterableFactory(): TypedGenerator<T>;

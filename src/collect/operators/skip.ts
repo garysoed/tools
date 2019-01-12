@@ -1,17 +1,17 @@
+import { countable } from '../generators';
+import { transform } from '../transform';
+import { map } from './map';
+import { skipWhile } from './skip-while';
 import { TypedGenerator } from './typed-generator';
-import { Operator } from './operator';
+import { zip } from './zip';
 
-export function skip<T>(count: number): Operator<TypedGenerator<T>, TypedGenerator<T>> {
-  return (from: TypedGenerator<T>) => {
-    return function *(): IterableIterator<T> {
-      let i = 0;
-      for (const value of from()) {
-        if (i >= count) {
-          yield value;
-        }
-
-        i++;
-      }
-    };
+export function skip(count: number): <T>(from: TypedGenerator<T>) => TypedGenerator<T> {
+  return <T>(from: TypedGenerator<T>) => {
+    return transform(
+        from,
+        zip(countable()),
+        skipWhile(([_, index]) => index < count),
+        map(([value]) => value),
+    );
   };
 }

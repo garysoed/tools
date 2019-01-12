@@ -6,6 +6,6 @@ import { map } from './map';
 test('collect.operators.map', () => {
   should(`map the values correctly`, () => {
     const list = new InfiniteList(generatorFrom([1, 2, 3]));
-    assert(list.transform(map<number, string>(i => `${i}`))()).to.startWith(['1', '2', '3']);
+    assert([...list.transform(map(i => `${i}`))()]).to.haveExactElements(['1', '2', '3']);
   });
 });

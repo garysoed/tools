@@ -1,17 +1,26 @@
+import { countable } from '../generators';
+import { transform } from '../transform';
+import { map } from './map';
 import { TypedGenerator } from './typed-generator';
-import { Operator } from './operator';
+import { zip } from './zip';
 
-export function setAt<T>(
-    item: T,
-    index: number,
-): Operator<TypedGenerator<T>, TypedGenerator<T>> {
+export function setAt<T>(...setSpecs: Array<[number, T]>):
+    (from: TypedGenerator<T>) => TypedGenerator<T> {
   return (from: TypedGenerator<T>) => {
-    return function *(): IterableIterator<T> {
-      let i = 0;
-      for (const value of from()) {
-        yield i === index ? item : value;
-        i++;
-      }
-    };
+    const setSpecMap = new Map(setSpecs);
+
+    return transform(
+        from,
+        zip(countable()),
+        map(([value, index]) => {
+          if (index === undefined) {
+            return value;
+          }
+
+          const setValue = setSpecMap.get(index);
+
+          return setValue === undefined ? value : setValue;
+        }),
+    );
   };
 }

@@ -1,18 +1,19 @@
+import { countable } from '../generators';
+import { transform } from '../transform';
+import { filter } from './filter';
+import { map } from './map';
 import { TypedGenerator } from './typed-generator';
-import { Operator } from './operator';
-import { skip } from './skip';
-import { take } from './take';
+import { zip } from './zip';
 
-export function deleteAt<T>(
-    index: number,
-): Operator<TypedGenerator<T>, TypedGenerator<T>> {
-  return (from: TypedGenerator<T>) => {
-    const before = take<T>(index)(from);
-    const after = skip<T>(index + 1)(from);
+export function deleteAt(...indexes: number[]): <T>(from: TypedGenerator<T>) => TypedGenerator<T> {
+  return <T>(from: TypedGenerator<T>) => {
+    const toDelete = new Set(indexes);
 
-    return function *(): IterableIterator<T> {
-      yield* before();
-      yield* after();
-    };
+    return transform(
+        from,
+        zip(countable()),
+        filter(([_, index]) => index === undefined || !toDelete.has(index)),
+        map(([value]) => value),
+    );
   };
 }

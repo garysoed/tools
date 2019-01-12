@@ -1,20 +1,28 @@
+import { countable } from '../generators';
+import { transform } from '../transform';
+import { map } from './map';
+import { skipWhile } from './skip-while';
+import { takeWhile } from './take-while';
 import { TypedGenerator } from './typed-generator';
-import { Operator } from './operator';
-import { skip } from './skip';
-import { take } from './take';
+import { zip } from './zip';
 
-export function insertAt<T>(
-    item: T,
-    index: number,
-): Operator<TypedGenerator<T>, TypedGenerator<T>> {
+export function insertAt<T>(...insertions: Array<[T, number]>):
+    (from: TypedGenerator<T>) => TypedGenerator<T> {
   return (from: TypedGenerator<T>) => {
-    const before = take<T>(index)(from);
-    const after = skip<T>(index)(from);
+    const zipped = zip(countable())(from);
 
     return function *(): IterableIterator<T> {
-      yield* before();
-      yield item;
-      yield* after();
+      let rest = zipped;
+      for (const [item, index] of insertions) {
+        const before = transform(
+            takeWhile(([_, i]) => i < index)(rest),
+            map(([value]) => value),
+        );
+        rest = skipWhile(([_, i]) => i < index)(rest);
+        yield* before();
+        yield item;
+      }
+      yield* transform(rest, map(([value]) => value))();
     };
   };
 }
