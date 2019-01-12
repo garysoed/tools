@@ -1,16 +1,16 @@
-import { IterableFactory } from './iterable-factory';
+import { TypedGenerator } from './typed-generator';
 import { Operator } from './operator';
 
 export function filter<T>(
     filterFn: (value: T) => boolean,
-): Operator<IterableFactory<T>, IterableFactory<T>>;
+): Operator<TypedGenerator<T>, TypedGenerator<T>>;
 export function filter<F, T>(
     filterFn: (value: F) => value is F,
-): Operator<IterableFactory<F>, IterableFactory<T>>;
+): Operator<TypedGenerator<F>, TypedGenerator<T>>;
 export function filter<T>(
     filterFn: (value: T) => boolean,
-): Operator<IterableFactory<T>, IterableFactory<T>> {
-  return (from: IterableFactory<T>) => {
+): Operator<TypedGenerator<T>, TypedGenerator<T>> {
+  return (from: TypedGenerator<T>) => {
     return function *(): IterableIterator<T> {
       for (const value of from()) {
         if (filterFn(value)) {

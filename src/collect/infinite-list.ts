@@ -1,5 +1,5 @@
 import { BaseCollection } from './base-collection';
-import { IterableFactory } from './operators/iterable-factory';
+import { TypedGenerator } from './operators/typed-generator';
 
 export class InfiniteList<T> extends BaseCollection<T> {
   /**
@@ -11,7 +11,7 @@ export class InfiniteList<T> extends BaseCollection<T> {
     super();
   }
 
-  iterableFactory(): IterableFactory<T> {
+  iterableFactory(): TypedGenerator<T> {
     return this.generator;
   }
 }
