@@ -1,7 +1,8 @@
 import { ImmutableList } from '../collect/immutable-list';
 import { filter } from '../collect/operators/filter';
-import { getAt } from '../collect/operators/get-at';
+import { head } from '../collect/operators/head';
 import { size } from '../collect/operators/size';
+import { skip } from '../collect/operators/skip';
 import { ImmutableMap } from '../immutable/immutable-map';
 
 
@@ -36,12 +37,12 @@ export function getMatches(path: string, matcher: string): ImmutableMap<string, 
 
   const matches: {[key: string]: string} = {};
   for (let i = 0; i < matcherParts.$(size()); i++) {
-    const matchPart = matcherParts.$(getAt(i));
+    const matchPart = matcherParts.$(skip(i), head());
     if (matchPart === undefined) {
       return null;
     }
 
-    const hashPart = hashParts.$(getAt(i));
+    const hashPart = hashParts.$(skip(i), head());
     if (hashPart === undefined) {
       return null;
     }

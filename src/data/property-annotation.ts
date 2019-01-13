@@ -1,4 +1,4 @@
-import { ImmutableList } from '../immutable/immutable-list';
+import { ImmutableList } from '../collect/immutable-list';
 import { ImmutableMap } from '../immutable/immutable-map';
 
 type Annotator<A extends any[], D> = (target: Object, key: string|symbol, ...args: A) => D;

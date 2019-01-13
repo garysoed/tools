@@ -1,5 +1,5 @@
 import { Converter, Result } from 'nabu/export/main';
-import { ImmutableList } from '../immutable';
+import { ImmutableList } from '../collect/immutable-list';
 import { AbsolutePath } from '../path/absolute-path';
 import { Path } from '../path/path';
 

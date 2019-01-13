@@ -1,4 +1,5 @@
-import { ImmutableList, Iterables } from '../immutable';
+import { ImmutableList } from '../collect/immutable-list';
+import { Iterables } from '../immutable';
 
 /**
  * Methods to manipulate DOM objects.

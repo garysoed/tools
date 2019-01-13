@@ -1,6 +1,6 @@
 import { assert, should, test } from 'gs-testing/export/main';
 import { strict } from 'nabu/export/util';
-import { ImmutableList } from '../immutable';
+import { ImmutableList } from '../collect/immutable-list';
 import { RelativePath } from './relative-path';
 import { relativePathParser } from './relative-path-parser';
 

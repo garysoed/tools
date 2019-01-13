@@ -1,6 +1,5 @@
 import { cache } from '../data/cache';
 import { Errors } from '../error';
-import { ImmutableList } from '../immutable';
 import { BaseColor } from './base-color';
 
 export class HslColor extends BaseColor {
@@ -66,7 +65,7 @@ export class HslColor extends BaseColor {
     }
 
     const min = this.getLightness() - chroma / 2;
-    const components = ImmutableList.of([r1, g1, b1])
+    const components = [r1, g1, b1]
         .map((value: number) => {
           return Math.round((value + min) * 255);
         });

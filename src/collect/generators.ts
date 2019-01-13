@@ -26,6 +26,8 @@ export function copyMetadata(base: TypedGenerator<any>, source: TypedGenerator<a
     return upgradeToFinite(base);
   } else if (isKeyed(source)) {
     return upgradeToKeyed(base, entry => source.getKey(entry));
+  } else {
+    return base;
   }
 }
 

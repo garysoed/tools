@@ -1,6 +1,6 @@
 import { assert, should } from 'gs-testing/export/main';
 
-import { ImmutableList } from '../immutable/immutable-list';
+import { ImmutableList } from '../collect/immutable-list';
 import { Cases } from './cases';
 
 
@@ -35,23 +35,23 @@ describe('string.Cases', () => {
 
   describe('of', () => {
     should('parse camelCase correctly', () => {
-      assert(Cases.of('camelCase')['words_']).to.haveElements(['camel', 'case']);
+      assert(Cases.of('camelCase')['words']).to.haveElements(['camel', 'case']);
     });
 
     should('parse PascalCase correctly', () => {
-      assert(Cases.of('PascalCase')['words_']).to.haveElements(['pascal', 'case']);
+      assert(Cases.of('PascalCase')['words']).to.haveElements(['pascal', 'case']);
     });
 
     should('parse lower-case correctly', () => {
-      assert(Cases.of('lower-case')['words_']).to.haveElements(['lower', 'case']);
+      assert(Cases.of('lower-case')['words']).to.haveElements(['lower', 'case']);
     });
 
     should('parse UPPER_CASE correctly', () => {
-      assert(Cases.of('UPPER_CASE')['words_']).to.haveElements(['upper', 'case']);
+      assert(Cases.of('UPPER_CASE')['words']).to.haveElements(['upper', 'case']);
     });
 
     should('parse unknown format correctly', () => {
-      assert(Cases.of('Unknown format')['words_']).to.haveElements(['unknown', 'format']);
+      assert(Cases.of('Unknown format')['words']).to.haveElements(['unknown', 'format']);
     });
   });
 });

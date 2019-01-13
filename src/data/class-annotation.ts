@@ -1,4 +1,4 @@
-import { ImmutableList } from '../immutable/immutable-list';
+import { ImmutableList } from '../collect/immutable-list';
 
 interface AnnotationResult<D, TF extends Function> {
   data: D;

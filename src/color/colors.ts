@@ -1,8 +1,6 @@
-import { ArrayOfType, NonNullType } from 'gs-types/export';
 import { human } from 'nabu/export/grammar';
 import { Result } from 'nabu/export/main';
-import { compose, strict } from 'nabu/export/util';
-import { ImmutableList } from '../immutable';
+import { compose } from 'nabu/export/util';
 import { floatConverter } from '../serializer/float-converter';
 import { integerConverter } from '../serializer/integer-converter';
 import { percentConverter } from '../serializer/percent-converter';
@@ -31,8 +29,9 @@ function fromRgb(cssColor: string): Color|null {
   const matchString = matches[1];
   let results: Array<Result<number>>;
   if (matchString.indexOf('/') < 0) {
-    const list = ImmutableList
-        .of(matchString.replace(/ /g, '').split(','))
+    const list = matchString
+        .replace(/ /g, '')
+        .split(',')
         .map((match: string, index: number) => {
           return index <= 2 ?
               INTEGER_PARSER.convertBackward(match) :
@@ -41,8 +40,10 @@ function fromRgb(cssColor: string): Color|null {
     results = [...list];
   } else {
     const [rgbString] = matchString.split('/');
-    const list = ImmutableList
-        .of(rgbString.replace(/ +/g, ' ').trim().split(' '))
+    const list = rgbString
+        .replace(/ +/g, ' ')
+        .trim()
+        .split(' ')
         .map((match: string) => {
           return INTEGER_PARSER.convertBackward(match.trim());
         });
@@ -70,8 +71,10 @@ function fromHsl(cssColor: string): Color|null {
   const matchString = matches[1];
   let results: Array<Result<number>>;
   if (matchString.indexOf('/') < 0) {
-    const list = ImmutableList
-        .of(matchString.replace(/ /g, '').split(',').slice(0, 3))
+    const list = matchString
+        .replace(/ /g, '')
+        .split(',')
+        .slice(0, 3)
         .map((match: string, index: number) => {
           if (index === 0) {
             return INTEGER_PARSER.convertBackward(match);
@@ -82,8 +85,10 @@ function fromHsl(cssColor: string): Color|null {
     results = [...list];
   } else {
     const [hslString] = matchString.split('/');
-    const list = ImmutableList
-        .of(hslString.replace(/ +/g, ' ').trim().split(' '))
+    const list = hslString
+        .replace(/ +/g, ' ')
+        .trim()
+        .split(' ')
         .map((match: string, index: number) => {
           if (index === 0) {
             return INTEGER_PARSER.convertBackward(match);
@@ -115,19 +120,18 @@ function fromHex(cssColor: string): Color|null {
   switch (matches.length) {
     case 3:
     case 4:
-      components = [...ImmutableList
-          .of(matches.split(''))
+      components = matches
+          .split('')
           .map((match: string) => {
             return Number.parseInt(`0x${match}${match}`, 16);
-          })];
+          });
       break;
     case 6:
     case 8:
-      components = [...ImmutableList
-          .of(matches.match(/../g) || [])
+      components = (matches.match(/../g) || [])
           .map((match: string) => {
             return Number.parseInt(`0x${match}`, 16);
-          })];
+          });
       break;
     default:
       return null;

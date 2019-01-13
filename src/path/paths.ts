@@ -1,5 +1,14 @@
+import { countable } from '../collect/generators';
+import { ImmutableList } from '../collect/immutable-list';
+import { filter } from '../collect/operators/filter';
+import { head } from '../collect/operators/head';
+import { push } from '../collect/operators/push';
+import { size } from '../collect/operators/size';
+import { skip } from '../collect/operators/skip';
+import { tail } from '../collect/operators/tail';
+import { take } from '../collect/operators/take';
+import { zip } from '../collect/operators/zip';
 import { Errors } from '../error';
-import { ImmutableList } from '../immutable';
 import { AbsolutePath } from '../path/absolute-path';
 import { Path } from '../path/path';
 import { RelativePath } from '../path/relative-path';
@@ -20,7 +29,10 @@ export class Paths {
   static getDirPath(path: AbsolutePath): AbsolutePath;
   static getDirPath(path: RelativePath): RelativePath;
   static getDirPath(path: AbsolutePath | RelativePath): Path {
-    const parts = path.getParts().slice(0, -1);
+    const parts = path.getParts().$(
+        take(path.getParts().$(size()) - 1),
+        ImmutableList.create<string>(),
+    );
     if (path instanceof AbsolutePath) {
       return new AbsolutePath(parts);
     } else if (path instanceof RelativePath) {
@@ -30,7 +42,7 @@ export class Paths {
     }
   }
 
-  static getFilenameParts(filename: string): {extension: string, name: string} {
+  static getFilenameParts(filename: string): {extension: string; name: string} {
     const parts = filename.split('.');
     const extensionIndex = Math.max(1, parts.length - 1);
     const extension = parts[extensionIndex] || '';
@@ -44,28 +56,34 @@ export class Paths {
   static getItemName(path: Path): string | null {
     const parts = path.getParts();
 
-    return parts.getAt(-1) || null;
+    return parts.$(tail()) || null;
   }
 
   static getRelativePath(srcPath: AbsolutePath, destPath: AbsolutePath): RelativePath {
     let commonCount = 0;
     const thisParts = srcPath.getParts();
     const thatParts = destPath.getParts();
-    while (commonCount < Math.min(thisParts.size(), thatParts.size()) - 1) {
-      if (thisParts.getAt(commonCount) !== thatParts.getAt(commonCount)) {
+    while (commonCount < Math.min(thisParts.$(size()), thatParts.$(size())) - 1) {
+      if (thisParts.$(skip(commonCount), head()) !== thatParts.$(skip(commonCount), head())) {
         break;
       }
 
       commonCount++;
     }
 
-    const upCount = thisParts.size() - commonCount;
+    const upCount = thisParts.$(size()) - commonCount;
     const parts: string[] = [];
     for (let i = 0; i < upCount; i++) {
       parts.push('..');
     }
 
-    return new RelativePath(ImmutableList.of(parts).addAll(thatParts.slice(upCount)));
+    return new RelativePath(
+        ImmutableList.of(parts)
+            .$(
+                push(...thatParts.$(take<string>(upCount))()),
+                ImmutableList.create(),
+            ),
+    );
   }
 
   /**
@@ -76,7 +94,7 @@ export class Paths {
   static getSubPathsToRoot(path: AbsolutePath): ImmutableList<AbsolutePath> {
     const subpaths: AbsolutePath[] = [];
     let currentPath = path;
-    while (currentPath && currentPath.getParts().size() > 0) {
+    while (currentPath && currentPath.getParts().$(size()) > 0) {
       subpaths.push(currentPath);
       currentPath = Paths.getDirPath(currentPath);
     }
@@ -107,7 +125,7 @@ export class Paths {
   static normalize(path: RelativePath): RelativePath;
   static normalize(path: AbsolutePath | RelativePath): Path {
     // Removes all instances of '' parts.
-    const noEmptyParts = [...path.getParts().filter(part => !!part)];
+    const noEmptyParts = [...path.getParts().$(filter(part => !!part))()];
 
     // Removes all instances of '.' part except the first one.
     const noCurrentParts: string[] = [];
@@ -119,8 +137,13 @@ export class Paths {
     }
 
     // Copy all trailing '..' part.
-    const nonDoubleDotEntry = ImmutableList.of(noCurrentParts).findEntry(part => part !== '..');
-    const nonDoubleIndex = nonDoubleDotEntry ? nonDoubleDotEntry[0] + 1 : 0;
+    const nonDoubleDotEntry = ImmutableList.of(noCurrentParts)
+        .$(
+            zip(countable()),
+            filter(([part]) => part !== '..'),
+            head(),
+        );
+    const nonDoubleIndex = nonDoubleDotEntry ? nonDoubleDotEntry[1] + 1 : 0;
     const normalizedParts: string[] = [];
     for (let i = 0; i < nonDoubleIndex; i++) {
       normalizedParts.push(noCurrentParts[i]);

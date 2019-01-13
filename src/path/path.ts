@@ -1,4 +1,4 @@
-import { ImmutableList } from '../immutable';
+import { ImmutableList } from '../collect/immutable-list';
 
 export abstract class Path {
   static readonly SEPARATOR: string = '/';
