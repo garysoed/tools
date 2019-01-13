@@ -11,6 +11,6 @@ test('collect.operators.skipWhile', () => {
   });
 
   should(`skip the items correctly`, () => {
-    assert([...list.transform(skipWhile(v => (v % 2) === 0))()]).to.haveExactElements([3, 4, 5]);
+    assert([...list.$(skipWhile(v => (v % 2) === 0))()]).to.haveExactElements([3, 4, 5]);
   });
 });

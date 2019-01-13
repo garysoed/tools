@@ -1,38 +1,42 @@
-import { TypedGenerator } from './operators/typed-generator';
 import { transform } from './transform';
+import { TypedGenerator } from './typed-generator';
 
 type Operator<F, T> = (from: F) => T;
 
-export abstract class BaseCollection<T, I extends TypedGenerator<T>> {
-  abstract iterableFactory(): I;
+export abstract class BaseCollection<T, I extends TypedGenerator<T>> implements Iterable<T> {
+  constructor(readonly generator: I) { }
 
-  transform<D>(
+  [Symbol.iterator](): Iterator<T> {
+    return this.generator();
+  }
+
+  $<D>(
       t0: Operator<I, D>,
   ): D;
-  transform<S0, D>(
+  $<S0, D>(
       t0: Operator<I, S0>,
       t1: Operator<S0, D>,
   ): D;
-  transform<S0, S1, D>(
+  $<S0, S1, D>(
       t0: Operator<I, S0>,
       t1: Operator<S0, S1>,
       t2: Operator<S1, D>,
   ): D;
-  transform<S0, S1, S2, D>(
+  $<S0, S1, S2, D>(
       t0: Operator<I, S0>,
       t1: Operator<S0, S1>,
       t2: Operator<S1, S2>,
       t3: Operator<S2, D>,
   ): D;
-  transform<S0, S1, S2, S3, D>(
+  $<S0, S1, S2, S3, D>(
       t0: Operator<I, S0>,
       t1: Operator<S0, S1>,
       t2: Operator<S1, S2>,
       t3: Operator<S2, S3>,
       t4: Operator<S2, D>,
   ): D;
-  transform(
+  $(
       ...transformers: Array<Operator<any, any>>): any {
-    return transform(this.iterableFactory(), ...transformers);
+    return transform(this.generator, ...transformers);
   }
 }

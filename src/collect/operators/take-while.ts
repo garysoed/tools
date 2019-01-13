@@ -1,4 +1,4 @@
-import { TypedGenerator } from './typed-generator';
+import { TypedGenerator } from '../typed-generator';
 
 type Operator<F, T> = (from: TypedGenerator<F>) => TypedGenerator<T>;
 export function takeWhile<T>(checkFn: (value: T) => boolean): Operator<T, T>;

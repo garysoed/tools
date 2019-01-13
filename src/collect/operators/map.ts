@@ -1,4 +1,4 @@
-import { TypedGenerator } from './typed-generator';
+import { TypedGenerator } from '../typed-generator';
 
 export function map<F, T>(
     mapFn: (from: F) => T,

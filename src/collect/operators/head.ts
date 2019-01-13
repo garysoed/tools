@@ -1,4 +1,4 @@
-import { TypedGenerator } from './typed-generator';
+import { TypedGenerator } from '../typed-generator';
 
 export function head(): <T>(from: TypedGenerator<T>) => T|undefined {
   return <T>(from: TypedGenerator<T>) => {

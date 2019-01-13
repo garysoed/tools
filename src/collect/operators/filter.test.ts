@@ -11,6 +11,6 @@ test('collect.operators.filter', () => {
   });
 
   should('filter out items that do not match the predicate', () => {
-    assert([...list.transform(filter(i => i > 2))()]).to.haveExactElements([3, 4]);
+    assert([...list.$(filter(i => i > 2))()]).to.haveExactElements([3, 4]);
   });
 });

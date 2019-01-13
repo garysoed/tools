@@ -1,8 +1,8 @@
 import { countable } from '../generators';
 import { transform } from '../transform';
+import { TypedGenerator } from '../typed-generator';
 import { filter } from './filter';
 import { map } from './map';
-import { TypedGenerator } from './typed-generator';
 import { zip } from './zip';
 
 export function deleteAt(...indexes: number[]): <T>(from: TypedGenerator<T>) => TypedGenerator<T> {

@@ -1,4 +1,7 @@
-import { ImmutableList } from '../immutable/immutable-list';
+import { ImmutableList } from '../collect/immutable-list';
+import { filter } from '../collect/operators/filter';
+import { getAt } from '../collect/operators/get-at';
+import { size } from '../collect/operators/size';
 import { ImmutableMap } from '../immutable/immutable-map';
 
 
@@ -27,18 +30,18 @@ export function getMatches(path: string, matcher: string): ImmutableMap<string, 
   const hashParts = getParts_(path);
   const matcherParts = getParts_(trimmedMatcher);
 
-  if (exactMatch && matcherParts.size() !== hashParts.size()) {
+  if (exactMatch && matcherParts.$(size()) !== hashParts.$(size())) {
     return null;
   }
 
   const matches: {[key: string]: string} = {};
-  for (let i = 0; i < matcherParts.size(); i++) {
-    const matchPart = matcherParts.getAt(i);
+  for (let i = 0; i < matcherParts.$(size()); i++) {
+    const matchPart = matcherParts.$(getAt(i));
     if (matchPart === undefined) {
       return null;
     }
 
-    const hashPart = hashParts.getAt(i);
+    const hashPart = hashParts.$(getAt(i));
     if (hashPart === undefined) {
       return null;
     }
@@ -59,10 +62,12 @@ export function getMatches(path: string, matcher: string): ImmutableMap<string, 
  * @return Parts of the given path.
  */
 export function getParts_(path: string): ImmutableList<string> {
-  return ImmutableList.of(normalizePath(path).split('/'))
-      .filter((part: string) => {
-        return part !== '.';
-      });
+  return ImmutableList
+      .of(normalizePath(path).split('/'))
+      .$(
+          filter(part => part !== '.'),
+          ImmutableList.create(),
+      );
 }
 
 /**

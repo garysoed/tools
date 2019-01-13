@@ -15,7 +15,7 @@ test('collect.operators.deleteKey', () => {
   });
 
   should(`delete the keys correctly`, () => {
-    assert([...map.transform(deleteKey('a', 'b', 'z'))()]).to.haveExactElements([
+    assert([...map.$(deleteKey('a', 'b', 'z'))()]).to.haveExactElements([
       match.anyTupleThat<[string, number]>().haveExactElements(['c', 3]),
     ]);
   });

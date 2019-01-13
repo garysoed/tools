@@ -15,7 +15,7 @@ test('collect.operators.getKey', () => {
   });
 
   should(`get the entries correctly`, () => {
-    assert([...map.transform(getKey('a', 'b', 'z'))()]).to.haveExactElements([
+    assert([...map.$(getKey('a', 'b', 'z'))()]).to.haveExactElements([
       match.anyTupleThat<[string, number]>().haveExactElements(['a', 1]),
       match.anyTupleThat<[string, number]>().haveExactElements(['b', 2]),
     ]);

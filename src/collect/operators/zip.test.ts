@@ -14,8 +14,8 @@ test('collect.operators.zip', () => {
     const iterableA = new InfiniteList(generatorFrom(['a', 'c']));
     const iterableB = new InfiniteList(generatorFrom(['1']));
 
-    assert([...list.transform(
-        zip(iterableA.iterableFactory(), iterableB.iterableFactory()),
+    assert([...list.$(
+        zip(iterableA.generator, iterableB.generator),
     )()]).to.haveExactElements([
       match.anyTupleThat<[number, string, string]>().haveExactElements([1, 'a', '1']),
     ]);
@@ -25,8 +25,8 @@ test('collect.operators.zip', () => {
     const iterableA = new InfiniteList(generatorFrom(['a', 'b', 'c', 'd']));
     const iterableB = new InfiniteList(generatorFrom(['1', '2', '3', '4', '5']));
 
-    assert([...list.transform(
-        zip(iterableA.iterableFactory(), iterableB.iterableFactory()),
+    assert([...list.$(
+        zip(iterableA.generator, iterableB.generator),
     )()]).to.haveExactElements([
       match.anyTupleThat<[number, string, string]>().haveExactElements([1, 'a', '1']),
       match.anyTupleThat<[number, string, string]>().haveExactElements([2, 'b', '2']),

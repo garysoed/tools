@@ -1,5 +1,6 @@
+import { copyMetadata } from '../generators';
+import { KeyedGenerator } from '../keyed-generator';
 import { transform } from '../transform';
-import { KeyedGenerator } from './keyed-generator';
 import { map } from './map';
 
 export function setKey<K, T>(...setSpecs: Array<[K, T]>):
@@ -7,7 +8,7 @@ export function setKey<K, T>(...setSpecs: Array<[K, T]>):
   return (from: KeyedGenerator<K, T>) => {
     const setSpecMap = new Map(setSpecs);
 
-    return from.set(
+    return copyMetadata(
         transform(
             from,
             map(entry => {
@@ -16,6 +17,7 @@ export function setKey<K, T>(...setSpecs: Array<[K, T]>):
               return newEntry === undefined ? entry : newEntry;
             }),
         ),
+        from,
     );
   };
 }

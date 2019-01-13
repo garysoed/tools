@@ -15,6 +15,6 @@ test('collect.operators.keys', () => {
   });
 
   should(`return the keys correctly`, () => {
-    assert([...map.transform(keys())()]).to.haveExactElements(['a', 'b', 'c']);
+    assert([...map.$(keys())()]).to.haveExactElements(['a', 'b', 'c']);
   });
 });

@@ -1,5 +1,4 @@
 import { cache } from '../data/cache';
-import { ImmutableList } from '../immutable';
 import { Color } from './color';
 
 export abstract class BaseColor implements Color {
@@ -15,8 +14,11 @@ export abstract class BaseColor implements Color {
 
   @cache()
   getLuminance(): number {
-    const components = ImmutableList
-        .of([this.getRed(), this.getGreen(), this.getBlue()])
+    const [computedRed, computedGreen, computedBlue] = [
+          this.getRed(),
+          this.getGreen(),
+          this.getBlue(),
+        ]
         .map((value: number) => {
           const normalized = value / 255;
 
@@ -24,7 +26,6 @@ export abstract class BaseColor implements Color {
               ? normalized / 12.92
               : Math.pow((normalized + 0.055) / 1.055, 2.4);
         });
-    const [computedRed, computedGreen, computedBlue] = [...components];
 
     return computedRed * 0.2126 + computedGreen * 0.7152 + computedBlue * 0.0722;
   }

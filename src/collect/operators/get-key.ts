@@ -1,7 +1,7 @@
+import { KeyedGenerator } from '../keyed-generator';
 import { transform } from '../transform';
+import { TypedGenerator } from '../typed-generator';
 import { filter } from './filter';
-import { KeyedGenerator } from './keyed-generator';
-import { TypedGenerator } from './typed-generator';
 
 export function getKey<K>(...keys: K[]): <T>(from: KeyedGenerator<K, T>) => TypedGenerator<T> {
   return <T>(from: KeyedGenerator<K, T>) => {

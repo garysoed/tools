@@ -1,4 +1,4 @@
-import { TypedGenerator } from './typed-generator';
+import { TypedGenerator } from '../typed-generator';
 
 export function zip<B0>(
     g0: TypedGenerator<B0>,

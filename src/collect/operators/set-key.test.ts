@@ -15,7 +15,7 @@ test('collect.operators.setKey', () => {
   });
 
   should(`set the entries correctly`, () => {
-    const newGenerator = map.transform(
+    const newGenerator = map.$(
         setKey(
           ['a', ['2', 2]],
           ['b', ['4', 4]],

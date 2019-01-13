@@ -1,8 +1,6 @@
 import { NumberType, StringType, Type } from 'gs-types/export';
 import { CompareResult } from '../interfaces/compare-result';
 import { Ordering } from '../interfaces/ordering';
-import { floatConverter } from '../serializer/float-converter';
-import { ImmutableList } from './immutable-list';
 
 const NATURAL_SPLIT_REGEXP = /([0-9]+)/;
 
@@ -56,10 +54,10 @@ export const Orderings = {
       const item2Chunks = item2.split(NATURAL_SPLIT_REGEXP);
       const maxLength = Math.min(item1Chunks.length, item2Chunks.length);
       const ordering = Orderings
-          .compound<any>(ImmutableList.of([
-            Orderings.type(ImmutableList.of([NumberType, StringType])),
+          .compound<any>([
+            Orderings.type([NumberType, StringType]),
             Orderings.normal(),
-          ]));
+          ]);
 
       function normalize(str: string): number|string {
         const parseResult = parseFloat(str);

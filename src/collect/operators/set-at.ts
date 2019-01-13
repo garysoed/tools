@@ -1,7 +1,7 @@
 import { countable } from '../generators';
 import { transform } from '../transform';
+import { TypedGenerator } from '../typed-generator';
 import { map } from './map';
-import { TypedGenerator } from './typed-generator';
 import { zip } from './zip';
 
 export function setAt<T>(...setSpecs: Array<[number, T]>):

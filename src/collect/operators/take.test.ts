@@ -11,12 +11,12 @@ test('collect.operators.take', () => {
   });
 
   should(`take the items correctly`, () => {
-    assert([...list.transform(take(2))()]).to.haveExactElements([1, 2]);
-    assert([...list.transform(take(0))()]).to.beEmpty();
+    assert([...list.$(take(2))()]).to.haveExactElements([1, 2]);
+    assert([...list.$(take(0))()]).to.beEmpty();
   });
 
   should(`handle out of bound counts correctly`, () => {
-    assert([...list.transform(take(-2))()]).to.beEmpty();
-    assert([...list.transform(take(10))()]).to.haveExactElements([1, 2, 3, 4]);
+    assert([...list.$(take(-2))()]).to.beEmpty();
+    assert([...list.$(take(10))()]).to.haveExactElements([1, 2, 3, 4]);
   });
 });

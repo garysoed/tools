@@ -1,9 +1,9 @@
 import { countable } from '../generators';
 import { transform } from '../transform';
+import { TypedGenerator } from '../typed-generator';
 import { map } from './map';
 import { skipWhile } from './skip-while';
 import { takeWhile } from './take-while';
-import { TypedGenerator } from './typed-generator';
 import { zip } from './zip';
 
 export function insertAt<T>(...insertions: Array<[T, number]>):

@@ -11,14 +11,14 @@ test('collect.operators.insertAt', () => {
   });
 
   should(`insert the new value correctly`, () => {
-    assert([...list.transform(insertAt([123, 0], [234, 2]))()]).to
+    assert([...list.$(insertAt([123, 0], [234, 2]))()]).to
         .haveExactElements([123, 1, 2, 234, 3]);
-    assert([...list.transform(insertAt([123, 1]))()]).to.haveExactElements([1, 123, 2, 3]);
-    assert([...list.transform(insertAt([123, 3]))()]).to.haveExactElements([1, 2, 3, 123]);
+    assert([...list.$(insertAt([123, 1]))()]).to.haveExactElements([1, 123, 2, 3]);
+    assert([...list.$(insertAt([123, 3]))()]).to.haveExactElements([1, 2, 3, 123]);
   });
 
   should(`handle out of bound indexes correctly`, () => {
-    assert([...list.transform(insertAt([123, -1]))()]).to.haveExactElements([123, 1, 2, 3]);
-    assert([...list.transform(insertAt([123, 300]))()]).to.haveExactElements([1, 2, 3, 123]);
+    assert([...list.$(insertAt([123, -1]))()]).to.haveExactElements([123, 1, 2, 3]);
+    assert([...list.$(insertAt([123, 300]))()]).to.haveExactElements([1, 2, 3, 123]);
   });
 });

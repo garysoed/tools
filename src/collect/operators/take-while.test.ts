@@ -12,6 +12,6 @@ test('collect.operators.takeWhile', () => {
   });
 
   should(`skip the items correctly`, () => {
-    assert([...list.transform(takeWhile(v => (v % 2) === 0))()]).to.haveExactElements([0, 2]);
+    assert([...list.$(takeWhile(v => (v % 2) === 0))()]).to.haveExactElements([0, 2]);
   });
 });
