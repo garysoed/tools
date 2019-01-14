@@ -2,7 +2,6 @@ export { Generators } from './generators';
 export { ImmutableMap } from './immutable-map';
 export { ImmutableSet } from './immutable-set';
 export { Iterables } from './iterables';
-export { OrderedMap } from './ordered-map';
 export { Orderings } from './orderings';
 export { TreeMap } from './tree-map';
 export { TreeSet } from './tree-set';

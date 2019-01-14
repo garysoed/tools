@@ -1,5 +1,5 @@
 import { transform } from './transform';
-import { TypedGenerator } from './typed-generator';
+import { TypedGenerator } from './types/generator';
 
 type Operator<F, T> = (from: F) => T;
 

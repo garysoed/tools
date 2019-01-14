@@ -1,10 +1,11 @@
 import { copyMetadata } from '../generators';
-import { IsFinite } from '../is-finite';
-import { TypedGenerator } from '../typed-generator';
+import { FiniteGenerator, FiniteKeyedGenerator } from '../types/generator';
+import { TypedOperator } from '../types/operator';
 
-export function push<T>(...items: T[]):
-    (from: TypedGenerator<T> & IsFinite) => TypedGenerator<T> & IsFinite {
-  return (from: TypedGenerator<T> & IsFinite) => {
+export function push<T>(...items: T[]): TypedOperator<T, FiniteGenerator<T>> {
+  function operator<K>(from: FiniteKeyedGenerator<K, T>): FiniteKeyedGenerator<K, T>;
+  function operator(from: FiniteGenerator<T>): FiniteGenerator<T>;
+  function operator(from: FiniteGenerator<T>): FiniteGenerator<T> {
     return copyMetadata(
         function *(): IterableIterator<T> {
           yield* from();
@@ -14,5 +15,7 @@ export function push<T>(...items: T[]):
         },
         from,
     );
-  };
+  }
+
+  return operator;
 }

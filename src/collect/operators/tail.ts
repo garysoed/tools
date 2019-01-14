@@ -1,11 +1,10 @@
-import { IsFinite } from '../is-finite';
 import { transform } from '../transform';
-import { TypedGenerator } from '../typed-generator';
+import { FiniteGenerator } from '../types/generator';
 import { head } from './head';
 import { reverse } from './reverse';
 
-export function tail(): <T>(from: TypedGenerator<T> & IsFinite) => T|undefined {
-  return <T>(from: TypedGenerator<T> & IsFinite) => {
-    return transform(from, reverse(), head());
+export function tail(): <T>(from: FiniteGenerator<T>) => T|undefined {
+  return <T>(from: FiniteGenerator<T>) => {
+    return transform<FiniteGenerator<T>, FiniteGenerator<T>, T|undefined>(from, reverse(), head());
   };
 }

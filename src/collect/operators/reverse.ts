@@ -1,11 +1,15 @@
 import { generatorFrom } from '../generators';
-import { IsFinite } from '../is-finite';
-import { TypedGenerator } from '../typed-generator';
+import { FiniteGenerator, FiniteKeyedGenerator } from '../types/generator';
+import { UntypedOperator } from '../types/operator';
 
-export function reverse(): <T>(from: TypedGenerator<T> & IsFinite) => TypedGenerator<T> & IsFinite {
-  return <T>(from: TypedGenerator<T> & IsFinite) => {
+export function reverse(): UntypedOperator<FiniteGenerator<any>> {
+  function operator<T, K>(from: FiniteKeyedGenerator<K, T>): FiniteKeyedGenerator<K, T>;
+  function operator<T>(from: FiniteGenerator<T>): FiniteGenerator<T>;
+  function operator<T>(from: FiniteGenerator<T>): FiniteGenerator<T> {
     const array = [...from()].reverse();
 
     return generatorFrom(array);
-  };
+  }
+
+  return operator;
 }

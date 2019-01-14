@@ -80,7 +80,7 @@ export class Paths {
     return new RelativePath(
         ImmutableList.of(parts)
             .$(
-                push(...thatParts.$(take<string>(upCount))()),
+                push(...thatParts.$(take(upCount))()),
                 ImmutableList.create(),
             ),
     );

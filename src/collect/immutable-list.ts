@@ -1,19 +1,15 @@
 import { BaseCollection } from './base-collection';
 import { generatorFrom } from './generators';
-import { IsFinite } from './is-finite';
-import { TypedGenerator } from './typed-generator';
+import { FiniteGenerator } from './types/generator';
 
 export class ImmutableList<T>
-    extends BaseCollection<T, TypedGenerator<T> & IsFinite>
-    implements IsFinite {
-  readonly isFinite: true = true;
-
-  constructor(generator: TypedGenerator<T> & IsFinite) {
+    extends BaseCollection<T, FiniteGenerator<T>> {
+  constructor(generator: FiniteGenerator<T>) {
     super(generator);
   }
 
-  static create<T>(): (from: TypedGenerator<T> & IsFinite) => ImmutableList<T> {
-    return (from: TypedGenerator<T> & IsFinite) => {
+  static create<T>(): (from: FiniteGenerator<T>) => ImmutableList<T> {
+    return (from: FiniteGenerator<T>) => {
       return new ImmutableList(from);
     };
   }

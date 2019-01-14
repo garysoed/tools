@@ -37,12 +37,12 @@ export function getMatches(path: string, matcher: string): ImmutableMap<string, 
 
   const matches: {[key: string]: string} = {};
   for (let i = 0; i < matcherParts.$(size()); i++) {
-    const matchPart = matcherParts.$(skip(i), head());
+    const matchPart = matcherParts.$(skip(i), head<string>());
     if (matchPart === undefined) {
       return null;
     }
 
-    const hashPart = hashParts.$(skip(i), head());
+    const hashPart = hashParts.$(skip(i), head<string>());
     if (hashPart === undefined) {
       return null;
     }

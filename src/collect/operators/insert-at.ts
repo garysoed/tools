@@ -1,21 +1,26 @@
 import { countable } from '../generators';
 import { transform } from '../transform';
-import { TypedGenerator } from '../typed-generator';
+import { FiniteGenerator, FiniteKeyedGenerator, KeyedGenerator, TypedGenerator } from '../types/generator';
+import { TypedOperator } from '../types/operator';
 import { map } from './map';
 import { skipWhile } from './skip-while';
 import { takeWhile } from './take-while';
 import { zip } from './zip';
 
-export function insertAt<T>(...insertions: Array<[T, number]>):
-    (from: TypedGenerator<T>) => TypedGenerator<T> {
-  return (from: TypedGenerator<T>) => {
-    const zipped = zip(countable())(from);
+export function insertAt<T>(...insertions: Array<[T, number]>): TypedOperator<T> {
+  function operator<K>(from: FiniteKeyedGenerator<K, T>): FiniteKeyedGenerator<K, T>;
+  function operator<K>(from: KeyedGenerator<K, T>): KeyedGenerator<K, T>;
+  function operator(from: FiniteGenerator<T>): FiniteGenerator<T>;
+  function operator(from: TypedGenerator<T>): TypedGenerator<T>;
+  function operator(from: TypedGenerator<T>): TypedGenerator<T> {
+    const zipped = zip<T, number>(countable())(from);
 
     return function *(): IterableIterator<T> {
       let rest = zipped;
       for (const [item, index] of insertions) {
         const before = transform(
-            takeWhile(([_, i]) => i < index)(rest),
+            zipped,
+            takeWhile(([_, i]) => i < index),
             map(([value]) => value),
         );
         rest = skipWhile(([_, i]) => i < index)(rest);
@@ -24,5 +29,7 @@ export function insertAt<T>(...insertions: Array<[T, number]>):
       }
       yield* transform(rest, map(([value]) => value))();
     };
-  };
+  }
+
+  return operator;
 }

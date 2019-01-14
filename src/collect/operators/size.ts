@@ -1,8 +1,7 @@
-import { IsFinite } from '../is-finite';
-import { TypedGenerator } from '../typed-generator';
+import { FiniteGenerator } from '../types/generator';
 
-export function size(): <T>(from: TypedGenerator<T> & IsFinite) => number {
-  return <T>(from: TypedGenerator<T> & IsFinite) => {
+export function size(): <T>(from: FiniteGenerator<T>) => number {
+  return <T>(from: FiniteGenerator<T>) => {
     let i = 0;
     for (const _ of from()) {
       i++;
