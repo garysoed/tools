@@ -1,16 +1,19 @@
+import { createGeneratorOperator } from '../create-operator';
+import { assertKeyedGenerator } from '../generators';
 import { transform } from '../transform';
-import { FiniteGenerator, KeyedGenerator, TypedGenerator } from '../types/generator';
+import { GeneratorOperator } from '../types/operator';
 import { filter } from './filter';
 import { take } from './take';
 
-export function getKey<K>(...keys: K[]): <T>(from: KeyedGenerator<K, T>) => FiniteGenerator<T> {
-  return <T>(from: KeyedGenerator<K, T>) => {
+export function getKey<T, K>(...keys: K[]): GeneratorOperator<T, K, T, K> {
+  return createGeneratorOperator(from => {
+    const fromGen = assertKeyedGenerator(from);
     const keySet = new Set(keys);
 
-    return transform<KeyedGenerator<K, T>, KeyedGenerator<K, T>, FiniteGenerator<T>>(
-        from,
-        filter(entry => keySet.has(from.getKey(entry))),
+    return transform(
+        fromGen,
+        filter(entry => keySet.has(fromGen.getKey(entry))),
         take(keySet.size),
     );
-  };
+  });
 }

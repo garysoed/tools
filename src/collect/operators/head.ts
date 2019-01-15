@@ -1,7 +1,7 @@
 import { TypedGenerator } from '../types/generator';
 
-export function head<T>(): (from: TypedGenerator<T>) => T|undefined {
-  return <T>(from: TypedGenerator<T>) => {
+export function head<T, K>(): (from: TypedGenerator<T, K>) => T|undefined {
+  return (from: TypedGenerator<T, K>) => {
     const {done, value} = from().next();
 
     return done ? undefined : value;

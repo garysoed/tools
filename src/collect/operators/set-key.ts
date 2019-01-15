@@ -1,27 +1,21 @@
-import { copyMetadata } from '../generators';
+import { createGeneratorOperator } from '../create-operator';
+import { assertKeyedGenerator } from '../generators';
 import { transform } from '../transform';
-import { FiniteKeyedGenerator, KeyedGenerator } from '../types/generator';
-import { TypedKeyedOperator } from '../types/operator';
+import { GeneratorOperator } from '../types/operator';
 import { map } from './map';
 
-export function setKey<K, T>(...setSpecs: Array<[K, T]>): TypedKeyedOperator<T, K> {
-  function operator(from: FiniteKeyedGenerator<K, T>): FiniteKeyedGenerator<K, T>;
-  function operator(from: KeyedGenerator<K, T>): KeyedGenerator<K, T>;
-  function operator(from: KeyedGenerator<K, T>): KeyedGenerator<K, T> {
+export function setKey<K, T>(...setSpecs: Array<[K, T]>): GeneratorOperator<T, K, T, K> {
+  return createGeneratorOperator(from => {
+    const fromGen = assertKeyedGenerator(from);
     const setSpecMap = new Map(setSpecs);
 
-    return copyMetadata(
-        transform(
-            from,
-            map(entry => {
-              const newEntry = setSpecMap.get(from.getKey(entry));
+    return transform(
+        fromGen,
+        map(entry => {
+          const newEntry = setSpecMap.get(fromGen.getKey(entry));
 
-              return newEntry === undefined ? entry : newEntry;
-            }),
-        ),
-        from,
+          return newEntry === undefined ? entry : newEntry;
+        }),
     );
-  }
-
-  return operator;
+  });
 }

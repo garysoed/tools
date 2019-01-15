@@ -1,15 +1,11 @@
-import { FiniteGenerator, FiniteKeyedGenerator, KeyedGenerator, TypedGenerator } from '../types/generator';
-import { MappedTypeOperator } from '../types/operator';
+import { createGeneratorOperator } from '../create-operator';
+import { GeneratorOperator } from '../types/operator';
 
-export function scan<T, D>(
+export function scan<T, D, K>(
     fn: (prev: D, value: T) => D,
     init: D,
-): MappedTypeOperator<T, D> {
-  function operator<K>(from: FiniteKeyedGenerator<K, T>): FiniteKeyedGenerator<K, D>;
-  function operator<K>(from: KeyedGenerator<K, T>): KeyedGenerator<K, D>;
-  function operator(from: FiniteGenerator<T>): FiniteGenerator<D>;
-  function operator(from: TypedGenerator<T>): TypedGenerator<D>;
-  function operator(from: TypedGenerator<T>): TypedGenerator<D> {
+): GeneratorOperator<T, K, D, K> {
+  return createGeneratorOperator(from => {
     let result = init;
 
     return function *(): IterableIterator<D> {
@@ -18,7 +14,5 @@ export function scan<T, D>(
         yield result;
       }
     };
-  }
-
-  return operator;
+  });
 }

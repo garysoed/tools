@@ -1,22 +1,16 @@
-import { copyMetadata } from '../generators';
+import { createGeneratorOperator } from '../create-operator';
+import { assertKeyedGenerator } from '../generators';
 import { transform } from '../transform';
-import { FiniteGenerator, FiniteKeyedGenerator, KeyedGenerator, TypedGenerator } from '../types/generator';
+import { TypedGenerator } from '../types/generator';
 import { map } from './map';
 
-export function keys(): Operator {
-  function operator<T, K>(from: FiniteKeyedGenerator<K, T>): FiniteGenerator<K>;
-  function operator<T, K>(from: KeyedGenerator<K, T>): TypedGenerator<K>;
-  function operator<T, K>(from: KeyedGenerator<K, T>): TypedGenerator<K> {
-    return copyMetadata(
-        transform(from, map(entry => from.getKey(entry))),
+export function keys<T, K>(): (from: TypedGenerator<T, K>) => TypedGenerator<K, void> {
+  return createGeneratorOperator(from => {
+    const fromGen = assertKeyedGenerator(from);
+
+    return transform(
         from,
+        map(entry => fromGen.getKey(entry)),
     );
-  }
-
-  return operator;
-}
-
-interface Operator {
-  <T, K>(from: FiniteKeyedGenerator<K, T>): FiniteGenerator<K>;
-  <T, K>(from: KeyedGenerator<K, T>): TypedGenerator<K>;
+  });
 }

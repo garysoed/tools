@@ -1,7 +1,9 @@
-import { FiniteGenerator } from '../types/generator';
+import { assertFinite } from '../generators';
+import { TypedGenerator } from '../types/generator';
 
-export function size(): <T>(from: FiniteGenerator<T>) => number {
-  return <T>(from: FiniteGenerator<T>) => {
+export function size<T, K>(): (from: TypedGenerator<T, K>) => number {
+  return (from: TypedGenerator<T, K>) => {
+    assertFinite(from);
     let i = 0;
     for (const _ of from()) {
       i++;

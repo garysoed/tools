@@ -1,14 +1,13 @@
-import { copyMetadata, countable } from '../generators';
+import { createGeneratorOperator } from '../create-operator';
+import { countable } from '../generators';
 import { transform } from '../transform';
-import { FiniteGenerator, FiniteKeyedGenerator, KeyedGenerator, TypedGenerator } from '../types/generator';
+import { GeneratorOperator } from '../types/operator';
 import { map } from './map';
 import { takeWhile } from './take-while';
 import { zip } from './zip';
 
-export function take<T>(count: number): Operator<T> {
-  function operator<K>(from: KeyedGenerator<K, T>): FiniteKeyedGenerator<K, T>;
-  function operator(from: TypedGenerator<T>): FiniteGenerator<T>;
-  function operator(from: TypedGenerator<T>): FiniteGenerator<T> {
+export function take<T, K>(count: number): GeneratorOperator<T, K, T, K> {
+  return createGeneratorOperator(from => {
     const gen = transform(
         from,
         zip(countable()),
@@ -16,13 +15,6 @@ export function take<T>(count: number): Operator<T> {
         map(([value]) => value),
     );
 
-    return Object.assign(copyMetadata(gen, from), {isFinite: true as true});
-  }
-
-  return operator;
-}
-
-interface Operator<T> {
-  <K>(from: KeyedGenerator<K, T>): FiniteKeyedGenerator<K, T>;
-  (from: TypedGenerator<T>): FiniteGenerator<T>;
+    return Object.assign(gen, {isFinite: true as true});
+  });
 }

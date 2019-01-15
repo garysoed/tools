@@ -1,5 +1,4 @@
 export { Generators } from './generators';
-export { ImmutableMap } from './immutable-map';
 export { ImmutableSet } from './immutable-set';
 export { Iterables } from './iterables';
 export { Orderings } from './orderings';

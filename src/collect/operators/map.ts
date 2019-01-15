@@ -1,20 +1,12 @@
-import { FiniteGenerator, FiniteKeyedGenerator, KeyedGenerator, TypedGenerator } from '../types/generator';
-import { MappedTypeOperator } from '../types/operator';
+import { createGeneratorOperator } from '../create-operator';
+import { GeneratorOperator } from '../types/operator';
 
-export function map<F, T>(
-    mapFn: (from: F) => T,
-): MappedTypeOperator<F, T> {
-  function operator<K>(from: FiniteKeyedGenerator<K, F>): FiniteKeyedGenerator<K, T>;
-  function operator<K>(from: KeyedGenerator<K, F>): KeyedGenerator<K, T>;
-  function operator(from: FiniteGenerator<F>): FiniteGenerator<T>;
-  function operator(from: TypedGenerator<F>): TypedGenerator<T>;
-  function operator(from: TypedGenerator<F>): TypedGenerator<T> {
+export function map<F, T, K>(mapFn: (from: F) => T): GeneratorOperator<F, K, T, K> {
+  return createGeneratorOperator(from => {
     return function *(): IterableIterator<T> {
       for (const value of from()) {
         yield mapFn(value);
       }
     };
-  }
-
-  return operator;
+  });
 }

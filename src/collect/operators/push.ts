@@ -1,21 +1,16 @@
-import { copyMetadata } from '../generators';
-import { FiniteGenerator, FiniteKeyedGenerator } from '../types/generator';
-import { TypedOperator } from '../types/operator';
+import { createGeneratorOperator } from '../create-operator';
+import { assertFinite } from '../generators';
+import { GeneratorOperator } from '../types/operator';
 
-export function push<T>(...items: T[]): TypedOperator<T, FiniteGenerator<T>> {
-  function operator<K>(from: FiniteKeyedGenerator<K, T>): FiniteKeyedGenerator<K, T>;
-  function operator(from: FiniteGenerator<T>): FiniteGenerator<T>;
-  function operator(from: FiniteGenerator<T>): FiniteGenerator<T> {
-    return copyMetadata(
-        function *(): IterableIterator<T> {
-          yield* from();
-          for (const item of items) {
-            yield item;
-          }
-        },
-        from,
-    );
-  }
+export function push<T, K>(...items: T[]): GeneratorOperator<T, K, T, K> {
+  return createGeneratorOperator(from => {
+    assertFinite(from);
 
-  return operator;
+    return function *(): IterableIterator<T> {
+      yield* from();
+      for (const item of items) {
+        yield item;
+      }
+    };
+  });
 }

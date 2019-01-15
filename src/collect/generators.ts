@@ -1,6 +1,26 @@
-import { FiniteGenerator, KeyedGenerator, TypedGenerator } from './types/generator';
+import { TypedGenerator } from './types/generator';
 
-export function countable(): TypedGenerator<number> {
+export function assertKeyedGenerator<T, K>(
+    generator: TypedGenerator<T, K>,
+): TypedGenerator<T, K> & {getKey(value: T): K} {
+  if (!isKeyed(generator)) {
+    throw new Error('generator requires a getKey function');
+  }
+
+  return generator;
+}
+
+export function assertFinite<T, K>(
+    generator: TypedGenerator<T, K>,
+): TypedGenerator<T, K> & {isFinite: true} {
+  if (generator.isFinite !== true) {
+    throw new Error('generator requires to be finite');
+  }
+
+  return generator as TypedGenerator<T, K> & {isFinite: true};
+}
+
+export function countable(): TypedGenerator<number, any> {
   return function *(): IterableIterator<number> {
     let i = 0;
     while (true) {
@@ -9,30 +29,16 @@ export function countable(): TypedGenerator<number> {
   };
 }
 
-export function copyMetadata<K, V>(
-    base: TypedGenerator<V>,
-    source: KeyedGenerator<K, any>,
-): KeyedGenerator<K, V>;
-export function copyMetadata<T>(
-    base: TypedGenerator<T>,
-    source: FiniteGenerator<any>,
-): FiniteGenerator<T>;
-export function copyMetadata<T>(base: TypedGenerator<T>, source: TypedGenerator<any>):
-    TypedGenerator<T>;
-export function copyMetadata(base: TypedGenerator<any>, source: TypedGenerator<any>): any {
-  if (isFinite(source)) {
-    return upgradeToFinite(base);
-  } else if (isKeyed(source)) {
-    return upgradeToKeyed(base, entry => source.getKey(entry));
-  } else {
-    return base;
-  }
+export function copyMetadata<T, K>(
+    base: TypedGenerator<T, K>,
+    source: TypedGenerator<any, any>,
+): any {
+  return Object.assign(base, source);
 }
 
-export function generatorFrom<T>(array: T[]): FiniteGenerator<T>;
-export function generatorFrom<K, V>(map: Map<K, V>): KeyedGenerator<K, [K, V]>;
-export function generatorFrom<T>(iterable: Iterable<T>): TypedGenerator<T>;
-export function generatorFrom(iterable: Iterable<any>): TypedGenerator<any> {
+export function generatorFrom<K, V>(map: Map<K, V>): TypedGenerator<[K, V], K>;
+export function generatorFrom<T>(iterable: Iterable<T>|T[]): TypedGenerator<T, void>;
+export function generatorFrom(iterable: Iterable<any>): TypedGenerator<any, any> {
   if (iterable instanceof Array) {
     return generatorFromArray(iterable);
   } else if (iterable instanceof Map) {
@@ -42,17 +48,17 @@ export function generatorFrom(iterable: Iterable<any>): TypedGenerator<any> {
   }
 }
 
-function generatorFromArray<T>(array: T[]): FiniteGenerator<T> {
+function generatorFromArray<T>(array: T[]): TypedGenerator<T, void> {
   return upgradeToFinite(generatorFromIterable(array));
 }
 
-function generatorFromMap<K, V>(map: Map<K, V>): KeyedGenerator<K, [K, V]> {
+function generatorFromMap<K, V>(map: Map<K, V>): TypedGenerator<[K, V], K> {
   return upgradeToFinite(
       upgradeToKeyed(generatorFromIterable(map), ([key]) => key),
   );
 }
 
-function generatorFromIterable<T>(iterable: Iterable<T>): TypedGenerator<T> {
+function generatorFromIterable<T>(iterable: Iterable<T>): TypedGenerator<T, void> {
   return function *(): IterableIterator<any> {
     for (const item of iterable) {
       yield item;
@@ -60,14 +66,14 @@ function generatorFromIterable<T>(iterable: Iterable<T>): TypedGenerator<T> {
   };
 }
 
-function upgradeToFinite<O extends TypedGenerator<T>, T>(generator: O): O & {isFinite: true} {
-  return Object.assign(generator, {isFinite: true as true});
+function upgradeToFinite<T, K>(generator: TypedGenerator<T, K>): TypedGenerator<T, K> {
+  return Object.assign(generator, {isFinite: true});
 }
 
-function upgradeToKeyed<K, V>(
-    generator: TypedGenerator<V>,
+export function upgradeToKeyed<K, V>(
+    generator: TypedGenerator<V, any>,
     getKey: (value: V) => K,
-): KeyedGenerator<K, V> {
+): TypedGenerator<V, K> {
   return Object.assign(
       generator,
       {
@@ -78,11 +84,9 @@ function upgradeToKeyed<K, V>(
   );
 }
 
-function isFinite(from: TypedGenerator<any>): from is FiniteGenerator<any> {
-  return (from as any).isFinite;
-}
-
-function isKeyed(from: TypedGenerator<any>): from is KeyedGenerator<any, any> {
-  return typeof (from as any).set === 'function';
+export function isKeyed<T, K>(
+    from: TypedGenerator<T, K>,
+): from is TypedGenerator<T, K> & {getKey(value: T): K} {
+  return from.getKey instanceof Function;
 }
 

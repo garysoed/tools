@@ -3,7 +3,7 @@ import { TypedGenerator } from './types/generator';
 
 type Operator<F, T> = (from: F) => T;
 
-export abstract class BaseCollection<T, I extends TypedGenerator<T>> implements Iterable<T> {
+export abstract class BaseCollection<T, K, I extends TypedGenerator<T, K>> implements Iterable<T> {
   constructor(readonly generator: I) { }
 
   [Symbol.iterator](): Iterator<T> {

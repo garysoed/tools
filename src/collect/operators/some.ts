@@ -1,7 +1,10 @@
-import { FiniteGenerator } from '../types/generator';
+import { assertFinite } from '../generators';
+import { TypedGenerator } from '../types/generator';
 
-export function some<T>(checkFn: (item: T) => boolean): (from: FiniteGenerator<T>) => boolean {
-  return (from: FiniteGenerator<T>) => {
+export function some<T, K>(checkFn: (item: T) => boolean): (from: TypedGenerator<T, K>) => boolean {
+  return from => {
+    assertFinite(from);
+
     for (const value of from()) {
       if (checkFn(value)) {
         return true;
