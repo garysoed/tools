@@ -1,12 +1,13 @@
 import { Converter, Result } from 'nabu/export/main';
-import { ImmutableSet } from '../immutable/immutable-set';
+import { ImmutableSet } from '../collect/immutable-set';
+import { hasEntry } from '../collect/operators/has-entry';
 
 
 class StringMatchConverter<T extends string> implements Converter<T, string> {
   constructor(private readonly acceptableValues_: ImmutableSet<T>) { }
 
   convertBackward(value: string): Result<T> {
-    const isAcceptable = this.acceptableValues_.has(value as T);
+    const isAcceptable = this.acceptableValues_.$(hasEntry(value as T));
     if (!isAcceptable) {
       return {success: false};
     }
@@ -15,7 +16,7 @@ class StringMatchConverter<T extends string> implements Converter<T, string> {
   }
 
   convertForward(input: T): Result<string> {
-    const isAcceptable = this.acceptableValues_.has(input);
+    const isAcceptable = this.acceptableValues_.$(hasEntry(input));
     if (!isAcceptable) {
       return {success: false};
     }
@@ -27,5 +28,5 @@ class StringMatchConverter<T extends string> implements Converter<T, string> {
 export function stringMatchConverter<T extends string>(
     acceptableValues: Iterable<T>,
 ): StringMatchConverter<T> {
-  return new StringMatchConverter<T>(ImmutableSet.of(acceptableValues));
+  return new StringMatchConverter<T>(ImmutableSet.of([...acceptableValues]));
 }

@@ -9,7 +9,7 @@ export class ImmutableSet<T> extends BaseCollection<T, void, TypedGenerator<T, v
     return from => new ImmutableSet(from);
   }
 
-  static of<T>(input: T[]|Set<T>): ImmutableSet<T> {
+  static of<T>(input: T[]|Set<T> = []): ImmutableSet<T> {
     return new ImmutableSet(
         transform(
             generatorFrom([...input]),

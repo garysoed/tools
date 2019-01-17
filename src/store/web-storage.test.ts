@@ -2,7 +2,7 @@ import { assert, should, test } from 'gs-testing/export/main';
 import { binary } from 'nabu/export/grammar';
 import { compose, identity, strict } from 'nabu/export/util';
 import { BehaviorSubject } from 'rxjs';
-import { ImmutableSet } from '../immutable/immutable-set';
+import { ImmutableSet } from '../collect/immutable-set';
 import { integerConverter } from '../serializer/integer-converter';
 import { INDEXES_PARSER, WebStorage } from './web-storage';
 

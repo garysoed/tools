@@ -7,7 +7,22 @@ export class ImmutableMap<K, V> extends BaseCollection<[K, V], K, TypedGenerator
     return from => new ImmutableMap(from);
   }
 
-  static of<K, V>(map: Map<K, V> = new Map()): ImmutableMap<K, V> {
-    return new ImmutableMap(generatorFrom(map));
+  static of<K, V>(): ImmutableMap<K, V>;
+  static of<T>(obj: {[key: string]: T}): ImmutableMap<string, T>;
+  static of<K, V>(map: Map<K, V>): ImmutableMap<K, V>;
+  static of<V>(source: Map<any, V>|{[key: string]: V} = new Map()): ImmutableMap<any, V> {
+    if (source instanceof Map) {
+      return new ImmutableMap(generatorFrom(source));
+    } else {
+      const entries: Array<[string, V]> = [];
+      for (const key in source) {
+        if (!source.hasOwnProperty(key)) {
+          continue;
+        }
+        entries.push([key, source[key]]);
+      }
+
+      return new ImmutableMap(generatorFrom(new Map(entries)));
+    }
   }
 }

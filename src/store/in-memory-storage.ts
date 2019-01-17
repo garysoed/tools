@@ -1,12 +1,15 @@
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
+import { setKey } from 'src/collect/operators/set-key';
 import { ImmutableMap } from '../collect/immutable-map';
+import { ImmutableSet } from '../collect/immutable-set';
 import { deleteKey } from '../collect/operators/delete-key';
+import { getKey } from '../collect/operators/get-key';
 import { hasKey } from '../collect/operators/has-key';
-import { ImmutableSet } from '../immutable';
+import { head } from '../collect/operators/head';
+import { keys } from '../collect/operators/keys';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { EditableStorage } from './editable-storage';
-import { keys } from '../collect/operators/keys';
 
 export class InMemoryStorage<T> implements EditableStorage<T> {
   // TODO: Build the map from diffs.
@@ -27,7 +30,7 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
   generateId(): Observable<string> {
     return this.data
         .pipe(
-            map(map => this.idGenerator.generate(map.keys())),
+            map(map => this.idGenerator.generate(map.$(keys())())),
             shareReplay(1),
         );
   }
@@ -47,7 +50,7 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
                 .$(
                     keys(),
                     ImmutableSet.create(),
-                )
+                ),
             ),
             shareReplay(1),
         );
@@ -57,13 +60,20 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
     return this.data
         .pipe(
             map(map => {
-              return map.get(id) || null;
+              const entry = map.$(getKey(id), head());
+
+              return entry ? entry[1] : null;
             }),
             shareReplay(1),
         );
   }
 
   update(id: string, instance: T): void {
-    this.data.next(this.data.getValue().set(id, instance));
+    this.data.next(
+        this.data.getValue().$(
+            setKey([id, [id, instance] as [string, T]]),
+            ImmutableMap.create(),
+        ),
+    );
   }
 }

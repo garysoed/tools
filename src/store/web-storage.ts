@@ -3,7 +3,11 @@ import { Converter, Serializable } from 'nabu/export/main';
 import { compose, identity, strict, StrictConverter } from 'nabu/export/util';
 import { fromEvent, Observable } from 'rxjs';
 import { map, shareReplay, startWith, take } from 'rxjs/operators';
-import { ImmutableSet } from '../immutable/immutable-set';
+import { ImmutableSet } from '../collect/immutable-set';
+import { deleteEntry } from '../collect/operators/delete-entry';
+import { filter } from '../collect/operators/filter';
+import { hasEntry } from '../collect/operators/has-entry';
+import { push } from '../collect/operators/push';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { SimpleIdGenerator } from '../random/simple-id-generator';
 import { setConverter } from '../serializer/set-converter';
@@ -45,7 +49,12 @@ export class WebStorage<T> implements EditableStorage<T> {
     this.storageIdsObs_
         .pipe(take(1))
         .subscribe(ids => {
-          const result = this.indexesConverter_.convertForward(ids.delete(id));
+          const result = this.indexesConverter_.convertForward(
+              ids.$(
+                  deleteEntry(id),
+                  ImmutableSet.create(),
+              ),
+          );
           this.storage_.setItem(this.prefix_, result);
           this.storage_.removeItem(getPath_(id, this.prefix_));
           this.invalidator_.invalidate();
@@ -63,7 +72,7 @@ export class WebStorage<T> implements EditableStorage<T> {
   has(id: string): Observable<boolean> {
     return this.storageIdsObs_
         .pipe(
-            map(ids => ids.has(id)),
+            map(ids => ids.$(hasEntry(id))),
             shareReplay(1),
         );
   }
@@ -86,7 +95,9 @@ export class WebStorage<T> implements EditableStorage<T> {
     this.listIds()
         .pipe(take(1))
         .subscribe(indexes => {
-          const indexesResult = this.indexesConverter_.convertForward(indexes.add(id));
+          const indexesResult = this.indexesConverter_.convertForward(
+              indexes.$(push(id), ImmutableSet.create()),
+          );
           this.storage_.setItem(this.prefix_, indexesResult);
 
           const itemResult = this.converter_.convertForward(instance);
@@ -122,7 +133,7 @@ function getIndexes_(
 
   const set = indexesConverter.convertBackward(indexesStr);
 
-  return set.filterItem((id): id is string => !!id);
+  return set.$(filter((id): id is string => !!id), ImmutableSet.create());
 }
 
 function getItem_<T>(

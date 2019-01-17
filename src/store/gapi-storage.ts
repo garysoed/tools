@@ -1,6 +1,6 @@
 import { from, Observable } from 'rxjs';
 import { shareReplay, switchMap } from 'rxjs/operators';
-import { ImmutableSet } from '../immutable';
+import { ImmutableSet } from '../collect/immutable-set';
 import { GapiLibrary } from '../net';
 import { ReadableStorage } from './readable-storage';
 

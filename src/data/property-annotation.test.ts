@@ -1,6 +1,5 @@
 import { assert, match, setup, should, test } from 'gs-testing/export/main';
-import { ImmutableList } from '../immutable/immutable-list';
-import { ClassAnnotation } from './class-annotation';
+import { ImmutableList } from '../collect/immutable-list';
 import { PropertyAnnotation } from './property-annotation';
 
 type Tuple = [Object, ImmutableList<string>];

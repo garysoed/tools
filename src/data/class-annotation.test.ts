@@ -1,5 +1,5 @@
 import { assert, match, setup, should, test } from 'gs-testing/export/main';
-import { ImmutableList } from '../immutable/immutable-list';
+import { ImmutableList } from '../collect/immutable-list';
 import { ClassAnnotation } from './class-annotation';
 
 test('data.ClassAnnotation', () => {

@@ -1,9 +1,10 @@
+import { stringMatchConverter } from 'src/serializer/string-match-converter';
 import { ImmutableList } from '../collect/immutable-list';
+import { ImmutableMap } from '../collect/immutable-map';
 import { filter } from '../collect/operators/filter';
 import { head } from '../collect/operators/head';
 import { size } from '../collect/operators/size';
 import { skip } from '../collect/operators/skip';
-import { ImmutableMap } from '../immutable/immutable-map';
 
 
 const MATCHER_REGEXP_: RegExp = /:([^:\/]+)/;
@@ -35,7 +36,7 @@ export function getMatches(path: string, matcher: string): ImmutableMap<string, 
     return null;
   }
 
-  const matches: {[key: string]: string} = {};
+  const matches = new Map<string, string>();
   for (let i = 0; i < matcherParts.$(size()); i++) {
     const matchPart = matcherParts.$(skip(i), head<string>());
     if (matchPart === undefined) {
@@ -50,7 +51,7 @@ export function getMatches(path: string, matcher: string): ImmutableMap<string, 
     const matcherResult = MATCHER_REGEXP_.exec(matchPart);
 
     if (matcherResult !== null) {
-      matches[matcherResult[1]] = hashPart;
+      matches.set(matcherResult[1], hashPart);
     } else if (hashPart !== matchPart) {
       return null;
     }

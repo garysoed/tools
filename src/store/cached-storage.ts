@@ -1,7 +1,7 @@
 import { combineLatest, Observable, of as observableOf } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { ImmutableSet } from '../collect/immutable-set';
 import { BaseDisposable } from '../dispose/base-disposable';
-import { ImmutableSet } from '../immutable';
 import { EditableStorage } from './editable-storage';
 
 export class CachedStorage<T> extends BaseDisposable implements EditableStorage<T> {

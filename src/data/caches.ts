@@ -1,4 +1,4 @@
-import { ImmutableMap } from '../immutable/immutable-map';
+import { ImmutableMap } from '../collect/immutable-map';
 import { Annotations } from './annotations';
 
 const __CACHES = Symbol('caches');

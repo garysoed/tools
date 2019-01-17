@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { ImmutableSet } from '../immutable/immutable-set';
+import { ImmutableSet } from '../collect/immutable-set';
 
 export interface ReadableStorage<TFull> {
   /**

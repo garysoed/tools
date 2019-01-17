@@ -1,3 +1,5 @@
+import { getKey } from '../collect/operators/get-key';
+import { head } from '../collect/operators/head';
 import { Errors } from '../error';
 import { hash } from '../util/hash';
 import { CACHE_ANNOTATIONS, getCache, setCacheValue } from './caches';
@@ -24,9 +26,9 @@ export function cache(): MethodDecorator {
             return hash(arg);
           })
           .join('_');
-      const cachedValue = cacheData.get(argsHash);
+      const cachedValue = cacheData.$(getKey(argsHash), head());
       if (cachedValue !== undefined) {
-        return cachedValue;
+        return cachedValue[1];
       }
 
       const result = value.apply(instance, args);

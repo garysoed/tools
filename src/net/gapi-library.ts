@@ -1,6 +1,5 @@
-import { from, Observable } from 'rxjs';
+import { ImmutableMap } from '../collect/immutable-map';
 import { Errors } from '../error';
-import { ImmutableMap } from '../immutable';
 import { Gapi } from '../net/gapi';
 import { GapiError } from '../net/gapi-error';
 import { SimpleIdGenerator } from '../random/simple-id-generator';
@@ -47,6 +46,7 @@ export class GapiLibrary<T> {
       for (const callback of callbackMap.values()) {
         callback(error);
       }
+
       return;
     }
 
@@ -77,9 +77,9 @@ export class GapiLibrary<T> {
 
   queueRequest<T>(request: gapi.client.HttpRequest<T>): Promise<T> {
     if (GapiLibrary.timeoutId_ === null) {
-      GapiLibrary.timeoutId_ = this.window_.setTimeout(() => {
-        this.flushRequests_();
-      },                                               QUEUE_TIMEOUT_MS);
+      GapiLibrary.timeoutId_ = this.window_.setTimeout(
+        () => this.flushRequests_(),
+        QUEUE_TIMEOUT_MS);
     }
 
     return new Promise((resolve, reject) => {
