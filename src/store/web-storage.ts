@@ -3,11 +3,12 @@ import { Converter, Serializable } from 'nabu/export/main';
 import { compose, identity, strict, StrictConverter } from 'nabu/export/util';
 import { fromEvent, Observable } from 'rxjs';
 import { map, shareReplay, startWith, take } from 'rxjs/operators';
-import { ImmutableSet } from '../collect/immutable-set';
+import { exec } from '../collect/exec';
 import { deleteEntry } from '../collect/operators/delete-entry';
 import { filter } from '../collect/operators/filter';
 import { hasEntry } from '../collect/operators/has-entry';
 import { push } from '../collect/operators/push';
+import { asImmutableSet, createImmutableSet, ImmutableSet } from '../collect/types/immutable-set';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { SimpleIdGenerator } from '../random/simple-id-generator';
 import { setConverter } from '../serializer/set-converter';
@@ -50,9 +51,10 @@ export class WebStorage<T> implements EditableStorage<T> {
         .pipe(take(1))
         .subscribe(ids => {
           const result = this.indexesConverter_.convertForward(
-              ids.$(
+              exec(
+                  ids,
                   deleteEntry(id),
-                  ImmutableSet.create(),
+                  asImmutableSet(),
               ),
           );
           this.storage_.setItem(this.prefix_, result);
@@ -64,7 +66,7 @@ export class WebStorage<T> implements EditableStorage<T> {
   generateId(): Observable<string> {
     return this.storageIdsObs_
         .pipe(
-            map(ids => this.idGenerator_.generate(ids)),
+            map(ids => this.idGenerator_.generate(ids())),
             shareReplay(1),
         );
   }
@@ -72,7 +74,7 @@ export class WebStorage<T> implements EditableStorage<T> {
   has(id: string): Observable<boolean> {
     return this.storageIdsObs_
         .pipe(
-            map(ids => ids.$(hasEntry(id))),
+            map(ids => exec(ids, hasEntry(id))),
             shareReplay(1),
         );
   }
@@ -96,7 +98,7 @@ export class WebStorage<T> implements EditableStorage<T> {
         .pipe(take(1))
         .subscribe(indexes => {
           const indexesResult = this.indexesConverter_.convertForward(
-              indexes.$(push(id), ImmutableSet.create()),
+              exec(indexes, push(id), asImmutableSet()),
           );
           this.storage_.setItem(this.prefix_, indexesResult);
 
@@ -128,12 +130,12 @@ function getIndexes_(
 ): ImmutableSet<string> {
   const indexesStr = storage.getItem(prefix);
   if (!indexesStr) {
-    return ImmutableSet.of();
+    return createImmutableSet();
   }
 
   const set = indexesConverter.convertBackward(indexesStr);
 
-  return set.$(filter((id): id is string => !!id), ImmutableSet.create());
+  return exec(set, filter((id): id is string => !!id), asImmutableSet());
 }
 
 function getItem_<T>(

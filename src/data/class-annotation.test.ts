@@ -1,5 +1,11 @@
+// tslint:disable:no-non-null-assertion
 import { assert, match, setup, should, test } from 'gs-testing/export/main';
-import { ImmutableList } from '../collect/immutable-list';
+import { exec } from '../collect/exec';
+import { getKey } from '../collect/operators/get-key';
+import { head } from '../collect/operators/head';
+import { pick } from '../collect/operators/pick';
+import { size } from '../collect/operators/size';
+import { ImmutableList } from '../collect/types/immutable-list';
 import { ClassAnnotation } from './class-annotation';
 
 test('data.ClassAnnotation', () => {
@@ -24,30 +30,49 @@ test('data.ClassAnnotation', () => {
       @annotation.getDecorator()(7, 8)
       class DescendantClass extends ChildClass { }
 
-      assert(annotation.getAttachedValues(DescendantClass)).to.haveElements([
-        match.anyTupleThat<[Function, ImmutableList<number>]>().haveExactElements([
-            DescendantClass,
-            match.anyIterableThat<number, ImmutableList<number>>().haveElements([15, 11]),
-        ]),
-        match.anyTupleThat<[Function, ImmutableList<number>]>().haveExactElements([
-            ParentClass,
-            match.anyIterableThat<number, ImmutableList<number>>().haveElements([7, 3]),
-        ]),
-      ]);
+      const descendantAttachedValues = annotation.getAttachedValues(DescendantClass);
+      assert(exec(descendantAttachedValues, size())).to.equal(2);
 
-      assert(annotation.getAttachedValues(ChildClass)).to.haveElements([
-        match.anyTupleThat<[Function, ImmutableList<number>]>().haveExactElements([
-            ParentClass,
-            match.anyIterableThat<number, ImmutableList<number>>().haveElements([7, 3]),
-        ]),
-      ]);
+      assert([
+        ...exec(
+            descendantAttachedValues,
+            getKey(DescendantClass as Function),
+            pick(1),
+            head(),
+        )!,
+      ]).to.haveExactElements([15, 11]);
+      assert([
+        ...exec(
+            descendantAttachedValues,
+            getKey(ParentClass as Function),
+            pick(1),
+            head(),
+        )!,
+      ]).to.haveExactElements([7, 3]);
 
-      assert(annotation.getAttachedValues(ParentClass)).to.haveElements([
-        match.anyTupleThat<[Function, ImmutableList<number>]>().haveExactElements([
-            ParentClass,
-            match.anyIterableThat<number, ImmutableList<number>>().haveElements([7, 3]),
-        ]),
-      ]);
+      const childAttachedValues = annotation.getAttachedValues(ChildClass);
+      assert(exec(childAttachedValues, size())).to.equal(1);
+
+      assert([
+        ...exec(
+            childAttachedValues,
+            getKey(ParentClass as Function),
+            pick(1),
+            head(),
+        )!,
+      ]).to.haveExactElements([7, 3]);
+
+      const parentAttachedValues = annotation.getAttachedValues(ParentClass);
+      assert(exec(parentAttachedValues, size())).to.equal(1);
+
+      assert([
+        ...exec(
+            parentAttachedValues,
+            getKey(ParentClass as Function),
+            pick(1),
+            head(),
+        )!,
+      ]).to.haveExactElements([7, 3]);
     });
   });
 });

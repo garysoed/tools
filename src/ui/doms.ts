@@ -1,4 +1,4 @@
-import { ImmutableList } from '../collect/immutable-list';
+import { createImmutableList, ImmutableList } from '../collect/types/immutable-list';
 import { Iterables } from '../immutable';
 
 /**
@@ -36,7 +36,7 @@ export class Doms {
       currentNode = currentNode.nextSibling;
     }
 
-    return ImmutableList.of(nodes);
+    return createImmutableList(nodes);
   }
 
   /**

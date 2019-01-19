@@ -1,15 +1,15 @@
-import { createGeneratorOperator } from '../create-operator';
+import { createGeneratorOperatorCopyAll } from '../create-operator';
 import { countable } from '../generators';
-import { transform } from '../transform';
+import { exec } from '../exec';
 import { GeneratorOperator } from '../types/operator';
 import { map } from './map';
 import { zip } from './zip';
 
 export function setAt<T, K>(...setSpecs: Array<[number, T]>): GeneratorOperator<T, K, T, K> {
-  return createGeneratorOperator(from => {
+  return createGeneratorOperatorCopyAll(from => {
     const setSpecMap = new Map(setSpecs);
 
-    return transform(
+    return exec(
         from,
         zip(countable()),
         map(([value, index]) => {

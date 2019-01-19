@@ -1,4 +1,4 @@
-import { transform } from './transform';
+import { exec } from './exec';
 import { TypedGenerator } from './types/generator';
 
 type Operator<F, T> = (from: F) => T;
@@ -37,6 +37,6 @@ export abstract class BaseCollection<T, K, I extends TypedGenerator<T, K>> imple
   ): D;
   $(
       ...transformers: Array<Operator<any, any>>): any {
-    return transform(this.generator, ...transformers);
+    return exec(this.generator, ...transformers);
   }
 }

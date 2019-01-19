@@ -1,21 +1,20 @@
 import { assert, setup, should, test } from 'gs-testing/export/main';
-import { generatorFrom } from '../generators';
-import { InfiniteList } from '../infinite-list';
-import { deleteEntry } from './delete-entry';
+import { exec } from '../exec';
+import { createInfiniteList, InfiniteList } from '../types/infinite-list';
 import { hasEntry } from './has-entry';
 
 test('collect.operators.hasEntry', () => {
   let list: InfiniteList<number>;
 
   setup(() => {
-    list = new InfiniteList(generatorFrom([1, 2, 3, 4]));
+    list = createInfiniteList([1, 2, 3, 4]);
   });
 
   should(`return true if one of the specified values exist`, () => {
-    assert(list.$(hasEntry(1, 5, 6))).to.beTrue();
+    assert(exec(list, hasEntry(1, 5, 6))).to.beTrue();
   });
 
   should(`return false if none of the specified values exists`, () => {
-    assert(list.$(hasEntry(5, 6))).to.beFalse();
+    assert(exec(list, hasEntry(5, 6))).to.beFalse();
   });
 });

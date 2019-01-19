@@ -1,18 +1,17 @@
-import { createGeneratorOperator } from '../create-operator';
-import { assertKeyedGenerator } from '../generators';
-import { transform } from '../transform';
+import { createGeneratorOperatorCopyAll } from '../create-operator';
+import { getKey } from '../generators';
+import { exec } from '../exec';
 import { GeneratorOperator } from '../types/operator';
 import { map } from './map';
 
 export function setKey<K, T>(...setSpecs: Array<[K, T]>): GeneratorOperator<T, K, T, K> {
-  return createGeneratorOperator(from => {
-    const fromGen = assertKeyedGenerator(from);
+  return createGeneratorOperatorCopyAll(from => {
     const setSpecMap = new Map(setSpecs);
 
-    return transform(
-        fromGen,
+    return exec(
+        from,
         map(entry => {
-          const newEntry = setSpecMap.get(fromGen.getKey(entry));
+          const newEntry = setSpecMap.get(getKey(from, entry));
 
           return newEntry === undefined ? entry : newEntry;
         }),

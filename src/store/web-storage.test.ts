@@ -2,7 +2,7 @@ import { assert, should, test } from 'gs-testing/export/main';
 import { binary } from 'nabu/export/grammar';
 import { compose, identity, strict } from 'nabu/export/util';
 import { BehaviorSubject } from 'rxjs';
-import { ImmutableSet } from '../collect/immutable-set';
+import { createImmutableSet, ImmutableSet } from '../collect/types/immutable-set';
 import { integerConverter } from '../serializer/integer-converter';
 import { INDEXES_PARSER, WebStorage } from './web-storage';
 
@@ -33,11 +33,11 @@ test('store.WebStorage', () => {
       setStorage(
           localStorage,
           PREFIX,
-          INDEXES_BINARY_CONVERTER.convertForward(ImmutableSet.of([id])),
+          INDEXES_BINARY_CONVERTER.convertForward(createImmutableSet([id])),
       );
       setStorage(localStorage, path, ITEM_BINARY_CONVERTER.convertForward(123));
 
-      const idsSubject = new BehaviorSubject(ImmutableSet.of<string>());
+      const idsSubject = new BehaviorSubject(createImmutableSet<string>());
       storage.listIds().subscribe(idsSubject);
 
       const itemSubject = new BehaviorSubject<number|null>(null);
@@ -47,8 +47,8 @@ test('store.WebStorage', () => {
 
       assert(localStorage.getItem(path)).to.beNull();
       assert(localStorage.getItem(PREFIX)).to
-          .equal(INDEXES_BINARY_CONVERTER.convertForward(ImmutableSet.of([])));
-      assert(idsSubject.getValue()).to.beEmpty();
+          .equal(INDEXES_BINARY_CONVERTER.convertForward(createImmutableSet([])));
+      assert(idsSubject.getValue()()).to.beEmpty();
       assert(itemSubject.getValue()).to.beNull();
     });
   });
@@ -63,7 +63,7 @@ test('store.WebStorage', () => {
       setStorage(
           localStorage,
           PREFIX,
-          INDEXES_BINARY_CONVERTER.convertForward(ImmutableSet.of([id])),
+          INDEXES_BINARY_CONVERTER.convertForward(createImmutableSet([id])),
       );
 
       assert(hasSubject.getValue()).to.beTrue();
@@ -85,16 +85,16 @@ test('store.WebStorage', () => {
       const id2 = 'id2';
       const id3 = 'id3';
 
-      const idsSubject = new BehaviorSubject<ImmutableSet<string>>(ImmutableSet.of());
+      const idsSubject = new BehaviorSubject<ImmutableSet<string>>(createImmutableSet());
       storage.listIds().subscribe(idsSubject);
 
       setStorage(
           localStorage,
           PREFIX,
-          INDEXES_BINARY_CONVERTER.convertForward(ImmutableSet.of([id1, id2, id3])),
+          INDEXES_BINARY_CONVERTER.convertForward(createImmutableSet([id1, id2, id3])),
       );
 
-      assert(idsSubject.getValue()).to.haveElements([id1, id2, id3]);
+      assert(idsSubject.getValue()()).to.haveElements([id1, id2, id3]);
     });
   });
 
@@ -127,17 +127,17 @@ test('store.WebStorage', () => {
       setStorage(
           localStorage,
           PREFIX,
-          INDEXES_BINARY_CONVERTER.convertForward(ImmutableSet.of(['oldId'])),
+          INDEXES_BINARY_CONVERTER.convertForward(createImmutableSet(['oldId'])),
       );
 
-      const idsSubject = new BehaviorSubject(ImmutableSet.of<string>());
+      const idsSubject = new BehaviorSubject(createImmutableSet<string>());
       storage.listIds().subscribe(idsSubject);
 
       const itemSubject = new BehaviorSubject<number|null>(null);
       storage.read(id).subscribe(itemSubject);
 
       storage.update(id, 123);
-      assert(idsSubject.getValue()).to.haveElements([oldId, id]);
+      assert(idsSubject.getValue()()).to.haveElements([oldId, id]);
       assert(itemSubject.getValue()).to.equal(123);
       assert(localStorage.getItem(path)).to.equal(ITEM_BINARY_CONVERTER.convertForward(123));
     });

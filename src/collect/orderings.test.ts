@@ -1,25 +1,27 @@
 import { assert, should, test } from 'gs-testing/export/main';
 import { NumberType } from 'gs-types/export';
-import { ImmutableList } from './immutable-list';
+import { CompareResult } from './compare-result';
+import { exec } from './exec';
+import { sort } from './operators/sort';
 import { Orderings } from './orderings';
-import { CompareResult } from '../interfaces/compare-result';
+import { createImmutableList } from './types/immutable-list';
 
 
 test('immutable.Orderings', () => {
   test('compound', () => {
     should(`use the first ordering and use the subsequent ones for tie breaking`, () => {
-      const ordering = Orderings.compound(ImmutableList.of([
+      const ordering = Orderings.compound(createImmutableList([
         () => 0 as CompareResult,
         Orderings.normal<number>(),
-      ]));
+      ])());
       assert(ordering(0, 1)).to.equal(-1);
       assert(ordering(1, 0)).to.equal(1);
     });
 
     should(`return 0 if none of the given orderings can break ties`, () => {
-      const ordering = Orderings.compound(ImmutableList.of([
+      const ordering = Orderings.compound(createImmutableList([
         () => 0 as CompareResult,
-      ]));
+      ])());
       assert(ordering(0, 1)).to.equal(0);
     });
   });
@@ -28,24 +30,25 @@ test('immutable.Orderings', () => {
     should(`order the items correctly`, () => {
       const a = {v: 1};
       const b = {v: 2};
-      const list = ImmutableList.of([b, a]);
+      const list = createImmutableList([b, a]);
 
-      const sorted = list.sort(Orderings.map(item => `${item.v}`, Orderings.natural()));
-      assert(sorted).to.haveElements([a, b]);
+      const sorted = exec(list, sort(Orderings.map(item => `${item.v}`, Orderings.natural())));
+      assert([...sorted()]).to.haveExactElements([a, b]);
     });
   });
 
   test('matches', () => {
     should(`order matching items at the start of the list`, () => {
-      const list = ImmutableList.of([1, 2, 3]);
-      assert(list.sort(Orderings.matches((v => v > 1)))).to.haveElements([2, 3, 1]);
+      const list = createImmutableList([1, 2, 3]);
+      assert([...exec(list, sort(Orderings.matches((v => v > 1))))()]).to
+          .haveExactElements([2, 3, 1]);
     });
   });
 
   test('isOneOf', () => {
     should(`order matching items at the start of the list`, () => {
-      const list = ImmutableList.of([1, 2, 3]);
-      assert(list.sort(Orderings.isOneOf([3]))).to.haveElements([3, 1, 2]);
+      const list = createImmutableList([1, 2, 3]);
+      assert([...exec(list, sort(Orderings.isOneOf([3])))()]).to.haveExactElements([3, 1, 2]);
     });
   });
 
@@ -101,15 +104,15 @@ test('immutable.Orderings', () => {
 
   test('type', () => {
     should(`return -1 if the first item is earlier in the type list`, () => {
-      assert(Orderings.type(ImmutableList.of([NumberType]))('a', 1)).to.equal(1);
+      assert(Orderings.type(createImmutableList([NumberType])())('a', 1)).to.equal(1);
     });
 
     should(`return 0 if both items match the list`, () => {
-      assert(Orderings.type(ImmutableList.of([NumberType]))(1, 1)).to.equal(0);
+      assert(Orderings.type(createImmutableList([NumberType])())(1, 1)).to.equal(0);
     });
 
     should(`return 0 if none of the items match the list`, () => {
-      assert(Orderings.type(ImmutableList.of([NumberType]))('1', '1')).to.equal(0);
+      assert(Orderings.type(createImmutableList([NumberType])())('1', '1')).to.equal(0);
     });
   });
 });

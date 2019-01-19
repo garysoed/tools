@@ -1,4 +1,4 @@
-import { createGeneratorOperator } from '../create-operator';
+import { createGeneratorOperatorCopyAll } from '../create-operator';
 import { GeneratorOperator } from '../types/operator';
 
 export function skipWhile<F, T extends F, K>(
@@ -6,7 +6,7 @@ export function skipWhile<F, T extends F, K>(
 ): GeneratorOperator<F, K, T, K>;
 export function skipWhile<T, K>(checkFn: (value: T) => boolean): GeneratorOperator<T, K, T, K>;
 export function skipWhile<T, K>(checkFn: (value: T) => boolean): GeneratorOperator<T, K, T, K> {
-  return createGeneratorOperator(from => function *(): IterableIterator<T> {
+  return createGeneratorOperatorCopyAll(from => function *(): IterableIterator<T> {
     let failed = false;
     for (const value of from()) {
       if (checkFn(value) && !failed) {

@@ -1,6 +1,6 @@
 import { combineLatest, Observable, of as observableOf } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { ImmutableSet } from '../collect/immutable-set';
+import { ImmutableSet } from '../collect/types/immutable-set';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { EditableStorage } from './editable-storage';
 

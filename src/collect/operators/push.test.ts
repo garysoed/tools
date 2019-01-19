@@ -1,15 +1,16 @@
 import { assert, setup, should, test } from 'gs-testing/export/main';
-import { ImmutableList } from '../immutable-list';
+import { exec } from '../exec';
+import { createImmutableList, ImmutableList } from '../types/immutable-list';
 import { push } from './push';
 
 test('collect.operators.push', () => {
   let list: ImmutableList<number>;
 
   setup(() => {
-    list = ImmutableList.of([1, 2, 3]);
+    list = createImmutableList([1, 2, 3]);
   });
 
   should(`add all the given elements`, () => {
-    assert([...list.$(push(4, 5, 6))()]).to.haveExactElements([1, 2, 3, 4, 5, 6]);
+    assert([...exec(list, push(4, 5, 6))()]).to.haveExactElements([1, 2, 3, 4, 5, 6]);
   });
 });

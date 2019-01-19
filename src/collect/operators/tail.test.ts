@@ -1,9 +1,10 @@
 import { assert, should, test } from 'gs-testing/export/main';
-import { ImmutableList } from '../immutable-list';
+import { exec } from '../exec';
+import { createImmutableList } from '../types/immutable-list';
 import { tail } from './tail';
 
 test('collect.operators.tail', () => {
   should(`return the correct element`, () => {
-    assert(ImmutableList.of([1, 2, 3]).$(tail())).to.equal(3);
+    assert(exec(createImmutableList([1, 2, 3]), tail())).to.equal(3);
   });
 });

@@ -1,4 +1,4 @@
-import { ImmutableMap } from '../collect/immutable-map';
+import { createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
 import { Annotations } from './annotations';
 
 const __CACHES = Symbol('caches');
@@ -29,7 +29,7 @@ export function clearAll(instance: Object): void {
  */
 export function getCache(instance: Object, propertyKey: string | symbol):
     ImmutableMap<string, any> {
-  return ImmutableMap.of(getCache_(instance, propertyKey));
+  return createImmutableMap(getCache_(instance, propertyKey));
 }
 
 function getCache_(instance: Object, propertyKey: string | symbol): Map<string, any> {

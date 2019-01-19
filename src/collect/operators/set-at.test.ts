@@ -1,22 +1,22 @@
 import { assert, setup, should, test } from 'gs-testing/export/main';
-import { generatorFrom } from '../generators';
-import { InfiniteList } from '../infinite-list';
+import { exec } from '../exec';
+import { createInfiniteList, InfiniteList } from '../types/infinite-list';
 import { setAt } from './set-at';
 
 test('collect.operators.setAt', () => {
   let list: InfiniteList<number>;
 
   setup(() => {
-    list = new InfiniteList(generatorFrom([1, 2, 3, 4]));
+    list = createInfiniteList([1, 2, 3, 4]);
   });
 
   should(`set the value correctly`, () => {
-    assert([...list.$(setAt([0, 123], [2, 234]))()]).to.haveExactElements([123, 2, 234, 4]);
-    assert([...list.$(setAt([2, 123]))()]).to.haveExactElements([1, 2, 123, 4]);
+    assert([...exec(list, setAt([0, 123], [2, 234]))()]).to.haveExactElements([123, 2, 234, 4]);
+    assert([...exec(list, setAt([2, 123]))()]).to.haveExactElements([1, 2, 123, 4]);
   });
 
   should(`handle out of bound indexes correctly`, () => {
-    assert([...list.$(setAt([-1, 123]))()]).to.haveExactElements([1, 2, 3, 4]);
-    assert([...list.$(setAt([4, 123]))()]).to.haveExactElements([1, 2, 3, 4]);
+    assert([...exec(list, setAt([-1, 123]))()]).to.haveExactElements([1, 2, 3, 4]);
+    assert([...exec(list, setAt([4, 123]))()]).to.haveExactElements([1, 2, 3, 4]);
   });
 });

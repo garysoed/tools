@@ -1,4 +1,4 @@
-import { ImmutableMap } from '../collect/immutable-map';
+import { createImmutableMap } from '../collect/types/immutable-map';
 import { Errors } from '../error';
 import { Gapi } from '../net/gapi';
 import { GapiError } from '../net/gapi-error';
@@ -50,7 +50,7 @@ export class GapiLibrary<T> {
       return;
     }
 
-    for (const [id, response] of ImmutableMap.of(batchResponse.result)) {
+    for (const [id, response] of createImmutableMap(batchResponse.result)) {
       const callback = callbackMap.get(id);
       if (!callback) {
         continue;

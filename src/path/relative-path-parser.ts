@@ -1,5 +1,5 @@
 import { Converter, Result } from 'nabu/export/main';
-import { ImmutableList } from '../collect/immutable-list';
+import { createImmutableList } from '../collect/types/immutable-list';
 import { Path } from '../path/path';
 import { RelativePath } from '../path/relative-path';
 
@@ -16,7 +16,7 @@ class RelativePathParser implements Converter<RelativePath, string> {
       return {success: false};
     }
 
-    return {result: new RelativePath(ImmutableList.of(parts)), success: true};
+    return {result: new RelativePath(createImmutableList(parts)()), success: true};
   }
 
   convertForward(input: RelativePath): Result<string> {

@@ -156,7 +156,7 @@
 //       }
 //     }
 
-//     return ImmutableList.of(newItems);
+//     return createImmutableList(newItems);
 //   }
 
 //   filterItem<S extends T>(checker: (value: T) => value is S): ImmutableList<S>;

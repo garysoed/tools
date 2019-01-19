@@ -1,6 +1,6 @@
 import { NumberType, StringType, Type } from 'gs-types/export';
-import { CompareResult } from '../interfaces/compare-result';
-import { Ordering } from '../interfaces/ordering';
+import { CompareResult } from './compare-result';
+import { Ordering } from './ordering';
 
 const NATURAL_SPLIT_REGEXP = /([0-9]+)/;
 

@@ -1,16 +1,9 @@
-import { createGeneratorOperator } from '../create-operator';
-import { assertKeyedGenerator } from '../generators';
-import { transform } from '../transform';
+import { createGeneratorOperatorCopySize } from '../create-operator';
+import { exec } from '../exec';
+import { getKey } from '../generators';
 import { TypedGenerator } from '../types/generator';
 import { map } from './map';
 
 export function keys<T, K>(): (from: TypedGenerator<T, K>) => TypedGenerator<K, void> {
-  return createGeneratorOperator(from => {
-    const fromGen = assertKeyedGenerator(from);
-
-    return transform(
-        from,
-        map(entry => fromGen.getKey(entry)),
-    );
-  });
+  return createGeneratorOperatorCopySize(from => exec(from, map(entry => getKey(from, entry))));
 }

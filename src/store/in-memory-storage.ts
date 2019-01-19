@@ -1,28 +1,30 @@
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { setKey } from 'src/collect/operators/set-key';
-import { ImmutableMap } from '../collect/immutable-map';
-import { ImmutableSet } from '../collect/immutable-set';
+import { exec } from '../collect/exec';
 import { deleteKey } from '../collect/operators/delete-key';
 import { getKey } from '../collect/operators/get-key';
 import { hasKey } from '../collect/operators/has-key';
 import { head } from '../collect/operators/head';
 import { keys } from '../collect/operators/keys';
+import { asImmutableMap, createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
+import { asImmutableSet, ImmutableSet } from '../collect/types/immutable-set';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { EditableStorage } from './editable-storage';
 
 export class InMemoryStorage<T> implements EditableStorage<T> {
   // TODO: Build the map from diffs.
   private readonly data: BehaviorSubject<ImmutableMap<string, T>> =
-      new BehaviorSubject(ImmutableMap.of());
+      new BehaviorSubject(createImmutableMap());
 
   constructor(private readonly idGenerator: BaseIdGenerator) { }
 
   delete(id: string): void {
     this.data.next(
-        this.data.getValue().$(
+        exec(
+            this.data.getValue(),
             deleteKey(id),
-            ImmutableMap.create(),
+            asImmutableMap(),
         ),
     );
   }
@@ -30,7 +32,7 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
   generateId(): Observable<string> {
     return this.data
         .pipe(
-            map(map => this.idGenerator.generate(map.$(keys())())),
+            map(map => this.idGenerator.generate(exec(map, keys())())),
             shareReplay(1),
         );
   }
@@ -38,7 +40,7 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
   has(id: string): Observable<boolean> {
     return this.data
         .pipe(
-            map(map => map.$(hasKey(id))),
+            map(map => exec(map, hasKey(id))),
             shareReplay(1),
         );
   }
@@ -46,12 +48,11 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
   listIds(): Observable<ImmutableSet<string>> {
     return this.data
         .pipe(
-            map(map => map
-                .$(
-                    keys(),
-                    ImmutableSet.create(),
-                ),
-            ),
+            map(map => exec(
+                map,
+                keys(),
+                asImmutableSet(),
+            )),
             shareReplay(1),
         );
   }
@@ -60,7 +61,7 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
     return this.data
         .pipe(
             map(map => {
-              const entry = map.$(getKey(id), head());
+              const entry = exec(map, getKey(id), head());
 
               return entry ? entry[1] : null;
             }),
@@ -70,9 +71,10 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
 
   update(id: string, instance: T): void {
     this.data.next(
-        this.data.getValue().$(
+        exec(
+            this.data.getValue(),
             setKey([id, [id, instance] as [string, T]]),
-            ImmutableMap.create(),
+            asImmutableMap(),
         ),
     );
   }

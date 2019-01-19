@@ -1,4 +1,5 @@
-import { ImmutableList } from '../collect/immutable-list';
+import { createImmutableList, ImmutableList } from '../collect/types/immutable-list';
+import { createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
 
 interface AnnotationResult<D, TF extends Function> {
   data: D;
@@ -15,19 +16,19 @@ export class ClassAnnotation<D, A extends any[]> {
       private readonly annotator: Annotator<A, D>,
   ) { }
 
-  getAttachedValues(ctorFn: Function): ImmutableList<[Function, ImmutableList<D>]> {
+  getAttachedValues(ctorFn: Function): ImmutableMap<Function, ImmutableList<D>> {
     const entries: Array<[Function, ImmutableList<D>]> = [];
     let currentCtor = ctorFn;
     while (currentCtor !== null) {
       const dataList = this.dataMap.get(currentCtor);
       if (dataList !== undefined) {
-        entries.push([currentCtor, ImmutableList.of(dataList)]);
+        entries.push([currentCtor, createImmutableList(dataList)]);
       }
 
       currentCtor = Object.getPrototypeOf(currentCtor);
     }
 
-    return ImmutableList.of(entries);
+    return createImmutableMap(entries);
   }
 
   getDecorator(): (...args: A) => ClassDecorator {

@@ -1,4 +1,4 @@
-import { createGeneratorOperator } from '../create-operator';
+import { createGeneratorOperatorCopySize } from '../create-operator';
 import { TypedGenerator } from '../types/generator';
 import { GeneratorOperator } from '../types/operator';
 
@@ -16,7 +16,7 @@ export function zip<T, B0, B1, B2, K>(
 ): GeneratorOperator<T, K, [T, B0, B1, B2], K>;
 export function zip<T, K>(...generators: Array<TypedGenerator<any, any>>):
     GeneratorOperator<T, K, any[], K> {
-  return createGeneratorOperator(from => function *(): IterableIterator<any[]> {
+  return createGeneratorOperatorCopySize(from => function *(): IterableIterator<any[]> {
     const iterables = generators.map(generator => generator());
     for (const valueA of from()) {
       const result = [valueA];

@@ -1,11 +1,8 @@
-import { createGeneratorOperator } from '../create-operator';
-import { assertFinite } from '../generators';
+import { createGeneratorOperatorCopyAll } from '../create-operator';
 import { GeneratorOperator } from '../types/operator';
 
 export function push<T, K>(...items: T[]): GeneratorOperator<T, K, T, K> {
-  return createGeneratorOperator(from => {
-    assertFinite(from);
-
+  return createGeneratorOperatorCopyAll(from => {
     return function *(): IterableIterator<T> {
       yield* from();
       for (const item of items) {

@@ -2,7 +2,7 @@ import { assert, should, test } from 'gs-testing/export/main';
 import { mocks } from 'gs-testing/export/mock';
 import { createSpyInstance, createSpyObject, fake, resetCalls, SpyObj } from 'gs-testing/export/spy';
 import { BehaviorSubject, of as observableOf } from 'rxjs';
-import { ImmutableSet } from '../collect/immutable-set';
+import { ImmutableSet } from '../collect/types/immutable-set';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { TestDispose } from '../dispose/testing/test-dispose';
 import { CachedStorage } from './cached-storage';
@@ -39,7 +39,7 @@ test.skip('store.CachedStorage', () => {
       assert(mockInnerStorage.delete).to.haveBeenCalledWith(id);
       assert(mockItem.dispose).to.haveBeenCalledWith();
       // tslint:disable-next-line:no-non-null-assertion
-      assert(idsSubject.getValue()!).to.beEmpty();
+      assert(idsSubject.getValue()!()).to.beEmpty();
     });
 
     should('not throw error if the deleted item is not disposable', () => {
@@ -53,7 +53,7 @@ test.skip('store.CachedStorage', () => {
       storage.delete(id);
       assert(mockInnerStorage.delete).to.haveBeenCalledWith(id);
       // tslint:disable-next-line:no-non-null-assertion
-      assert(idsSubject.getValue()!).to.beEmpty();
+      assert(idsSubject.getValue()!()).to.beEmpty();
     });
 
     should('not throw error if the item does not exist', () => {
@@ -65,7 +65,7 @@ test.skip('store.CachedStorage', () => {
       storage.delete('id');
       assert(mockInnerStorage.delete).to.haveBeenCalledWith(id);
       // tslint:disable-next-line:no-non-null-assertion
-      assert(idsSubject.getValue()!).to.beEmpty();
+      assert(idsSubject.getValue()!()).to.beEmpty();
     });
   });
 

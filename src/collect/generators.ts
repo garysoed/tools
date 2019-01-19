@@ -1,25 +1,5 @@
 import { TypedGenerator } from './types/generator';
 
-export function assertKeyedGenerator<T, K>(
-    generator: TypedGenerator<T, K>,
-): TypedGenerator<T, K> & {getKey(value: T): K} {
-  if (!isKeyed(generator)) {
-    throw new Error('generator requires a getKey function');
-  }
-
-  return generator;
-}
-
-export function assertFinite<T, K>(
-    generator: TypedGenerator<T, K>,
-): TypedGenerator<T, K> & {isFinite: true} {
-  if (generator.isFinite !== true) {
-    throw new Error('generator requires to be finite');
-  }
-
-  return generator as TypedGenerator<T, K> & {isFinite: true};
-}
-
 export function countable(): TypedGenerator<number, any> {
   return function *(): IterableIterator<number> {
     let i = 0;
@@ -27,13 +7,6 @@ export function countable(): TypedGenerator<number, any> {
       yield i++;
     }
   };
-}
-
-export function copyMetadata<T, K>(
-    base: TypedGenerator<T, K>,
-    source: TypedGenerator<any, any>,
-): any {
-  return Object.assign(base, source);
 }
 
 export function generatorFrom<K, V>(map: Map<K, V>): TypedGenerator<[K, V], K>;
@@ -64,6 +37,22 @@ function generatorFromIterable<T>(iterable: Iterable<T>): TypedGenerator<T, void
       yield item;
     }
   };
+}
+
+export function getKey<T, K>(generator: TypedGenerator<T, K>, value: T): K {
+  if (!isKeyed(generator)) {
+    throw new Error('generator requires a getKey function');
+  }
+
+  return generator.getKey(value);
+}
+
+export function toArray<T, K>(generator: TypedGenerator<T, K>): T[] {
+  if (generator.isFinite !== true) {
+    throw new Error('generator requires to be finite');
+  }
+
+  return [...generator()];
 }
 
 function upgradeToFinite<T, K>(generator: TypedGenerator<T, K>): TypedGenerator<T, K> {

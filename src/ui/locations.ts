@@ -1,10 +1,10 @@
-import { stringMatchConverter } from 'src/serializer/string-match-converter';
-import { ImmutableList } from '../collect/immutable-list';
-import { ImmutableMap } from '../collect/immutable-map';
+import { exec } from '../collect/exec';
 import { filter } from '../collect/operators/filter';
 import { head } from '../collect/operators/head';
 import { size } from '../collect/operators/size';
 import { skip } from '../collect/operators/skip';
+import { asImmutableList, createImmutableList, ImmutableList } from '../collect/types/immutable-list';
+import { createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
 
 
 const MATCHER_REGEXP_: RegExp = /:([^:\/]+)/;
@@ -32,18 +32,18 @@ export function getMatches(path: string, matcher: string): ImmutableMap<string, 
   const hashParts = getParts_(path);
   const matcherParts = getParts_(trimmedMatcher);
 
-  if (exactMatch && matcherParts.$(size()) !== hashParts.$(size())) {
+  if (exactMatch && exec(matcherParts, size()) !== exec(hashParts, size())) {
     return null;
   }
 
   const matches = new Map<string, string>();
-  for (let i = 0; i < matcherParts.$(size()); i++) {
-    const matchPart = matcherParts.$(skip(i), head<string>());
+  for (let i = 0; i < exec(matcherParts, size()); i++) {
+    const matchPart = exec(matcherParts, skip(i), head<string>());
     if (matchPart === undefined) {
       return null;
     }
 
-    const hashPart = hashParts.$(skip(i), head<string>());
+    const hashPart = exec(hashParts, skip(i), head<string>());
     if (hashPart === undefined) {
       return null;
     }
@@ -57,19 +57,18 @@ export function getMatches(path: string, matcher: string): ImmutableMap<string, 
     }
   }
 
-  return ImmutableMap.of(matches);
+  return createImmutableMap(matches);
 }
 
 /**
  * @return Parts of the given path.
  */
 export function getParts_(path: string): ImmutableList<string> {
-  return ImmutableList
-      .of(normalizePath(path).split('/'))
-      .$(
-          filter(part => part !== '.'),
-          ImmutableList.create(),
-      );
+  return exec(
+      createImmutableList(normalizePath(path).split('/')),
+      filter(part => part !== '.'),
+      asImmutableList(),
+  );
 }
 
 /**

@@ -1,6 +1,7 @@
 import { Converter, Result, Serializable } from 'nabu/export/main';
+import { TypedGenerator } from 'src/collect/types/generator';
 
-class IterableConverter<T, I extends Iterable<T>> implements Converter<I, Serializable> {
+class IterableConverter<T, I extends TypedGenerator<T, any>> implements Converter<I, Serializable> {
   constructor(
       private readonly iterableProvider_: (content: Iterable<T>) => I,
       private readonly itemConverter_: Converter<T, Serializable>,
@@ -26,7 +27,7 @@ class IterableConverter<T, I extends Iterable<T>> implements Converter<I, Serial
 
   convertForward(input: I): Result<Serializable> {
     const convertedItems: Serializable[] = [];
-    for (const item of input) {
+    for (const item of input()) {
       const conversionResult = this.itemConverter_.convertForward(item);
       if (!conversionResult.success) {
         return {success: false};
@@ -39,7 +40,7 @@ class IterableConverter<T, I extends Iterable<T>> implements Converter<I, Serial
   }
 }
 
-export function iterableConverter<T, I extends Iterable<T>>(
+export function iterableConverter<T, I extends TypedGenerator<T, any>>(
     provider: (content: Iterable<T>) => I,
     itemConverter: Converter<T, Serializable>,
 ): IterableConverter<T, I> {

@@ -1,13 +1,13 @@
-import { createGeneratorOperator } from '../create-operator';
-import { transform } from '../transform';
+import { createGeneratorOperatorCopyAll } from '../create-operator';
+import { exec } from '../exec';
 import { GeneratorOperator } from '../types/operator';
 import { filter } from './filter';
 
 export function deleteEntry<T, K = void>(...entries: T[]): GeneratorOperator<T, K, T, K> {
-  return createGeneratorOperator(from => {
+  return createGeneratorOperatorCopyAll(from => {
     const toDelete = new Set(entries);
 
-    return transform(
+    return exec(
         from,
         filter(entry => !toDelete.has(entry)),
     );

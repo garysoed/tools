@@ -1,5 +1,5 @@
 import { Converter, Serializable } from 'nabu/export/main';
-import { ImmutableMap } from '../collect/immutable-map';
+import { createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
 import { iterableConverter } from './iterable-converter';
 import { tupleConverter } from './tuple-converter';
 
@@ -8,7 +8,7 @@ export function mapConverter<K, V>(
     valueConverter: Converter<V, Serializable>,
 ): Converter<ImmutableMap<K, V>, Serializable> {
   return iterableConverter(
-      contents => ImmutableMap.of(new Map([...contents])),
+      contents => createImmutableMap(new Map([...contents])),
       tupleConverter([keyConverter, valueConverter]),
   );
 }

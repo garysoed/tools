@@ -1,6 +1,6 @@
-import { ImmutableList } from '../collect/immutable-list';
-import { ImmutableMap } from '../collect/immutable-map';
-import { ImmutableSet } from '../collect/immutable-set';
+import { createImmutableList, ImmutableList } from '../collect/types/immutable-list';
+import { ImmutableMap } from '../collect/types/immutable-map';
+import { ImmutableSet } from '../collect/types/immutable-set';
 import { hash } from '../util/hash';
 
 export const __class = Symbol('class');
@@ -50,7 +50,7 @@ export class AnnotationsHandler<T> {
   getAttachedValues(): ImmutableMap<string|symbol, ImmutableList<T>> {
     const entries: Array<[string|symbol, ImmutableList<T>]> = [];
     for (const [key, values] of this.propertyValues_) {
-      entries.push([key, ImmutableList.of([...values])] as [string|symbol, ImmutableList<T>]);
+      entries.push([key, createImmutableList([...values])] as [string|symbol, ImmutableList<T>]);
     }
 
     const map = new Map(entries);
@@ -60,13 +60,13 @@ export class AnnotationsHandler<T> {
           .getAttachedValues();
 
       for (const [key, set] of parentAnnotationValues) {
-        const existingSet = map.get(key) || ImmutableList.of([]);
+        const existingSet = map.get(key) || createImmutableList([]);
         map.set(key, existingSet.addAll(set));
       }
 
-      return ImmutableMap.of(map);
+      return createImmutableMap(map);
     } else {
-      return ImmutableMap.of(map);
+      return createImmutableMap(map);
     }
   }
 

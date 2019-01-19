@@ -1,5 +1,5 @@
 import { Converter, Result } from 'nabu/export/main';
-import { ImmutableList } from '../collect/immutable-list';
+import { createImmutableList } from '../collect/types/immutable-list';
 import { AbsolutePath } from '../path/absolute-path';
 import { Path } from '../path/path';
 
@@ -16,7 +16,7 @@ class AbsolutePathParser implements Converter<AbsolutePath, string> {
       return {success: false};
     }
 
-    return {result: new AbsolutePath(ImmutableList.of(parts.slice(1))), success: true};
+    return {result: new AbsolutePath(createImmutableList(parts.slice(1))()), success: true};
   }
 
   convertForward(input: AbsolutePath): Result<string> {

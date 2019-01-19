@@ -1,12 +1,12 @@
 export { Collection } from './collection';
-export { CompareResult } from './compare-result';
+export { CompareResult } from '../collect/compare-result';
 export { DispatchFn } from './dispatch-fn';
 export { DomBinder } from './dom-binder';
 export { FiniteCollection } from './finite-collection';
 export { FiniteIndexed } from './finite-indexed';
 export { Monad } from './monad';
 export { Ordered } from './ordered';
-export { Ordering } from './ordering';
+export { Ordering } from '../collect/ordering';
 export { MonadFactory } from './monad-factory';
 export { MonadSetter } from './monad-setter';
 export { MonadValue } from './monad-value';

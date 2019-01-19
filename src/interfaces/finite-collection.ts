@@ -1,7 +1,7 @@
 import { Collection } from './collection';
 import { Finite } from './finite';
 import { Ordered } from './ordered';
-import { Ordering } from './ordering';
+import { Ordering } from '../collect/ordering';
 
 /**
  * A collection that has a finite size.

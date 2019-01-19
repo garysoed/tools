@@ -1,5 +1,5 @@
-import { ImmutableList } from '../collect/immutable-list';
-import { ImmutableMap } from '../collect/immutable-map';
+import { createImmutableList, ImmutableList } from '../collect/types/immutable-list';
+import { createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
 
 type Annotator<A extends any[], D> = (target: Object, key: string|symbol, ...args: A) => D;
 
@@ -11,7 +11,7 @@ export class PropertyAnnotation<D, A extends any[]> {
       private readonly annotator: Annotator<A, D>,
   ) { }
 
-  getAttachedValues(ctorFn: Object, key: string|symbol): ImmutableList<[Object, ImmutableList<D>]> {
+  getAttachedValues(ctorFn: Object, key: string|symbol): ImmutableMap<Object, ImmutableList<D>> {
     const entries: Array<[Object, ImmutableList<D>]> = [];
     let currentCtor = ctorFn;
     while (currentCtor !== null) {
@@ -19,20 +19,20 @@ export class PropertyAnnotation<D, A extends any[]> {
       if (keyMap) {
         const data = keyMap.get(key);
         if (data !== undefined) {
-          entries.push([currentCtor, ImmutableList.of(data)]);
+          entries.push([currentCtor, createImmutableList(data)]);
         }
       }
 
       currentCtor = Object.getPrototypeOf(currentCtor);
     }
 
-    return ImmutableList.of(entries);
+    return createImmutableMap(entries);
   }
 
   getAttachedValuesForCtor(
       ctorFn: Object,
-  ): ImmutableMap<string|symbol, ImmutableList<[Object, ImmutableList<D>]>> {
-    const map = new Map<string|symbol, ImmutableList<[Object, ImmutableList<D>]>>();
+  ): ImmutableMap<string|symbol, ImmutableMap<Object, ImmutableList<D>>> {
+    const map = new Map<string|symbol, ImmutableMap<Object, ImmutableList<D>>>();
     let currentCtor = ctorFn;
     while (currentCtor !== null) {
       const keyToDataMap = this.dataMap.get(currentCtor) || new Map<string|symbol, D[]>();
@@ -47,7 +47,7 @@ export class PropertyAnnotation<D, A extends any[]> {
       currentCtor = Object.getPrototypeOf(currentCtor);
     }
 
-    return ImmutableMap.of(map);
+    return createImmutableMap(map);
   }
 
   getDecorator(): (...args: A) => PropertyDecorator {

@@ -2,7 +2,7 @@ import { assert, match, retryUntil, should, test } from 'gs-testing/export/main'
 import { mocks } from 'gs-testing/export/mock';
 import { createSpy, createSpyObject, fake, Spy, SpyObj } from 'gs-testing/export/spy';
 import { BehaviorSubject, Observable, of as observableOf } from 'rxjs';
-import { ImmutableSet } from '../collect/immutable-set';
+import { createImmutableSet, ImmutableSet } from '../collect/types/immutable-set';
 import { GapiLibrary } from '../net';
 import { GapiRequestQueue, GapiStorage } from './gapi-storage';
 
@@ -76,14 +76,14 @@ test.skip('store.GapiStorage', () => {
 
   test('listIds', () => {
     should(`resolve correctly`, async () => {
-      const listIds = ImmutableSet.of(['itemId']);
+      const listIds = createImmutableSet(['itemId']);
       fake(mockListIdsImpl_).always().return(observableOf(listIds));
 
-      const listIdsSubject = new BehaviorSubject<ImmutableSet<string>>(ImmutableSet.of());
+      const listIdsSubject = new BehaviorSubject<ImmutableSet<string>>(createImmutableSet());
       storage.listIds().subscribe(listIdsSubject);
 
       // tslint:disable-next-line:no-non-null-assertion
-      assert(listIdsSubject.getValue()!).to.haveElements('itemId');
+      assert(listIdsSubject.getValue()!()).to.haveElements('itemId');
 
       const requestQueueMatcher = match
           .anyObjectThat<GapiRequestQueue<{}, {}>>()

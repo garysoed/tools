@@ -7,14 +7,14 @@ test('ui.Locations', () => {
     should('split the normalized parts', () => {
       const path = '/a/./b/c';
 
-      assert(getParts_(path)).to.haveElements(['', 'a', 'b', 'c']);
+      assert(getParts_(path)()).to.haveElements(['', 'a', 'b', 'c']);
     });
   });
 
   test('getMatches', () => {
     should('return the correct matches', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getMatches('/hello/_/location', '/:a/_/:b')!).to.haveElements([
+      assert(getMatches('/hello/_/location', '/:a/_/:b')!()).to.haveElements([
         match.anyTupleThat<[string, string]>().haveExactElements(['a', 'hello']),
         match.anyTupleThat<[string, string]>().haveExactElements(['b', 'location']),
       ]);
@@ -26,7 +26,7 @@ test('ui.Locations', () => {
 
     should('return the matches for exact match', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getMatches('/hello/_/location', `/:a/_/:b$`)!).to.haveElements([
+      assert(getMatches('/hello/_/location', `/:a/_/:b$`)!()).to.haveElements([
         match.anyTupleThat<[string, string]>().haveExactElements(['a', 'hello']),
         match.anyTupleThat<[string, string]>().haveExactElements(['b', 'location']),
       ]);

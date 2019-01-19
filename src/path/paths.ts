@@ -1,5 +1,5 @@
+import { exec } from '../collect/exec';
 import { countable } from '../collect/generators';
-import { ImmutableList } from '../collect/immutable-list';
 import { filter } from '../collect/operators/filter';
 import { head } from '../collect/operators/head';
 import { push } from '../collect/operators/push';
@@ -8,6 +8,7 @@ import { skip } from '../collect/operators/skip';
 import { tail } from '../collect/operators/tail';
 import { take } from '../collect/operators/take';
 import { zip } from '../collect/operators/zip';
+import { asImmutableList, createImmutableList, ImmutableList } from '../collect/types/immutable-list';
 import { Errors } from '../error';
 import { AbsolutePath } from '../path/absolute-path';
 import { Path } from '../path/path';
@@ -29,9 +30,10 @@ export class Paths {
   static getDirPath(path: AbsolutePath): AbsolutePath;
   static getDirPath(path: RelativePath): RelativePath;
   static getDirPath(path: AbsolutePath | RelativePath): Path {
-    const parts = path.getParts().$(
-        take(path.getParts().$(size()) - 1),
-        ImmutableList.create<string>(),
+    const parts = exec(
+        path.getParts(),
+        take(exec(path.getParts(), size()) - 1),
+        createImmutableList<string>(),
     );
     if (path instanceof AbsolutePath) {
       return new AbsolutePath(parts);
@@ -56,33 +58,34 @@ export class Paths {
   static getItemName(path: Path): string | null {
     const parts = path.getParts();
 
-    return parts.$(tail()) || null;
+    return exec(parts, tail()) || null;
   }
 
   static getRelativePath(srcPath: AbsolutePath, destPath: AbsolutePath): RelativePath {
     let commonCount = 0;
     const thisParts = srcPath.getParts();
     const thatParts = destPath.getParts();
-    while (commonCount < Math.min(thisParts.$(size()), thatParts.$(size())) - 1) {
-      if (thisParts.$(skip(commonCount), head()) !== thatParts.$(skip(commonCount), head())) {
+    while (commonCount < Math.min(exec(thisParts, size()), exec(thatParts, size())) - 1) {
+      if (exec(thisParts, skip(commonCount), head()) !==
+          exec(thatParts, skip(commonCount), head())) {
         break;
       }
 
       commonCount++;
     }
 
-    const upCount = thisParts.$(size()) - commonCount;
+    const upCount = exec(thisParts, size()) - commonCount;
     const parts: string[] = [];
     for (let i = 0; i < upCount; i++) {
       parts.push('..');
     }
 
     return new RelativePath(
-        ImmutableList.of(parts)
-            .$(
-                push(...thatParts.$(take(upCount))()),
-                ImmutableList.create(),
-            ),
+        exec(
+            createImmutableList(parts),
+            push(...exec(thatParts, take(upCount))()),
+            asImmutableList<string>(),
+        )(),
     );
   }
 
@@ -94,28 +97,28 @@ export class Paths {
   static getSubPathsToRoot(path: AbsolutePath): ImmutableList<AbsolutePath> {
     const subpaths: AbsolutePath[] = [];
     let currentPath = path;
-    while (currentPath && currentPath.getParts().$(size()) > 0) {
+    while (currentPath && exec(currentPath.getParts(), size()) > 0) {
       subpaths.push(currentPath);
       currentPath = Paths.getDirPath(currentPath);
     }
 
-    return ImmutableList.of(subpaths);
+    return createImmutableList(subpaths);
   }
 
   static join(root: AbsolutePath, ...paths: RelativePath[]): AbsolutePath;
   static join(root: RelativePath, ...paths: RelativePath[]): RelativePath;
   static join(root: AbsolutePath | RelativePath, ...paths: RelativePath[]): Path {
-    const srcParts = [...root.getParts()];
+    const srcParts = [...root.getParts()()];
     for (const path of paths) {
-      for (const part of path.getParts()) {
+      for (const part of path.getParts()()) {
         srcParts.push(part);
       }
     }
 
     if (root instanceof AbsolutePath) {
-      return Paths.normalize(new AbsolutePath(ImmutableList.of(srcParts)));
+      return Paths.normalize(new AbsolutePath(createImmutableList(srcParts)()));
     } else if (root instanceof RelativePath) {
-      return Paths.normalize(new RelativePath(ImmutableList.of(srcParts)));
+      return Paths.normalize(new RelativePath(createImmutableList(srcParts)()));
     } else {
       throw assertUnreachable(root);
     }
@@ -125,7 +128,7 @@ export class Paths {
   static normalize(path: RelativePath): RelativePath;
   static normalize(path: AbsolutePath | RelativePath): Path {
     // Removes all instances of '' parts.
-    const noEmptyParts = [...path.getParts().$(filter(part => !!part))()];
+    const noEmptyParts = [...exec(path.getParts(), filter(part => !!part))()];
 
     // Removes all instances of '.' part except the first one.
     const noCurrentParts: string[] = [];
@@ -137,12 +140,12 @@ export class Paths {
     }
 
     // Copy all trailing '..' part.
-    const nonDoubleDotEntry = ImmutableList.of(noCurrentParts)
-        .$(
-            zip(countable()),
-            filter(([part]) => part !== '..'),
-            head(),
-        );
+    const nonDoubleDotEntry = exec(
+        createImmutableList(noCurrentParts),
+        zip(countable()),
+        filter(([part]) => part !== '..'),
+        head(),
+    );
     const nonDoubleIndex = nonDoubleDotEntry ? nonDoubleDotEntry[1] + 1 : 0;
     const normalizedParts: string[] = [];
     for (let i = 0; i < nonDoubleIndex; i++) {
@@ -161,9 +164,9 @@ export class Paths {
     }
 
     if (path instanceof AbsolutePath) {
-      return new AbsolutePath(ImmutableList.of(normalizedParts));
+      return new AbsolutePath(createImmutableList(normalizedParts)());
     } else if (path instanceof RelativePath) {
-      return new RelativePath(ImmutableList.of(normalizedParts));
+      return new RelativePath(createImmutableList(normalizedParts)());
     } else {
       throw assertUnreachable(path);
     }

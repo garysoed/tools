@@ -98,7 +98,7 @@
 //   }
 
 //   filterItem(checker: (item: [K, V]) => boolean): ImmutableMap<K, V> {
-//     return ImmutableMap.of(this.entries().filterItem(checker));
+//     return createImmutableMap(this.entries().filterItem(checker));
 //   }
 
 //   find(check: (item: [K, V]) => boolean): [K, V] | null {
@@ -151,7 +151,7 @@
 //           return [key, fn(value, key)] as [K, R];
 //         });
 
-//     return ImmutableMap.of(mappedEntries);
+//     return createImmutableMap(mappedEntries);
 //   }
 
 //   mapItem<R>(fn: (item: [K, V]) => R): ImmutableSet<R> {
