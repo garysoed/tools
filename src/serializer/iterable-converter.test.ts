@@ -8,7 +8,7 @@ test('serializer.IterableConverter', () => {
   test('convertBackward', () => {
     should(`convert correctly`, () => {
       const converter = iterableConverter(
-          content => createImmutableList([...content]),
+          content => [...content],
           integerConverter(),
       );
 

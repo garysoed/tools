@@ -18,6 +18,29 @@ export const Orderings = {
     };
   },
 
+  following<T>(specs: T[]): Ordering<T> {
+    const ordering = new Map<T, number>();
+    for (let i = 0; i < specs.length; i++) {
+      ordering.set(specs[i], i);
+    }
+
+    const normalOrdering = Orderings.normal();
+
+    return (item1, item2): CompareResult => {
+      const ordinal1 = ordering.get(item1);
+      const ordinal2 = ordering.get(item2);
+      if (ordinal1 === undefined) {
+        return 0;
+      }
+
+      if (ordinal2 === undefined) {
+        return 0;
+      }
+
+      return normalOrdering(ordinal1, ordinal2);
+    };
+  },
+
   map<T1, T2>(mapFn: (input: T1) => T2, ordering: Ordering<T2>): Ordering<T1> {
     return (item1: T1, item2: T1): CompareResult => {
       return ordering(mapFn(item1), mapFn(item2));

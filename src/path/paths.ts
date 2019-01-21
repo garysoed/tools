@@ -33,7 +33,7 @@ export class Paths {
     const parts = exec(
         path.getParts(),
         take(exec(path.getParts(), size()) - 1),
-        createImmutableList<string>(),
+        asImmutableList<string>(),
     );
     if (path instanceof AbsolutePath) {
       return new AbsolutePath(parts);
@@ -83,7 +83,7 @@ export class Paths {
     return new RelativePath(
         exec(
             createImmutableList(parts),
-            push(...exec(thatParts, take(upCount))()),
+            push(...exec(thatParts, skip(upCount))()),
             asImmutableList<string>(),
         )(),
     );

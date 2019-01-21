@@ -1,9 +1,12 @@
+import { exec } from '../collect/exec';
+import { keys } from '../collect/operators/keys';
 import { createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
-import { Annotations } from './annotations';
+import { asImmutableSet } from '../collect/types/immutable-set';
+import { PropertyAnnotator } from './property-annotation';
 
 const __CACHES = Symbol('caches');
 
-export const CACHE_ANNOTATIONS = Annotations.of(__CACHES);
+export const CACHE_ANNOTATOR = new PropertyAnnotator(() => undefined);
 
 /**
  * @param target Object to clear the cache from.
@@ -18,7 +21,12 @@ export function clear(instance: Object, propertyKey: string | symbol): void {
  * @param target Object to clear all the cache from.
  */
 export function clearAll(instance: Object): void {
-  for (const key of CACHE_ANNOTATIONS.forCtor(instance.constructor).getAnnotatedProperties()) {
+  const keysSet = exec(
+      CACHE_ANNOTATOR.data.getAttachedValuesForCtor(instance.constructor),
+      keys(),
+      asImmutableSet(),
+  );
+  for (const key of keysSet) {
     clear(instance, key);
   }
 }

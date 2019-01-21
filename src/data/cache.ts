@@ -3,7 +3,7 @@ import { getKey } from '../collect/operators/get-key';
 import { head } from '../collect/operators/head';
 import { Errors } from '../error';
 import { hash } from '../util/hash';
-import { CACHE_ANNOTATIONS, getCache, setCacheValue } from './caches';
+import { CACHE_ANNOTATOR, getCache, setCacheValue } from './caches';
 
 /**
  * Caches the given method.
@@ -38,7 +38,7 @@ export function cache(): MethodDecorator {
       return result;
     };
 
-    CACHE_ANNOTATIONS.forCtor(target.constructor).attachValueToProperty(propertyKey, {});
+    CACHE_ANNOTATOR.decorator()(target, propertyKey);
 
     return descriptor;
   };

@@ -1,5 +1,10 @@
+import { exec } from '../collect/exec';
+import { getKey } from '../collect/operators/get-key';
+import { mapPick } from '../collect/operators/map-pick';
+import { sort } from '../collect/operators/sort';
+import { Orderings } from '../collect/orderings';
 import { createImmutableList, ImmutableList } from '../collect/types/immutable-list';
-import { createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
+import { asImmutableMap, createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
 
 interface AnnotationResult<D, TF extends Function> {
   data: D;
@@ -9,29 +14,47 @@ interface AnnotationResult<D, TF extends Function> {
 type Annotator<A extends any[], D> =
     <TF extends Function>(target: TF, ...args: A) => AnnotationResult<D, TF>;
 
-export class ClassAnnotation<D, A extends any[]> {
+export class ClassAnnotation<D> {
+  constructor(
+      private readonly data: ImmutableMap<Function, ImmutableList<D>>,
+  ) { }
+
+  getAttachedValues(ctorFn: Function): ImmutableMap<Function, ImmutableList<D>> {
+    // Collect the ctor hierarchy.
+    const ctors: Function[] = [];
+    let currentCtor = ctorFn;
+    while (currentCtor !== null) {
+      ctors.push(currentCtor);
+      currentCtor = Object.getPrototypeOf(currentCtor);
+    }
+
+    return exec(
+        this.data,
+        getKey(...ctors),
+        sort(Orderings.map(([ctor]) => ctor, Orderings.following(ctors))),
+        asImmutableMap(),
+    );
+  }
+}
+
+export class ClassAnnotator<D, A extends any[]> {
   private readonly dataMap: Map<Function, D[]> = new Map<Function, D[]>();
 
   constructor(
       private readonly annotator: Annotator<A, D>,
   ) { }
 
-  getAttachedValues(ctorFn: Function): ImmutableMap<Function, ImmutableList<D>> {
-    const entries: Array<[Function, ImmutableList<D>]> = [];
-    let currentCtor = ctorFn;
-    while (currentCtor !== null) {
-      const dataList = this.dataMap.get(currentCtor);
-      if (dataList !== undefined) {
-        entries.push([currentCtor, createImmutableList(dataList)]);
-      }
-
-      currentCtor = Object.getPrototypeOf(currentCtor);
-    }
-
-    return createImmutableMap(entries);
+  get data(): ClassAnnotation<D> {
+    return new ClassAnnotation(
+        exec(
+            createImmutableMap(this.dataMap),
+            mapPick(1, data => createImmutableList(data)),
+            asImmutableMap<Function, ImmutableList<D>>(),
+        ),
+    );
   }
 
-  getDecorator(): (...args: A) => ClassDecorator {
+  get decorator(): (...args: A) => ClassDecorator {
     return (...args: A) => {
       return <TF extends Function>(target: TF) => {
         const {data, newTarget} = this.annotator(target, ...args);
@@ -44,3 +67,4 @@ export class ClassAnnotation<D, A extends any[]> {
     };
   }
 }
+

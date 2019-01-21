@@ -1,6 +1,6 @@
 import { createGeneratorOperatorCopyAll } from '../create-operator';
-import { getKey } from '../generators';
 import { exec } from '../exec';
+import { getKey } from '../generators';
 import { GeneratorOperator } from '../types/operator';
 import { map } from './map';
 

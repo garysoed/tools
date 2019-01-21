@@ -13,7 +13,7 @@ test('immutable.Orderings', () => {
       const ordering = Orderings.compound(createImmutableList([
         () => 0 as CompareResult,
         Orderings.normal<number>(),
-      ])());
+      ]));
       assert(ordering(0, 1)).to.equal(-1);
       assert(ordering(1, 0)).to.equal(1);
     });
@@ -21,7 +21,7 @@ test('immutable.Orderings', () => {
     should(`return 0 if none of the given orderings can break ties`, () => {
       const ordering = Orderings.compound(createImmutableList([
         () => 0 as CompareResult,
-      ])());
+      ]));
       assert(ordering(0, 1)).to.equal(0);
     });
   });

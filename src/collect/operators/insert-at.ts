@@ -1,6 +1,6 @@
 import { createGeneratorOperatorCopyAll } from '../create-operator';
-import { countable } from '../generators';
 import { exec } from '../exec';
+import { countable } from '../generators';
 import { GeneratorOperator } from '../types/operator';
 import { map } from './map';
 import { skipWhile } from './skip-while';
