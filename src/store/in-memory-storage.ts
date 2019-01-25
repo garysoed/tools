@@ -1,12 +1,12 @@
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import { setKey } from 'src/collect/operators/set-key';
 import { exec } from '../collect/exec';
 import { deleteKey } from '../collect/operators/delete-key';
 import { getKey } from '../collect/operators/get-key';
 import { hasKey } from '../collect/operators/has-key';
 import { head } from '../collect/operators/head';
 import { keys } from '../collect/operators/keys';
+import { setKey } from '../collect/operators/set-key';
 import { asImmutableMap, createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
 import { asImmutableSet, ImmutableSet } from '../collect/types/immutable-set';
 import { BaseIdGenerator } from '../random/base-id-generator';

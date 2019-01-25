@@ -10,7 +10,7 @@ export interface ImmutableSet<T> extends TypedGenerator<T, void>, Iterable<T> {
 export function createImmutableSet<T>(array: T[]|Set<T> = []): ImmutableSet<T> {
   const generator: TypedGenerator<T, void> = exec(
       function *(): IterableIterator<T> {
-        yield* array;
+        yield* [...array];
       },
       distinct(),
   );

@@ -1,24 +1,21 @@
+import { EqualType, HasPropertiesType, InstanceofType, Type } from 'gs-types/export';
 import { generatorFrom } from '../generators';
 import { TypedGenerator } from './generator';
 
 export interface ImmutableMap<K, V> extends TypedGenerator<[K, V], K>, Iterable<[K, V]> {
   isFinite: true;
-  getKey([key]: [K, V]): K;
+  getKey(entry: [K, V]): K;
 }
 
-function createImmutableMap_<K, V>(generator: () => IterableIterator<[K, V]>): ImmutableMap<K, V> {
-  return Object.assign(
-    generator,
-    {
-      [Symbol.iterator](): IterableIterator<[K, V]> {
-        return generator();
-      },
-      isFinite: true as true,
-      getKey([key]: [K, V]): K {
-        return key;
-      },
-    },
-  );
+export function ImmutableMapType<K, V>(): Type<ImmutableMap<K, V>> {
+  return HasPropertiesType<ImmutableMap<K, V>>({
+    getKey: InstanceofType<(entry: [K, V]) => K>(Function),
+    isFinite: EqualType<true>(true),
+  });
+}
+
+export function asImmutableMap<K, V>(): (from: TypedGenerator<[K, V], K>) => ImmutableMap<K, V> {
+  return from => createImmutableMap([...from()]);
 }
 
 export function createImmutableMap<T>(obj: {[key: string]: T}): ImmutableMap<string, T>;
@@ -41,6 +38,17 @@ export function createImmutableMap<V>(
   }
 }
 
-export function asImmutableMap<K, V>(): (from: TypedGenerator<[K, V], K>) => ImmutableMap<K, V> {
-  return from => createImmutableMap([...from()]);
+function createImmutableMap_<K, V>(generator: () => IterableIterator<[K, V]>): ImmutableMap<K, V> {
+  return Object.assign(
+    generator,
+    {
+      [Symbol.iterator](): IterableIterator<[K, V]> {
+        return generator();
+      },
+      isFinite: true as true,
+      getKey([key]: [K, V]): K {
+        return key;
+      },
+    },
+  );
 }

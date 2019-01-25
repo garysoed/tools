@@ -19,6 +19,10 @@ export class ClassAnnotation<D> {
       private readonly data: ImmutableMap<Function, ImmutableList<D>>,
   ) { }
 
+  getAllValues(): ImmutableMap<Function, ImmutableList<D>> {
+    return this.data;
+  }
+
   getAttachedValues(ctorFn: Function): ImmutableMap<Function, ImmutableList<D>> {
     // Collect the ctor hierarchy.
     const ctors: Function[] = [];

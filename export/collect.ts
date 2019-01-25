@@ -1,5 +1,5 @@
 export { ImmutableList, asImmutableList, createImmutableList } from '../src/collect/types/immutable-list';
-export { ImmutableMap, asImmutableMap, createImmutableMap } from '../src/collect/types/immutable-map';
+export { ImmutableMap, asImmutableMap, createImmutableMap, ImmutableMapType } from '../src/collect/types/immutable-map';
 export { ImmutableSet, asImmutableSet, createImmutableSet } from '../src/collect/types/immutable-set';
 export { Orderings } from '../src/collect/orderings';
 export { exec as $exec } from '../src/collect/exec';

@@ -30,6 +30,13 @@ export class ParameterAnnotation<D> {
       >,
   ) { }
 
+  getAllValues(): ImmutableMap<
+      Object,
+      ImmutableMap<string|symbol, ImmutableMap<number, ImmutableList<D>>>
+  > {
+    return this.data;
+  }
+
   getAttachedValues(
       ctorFn: Object,
       key: string|symbol,
@@ -144,9 +151,9 @@ export class ParameterAnnotator<D, A extends any[]> {
   get decorator(): (...args: A) => ParameterDecorator {
     return (...args: A) => {
       return (target: Object, propertyKey: string | symbol, index: number) => {
-        const ctor = target.constructor;
-        const data = this.annotator(ctor, propertyKey, index, ...args);
+        const data = this.annotator(target, propertyKey, index, ...args);
 
+        const ctor = target.constructor;
         const keyMap = this.dataMap.get(ctor) || new Map<string|symbol, Map<number, D[]>>();
         const subMap = keyMap.get(propertyKey) || new Map<number, D[]>();
         const dataList = subMap.get(index) || [];
