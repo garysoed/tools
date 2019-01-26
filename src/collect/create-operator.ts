@@ -1,9 +1,9 @@
 import { TypedGenerator } from './types/generator';
 import { GeneratorOperator } from './types/operator';
 
-export function createGeneratorOperatorCopyAll<T, K>(
-    createFn: (from: TypedGenerator<T, K>) => TypedGenerator<T, K>,
-): GeneratorOperator<T, K, T, K> {
+export function createGeneratorOperatorCopyAll<T, K, T2 extends T>(
+    createFn: (from: TypedGenerator<T, K>) => TypedGenerator<T2, K>,
+): GeneratorOperator<T, K, T2, K> {
   return from => Object.assign(createFn(from), from);
 }
 

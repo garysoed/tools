@@ -11,6 +11,7 @@ export { declareKeyed as $declareKeyed } from '../src/collect/operators/declare-
 export { deleteAt as $deleteAt } from '../src/collect/operators/delete-at';
 export { distinct as $distinct } from '../src/collect/operators/distinct';
 export { filter as $filter } from '../src/collect/operators/filter';
+export { filterNotEqual as $filterNotEqual } from '../src/collect/operators/filter-not-equal';
 export { filterPick as $filterPick } from '../src/collect/operators/filter-pick';
 export { flat as $flat } from '../src/collect/operators/flat';
 export { getKey as $getKey } from '../src/collect/operators/get-key';
