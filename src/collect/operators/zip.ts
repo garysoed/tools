@@ -1,6 +1,6 @@
 import { createGeneratorOperatorCopySize } from '../create-operator';
-import { Stream } from '../types/stream';
 import { GeneratorOperator } from '../types/operator';
+import { Stream } from '../types/stream';
 
 export function zip<T, B0, K>(
     g0: Stream<B0, K>,

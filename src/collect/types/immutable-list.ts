@@ -1,5 +1,4 @@
-import { HasPropertiesType, InstanceofType, IntersectType, NumberType, Type } from 'gs-types/export';
-import { toArray } from '../generators';
+import { AnyType, HasPropertiesType, InstanceofType, IntersectType, IterableOfType, NumberType, Type } from 'gs-types/export';
 import { Stream } from './stream';
 
 export interface ImmutableList<T> extends Stream<T, void>, Iterable<T> {
@@ -11,16 +10,9 @@ interface ItemList<T> {
   item(index: number): T;
 }
 
-function ItemListType<T>(): Type<ItemList<T>> {
-  return IntersectType<ItemList<T>>([
-    HasPropertiesType({item: InstanceofType(Function)}),
-    HasPropertiesType({length: NumberType}),
-  ]);
-}
-
-export function createImmutableList<T>(data: T[]|ItemList<T> = []): ImmutableList<T> {
+export function createImmutableList<T>(data: Iterable<T>|ItemList<T> = []): ImmutableList<T> {
   const generator = function *(): IterableIterator<T> {
-    yield* convertToArray(data);
+    yield* convertToIterable(data);
   };
 
   return Object.assign(
@@ -34,8 +26,8 @@ export function createImmutableList<T>(data: T[]|ItemList<T> = []): ImmutableLis
   );
 }
 
-function convertToArray<T>(data: T[]|ItemList<T>): T[] {
-  if (data instanceof Array) {
+function convertToIterable<T>(data: Iterable<T>|ItemList<T>): Iterable<T> {
+  if (IterableOfType(AnyType<T>()).check(data)) {
     return data;
   }
 
@@ -48,5 +40,11 @@ function convertToArray<T>(data: T[]|ItemList<T>): T[] {
 }
 
 export function asImmutableList<T>(): (from: Stream<T, any>) => ImmutableList<T> {
-  return from => createImmutableList(toArray(from));
+  return from => {
+    if (!from.isFinite) {
+      throw new Error('generator requires to be finite');
+    }
+
+    return createImmutableList(from());
+  };
 }

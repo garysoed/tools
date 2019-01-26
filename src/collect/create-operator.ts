@@ -1,5 +1,5 @@
-import { Stream } from './types/stream';
 import { GeneratorOperator } from './types/operator';
+import { Stream } from './types/stream';
 
 export function createGeneratorOperatorCopyAll<T, K, T2 extends T>(
     createFn: (from: Stream<T, K>) => Stream<T2, K>,

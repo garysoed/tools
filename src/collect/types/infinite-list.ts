@@ -1,14 +1,13 @@
-import { toArray } from '../generators';
 import { Stream } from './stream';
 
 export interface InfiniteList<T> extends Stream<T, void> {}
 
-export function createInfiniteList<T>(array: T[] = []): InfiniteList<T> {
+export function createInfiniteList<T>(iterable: Iterable<T> = []): InfiniteList<T> {
   return function *(): IterableIterator<T> {
-    yield* array;
+    yield* iterable;
   };
 }
 
 export function asInfiniteList<T>(): (from: Stream<T, any>) => InfiniteList<T> {
-  return from => createInfiniteList(toArray(from));
+  return from => createInfiniteList(from());
 }

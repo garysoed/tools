@@ -47,14 +47,6 @@ export function getKey<T, K>(generator: Stream<T, K>, value: T): K {
   return generator.getKey(value);
 }
 
-export function toArray<T, K>(generator: Stream<T, K>): T[] {
-  if (generator.isFinite !== true) {
-    throw new Error('generator requires to be finite');
-  }
-
-  return [...generator()];
-}
-
 function upgradeToFinite<T, K>(generator: Stream<T, K>): Stream<T, K> {
   return Object.assign(generator, {isFinite: true});
 }
