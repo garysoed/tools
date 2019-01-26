@@ -1,8 +1,8 @@
 import { EqualType, HasPropertiesType, InstanceofType, Type } from 'gs-types/export';
 import { generatorFrom } from '../generators';
-import { TypedGenerator } from './generator';
+import { Stream } from './stream';
 
-export interface ImmutableMap<K, V> extends TypedGenerator<[K, V], K>, Iterable<[K, V]> {
+export interface ImmutableMap<K, V> extends Stream<[K, V], K>, Iterable<[K, V]> {
   isFinite: true;
   getKey(entry: [K, V]): K;
 }
@@ -14,7 +14,7 @@ export function ImmutableMapType<K, V>(): Type<ImmutableMap<K, V>> {
   });
 }
 
-export function asImmutableMap<K, V>(): (from: TypedGenerator<[K, V], K>) => ImmutableMap<K, V> {
+export function asImmutableMap<K, V>(): (from: Stream<[K, V], K>) => ImmutableMap<K, V> {
   return from => createImmutableMap([...from()]);
 }
 

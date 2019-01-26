@@ -1,6 +1,6 @@
-import { TypedGenerator } from './types/generator';
+import { Stream } from './types/stream';
 
-export function countable(): TypedGenerator<number, any> {
+export function countable(): Stream<number, any> {
   return function *(): IterableIterator<number> {
     let i = 0;
     while (true) {
@@ -9,9 +9,9 @@ export function countable(): TypedGenerator<number, any> {
   };
 }
 
-export function generatorFrom<K, V>(map: Map<K, V>): TypedGenerator<[K, V], K>;
-export function generatorFrom<T>(iterable: Iterable<T>|T[]): TypedGenerator<T, void>;
-export function generatorFrom(iterable: Iterable<any>): TypedGenerator<any, any> {
+export function generatorFrom<K, V>(map: Map<K, V>): Stream<[K, V], K>;
+export function generatorFrom<T>(iterable: Iterable<T>|T[]): Stream<T, void>;
+export function generatorFrom(iterable: Iterable<any>): Stream<any, any> {
   if (iterable instanceof Array) {
     return generatorFromArray(iterable);
   } else if (iterable instanceof Map) {
@@ -21,17 +21,17 @@ export function generatorFrom(iterable: Iterable<any>): TypedGenerator<any, any>
   }
 }
 
-function generatorFromArray<T>(array: T[]): TypedGenerator<T, void> {
+function generatorFromArray<T>(array: T[]): Stream<T, void> {
   return upgradeToFinite(generatorFromIterable(array));
 }
 
-function generatorFromMap<K, V>(map: Map<K, V>): TypedGenerator<[K, V], K> {
+function generatorFromMap<K, V>(map: Map<K, V>): Stream<[K, V], K> {
   return upgradeToFinite(
       upgradeToKeyed(generatorFromIterable(map), ([key]) => key),
   );
 }
 
-function generatorFromIterable<T>(iterable: Iterable<T>): TypedGenerator<T, void> {
+function generatorFromIterable<T>(iterable: Iterable<T>): Stream<T, void> {
   return function *(): IterableIterator<any> {
     for (const item of iterable) {
       yield item;
@@ -39,7 +39,7 @@ function generatorFromIterable<T>(iterable: Iterable<T>): TypedGenerator<T, void
   };
 }
 
-export function getKey<T, K>(generator: TypedGenerator<T, K>, value: T): K {
+export function getKey<T, K>(generator: Stream<T, K>, value: T): K {
   if (!isKeyed(generator)) {
     throw new Error('generator requires a getKey function');
   }
@@ -47,7 +47,7 @@ export function getKey<T, K>(generator: TypedGenerator<T, K>, value: T): K {
   return generator.getKey(value);
 }
 
-export function toArray<T, K>(generator: TypedGenerator<T, K>): T[] {
+export function toArray<T, K>(generator: Stream<T, K>): T[] {
   if (generator.isFinite !== true) {
     throw new Error('generator requires to be finite');
   }
@@ -55,14 +55,14 @@ export function toArray<T, K>(generator: TypedGenerator<T, K>): T[] {
   return [...generator()];
 }
 
-function upgradeToFinite<T, K>(generator: TypedGenerator<T, K>): TypedGenerator<T, K> {
+function upgradeToFinite<T, K>(generator: Stream<T, K>): Stream<T, K> {
   return Object.assign(generator, {isFinite: true});
 }
 
 export function upgradeToKeyed<K, V>(
-    generator: TypedGenerator<V, any>,
+    generator: Stream<V, any>,
     getKey: (value: V) => K,
-): TypedGenerator<V, K> {
+): Stream<V, K> {
   return Object.assign(
       generator,
       {
@@ -74,8 +74,8 @@ export function upgradeToKeyed<K, V>(
 }
 
 export function isKeyed<T, K>(
-    from: TypedGenerator<T, K>,
-): from is TypedGenerator<T, K> & {getKey(value: T): K} {
+    from: Stream<T, K>,
+): from is Stream<T, K> & {getKey(value: T): K} {
   return from.getKey instanceof Function;
 }
 

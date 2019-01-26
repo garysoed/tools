@@ -1,7 +1,7 @@
 import { generatorFrom } from '../generators';
-import { TypedGenerator } from './generator';
+import { Stream } from './stream';
 
-export interface InfiniteMap<K, V> extends TypedGenerator<[K, V], K>, Iterable<[K, V]> {
+export interface InfiniteMap<K, V> extends Stream<[K, V], K>, Iterable<[K, V]> {
   getKey([key]: [K, V]): K;
 }
 
@@ -39,6 +39,6 @@ export function createInfiniteMap<V>(
   }
 }
 
-export function asInfiniteMap<K, V>(): (from: TypedGenerator<[K, V], K>) => InfiniteMap<K, V> {
+export function asInfiniteMap<K, V>(): (from: Stream<[K, V], K>) => InfiniteMap<K, V> {
   return from => createInfiniteMap([...from()]);
 }

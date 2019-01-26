@@ -1,8 +1,8 @@
 import { HasPropertiesType, InstanceofType, IntersectType, NumberType, Type } from 'gs-types/export';
 import { toArray } from '../generators';
-import { TypedGenerator } from './generator';
+import { Stream } from './stream';
 
-export interface ImmutableList<T> extends TypedGenerator<T, void>, Iterable<T> {
+export interface ImmutableList<T> extends Stream<T, void>, Iterable<T> {
   isFinite: true;
 }
 
@@ -47,6 +47,6 @@ function convertToArray<T>(data: T[]|ItemList<T>): T[] {
   return array;
 }
 
-export function asImmutableList<T>(): (from: TypedGenerator<T, any>) => ImmutableList<T> {
+export function asImmutableList<T>(): (from: Stream<T, any>) => ImmutableList<T> {
   return from => createImmutableList(toArray(from));
 }

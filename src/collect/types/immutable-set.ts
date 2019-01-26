@@ -1,14 +1,14 @@
 import { exec } from '../exec';
 import { toArray } from '../generators';
 import { distinct } from '../operators/distinct';
-import { TypedGenerator } from './generator';
+import { Stream } from './stream';
 
-export interface ImmutableSet<T> extends TypedGenerator<T, void>, Iterable<T> {
+export interface ImmutableSet<T> extends Stream<T, void>, Iterable<T> {
   isFinite: true;
 }
 
 export function createImmutableSet<T>(array: T[]|Set<T> = []): ImmutableSet<T> {
-  const generator: TypedGenerator<T, void> = exec(
+  const generator: Stream<T, void> = exec(
       function *(): IterableIterator<T> {
         yield* [...array];
       },
@@ -25,6 +25,6 @@ export function createImmutableSet<T>(array: T[]|Set<T> = []): ImmutableSet<T> {
       });
 }
 
-export function asImmutableSet<T>(): (from: TypedGenerator<T, any>) => ImmutableSet<T> {
+export function asImmutableSet<T>(): (from: Stream<T, any>) => ImmutableSet<T> {
   return from => createImmutableSet(toArray(from));
 }

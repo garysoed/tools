@@ -1,10 +1,10 @@
 import { toArray } from '../generators';
-import { TypedGenerator } from '../types/generator';
+import { Stream } from '../types/stream';
 
 export function every<T, K>(
     checkFn: (item: T) => boolean,
-): (from: TypedGenerator<T, K>) => boolean {
-  return (from: TypedGenerator<T, K>) => {
+): (from: Stream<T, K>) => boolean {
+  return (from: Stream<T, K>) => {
     for (const value of toArray(from)) {
       if (!checkFn(value)) {
         return false;

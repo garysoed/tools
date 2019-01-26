@@ -1,8 +1,8 @@
 import { toArray } from '../generators';
-import { TypedGenerator } from '../types/generator';
+import { Stream } from '../types/stream';
 
-export function size<T, K>(): (from: TypedGenerator<T, K>) => number {
-  return (from: TypedGenerator<T, K>) => {
+export function size<T, K>(): (from: Stream<T, K>) => number {
+  return (from: Stream<T, K>) => {
     let i = 0;
     for (const _ of toArray(from)) {
       i++;

@@ -1,8 +1,8 @@
 import { exec } from '../exec';
-import { TypedGenerator } from '../types/generator';
+import { Stream } from '../types/stream';
 import { getKey } from './get-key';
 import { head } from './head';
 
-export function hasKey<K>(...keys: K[]): (from: TypedGenerator<unknown, K>) => boolean {
+export function hasKey<K>(...keys: K[]): (from: Stream<unknown, K>) => boolean {
   return from => exec(from, getKey(...keys), head()) !== undefined;
 }

@@ -1,7 +1,7 @@
 import { toArray } from '../generators';
-import { TypedGenerator } from '../types/generator';
+import { Stream } from '../types/stream';
 
-export function some<T, K>(checkFn: (item: T) => boolean): (from: TypedGenerator<T, K>) => boolean {
+export function some<T, K>(checkFn: (item: T) => boolean): (from: Stream<T, K>) => boolean {
   return from => {
     for (const value of toArray(from)) {
       if (checkFn(value)) {
