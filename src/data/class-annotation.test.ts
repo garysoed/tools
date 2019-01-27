@@ -1,6 +1,6 @@
 // tslint:disable:no-non-null-assertion
 import { assert, should, test } from 'gs-testing/export/main';
-import { exec } from '../collect/exec';
+import { pipe } from '../collect/pipe';
 import { flat } from '../collect/operators/flat';
 import { map } from '../collect/operators/map';
 import { ClassAnnotator } from './class-annotation';
@@ -24,7 +24,7 @@ test('data.ClassAnnotator', () => {
   test('getAttachedValues', () => {
     function getFlatAttachedValues(ctorFn: Function): Array<Object|string> {
       return [
-        ...exec(
+        ...pipe(
             annotation.data.getAttachedValues(ctorFn),
             map(([obj, valuesList]) => [obj, ...valuesList]),
             flat<Object|string>(),

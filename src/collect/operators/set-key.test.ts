@@ -1,5 +1,5 @@
 import { assert, match, setup, should, test } from 'gs-testing/export/main';
-import { exec } from '../exec';
+import { pipe } from '../pipe';
 import { createInfiniteMap, InfiniteMap } from '../types/infinite-map';
 import { setKey } from './set-key';
 
@@ -15,7 +15,7 @@ test('collect.operators.setKey', () => {
   });
 
   should(`set the entries correctly`, () => {
-    const newGenerator = exec(
+    const newGenerator = pipe(
         map,
         setKey(
           ['a', ['2', 2]],

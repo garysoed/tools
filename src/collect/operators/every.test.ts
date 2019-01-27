@@ -1,5 +1,5 @@
 import { assert, setup, should, test } from 'gs-testing/export/main';
-import { exec } from '../exec';
+import { pipe } from '../pipe';
 import { createImmutableList, ImmutableList } from '../types/immutable-list';
 import { every } from './every';
 
@@ -11,14 +11,14 @@ test('collect.operators.every', () => {
   });
 
   should(`return true if all the elements fulfill the check function`, () => {
-    assert(exec(list, every(value => typeof value === 'number'))).to.beTrue();
+    assert(pipe(list, every(value => typeof value === 'number'))).to.beTrue();
   });
 
   should(`return false if an element does not fulfill the check function`, () => {
-    assert(exec(list, every(value => value < 2))).to.beFalse();
+    assert(pipe(list, every(value => value < 2))).to.beFalse();
   });
 
   should(`return true if empty`, () => {
-    assert(exec(createImmutableList([]), every(value => false))).to.beTrue();
+    assert(pipe(createImmutableList([]), every(value => false))).to.beTrue();
   });
 });

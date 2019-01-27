@@ -1,4 +1,4 @@
-import { exec } from '../exec';
+import { pipe } from '../pipe';
 import { distinct } from '../operators/distinct';
 import { asImmutableList } from './immutable-list';
 import { Stream } from './stream';
@@ -8,7 +8,7 @@ export interface ImmutableSet<T> extends Stream<T, void>, Iterable<T> {
 }
 
 export function createImmutableSet<T>(iterable: Iterable<T> = []): ImmutableSet<T> {
-  const generator: Stream<T, void> = exec(
+  const generator: Stream<T, void> = pipe(
       function *(): IterableIterator<T> {
         yield* iterable;
       },

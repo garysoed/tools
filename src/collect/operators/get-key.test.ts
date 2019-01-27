@@ -1,5 +1,5 @@
 import { assert, match, setup, should, test } from 'gs-testing/export/main';
-import { exec } from '../exec';
+import { pipe } from '../pipe';
 import { createInfiniteMap, InfiniteMap } from '../types/infinite-map';
 import { getKey } from './get-key';
 
@@ -15,7 +15,7 @@ test('collect.operators.getKey', () => {
   });
 
   should(`get the entries correctly`, () => {
-    assert([...exec(map, getKey('a', 'b', 'z'))()]).to.haveExactElements([
+    assert([...pipe(map, getKey('a', 'b', 'z'))()]).to.haveExactElements([
       match.anyTupleThat<[string, number]>().haveExactElements(['a', 1]),
       match.anyTupleThat<[string, number]>().haveExactElements(['b', 2]),
     ]);

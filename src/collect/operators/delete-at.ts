@@ -1,5 +1,5 @@
 import { createGeneratorOperatorCopyAll } from '../create-operator';
-import { exec } from '../exec';
+import { pipe } from '../pipe';
 import { countable } from '../generators';
 import { GeneratorOperator } from '../types/operator';
 import { filter } from './filter';
@@ -10,7 +10,7 @@ export function deleteAt<T, K>(...indexes: number[]): GeneratorOperator<T, K, T,
   return createGeneratorOperatorCopyAll(from => {
     const toDelete = new Set(indexes);
 
-    return exec(
+    return pipe(
         from,
         zip(countable()),
         filter(([_, index]) => index === undefined || !toDelete.has(index)),

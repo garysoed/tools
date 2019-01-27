@@ -1,5 +1,5 @@
 import { assert, setup, should, test } from 'gs-testing/export/main';
-import { exec } from '../exec';
+import { pipe } from '../pipe';
 import { createInfiniteMap, InfiniteMap } from '../types/infinite-map';
 import { filterPick } from './filter-pick';
 import { flat } from './flat';
@@ -12,7 +12,7 @@ test('collect.operators.filterPick', () => {
   });
 
   should('filter out items that do not match the predicate', () => {
-    const filteredItems = exec(
+    const filteredItems = pipe(
         list,
         filterPick(1, i => i > 2),
         flat(),

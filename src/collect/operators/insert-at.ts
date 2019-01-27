@@ -1,5 +1,5 @@
 import { createGeneratorOperatorCopyAll } from '../create-operator';
-import { exec } from '../exec';
+import { pipe } from '../pipe';
 import { countable } from '../generators';
 import { GeneratorOperator } from '../types/operator';
 import { map } from './map';
@@ -14,7 +14,7 @@ export function insertAt<T, K>(...insertions: Array<[T, number]>): GeneratorOper
     return function *(): IterableIterator<T> {
       let rest = zipped;
       for (const [item, index] of insertions) {
-        const before = exec(
+        const before = pipe(
             zipped,
             takeWhile(([_, i]) => i < index),
             map(([value]) => value),
@@ -23,7 +23,7 @@ export function insertAt<T, K>(...insertions: Array<[T, number]>): GeneratorOper
         yield* before();
         yield item;
       }
-      yield* exec(rest, map(([value]) => value))();
+      yield* pipe(rest, map(([value]) => value))();
     };
   });
 }

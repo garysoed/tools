@@ -1,5 +1,5 @@
 import { createGeneratorOperatorCopyAll } from '../create-operator';
-import { exec } from '../exec';
+import { pipe } from '../pipe';
 import { countable } from '../generators';
 import { GeneratorOperator } from '../types/operator';
 import { map } from './map';
@@ -9,7 +9,7 @@ export function setAt<T, K>(...setSpecs: Array<[number, T]>): GeneratorOperator<
   return createGeneratorOperatorCopyAll(from => {
     const setSpecMap = new Map(setSpecs);
 
-    return exec(
+    return pipe(
         from,
         zip(countable()),
         map(([value, index]) => {

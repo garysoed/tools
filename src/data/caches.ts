@@ -1,4 +1,4 @@
-import { exec } from '../collect/exec';
+import { pipe } from '../collect/pipe';
 import { keys } from '../collect/operators/keys';
 import { createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
 import { asImmutableSet } from '../collect/types/immutable-set';
@@ -21,7 +21,7 @@ export function clear(instance: Object, propertyKey: string | symbol): void {
  * @param target Object to clear all the cache from.
  */
 export function clearAll(instance: Object): void {
-  const keysSet = exec(
+  const keysSet = pipe(
       CACHE_ANNOTATOR.data.getAttachedValuesForCtor(instance.constructor),
       keys(),
       asImmutableSet(),

@@ -1,6 +1,6 @@
 // tslint:disable:no-non-null-assertion
 import { assert, match, setup, should, test } from 'gs-testing/export/main';
-import { exec } from '../collect/exec';
+import { pipe } from '../collect/pipe';
 import { flat } from '../collect/operators/flat';
 import { map } from '../collect/operators/map';
 import { mapPick } from '../collect/operators/map-pick';
@@ -50,7 +50,7 @@ test('data.ParameterAnnotator', () => {
         index: number,
     ): Array<Object|string> {
       return [
-        ...exec(
+        ...pipe(
             annotation.data.getAttachedValues(ctorFn, key, index),
             map(([obj, valuesList]) => [obj, ...valuesList]),
             flat<Object|string>(),
@@ -115,15 +115,15 @@ test('data.ParameterAnnotator', () => {
   test('getAttachedValuesForCtor', () => {
     function getFlatAttachedValues(ctorFn: Object): Array<Object|string|symbol|number> {
       return [
-        ...exec(
+        ...pipe(
             annotation.data.getAttachedValuesForCtor(ctorFn),
             mapPick(
                 1,
-                indexMap => exec(
+                indexMap => pipe(
                     indexMap,
                     mapPick(
                         1,
-                        objMap => exec(
+                        objMap => pipe(
                             objMap,
                             map(([obj, valuesList]) => [obj, ...valuesList]),
                             flat(),
@@ -195,11 +195,11 @@ test('data.ParameterAnnotator', () => {
   test('getAttachedValuesForKey', () => {
     function getFlatAttachedValues(ctorFn: Object, key: string|symbol): Array<Object|number> {
       return [
-        ...exec(
+        ...pipe(
             annotation.data.getAttachedValuesForKey(ctorFn, key),
             mapPick(
                 1,
-                indexMap => exec(
+                indexMap => pipe(
                     indexMap,
                     map(([key, values]) => [key, ...values()]),
                     flat<Object|string|symbol|number>(),

@@ -1,5 +1,5 @@
 import { Converter, Result } from 'nabu/export/main';
-import { exec } from '../collect/exec';
+import { pipe } from '../collect/pipe';
 import { hasEntry } from '../collect/operators/has-entry';
 import { createImmutableSet, ImmutableSet } from '../collect/types/immutable-set';
 
@@ -8,7 +8,7 @@ class StringMatchConverter<T extends string> implements Converter<T, string> {
   constructor(private readonly acceptableValues_: ImmutableSet<T>) { }
 
   convertBackward(value: string): Result<T> {
-    const isAcceptable = exec(this.acceptableValues_, hasEntry(value as T));
+    const isAcceptable = pipe(this.acceptableValues_, hasEntry(value as T));
     if (!isAcceptable) {
       return {success: false};
     }
@@ -17,7 +17,7 @@ class StringMatchConverter<T extends string> implements Converter<T, string> {
   }
 
   convertForward(input: T): Result<string> {
-    const isAcceptable = exec(this.acceptableValues_, hasEntry(input));
+    const isAcceptable = pipe(this.acceptableValues_, hasEntry(input));
     if (!isAcceptable) {
       return {success: false};
     }

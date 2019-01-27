@@ -1,5 +1,5 @@
 import { assert, setup, should, test } from 'gs-testing/export/main';
-import { exec } from '../exec';
+import { pipe } from '../pipe';
 import { createImmutableList, ImmutableList } from '../types/immutable-list';
 import { reverse } from './reverse';
 
@@ -11,6 +11,6 @@ test('collect.operators.reverse', () => {
   });
 
   should(`reverse the items`, () => {
-    assert([...exec(list, reverse())()]).to.haveExactElements([3, 2, 1]);
+    assert([...pipe(list, reverse())()]).to.haveExactElements([3, 2, 1]);
   });
 });

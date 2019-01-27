@@ -1,7 +1,7 @@
 import { assert, should, test } from 'gs-testing/export/main';
 import { NumberType } from 'gs-types/export';
 import { CompareResult } from './compare-result';
-import { exec } from './exec';
+import { pipe } from './pipe';
 import { sort } from './operators/sort';
 import { Orderings } from './orderings';
 import { createImmutableList } from './types/immutable-list';
@@ -32,7 +32,7 @@ test('immutable.Orderings', () => {
       const b = {v: 2};
       const list = createImmutableList([b, a]);
 
-      const sorted = exec(list, sort(Orderings.map(item => `${item.v}`, Orderings.natural())));
+      const sorted = pipe(list, sort(Orderings.map(item => `${item.v}`, Orderings.natural())));
       assert([...sorted()]).to.haveExactElements([a, b]);
     });
   });
@@ -40,7 +40,7 @@ test('immutable.Orderings', () => {
   test('matches', () => {
     should(`order matching items at the start of the list`, () => {
       const list = createImmutableList([1, 2, 3]);
-      assert([...exec(list, sort(Orderings.matches((v => v > 1))))()]).to
+      assert([...pipe(list, sort(Orderings.matches((v => v > 1))))()]).to
           .haveExactElements([2, 3, 1]);
     });
   });
@@ -48,7 +48,7 @@ test('immutable.Orderings', () => {
   test('isOneOf', () => {
     should(`order matching items at the start of the list`, () => {
       const list = createImmutableList([1, 2, 3]);
-      assert([...exec(list, sort(Orderings.isOneOf([3])))()]).to.haveExactElements([3, 1, 2]);
+      assert([...pipe(list, sort(Orderings.isOneOf([3])))()]).to.haveExactElements([3, 1, 2]);
     });
   });
 

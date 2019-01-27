@@ -1,4 +1,4 @@
-import { exec } from '../collect/exec';
+import { pipe } from '../collect/pipe';
 import { filter } from '../collect/operators/filter';
 import { head } from '../collect/operators/head';
 import { size } from '../collect/operators/size';
@@ -32,18 +32,18 @@ export function getMatches(path: string, matcher: string): ImmutableMap<string, 
   const hashParts = getParts_(path);
   const matcherParts = getParts_(trimmedMatcher);
 
-  if (exactMatch && exec(matcherParts, size()) !== exec(hashParts, size())) {
+  if (exactMatch && pipe(matcherParts, size()) !== pipe(hashParts, size())) {
     return null;
   }
 
   const matches = new Map<string, string>();
-  for (let i = 0; i < exec(matcherParts, size()); i++) {
-    const matchPart = exec(matcherParts, skip(i), head<string>());
+  for (let i = 0; i < pipe(matcherParts, size()); i++) {
+    const matchPart = pipe(matcherParts, skip(i), head<string>());
     if (matchPart === undefined) {
       return null;
     }
 
-    const hashPart = exec(hashParts, skip(i), head<string>());
+    const hashPart = pipe(hashParts, skip(i), head<string>());
     if (hashPart === undefined) {
       return null;
     }
@@ -64,7 +64,7 @@ export function getMatches(path: string, matcher: string): ImmutableMap<string, 
  * @return Parts of the given path.
  */
 export function getParts_(path: string): ImmutableList<string> {
-  return exec(
+  return pipe(
       createImmutableList(normalizePath(path).split('/')),
       filter(part => part !== '.'),
       asImmutableList(),

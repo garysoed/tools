@@ -1,5 +1,5 @@
 import { assert, should, test } from 'gs-testing/export/main';
-import { exec } from '../exec';
+import { pipe } from '../pipe';
 import { createImmutableList } from '../types/immutable-list';
 import { flat } from './flat';
 
@@ -11,6 +11,6 @@ test('collect.operators.flat', () => {
       createImmutableList([4, 5]),
     ]);
 
-    assert([...exec(list, flat())()]).to.haveExactElements([1, 2, 3, 4, 5]);
+    assert([...pipe(list, flat())()]).to.haveExactElements([1, 2, 3, 4, 5]);
   });
 });

@@ -1,5 +1,5 @@
 import { assert, setup, should, test } from 'gs-testing/export/main';
-import { exec } from '../exec';
+import { pipe } from '../pipe';
 import { createInfiniteList, InfiniteList } from '../types/infinite-list';
 import { deleteEntry } from './delete-entry';
 
@@ -11,6 +11,6 @@ test('collect.operators.deleteEntry', () => {
   });
 
   should(`delete the entries correctly`, () => {
-    assert([...exec(list, deleteEntry(1, 3, 4))()]).to.haveExactElements([2]);
+    assert([...pipe(list, deleteEntry(1, 3, 4))()]).to.haveExactElements([2]);
   });
 });

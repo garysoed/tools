@@ -1,4 +1,4 @@
-import { exec } from '../collect/exec';
+import { pipe } from '../collect/pipe';
 import { declareFinite } from '../collect/operators/declare-finite';
 import { declareKeyed } from '../collect/operators/declare-keyed';
 import { distinct } from '../collect/operators/distinct';
@@ -44,12 +44,12 @@ export class ParameterAnnotation<D> {
   ): ImmutableMap<Object, ImmutableList<D>> {
     const ctorChain = [...getCtorChain(ctorFn)];
 
-    return exec(
+    return pipe(
         this.data,
         getKey(...ctorChain),
         mapPick(
             1,
-            keyToDataMap => exec(
+            keyToDataMap => pipe(
                 keyToDataMap,
                 getKey(key),
                 pick(1),
@@ -70,9 +70,9 @@ export class ParameterAnnotation<D> {
   getAttachedValuesForCtor(
       ctorFn: Object,
   ): ImmutableMap<string|symbol, ImmutableMap<number, ImmutableMap<Object, ImmutableList<D>>>> {
-    return exec(
+    return pipe(
         // Get the keys
-        exec(
+        pipe(
             this.data,
             getKey(...getCtorChain(ctorFn)),
             pick(1),
@@ -93,9 +93,9 @@ export class ParameterAnnotation<D> {
       ctorFn: Object,
       key: string|symbol,
   ): ImmutableMap<number, ImmutableMap<Object, ImmutableList<D>>> {
-    return exec(
+    return pipe(
         // Get the indexes.
-        exec(
+        pipe(
             this.data,
             getKey(...getCtorChain(ctorFn)),
             pick(1),
@@ -126,15 +126,15 @@ export class ParameterAnnotator<D, A extends any[]> {
 
   get data(): ParameterAnnotation<D> {
     return new ParameterAnnotation(
-        exec(
+        pipe(
             createImmutableMap(this.dataMap),
             mapPick(
                 1,
-                mapObj => exec(
+                mapObj => pipe(
                     createImmutableMap(mapObj),
                     mapPick(
                         1,
-                        subMapObj => exec(
+                        subMapObj => pipe(
                             createImmutableMap(subMapObj),
                             mapPick(1, data => createImmutableList<D>(data)),
                             asImmutableMap(),

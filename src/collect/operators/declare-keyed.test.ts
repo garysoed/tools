@@ -1,11 +1,11 @@
 import { assert, should, test } from 'gs-testing/export/main';
-import { exec } from '../exec';
+import { pipe } from '../pipe';
 import { getKey } from '../generators';
 import { declareKeyed } from './declare-keyed';
 
 test('collect.operators.declareKeyed', () => {
   should(`declare the generator as keyed`, () => {
-    const generator = exec(
+    const generator = pipe(
         function *(): IterableIterator<number> {
           yield 12;
         },

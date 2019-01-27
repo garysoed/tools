@@ -3,7 +3,7 @@ import { Converter, Serializable } from 'nabu/export/main';
 import { compose, identity, strict, StrictConverter } from 'nabu/export/util';
 import { fromEvent, Observable } from 'rxjs';
 import { map, shareReplay, startWith, take } from 'rxjs/operators';
-import { exec } from '../collect/exec';
+import { pipe } from '../collect/pipe';
 import { deleteEntry } from '../collect/operators/delete-entry';
 import { filter } from '../collect/operators/filter';
 import { hasEntry } from '../collect/operators/has-entry';
@@ -51,7 +51,7 @@ export class WebStorage<T> implements EditableStorage<T> {
         .pipe(take(1))
         .subscribe(ids => {
           const result = this.indexesConverter_.convertForward(
-              exec(
+              pipe(
                   ids,
                   deleteEntry(id),
                   asImmutableSet(),
@@ -74,7 +74,7 @@ export class WebStorage<T> implements EditableStorage<T> {
   has(id: string): Observable<boolean> {
     return this.storageIdsObs_
         .pipe(
-            map(ids => exec(ids, hasEntry(id))),
+            map(ids => pipe(ids, hasEntry(id))),
             shareReplay(1),
         );
   }
@@ -98,7 +98,7 @@ export class WebStorage<T> implements EditableStorage<T> {
         .pipe(take(1))
         .subscribe(indexes => {
           const indexesResult = this.indexesConverter_.convertForward(
-              exec(indexes, push(id), asImmutableSet()),
+              pipe(indexes, push(id), asImmutableSet()),
           );
           this.storage_.setItem(this.prefix_, indexesResult);
 
@@ -135,7 +135,7 @@ function getIndexes_(
 
   const set = indexesConverter.convertBackward(indexesStr);
 
-  return exec(set, filter((id): id is string => !!id), asImmutableSet());
+  return pipe(set, filter((id): id is string => !!id), asImmutableSet());
 }
 
 function getItem_<T>(

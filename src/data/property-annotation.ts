@@ -1,4 +1,4 @@
-import { exec } from '../collect/exec';
+import { pipe } from '../collect/pipe';
 import { declareKeyed } from '../collect/operators/declare-keyed';
 import { distinct } from '../collect/operators/distinct';
 import { filterPick } from '../collect/operators/filter-pick';
@@ -28,12 +28,12 @@ export class PropertyAnnotation<D> {
   getAttachedValues(ctorFn: Object, key: string|symbol): ImmutableMap<Object, ImmutableList<D>> {
     const ctorChain = [...getCtorChain(ctorFn)];
 
-    return exec(
+    return pipe(
         this.data,
         getKey(...ctorChain),
         mapPick(
             1,
-            keyToDataMap => exec(
+            keyToDataMap => pipe(
                 keyToDataMap,
                 getKey(key),
                 pick(1),
@@ -49,9 +49,9 @@ export class PropertyAnnotation<D> {
   getAttachedValuesForCtor(
       ctorFn: Object,
   ): ImmutableMap<string|symbol, ImmutableMap<Object, ImmutableList<D>>> {
-    return exec(
+    return pipe(
         // Get the keys
-        exec(
+        pipe(
             this.data,
             getKey(...getCtorChain(ctorFn)),
             pick(1),
@@ -79,11 +79,11 @@ export class PropertyAnnotator<D, A extends any[]> {
 
   get data(): PropertyAnnotation<D> {
     return new PropertyAnnotation(
-        exec(
+        pipe(
             createImmutableMap(this.dataMap),
             mapPick(
                 1,
-                mapObj => exec(
+                mapObj => pipe(
                     createImmutableMap(mapObj),
                     mapPick(1, data => createImmutableList(data)),
                     asImmutableMap(),

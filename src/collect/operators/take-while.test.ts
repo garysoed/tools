@@ -1,5 +1,5 @@
 import { assert, setup, should, test } from 'gs-testing/export/main';
-import { exec } from '../exec';
+import { pipe } from '../pipe';
 import { generatorFrom } from '../generators';
 import { InfiniteList } from '../types/infinite-list';
 import { takeWhile } from './take-while';
@@ -12,6 +12,6 @@ test('collect.operators.takeWhile', () => {
   });
 
   should(`skip the items correctly`, () => {
-    assert([...exec(list, takeWhile(v => (v % 2) === 0))()]).to.haveExactElements([0, 2]);
+    assert([...pipe(list, takeWhile(v => (v % 2) === 0))()]).to.haveExactElements([0, 2]);
   });
 });

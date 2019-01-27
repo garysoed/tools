@@ -2,7 +2,7 @@ export { ImmutableList, asImmutableList, createImmutableList } from '../src/coll
 export { ImmutableMap, asImmutableMap, createImmutableMap, ImmutableMapType } from '../src/collect/types/immutable-map';
 export { ImmutableSet, asImmutableSet, createImmutableSet } from '../src/collect/types/immutable-set';
 export { Orderings } from '../src/collect/orderings';
-export { exec as $exec } from '../src/collect/exec';
+export { pipe as $pipe } from '../src/collect/pipe';
 
 // Operators
 export { concat as $concat } from '../src/collect/operators/concat';

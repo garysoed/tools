@@ -1,4 +1,4 @@
-import { exec } from './exec';
+import { pipe } from './pipe';
 import { Stream } from './types/stream';
 
 type Operator<F, T> = (from: F) => T;
@@ -37,6 +37,6 @@ export abstract class BaseCollection<T, K, I extends Stream<T, K>> implements It
   ): D;
   $(
       ...transformers: Array<Operator<any, any>>): any {
-    return exec(this.generator, ...transformers);
+    return pipe(this.generator, ...transformers);
   }
 }

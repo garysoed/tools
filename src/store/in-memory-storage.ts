@@ -1,6 +1,6 @@
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import { exec } from '../collect/exec';
+import { pipe } from '../collect/pipe';
 import { deleteKey } from '../collect/operators/delete-key';
 import { getKey } from '../collect/operators/get-key';
 import { hasKey } from '../collect/operators/has-key';
@@ -21,7 +21,7 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
 
   delete(id: string): void {
     this.data.next(
-        exec(
+        pipe(
             this.data.getValue(),
             deleteKey(id),
             asImmutableMap(),
@@ -32,7 +32,7 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
   generateId(): Observable<string> {
     return this.data
         .pipe(
-            map(map => this.idGenerator.generate(exec(map, keys())())),
+            map(map => this.idGenerator.generate(pipe(map, keys())())),
             shareReplay(1),
         );
   }
@@ -40,7 +40,7 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
   has(id: string): Observable<boolean> {
     return this.data
         .pipe(
-            map(map => exec(map, hasKey(id))),
+            map(map => pipe(map, hasKey(id))),
             shareReplay(1),
         );
   }
@@ -48,7 +48,7 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
   listIds(): Observable<ImmutableSet<string>> {
     return this.data
         .pipe(
-            map(map => exec(
+            map(map => pipe(
                 map,
                 keys(),
                 asImmutableSet(),
@@ -61,7 +61,7 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
     return this.data
         .pipe(
             map(map => {
-              const entry = exec(map, getKey(id), head());
+              const entry = pipe(map, getKey(id), head());
 
               return entry ? entry[1] : null;
             }),
@@ -71,7 +71,7 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
 
   update(id: string, instance: T): void {
     this.data.next(
-        exec(
+        pipe(
             this.data.getValue(),
             setKey([id, [id, instance] as [string, T]]),
             asImmutableMap(),

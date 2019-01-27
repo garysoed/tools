@@ -1,5 +1,5 @@
 import { createGeneratorOperatorCopySize } from '../create-operator';
-import { exec } from '../exec';
+import { pipe } from '../pipe';
 import { GeneratorOperator } from '../types/operator';
 import { map } from './map';
 
@@ -13,7 +13,7 @@ export function mapPick<T extends any[], K, N extends keyof T & number, R>(
     index: N,
     mapFn: (from: T[N]) => R,
 ): GeneratorOperator<T, K, Mapped<T, N, R>, K> {
-  return createGeneratorOperatorCopySize(from => exec(
+  return createGeneratorOperatorCopySize(from => pipe(
       from,
       map(item => {
         const rv = [...item];

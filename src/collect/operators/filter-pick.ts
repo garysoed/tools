@@ -1,5 +1,5 @@
 import { createGeneratorOperatorCopyAll } from '../create-operator';
-import { exec } from '../exec';
+import { pipe } from '../pipe';
 import { GeneratorOperator } from '../types/operator';
 import { filter } from './filter';
 
@@ -19,7 +19,7 @@ export function filterPick<T, K, N extends keyof T & number>(
   index: N,
   filterFn: (value: T[N]) => boolean,
 ): GeneratorOperator<T, K, T, K> {
-  return createGeneratorOperatorCopyAll(from => exec(
+  return createGeneratorOperatorCopyAll(from => pipe(
       from,
       filter(item => filterFn(item[index])),
   ));

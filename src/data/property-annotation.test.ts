@@ -1,6 +1,6 @@
 // tslint:disable:no-non-null-assertion
 import { assert, should, test } from 'gs-testing/export/main';
-import { exec } from '../collect/exec';
+import { pipe } from '../collect/pipe';
 import { flat } from '../collect/operators/flat';
 import { map } from '../collect/operators/map';
 import { mapPick } from '../collect/operators/map-pick';
@@ -41,7 +41,7 @@ test('data.PropertyAnnotation', () => {
         key: string|symbol,
     ): Array<Object|string> {
       return [
-        ...exec(
+        ...pipe(
             annotation.data.getAttachedValues(ctorFn, key),
             map(([obj, valuesList]) => [obj, ...valuesList]),
             flat<Object|string>(),
@@ -92,11 +92,11 @@ test('data.PropertyAnnotation', () => {
   test('getAttachedValuesForCtor', () => {
     function getFlatAttachedValues(ctorFn: Object): Array<Object|number> {
       return [
-        ...exec(
+        ...pipe(
             annotation.data.getAttachedValuesForCtor(ctorFn),
             mapPick(
                 1,
-                indexMap => exec(
+                indexMap => pipe(
                     indexMap,
                     map(([key, values]) => [key, ...values()]),
                     flat<Object|string|symbol|number>(),

@@ -2,29 +2,29 @@ import { Stream } from './types/stream';
 
 type Operator<F, T> = (from: F) => T;
 
-export function exec<F, T>(
+export function pipe<F, T>(
     start: F,
     t0: Operator<F, T>,
 ): T;
-export function exec<F extends Stream<any, any>, S0, T>(
+export function pipe<F extends Stream<any, any>, S0, T>(
     start: F,
     t0: Operator<F, S0>,
     t1: Operator<S0, T>,
 ): T;
-export function exec<F extends Stream<any, any>, S0, S1, T>(
+export function pipe<F extends Stream<any, any>, S0, S1, T>(
     start: F,
     t0: Operator<F, S0>,
     t1: Operator<S0, S1>,
     t2: Operator<S1, T>,
 ): T;
-export function exec<F extends Stream<any, any>, S0, S1, S2, T>(
+export function pipe<F extends Stream<any, any>, S0, S1, S2, T>(
     start: F,
     t0: Operator<F, S0>,
     t1: Operator<S0, S1>,
     t2: Operator<S1, S2>,
     t3: Operator<S2, T>,
 ): T;
-export function exec<F extends Stream<any, any>, S0, S1, S2, S3, T>(
+export function pipe<F extends Stream<any, any>, S0, S1, S2, S3, T>(
     start: F,
     t0: Operator<F, S0>,
     t1: Operator<S0, S1>,
@@ -32,7 +32,7 @@ export function exec<F extends Stream<any, any>, S0, S1, S2, S3, T>(
     t3: Operator<S2, S3>,
     t4: Operator<S3, T>,
 ): T;
-export function exec<F extends Stream<any, any>, S0, S1, S2, S3, S4, T>(
+export function pipe<F extends Stream<any, any>, S0, S1, S2, S3, S4, T>(
     start: F,
     t0: Operator<F, S0>,
     t1: Operator<S0, S1>,
@@ -41,7 +41,7 @@ export function exec<F extends Stream<any, any>, S0, S1, S2, S3, S4, T>(
     t4: Operator<S3, S4>,
     t5: Operator<S4, T>,
 ): T;
-export function exec<F extends Stream<any, any>, S0, S1, S2, S3, S4, S5, T>(
+export function pipe<F extends Stream<any, any>, S0, S1, S2, S3, S4, S5, T>(
     start: F,
     t0: Operator<F, S0>,
     t1: Operator<S0, S1>,
@@ -51,7 +51,7 @@ export function exec<F extends Stream<any, any>, S0, S1, S2, S3, S4, S5, T>(
     t5: Operator<S4, S5>,
     t6: Operator<S5, T>,
 ): T;
-export function exec<F extends Stream<any, any>, S0, S1, S2, S3, S4, S5, S6, T>(
+export function pipe<F extends Stream<any, any>, S0, S1, S2, S3, S4, S5, S6, T>(
     start: F,
     t0: Operator<F, S0>,
     t1: Operator<S0, S1>,
@@ -62,7 +62,7 @@ export function exec<F extends Stream<any, any>, S0, S1, S2, S3, S4, S5, S6, T>(
     t6: Operator<S5, S6>,
     t7: Operator<S6, T>,
 ): T;
-export function exec<F extends Stream<any, any>, S0, S1, S2, S3, S4, S5, S6, S7, T>(
+export function pipe<F extends Stream<any, any>, S0, S1, S2, S3, S4, S5, S6, S7, T>(
     start: F,
     t0: Operator<F, S0>,
     t1: Operator<S0, S1>,
@@ -74,7 +74,7 @@ export function exec<F extends Stream<any, any>, S0, S1, S2, S3, S4, S5, S6, S7,
     t7: Operator<S6, S7>,
     t8: Operator<S7, T>,
 ): T;
-export function exec<F extends Stream<any, any>, S0, S1, S2, S3, S4, S5, S6, S7, S8, T>(
+export function pipe<F extends Stream<any, any>, S0, S1, S2, S3, S4, S5, S6, S7, S8, T>(
     start: F,
     t0: Operator<F, S0>,
     t1: Operator<S0, S1>,
@@ -87,10 +87,10 @@ export function exec<F extends Stream<any, any>, S0, S1, S2, S3, S4, S5, S6, S7,
     t8: Operator<S7, S8>,
     t9: Operator<S8, T>,
 ): T;
-export function exec(
+export function pipe(
     start: Stream<any, any>,
     ...transformers: Array<Operator<unknown, unknown>>): unknown;
-export function exec(
+export function pipe(
     start: Stream<any, any>,
     ...transformers: Array<Operator<unknown, unknown>>): unknown {
   let result: unknown = start;

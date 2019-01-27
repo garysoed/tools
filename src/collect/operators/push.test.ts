@@ -1,5 +1,5 @@
 import { assert, setup, should, test } from 'gs-testing/export/main';
-import { exec } from '../exec';
+import { pipe } from '../pipe';
 import { createImmutableList, ImmutableList } from '../types/immutable-list';
 import { push } from './push';
 
@@ -11,6 +11,6 @@ test('collect.operators.push', () => {
   });
 
   should(`add all the given elements`, () => {
-    assert([...exec(list, push(4, 5, 6))()]).to.haveExactElements([1, 2, 3, 4, 5, 6]);
+    assert([...pipe(list, push(4, 5, 6))()]).to.haveExactElements([1, 2, 3, 4, 5, 6]);
   });
 });

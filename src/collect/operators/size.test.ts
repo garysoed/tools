@@ -1,5 +1,5 @@
 import { assert, setup, should, test } from 'gs-testing/export/main';
-import { exec } from '../exec';
+import { pipe } from '../pipe';
 import { createImmutableList, ImmutableList } from '../types/immutable-list';
 import { size } from './size';
 
@@ -11,6 +11,6 @@ test('collect.operators.size', () => {
   });
 
   should(`return the correct size`, () => {
-    assert(exec(list, size())).to.equal(3);
+    assert(pipe(list, size())).to.equal(3);
   });
 });

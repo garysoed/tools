@@ -1,4 +1,4 @@
-import { exec } from '../collect/exec';
+import { pipe } from '../collect/pipe';
 import { getKey } from '../collect/operators/get-key';
 import { mapPick } from '../collect/operators/map-pick';
 import { sort } from '../collect/operators/sort';
@@ -32,7 +32,7 @@ export class ClassAnnotation<D> {
       currentCtor = Object.getPrototypeOf(currentCtor);
     }
 
-    return exec(
+    return pipe(
         this.data,
         getKey(...ctors),
         sort(Orderings.map(([ctor]) => ctor, Orderings.following(ctors))),
@@ -50,7 +50,7 @@ export class ClassAnnotator<D, A extends any[]> {
 
   get data(): ClassAnnotation<D> {
     return new ClassAnnotation(
-        exec(
+        pipe(
             createImmutableMap(this.dataMap),
             mapPick(1, data => createImmutableList(data)),
             asImmutableMap<Function, ImmutableList<D>>(),

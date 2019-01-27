@@ -1,5 +1,5 @@
 import { createGeneratorOperatorCopyAll } from '../create-operator';
-import { exec } from '../exec';
+import { pipe } from '../pipe';
 import { countable } from '../generators';
 import { GeneratorOperator } from '../types/operator';
 import { map } from './map';
@@ -8,7 +8,7 @@ import { zip } from './zip';
 
 export function take<T, K>(count: number): GeneratorOperator<T, K, T, K> {
   return createGeneratorOperatorCopyAll(from => {
-    const gen = exec(
+    const gen = pipe(
         from,
         zip(countable()),
         takeWhile(([_, index]) => index < count),

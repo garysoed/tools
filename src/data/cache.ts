@@ -1,4 +1,4 @@
-import { exec } from '../collect/exec';
+import { pipe } from '../collect/pipe';
 import { getKey } from '../collect/operators/get-key';
 import { head } from '../collect/operators/head';
 import { Errors } from '../error';
@@ -27,7 +27,7 @@ export function cache(): MethodDecorator {
             return hash(arg);
           })
           .join('_');
-      const cachedValue = exec(cacheData, getKey(argsHash), head());
+      const cachedValue = pipe(cacheData, getKey(argsHash), head());
       if (cachedValue !== undefined) {
         return cachedValue[1];
       }

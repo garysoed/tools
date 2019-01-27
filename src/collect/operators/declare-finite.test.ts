@@ -1,12 +1,12 @@
 import { assert, should, test } from 'gs-testing/export/main';
-import { exec } from '../exec';
+import { pipe } from '../pipe';
 import { asArray } from './as-array';
 import { declareFinite } from './declare-finite';
 
 test('collect.operators.declareFinite', () => {
   should(`declare the generator as finite`, () => {
     assert(() => {
-      exec(
+      pipe(
           function *(): IterableIterator<number> {
             yield* [1, 2, 3];
           },

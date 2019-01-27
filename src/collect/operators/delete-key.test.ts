@@ -1,5 +1,5 @@
 import { assert, match, setup, should, test } from 'gs-testing/export/main';
-import { exec } from '../exec';
+import { pipe } from '../pipe';
 import { createInfiniteMap, InfiniteMap } from '../types/infinite-map';
 import { deleteKey } from './delete-key';
 
@@ -15,7 +15,7 @@ test('collect.operators.deleteKey', () => {
   });
 
   should(`delete the keys correctly`, () => {
-    assert([...exec(map, deleteKey('a', 'b', 'z'))()]).to.haveExactElements([
+    assert([...pipe(map, deleteKey('a', 'b', 'z'))()]).to.haveExactElements([
       match.anyTupleThat<[string, number]>().haveExactElements(['c', 3]),
     ]);
   });
