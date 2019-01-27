@@ -10,11 +10,7 @@ interface ItemList<T> {
   item(index: number): T;
 }
 
-export function createImmutableList<T>(data: Iterable<T>|ItemList<T> = []): ImmutableList<T> {
-  const generator = function *(): IterableIterator<T> {
-    yield* convertToIterable(data);
-  };
-
+function createImmutableList_<T>(generator: () => IterableIterator<T>): ImmutableList<T> {
   return Object.assign(
       generator,
       {
@@ -24,6 +20,14 @@ export function createImmutableList<T>(data: Iterable<T>|ItemList<T> = []): Immu
         isFinite: true as true,
       },
   );
+}
+
+export function createImmutableList<T>(data: Iterable<T>|ItemList<T> = []): ImmutableList<T> {
+  const generator = function *(): IterableIterator<T> {
+    yield* convertToIterable(data);
+  };
+
+  return createImmutableList_(generator);
 }
 
 function convertToIterable<T>(data: Iterable<T>|ItemList<T>): Iterable<T> {
@@ -45,6 +49,6 @@ export function asImmutableList<T>(): (from: Stream<T, any>) => ImmutableList<T>
       throw new Error('generator requires to be finite');
     }
 
-    return createImmutableList(from());
+    return createImmutableList_(from);
   };
 }

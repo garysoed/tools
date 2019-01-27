@@ -1,9 +1,9 @@
 // tslint:disable:no-non-null-assertion
 import { assert, should, test } from 'gs-testing/export/main';
-import { pipe } from '../collect/pipe';
 import { flat } from '../collect/operators/flat';
 import { map } from '../collect/operators/map';
 import { mapPick } from '../collect/operators/map-pick';
+import { pipe } from '../collect/pipe';
 import { PropertyAnnotator } from './property-annotation';
 
 const annotation = new PropertyAnnotator((_, propertyKey, value) => {

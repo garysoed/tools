@@ -1,15 +1,18 @@
-import { pipe } from '../collect/pipe';
+import { debug } from '../collect/operators/debug';
 import { declareFinite } from '../collect/operators/declare-finite';
 import { declareKeyed } from '../collect/operators/declare-keyed';
 import { distinct } from '../collect/operators/distinct';
+import { filterPick } from '../collect/operators/filter-pick';
 import { flat } from '../collect/operators/flat';
 import { getKey } from '../collect/operators/get-key';
+import { head } from '../collect/operators/head';
 import { keys } from '../collect/operators/keys';
 import { map } from '../collect/operators/map';
 import { mapPick } from '../collect/operators/map-pick';
 import { pick } from '../collect/operators/pick';
 import { sort } from '../collect/operators/sort';
 import { Orderings } from '../collect/orderings';
+import { pipe } from '../collect/pipe';
 import { asImmutableList, createImmutableList, ImmutableList } from '../collect/types/immutable-list';
 import { asImmutableMap, createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
 
@@ -52,10 +55,16 @@ export class ParameterAnnotation<D> {
             keyToDataMap => pipe(
                 keyToDataMap,
                 getKey(key),
-                pick(1),
-                flat<[number, ImmutableList<D>]>(),
-                declareKeyed(([index]) => index),
-                getKey(index),
+                mapPick(
+                    1,
+                    indexToDataMap => pipe(
+                        indexToDataMap,
+                        getKey(index),
+                        pick(1),
+                        head(),
+                    ),
+                ),
+                filterPick(1, (data): data is ImmutableList<D> => !!data),
                 pick(1),
                 flat<D>(),
                 declareFinite(),

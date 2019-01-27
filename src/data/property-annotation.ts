@@ -1,4 +1,4 @@
-import { pipe } from '../collect/pipe';
+import { declareFinite } from 'src/collect/operators/declare-finite';
 import { declareKeyed } from '../collect/operators/declare-keyed';
 import { distinct } from '../collect/operators/distinct';
 import { filterPick } from '../collect/operators/filter-pick';
@@ -11,6 +11,7 @@ import { mapPick } from '../collect/operators/map-pick';
 import { pick } from '../collect/operators/pick';
 import { sort } from '../collect/operators/sort';
 import { Orderings } from '../collect/orderings';
+import { pipe } from '../collect/pipe';
 import { createImmutableList, ImmutableList } from '../collect/types/immutable-list';
 import { asImmutableMap, createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
 

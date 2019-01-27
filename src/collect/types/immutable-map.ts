@@ -15,7 +15,7 @@ export function ImmutableMapType<K, V>(): Type<ImmutableMap<K, V>> {
 }
 
 export function asImmutableMap<K, V>(): (from: Stream<[K, V], K>) => ImmutableMap<K, V> {
-  return from => createImmutableMap([...from()]);
+  return from => createImmutableMap_(from);
 }
 
 export function createImmutableMap<T>(obj: {[key: string]: T}): ImmutableMap<string, T>;

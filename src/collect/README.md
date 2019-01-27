@@ -27,4 +27,38 @@ structures.
 
 ## Operators
 
-All operations
+All operations must use the `$pipe` method to apply to the data structure.
+
+Some examples:
+
+```typescript
+// Creates InfiniteList of [0, 1, 2, 3, 4, ...].
+const list = counting();
+
+// Creates Stream of [2, 4, 6, 8, ...].
+const evens = $pipe(
+    list,
+    $filter(i => (i % 2) === 0), // Even numbers only
+);
+```
+
+Operators like `$filter` operates on every item in the stream. Note that operators such as `$filter`
+may take out an item from the stream.
+
+Since the operators are lazy, none of the filtering operation happens, until a terminating operation
+is applied to the pipe. For example:
+
+```typescript
+// Returns 6
+const thirdEven = $pipe(
+    evens,
+    $skip(3), // Skips the first 3 evens
+    $head(), // Takes the first item in the Stream.
+);
+```
+
+When `$head` is applied, `Pocket` will run through the list `[0, 1, 2, 3, 4, 5, 6]` until there is
+an item that passes through the filters `$filter` and `$skip`. `[0, 2, 4]` are all blocked by
+`$skip`, while `[1, 3, 5]` are blocked by `$filter`. `6` is the first item that are not blocked, and
+`$head` returns this.
+

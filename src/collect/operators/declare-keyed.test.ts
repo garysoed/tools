@@ -1,6 +1,6 @@
 import { assert, should, test } from 'gs-testing/export/main';
-import { pipe } from '../pipe';
 import { getKey } from '../generators';
+import { pipe } from '../pipe';
 import { declareKeyed } from './declare-keyed';
 
 test('collect.operators.declareKeyed', () => {
