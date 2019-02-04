@@ -17,7 +17,7 @@ export function mapPick<T extends any[], K, N extends keyof T & number, R>(
       from,
       map(item => {
         const rv = [...item];
-        rv.splice(index, 1, mapFn(item[index]));
+        rv[index] =  mapFn(item[index]);
 
         return rv as any;
       }),

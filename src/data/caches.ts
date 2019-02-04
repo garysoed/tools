@@ -26,7 +26,7 @@ export function clearAll(instance: Object): void {
       keys(),
       asImmutableSet(),
   );
-  for (const key of keysSet) {
+  for (const key of keysSet()) {
     clear(instance, key);
   }
 }

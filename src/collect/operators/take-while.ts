@@ -8,14 +8,12 @@ export function takeWhile<T, K>(checkFn: (value: T) => boolean): GeneratorOperat
 export function takeWhile<T, K>(checkFn: (value: T) => boolean): GeneratorOperator<T, K, T, K> {
   return createGeneratorOperatorCopyAll(from => {
     return function *(): IterableIterator<T> {
-      let failed = false;
       for (const value of from()) {
-        if (checkFn(value) && !failed) {
-          yield value;
-          continue;
+        if (!checkFn(value)) {
+          return;
         }
 
-        failed = true;
+        yield value;
       }
     };
   });

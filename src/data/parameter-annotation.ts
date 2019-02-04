@@ -1,4 +1,3 @@
-import { debug } from '../collect/operators/debug';
 import { declareFinite } from '../collect/operators/declare-finite';
 import { declareKeyed } from '../collect/operators/declare-keyed';
 import { distinct } from '../collect/operators/distinct';
@@ -14,7 +13,8 @@ import { sort } from '../collect/operators/sort';
 import { Orderings } from '../collect/orderings';
 import { pipe } from '../collect/pipe';
 import { asImmutableList, createImmutableList, ImmutableList } from '../collect/types/immutable-list';
-import { asImmutableMap, createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
+import { asImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
+import { createInfiniteMap } from '../collect/types/infinite-map';
 
 type Annotator<A extends any[], D> = (
     target: Object,
@@ -33,7 +33,7 @@ export class ParameterAnnotation<D> {
       >,
   ) { }
 
-  getAllValues(): ImmutableMap<
+  getAll(): ImmutableMap<
       Object,
       ImmutableMap<string|symbol, ImmutableMap<number, ImmutableList<D>>>
   > {
@@ -81,19 +81,18 @@ export class ParameterAnnotation<D> {
   ): ImmutableMap<string|symbol, ImmutableMap<number, ImmutableMap<Object, ImmutableList<D>>>> {
     return pipe(
         // Get the keys
-        pipe(
-            this.data,
-            getKey(...getCtorChain(ctorFn)),
-            pick(1),
-            flat<[string|symbol, ImmutableMap<number, ImmutableList<D>>]>(),
-            declareKeyed(([key]) => key),
-            keys(),
-            distinct<string|symbol, any>(),
-        ),
+        this.data,
+        getKey(...getCtorChain(ctorFn)),
+        pick(1),
+        flat<[string|symbol, ImmutableMap<number, ImmutableList<D>>]>(),
+        declareKeyed(([key]) => key),
+        keys(),
+        distinct<string|symbol, any>(),
         map(key => [
           key,
           this.getAttachedValuesForKey(ctorFn, key),
         ] as [string|symbol, ImmutableMap<number, ImmutableMap<Object, ImmutableList<D>>>]),
+        declareFinite(),
         asImmutableMap(),
     );
   }
@@ -106,7 +105,7 @@ export class ParameterAnnotation<D> {
         // Get the indexes.
         pipe(
             this.data,
-            getKey(...getCtorChain(ctorFn)),
+            getKey(...getCtorChain(ctorFn)()),
             pick(1),
             flat<[string|symbol, ImmutableMap<number, ImmutableList<D>>]>(),
             declareKeyed(([key]) => key),
@@ -121,6 +120,8 @@ export class ParameterAnnotation<D> {
           index,
           this.getAttachedValues(ctorFn, key, index),
         ] as [number, ImmutableMap<Object, ImmutableList<D>>]),
+        declareFinite(),
+        declareKeyed(([index]) => index),
         asImmutableMap(),
     );
   }
@@ -136,22 +137,28 @@ export class ParameterAnnotator<D, A extends any[]> {
   get data(): ParameterAnnotation<D> {
     return new ParameterAnnotation(
         pipe(
-            createImmutableMap(this.dataMap),
+            createInfiniteMap(this.dataMap),
             mapPick(
                 1,
                 mapObj => pipe(
-                    createImmutableMap(mapObj),
+                    createInfiniteMap(mapObj),
                     mapPick(
                         1,
                         subMapObj => pipe(
-                            createImmutableMap(subMapObj),
-                            mapPick(1, data => createImmutableList<D>(data)),
+                            createInfiniteMap(subMapObj),
+                            mapPick(
+                                1,
+                                data => createImmutableList<D>(data),
+                            ),
+                            declareFinite(),
                             asImmutableMap(),
                         ),
                     ),
+                    declareFinite(),
                     asImmutableMap(),
                 ),
             ),
+            declareFinite(),
             asImmutableMap(),
         ),
     );

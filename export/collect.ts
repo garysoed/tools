@@ -2,10 +2,12 @@ export { ImmutableList, asImmutableList, createImmutableList } from '../src/coll
 export { ImmutableMap, asImmutableMap, createImmutableMap, ImmutableMapType } from '../src/collect/types/immutable-map';
 export { ImmutableSet, asImmutableSet, createImmutableSet } from '../src/collect/types/immutable-set';
 export { Orderings } from '../src/collect/orderings';
+export { Stream } from '../src/collect/types/stream';
 export { pipe as $pipe } from '../src/collect/pipe';
 
 // Operators
 export { concat as $concat } from '../src/collect/operators/concat';
+export { debug as $debug } from '../src/collect/operators/debug';
 export { declareFinite as $declareFinite } from '../src/collect/operators/declare-finite';
 export { declareKeyed as $declareKeyed } from '../src/collect/operators/declare-keyed';
 export { deleteAt as $deleteAt } from '../src/collect/operators/delete-at';

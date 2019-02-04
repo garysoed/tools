@@ -87,6 +87,19 @@ export function pipe<F extends Stream<any, any>, S0, S1, S2, S3, S4, S5, S6, S7,
     t8: Operator<S7, S8>,
     t9: Operator<S8, T>,
 ): T;
+export function pipe<F extends Stream<any, any>, S0, S1, S2, S3, S4, S5, S6, S7, S8, T>(
+  start: F,
+  t0: Operator<F, S0>,
+  t1: Operator<S0, S1>,
+  t2: Operator<S1, S2>,
+  t3: Operator<S2, S3>,
+  t4: Operator<S3, S4>,
+  t5: Operator<S4, S5>,
+  t6: Operator<S5, S6>,
+  t7: Operator<S6, S7>,
+  t8: Operator<S7, S8>,
+  t9: Operator<S8, T>,
+): T;
 export function pipe(
     start: Stream<any, any>,
     ...transformers: Array<Operator<unknown, unknown>>): unknown;

@@ -1,6 +1,6 @@
 import { createGeneratorOperatorCopyAll } from '../create-operator';
-import { pipe } from '../pipe';
 import { getKey as getKeyFromGenerator } from '../generators';
+import { pipe } from '../pipe';
 import { GeneratorOperator } from '../types/operator';
 import { filter } from './filter';
 import { take } from './take';

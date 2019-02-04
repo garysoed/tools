@@ -1,5 +1,6 @@
-import { pipe } from '../pipe';
+import { cache } from '../operators/cache';
 import { distinct } from '../operators/distinct';
+import { pipe } from '../pipe';
 import { asImmutableList } from './immutable-list';
 import { Stream } from './stream';
 
@@ -12,7 +13,8 @@ export function createImmutableSet<T>(iterable: Iterable<T> = []): ImmutableSet<
       function *(): IterableIterator<T> {
         yield* iterable;
       },
-      distinct(),
+      distinct<T, void>(),
+      cache(),
   );
 
   return Object.assign(
@@ -26,5 +28,5 @@ export function createImmutableSet<T>(iterable: Iterable<T> = []): ImmutableSet<
 }
 
 export function asImmutableSet<T>(): (from: Stream<T, any>) => ImmutableSet<T> {
-  return from => createImmutableSet(asImmutableList<T>()(from));
+  return from => createImmutableSet(pipe(from, asImmutableList<T>())());
 }

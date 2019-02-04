@@ -1,4 +1,4 @@
-import { declareFinite } from 'src/collect/operators/declare-finite';
+import { declareFinite } from '../collect/operators/declare-finite';
 import { declareKeyed } from '../collect/operators/declare-keyed';
 import { distinct } from '../collect/operators/distinct';
 import { filterPick } from '../collect/operators/filter-pick';
@@ -27,7 +27,7 @@ export class PropertyAnnotation<D> {
   }
 
   getAttachedValues(ctorFn: Object, key: string|symbol): ImmutableMap<Object, ImmutableList<D>> {
-    const ctorChain = [...getCtorChain(ctorFn)];
+    const ctorChain = [...getCtorChain(ctorFn)()];
 
     return pipe(
         this.data,
@@ -54,7 +54,7 @@ export class PropertyAnnotation<D> {
         // Get the keys
         pipe(
             this.data,
-            getKey(...getCtorChain(ctorFn)),
+            getKey(...getCtorChain(ctorFn)()),
             pick(1),
             flat<[string|symbol, ImmutableList<D>]>(),
             declareKeyed(([key]) => key),
@@ -66,6 +66,7 @@ export class PropertyAnnotation<D> {
           this.getAttachedValues(ctorFn, key),
         ] as [string|symbol, ImmutableMap<Object, ImmutableList<D>>]),
         declareKeyed(([key]) => key),
+        declareFinite(),
         asImmutableMap(),
     );
   }

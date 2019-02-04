@@ -1,6 +1,6 @@
 import { createGeneratorOperatorCopySize } from '../create-operator';
-import { pipe } from '../pipe';
 import { getKey } from '../generators';
+import { pipe } from '../pipe';
 import { Stream } from '../types/stream';
 import { map } from './map';
 

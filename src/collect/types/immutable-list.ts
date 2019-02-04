@@ -1,4 +1,7 @@
-import { AnyType, HasPropertiesType, InstanceofType, IntersectType, IterableOfType, NumberType, Type } from 'gs-types/export';
+import { AnyType, IterableOfType } from 'gs-types/export';
+import { generatorFrom } from '../generators';
+import { eager } from '../operators/eager-finite';
+import { pipe } from '../pipe';
 import { Stream } from './stream';
 
 export interface ImmutableList<T> extends Stream<T, void>, Iterable<T> {
@@ -11,11 +14,13 @@ interface ItemList<T> {
 }
 
 function createImmutableList_<T>(generator: () => IterableIterator<T>): ImmutableList<T> {
+  const cached = pipe(generator, eager());
+
   return Object.assign(
-      generator,
+      cached,
       {
         [Symbol.iterator](): IterableIterator<T> {
-          return generator();
+          return cached();
         },
         isFinite: true as true,
       },
@@ -23,11 +28,7 @@ function createImmutableList_<T>(generator: () => IterableIterator<T>): Immutabl
 }
 
 export function createImmutableList<T>(data: Iterable<T>|ItemList<T> = []): ImmutableList<T> {
-  const generator = function *(): IterableIterator<T> {
-    yield* convertToIterable(data);
-  };
-
-  return createImmutableList_(generator);
+  return createImmutableList_(generatorFrom(convertToIterable(data)));
 }
 
 function convertToIterable<T>(data: Iterable<T>|ItemList<T>): Iterable<T> {

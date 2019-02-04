@@ -1,6 +1,6 @@
 import { createGeneratorOperatorCopyAll } from '../create-operator';
-import { pipe } from '../pipe';
 import { Ordering } from '../ordering';
+import { pipe } from '../pipe';
 import { GeneratorOperator } from '../types/operator';
 import { asArray } from './as-array';
 

@@ -1,5 +1,7 @@
 import { EqualType, HasPropertiesType, InstanceofType, Type } from 'gs-types/export';
 import { generatorFrom } from '../generators';
+import { eager } from '../operators/eager-finite';
+import { pipe } from '../pipe';
 import { Stream } from './stream';
 
 export interface ImmutableMap<K, V> extends Stream<[K, V], K>, Iterable<[K, V]> {
@@ -39,16 +41,18 @@ export function createImmutableMap<V>(
 }
 
 function createImmutableMap_<K, V>(generator: () => IterableIterator<[K, V]>): ImmutableMap<K, V> {
+  const cached = pipe(generator, eager());
+
   return Object.assign(
-    generator,
-    {
-      [Symbol.iterator](): IterableIterator<[K, V]> {
-        return generator();
+      cached,
+      {
+        [Symbol.iterator](): IterableIterator<[K, V]> {
+          return cached();
+        },
+        isFinite: true as true,
+        getKey([key]: [K, V]): K {
+          return key;
+        },
       },
-      isFinite: true as true,
-      getKey([key]: [K, V]): K {
-        return key;
-      },
-    },
   );
 }

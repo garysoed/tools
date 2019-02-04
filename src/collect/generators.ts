@@ -1,3 +1,6 @@
+import { declareFinite } from './operators/declare-finite';
+import { declareKeyed } from './operators/declare-keyed';
+import { pipe } from './pipe';
 import { Stream } from './types/stream';
 
 export function countable(): Stream<number, any> {
@@ -22,12 +25,14 @@ export function generatorFrom(iterable: Iterable<any>): Stream<any, any> {
 }
 
 function generatorFromArray<T>(array: T[]): Stream<T, void> {
-  return upgradeToFinite(generatorFromIterable(array));
+  return pipe(generatorFromIterable(array), declareFinite());
 }
 
 function generatorFromMap<K, V>(map: Map<K, V>): Stream<[K, V], K> {
-  return upgradeToFinite(
-      upgradeToKeyed(generatorFromIterable(map), ([key]) => key),
+  return pipe(
+      generatorFromIterable(map),
+      declareFinite(),
+      declareKeyed(([key]) => key),
   );
 }
 
@@ -45,24 +50,6 @@ export function getKey<T, K>(generator: Stream<T, K>, value: T): K {
   }
 
   return generator.getKey(value);
-}
-
-function upgradeToFinite<T, K>(generator: Stream<T, K>): Stream<T, K> {
-  return Object.assign(generator, {isFinite: true});
-}
-
-export function upgradeToKeyed<K, V>(
-    generator: Stream<V, any>,
-    getKey: (value: V) => K,
-): Stream<V, K> {
-  return Object.assign(
-      generator,
-      {
-        getKey(item: V): K {
-          return getKey(item);
-        },
-      },
-  );
 }
 
 export function isKeyed<T, K>(
