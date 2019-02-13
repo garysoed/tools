@@ -25,6 +25,7 @@
     "declarations/gs-tools.d.ts",
     "declarations/x-tag.d.ts",
     "node_modules/gs-testing/export/*.ts",
-    "node_modules/gs-types/export/*.ts"
+    "node_modules/gs-types/export/*.ts",
+    "node_modules/moirai/export/*.ts"
   ]
 }

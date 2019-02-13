@@ -29,4 +29,14 @@ test('collect.operators.setKey', () => {
       match.anyTupleThat<[string, number]>().haveExactElements(['c', 3]),
     ]);
   });
+
+  should(`insert a new entry at the end correctly`, () => {
+    const newGenerator = pipe(map, setKey(['d', ['d', 4]]));
+    assert([...newGenerator()]).to.haveExactElements([
+      match.anyTupleThat<[string, number]>().haveExactElements(['a', 1]),
+      match.anyTupleThat<[string, number]>().haveExactElements(['b', 2]),
+      match.anyTupleThat<[string, number]>().haveExactElements(['c', 3]),
+      match.anyTupleThat<[string, number]>().haveExactElements(['d', 4]),
+    ]);
+  });
 });
