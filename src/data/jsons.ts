@@ -61,7 +61,7 @@ export function getValue(json: Json, path: string): any {
  * @param path `.` separated path to the location of the value to set.
  * @param value The value to set.
  */
-export function setValue(json: Json, path: string, value: any): void {
+export function setValue(json: Json, path: string, value: unknown): void {
   const parts = path.split('.');
   const propertyName = parts.pop();
   if (!propertyName) {
