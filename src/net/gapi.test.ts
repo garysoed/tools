@@ -1,5 +1,5 @@
-import { assert, match, should, test } from 'gs-testing/export/main';
-import { createSpyObject, fake, Spy, SpyObj } from 'gs-testing/export/spy';
+import { assert, match, should, test } from '@gs-testing/main';
+import { createSpyObject, fake, Spy, SpyObj } from '@gs-testing/spy';
 import { Gapi } from '.';
 
 interface Auth2Type {

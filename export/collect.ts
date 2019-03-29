@@ -1,3 +1,4 @@
+export { countable } from '../src/collect/generators';
 export { ImmutableList, asImmutableList, createImmutableList } from '../src/collect/types/immutable-list';
 export { ImmutableMap, asImmutableMap, createImmutableMap, ImmutableMapType } from '../src/collect/types/immutable-map';
 export { ImmutableSet, asImmutableSet, createImmutableSet } from '../src/collect/types/immutable-set';
@@ -31,3 +32,4 @@ export { size as $size } from '../src/collect/operators/size';
 export { skip as $skip } from '../src/collect/operators/skip';
 export { sort as $sort } from '../src/collect/operators/sort';
 export { tail as $tail } from '../src/collect/operators/tail';
+export { zip as $zip } from '../src/collect/operators/zip';

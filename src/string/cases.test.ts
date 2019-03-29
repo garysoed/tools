@@ -1,4 +1,4 @@
-import { assert, should } from 'gs-testing/export/main';
+import { assert, should } from '@gs-testing/main';
 
 import { createImmutableList } from '../collect/types/immutable-list';
 import { Cases } from './cases';

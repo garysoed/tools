@@ -1,4 +1,4 @@
-import { assert, match, should, test } from 'gs-testing/export/main';
+import { assert, match, should, test } from '@gs-testing/main';
 import { createImmutableList } from '../collect/types/immutable-list';
 import { createImmutableSet } from '../collect/types/immutable-set';
 import { integerConverter } from './integer-converter';

@@ -1,4 +1,4 @@
-import { assert, should, test } from 'gs-testing/export/main';
+import { assert, should, test } from '@gs-testing/main';
 import { pipe } from '../pipe';
 import { createInfiniteList, InfiniteList } from '../types/infinite-list';
 import { head } from './head';

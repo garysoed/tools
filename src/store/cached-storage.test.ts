@@ -1,6 +1,6 @@
-import { assert, should, test } from 'gs-testing/export/main';
-import { mocks } from 'gs-testing/export/mock';
-import { createSpyInstance, createSpyObject, fake, resetCalls, SpyObj } from 'gs-testing/export/spy';
+import { assert, should, test } from '@gs-testing/main';
+import { mocks } from '@gs-testing/mock';
+import { createSpyInstance, createSpyObject, fake, resetCalls, SpyObj } from '@gs-testing/spy';
 import { BehaviorSubject, of as observableOf } from 'rxjs';
 import { ImmutableSet } from '../collect/types/immutable-set';
 import { BaseDisposable } from '../dispose/base-disposable';

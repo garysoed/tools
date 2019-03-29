@@ -1,4 +1,4 @@
-import { assert, match, should, test } from 'gs-testing/export/main';
+import { assert, match, should, test } from '@gs-testing/main';
 import { getMatches, getParts_, normalizePath } from './locations';
 
 

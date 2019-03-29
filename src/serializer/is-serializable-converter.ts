@@ -1,4 +1,4 @@
-import { Converter, Result, Serializable } from 'nabu/export/main';
+import { Converter, Result, Serializable } from '@nabu/main';
 import { IsSerializable } from './is-serializable';
 
 class IsSerializableConverter<T extends IsSerializable> implements Converter<T, Serializable> {

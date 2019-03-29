@@ -1,4 +1,4 @@
-// import { assert, Matchers, TestBase } from 'gs-testing/export/main';
+// import { assert, Matchers, TestBase } from '@gs-testing/main';
 //
 
 // import { Mocks } from '../mock/mocks';

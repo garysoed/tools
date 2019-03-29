@@ -12,6 +12,12 @@
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "outDir": "out",
+    "paths": {
+      "@gs-testing/*": ["node_modules/gs-testing/export/*"],
+      "@gs-types": ["node_modules/gs-types/export/index.ts"],
+      "@moirai": ["node_modules/moirai/export/index.ts"],
+      "@nabu/*": ["node_modules/nabu/export/*"],
+    },
     "pretty": true,
     "sourceMap": true,
     "strict": true,

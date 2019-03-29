@@ -1,4 +1,4 @@
-import { assert, match, should, test } from 'gs-testing/export/main';
+import { assert, match, should, test } from '@gs-testing/main';
 import { integerConverter } from './integer-converter';
 import { tupleConverter } from './tuple-converter';
 

@@ -1,6 +1,6 @@
-import { human } from 'nabu/export/grammar';
-import { Result } from 'nabu/export/main';
-import { compose } from 'nabu/export/util';
+import { human } from '@nabu/grammar';
+import { Result } from '@nabu/main';
+import { compose } from '@nabu/util';
 import { floatConverter } from '../serializer/float-converter';
 import { integerConverter } from '../serializer/integer-converter';
 import { percentConverter } from '../serializer/percent-converter';

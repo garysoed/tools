@@ -1,7 +1,7 @@
-import { assert, should, test } from 'gs-testing/export/main';
-import { NumberType } from 'gs-types/export';
-import { Converter, Serializable } from 'nabu/export/main';
-import { strict } from 'nabu/export/util';
+import { assert, should, test } from '@gs-testing/main';
+import { NumberType } from '@gs-types';
+import { Converter, Serializable } from '@nabu/main';
+import { strict } from '@nabu/util';
 import { typeBased } from './type-based-converter';
 
 test('serializer.TypeBasedConverter', () => {

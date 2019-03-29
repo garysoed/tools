@@ -1,6 +1,6 @@
 // tslint:disable:no-non-null-assertion
-import { assert, should, test } from 'gs-testing/export/main';
-import { strict } from 'nabu/export/util';
+import { assert, should, test } from '@gs-testing/main';
+import { strict } from '@nabu/util';
 import { AbsolutePath } from './absolute-path';
 import { pathParser } from './path-parser';
 import { Paths } from './paths';

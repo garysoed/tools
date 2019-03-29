@@ -1,4 +1,4 @@
-import { assert, setup, should, test } from 'gs-testing/export/main';
+import { assert, setup, should, test } from '@gs-testing/main';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { Invalidator } from './invalidator';
 

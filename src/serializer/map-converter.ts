@@ -1,4 +1,4 @@
-import { Converter, Serializable } from 'nabu/export/main';
+import { Converter, Serializable } from '@nabu/main';
 import { createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
 import { iterableConverter } from './iterable-converter';
 import { tupleConverter } from './tuple-converter';

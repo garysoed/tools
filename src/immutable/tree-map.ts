@@ -1,4 +1,4 @@
-// import { InstanceofType, NonNullType, TupleOfType } from 'gs-types/export';
+// import { InstanceofType, NonNullType, TupleOfType } from '@gs-types';
 // import { cache } from '../data/cache';
 // import { Collection } from '../interfaces';
 // import { Tree } from '../interfaces/tree';

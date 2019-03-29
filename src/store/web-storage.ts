@@ -1,6 +1,6 @@
-import { binary } from 'nabu/export/grammar';
-import { Converter, Serializable } from 'nabu/export/main';
-import { compose, identity, strict, StrictConverter } from 'nabu/export/util';
+import { binary } from '@nabu/grammar';
+import { Converter, Serializable } from '@nabu/main';
+import { compose, identity, strict, StrictConverter } from '@nabu/util';
 import { fromEvent, Observable } from 'rxjs';
 import { map, shareReplay, startWith, take } from 'rxjs/operators';
 import { pipe } from '../collect/pipe';

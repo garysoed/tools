@@ -1,4 +1,4 @@
-import { assert, should, test } from 'gs-testing/export/main';
+import { assert, should, test } from '@gs-testing/main';
 import { stringMatchConverter } from './string-match-converter';
 
 test('serializable.StringMatchConverter', () => {

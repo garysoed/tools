@@ -1,4 +1,4 @@
-import { assert, match, setup, should, test } from 'gs-testing/export/main';
+import { assert, match, setup, should, test } from '@gs-testing/main';
 import { pipe } from '../pipe';
 import { generatorFrom } from '../generators';
 import { InfiniteList } from '../types/infinite-list';

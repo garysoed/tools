@@ -1,4 +1,4 @@
-import { Converter, Serializable } from 'nabu/export/main';
+import { Converter, Serializable } from '@nabu/main';
 import { WebStorage } from './web-storage';
 
 export class LocalStorage<T> extends WebStorage<T> {

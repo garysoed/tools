@@ -1,5 +1,5 @@
-import { assert, should, test } from 'gs-testing/export/main';
-import { createSpy, fake, resetCalls, Spy } from 'gs-testing/export/spy';
+import { assert, should, test } from '@gs-testing/main';
+import { createSpy, fake, resetCalls, Spy } from '@gs-testing/spy';
 import { cache } from './cache';
 import { clear, clearAll } from './caches';
 

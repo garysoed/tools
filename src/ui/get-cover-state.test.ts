@@ -1,6 +1,6 @@
-import { assert, should, test } from 'gs-testing/export/main';
-import { mocks } from 'gs-testing/export/mock';
-import { createSpyObject, fake, spy, SpyObj } from 'gs-testing/export/spy';
+import { assert, should, test } from '@gs-testing/main';
+import { mocks } from '@gs-testing/mock';
+import { createSpyObject, fake, spy, SpyObj } from '@gs-testing/spy';
 import { Doms } from './doms';
 import { getCoverState, State } from './get-cover-state';
 

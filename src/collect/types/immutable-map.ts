@@ -1,4 +1,4 @@
-import { EqualType, HasPropertiesType, InstanceofType, Type } from 'gs-types/export';
+import { EqualType, HasPropertiesType, InstanceofType, Type } from '@gs-types';
 import { generatorFrom } from '../generators';
 import { eager } from '../operators/eager-finite';
 import { pipe } from '../pipe';

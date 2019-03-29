@@ -1,4 +1,4 @@
-import { AnyType, HasPropertiesType, InstanceofType, IterableOfType, StringType, Type } from 'gs-types/export';
+import { AnyType, HasPropertiesType, InstanceofType, IterableOfType, StringType, Type } from '@gs-types';
 import { assertUnreachable } from '../typescript/assert-unreachable';
 
 export class Iterables {

@@ -1,6 +1,6 @@
-import { assert, match, should, test } from 'gs-testing/export/main';
-import { Converter, Serializable } from 'nabu/export/main';
-import { strict } from 'nabu/export/util';
+import { assert, match, should, test } from '@gs-testing/main';
+import { Converter, Serializable } from '@nabu/main';
+import { strict } from '@nabu/util';
 import { IsSerializable } from './is-serializable';
 import { isSerializable } from './is-serializable-converter';
 

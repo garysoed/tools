@@ -1,4 +1,4 @@
-import { HasPropertiesType, InstanceofType, NumberType } from 'gs-types/export';
+import { HasPropertiesType, InstanceofType, NumberType } from '@gs-types';
 import { generatorFrom } from '../generators';
 import { eager } from '../operators/eager-finite';
 import { pipe } from '../pipe';

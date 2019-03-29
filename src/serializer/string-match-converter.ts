@@ -1,4 +1,4 @@
-import { Converter, Result } from 'nabu/export/main';
+import { Converter, Result } from '@nabu/main';
 import { pipe } from '../collect/pipe';
 import { hasEntry } from '../collect/operators/has-entry';
 import { createImmutableSet, ImmutableSet } from '../collect/types/immutable-set';

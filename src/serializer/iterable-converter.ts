@@ -1,4 +1,4 @@
-import { Converter, Result, Serializable } from 'nabu/export/main';
+import { Converter, Result, Serializable } from '@nabu/main';
 
 class IterableConverter<T, I extends Iterable<T>> implements Converter<I, Serializable> {
   constructor(

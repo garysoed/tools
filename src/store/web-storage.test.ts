@@ -1,6 +1,6 @@
-import { assert, should, test } from 'gs-testing/export/main';
-import { binary } from 'nabu/export/grammar';
-import { compose, identity, strict } from 'nabu/export/util';
+import { assert, should, test } from '@gs-testing/main';
+import { binary } from '@nabu/grammar';
+import { compose, identity, strict } from '@nabu/util';
 import { BehaviorSubject } from 'rxjs';
 import { createImmutableSet, ImmutableSet } from '../collect/types/immutable-set';
 import { integerConverter } from '../serializer/integer-converter';

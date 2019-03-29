@@ -1,4 +1,4 @@
-import { assert, match, should, test } from 'gs-testing/export/main';
+import { assert, match, should, test } from '@gs-testing/main';
 import { pipe } from '../pipe';
 import { createInfiniteMap } from '../types/infinite-map';
 import { mapPick } from './map-pick';

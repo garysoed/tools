@@ -1,4 +1,4 @@
-import { assert, match, setup, should, test } from 'gs-testing/export/main';
+import { assert, match, setup, should, test } from '@gs-testing/main';
 import { pipe } from '../pipe';
 import { createInfiniteMap, InfiniteMap } from '../types/infinite-map';
 import { setKey } from './set-key';
@@ -20,7 +20,6 @@ test('collect.operators.setKey', () => {
         setKey(
           ['a', ['2', 2]],
           ['b', ['4', 4]],
-          ['z', ['0', 0]],
         ),
     );
     assert([...newGenerator()]).to.haveExactElements([

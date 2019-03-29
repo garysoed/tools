@@ -1,4 +1,4 @@
-import { Converter, Result, Serializable } from 'nabu/export/main';
+import { Converter, Result, Serializable } from '@nabu/main';
 
 class FloatConverter implements Converter<number, Serializable> {
   convertBackward(input: Serializable): Result<number> {

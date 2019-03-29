@@ -1,5 +1,5 @@
-import { assert, should, test } from 'gs-testing/export/main';
-import { NumberType } from 'gs-types/export';
+import { assert, should, test } from '@gs-testing/main';
+import { NumberType } from '@gs-types';
 import { CompareResult } from './compare-result';
 import { pipe } from './pipe';
 import { sort } from './operators/sort';

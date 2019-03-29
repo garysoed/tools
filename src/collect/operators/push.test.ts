@@ -1,4 +1,4 @@
-import { assert, setup, should, test } from 'gs-testing/export/main';
+import { assert, setup, should, test } from '@gs-testing/main';
 import { pipe } from '../pipe';
 import { createImmutableList, ImmutableList } from '../types/immutable-list';
 import { push } from './push';

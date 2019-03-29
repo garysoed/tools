@@ -1,5 +1,5 @@
-import { assert, should } from 'gs-testing/export/main';
-import { mocks } from 'gs-testing/export/mock';
+import { assert, should } from '@gs-testing/main';
+import { mocks } from '@gs-testing/mock';
 import { GLOBALS, hash, HASHED_OBJECTS, HASHED_VALUES } from './hash';
 
 

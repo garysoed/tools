@@ -1,6 +1,6 @@
-import { assert, should, test } from 'gs-testing/export/main';
+import { assert, should, test } from '@gs-testing/main';
 
-import { SuccessResult } from 'nabu/export/main';
+import { SuccessResult } from '@nabu/main';
 import { createImmutableList } from '../collect/types/immutable-list';
 import { AbsolutePath } from './absolute-path';
 import { absolutePathParser } from './absolute-path-parser';

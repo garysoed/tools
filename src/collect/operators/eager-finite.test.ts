@@ -1,5 +1,5 @@
-import { assert, should, test } from 'gs-testing/export/main';
-import { createSpy, fake, resetCalls } from 'gs-testing/export/spy';
+import { assert, should, test } from '@gs-testing/main';
+import { createSpy, fake, resetCalls } from '@gs-testing/spy';
 import { pipe } from '../pipe';
 import { createImmutableList } from '../types/immutable-list';
 import { eager } from './eager-finite';
