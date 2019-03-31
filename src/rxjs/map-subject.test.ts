@@ -1,11 +1,13 @@
 import { test, should, setup, assert, match } from '@gs-testing/main';
 import { scan } from 'rxjs/operators';
 import { SpySubject, createSpySubject } from '@gs-testing/spy';
-import { MapSubject, MapDiff } from './map-subject';
+import { MapSubject } from './map-subject';
+import { ImmutableMap } from '../collect/types/immutable-map';
+import { MapDiff } from './map-observable';
 
 test('gs-tools.rxjs.MapSubject', () => {
   let subject: MapSubject<string, number>;
-  let mapSpySubject: SpySubject<Map<string, number>>;
+  let mapSpySubject: SpySubject<ImmutableMap<string, number>>;
   let scanSpySubject: SpySubject<Map<string, number>>;
 
   setup(() => {
@@ -38,12 +40,12 @@ test('gs-tools.rxjs.MapSubject', () => {
       subject.delete('b');
 
       await assert(mapSpySubject).to.emitWith(
-          match.anyIterableThat<[string, number], Map<string, number>>().haveElements([
+          match.anyIterableThat<[string, number], ImmutableMap<string, number>>().haveElements([
             match.anyTupleThat<[string, number]>().haveExactElements(['a', 1]),
             match.anyTupleThat<[string, number]>().haveExactElements(['c', 3]),
           ]));
 
-      await assert(mapSpySubject).to.emitWith(
+      await assert(scanSpySubject).to.emitWith(
           match.anyIterableThat<[string, number], Map<string, number>>().haveElements([
             match.anyTupleThat<[string, number]>().haveExactElements(['a', 1]),
             match.anyTupleThat<[string, number]>().haveExactElements(['c', 3]),
@@ -88,18 +90,18 @@ test('gs-tools.rxjs.MapSubject', () => {
       subject.setAll(new Map([['e', 5], ['c', 4], ['b', 2]]));
 
       await assert(mapSpySubject).to.emitWith(
-        match.anyIterableThat<[string, number], Map<string, number>>().haveElements([
-          match.anyTupleThat<[string, number]>().haveExactElements(['b', 2]),
-          match.anyTupleThat<[string, number]>().haveExactElements(['c', 4]),
-          match.anyTupleThat<[string, number]>().haveExactElements(['e', 5]),
-        ]));
+          match.anyIterableThat<[string, number], ImmutableMap<string, number>>().haveElements([
+            match.anyTupleThat<[string, number]>().haveExactElements(['b', 2]),
+            match.anyTupleThat<[string, number]>().haveExactElements(['c', 4]),
+            match.anyTupleThat<[string, number]>().haveExactElements(['e', 5]),
+          ]));
 
-    await assert(mapSpySubject).to.emitWith(
-        match.anyIterableThat<[string, number], Map<string, number>>().haveElements([
-          match.anyTupleThat<[string, number]>().haveExactElements(['b', 2]),
-          match.anyTupleThat<[string, number]>().haveExactElements(['c', 4]),
-          match.anyTupleThat<[string, number]>().haveExactElements(['e', 5]),
-        ]));
+      await assert(scanSpySubject).to.emitWith(
+          match.anyIterableThat<[string, number], Map<string, number>>().haveElements([
+            match.anyTupleThat<[string, number]>().haveExactElements(['b', 2]),
+            match.anyTupleThat<[string, number]>().haveExactElements(['c', 4]),
+            match.anyTupleThat<[string, number]>().haveExactElements(['e', 5]),
+          ]));
     });
   });
 
@@ -108,13 +110,13 @@ test('gs-tools.rxjs.MapSubject', () => {
       subject.set('b', 6);
 
       await assert(mapSpySubject).to.emitWith(
-          match.anyIterableThat<[string, number], Map<string, number>>().haveElements([
+          match.anyIterableThat<[string, number], ImmutableMap<string, number>>().haveElements([
             match.anyTupleThat<[string, number]>().haveExactElements(['a', 1]),
             match.anyTupleThat<[string, number]>().haveExactElements(['b', 6]),
             match.anyTupleThat<[string, number]>().haveExactElements(['c', 3]),
           ]));
 
-      await assert(mapSpySubject).to.emitWith(
+      await assert(scanSpySubject).to.emitWith(
           match.anyIterableThat<[string, number], Map<string, number>>().haveElements([
             match.anyTupleThat<[string, number]>().haveExactElements(['a', 1]),
             match.anyTupleThat<[string, number]>().haveExactElements(['b', 6]),

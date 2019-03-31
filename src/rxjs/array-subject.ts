@@ -1,31 +1,10 @@
 import { concat, Observable, of as observableOf, Subject } from 'rxjs';
-import { mapTo } from 'rxjs/operators';
+import { mapTo, shareReplay, map } from 'rxjs/operators';
+import { ImmutableList, createImmutableList } from '../collect/types/immutable-list';
+import { ArrayDiff, ArrayObservable, ArrayInit } from './array-observable';
 
-export interface ArrayInit<T> {
-  payload: T[];
-  type: 'init';
-}
 
-export interface ArrayInsert<T> {
-  index: number;
-  payload: T;
-  type: 'insert';
-}
-
-export interface ArrayDelete {
-  index: number;
-  type: 'delete';
-}
-
-export interface ArraySet<T> {
-  index: number;
-  payload: T;
-  type: 'set';
-}
-
-export type ArrayDiff<T> = ArrayInit<T>|ArrayInsert<T>|ArrayDelete|ArraySet<T>;
-
-export class ArraySubject<T> {
+export class ArraySubject<T> implements ArrayObservable<T> {
   private readonly innerArray: T[];
   private readonly diffSubject: Subject<ArrayDiff<T>> = new Subject();
 
@@ -49,8 +28,11 @@ export class ArraySubject<T> {
     );
   }
 
-  getObs(): Observable<T[]> {
-    return this.diffSubject.pipe(mapTo(this.innerArray));
+  getObs(): Observable<ImmutableList<T>> {
+    return this.diffSubject.pipe(
+        map(() => createImmutableList(this.innerArray)),
+        shareReplay(1),
+    );
   }
 
   insertAt(index: number, payload: T): void {

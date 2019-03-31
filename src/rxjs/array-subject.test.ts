@@ -1,11 +1,13 @@
 import { test, should, setup, assert, match } from '@gs-testing/main';
-import { ArraySubject, ArrayDiff } from './array-subject';
+import { ArraySubject } from './array-subject';
 import { scan } from 'rxjs/operators';
 import { SpySubject, createSpySubject } from '@gs-testing/spy';
+import { ImmutableList } from '../collect/types/immutable-list';
+import { ArrayDiff } from './array-observable';
 
 test('gs-tools.rxjs.ArraySubject', () => {
   let subject: ArraySubject<string>;
-  let arraySpySubject: SpySubject<string[]>;
+  let arraySpySubject: SpySubject<ImmutableList<string>>;
   let scanSpySubject: SpySubject<string[]>;
 
   setup(() => {
@@ -41,7 +43,7 @@ test('gs-tools.rxjs.ArraySubject', () => {
       subject.deleteAt(1);
 
       await assert(arraySpySubject).to
-          .emitWith(match.anyArrayThat<string>().haveExactElements(['a', 'c']));
+          .emitWith(match.anyIterableThat<string, ImmutableList<string>>().startWith(['a', 'c']));
       await assert(scanSpySubject).to
           .emitWith(match.anyArrayThat<string>().haveExactElements(['a', 'c']));
     });
@@ -79,8 +81,8 @@ test('gs-tools.rxjs.ArraySubject', () => {
     should(`insert the item correctly`, async () => {
       subject.insertAt(0, '0');
 
-      await assert(arraySpySubject).to
-          .emitWith(match.anyArrayThat<string>().haveExactElements(['0', 'a', 'b', 'c']));
+      await assert(arraySpySubject).to.emitWith(
+          match.anyIterableThat<string, ImmutableList<string>>().startWith(['0', 'a', 'b', 'c']));
       await assert(scanSpySubject).to
           .emitWith(match.anyArrayThat<string>().haveExactElements(['0', 'a', 'b', 'c']));
     });
@@ -90,8 +92,8 @@ test('gs-tools.rxjs.ArraySubject', () => {
     should(`set all the items correctly`, async () => {
       subject.setAll(['e', 'c']);
 
-      await assert(arraySpySubject).to
-          .emitWith(match.anyArrayThat<string>().haveExactElements(['e', 'c']));
+      await assert(arraySpySubject).to.emitWith(
+          match.anyIterableThat<string, ImmutableList<string>>().startWith(['e', 'c']));
       await assert(scanSpySubject).to
           .emitWith(match.anyArrayThat<string>().haveExactElements(['e', 'c']));
     });
@@ -101,8 +103,8 @@ test('gs-tools.rxjs.ArraySubject', () => {
     should(`set the item correctly`, async () => {
       subject.setAt(1, '1');
 
-      await assert(arraySpySubject).to
-          .emitWith(match.anyArrayThat<string>().haveExactElements(['a', '1', 'c']));
+      await assert(arraySpySubject).to.emitWith(
+          match.anyIterableThat<string, ImmutableList<string>>().startWith(['a', '1', 'c']));
       await assert(scanSpySubject).to
           .emitWith(match.anyArrayThat<string>().haveExactElements(['a', '1', 'c']));
     });

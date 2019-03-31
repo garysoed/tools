@@ -1,19 +1,20 @@
 import { test, should, setup, assert, match } from '@gs-testing/main';
-import { ArraySubject, ArrayDiff } from './array-subject';
 import { scan } from 'rxjs/operators';
 import { SpySubject, createSpySubject } from '@gs-testing/spy';
-import { SetSubject, SetDiff } from './set-subject';
+import { SetSubject } from './set-subject';
+import { SetDiff } from './set-observable';
+import { ImmutableSet } from '../collect/types/immutable-set';
 
 test('gs-tools.rxjs.SetSubject', () => {
   let subject: SetSubject<string>;
-  let arraySpySubject: SpySubject<Set<string>>;
+  let setSpySubject: SpySubject<ImmutableSet<string>>;
   let scanSpySubject: SpySubject<Set<string>>;
 
   setup(() => {
     subject = new SetSubject(['a', 'b', 'c']);
 
-    arraySpySubject = new SpySubject();
-    subject.getObs().subscribe(arraySpySubject);
+    setSpySubject = new SpySubject();
+    subject.getObs().subscribe(setSpySubject);
 
     scanSpySubject = new SpySubject();
     subject.getDiffs()
@@ -38,19 +39,19 @@ test('gs-tools.rxjs.SetSubject', () => {
     should(`set the item correctly`, async () => {
       subject.add('d');
 
-      await assert(arraySpySubject).to.emitWith(
-          match.anyIterableThat<string, Set<string>>().haveElements(['a', 'b', 'c', 'd']));
+      await assert(setSpySubject).to.emitWith(
+          match.anyIterableThat<string, ImmutableSet<string>>().haveElements(['a', 'b', 'c', 'd']));
       await assert(scanSpySubject).to.emitWith(
           match.anyIterableThat<string, Set<string>>().haveElements(['a', 'b', 'c', 'd']));
     });
 
     should(`be noop if the item is already in the set`, async () => {
-      arraySpySubject.reset();
+      setSpySubject.reset();
       scanSpySubject.reset();
 
       subject.add('b');
 
-      await assert(arraySpySubject).toNot.emit();
+      await assert(setSpySubject).toNot.emit();
       await assert(scanSpySubject).toNot.emit();
     });
   });
@@ -59,19 +60,19 @@ test('gs-tools.rxjs.SetSubject', () => {
     should(`delete the item correctly`, async () => {
       subject.delete('b');
 
-      await assert(arraySpySubject).to
-          .emitWith(match.anyIterableThat<string, Set<string>>().haveElements(['a', 'c']));
+      await assert(setSpySubject).to
+          .emitWith(match.anyIterableThat<string, ImmutableSet<string>>().haveElements(['a', 'c']));
       await assert(scanSpySubject).to
           .emitWith(match.anyIterableThat<string, Set<string>>().haveElements(['a', 'c']));
     });
 
     should(`be noop if the item does not exist`, async () => {
-      arraySpySubject.reset();
+      setSpySubject.reset();
       scanSpySubject.reset();
 
       subject.delete('d');
 
-      await assert(arraySpySubject).toNot.emit();
+      await assert(setSpySubject).toNot.emit();
       await assert(scanSpySubject).toNot.emit();
     });
   });
@@ -98,8 +99,8 @@ test('gs-tools.rxjs.SetSubject', () => {
     should(`set all the items correctly`, async () => {
       subject.setAll(new Set(['e', 'c']));
 
-      await assert(arraySpySubject).to
-          .emitWith(match.anyIterableThat<string, Set<string>>().haveElements(['c', 'e']));
+      await assert(setSpySubject).to
+          .emitWith(match.anyIterableThat<string, ImmutableSet<string>>().haveElements(['c', 'e']));
       await assert(scanSpySubject).to
           .emitWith(match.anyIterableThat<string, Set<string>>().haveElements(['c', 'e']));
     });

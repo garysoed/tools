@@ -1,25 +1,9 @@
 import { concat, Observable, of as observableOf, Subject } from 'rxjs';
-import { mapTo } from 'rxjs/operators';
+import { shareReplay, map } from 'rxjs/operators';
+import { ImmutableMap, createImmutableMap } from '../collect/types/immutable-map';
+import { MapObservable, MapDiff, MapInit } from './map-observable';
 
-export interface MapInit<K, V> {
-  payload: Map<K, V>;
-  type: 'init';
-}
-
-export interface MapDelete<K> {
-  key: K;
-  type: 'delete';
-}
-
-export interface MapSet<K, V> {
-  key: K;
-  value: V;
-  type: 'set';
-}
-
-export type MapDiff<K, V> = MapInit<K, V>|MapDelete<K>|MapSet<K, V>;
-
-export class MapSubject<K, V> {
+export class MapSubject<K, V> implements MapObservable<K, V> {
   private readonly innerMap: Map<K, V>;
   private readonly diffSubject: Subject<MapDiff<K, V>> = new Subject();
 
@@ -43,8 +27,11 @@ export class MapSubject<K, V> {
     );
   }
 
-  getObs(): Observable<Map<K, V>> {
-    return this.diffSubject.pipe(mapTo(this.innerMap));
+  getObs(): Observable<ImmutableMap<K, V>> {
+    return this.diffSubject.pipe(
+        map(() => createImmutableMap(this.innerMap)),
+        shareReplay(1),
+    );
   }
 
   setAll(newItems: Map<K, V>): void {

@@ -1,24 +1,9 @@
 import { concat, Observable, of as observableOf, Subject } from 'rxjs';
-import { mapTo } from 'rxjs/operators';
+import { map, shareReplay } from 'rxjs/operators';
+import { ImmutableSet, createImmutableSet } from '../collect/types/immutable-set';
+import { SetDiff, SetInit, SetObservable } from './set-observable';
 
-export interface SetAdd<T> {
-  value: T;
-  type: 'add';
-}
-
-export interface SetInit<T> {
-  payload: Set<T>;
-  type: 'init';
-}
-
-export interface SetDelete<T> {
-  value: T;
-  type: 'delete';
-}
-
-export type SetDiff<T> = SetInit<T>|SetDelete<T>|SetAdd<T>;
-
-export class SetSubject<T> {
+export class SetSubject<T> implements SetObservable<T> {
   private readonly innerSet: Set<T>;
   private readonly diffSubject: Subject<SetDiff<T>> = new Subject();
 
@@ -51,8 +36,11 @@ export class SetSubject<T> {
     );
   }
 
-  getObs(): Observable<Set<T>> {
-    return this.diffSubject.pipe(mapTo(this.innerSet));
+  getObs(): Observable<ImmutableSet<T>> {
+    return this.diffSubject.pipe(
+        map(() => createImmutableSet(this.innerSet)),
+        shareReplay(1),
+    );
   }
 
   setAll(newItems: Set<T>): void {
