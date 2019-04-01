@@ -8,7 +8,7 @@ export interface EditableStorage<TFull> extends ReadableStorage<TFull> {
    *
    * @param id ID of the object to delete.
    */
-  delete(id: string): void;
+  delete(id: string): Observable<unknown>;
 
   /**
    * Reserves a new ID in the storage.
@@ -23,5 +23,5 @@ export interface EditableStorage<TFull> extends ReadableStorage<TFull> {
    * @param id ID of the object to update.
    * @param instance Object to update.
    */
-  update(id: string, instance: TFull): void;
+  update(id: string, instance: TFull): Observable<unknown>;
 }

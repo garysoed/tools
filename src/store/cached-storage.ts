@@ -1,6 +1,6 @@
 import { combineLatest, Observable, of as observableOf } from 'rxjs';
-import { take } from 'rxjs/operators';
-import { ImmutableSet } from '../collect/types/immutable-set';
+import { take, tap } from 'rxjs/operators';
+import { SetDiff } from '../rxjs/set-observable';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { EditableStorage } from './editable-storage';
 
@@ -13,13 +13,13 @@ export class CachedStorage<T> extends BaseDisposable implements EditableStorage<
     this.innerStorage_ = innerStorage;
   }
 
-  delete(id: string): void {
+  delete(id: string): Observable<unknown> {
     const item = this.cache_.get(id);
     if (item !== undefined && item instanceof BaseDisposable) {
       item.dispose();
     }
-    this.cache_.delete(id);
-    this.innerStorage_.delete(id);
+    return this.innerStorage_.delete(id)
+        .pipe(tap(() => this.cache_.delete(id)));
   }
 
   disposeInternal(): void {
@@ -46,7 +46,7 @@ export class CachedStorage<T> extends BaseDisposable implements EditableStorage<
     return this.innerStorage_.has(id);
   }
 
-  listIds(): Observable<ImmutableSet<string>> {
+  listIds(): Observable<SetDiff<string>> {
     return this.innerStorage_.listIds();
   }
 
@@ -62,9 +62,9 @@ export class CachedStorage<T> extends BaseDisposable implements EditableStorage<
     return obs;
   }
 
-  update(id: string, instance: T): void {
-    this.innerStorage_.update(id, instance);
-    this.cache_.set(id, observableOf(instance));
+  update(id: string, instance: T): Observable<unknown> {
+    return this.innerStorage_.update(id, instance)
+        .pipe(tap(() => this.cache_.set(id, observableOf(instance))));
   }
 
   /**

@@ -1,36 +1,26 @@
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
-import { pipe } from '../collect/pipe';
-import { deleteKey } from '../collect/operators/delete-key';
+import { Observable, of as observableOf } from 'rxjs';
+import { map, shareReplay, tap } from 'rxjs/operators';
+import { MapSubject } from 'src/rxjs/map-subject';
+import { SetDiff } from 'src/rxjs/set-observable';
 import { getKey } from '../collect/operators/get-key';
 import { hasKey } from '../collect/operators/has-key';
 import { head } from '../collect/operators/head';
 import { keys } from '../collect/operators/keys';
-import { setKey } from '../collect/operators/set-key';
-import { asImmutableMap, createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
-import { asImmutableSet, ImmutableSet } from '../collect/types/immutable-set';
+import { pipe } from '../collect/pipe';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { EditableStorage } from './editable-storage';
 
 export class InMemoryStorage<T> implements EditableStorage<T> {
-  // TODO: Build the map from diffs.
-  private readonly data: BehaviorSubject<ImmutableMap<string, T>> =
-      new BehaviorSubject(createImmutableMap());
+  private readonly data: MapSubject<string, T> = new MapSubject();
 
   constructor(private readonly idGenerator: BaseIdGenerator) { }
 
-  delete(id: string): void {
-    this.data.next(
-        pipe(
-            this.data.getValue(),
-            deleteKey(id),
-            asImmutableMap(),
-        ),
-    );
+  delete(id: string): Observable<unknown> {
+    return observableOf({}).pipe(tap(() => this.data.delete(id)));
   }
 
   generateId(): Observable<string> {
-    return this.data
+    return this.data.getObs()
         .pipe(
             map(map => this.idGenerator.generate(pipe(map, keys())())),
             shareReplay(1),
@@ -38,27 +28,31 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
   }
 
   has(id: string): Observable<boolean> {
-    return this.data
+    return this.data.getObs()
         .pipe(
             map(map => pipe(map, hasKey(id))),
             shareReplay(1),
         );
   }
 
-  listIds(): Observable<ImmutableSet<string>> {
-    return this.data
+  listIds(): Observable<SetDiff<string>> {
+    return this.data.getDiffs()
         .pipe(
-            map(map => pipe(
-                map,
-                keys(),
-                asImmutableSet(),
-            )),
-            shareReplay(1),
+            map((diff): SetDiff<string> => {
+              switch (diff.type) {
+                case 'set':
+                  return {value: diff.key, type: 'add'};
+                case 'delete':
+                  return {value: diff.key, type: 'delete'};
+                case 'init':
+                  return {payload: new Set(diff.payload.keys()), type: 'init'};
+              }
+            }),
         );
   }
 
   read(id: string): Observable<T|null> {
-    return this.data
+    return this.data.getObs()
         .pipe(
             map(map => {
               const entry = pipe(map, getKey(id), head());
@@ -69,13 +63,7 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
         );
   }
 
-  update(id: string, instance: T): void {
-    this.data.next(
-        pipe(
-            this.data.getValue(),
-            setKey([id, [id, instance] as [string, T]]),
-            asImmutableMap(),
-        ),
-    );
+  update(id: string, instance: T): Observable<unknown> {
+    return observableOf({}).pipe(tap(() => this.data.set(id, instance)));
   }
 }

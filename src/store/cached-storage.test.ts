@@ -2,9 +2,11 @@ import { assert, should, test } from '@gs-testing/main';
 import { mocks } from '@gs-testing/mock';
 import { createSpyInstance, createSpyObject, fake, resetCalls, SpyObj } from '@gs-testing/spy';
 import { BehaviorSubject, of as observableOf } from 'rxjs';
-import { ImmutableSet } from '../collect/types/immutable-set';
+import { scan } from 'rxjs/operators';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { TestDispose } from '../dispose/testing/test-dispose';
+import { applyDiff } from '../rxjs/diff-set';
+import { SetDiff } from '../rxjs/set-observable';
 import { CachedStorage } from './cached-storage';
 import { EditableStorage } from './editable-storage';
 
@@ -32,14 +34,21 @@ test.skip('store.CachedStorage', () => {
       const id = 'id';
       storage.update(id, mockItem);
 
-      const idsSubject = new BehaviorSubject<ImmutableSet<string>|null>(null);
-      storage.listIds().subscribe(idsSubject);
+      const idsSubject = new BehaviorSubject<Set<string>>(new Set());
+      storage.listIds()
+          .pipe(
+              scan<SetDiff<string>, Set<string>>((acc, value) => {
+                applyDiff(acc, value);
+                return acc;
+              }, new Set<string>()),
+          )
+          .subscribe(idsSubject);
 
-      storage.delete(id);
+      storage.delete(id).subscribe();
       assert(mockInnerStorage.delete).to.haveBeenCalledWith(id);
       assert(mockItem.dispose).to.haveBeenCalledWith();
       // tslint:disable-next-line:no-non-null-assertion
-      assert(idsSubject.getValue()!()).to.beEmpty();
+      assert(idsSubject.getValue()).to.beEmpty();
     });
 
     should('not throw error if the deleted item is not disposable', () => {
@@ -47,25 +56,39 @@ test.skip('store.CachedStorage', () => {
       const id = 'id';
       storage.update(id, item);
 
-      const idsSubject = new BehaviorSubject<ImmutableSet<string>|null>(null);
-      storage.listIds().subscribe(idsSubject);
+      const idsSubject = new BehaviorSubject<Set<string>>(new Set());
+      storage.listIds()
+          .pipe(
+              scan<SetDiff<string>, Set<string>>((acc, value) => {
+                applyDiff(acc, value);
+                return acc;
+              }, new Set<string>()),
+          )
+          .subscribe(idsSubject);
 
-      storage.delete(id);
+      storage.delete(id).subscribe();
       assert(mockInnerStorage.delete).to.haveBeenCalledWith(id);
       // tslint:disable-next-line:no-non-null-assertion
-      assert(idsSubject.getValue()!()).to.beEmpty();
+      assert(idsSubject.getValue()).to.beEmpty();
     });
 
     should('not throw error if the item does not exist', () => {
       const id = 'id';
 
-      const idsSubject = new BehaviorSubject<ImmutableSet<string>|null>(null);
-      storage.listIds().subscribe(idsSubject);
+      const idsSubject = new BehaviorSubject<Set<string>>(new Set());
+      storage.listIds()
+          .pipe(
+              scan<SetDiff<string>, Set<string>>((acc, value) => {
+                applyDiff(acc, value);
+                return acc;
+              }, new Set<string>()),
+          )
+          .subscribe(idsSubject);
 
-      storage.delete('id');
+      storage.delete('id').subscribe();
       assert(mockInnerStorage.delete).to.haveBeenCalledWith(id);
       // tslint:disable-next-line:no-non-null-assertion
-      assert(idsSubject.getValue()!()).to.beEmpty();
+      assert(idsSubject.getValue()).to.beEmpty();
     });
   });
 

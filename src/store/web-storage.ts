@@ -1,156 +1,120 @@
 import { binary } from '@nabu/grammar';
 import { Converter, Serializable } from '@nabu/main';
 import { compose, identity, strict, StrictConverter } from '@nabu/util';
-import { fromEvent, Observable } from 'rxjs';
-import { map, shareReplay, startWith, take } from 'rxjs/operators';
-import { pipe } from '../collect/pipe';
-import { deleteEntry } from '../collect/operators/delete-entry';
-import { filter } from '../collect/operators/filter';
-import { hasEntry } from '../collect/operators/has-entry';
-import { push } from '../collect/operators/push';
-import { asImmutableSet, createImmutableSet, ImmutableSet } from '../collect/types/immutable-set';
+import { Observable } from 'rxjs';
+import { map, shareReplay, take, tap } from 'rxjs/operators';
+import { createImmutableSet, ImmutableSet } from '../collect/types/immutable-set';
+import { cache } from '../data/cache';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { SimpleIdGenerator } from '../random/simple-id-generator';
+import { diffSet } from '../rxjs/diff-set';
+import { mapNonNull } from '../rxjs/map-non-null';
+import { SetDiff } from '../rxjs/set-observable';
+import { WebStorageObservable } from '../rxjs/web-storage-observable';
 import { setConverter } from '../serializer/set-converter';
 import { EditableStorage } from './editable-storage';
-import { Invalidator } from './invalidator';
 
 export const INDEXES_PARSER = setConverter<string>(identity<string>());
 
 export class WebStorage<T> implements EditableStorage<T> {
-  private readonly converter_: StrictConverter<T, string>;
+  private readonly storage: WebStorageObservable;
+  private readonly converter: StrictConverter<T, string>;
   private readonly idGenerator_: BaseIdGenerator = new SimpleIdGenerator();
-  private readonly indexesConverter_: StrictConverter<ImmutableSet<string>, string>;
-  private readonly invalidator_: Invalidator;
-  private readonly storageIdsObs_: Observable<ImmutableSet<string>>;
+  private readonly indexesConverter: StrictConverter<ImmutableSet<string>, string>;
 
   /**
    * @param storage Reference to storage instance.
    * @param prefix The prefix of the IDs added by this storage.
    */
   constructor(
-      private readonly storage_: Storage,
-      private readonly prefix_: string,
+      storage: Storage,
+      private readonly prefix: string,
       converter: Converter<T, Serializable>,
   ) {
-    const invalidator = new Invalidator(fromEvent(window, 'storage'));
+    this.storage = new WebStorageObservable(storage);
+
     const binaryGrammar = binary();
-    this.converter_ = strict(compose(converter, binaryGrammar));
-    this.indexesConverter_ = strict(compose(INDEXES_PARSER, binaryGrammar));
-    this.storageIdsObs_ = createStorageIdsObs_(
-        storage_,
-        prefix_,
-        invalidator.getObservable(),
-        this.indexesConverter_,
-    );
-    this.invalidator_ = invalidator;
+    this.converter = strict(compose(converter, binaryGrammar));
+    this.indexesConverter = strict(compose(INDEXES_PARSER, binaryGrammar));
   }
 
-  delete(id: string): void {
-    this.storageIdsObs_
-        .pipe(take(1))
-        .subscribe(ids => {
-          const result = this.indexesConverter_.convertForward(
-              pipe(
-                  ids,
-                  deleteEntry(id),
-                  asImmutableSet(),
-              ),
-          );
-          this.storage_.setItem(this.prefix_, result);
-          this.storage_.removeItem(getPath_(id, this.prefix_));
-          this.invalidator_.invalidate();
-        });
+  @cache()
+  private listIdsAsSet(): Observable<Set<string>> {
+    return this.storage.getItem(this.prefix)
+        .pipe(
+            map(indexesStr => {
+              if (!indexesStr) {
+                return createImmutableSet<string>();
+              }
+
+              return this.indexesConverter.convertBackward(indexesStr);
+            }),
+            map(immutableSet => new Set(immutableSet)),
+            shareReplay(1),
+        );
+  }
+
+  delete(id: string): Observable<unknown> {
+    return this.listIdsAsSet()
+        .pipe(
+            take(1),
+            tap(ids => {
+              const newSet = new Set(ids);
+              newSet.delete(id);
+              const result = this.indexesConverter.convertForward(createImmutableSet(newSet));
+              this.storage.setItem(this.prefix, result);
+              this.storage.removeItem(getPath(id, this.prefix));
+            })
+        );
   }
 
   generateId(): Observable<string> {
-    return this.storageIdsObs_
+    return this.listIdsAsSet()
         .pipe(
-            map(ids => this.idGenerator_.generate(ids())),
+            map(ids => this.idGenerator_.generate(ids)),
             shareReplay(1),
         );
   }
 
   has(id: string): Observable<boolean> {
-    return this.storageIdsObs_
+    return this.listIdsAsSet()
         .pipe(
-            map(ids => pipe(ids, hasEntry(id))),
+            map(ids => ids.has(id)),
             shareReplay(1),
         );
   }
 
-  listIds(): Observable<ImmutableSet<string>> {
-    return this.storageIdsObs_;
+  listIds(): Observable<SetDiff<string>> {
+    return this.listIdsAsSet().pipe(diffSet());
   }
 
   read(id: string): Observable<T|null> {
-    return this.invalidator_.getObservable()
+    const path = getPath(id, this.prefix);
+    return this.storage.getItem(path)
         .pipe(
-            map(() => getItem_(this.storage_, id, this.prefix_, this.converter_)),
-            startWith(getItem_(this.storage_, id, this.prefix_, this.converter_)),
+            mapNonNull(itemStr => this.converter.convertBackward(itemStr)),
             shareReplay(1),
         );
   }
 
-  update(id: string, instance: T): void {
-    const path = getPath_(id, this.prefix_);
-    this.listIds()
-        .pipe(take(1))
-        .subscribe(indexes => {
-          const indexesResult = this.indexesConverter_.convertForward(
-              pipe(indexes, push(id), asImmutableSet()),
-          );
-          this.storage_.setItem(this.prefix_, indexesResult);
+  update(id: string, instance: T): Observable<unknown> {
+    const path = getPath(id, this.prefix);
+    return this.listIdsAsSet()
+        .pipe(
+            take(1),
+            tap(ids => {
+              const newIds = this.indexesConverter.convertForward(
+                  createImmutableSet(new Set([...ids, id])),
+              );
+              this.storage.setItem(this.prefix, newIds);
 
-          const itemResult = this.converter_.convertForward(instance);
-          this.storage_.setItem(path, itemResult);
-          this.invalidator_.invalidate();
-        });
+              const itemResult = this.converter.convertForward(instance);
+              this.storage.setItem(path, itemResult);
+            }),
+        );
   }
 }
 
-function createStorageIdsObs_(
-    storage: Storage,
-    prefix: string,
-    invalidatorObs: Observable<unknown>,
-    indexesConverter: StrictConverter<ImmutableSet<string>, string>,
-): Observable<ImmutableSet<string>> {
-  return invalidatorObs
-      .pipe(
-          map(() => getIndexes_(storage, prefix, indexesConverter)),
-          startWith(getIndexes_(storage, prefix, indexesConverter)),
-          shareReplay(1),
-      );
-}
-
-function getIndexes_(
-    storage: Storage,
-    prefix: string,
-    indexesConverter: StrictConverter<ImmutableSet<string>, string>,
-): ImmutableSet<string> {
-  const indexesStr = storage.getItem(prefix);
-  if (!indexesStr) {
-    return createImmutableSet();
-  }
-
-  const set = indexesConverter.convertBackward(indexesStr);
-
-  return pipe(set, filter((id): id is string => !!id), asImmutableSet());
-}
-
-function getItem_<T>(
-    storage: Storage,
-    id: string,
-    prefix: string,
-    converter: StrictConverter<T, string>): T|null {
-  const itemStr = storage.getItem(getPath_(id, prefix));
-  if (!itemStr) {
-    return null;
-  }
-
-  return converter.convertBackward(itemStr);
-}
-
-function getPath_(key: string, prefix: string): string {
+function getPath(key: string, prefix: string): string {
   return `${prefix}/${key}`;
 }

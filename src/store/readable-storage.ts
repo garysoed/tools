@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { ImmutableSet } from '../collect/types/immutable-set';
+import { SetDiff } from '../rxjs/set-observable';
 
 export interface ReadableStorage<TFull> {
   /**
@@ -13,7 +13,7 @@ export interface ReadableStorage<TFull> {
   /**
    * @return IDs of the data in the storage.
    */
-  listIds(): Observable<ImmutableSet<string>>;
+  listIds(): Observable<SetDiff<string>>;
 
   /**
    * Reads the object corresponding to the given ID.

@@ -2,9 +2,12 @@ import { assert, should, test } from '@gs-testing/main';
 import { binary } from '@nabu/grammar';
 import { compose, identity, strict } from '@nabu/util';
 import { BehaviorSubject } from 'rxjs';
-import { createImmutableSet, ImmutableSet } from '../collect/types/immutable-set';
+import { scan } from 'rxjs/operators';
+import { createImmutableSet } from '../collect/types/immutable-set';
+import { SetDiff } from '../rxjs/set-observable';
 import { integerConverter } from '../serializer/integer-converter';
 import { INDEXES_PARSER, WebStorage } from './web-storage';
+import { applyDiff } from '../rxjs/diff-set';
 
 function setStorage(storage: Storage, key: string, value: string): void {
   storage.setItem(key, value);
@@ -37,18 +40,25 @@ test('store.WebStorage', () => {
       );
       setStorage(localStorage, path, ITEM_BINARY_CONVERTER.convertForward(123));
 
-      const idsSubject = new BehaviorSubject(createImmutableSet<string>());
-      storage.listIds().subscribe(idsSubject);
+      const idsSubject = new BehaviorSubject<Set<string>>(new Set());
+      storage.listIds()
+          .pipe(
+              scan<SetDiff<string>, Set<string>>((acc, value) => {
+                applyDiff(acc, value);
+                return acc;
+              }, new Set<string>()),
+          )
+          .subscribe(idsSubject);
 
       const itemSubject = new BehaviorSubject<number|null>(null);
       storage.read(id).subscribe(itemSubject);
 
-      storage.delete(id);
+      storage.delete(id).subscribe();
 
       assert(localStorage.getItem(path)).to.beNull();
       assert(localStorage.getItem(PREFIX)).to
           .equal(INDEXES_BINARY_CONVERTER.convertForward(createImmutableSet([])));
-      assert(idsSubject.getValue()()).to.beEmpty();
+      assert(idsSubject.getValue()).to.beEmpty();
       assert(itemSubject.getValue()).to.beNull();
     });
   });
@@ -85,8 +95,15 @@ test('store.WebStorage', () => {
       const id2 = 'id2';
       const id3 = 'id3';
 
-      const idsSubject = new BehaviorSubject<ImmutableSet<string>>(createImmutableSet());
-      storage.listIds().subscribe(idsSubject);
+      const idsSubject = new BehaviorSubject<Set<string>>(new Set());
+      storage.listIds()
+          .pipe(
+              scan<SetDiff<string>, Set<string>>((acc, value) => {
+                applyDiff(acc, value);
+                return acc;
+              }, new Set<string>()),
+          )
+          .subscribe(idsSubject);
 
       setStorage(
           localStorage,
@@ -94,7 +111,7 @@ test('store.WebStorage', () => {
           INDEXES_BINARY_CONVERTER.convertForward(createImmutableSet([id1, id2, id3])),
       );
 
-      assert(idsSubject.getValue()()).to.haveElements([id1, id2, id3]);
+      assert(idsSubject.getValue()).to.haveElements([id1, id2, id3]);
     });
   });
 
@@ -130,14 +147,21 @@ test('store.WebStorage', () => {
           INDEXES_BINARY_CONVERTER.convertForward(createImmutableSet(['oldId'])),
       );
 
-      const idsSubject = new BehaviorSubject(createImmutableSet<string>());
-      storage.listIds().subscribe(idsSubject);
+      const idsSubject = new BehaviorSubject<Set<string>>(new Set());
+      storage.listIds()
+          .pipe(
+              scan<SetDiff<string>, Set<string>>((acc, value) => {
+                applyDiff(acc, value);
+                return acc;
+              }, new Set<string>()),
+          )
+          .subscribe(idsSubject);
 
       const itemSubject = new BehaviorSubject<number|null>(null);
       storage.read(id).subscribe(itemSubject);
 
-      storage.update(id, 123);
-      assert(idsSubject.getValue()()).to.haveElements([oldId, id]);
+      storage.update(id, 123).subscribe();
+      assert(idsSubject.getValue()).to.haveElements([oldId, id]);
       assert(itemSubject.getValue()).to.equal(123);
       assert(localStorage.getItem(path)).to.equal(ITEM_BINARY_CONVERTER.convertForward(123));
     });

@@ -2,6 +2,7 @@ import { concat, Observable, of as observableOf, Subject } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { ImmutableSet, createImmutableSet } from '../collect/types/immutable-set';
 import { SetDiff, SetInit, SetObservable } from './set-observable';
+import { diff, applyDiff } from './diff-set';
 
 export class SetSubject<T> implements SetObservable<T> {
   private readonly innerSet: Set<T>;
@@ -44,18 +45,9 @@ export class SetSubject<T> implements SetObservable<T> {
   }
 
   setAll(newItems: Set<T>): void {
-    // Delete the extra items.
-    for (const existingValue of this.innerSet) {
-      if (!newItems.has(existingValue)) {
-        this.delete(existingValue);
-      }
-    }
-
-    // Insert the missing items.
-    for (const newValue of newItems) {
-      if (!this.innerSet.has(newValue)) {
-        this.add(newValue);
-      }
+    for (const diffItem of diff(this.innerSet, newItems)) {
+      applyDiff(this.innerSet, diffItem);
+      this.diffSubject.next(diffItem);
     }
   }
 }
