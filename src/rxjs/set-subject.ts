@@ -1,12 +1,12 @@
 import { concat, Observable, of as observableOf, Subject } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import { ImmutableSet, createImmutableSet } from '../collect/types/immutable-set';
+import { createImmutableSet, ImmutableSet } from '../collect/types/immutable-set';
+import { applyDiff, diff } from './diff-set';
 import { SetDiff, SetInit, SetObservable } from './set-observable';
-import { diff, applyDiff } from './diff-set';
 
 export class SetSubject<T> implements SetObservable<T> {
-  private readonly innerSet: Set<T>;
   private readonly diffSubject: Subject<SetDiff<T>> = new Subject();
+  private readonly innerSet: Set<T>;
 
   constructor(init: Iterable<T> = []) {
     this.innerSet = new Set([...init]);

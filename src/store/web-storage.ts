@@ -17,10 +17,10 @@ import { EditableStorage } from './editable-storage';
 export const INDEXES_PARSER = setConverter<string>(identity<string>());
 
 export class WebStorage<T> implements EditableStorage<T> {
-  private readonly storage: WebStorageObservable;
   private readonly converter: StrictConverter<T, string>;
-  private readonly idGenerator_: BaseIdGenerator = new SimpleIdGenerator();
+  private readonly idGenerator: BaseIdGenerator = new SimpleIdGenerator();
   private readonly indexesConverter: StrictConverter<ImmutableSet<string>, string>;
+  private readonly storage: WebStorageObservable;
 
   /**
    * @param storage Reference to storage instance.
@@ -36,6 +36,40 @@ export class WebStorage<T> implements EditableStorage<T> {
     const binaryGrammar = binary();
     this.converter = strict(compose(converter, binaryGrammar));
     this.indexesConverter = strict(compose(INDEXES_PARSER, binaryGrammar));
+  }
+
+  delete(id: string): Observable<unknown> {
+    return this.listIdsAsSet()
+        .pipe(
+            take(1),
+            tap(ids => {
+              const newSet = new Set(ids);
+              newSet.delete(id);
+              const result = this.indexesConverter.convertForward(createImmutableSet(newSet));
+              this.storage.setItem(this.prefix, result);
+              this.storage.removeItem(getPath(id, this.prefix));
+            }),
+        );
+  }
+
+  generateId(): Observable<string> {
+    return this.listIdsAsSet()
+        .pipe(
+            map(ids => this.idGenerator.generate(ids)),
+            shareReplay(1),
+        );
+  }
+
+  has(id: string): Observable<boolean> {
+    return this.listIdsAsSet()
+        .pipe(
+            map(ids => ids.has(id)),
+            shareReplay(1),
+        );
+  }
+
+  listIds(): Observable<SetDiff<string>> {
+    return this.listIdsAsSet().pipe(diffSet());
   }
 
   @cache()
@@ -54,42 +88,9 @@ export class WebStorage<T> implements EditableStorage<T> {
         );
   }
 
-  delete(id: string): Observable<unknown> {
-    return this.listIdsAsSet()
-        .pipe(
-            take(1),
-            tap(ids => {
-              const newSet = new Set(ids);
-              newSet.delete(id);
-              const result = this.indexesConverter.convertForward(createImmutableSet(newSet));
-              this.storage.setItem(this.prefix, result);
-              this.storage.removeItem(getPath(id, this.prefix));
-            })
-        );
-  }
-
-  generateId(): Observable<string> {
-    return this.listIdsAsSet()
-        .pipe(
-            map(ids => this.idGenerator_.generate(ids)),
-            shareReplay(1),
-        );
-  }
-
-  has(id: string): Observable<boolean> {
-    return this.listIdsAsSet()
-        .pipe(
-            map(ids => ids.has(id)),
-            shareReplay(1),
-        );
-  }
-
-  listIds(): Observable<SetDiff<string>> {
-    return this.listIdsAsSet().pipe(diffSet());
-  }
-
   read(id: string): Observable<T|null> {
     const path = getPath(id, this.prefix);
+
     return this.storage.getItem(path)
         .pipe(
             mapNonNull(itemStr => this.converter.convertBackward(itemStr)),
@@ -99,6 +100,7 @@ export class WebStorage<T> implements EditableStorage<T> {
 
   update(id: string, instance: T): Observable<unknown> {
     const path = getPath(id, this.prefix);
+
     return this.listIdsAsSet()
         .pipe(
             take(1),

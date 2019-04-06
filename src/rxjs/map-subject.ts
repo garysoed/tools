@@ -1,11 +1,11 @@
 import { concat, Observable, of as observableOf, Subject } from 'rxjs';
-import { shareReplay, map } from 'rxjs/operators';
-import { ImmutableMap, createImmutableMap } from '../collect/types/immutable-map';
-import { MapObservable, MapDiff, MapInit } from './map-observable';
+import { map, shareReplay } from 'rxjs/operators';
+import { createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
+import { MapDiff, MapInit, MapObservable } from './map-observable';
 
 export class MapSubject<K, V> implements MapObservable<K, V> {
-  private readonly innerMap: Map<K, V>;
   private readonly diffSubject: Subject<MapDiff<K, V>> = new Subject();
+  private readonly innerMap: Map<K, V>;
 
   constructor(init: Iterable<[K, V]> = []) {
     this.innerMap = new Map([...init]);
@@ -34,6 +34,15 @@ export class MapSubject<K, V> implements MapObservable<K, V> {
     );
   }
 
+  set(key: K, value: V): void {
+    if (this.innerMap.get(key) === value) {
+      return;
+    }
+
+    this.innerMap.set(key, value);
+    this.diffSubject.next({key, value, type: 'set'});
+  }
+
   setAll(newItems: Map<K, V>): void {
     // Delete the extra items.
     for (const [existingKey] of this.innerMap) {
@@ -48,14 +57,5 @@ export class MapSubject<K, V> implements MapObservable<K, V> {
         this.set(newKey, newValue);
       }
     }
-  }
-
-  set(key: K, value: V): void {
-    if (this.innerMap.get(key) === value) {
-      return;
-    }
-
-    this.innerMap.set(key, value);
-    this.diffSubject.next({key, value, type: 'set'});
   }
 }

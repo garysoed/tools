@@ -2,8 +2,8 @@ import { Observable } from 'rxjs';
 import { ImmutableSet } from '../collect/types/immutable-set';
 
 export interface SetAdd<T> {
-  value: T;
   type: 'add';
+  value: T;
 }
 
 export interface SetInit<T> {
@@ -12,8 +12,8 @@ export interface SetInit<T> {
 }
 
 export interface SetDelete<T> {
-  value: T;
   type: 'delete';
+  value: T;
 }
 
 export type SetDiff<T> = SetInit<T>|SetDelete<T>|SetAdd<T>;

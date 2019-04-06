@@ -1,4 +1,4 @@
-import { should, test, assert } from '@gs-testing/main';
+import { assert, should, test } from '@gs-testing/main';
 import { WebStorageObservable } from './web-storage-observable';
 
 interface Entry {
@@ -21,11 +21,13 @@ class FakeStorage implements Storage {
 
   getItem(itemKey: string): string|null {
     const entry = this.data.find(({key}) => key === itemKey);
+
     return entry ? entry.value : null;
   }
 
   key(index: number): string|null {
     const entry = this.data[index];
+
     return entry ? entry.key : null;
   }
 

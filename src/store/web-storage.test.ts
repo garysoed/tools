@@ -4,10 +4,10 @@ import { compose, identity, strict } from '@nabu/util';
 import { BehaviorSubject } from 'rxjs';
 import { scan } from 'rxjs/operators';
 import { createImmutableSet } from '../collect/types/immutable-set';
+import { applyDiff } from '../rxjs/diff-set';
 import { SetDiff } from '../rxjs/set-observable';
 import { integerConverter } from '../serializer/integer-converter';
 import { INDEXES_PARSER, WebStorage } from './web-storage';
-import { applyDiff } from '../rxjs/diff-set';
 
 function setStorage(storage: Storage, key: string, value: string): void {
   storage.setItem(key, value);
@@ -43,10 +43,13 @@ test('store.WebStorage', () => {
       const idsSubject = new BehaviorSubject<Set<string>>(new Set());
       storage.listIds()
           .pipe(
-              scan<SetDiff<string>, Set<string>>((acc, value) => {
-                applyDiff(acc, value);
-                return acc;
-              }, new Set<string>()),
+              scan<SetDiff<string>, Set<string>>(
+                  (acc, value) => {
+                    applyDiff(acc, value);
+
+                    return acc;
+                  },
+                  new Set<string>()),
           )
           .subscribe(idsSubject);
 
@@ -98,10 +101,13 @@ test('store.WebStorage', () => {
       const idsSubject = new BehaviorSubject<Set<string>>(new Set());
       storage.listIds()
           .pipe(
-              scan<SetDiff<string>, Set<string>>((acc, value) => {
-                applyDiff(acc, value);
-                return acc;
-              }, new Set<string>()),
+              scan<SetDiff<string>, Set<string>>(
+                  (acc, value) => {
+                    applyDiff(acc, value);
+
+                    return acc;
+                  },
+                  new Set<string>()),
           )
           .subscribe(idsSubject);
 
@@ -150,10 +156,13 @@ test('store.WebStorage', () => {
       const idsSubject = new BehaviorSubject<Set<string>>(new Set());
       storage.listIds()
           .pipe(
-              scan<SetDiff<string>, Set<string>>((acc, value) => {
-                applyDiff(acc, value);
-                return acc;
-              }, new Set<string>()),
+              scan<SetDiff<string>, Set<string>>(
+                  (acc, value) => {
+                    applyDiff(acc, value);
+
+                    return acc;
+                  },
+                  new Set<string>()),
           )
           .subscribe(idsSubject);
 

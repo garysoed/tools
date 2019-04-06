@@ -42,7 +42,7 @@ test('serializer.FunctionConverter', () => {
 
   test('convertForward', () => {
     should(`return the correct value`, () => {
-      const fn = function test(a: any): any { return a + 1; };
+      const fn = function test(a: number): number { return a + 1; };
       const parser = oneParamFunctionConverter();
 
       assert(parser.convertForward(fn)).to
@@ -59,7 +59,7 @@ test('serializer.FunctionConverter', () => {
     });
 
     should(`handle any number of params`, () => {
-      const fn = function test(a: any): any { return a + 1; };
+      const fn = function test(a: number): number { return a + 1; };
       const parser = anyParamsFunctionConverter();
 
       assert(parser.convertForward(fn)).to

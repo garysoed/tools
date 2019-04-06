@@ -13,8 +13,8 @@ export interface MapDelete<K> {
 
 export interface MapSet<K, V> {
   key: K;
-  value: V;
   type: 'set';
+  value: V;
 }
 
 export type MapDiff<K, V> = MapInit<K, V>|MapDelete<K>|MapSet<K, V>;

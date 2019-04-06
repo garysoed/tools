@@ -37,10 +37,13 @@ test.skip('store.CachedStorage', () => {
       const idsSubject = new BehaviorSubject<Set<string>>(new Set());
       storage.listIds()
           .pipe(
-              scan<SetDiff<string>, Set<string>>((acc, value) => {
-                applyDiff(acc, value);
-                return acc;
-              }, new Set<string>()),
+              scan<SetDiff<string>, Set<string>>(
+                (acc, value) => {
+                  applyDiff(acc, value);
+
+                  return acc;
+                },
+                new Set<string>()),
           )
           .subscribe(idsSubject);
 
@@ -59,10 +62,13 @@ test.skip('store.CachedStorage', () => {
       const idsSubject = new BehaviorSubject<Set<string>>(new Set());
       storage.listIds()
           .pipe(
-              scan<SetDiff<string>, Set<string>>((acc, value) => {
-                applyDiff(acc, value);
-                return acc;
-              }, new Set<string>()),
+              scan<SetDiff<string>, Set<string>>(
+                  (acc, value) => {
+                    applyDiff(acc, value);
+
+                    return acc;
+                  },
+                  new Set<string>()),
           )
           .subscribe(idsSubject);
 
@@ -78,10 +84,13 @@ test.skip('store.CachedStorage', () => {
       const idsSubject = new BehaviorSubject<Set<string>>(new Set());
       storage.listIds()
           .pipe(
-              scan<SetDiff<string>, Set<string>>((acc, value) => {
-                applyDiff(acc, value);
-                return acc;
-              }, new Set<string>()),
+              scan<SetDiff<string>, Set<string>>(
+                  (acc, value) => {
+                    applyDiff(acc, value);
+
+                    return acc;
+                  },
+                  new Set<string>()),
           )
           .subscribe(idsSubject);
 

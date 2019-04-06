@@ -1,9 +1,9 @@
-import { test, should, setup, assert, match } from '@gs-testing/main';
+import { assert, match, setup, should, test } from '@gs-testing/main';
+import { createSpySubject, SpySubject } from '@gs-testing/spy';
 import { scan } from 'rxjs/operators';
-import { SpySubject, createSpySubject } from '@gs-testing/spy';
-import { MapSubject } from './map-subject';
 import { ImmutableMap } from '../collect/types/immutable-map';
 import { MapDiff } from './map-observable';
+import { MapSubject } from './map-subject';
 
 test('gs-tools.rxjs.MapSubject', () => {
   let subject: MapSubject<string, number>;
@@ -19,18 +19,22 @@ test('gs-tools.rxjs.MapSubject', () => {
     scanSpySubject = new SpySubject();
     subject.getDiffs()
         .pipe(
-            scan<MapDiff<string, number>, Map<string, number>>((acc, diff) => {
-              switch (diff.type) {
-                case 'delete':
-                  acc.delete(diff.key);
-                  return acc;
-                case 'init':
-                  return diff.payload;
-                case 'set':
-                  acc.set(diff.key, diff.value);
-                  return acc;
-              }
-            }, new Map<string, number>()),
+            scan<MapDiff<string, number>, Map<string, number>>(
+                (acc, diff) => {
+                  switch (diff.type) {
+                    case 'delete':
+                      acc.delete(diff.key);
+
+                      return acc;
+                    case 'init':
+                      return diff.payload;
+                    case 'set':
+                      acc.set(diff.key, diff.value);
+
+                      return acc;
+                  }
+                },
+                new Map<string, number>()),
         )
         .subscribe(scanSpySubject);
   });

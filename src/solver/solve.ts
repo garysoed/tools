@@ -38,11 +38,9 @@ export class Solve {
           bestIndex = guessIndex;
         }
 
-        if (trueAtLowerValues) {
-          bestIndex = Math.max(bestIndex, guessIndex);
-        } else {
-          bestIndex = Math.min(bestIndex, guessIndex);
-        }
+        bestIndex = trueAtLowerValues ?
+            Math.max(bestIndex, guessIndex) :
+            Math.min(bestIndex, guessIndex);
       }
 
       if (result === trueAtLowerValues) {
@@ -55,4 +53,3 @@ export class Solve {
     return bestIndex === null ? null : values[bestIndex];
   }
 }
-// TODO: Mutable

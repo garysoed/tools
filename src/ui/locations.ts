@@ -1,8 +1,8 @@
-import { pipe } from '../collect/pipe';
 import { filter } from '../collect/operators/filter';
 import { head } from '../collect/operators/head';
 import { size } from '../collect/operators/size';
 import { skip } from '../collect/operators/skip';
+import { pipe } from '../collect/pipe';
 import { asImmutableList, createImmutableList, ImmutableList } from '../collect/types/immutable-list';
 import { createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
 

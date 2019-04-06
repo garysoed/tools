@@ -1,9 +1,9 @@
-import { test, should, setup, assert, match } from '@gs-testing/main';
+import { assert, match, setup, should, test } from '@gs-testing/main';
+import { createSpySubject, SpySubject } from '@gs-testing/spy';
 import { scan } from 'rxjs/operators';
-import { SpySubject, createSpySubject } from '@gs-testing/spy';
-import { SetSubject } from './set-subject';
-import { SetDiff } from './set-observable';
 import { ImmutableSet } from '../collect/types/immutable-set';
+import { SetDiff } from './set-observable';
+import { SetSubject } from './set-subject';
 
 test('gs-tools.rxjs.SetSubject', () => {
   let subject: SetSubject<string>;
@@ -19,18 +19,22 @@ test('gs-tools.rxjs.SetSubject', () => {
     scanSpySubject = new SpySubject();
     subject.getDiffs()
         .pipe(
-            scan<SetDiff<string>, Set<string>>((acc, diff) => {
-              switch (diff.type) {
-                case 'add':
-                  acc.add(diff.value);
-                  return acc;
-                case 'delete':
-                  acc.delete(diff.value);
-                  return acc;
-                case 'init':
-                  return diff.payload;
-              }
-            }, new Set()),
+            scan<SetDiff<string>, Set<string>>(
+                (acc, diff) => {
+                  switch (diff.type) {
+                    case 'add':
+                      acc.add(diff.value);
+
+                      return acc;
+                    case 'delete':
+                      acc.delete(diff.value);
+
+                      return acc;
+                    case 'init':
+                      return diff.payload;
+                  }
+                },
+                new Set()),
         )
         .subscribe(scanSpySubject);
   });
@@ -89,8 +93,8 @@ test('gs-tools.rxjs.SetSubject', () => {
 
       subject.delete('b');
       await assert(spySubject).to.emitWith(match.anyObjectThat().haveProperties({
-        value: 'b',
         type: 'delete',
+        value: 'b',
       }));
     });
   });

@@ -1,19 +1,20 @@
-import { pipe } from '../collect/pipe';
 import { countable } from '../collect/generators';
 import { map } from '../collect/operators/map';
 import { zip } from '../collect/operators/zip';
+import { pipe } from '../collect/pipe';
 import { createImmutableList, ImmutableList } from '../collect/types/immutable-list';
+
+const CAMEL_CASE_REGEX: RegExp = /^[a-z][a-zA-Z0-9]*$/;
+const LOWER_CASE_REGEX: RegExp = /^[a-z][a-z0-9\-]*$/;
+const PASCAL_CASE_REGEX: RegExp = /^[A-Z][a-zA-Z0-9]*$/;
+const UPPER_CASE_REGEX: RegExp = /^[A-Z][A-Z0-9_]*$/;
 
 /**
  * Utility class to convert between different capitalization styles.
  */
 export class Cases {
-  private static CAMEL_CASE_REGEX_: RegExp = /^[a-z][a-zA-Z0-9]*$/;
-  private static LOWER_CASE_REGEX_: RegExp = /^[a-z][a-z0-9\-]*$/;
-  private static PASCAL_CASE_REGEX_: RegExp = /^[A-Z][a-zA-Z0-9]*$/;
-  private static UPPER_CASE_REGEX_: RegExp = /^[A-Z][A-Z0-9_]*$/;
 
-  constructor(private words: ImmutableList<string>) {}
+  constructor(private readonly words: ImmutableList<string>) {}
 
   /**
    * Converts to camelCase.
@@ -82,14 +83,14 @@ export class Cases {
    */
   static of(input: string): Cases {
     let words: Iterable<string>;
-    if (Cases.CAMEL_CASE_REGEX_.test(input)) {
+    if (CAMEL_CASE_REGEX.test(input)) {
       words = pipe(
           createImmutableList(input.replace(/([A-Z])/g, ' $1').split(' ')),
           map((word: string) => {
             return word.toLowerCase();
           }),
       )();
-    } else if (Cases.PASCAL_CASE_REGEX_.test(input)) {
+    } else if (PASCAL_CASE_REGEX.test(input)) {
       const normalizedInput = `${input[0].toLowerCase()}${input.substring(1)}`;
       words = pipe(
           createImmutableList(normalizedInput.replace(/([A-Z])/g, ' $1').split(' ')),
@@ -97,9 +98,9 @@ export class Cases {
             return word.toLowerCase();
           }),
       )();
-    } else if (Cases.LOWER_CASE_REGEX_.test(input)) {
+    } else if (LOWER_CASE_REGEX.test(input)) {
       words = input.split('-');
-    } else if (Cases.UPPER_CASE_REGEX_.test(input)) {
+    } else if (UPPER_CASE_REGEX.test(input)) {
       words = pipe(
           createImmutableList(input.split('_')),
           map((word: string) => {

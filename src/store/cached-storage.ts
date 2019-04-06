@@ -1,7 +1,7 @@
 import { combineLatest, Observable, of as observableOf } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
-import { SetDiff } from '../rxjs/set-observable';
 import { BaseDisposable } from '../dispose/base-disposable';
+import { SetDiff } from '../rxjs/set-observable';
 import { EditableStorage } from './editable-storage';
 
 export class CachedStorage<T> extends BaseDisposable implements EditableStorage<T> {
@@ -18,8 +18,8 @@ export class CachedStorage<T> extends BaseDisposable implements EditableStorage<
     if (item !== undefined && item instanceof BaseDisposable) {
       item.dispose();
     }
-    return this.innerStorage_.delete(id)
-        .pipe(tap(() => this.cache_.delete(id)));
+
+    return this.innerStorage_.delete(id).pipe(tap(() => this.cache_.delete(id)));
   }
 
   disposeInternal(): void {
