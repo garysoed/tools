@@ -1,7 +1,7 @@
 import { Observable, of as observableOf } from 'rxjs';
 import { map, shareReplay, tap } from 'rxjs/operators';
-import { MapSubject } from 'src/rxjs/map-subject';
-import { SetDiff } from 'src/rxjs/set-observable';
+import { MapSubject } from '../rxjs/map-subject';
+import { SetDiff } from '../rxjs/set-observable';
 import { getKey } from '../collect/operators/get-key';
 import { hasKey } from '../collect/operators/has-key';
 import { head } from '../collect/operators/head';
