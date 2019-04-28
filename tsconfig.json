@@ -13,10 +13,12 @@
     "noImplicitThis": true,
     "outDir": "out",
     "paths": {
-      "@gs-testing/*": ["node_modules/gs-testing/export/*"],
+      "@gs-testing": ["node_modules/gs-testing/export/index.ts"],
       "@gs-types": ["node_modules/gs-types/export/index.ts"],
       "@moirai": ["node_modules/moirai/export/index.ts"],
       "@nabu/*": ["node_modules/nabu/export/*"],
+      "@rxjs": ["node_modules/rxjs"],
+      "@rxjs/operators": ["node_modules/rxjs/operators"],
     },
     "pretty": true,
     "sourceMap": true,

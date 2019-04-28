@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable } from '@rxjs';
 import { SetDiff } from '../rxjs/set-observable';
 
 export interface ReadableStorage<TFull> {

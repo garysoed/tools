@@ -18,7 +18,7 @@
 Example:
 
 ```typescript
-import { assert, Matchers, TestBase } from '@gs-testing/main';
+import { assert, Matchers, TestBase } from '@gs-testing';
 
 
 import { Validate } from 'external/gs_tools/src/util';

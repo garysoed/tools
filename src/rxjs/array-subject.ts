@@ -1,7 +1,7 @@
-import { concat, Observable, of as observableOf, Subject } from 'rxjs';
-import { mapTo, shareReplay, map } from 'rxjs/operators';
+import { concat, Observable, of as observableOf, Subject } from '@rxjs';
+import { ArrayDiff, ArrayInit, ArrayObservable } from './array-observable';
+import { map, shareReplay } from '@rxjs/operators';
 import { ImmutableList, createImmutableList } from '../collect/types/immutable-list';
-import { ArrayDiff, ArrayObservable, ArrayInit } from './array-observable';
 
 
 export class ArraySubject<T> implements ArrayObservable<T> {
@@ -23,7 +23,7 @@ export class ArraySubject<T> implements ArrayObservable<T> {
 
   getDiffs(): Observable<ArrayDiff<T>> {
     return concat(
-        observableOf<ArrayInit<T>>({payload: [...this.innerArray], type: 'init'}),
+        observableOf<ArrayInit<T>>({value: [...this.innerArray], type: 'init'}),
         this.diffSubject,
     );
   }
@@ -37,7 +37,7 @@ export class ArraySubject<T> implements ArrayObservable<T> {
 
   insertAt(index: number, payload: T): void {
     this.innerArray.splice(index, 0, payload);
-    this.diffSubject.next({index, payload, type: 'insert'});
+    this.diffSubject.next({index, value: payload, type: 'insert'});
   }
 
   setAll(newItems: T[]): void {
@@ -65,6 +65,6 @@ export class ArraySubject<T> implements ArrayObservable<T> {
     }
 
     this.innerArray[index] = payload;
-    this.diffSubject.next({index, payload, type: 'set'});
+    this.diffSubject.next({index, value: payload, type: 'set'});
   }
 }

@@ -1,5 +1,5 @@
-import { assert, should } from '@gs-testing/main';
-import { fake, spy } from '@gs-testing/spy';
+import { assert, should } from '@gs-testing';
+import { fake, spy } from '@gs-testing';
 import { BaseColor } from '../color/base-color';
 
 // tslint:disable:prefer-function-over-method

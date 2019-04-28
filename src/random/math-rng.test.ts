@@ -1,5 +1,5 @@
-import { assert, should } from '@gs-testing/main';
-import { fake, spy } from '@gs-testing/spy';
+import { assert, should } from '@gs-testing';
+import { fake, spy } from '@gs-testing';
 import { MathRng } from './math-rng';
 
 describe('random.MathJs', () => {

@@ -1,5 +1,5 @@
-import { combineLatest, Observable, of as observableOf } from 'rxjs';
-import { take, tap } from 'rxjs/operators';
+import { combineLatest, Observable, of as observableOf } from '@rxjs';
+import { take, tap } from '@rxjs/operators';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { SetDiff } from '../rxjs/set-observable';
 import { EditableStorage } from './editable-storage';

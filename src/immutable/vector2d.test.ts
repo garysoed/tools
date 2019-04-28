@@ -1,4 +1,4 @@
-import { assert, match, should } from '@gs-testing/main';
+import { assert, match, should } from '@gs-testing';
 import { Vector2d } from './vector2d';
 
 

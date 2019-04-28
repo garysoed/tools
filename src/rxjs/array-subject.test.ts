@@ -1,7 +1,7 @@
-import { test, should, setup, assert, match } from '@gs-testing/main';
+import { test, should, setup, assert, match } from '@gs-testing';
 import { ArraySubject } from './array-subject';
-import { scan } from 'rxjs/operators';
-import { SpySubject, createSpySubject } from '@gs-testing/spy';
+import { scan } from '@rxjs/operators';
+import { SpySubject, createSpySubject } from '@gs-testing';
 import { ImmutableList } from '../collect/types/immutable-list';
 import { ArrayDiff } from './array-observable';
 
@@ -25,12 +25,12 @@ test('gs-tools.rxjs.ArraySubject', () => {
                   acc.splice(diff.index, 1);
                   return acc;
                 case 'init':
-                  return diff.payload;
+                  return diff.value;
                 case 'insert':
-                  acc.splice(diff.index, 0, diff.payload);
+                  acc.splice(diff.index, 0, diff.value);
                   return acc;
                 case 'set':
-                  acc[diff.index] = diff.payload;
+                  acc[diff.index] = diff.value;
                   return acc;
               }
             }, [] as string[]),

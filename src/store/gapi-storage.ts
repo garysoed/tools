@@ -1,5 +1,5 @@
-// import { from, Observable } from 'rxjs';
-// import { shareReplay, switchMap } from 'rxjs/operators';
+// import { from, Observable } from '@rxjs';
+// import { shareReplay, switchMap } from '@rxjs/operators';
 // import { GapiLibrary } from '../net';
 // import { ReadableStorage } from './readable-storage';
 // import { SetObservable } from 'src/rxjs/set-observable';

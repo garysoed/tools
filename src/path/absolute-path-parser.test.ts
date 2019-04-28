@@ -1,4 +1,4 @@
-import { assert, should, test } from '@gs-testing/main';
+import { assert, should, test } from '@gs-testing';
 
 import { SuccessResult } from '@nabu/main';
 import { createImmutableList } from '../collect/types/immutable-list';

@@ -1,9 +1,9 @@
-import { Observable } from 'rxjs';
-import { ImmutableMap } from '../collect/types/immutable-map';
+import { Observable } from '@rxjs';
+import { scan } from '@rxjs/operators';
 
 export interface MapInit<K, V> {
-  payload: Map<K, V>;
   type: 'init';
+  value: Map<K, V>;
 }
 
 export interface MapDelete<K> {
@@ -21,6 +21,22 @@ export type MapDiff<K, V> = MapInit<K, V>|MapDelete<K>|MapSet<K, V>;
 
 export interface MapObservable<K, V> {
   getDiffs(): Observable<MapDiff<K, V>>;
+}
 
-  getObs(): Observable<ImmutableMap<K, V>>;
+export function scanMap<K, V>(): (obs: Observable<MapDiff<K, V>>) => Observable<Map<K, V>> {
+  return obs => obs.pipe(
+      scan<MapDiff<K, V>, Map<K, V>>(
+          (acc, diff) => {
+            switch (diff.type) {
+              case 'delete':
+                return new Map([...acc].filter(([key]) => key === diff.key));
+              case 'init':
+                return new Map(diff.value);
+              case 'set':
+                return new Map([...acc, [diff.key, diff.value]]);
+            }
+          },
+          new Map(),
+      )
+  )
 }

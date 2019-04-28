@@ -1,20 +1,20 @@
-import { assert, match, setup, should, test } from '@gs-testing/main';
-import { createSpySubject, SpySubject } from '@gs-testing/spy';
-import { scan } from 'rxjs/operators';
+import { assert, match, setup, should, test } from '@gs-testing';
+import { createSpySubject, SpySubject } from '@gs-testing';
+import { scan } from '@rxjs/operators';
 import { ImmutableSet } from '../collect/types/immutable-set';
-import { SetDiff } from './set-observable';
+import { SetDiff, scanSet } from './set-observable';
 import { SetSubject } from './set-subject';
 
 test('gs-tools.rxjs.SetSubject', () => {
   let subject: SetSubject<string>;
-  let setSpySubject: SpySubject<ImmutableSet<string>>;
+  let setSpySubject: SpySubject<Set<string>>;
   let scanSpySubject: SpySubject<Set<string>>;
 
   setup(() => {
     subject = new SetSubject(['a', 'b', 'c']);
 
     setSpySubject = new SpySubject();
-    subject.getObs().subscribe(setSpySubject);
+    subject.getDiffs().pipe(scanSet()).subscribe(setSpySubject);
 
     scanSpySubject = new SpySubject();
     subject.getDiffs()
@@ -31,7 +31,7 @@ test('gs-tools.rxjs.SetSubject', () => {
 
                       return acc;
                     case 'init':
-                      return diff.payload;
+                      return diff.value;
                   }
                 },
                 new Set()),
@@ -44,7 +44,7 @@ test('gs-tools.rxjs.SetSubject', () => {
       subject.add('d');
 
       await assert(setSpySubject).to.emitWith(
-          match.anyIterableThat<string, ImmutableSet<string>>().haveElements(['a', 'b', 'c', 'd']));
+          match.anyIterableThat<string, Set<string>>().haveElements(['a', 'b', 'c', 'd']));
       await assert(scanSpySubject).to.emitWith(
           match.anyIterableThat<string, Set<string>>().haveElements(['a', 'b', 'c', 'd']));
     });
@@ -65,7 +65,7 @@ test('gs-tools.rxjs.SetSubject', () => {
       subject.delete('b');
 
       await assert(setSpySubject).to
-          .emitWith(match.anyIterableThat<string, ImmutableSet<string>>().haveElements(['a', 'c']));
+          .emitWith(match.anyIterableThat<string, Set<string>>().haveElements(['a', 'c']));
       await assert(scanSpySubject).to
           .emitWith(match.anyIterableThat<string, Set<string>>().haveElements(['a', 'c']));
     });
@@ -104,7 +104,7 @@ test('gs-tools.rxjs.SetSubject', () => {
       subject.setAll(new Set(['e', 'c']));
 
       await assert(setSpySubject).to
-          .emitWith(match.anyIterableThat<string, ImmutableSet<string>>().haveElements(['c', 'e']));
+          .emitWith(match.anyIterableThat<string, Set<string>>().haveElements(['c', 'e']));
       await assert(scanSpySubject).to
           .emitWith(match.anyIterableThat<string, Set<string>>().haveElements(['c', 'e']));
     });

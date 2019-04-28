@@ -1,5 +1,5 @@
-import { assert, should } from '@gs-testing/main';
-import { createSpy, fake, resetCalls, Spy } from '@gs-testing/spy';
+import { assert, should } from '@gs-testing';
+import { createSpy, fake, resetCalls, Spy } from '@gs-testing';
 import { cache } from '../data/cache';
 
 describe('data.cache', () => {

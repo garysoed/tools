@@ -1,4 +1,4 @@
-import { assert, match, should, test } from '@gs-testing/main';
+import { assert, match, should, test } from '@gs-testing';
 import { anyParamsFunctionConverter, noParamFunctionConverter, oneParamFunctionConverter } from './function-converter';
 
 test('serializer.FunctionConverter', () => {

@@ -1,7 +1,7 @@
-// import { assert, match, retryUntil, should, test } from '@gs-testing/main';
-// import { mocks } from '@gs-testing/mock';
-// import { createSpy, createSpyObject, fake, Spy, SpyObj } from '@gs-testing/spy';
-// import { BehaviorSubject, Observable, of as observableOf } from 'rxjs';
+// import { assert, match, retryUntil, should, test } from '@gs-testing';
+// import { mocks } from '@gs-testing';
+// import { createSpy, createSpyObject, fake, Spy, SpyObj } from '@gs-testing';
+// import { BehaviorSubject, Observable, of as observableOf } from '@rxjs';
 // import { createImmutableSet, ImmutableSet } from '../collect/types/immutable-set';
 // import { GapiLibrary } from '../net';
 // import { GapiRequestQueue, GapiStorage } from './gapi-storage';

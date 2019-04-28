@@ -1,8 +1,8 @@
-import { assert, should, test } from '@gs-testing/main';
-import { mocks } from '@gs-testing/mock';
-import { createSpyInstance, createSpyObject, fake, resetCalls, SpyObj } from '@gs-testing/spy';
-import { BehaviorSubject, of as observableOf } from 'rxjs';
-import { scan } from 'rxjs/operators';
+import { assert, should, test } from '@gs-testing';
+import { mocks } from '@gs-testing';
+import { createSpyInstance, createSpyObject, fake, resetCalls, SpyObj } from '@gs-testing';
+import { BehaviorSubject, of as observableOf } from '@rxjs';
+import { scan } from '@rxjs/operators';
 import { BaseDisposable } from '../dispose/base-disposable';
 import { TestDispose } from '../dispose/testing/test-dispose';
 import { applyDiff } from '../rxjs/diff-set';

@@ -1,5 +1,5 @@
-import { concat, Observable, of as observableOf, Subject } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { concat, Observable, of as observableOf, Subject } from '@rxjs';
+import { map, shareReplay } from '@rxjs/operators';
 import { createImmutableSet, ImmutableSet } from '../collect/types/immutable-set';
 import { applyDiff, diff } from './diff-set';
 import { SetDiff, SetInit, SetObservable } from './set-observable';
@@ -32,15 +32,8 @@ export class SetSubject<T> implements SetObservable<T> {
 
   getDiffs(): Observable<SetDiff<T>> {
     return concat(
-        observableOf<SetInit<T>>({payload: new Set([...this.innerSet]), type: 'init'}),
+        observableOf<SetInit<T>>({value: new Set([...this.innerSet]), type: 'init'}),
         this.diffSubject,
-    );
-  }
-
-  getObs(): Observable<ImmutableSet<T>> {
-    return this.diffSubject.pipe(
-        map(() => createImmutableSet(this.innerSet)),
-        shareReplay(1),
     );
   }
 

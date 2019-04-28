@@ -1,4 +1,4 @@
-import { assert, should, test } from '@gs-testing/main';
+import { assert, should, test } from '@gs-testing';
 import { NumberType } from '@gs-types';
 import { CompareResult } from './compare-result';
 import { pipe } from './pipe';

@@ -1,4 +1,4 @@
-import { assert, setup, should, test } from '@gs-testing/main';
+import { assert, setup, should, test } from '@gs-testing';
 import { pipe } from '../pipe';
 import { createImmutableMap, ImmutableMap } from '../types/immutable-map';
 import { hasKey } from './has-key';

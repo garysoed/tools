@@ -1,5 +1,5 @@
-import { concat, Observable, of as observableOf, Subject } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { concat, Observable, of as observableOf, Subject } from '@rxjs';
+import { map, shareReplay } from '@rxjs/operators';
 import { createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
 import { MapDiff, MapInit, MapObservable } from './map-observable';
 
@@ -22,15 +22,8 @@ export class MapSubject<K, V> implements MapObservable<K, V> {
 
   getDiffs(): Observable<MapDiff<K, V>> {
     return concat(
-        observableOf<MapInit<K, V>>({payload: new Map([...this.innerMap]), type: 'init'}),
+        observableOf<MapInit<K, V>>({value: new Map([...this.innerMap]), type: 'init'}),
         this.diffSubject,
-    );
-  }
-
-  getObs(): Observable<ImmutableMap<K, V>> {
-    return this.diffSubject.pipe(
-        map(() => createImmutableMap(this.innerMap)),
-        shareReplay(1),
     );
   }
 

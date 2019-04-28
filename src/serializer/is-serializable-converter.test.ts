@@ -1,4 +1,4 @@
-import { assert, match, should, test } from '@gs-testing/main';
+import { assert, match, should, test } from '@gs-testing';
 import { Converter, Serializable } from '@nabu/main';
 import { strict } from '@nabu/util';
 import { IsSerializable } from './is-serializable';

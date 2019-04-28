@@ -1,5 +1,5 @@
 // tslint:disable:no-non-null-assertion
-import { assert, match, setup, should, test } from '@gs-testing/main';
+import { assert, match, setup, should, test } from '@gs-testing';
 import { flat } from '../collect/operators/flat';
 import { map } from '../collect/operators/map';
 import { mapPick } from '../collect/operators/map-pick';

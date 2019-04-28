@@ -1,5 +1,5 @@
-import { assert, should } from '@gs-testing/main';
-import { createSpyInstance, fake, SpyObj } from '@gs-testing/spy';
+import { assert, should } from '@gs-testing';
+import { createSpyInstance, fake, SpyObj } from '@gs-testing';
 import { RandomizerImpl } from './randomizer';
 import { SimpleIdGenerator } from './simple-id-generator';
 

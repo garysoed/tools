@@ -1,6 +1,6 @@
-import { Observable, of as observableOf, OperatorFunction } from 'rxjs';
+import { Observable, of as observableOf, OperatorFunction } from '@rxjs';
 import { SetDiff } from './set-observable';
-import { startWith, pairwise, switchMap } from 'rxjs/operators';
+import { startWith, pairwise, switchMap } from '@rxjs/operators';
 
 export function diffSet<T>(): OperatorFunction<Set<T>, SetDiff<T>> {
   return (source: Observable<Set<T>>) => source
@@ -10,7 +10,7 @@ export function diffSet<T>(): OperatorFunction<Set<T>, SetDiff<T>> {
           switchMap(([oldSet, rawNewSet]) => {
             const newSet = rawNewSet || new Set<T>();
             if (oldSet === null) {
-              return observableOf<SetDiff<T>>({payload: newSet, type: 'init'});
+              return observableOf<SetDiff<T>>({value: newSet, type: 'init'});
             }
 
             return observableOf(...diff(oldSet, newSet));
@@ -48,7 +48,7 @@ export function applyDiff<T>(set: Set<T>, diff: SetDiff<T>): void {
       return;
     case 'init':
       set.clear();
-      for (const value of diff.payload) {
+      for (const value of diff.value) {
         set.add(value);
       }
       return;

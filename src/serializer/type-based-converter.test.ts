@@ -1,4 +1,4 @@
-import { assert, should, test } from '@gs-testing/main';
+import { assert, should, test } from '@gs-testing';
 import { NumberType } from '@gs-types';
 import { Converter, Serializable } from '@nabu/main';
 import { strict } from '@nabu/util';

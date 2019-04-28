@@ -1,20 +1,18 @@
-import { assert, match, setup, should, test } from '@gs-testing/main';
-import { createSpySubject, SpySubject } from '@gs-testing/spy';
-import { scan } from 'rxjs/operators';
-import { ImmutableMap } from '../collect/types/immutable-map';
-import { MapDiff } from './map-observable';
+import { assert, createSpySubject, match, setup, should, SpySubject, test } from '@gs-testing';
+import { scan } from '@rxjs/operators';
+import { MapDiff, scanMap } from './map-observable';
 import { MapSubject } from './map-subject';
 
 test('gs-tools.rxjs.MapSubject', () => {
   let subject: MapSubject<string, number>;
-  let mapSpySubject: SpySubject<ImmutableMap<string, number>>;
+  let mapSpySubject: SpySubject<Map<string, number>>;
   let scanSpySubject: SpySubject<Map<string, number>>;
 
   setup(() => {
     subject = new MapSubject([['a', 1], ['b', 2], ['c', 3]]);
 
     mapSpySubject = new SpySubject();
-    subject.getObs().subscribe(mapSpySubject);
+    subject.getDiffs().pipe(scanMap()).subscribe(mapSpySubject);
 
     scanSpySubject = new SpySubject();
     subject.getDiffs()
@@ -27,7 +25,7 @@ test('gs-tools.rxjs.MapSubject', () => {
 
                       return acc;
                     case 'init':
-                      return diff.payload;
+                      return diff.value;
                     case 'set':
                       acc.set(diff.key, diff.value);
 
@@ -44,7 +42,7 @@ test('gs-tools.rxjs.MapSubject', () => {
       subject.delete('b');
 
       await assert(mapSpySubject).to.emitWith(
-          match.anyIterableThat<[string, number], ImmutableMap<string, number>>().haveElements([
+          match.anyIterableThat<[string, number], Map<string, number>>().haveElements([
             match.anyTupleThat<[string, number]>().haveExactElements(['a', 1]),
             match.anyTupleThat<[string, number]>().haveExactElements(['c', 3]),
           ]));
@@ -94,7 +92,7 @@ test('gs-tools.rxjs.MapSubject', () => {
       subject.setAll(new Map([['e', 5], ['c', 4], ['b', 2]]));
 
       await assert(mapSpySubject).to.emitWith(
-          match.anyIterableThat<[string, number], ImmutableMap<string, number>>().haveElements([
+          match.anyIterableThat<[string, number], Map<string, number>>().haveElements([
             match.anyTupleThat<[string, number]>().haveExactElements(['b', 2]),
             match.anyTupleThat<[string, number]>().haveExactElements(['c', 4]),
             match.anyTupleThat<[string, number]>().haveExactElements(['e', 5]),
@@ -114,7 +112,7 @@ test('gs-tools.rxjs.MapSubject', () => {
       subject.set('b', 6);
 
       await assert(mapSpySubject).to.emitWith(
-          match.anyIterableThat<[string, number], ImmutableMap<string, number>>().haveElements([
+          match.anyIterableThat<[string, number], Map<string, number>>().haveElements([
             match.anyTupleThat<[string, number]>().haveExactElements(['a', 1]),
             match.anyTupleThat<[string, number]>().haveExactElements(['b', 6]),
             match.anyTupleThat<[string, number]>().haveExactElements(['c', 3]),

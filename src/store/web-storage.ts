@@ -1,8 +1,8 @@
 import { binary } from '@nabu/grammar';
 import { Converter, Serializable } from '@nabu/main';
 import { compose, identity, strict, StrictConverter } from '@nabu/util';
-import { Observable } from 'rxjs';
-import { map, shareReplay, take, tap } from 'rxjs/operators';
+import { Observable } from '@rxjs';
+import { map, shareReplay, take, tap } from '@rxjs/operators';
 import { createImmutableSet, ImmutableSet } from '../collect/types/immutable-set';
 import { cache } from '../data/cache';
 import { BaseIdGenerator } from '../random/base-id-generator';

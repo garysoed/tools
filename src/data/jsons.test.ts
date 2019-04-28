@@ -1,4 +1,4 @@
-import { assert, match, should, test } from '@gs-testing/main';
+import { assert, match, should, test } from '@gs-testing';
 import { deepClone, getValue, setValue } from './jsons';
 
 test('data.Jsons', () => {

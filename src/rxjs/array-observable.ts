@@ -1,14 +1,13 @@
-import { Observable } from 'rxjs';
-import { ImmutableList } from '../collect/types/immutable-list';
+import { Observable } from '@rxjs';
 
 export interface ArrayInit<T> {
-  payload: T[];
+  value: T[];
   type: 'init';
 }
 
 export interface ArrayInsert<T> {
   index: number;
-  payload: T;
+  value: T;
   type: 'insert';
 }
 
@@ -19,7 +18,7 @@ export interface ArrayDelete {
 
 export interface ArraySet<T> {
   index: number;
-  payload: T;
+  value: T;
   type: 'set';
 }
 
@@ -27,6 +26,4 @@ export type ArrayDiff<T> = ArrayInit<T>|ArrayInsert<T>|ArrayDelete|ArraySet<T>;
 
 export interface ArrayObservable<T> {
   getDiffs(): Observable<ArrayDiff<T>>;
-
-  getObs(): Observable<ImmutableList<T>>;
 }

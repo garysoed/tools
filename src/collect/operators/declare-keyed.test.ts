@@ -1,4 +1,4 @@
-import { assert, should, test } from '@gs-testing/main';
+import { assert, should, test } from '@gs-testing';
 import { getKey } from '../generators';
 import { pipe } from '../pipe';
 import { declareKeyed } from './declare-keyed';
