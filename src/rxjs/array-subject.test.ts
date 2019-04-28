@@ -5,7 +5,7 @@ import { SpySubject, createSpySubject } from '@gs-testing';
 import { ImmutableList } from '../collect/types/immutable-list';
 import { ArrayDiff } from './array-observable';
 
-test('gs-tools.rxjs.ArraySubject', () => {
+test('@gs-tools/rxjs/ArraySubject', () => {
   let subject: ArraySubject<string>;
   let arraySpySubject: SpySubject<ImmutableList<string>>;
   let scanSpySubject: SpySubject<string[]>;
@@ -65,7 +65,7 @@ test('gs-tools.rxjs.ArraySubject', () => {
       subject.getDiffs().subscribe(spySubject);
 
       await assert(spySubject).to.emitWith(match.anyObjectThat().haveProperties({
-        payload: match.anyArrayThat().haveExactElements(['a', 'b', 'c']),
+        value: match.anyArrayThat().haveExactElements(['a', 'b', 'c']),
         type: 'init',
       }));
 

@@ -1,11 +1,9 @@
-import { assert, match, setup, should, test } from '@gs-testing';
-import { createSpySubject, SpySubject } from '@gs-testing';
+import { assert, createSpySubject, match, setup, should, SpySubject, test } from '@gs-testing';
 import { scan } from '@rxjs/operators';
-import { ImmutableSet } from '../collect/types/immutable-set';
-import { SetDiff, scanSet } from './set-observable';
+import { scanSet, SetDiff } from './set-observable';
 import { SetSubject } from './set-subject';
 
-test('gs-tools.rxjs.SetSubject', () => {
+test('@gs-tools/rxjs/SetSubject', () => {
   let subject: SetSubject<string>;
   let setSpySubject: SpySubject<Set<string>>;
   let scanSpySubject: SpySubject<Set<string>>;
@@ -87,7 +85,7 @@ test('gs-tools.rxjs.SetSubject', () => {
       subject.getDiffs().subscribe(spySubject);
 
       await assert(spySubject).to.emitWith(match.anyObjectThat().haveProperties({
-        payload: match.anyIterableThat().haveElements(['a', 'b', 'c']),
+        value: match.anyIterableThat().haveElements(['a', 'b', 'c']),
         type: 'init',
       }));
 

@@ -3,7 +3,7 @@ import { scan } from '@rxjs/operators';
 import { MapDiff, scanMap } from './map-observable';
 import { MapSubject } from './map-subject';
 
-test('gs-tools.rxjs.MapSubject', () => {
+test('@gs-tools/rxjs/MapSubject', () => {
   let subject: MapSubject<string, number>;
   let mapSpySubject: SpySubject<Map<string, number>>;
   let scanSpySubject: SpySubject<Map<string, number>>;
@@ -71,7 +71,7 @@ test('gs-tools.rxjs.MapSubject', () => {
       subject.getDiffs().subscribe(spySubject);
 
       await assert(spySubject).to.emitWith(match.anyObjectThat().haveProperties({
-        payload: match.anyIterableThat<[string, number], Map<string, number>>().startWith([
+        value: match.anyIterableThat<[string, number], Map<string, number>>().startWith([
           match.anyTupleThat<[string, number]>().haveExactElements(['a', 1]),
           match.anyTupleThat<[string, number]>().haveExactElements(['b', 2]),
           match.anyTupleThat<[string, number]>().haveExactElements(['c', 3]),

@@ -29,7 +29,7 @@ export function scanMap<K, V>(): (obs: Observable<MapDiff<K, V>>) => Observable<
           (acc, diff) => {
             switch (diff.type) {
               case 'delete':
-                return new Map([...acc].filter(([key]) => key === diff.key));
+                return new Map([...acc].filter(([key]) => key !== diff.key));
               case 'init':
                 return new Map(diff.value);
               case 'set':
