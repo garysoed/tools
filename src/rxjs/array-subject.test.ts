@@ -1,40 +1,17 @@
-import { test, should, setup, assert, match } from '@gs-testing';
+import { assert, createSpySubject, match, setup, should, SpySubject, test } from '@gs-testing';
+import { scanArray } from './array-observable';
 import { ArraySubject } from './array-subject';
-import { scan } from '@rxjs/operators';
-import { SpySubject, createSpySubject } from '@gs-testing';
-import { ImmutableList } from '../collect/types/immutable-list';
-import { ArrayDiff } from './array-observable';
 
-test('@gs-tools/rxjs/ArraySubject', () => {
+test('@gs-tools/rxjs/array-subject', () => {
   let subject: ArraySubject<string>;
-  let arraySpySubject: SpySubject<ImmutableList<string>>;
   let scanSpySubject: SpySubject<string[]>;
 
   setup(() => {
     subject = new ArraySubject(['a', 'b', 'c']);
 
-    arraySpySubject = new SpySubject();
-    subject.getObs().subscribe(arraySpySubject);
-
     scanSpySubject = new SpySubject();
     subject.getDiffs()
-        .pipe(
-            scan<ArrayDiff<string>, string[]>((acc, diff) => {
-              switch (diff.type) {
-                case 'delete':
-                  acc.splice(diff.index, 1);
-                  return acc;
-                case 'init':
-                  return diff.value;
-                case 'insert':
-                  acc.splice(diff.index, 0, diff.value);
-                  return acc;
-                case 'set':
-                  acc[diff.index] = diff.value;
-                  return acc;
-              }
-            }, [] as string[]),
-        )
+        .pipe(scanArray())
         .subscribe(scanSpySubject);
   });
 
@@ -42,19 +19,15 @@ test('@gs-tools/rxjs/ArraySubject', () => {
     should(`delete the item correctly`, async () => {
       subject.deleteAt(1);
 
-      await assert(arraySpySubject).to
-          .emitWith(match.anyIterableThat<string, ImmutableList<string>>().startWith(['a', 'c']));
       await assert(scanSpySubject).to
           .emitWith(match.anyArrayThat<string>().haveExactElements(['a', 'c']));
     });
 
     should(`be noop if the item does not exist`, async () => {
-      arraySpySubject.reset();
       scanSpySubject.reset();
 
       subject.deleteAt(3);
 
-      await assert(arraySpySubject).toNot.emit();
       await assert(scanSpySubject).toNot.emit();
     });
   });
@@ -81,8 +54,6 @@ test('@gs-tools/rxjs/ArraySubject', () => {
     should(`insert the item correctly`, async () => {
       subject.insertAt(0, '0');
 
-      await assert(arraySpySubject).to.emitWith(
-          match.anyIterableThat<string, ImmutableList<string>>().startWith(['0', 'a', 'b', 'c']));
       await assert(scanSpySubject).to
           .emitWith(match.anyArrayThat<string>().haveExactElements(['0', 'a', 'b', 'c']));
     });
@@ -92,8 +63,6 @@ test('@gs-tools/rxjs/ArraySubject', () => {
     should(`set all the items correctly`, async () => {
       subject.setAll(['e', 'c']);
 
-      await assert(arraySpySubject).to.emitWith(
-          match.anyIterableThat<string, ImmutableList<string>>().startWith(['e', 'c']));
       await assert(scanSpySubject).to
           .emitWith(match.anyArrayThat<string>().haveExactElements(['e', 'c']));
     });
@@ -103,19 +72,15 @@ test('@gs-tools/rxjs/ArraySubject', () => {
     should(`set the item correctly`, async () => {
       subject.setAt(1, '1');
 
-      await assert(arraySpySubject).to.emitWith(
-          match.anyIterableThat<string, ImmutableList<string>>().startWith(['a', '1', 'c']));
       await assert(scanSpySubject).to
           .emitWith(match.anyArrayThat<string>().haveExactElements(['a', '1', 'c']));
     });
 
     should(`be noop if the item is already set`, async () => {
-      arraySpySubject.reset();
       scanSpySubject.reset();
 
       subject.setAt(1, 'b');
 
-      await assert(arraySpySubject).toNot.emit();
       await assert(scanSpySubject).toNot.emit();
     });
   });

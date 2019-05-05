@@ -1,9 +1,9 @@
-import { Observable, of as observableOf, OperatorFunction } from '@rxjs';
+import { of as observableOf, OperatorFunction } from '@rxjs';
+import { pairwise, startWith, switchMap } from '@rxjs/operators';
 import { SetDiff } from './set-observable';
-import { startWith, pairwise, switchMap } from '@rxjs/operators';
 
 export function diffSet<T>(): OperatorFunction<Set<T>, SetDiff<T>> {
-  return (source: Observable<Set<T>>) => source
+  return source => source
       .pipe(
           startWith(null),
           pairwise(),

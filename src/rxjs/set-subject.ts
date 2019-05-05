@@ -1,6 +1,4 @@
 import { concat, Observable, of as observableOf, Subject } from '@rxjs';
-import { map, shareReplay } from '@rxjs/operators';
-import { createImmutableSet, ImmutableSet } from '../collect/types/immutable-set';
 import { applyDiff, diff } from './diff-set';
 import { SetDiff, SetInit, SetObservable } from './set-observable';
 

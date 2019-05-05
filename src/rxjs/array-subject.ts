@@ -1,7 +1,6 @@
 import { concat, Observable, of as observableOf, Subject } from '@rxjs';
 import { ArrayDiff, ArrayInit, ArrayObservable } from './array-observable';
-import { map, shareReplay } from '@rxjs/operators';
-import { ImmutableList, createImmutableList } from '../collect/types/immutable-list';
+import { diff, applyDiff } from './diff-array';
 
 
 export class ArraySubject<T> implements ArrayObservable<T> {
@@ -28,34 +27,15 @@ export class ArraySubject<T> implements ArrayObservable<T> {
     );
   }
 
-  getObs(): Observable<ImmutableList<T>> {
-    return this.diffSubject.pipe(
-        map(() => createImmutableList(this.innerArray)),
-        shareReplay(1),
-    );
-  }
-
   insertAt(index: number, payload: T): void {
     this.innerArray.splice(index, 0, payload);
     this.diffSubject.next({index, value: payload, type: 'insert'});
   }
 
   setAll(newItems: T[]): void {
-    let i = 0;
-
-    // Insert the missing items.
-    while (i < newItems.length) {
-      const existingItem = this.innerArray[i];
-      const newItem = newItems[i];
-      if (existingItem !== newItem) {
-        this.insertAt(i, newItem);
-      }
-      i++;
-    }
-
-    // Delete the extra items.
-    for (let i = this.innerArray.length - 1; i >= newItems.length; i--) {
-      this.deleteAt(i);
+    for (const diffItem of diff(this.innerArray, newItems)) {
+      applyDiff(this.innerArray, diffItem);
+      this.diffSubject.next(diffItem);
     }
   }
 
