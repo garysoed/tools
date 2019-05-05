@@ -4,8 +4,8 @@ import { compose, identity, strict } from '@nabu/util';
 import { BehaviorSubject } from '@rxjs';
 import { scan } from '@rxjs/operators';
 import { createImmutableSet } from '../collect/types/immutable-set';
-import { applyDiff } from '../rxjs/diff-set';
-import { SetDiff } from '../rxjs/set-observable';
+import { ArrayDiff } from '../rxjs/array-observable';
+import { applyDiff } from '../rxjs/diff-array';
 import { integerConverter } from '../serializer/integer-converter';
 import { INDEXES_PARSER, WebStorage } from './web-storage';
 
@@ -40,16 +40,16 @@ test('store.WebStorage', () => {
       );
       setStorage(localStorage, path, ITEM_BINARY_CONVERTER.convertForward(123));
 
-      const idsSubject = new BehaviorSubject<Set<string>>(new Set());
+      const idsSubject = new BehaviorSubject<string[]>([]);
       storage.listIds()
           .pipe(
-              scan<SetDiff<string>, Set<string>>(
+              scan<ArrayDiff<string>, string[]>(
                   (acc, value) => {
                     applyDiff(acc, value);
 
                     return acc;
                   },
-                  new Set<string>()),
+                  []),
           )
           .subscribe(idsSubject);
 
@@ -98,16 +98,17 @@ test('store.WebStorage', () => {
       const id2 = 'id2';
       const id3 = 'id3';
 
-      const idsSubject = new BehaviorSubject<Set<string>>(new Set());
+      const idsSubject = new BehaviorSubject<string[]>([]);
       storage.listIds()
           .pipe(
-              scan<SetDiff<string>, Set<string>>(
+              scan<ArrayDiff<string>, string[]>(
                   (acc, value) => {
                     applyDiff(acc, value);
 
                     return acc;
                   },
-                  new Set<string>()),
+                  [],
+              ),
           )
           .subscribe(idsSubject);
 
@@ -153,16 +154,17 @@ test('store.WebStorage', () => {
           INDEXES_BINARY_CONVERTER.convertForward(createImmutableSet(['oldId'])),
       );
 
-      const idsSubject = new BehaviorSubject<Set<string>>(new Set());
+      const idsSubject = new BehaviorSubject<string[]>([]);
       storage.listIds()
           .pipe(
-              scan<SetDiff<string>, Set<string>>(
+              scan<ArrayDiff<string>, string[]>(
                   (acc, value) => {
                     applyDiff(acc, value);
 
                     return acc;
                   },
-                  new Set<string>()),
+                  [],
+              ),
           )
           .subscribe(idsSubject);
 

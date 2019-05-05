@@ -3,23 +3,24 @@ import { Converter, Serializable } from '@nabu/main';
 import { compose, identity, strict, StrictConverter } from '@nabu/util';
 import { Observable } from '@rxjs';
 import { map, shareReplay, take, tap } from '@rxjs/operators';
-import { createImmutableSet, ImmutableSet } from '../collect/types/immutable-set';
+import { createImmutableList, ImmutableList } from '../collect/types/immutable-list';
+import { createImmutableSet } from '../collect/types/immutable-set';
 import { cache } from '../data/cache';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { SimpleIdGenerator } from '../random/simple-id-generator';
-import { diffSet } from '../rxjs/diff-set';
+import { ArrayDiff } from '../rxjs/array-observable';
+import { diffArray } from '../rxjs/diff-array';
 import { mapNonNull } from '../rxjs/map-non-null';
-import { SetDiff } from '../rxjs/set-observable';
 import { WebStorageObservable } from '../rxjs/web-storage-observable';
-import { setConverter } from '../serializer/set-converter';
+import { listConverter } from '../serializer/list-converter';
 import { EditableStorage } from './editable-storage';
 
-export const INDEXES_PARSER = setConverter<string>(identity<string>());
+export const INDEXES_PARSER = listConverter<string>(identity<string>());
 
 export class WebStorage<T> implements EditableStorage<T> {
   private readonly converter: StrictConverter<T, string>;
   private readonly idGenerator: BaseIdGenerator = new SimpleIdGenerator();
-  private readonly indexesConverter: StrictConverter<ImmutableSet<string>, string>;
+  private readonly indexesConverter: StrictConverter<ImmutableList<string>, string>;
   private readonly storage: WebStorageObservable;
 
   /**
@@ -38,14 +39,33 @@ export class WebStorage<T> implements EditableStorage<T> {
     this.indexesConverter = strict(compose(INDEXES_PARSER, binaryGrammar));
   }
 
+  clear(): Observable<unknown> {
+    return this.storage.clear();
+  }
+
+  deleteAt(index: number): Observable<unknown> {
+    throw new Error('Method not implemented.');
+  }
+
+  insertAt(index: number, id: string, instance: T): Observable<unknown> {
+    throw new Error('Method not implemented.');
+  }
+
+  updateAt(index: number, id: string, instance: T): Observable<unknown> {
+    throw new Error('Method not implemented.');
+  }
+
+  findIndex(id: string): Observable<number | null> {
+    throw new Error('Method not implemented.');
+  }
+
   delete(id: string): Observable<unknown> {
-    return this.listIdsAsSet()
+    return this.listIdsAsArray()
         .pipe(
             take(1),
             tap(ids => {
-              const newSet = new Set(ids);
-              newSet.delete(id);
-              const result = this.indexesConverter.convertForward(createImmutableSet(newSet));
+              const newArray = ids.filter(v => v !== id);
+              const result = this.indexesConverter.convertForward(createImmutableList(newArray));
               this.storage.setItem(this.prefix, result);
               this.storage.removeItem(getPath(id, this.prefix));
             }),
@@ -53,7 +73,7 @@ export class WebStorage<T> implements EditableStorage<T> {
   }
 
   generateId(): Observable<string> {
-    return this.listIdsAsSet()
+    return this.listIdsAsArray()
         .pipe(
             map(ids => this.idGenerator.generate(ids)),
             shareReplay(1),
@@ -61,29 +81,29 @@ export class WebStorage<T> implements EditableStorage<T> {
   }
 
   has(id: string): Observable<boolean> {
-    return this.listIdsAsSet()
+    return this.listIdsAsArray()
         .pipe(
-            map(ids => ids.has(id)),
+            map(ids => ids.indexOf(id) >= 0),
             shareReplay(1),
         );
   }
 
-  listIds(): Observable<SetDiff<string>> {
-    return this.listIdsAsSet().pipe(diffSet());
+  listIds(): Observable<ArrayDiff<string>> {
+    return this.listIdsAsArray().pipe(diffArray());
   }
 
   @cache()
-  private listIdsAsSet(): Observable<Set<string>> {
+  private listIdsAsArray(): Observable<string[]> {
     return this.storage.getItem(this.prefix)
         .pipe(
             map(indexesStr => {
               if (!indexesStr) {
-                return createImmutableSet<string>();
+                return createImmutableList<string>();
               }
 
               return this.indexesConverter.convertBackward(indexesStr);
             }),
-            map(immutableSet => new Set(immutableSet)),
+            map(immutableList => [...immutableList]),
             shareReplay(1),
         );
   }
@@ -101,7 +121,7 @@ export class WebStorage<T> implements EditableStorage<T> {
   update(id: string, instance: T): Observable<unknown> {
     const path = getPath(id, this.prefix);
 
-    return this.listIdsAsSet()
+    return this.listIdsAsArray()
         .pipe(
             take(1),
             tap(ids => {

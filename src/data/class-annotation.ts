@@ -6,13 +6,12 @@ import { Orderings } from '../collect/orderings';
 import { createImmutableList, ImmutableList } from '../collect/types/immutable-list';
 import { asImmutableMap, createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
 
-interface AnnotationResult<D, TF extends Function> {
+interface AnnotationResult<D> {
   data: D;
-  newTarget: TF|void;
+  newTarget: Function|void;
 }
 
-type Annotator<A extends any[], D> =
-    <TF extends Function>(target: TF, ...args: A) => AnnotationResult<D, TF>;
+type Annotator<A extends any[], D> = (target: Function, ...args: A) => AnnotationResult<D>;
 
 export class ClassAnnotation<D> {
   constructor(
@@ -66,7 +65,7 @@ export class ClassAnnotator<D, A extends any[]> {
         dataList.push(data);
         this.dataMap.set(target, dataList);
 
-        return newTarget;
+        return newTarget as TF;
       };
     };
   }

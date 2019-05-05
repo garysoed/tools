@@ -3,7 +3,7 @@ import { scan } from '@rxjs/operators';
 import { MapDiff, scanMap } from './map-observable';
 import { MapSubject } from './map-subject';
 
-test('@gs-tools/rxjs/MapSubject', () => {
+test('@gs-tools/rxjs/map-subject', () => {
   let subject: MapSubject<string, number>;
   let mapSpySubject: SpySubject<Map<string, number>>;
   let scanSpySubject: SpySubject<Map<string, number>>;
