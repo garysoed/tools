@@ -30,7 +30,7 @@ export interface EditableStorage<TFull> extends ReadableStorage<TFull> {
   insertAt(index: number, id: string, instance: TFull): Observable<unknown>;
 
   /**
-   * Updates the given object.
+   * Updates the given object. If it doesn't exist, add the object.
    *
    * @param id ID of the object to update.
    * @param instance Object to update.

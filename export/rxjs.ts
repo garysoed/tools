@@ -1,4 +1,4 @@
-export { ArrayDiff } from '../src/rxjs/array-observable';
+export { mapArray, scanArray, ArrayDiff } from '../src/rxjs/array-observable';
 export { ArraySubject } from '../src/rxjs/array-subject';
 export { debug } from '../src/rxjs/debug';
 export { filterNonNull } from '../src/rxjs/filter-non-null';

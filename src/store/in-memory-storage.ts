@@ -1,5 +1,5 @@
 import { Observable, of as observableOf } from '@rxjs';
-import { map, shareReplay, tap } from '@rxjs/operators';
+import { map, shareReplay, tap, take } from '@rxjs/operators';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { ArrayDiff, scanArray } from '../rxjs/array-observable';
 import { ArraySubject } from '../rxjs/array-subject';
@@ -24,14 +24,21 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
   }
 
   delete(id: string): Observable<unknown> {
-    return observableOf({}).pipe(tap(() => this.mapData.delete(id)));
+    return this.arrayData.getDiffs()
+        .pipe(
+            scanArray(),
+            take(1),
+            tap(array => {
+              const filteredArray = array.filter(v => v !== id);
+              this.arrayData.setAll(filteredArray);
+
+              this.mapData.delete(id);
+            }),
+        );
   }
 
   deleteAt(index: number): Observable<unknown> {
-    return observableOf({})
-        .pipe(
-            tap(() => this.arrayData.deleteAt(index)),
-        );
+    return observableOf({}).pipe(tap(() => this.arrayData.deleteAt(index)));
   }
 
   findIndex(id: string): Observable<number|null> {
@@ -82,15 +89,25 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
         .getDiffs()
         .pipe(
             scanMap(),
-            map(map => {
-              return map.get(id) || null;
-            }),
+            map(map => map.get(id) || null),
             shareReplay(1),
         );
   }
 
   update(id: string, instance: T): Observable<unknown> {
-    return observableOf({}).pipe(tap(() => this.mapData.set(id, instance)));
+    return this.has(id)
+        .pipe(
+            take(1),
+            tap(hasId => {
+              this.mapData.set(id, instance);
+
+              if (hasId) {
+                return;
+              }
+
+              this.arrayData.insert(id);
+            }),
+        );
   }
 
   updateAt(index: number, id: string, instance: T): Observable<unknown> {

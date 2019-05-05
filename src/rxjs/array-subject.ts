@@ -27,6 +27,10 @@ export class ArraySubject<T> implements ArrayObservable<T> {
     );
   }
 
+  insert(payload: T): void {
+    this.insertAt(this.innerArray.length, payload);
+  }
+
   insertAt(index: number, payload: T): void {
     this.innerArray.splice(index, 0, payload);
     this.diffSubject.next({index, value: payload, type: 'insert'});

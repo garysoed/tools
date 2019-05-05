@@ -1,5 +1,5 @@
 import { Observable } from '@rxjs';
-import { scan } from '@rxjs/operators';
+import { scan, map } from '@rxjs/operators';
 
 export interface ArrayInit<T> {
   value: T[];
@@ -27,6 +27,36 @@ export type ArrayDiff<T> = ArrayInit<T>|ArrayInsert<T>|ArrayDelete|ArraySet<T>;
 
 export interface ArrayObservable<T> {
   getDiffs(): Observable<ArrayDiff<T>>;
+}
+
+export function mapArray<F, T>(mapFn: (from: F) => T):
+    (obs: Observable<ArrayDiff<F>>) => Observable<ArrayDiff<T>> {
+  return source => source
+      .pipe(
+          map(diff => {
+            switch (diff.type) {
+              case 'delete':
+                return diff;
+              case 'init':
+                return {
+                  type: 'init',
+                  value: diff.value.map(mapFn),
+                };
+              case 'insert':
+                return {
+                  index: diff.index,
+                  type: 'insert',
+                  value: mapFn(diff.value),
+                };
+              case 'set':
+                return {
+                  index: diff.index,
+                  type: 'set',
+                  value: mapFn(diff.value),
+                };
+            }
+          }),
+      )
 }
 
 export function scanArray<T>(): (obs: Observable<ArrayDiff<T>>) => Observable<T[]> {
