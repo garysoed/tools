@@ -1,5 +1,5 @@
 import { assert, should, test } from '@gs-testing';
-import { Enums } from './enums';
+import * as Enums from './enums';
 
 /**
  * @test
@@ -15,12 +15,24 @@ test('typescript.Enums', () => {
     });
   });
 
-  test('getAllValues_', () => {
+  test('getAllValues', () => {
     should('return the correct set of values', () => {
       /**
        * @test
        */
       enum Enum {A, B, C}
+      assert(Enums.getAllValues<Enum>(Enum)).to.haveExactElements([Enum.A, Enum.B, Enum.C]);
+    });
+
+    should(`work with string enums`, () => {
+      /**
+       * @test
+       */
+      enum Enum {
+        A = 'a',
+        B = 'b',
+        C = 'c',
+      }
       assert(Enums.getAllValues<Enum>(Enum)).to.haveExactElements([Enum.A, Enum.B, Enum.C]);
     });
   });
