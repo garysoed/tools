@@ -1,5 +1,5 @@
-import { Converter, Result } from '@nabu/main';
-import { firstSuccess } from '@nabu/util';
+import { Converter, Result } from '@nabu';
+import { firstSuccess } from '@nabu';
 import { absolutePathParser } from '../path/absolute-path-parser';
 import { Path } from '../path/path';
 import { relativePathParser } from '../path/relative-path-parser';

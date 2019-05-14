@@ -1,4 +1,4 @@
-import { Converter, Result, Serializable } from '@nabu/main';
+import { Converter, Result, Serializable } from '@nabu';
 
 class FunctionConverter<F extends Function> implements Converter<F, Serializable> {
   constructor(private readonly paramCount_: number|null) { }

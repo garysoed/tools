@@ -1,6 +1,4 @@
-import { binary } from '@nabu/grammar';
-import { Converter, Serializable } from '@nabu/main';
-import { compose, identity, strict, StrictConverter } from '@nabu/util';
+import { binary, compose, Converter, identity, Serializable, strict, StrictConverter } from '@nabu';
 import { Observable } from '@rxjs';
 import { map, shareReplay, take, tap } from '@rxjs/operators';
 import { createImmutableList, ImmutableList } from '../collect/types/immutable-list';

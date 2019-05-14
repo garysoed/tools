@@ -1,5 +1,5 @@
 import { assert, should, test } from '@gs-testing';
-import { strict } from '@nabu/util';
+import { strict } from '@nabu';
 import { createImmutableList } from '../collect/types/immutable-list';
 import { RelativePath } from './relative-path';
 import { relativePathParser } from './relative-path-parser';

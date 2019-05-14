@@ -1,4 +1,4 @@
-import { Converter, Result, Serializable } from '@nabu/main';
+import { Converter, Result, Serializable } from '@nabu';
 
 export class ObjectConverter<T extends {}> implements
     Converter<{[K in keyof T]: T[K]}, Serializable> {

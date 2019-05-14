@@ -1,4 +1,4 @@
-import { Converter, Result, Serializable } from '@nabu/main';
+import { Converter, Result, Serializable } from '@nabu';
 
 class IntegerConverter implements Converter<number, Serializable> {
   constructor(private readonly round_: boolean) { }

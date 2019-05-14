@@ -1,4 +1,4 @@
-import { Converter, Serializable } from '@nabu/main';
+import { Converter, Serializable } from '@nabu';
 import { createImmutableSet, ImmutableSet } from '../collect/types/immutable-set';
 import { iterableConverter } from './iterable-converter';
 

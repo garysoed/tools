@@ -1,5 +1,5 @@
 import { Type } from '@gs-types';
-import { Converter, Result, Serializable } from '@nabu/main';
+import { Converter, Result, Serializable } from '@nabu';
 
 class TypeBasedConverter<T extends Serializable> implements Converter<T, Serializable> {
   constructor(private readonly type: Type<T>) { }
