@@ -7,7 +7,7 @@ interface Library {
   scopes: string[],
 }
 
-const GAPI_URL = 'https://apis.google.com/js/api.js';
+export const GAPI_URL = 'https://apis.google.com/js/api.js';
 
 export class Builder {
   private readonly discoveryDocs = [] as string[];
