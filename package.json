@@ -21,6 +21,7 @@
   "homepage": "https://github.com/garysoed/gs-tools#readme",
   "dependencies": {
     "@types/gapi": "0.0.35",
+    "@types/gapi.auth2": "0.0.50",
     "@types/jasmine": "^2.8.7",
     "ansi-styles": "^3.2.1",
     "chalk": "^1.1.3",
