@@ -1,109 +1,109 @@
-import { createImmutableMap } from '../collect/types/immutable-map';
-import { Errors } from '../error';
-import { Gapi } from '../net/gapi';
-import { GapiError } from '../net/gapi-error';
-import { SimpleIdGenerator } from '../random/simple-id-generator';
+// import { createImmutableMap } from '../collect/types/immutable-map';
+// import { Errors } from '../error';
+// import { Gapi } from '../net/gapi';
+// import { GapiError } from '../net/gapi-error';
+// import { SimpleIdGenerator } from '../random/simple-id-generator';
 
-type Callback<T> = (result: T | Error) => void;
+// type Callback<T> = (result: T | Error) => void;
 
-export const QUEUED_REQUESTS: Map<gapi.client.HttpRequest<any>, Callback<any>> = new Map();
-const QUEUE_TIMEOUT_MS = 10;
+// export const QUEUED_REQUESTS: Map<gapi.client.HttpRequest<any>, Callback<any>> = new Map();
+// const QUEUE_TIMEOUT_MS = 10;
 
-export class GapiLibrary<T> {
-  private static timeoutId_: null | number = null;
+// export class GapiLibrary<T> {
+//   private static timeoutId_: null | number = null;
 
-  constructor(
-      private readonly gapi_: Gapi,
-      private readonly name_: string,
-      private readonly window_: Window = window) { }
+//   constructor(
+//       private readonly gapi_: Gapi,
+//       private readonly name_: string,
+//       private readonly window_: Window = window) { }
 
-  client(): Promise<gapi.Client> {
-    return this.gapi_.init();
-  }
+//   client(): Promise<gapi.Client> {
+//     return this.gapi_.init();
+//   }
 
-  async flushRequests_(): Promise<void> {
-    const client = await this.client();
-    const batch = client.newBatch();
-    const idGenerator = new SimpleIdGenerator();
-    const callbackMap: Map<string, Callback<any>> = new Map();
+//   async flushRequests_(): Promise<void> {
+//     const client = await this.client();
+//     const batch = client.newBatch();
+//     const idGenerator = new SimpleIdGenerator();
+//     const callbackMap: Map<string, Callback<any>> = new Map();
 
-    if (GapiLibrary.timeoutId_ !== null) {
-      this.window_.clearTimeout(GapiLibrary.timeoutId_);
-      GapiLibrary.timeoutId_ = null;
-    }
+//     if (GapiLibrary.timeoutId_ !== null) {
+//       this.window_.clearTimeout(GapiLibrary.timeoutId_);
+//       GapiLibrary.timeoutId_ = null;
+//     }
 
-    for (const [request, callback] of QUEUED_REQUESTS) {
-      const id = idGenerator.generate(callbackMap.keys());
-      batch.add(request, {id});
-      callbackMap.set(id, callback);
-    }
+//     for (const [request, callback] of QUEUED_REQUESTS) {
+//       const id = idGenerator.generate(callbackMap.keys());
+//       batch.add(request, {id});
+//       callbackMap.set(id, callback);
+//     }
 
-    QUEUED_REQUESTS.clear();
+//     QUEUED_REQUESTS.clear();
 
-    const batchResponse = await batch;
-    if (batchResponse.status !== 200) {
-      const error = new GapiError(batchResponse);
-      for (const callback of callbackMap.values()) {
-        callback(error);
-      }
+//     const batchResponse = await batch;
+//     if (batchResponse.status !== 200) {
+//       const error = new GapiError(batchResponse);
+//       for (const callback of callbackMap.values()) {
+//         callback(error);
+//       }
 
-      return;
-    }
+//       return;
+//     }
 
-    for (const [id, response] of createImmutableMap(batchResponse.result)) {
-      const callback = callbackMap.get(id);
-      if (!callback) {
-        continue;
-      }
+//     for (const [id, response] of createImmutableMap(batchResponse.result)) {
+//       const callback = callbackMap.get(id);
+//       if (!callback) {
+//         continue;
+//       }
 
-      if (response.status !== 200) {
-        callback(new GapiError(response));
-        continue;
-      }
+//       if (response.status !== 200) {
+//         callback(new GapiError(response));
+//         continue;
+//       }
 
-      callback(response.result);
-    }
-  }
+//       callback(response.result);
+//     }
+//   }
 
-  async get(): Promise<T> {
-    const client = await this.client();
-    // TODO: See if we can skip the typecast
-    const obj = (client as any)[this.name_];
-    if (!obj) {
-      throw Errors.assert(`gapi.${this.name_}`).shouldExist().butWas(obj);
-    }
-    return obj;
-  }
+//   async get(): Promise<T> {
+//     const client = await this.client();
+//     // TODO: See if we can skip the typecast
+//     const obj = (client as any)[this.name_];
+//     if (!obj) {
+//       throw Errors.assert(`gapi.${this.name_}`).shouldExist().butWas(obj);
+//     }
+//     return obj;
+//   }
 
-  queueRequest<T>(request: gapi.client.HttpRequest<T>): Promise<T> {
-    if (GapiLibrary.timeoutId_ === null) {
-      GapiLibrary.timeoutId_ = this.window_.setTimeout(
-        () => this.flushRequests_(),
-        QUEUE_TIMEOUT_MS);
-    }
+//   queueRequest<T>(request: gapi.client.HttpRequest<T>): Promise<T> {
+//     if (GapiLibrary.timeoutId_ === null) {
+//       GapiLibrary.timeoutId_ = this.window_.setTimeout(
+//         () => this.flushRequests_(),
+//         QUEUE_TIMEOUT_MS);
+//     }
 
-    return new Promise((resolve, reject) => {
-      QUEUED_REQUESTS.set(request, result => {
-        if (result instanceof Error) {
-          reject(result);
-        } else {
-          resolve(result);
-        }
-      });
-    });
-  }
+//     return new Promise((resolve, reject) => {
+//       QUEUED_REQUESTS.set(request, result => {
+//         if (result instanceof Error) {
+//           reject(result);
+//         } else {
+//           resolve(result);
+//         }
+//       });
+//     });
+//   }
 
-  static create<T>(
-      gapi: Gapi,
-      discoveryDocs: string[],
-      scopes: string[],
-      name: string,
-      signIn: boolean = false): GapiLibrary<T> {
-    gapi.addScopes(scopes);
-    gapi.addDiscoveryDocs(discoveryDocs);
-    if (signIn) {
-      gapi.addSignIn();
-    }
-    return new GapiLibrary(gapi, name);
-  }
-}
+//   static create<T>(
+//       gapi: Gapi,
+//       discoveryDocs: string[],
+//       scopes: string[],
+//       name: string,
+//       signIn: boolean = false): GapiLibrary<T> {
+//     gapi.addScopes(scopes);
+//     gapi.addDiscoveryDocs(discoveryDocs);
+//     if (signIn) {
+//       gapi.addSignIn();
+//     }
+//     return new GapiLibrary(gapi, name);
+//   }
+// }
