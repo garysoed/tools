@@ -6,3 +6,4 @@ export { mapNonNull } from '../src/rxjs/map-non-null';
 export { scanMap, MapDiff } from '../src/rxjs/map-observable';
 export { MapSubject } from '../src/rxjs/map-subject';
 export { scanSet, SetDiff } from '../src/rxjs/set-observable';
+export { switchMapNonNull } from '../src/rxjs/switch-map-non-null';
