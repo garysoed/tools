@@ -56,58 +56,58 @@ test('gs-tools.rxjs.WebStorageObservable', () => {
   });
 
   test('getLength', () => {
-    should(`emit the lengths correctly`, async () => {
+    should(`emit the lengths correctly`, () => {
       const lengthObs = obs.getLength();
-      await assert(lengthObs).to.emitWith(3);
+      assert(lengthObs).to.emitWith(3);
 
       entries.splice(0, 1);
       window.dispatchEvent(new CustomEvent('storage'));
 
-      await assert(lengthObs).to.emitWith(2);
+      assert(lengthObs).to.emitWith(2);
     });
   });
 
   test('getItem', () => {
-    should(`emit the items correctly`, async () => {
+    should(`emit the items correctly`, () => {
       const itemObs = obs.getItem('key3');
-      await assert(itemObs).to.emitWith('value3');
+      assert(itemObs).to.emitWith('value3');
 
       entries.splice(2, 1);
       window.dispatchEvent(new CustomEvent('storage'));
 
-      await assert(itemObs).to.emitWith(null);
+      assert(itemObs).to.emitWith(null);
     });
   });
 
   test('key', () => {
-    should(`emit the keys correctly`, async () => {
+    should(`emit the keys correctly`, () => {
       const keyObs = obs.key(2);
-      await assert(keyObs).to.emitWith('key3');
+      assert(keyObs).to.emitWith('key3');
 
       entries.splice(2, 1);
       window.dispatchEvent(new CustomEvent('storage'));
 
-      await assert(keyObs).to.emitWith(null);
+      assert(keyObs).to.emitWith(null);
     });
   });
 
   test('removeItem', () => {
-    should(`remove the items correctly`, async () => {
+    should(`remove the items correctly`, () => {
       const keyObs = obs.key(2);
 
       obs.removeItem('key3');
 
-      await assert(keyObs).to.emitWith(null);
+      assert(keyObs).to.emitWith(null);
     });
   });
 
   test('setItem', () => {
-    should(`set the item correctly`, async () => {
+    should(`set the item correctly`, () => {
       const itemObs = obs.getItem('key3');
 
       obs.setItem('key3', 'newValue');
 
-      await assert(itemObs).to.emitWith('newValue');
+      assert(itemObs).to.emitWith('newValue');
     });
   });
 });

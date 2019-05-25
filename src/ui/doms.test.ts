@@ -1,5 +1,4 @@
-import { assert, should } from '@gs-testing';
-import { createSpy, fake } from '@gs-testing';
+import { assert, createSpy, fake, should } from '@gs-testing';
 import { Doms } from './doms';
 
 

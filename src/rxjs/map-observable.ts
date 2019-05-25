@@ -37,6 +37,6 @@ export function scanMap<K, V>(): (obs: Observable<MapDiff<K, V>>) => Observable<
             }
           },
           new Map(),
-      )
-  )
+      ),
+  );
 }

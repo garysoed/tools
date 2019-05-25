@@ -41,22 +41,6 @@ export class WebStorage<T> implements EditableStorage<T> {
     return this.storage.clear();
   }
 
-  deleteAt(index: number): Observable<unknown> {
-    throw new Error('Method not implemented.');
-  }
-
-  insertAt(index: number, id: string, instance: T): Observable<unknown> {
-    throw new Error('Method not implemented.');
-  }
-
-  updateAt(index: number, id: string, instance: T): Observable<unknown> {
-    throw new Error('Method not implemented.');
-  }
-
-  findIndex(id: string): Observable<number | null> {
-    throw new Error('Method not implemented.');
-  }
-
   delete(id: string): Observable<unknown> {
     return this.listIdsAsArray()
         .pipe(
@@ -68,6 +52,14 @@ export class WebStorage<T> implements EditableStorage<T> {
               this.storage.removeItem(getPath(id, this.prefix));
             }),
         );
+  }
+
+  deleteAt(index: number): Observable<unknown> {
+    throw new Error('Method not implemented.');
+  }
+
+  findIndex(id: string): Observable<number | null> {
+    throw new Error('Method not implemented.');
   }
 
   generateId(): Observable<string> {
@@ -86,24 +78,12 @@ export class WebStorage<T> implements EditableStorage<T> {
         );
   }
 
-  listIds(): Observable<ArrayDiff<string>> {
-    return this.listIdsAsArray().pipe(diffArray());
+  insertAt(index: number, id: string, instance: T): Observable<unknown> {
+    throw new Error('Method not implemented.');
   }
 
-  @cache()
-  private listIdsAsArray(): Observable<string[]> {
-    return this.storage.getItem(this.prefix)
-        .pipe(
-            map(indexesStr => {
-              if (!indexesStr) {
-                return createImmutableList<string>();
-              }
-
-              return this.indexesConverter.convertBackward(indexesStr);
-            }),
-            map(immutableList => [...immutableList]),
-            shareReplay(1),
-        );
+  listIds(): Observable<ArrayDiff<string>> {
+    return this.listIdsAsArray().pipe(diffArray());
   }
 
   read(id: string): Observable<T|null> {
@@ -131,6 +111,26 @@ export class WebStorage<T> implements EditableStorage<T> {
               const itemResult = this.converter.convertForward(instance);
               this.storage.setItem(path, itemResult);
             }),
+        );
+  }
+
+  updateAt(index: number, id: string, instance: T): Observable<unknown> {
+    throw new Error('Method not implemented.');
+  }
+
+  @cache()
+  private listIdsAsArray(): Observable<string[]> {
+    return this.storage.getItem(this.prefix)
+        .pipe(
+            map(indexesStr => {
+              if (!indexesStr) {
+                return createImmutableList<string>();
+              }
+
+              return this.indexesConverter.convertBackward(indexesStr);
+            }),
+            map(immutableList => [...immutableList]),
+            shareReplay(1),
         );
   }
 }

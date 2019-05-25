@@ -6,6 +6,7 @@ const SUBSCRIBED_KEYS = new Set<string>();
 
 export function debug<T>(...keys: string[]): MonoTypeOperatorFunction<T> {
   const baseKey = keys.join('::');
+
   return source => new Observable(subscriber => {
     const key = generateKey(baseKey);
     SUBSCRIBED_KEYS.add(key);

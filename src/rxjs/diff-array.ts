@@ -1,7 +1,7 @@
-import { OperatorFunction, of as observableOf } from '@rxjs';
-import { ArrayDiff } from './array-observable';
-import { startWith, pairwise, switchMap } from '@rxjs/operators';
+import { of as observableOf, OperatorFunction } from '@rxjs';
+import { pairwise, startWith, switchMap } from '@rxjs/operators';
 import { assertUnreachable } from '../typescript/assert-unreachable';
+import { ArrayDiff } from './array-observable';
 
 export function diffArray<T>(): OperatorFunction<T[], ArrayDiff<T>> {
   return source => source
@@ -47,15 +47,19 @@ export function applyDiff<T>(array: T[], diff: ArrayDiff<T>): void {
   switch (diff.type) {
     case 'insert':
       array.splice(diff.index, 0, diff.value);
+
       return;
     case 'delete':
       array.splice(diff.index, 1);
+
       return;
     case 'init':
       array.splice(0, array.length, ...diff.value);
+
       return;
     case 'set':
       array[diff.index] = diff.value;
+
       return;
     default:
       assertUnreachable(diff);

@@ -2,7 +2,7 @@ import { Converter, Result, Serializable } from '@nabu';
 
 export class ObjectConverter<T extends {}> implements
     Converter<{[K in keyof T]: T[K]}, Serializable> {
-  constructor(private spec_: {[spec in keyof T]: Converter<T[spec], Serializable>}) { }
+  constructor(private readonly spec_: {[spec in keyof T]: Converter<T[spec], Serializable>}) { }
 
   convertBackward(input: Serializable): Result<{[K in keyof T]: T[K]}> {
     if (!(input instanceof Object)) {

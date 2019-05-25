@@ -7,8 +7,8 @@ export interface SetAdd<T> {
 }
 
 export interface SetInit<T> {
-  value: Set<T>;
   type: 'init';
+  value: Set<T>;
 }
 
 export interface SetDelete<T> {

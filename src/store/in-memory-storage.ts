@@ -1,5 +1,5 @@
 import { Observable, of as observableOf } from '@rxjs';
-import { map, shareReplay, tap, take } from '@rxjs/operators';
+import { map, shareReplay, take, tap } from '@rxjs/operators';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { ArrayDiff, scanArray } from '../rxjs/array-observable';
 import { ArraySubject } from '../rxjs/array-subject';

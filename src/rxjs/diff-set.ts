@@ -42,15 +42,18 @@ export function applyDiff<T>(set: Set<T>, diff: SetDiff<T>): void {
   switch (diff.type) {
     case 'add':
       set.add(diff.value);
+
       return;
     case 'delete':
       set.delete(diff.value);
+
       return;
     case 'init':
       set.clear();
       for (const value of diff.value) {
         set.add(value);
       }
+
       return;
   }
 }

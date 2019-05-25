@@ -38,59 +38,59 @@ test('@gs-tools/rxjs/set-subject', () => {
   });
 
   test('add', () => {
-    should(`set the item correctly`, async () => {
+    should(`set the item correctly`, () => {
       subject.add('d');
 
-      await assert(setSpySubject).to.emitWith(
+      assert(setSpySubject).to.emitWith(
           match.anyIterableThat<string, Set<string>>().haveElements(['a', 'b', 'c', 'd']));
-      await assert(scanSpySubject).to.emitWith(
+      assert(scanSpySubject).to.emitWith(
           match.anyIterableThat<string, Set<string>>().haveElements(['a', 'b', 'c', 'd']));
     });
 
-    should(`be noop if the item is already in the set`, async () => {
+    should(`be noop if the item is already in the set`, () => {
       setSpySubject.reset();
       scanSpySubject.reset();
 
       subject.add('b');
 
-      await assert(setSpySubject).toNot.emit();
-      await assert(scanSpySubject).toNot.emit();
+      assert(setSpySubject).toNot.emit();
+      assert(scanSpySubject).toNot.emit();
     });
   });
 
   test('delete', () => {
-    should(`delete the item correctly`, async () => {
+    should(`delete the item correctly`, () => {
       subject.delete('b');
 
-      await assert(setSpySubject).to
+      assert(setSpySubject).to
           .emitWith(match.anyIterableThat<string, Set<string>>().haveElements(['a', 'c']));
-      await assert(scanSpySubject).to
+      assert(scanSpySubject).to
           .emitWith(match.anyIterableThat<string, Set<string>>().haveElements(['a', 'c']));
     });
 
-    should(`be noop if the item does not exist`, async () => {
+    should(`be noop if the item does not exist`, () => {
       setSpySubject.reset();
       scanSpySubject.reset();
 
       subject.delete('d');
 
-      await assert(setSpySubject).toNot.emit();
-      await assert(scanSpySubject).toNot.emit();
+      assert(setSpySubject).toNot.emit();
+      assert(scanSpySubject).toNot.emit();
     });
   });
 
   test('getDiffs', () => {
-    should(`emit correctly`, async () => {
+    should(`emit correctly`, () => {
       const spySubject = createSpySubject();
       subject.getDiffs().subscribe(spySubject);
 
-      await assert(spySubject).to.emitWith(match.anyObjectThat().haveProperties({
-        value: match.anyIterableThat().haveElements(['a', 'b', 'c']),
+      assert(spySubject).to.emitWith(match.anyObjectThat().haveProperties({
         type: 'init',
+        value: match.anyIterableThat().haveElements(['a', 'b', 'c']),
       }));
 
       subject.delete('b');
-      await assert(spySubject).to.emitWith(match.anyObjectThat().haveProperties({
+      assert(spySubject).to.emitWith(match.anyObjectThat().haveProperties({
         type: 'delete',
         value: 'b',
       }));
@@ -98,12 +98,12 @@ test('@gs-tools/rxjs/set-subject', () => {
   });
 
   test('setAll', () => {
-    should(`set all the items correctly`, async () => {
+    should(`set all the items correctly`, () => {
       subject.setAll(new Set(['e', 'c']));
 
-      await assert(setSpySubject).to
+      assert(setSpySubject).to
           .emitWith(match.anyIterableThat<string, Set<string>>().haveElements(['c', 'e']));
-      await assert(scanSpySubject).to
+      assert(scanSpySubject).to
           .emitWith(match.anyIterableThat<string, Set<string>>().haveElements(['c', 'e']));
     });
   });
