@@ -1,6 +1,7 @@
 import { assert, should, test, setup, match, Spy, createSpy, fake, spy } from '@gs-testing';
 import { Builder } from './builder';
-import { ReplaySubject } from 'rxjs';
+import { ReplaySubject } from '@rxjs';
+import { take } from '@rxjs/operators';
 
 test('@gs-tools/gapi/builder', () => {
   const API_KEY = 'apiKey';
@@ -44,7 +45,7 @@ test('@gs-tools/gapi/builder', () => {
 
     scriptEl.onload!(new CustomEvent('load'));
 
-    await assert(subject).to.emit();
+    await subject.pipe(take(1)).toPromise();
     assert(mockGapiClientInit).to.haveBeenCalledWith(match.anyObjectThat().haveProperties({
       apiKey: API_KEY,
       clientId: CLIENT_ID,
