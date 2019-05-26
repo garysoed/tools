@@ -1,20 +1,7 @@
 import { assert, match, should, test } from '@gs-testing';
-import { deepClone, getValue, setValue } from './jsons';
+import { getValue, setValue } from './jsons';
 
 test('data.Jsons', () => {
-  test('deepClone', () => {
-    should('clone the given object', () => {
-      const original = {
-        a: { b: 2 },
-      };
-      const clone = deepClone(original);
-      assert(clone).to.haveProperties({
-        a: match.anyObjectThat().haveProperties({b: 2}),
-      });
-      assert(clone).toNot.equal(original);
-    });
-  });
-
   test('getValue', () => {
     should('retrieve the value correctly', () => {
       const json = {a: {b: {c: 123}}};

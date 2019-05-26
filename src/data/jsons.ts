@@ -19,16 +19,6 @@ export function clone<T extends Json>(original: Json): T {
 }
 
 /**
- * Recursively clones the given JSON.
- *
- * @param original The JSON to be cloned.
- * @return The cloned JSON.
- */
-export function deepClone(original: Json): Json {
-  return JSON.parse(JSON.stringify(original));
-}
-
-/**
  * Searchs for the value in the JSON at the given path.
  *
  * @param json The object to get the value of.
