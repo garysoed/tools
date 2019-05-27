@@ -13,7 +13,7 @@ interface SerializableChild extends SerializableParent {
 }
 
 class ParentSpec {
-  constructor(private pSerializable: SerializableParent) { }
+  constructor(private readonly pSerializable: SerializableParent) { }
 
   get name(): string {
     return this.pSerializable.pName;
@@ -29,7 +29,7 @@ class ParentSpec {
 }
 
 class ChildSpec extends ParentSpec {
-  constructor(private cSerializable: SerializableChild) {
+  constructor(private readonly cSerializable: SerializableChild) {
     super(cSerializable);
   }
 
