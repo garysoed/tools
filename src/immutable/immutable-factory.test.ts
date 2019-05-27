@@ -58,7 +58,7 @@ test('@gs-tools/immutable/immutable-factory', () => {
       const pIndex = 123;
       const pName = 'pName';
 
-      const instance = factory.$create({pIndex, pName});
+      const instance = factory.create({pIndex, pName});
       assert(instance.index).to.equal(pIndex);
       assert(instance.name).to.equal(pName);
 
@@ -84,7 +84,7 @@ test('@gs-tools/immutable/immutable-factory', () => {
       const cIndex = 456;
       const cName = 'cName';
 
-      const instance = factory.$create({cIndex, cName, pIndex, pName});
+      const instance = factory.create({cIndex, cName, pIndex, pName});
       assert(instance.cIndex).to.equal(cIndex);
       assert(instance.index).to.equal(pIndex);
       assert(instance.name).to.equal(cName);

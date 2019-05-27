@@ -1,15 +1,15 @@
 import { Serializable } from '@nabu';
-import { Ctor } from './types';
-import { ImmutableObject, ImmutableOf } from './immutable-object';
+import { Ctor, Immutable } from './types';
+import { ImmutableObject } from './immutable-object';
 
 export class ImmutableFactory<O, S extends Serializable> {
   constructor(private readonly specCtor: Ctor<O, S>) { }
 
-  $create(serializable: S): ImmutableOf<O, S> {
+  create(serializable: S): Immutable<O, S> {
     const immutable = new ImmutableObject(
         this.specCtor,
         serializable,
-        args => this.$create(args),
+        args => this.create(args),
     );
 
     // Collect the ctor hierarchy.
@@ -41,6 +41,21 @@ export class ImmutableFactory<O, S extends Serializable> {
 
     return immutable as any;
   }
+
+  get factoryOf(): (target: any) => target is Immutable<O, S> {
+    return (target): target is Immutable<O, S> => {
+      if (!(target instanceof Object)) {
+        return false;
+      }
+
+      const ctor = target.specCtor;
+      if (!(ctor instanceof Function)) {
+        return false;
+      }
+
+      return ctor === this.specCtor || ctor.prototype instanceof this.specCtor;
+    }
+  };
 }
 
 export function generateImmutable<S, A extends Serializable>(specCtor: Ctor<S, A>): ImmutableFactory<S, A> {

@@ -1,3 +1,5 @@
+import { Serializable } from 'nabu/export';
+
 type IfEquals<X, Y, A, B> =
     (<T>() => T extends X ? 1 : 2) extends
     (<T>() => T extends Y ? 1 : 2) ? A : B;
@@ -12,3 +14,10 @@ export interface Ctor<O, S> {
   new (serializable: S): O;
   prototype: O;
 }
+
+export type Immutable<O, S extends Serializable> = {
+  $update(...newData: Array<Partial<S>>): Immutable<O, S>,
+
+  readonly $set: Setter<O, S>,
+  readonly serializable: S;
+} & Readonly<O>;
