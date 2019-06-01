@@ -1,15 +1,15 @@
 import { Observable } from '@rxjs';
-import { scan, map } from '@rxjs/operators';
+import { map, scan } from '@rxjs/operators';
 
 export interface ArrayInit<T> {
-  value: T[];
   type: 'init';
+  value: T[];
 }
 
 export interface ArrayInsert<T> {
   index: number;
-  value: T;
   type: 'insert';
+  value: T;
 }
 
 export interface ArrayDelete {
@@ -19,8 +19,8 @@ export interface ArrayDelete {
 
 export interface ArraySet<T> {
   index: number;
-  value: T;
   type: 'set';
+  value: T;
 }
 
 export type ArrayDiff<T> = ArrayInit<T>|ArrayInsert<T>|ArrayDelete|ArraySet<T>;
@@ -56,7 +56,7 @@ export function mapArray<F, T>(mapFn: (from: F) => T):
                 };
             }
           }),
-      )
+      );
 }
 
 export function scanArray<T>(): (obs: Observable<ArrayDiff<T>>) => Observable<T[]> {
@@ -68,14 +68,17 @@ export function scanArray<T>(): (obs: Observable<ArrayDiff<T>>) => Observable<T[
                 switch (diff.type) {
                   case 'delete':
                     copy.splice(diff.index, 1);
+
                     return copy;
                   case 'init':
                     return [...diff.value];
                   case 'insert':
                     copy.splice(diff.index, 0, diff.value);
+
                     return copy;
                   case 'set':
                     copy[diff.index] = diff.value;
+
                     return copy;
                 }
               },
