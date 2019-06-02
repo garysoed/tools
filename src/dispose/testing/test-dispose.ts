@@ -14,7 +14,7 @@ const DISPOSABLES: Disposable[] = [];
  * need to be disposed manually (because they should be disposed through some flow not covered by
  * the test) can be disposed by using the [[add]] method.
  */
-class TestDisposeImpl implements Environment {
+class TestDisposeImpl extends Environment {
   /**
    * Adds the given disposables to be disposed at the end of the test.
    * @param ...disposables Disposables to be disposed at the end of the test.
@@ -28,7 +28,7 @@ class TestDisposeImpl implements Environment {
   /**
    * Runs the code in jasmine's `afterEach` logic.
    */
-  afterEach(): void {
+  innerAfterEach(): void {
     DISPOSABLES.forEach((disposable: Disposable) => disposable.dispose());
     Flags.enableTracking = false;
 
@@ -40,7 +40,7 @@ class TestDisposeImpl implements Environment {
   /**
    * Runs the code in jasmine's `beforeEach` logic.
    */
-  beforeEach(): void {
+  innerBeforeEach(): void {
     DISPOSABLES.splice(0, DISPOSABLES.length);
     Flags.enableTracking = true;
   }

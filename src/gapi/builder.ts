@@ -1,13 +1,11 @@
 import { from, Observable } from '@rxjs';
-import { mapTo, shareReplay, switchMap } from '@rxjs/operators';
+import { mapTo, shareReplay } from '@rxjs/operators';
 import { Handler } from './handler';
 
 interface Library {
-  discoveryDoc: string,
-  scopes: string[],
+  discoveryDoc: string;
+  scopes: string[];
 }
-
-export const GAPI_URL = 'https://apis.google.com/js/api.js';
 
 export class Builder {
   private readonly discoveryDocs = [] as string[];
@@ -16,7 +14,6 @@ export class Builder {
   constructor(
       private readonly apiKey: string,
       private readonly clientId: string,
-      private readonly apiUrl = GAPI_URL,
   ) { }
 
   addLibrary({discoveryDoc, scopes}: Library): this {
@@ -27,29 +24,23 @@ export class Builder {
   }
 
   build(): Observable<Handler> {
-    return from<Promise<void>>(new Promise(resolve => {
-          const scriptEl = document.createElement('script');
-          scriptEl.onload = () => resolve();
-          scriptEl.src = this.apiUrl;
-          document.head.appendChild(scriptEl);
+    return from<Promise<void>>(new Promise((resolve, reject) => {
+          gapi.load('client:auth2', async () => {
+            try {
+              await gapi.client.init({
+                apiKey: this.apiKey,
+                clientId: this.clientId,
+                discoveryDocs: this.discoveryDocs,
+                scope: this.scopes.join(' '),
+              });
+            } catch (e) {
+              reject(e);
+            }
+
+            resolve();
+          });
         }))
         .pipe(
-            switchMap(() => from<Promise<void>>(new Promise((resolve, reject) => {
-              gapi.load('client:auth2', async () => {
-                try {
-                  await gapi.client.init({
-                    apiKey: this.apiKey,
-                    clientId: this.clientId,
-                    discoveryDocs: this.discoveryDocs,
-                    scope: this.scopes.join(' '),
-                  });
-                } catch (e) {
-                  reject(e);
-                }
-
-                resolve();
-              })
-            }))),
             mapTo(new Handler()),
             shareReplay(1),
         );
