@@ -8,11 +8,11 @@ export function diff<T>(
     oldIterable: Iterable<T>,
     newIterable: Iterable<T>,
 ): DiffResult<T> {
-  const oldSet = new Set(oldIterable);
-  const newSet = new Set(newIterable);
+  const oldSet = new Set<T>(oldIterable);
+  const newSet = new Set<T>(newIterable);
 
-  const added = new Set();
-  const unchanged = new Set();
+  const added = new Set<T>();
+  const unchanged = new Set<T>();
   for (const item of newSet) {
     if (oldSet.has(item)) {
       unchanged.add(item);
@@ -21,7 +21,7 @@ export function diff<T>(
     }
   }
 
-  const deleted = new Set();
+  const deleted = new Set<T>();
   for (const item of oldSet) {
     if (!newSet.has(item)) {
       deleted.add(item);

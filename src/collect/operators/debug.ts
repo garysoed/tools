@@ -6,7 +6,7 @@ import { GeneratorOperator } from '../types/operator';
  * @param tag Prefix to tag the debug message.
  * @param toStringFn Custom function to convert the value to a string.
  */
-export function debug<T, K>(
+export function debug<T extends Object, K>(
     tag: string,
     toStringFn: (value: T) => string = value => value.toString(),
 ): GeneratorOperator<T, K, T, K> {
