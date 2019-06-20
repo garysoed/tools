@@ -10,7 +10,7 @@ test('@gs-tools/rxjs/state/array-subject', () => {
     subject = new ArraySubject(['a', 'b', 'c']);
 
     scanSpySubject = new SpySubject();
-    subject.getDiffs()
+    subject
         .pipe(scanArray())
         .subscribe(scanSpySubject);
   });
@@ -35,7 +35,7 @@ test('@gs-tools/rxjs/state/array-subject', () => {
   test('getDiffs', () => {
     should(`emit correctly`, () => {
       const spySubject = createSpySubject();
-      subject.getDiffs().subscribe(spySubject);
+      subject.subscribe(spySubject);
 
       assert(spySubject).to.emitWith(match.anyObjectThat().haveProperties({
         type: 'init',

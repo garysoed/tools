@@ -12,10 +12,10 @@ test('@gs-tools/rxjs/state/set-subject', () => {
     subject = new SetSubject(['a', 'b', 'c']);
 
     setSpySubject = new SpySubject();
-    subject.getDiffs().pipe(scanSet()).subscribe(setSpySubject);
+    subject.pipe(scanSet()).subscribe(setSpySubject);
 
     scanSpySubject = new SpySubject();
-    subject.getDiffs()
+    subject
         .pipe(
             scan<SetDiff<string>, Set<string>>(
                 (acc, diff) => {
@@ -82,7 +82,7 @@ test('@gs-tools/rxjs/state/set-subject', () => {
   test('getDiffs', () => {
     should(`emit correctly`, () => {
       const spySubject = createSpySubject();
-      subject.getDiffs().subscribe(spySubject);
+      subject.subscribe(spySubject);
 
       assert(spySubject).to.emitWith(match.anyObjectThat().haveProperties({
         type: 'init',

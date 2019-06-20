@@ -1,14 +1,23 @@
-import { concat, Observable, of as observableOf, Subject } from '@rxjs';
-import { map, shareReplay } from '@rxjs/operators';
-import { createImmutableMap, ImmutableMap } from '../../collect/types/immutable-map';
-import { MapDiff, MapInit, MapObservable } from './map-observable';
+import { Subject, Subscriber, Subscription, SubscriptionLike } from '@rxjs';
+import { MapDiff } from './map-observable';
 
-export class MapSubject<K, V> implements MapObservable<K, V> {
-  private readonly diffSubject: Subject<MapDiff<K, V>> = new Subject();
+export class MapSubject<K, V> extends Subject<MapDiff<K, V>> {
   private readonly innerMap: Map<K, V>;
 
   constructor(init: Iterable<[K, V]> = []) {
+    super();
     this.innerMap = new Map([...init]);
+  }
+
+  /** @deprecated This is an internal implementation detail, do not use. */
+  _subscribe(subscriber: Subscriber<MapDiff<K, V>>): Subscription {
+    // tslint:disable-next-line: deprecation
+    const subscription = super._subscribe(subscriber);
+    if (subscription && !(subscription as SubscriptionLike).closed) {
+      subscriber.next({type: 'init', value: new Map([...this.innerMap])});
+    }
+
+    return subscription;
   }
 
   delete(key: K): void {
@@ -17,14 +26,7 @@ export class MapSubject<K, V> implements MapObservable<K, V> {
     }
 
     this.innerMap.delete(key);
-    this.diffSubject.next({key, type: 'delete'});
-  }
-
-  getDiffs(): Observable<MapDiff<K, V>> {
-    return concat(
-        observableOf<MapInit<K, V>>({value: new Map([...this.innerMap]), type: 'init'}),
-        this.diffSubject,
-    );
+    this.next({key, type: 'delete'});
   }
 
   set(key: K, value: V): void {
@@ -33,7 +35,7 @@ export class MapSubject<K, V> implements MapObservable<K, V> {
     }
 
     this.innerMap.set(key, value);
-    this.diffSubject.next({key, value, type: 'set'});
+    this.next({key, value, type: 'set'});
   }
 
   setAll(newItems: Map<K, V>): void {

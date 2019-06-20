@@ -24,7 +24,7 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
   }
 
   delete(id: string): Observable<unknown> {
-    return this.arrayData.getDiffs()
+    return this.arrayData
         .pipe(
             scanArray(),
             take(1),
@@ -42,7 +42,7 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
   }
 
   findIndex(id: string): Observable<number|null> {
-    return this.arrayData.getDiffs()
+    return this.arrayData
         .pipe(
             scanArray(),
             map(array => array.findIndex(value => value === id)),
@@ -52,7 +52,6 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
 
   generateId(): Observable<string> {
     return this.mapData
-        .getDiffs()
         .pipe(
             scanMap(),
             map(map => this.idGenerator.generate(map.keys())),
@@ -62,7 +61,6 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
 
   has(id: string): Observable<boolean> {
     return this.mapData
-        .getDiffs()
         .pipe(
             scanMap(),
             map(map => map.has(id)),
@@ -81,12 +79,11 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
   }
 
   listIds(): Observable<ArrayDiff<string>> {
-    return this.arrayData.getDiffs();
+    return this.arrayData;
   }
 
   read(id: string): Observable<T|null> {
     return this.mapData
-        .getDiffs()
         .pipe(
             scanMap(),
             map(map => map.get(id) || null),

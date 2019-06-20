@@ -12,10 +12,10 @@ test('@gs-tools/rxjs/state/map-subject', () => {
     subject = new MapSubject([['a', 1], ['b', 2], ['c', 3]]);
 
     mapSpySubject = new SpySubject();
-    subject.getDiffs().pipe(scanMap()).subscribe(mapSpySubject);
+    subject.pipe(scanMap()).subscribe(mapSpySubject);
 
     scanSpySubject = new SpySubject();
-    subject.getDiffs()
+    subject
         .pipe(
             scan<MapDiff<string, number>, Map<string, number>>(
                 (acc, diff) => {
@@ -68,7 +68,7 @@ test('@gs-tools/rxjs/state/map-subject', () => {
   test('getDiffs', () => {
     should(`emit correctly`, () => {
       const spySubject = createSpySubject();
-      subject.getDiffs().subscribe(spySubject);
+      subject.subscribe(spySubject);
 
       assert(spySubject).to.emitWith(match.anyObjectThat().haveProperties({
         type: 'init',
