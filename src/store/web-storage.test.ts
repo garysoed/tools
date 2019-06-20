@@ -3,8 +3,8 @@ import { binary, compose, identity, strict } from '@nabu';
 import { BehaviorSubject } from '@rxjs';
 import { scan } from '@rxjs/operators';
 import { createImmutableSet } from '../collect/types/immutable-set';
-import { ArrayDiff } from '../rxjs/array-observable';
-import { applyDiff } from '../rxjs/diff-array';
+import { ArrayDiff } from '../rxjs/state/array-observable';
+import { applyDiff } from '../rxjs/state/diff-array';
 import { integerConverter } from '../serializer/integer-converter';
 import { INDEXES_PARSER, WebStorage } from './web-storage';
 

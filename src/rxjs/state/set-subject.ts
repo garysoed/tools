@@ -1,6 +1,6 @@
 import { concat, Observable, of as observableOf, Subject } from '@rxjs';
-import { applyDiff, diff } from './state/diff-set';
-import { SetDiff, SetInit, SetObservable } from './state/set-observable';
+import { applyDiff, diff } from './diff-set';
+import { SetDiff, SetInit, SetObservable } from './set-observable';
 
 export class SetSubject<T> implements SetObservable<T> {
   private readonly diffSubject: Subject<SetDiff<T>> = new Subject();

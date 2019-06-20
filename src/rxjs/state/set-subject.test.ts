@@ -3,7 +3,7 @@ import { scan } from '@rxjs/operators';
 import { scanSet, SetDiff } from './set-observable';
 import { SetSubject } from './set-subject';
 
-test('@gs-tools/rxjs/set-subject', () => {
+test('@gs-tools/rxjs/state/set-subject', () => {
   let subject: SetSubject<string>;
   let setSpySubject: SpySubject<Set<string>>;
   let scanSpySubject: SpySubject<Set<string>>;

@@ -1,6 +1,6 @@
 import { concat, Observable, of as observableOf, Subject } from '@rxjs';
 import { map, shareReplay } from '@rxjs/operators';
-import { createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
+import { createImmutableMap, ImmutableMap } from '../../collect/types/immutable-map';
 import { MapDiff, MapInit, MapObservable } from './map-observable';
 
 export class MapSubject<K, V> implements MapObservable<K, V> {

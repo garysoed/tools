@@ -1,6 +1,6 @@
 import { of as observableOf, OperatorFunction } from '@rxjs';
 import { pairwise, startWith, switchMap } from '@rxjs/operators';
-import { assertUnreachable } from '../typescript/assert-unreachable';
+import { assertUnreachable } from '../../typescript/assert-unreachable';
 import { ArrayDiff } from './array-observable';
 
 export function diffArray<T>(): OperatorFunction<T[], ArrayDiff<T>> {

@@ -1,10 +1,10 @@
 import { Observable, of as observableOf } from '@rxjs';
 import { map, shareReplay, take, tap } from '@rxjs/operators';
 import { BaseIdGenerator } from '../random/base-id-generator';
-import { ArrayDiff, scanArray } from '../rxjs/array-observable';
-import { ArraySubject } from '../rxjs/array-subject';
-import { scanMap } from '../rxjs/map-observable';
-import { MapSubject } from '../rxjs/map-subject';
+import { ArrayDiff, scanArray } from '../rxjs/state/array-observable';
+import { ArraySubject } from '../rxjs/state/array-subject';
+import { scanMap } from '../rxjs/state/map-observable';
+import { MapSubject } from '../rxjs/state/map-subject';
 import { EditableStorage } from './editable-storage';
 
 export class InMemoryStorage<T> implements EditableStorage<T> {
