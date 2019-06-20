@@ -36,7 +36,10 @@ export function mapArray<F, T>(mapFn: (from: F) => T):
           map(diff => {
             switch (diff.type) {
               case 'delete':
-                return diff;
+                return {
+                  index: diff.index,
+                  type: 'delete',
+                };
               case 'init':
                 return {
                   type: 'init',

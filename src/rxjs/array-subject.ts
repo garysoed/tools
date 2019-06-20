@@ -1,11 +1,11 @@
 import { concat, Observable, of as observableOf, Subject } from '@rxjs';
 import { ArrayDiff, ArrayInit, ArrayObservable } from './array-observable';
-import { diff, applyDiff } from './diff-array';
+import { applyDiff, diff } from './diff-array';
 
 
 export class ArraySubject<T> implements ArrayObservable<T> {
-  private readonly innerArray: T[];
   private readonly diffSubject: Subject<ArrayDiff<T>> = new Subject();
+  private readonly innerArray: T[];
 
   constructor(init: Iterable<T> = []) {
     this.innerArray = [...init];
