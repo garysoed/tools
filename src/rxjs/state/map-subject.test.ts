@@ -42,16 +42,18 @@ test('@gs-tools/rxjs/state/map-subject', () => {
       subject.delete('b');
 
       assert(mapSpySubject).to.emitWith(
-          match.anyIterableThat<[string, number], Map<string, number>>().haveElements([
-            match.anyTupleThat<[string, number]>().haveExactElements(['a', 1]),
-            match.anyTupleThat<[string, number]>().haveExactElements(['c', 3]),
-          ]));
+          match.anyMapThat<string, number>().haveExactElements(new Map([
+            ['a', 1],
+            ['c', 3],
+          ])),
+      );
 
       assert(scanSpySubject).to.emitWith(
-          match.anyIterableThat<[string, number], Map<string, number>>().haveElements([
-            match.anyTupleThat<[string, number]>().haveExactElements(['a', 1]),
-            match.anyTupleThat<[string, number]>().haveExactElements(['c', 3]),
-          ]));
+          match.anyMapThat<string, number>().haveExactElements(new Map([
+            ['a', 1],
+            ['c', 3],
+          ])),
+      );
     });
 
     should(`be noop if the item does not exist`, () => {
@@ -72,11 +74,11 @@ test('@gs-tools/rxjs/state/map-subject', () => {
 
       assert(spySubject).to.emitWith(match.anyObjectThat().haveProperties({
         type: 'init',
-        value: match.anyIterableThat<[string, number], Map<string, number>>().startWith([
-          match.anyTupleThat<[string, number]>().haveExactElements(['a', 1]),
-          match.anyTupleThat<[string, number]>().haveExactElements(['b', 2]),
-          match.anyTupleThat<[string, number]>().haveExactElements(['c', 3]),
-        ]),
+        value: match.anyMapThat<string, number>().haveExactElements(new Map([
+          ['a', 1],
+          ['b', 2],
+          ['c', 3],
+        ])),
       }));
 
       subject.delete('b');
@@ -87,23 +89,85 @@ test('@gs-tools/rxjs/state/map-subject', () => {
     });
   });
 
+  test('next', () => {
+    should(`handle delete correctly`, () => {
+      subject.next({type: 'delete', key: 'b'});
+
+      assert(mapSpySubject).to.emitWith(
+          match.anyMapThat<string, number>().haveExactElements(new Map([
+            ['a', 1],
+            ['c', 3],
+          ])),
+      );
+
+      assert(scanSpySubject).to.emitWith(
+          match.anyMapThat<string, number>().haveExactElements(new Map([
+            ['a', 1],
+            ['c', 3],
+          ])),
+      );
+    });
+
+    should(`handle init correctly`, () => {
+      subject.next({type: 'init', value: new Map([['e', 5], ['c', 4], ['b', 2]])});
+
+      assert(mapSpySubject).to.emitWith(
+          match.anyMapThat<string, number>().haveExactElements(new Map([
+            ['b', 2],
+            ['c', 4],
+            ['e', 5],
+          ])),
+      );
+
+      assert(scanSpySubject).to.emitWith(
+          match.anyMapThat<string, number>().haveExactElements(new Map([
+            ['b', 2],
+            ['c', 4],
+            ['e', 5],
+          ])),
+      );
+    });
+
+    should(`handle set correctly`, () => {
+      subject.next({type: 'set', key: 'b', value: 6});
+
+      assert(mapSpySubject).to.emitWith(
+          match.anyMapThat<string, number>().haveExactElements(new Map([
+            ['a', 1],
+            ['b', 6],
+            ['c', 3],
+          ])),
+      );
+
+      assert(scanSpySubject).to.emitWith(
+          match.anyMapThat<string, number>().haveExactElements(new Map([
+            ['a', 1],
+            ['b', 6],
+            ['c', 3],
+          ])),
+      );
+    });
+  });
+
   test('setAll', () => {
     should(`set all the items correctly`, () => {
       subject.setAll(new Map([['e', 5], ['c', 4], ['b', 2]]));
 
       assert(mapSpySubject).to.emitWith(
-          match.anyIterableThat<[string, number], Map<string, number>>().haveElements([
-            match.anyTupleThat<[string, number]>().haveExactElements(['b', 2]),
-            match.anyTupleThat<[string, number]>().haveExactElements(['c', 4]),
-            match.anyTupleThat<[string, number]>().haveExactElements(['e', 5]),
-          ]));
+          match.anyMapThat<string, number>().haveExactElements(new Map([
+            ['b', 2],
+            ['c', 4],
+            ['e', 5],
+          ])),
+      );
 
       assert(scanSpySubject).to.emitWith(
-          match.anyIterableThat<[string, number], Map<string, number>>().haveElements([
-            match.anyTupleThat<[string, number]>().haveExactElements(['b', 2]),
-            match.anyTupleThat<[string, number]>().haveExactElements(['c', 4]),
-            match.anyTupleThat<[string, number]>().haveExactElements(['e', 5]),
-          ]));
+          match.anyMapThat<string, number>().haveExactElements(new Map([
+            ['b', 2],
+            ['c', 4],
+            ['e', 5],
+          ])),
+      );
     });
   });
 
@@ -112,18 +176,20 @@ test('@gs-tools/rxjs/state/map-subject', () => {
       subject.set('b', 6);
 
       assert(mapSpySubject).to.emitWith(
-          match.anyIterableThat<[string, number], Map<string, number>>().haveElements([
-            match.anyTupleThat<[string, number]>().haveExactElements(['a', 1]),
-            match.anyTupleThat<[string, number]>().haveExactElements(['b', 6]),
-            match.anyTupleThat<[string, number]>().haveExactElements(['c', 3]),
-          ]));
+          match.anyMapThat<string, number>().haveExactElements(new Map([
+            ['a', 1],
+            ['b', 6],
+            ['c', 3],
+          ])),
+      );
 
       assert(scanSpySubject).to.emitWith(
-          match.anyIterableThat<[string, number], Map<string, number>>().haveElements([
-            match.anyTupleThat<[string, number]>().haveExactElements(['a', 1]),
-            match.anyTupleThat<[string, number]>().haveExactElements(['b', 6]),
-            match.anyTupleThat<[string, number]>().haveExactElements(['c', 3]),
-          ]));
+          match.anyMapThat<string, number>().haveExactElements(new Map([
+            ['a', 1],
+            ['b', 6],
+            ['c', 3],
+          ])),
+      );
     });
 
     should(`be noop if the item is already set`, () => {

@@ -22,11 +22,9 @@ test('@gs-tools/rxjs/state/set-subject', () => {
                   switch (diff.type) {
                     case 'add':
                       acc.add(diff.value);
-
                       return acc;
                     case 'delete':
                       acc.delete(diff.value);
-
                       return acc;
                     case 'init':
                       return diff.value;
@@ -42,9 +40,9 @@ test('@gs-tools/rxjs/state/set-subject', () => {
       subject.add('d');
 
       assert(setSpySubject).to.emitWith(
-          match.anyIterableThat<string, Set<string>>().haveElements(['a', 'b', 'c', 'd']));
+          match.anySetThat<string>().haveExactElements(new Set(['a', 'b', 'c', 'd'])));
       assert(scanSpySubject).to.emitWith(
-          match.anyIterableThat<string, Set<string>>().haveElements(['a', 'b', 'c', 'd']));
+          match.anySetThat<string>().haveExactElements(new Set(['a', 'b', 'c', 'd'])));
     });
 
     should(`be noop if the item is already in the set`, () => {
@@ -63,9 +61,9 @@ test('@gs-tools/rxjs/state/set-subject', () => {
       subject.delete('b');
 
       assert(setSpySubject).to
-          .emitWith(match.anyIterableThat<string, Set<string>>().haveElements(['a', 'c']));
+          .emitWith(match.anySetThat<string>().haveExactElements(new Set(['a', 'c'])));
       assert(scanSpySubject).to
-          .emitWith(match.anyIterableThat<string, Set<string>>().haveElements(['a', 'c']));
+          .emitWith(match.anySetThat<string>().haveExactElements(new Set(['a', 'c'])));
     });
 
     should(`be noop if the item does not exist`, () => {
@@ -97,14 +95,43 @@ test('@gs-tools/rxjs/state/set-subject', () => {
     });
   });
 
+  test('next', () => {
+    should(`handle add correctly`, () => {
+      subject.next({type: 'add', value: 'd'});
+
+      assert(setSpySubject).to.emitWith(
+          match.anySetThat<string>().haveExactElements(new Set(['a', 'b', 'c', 'd'])));
+      assert(scanSpySubject).to.emitWith(
+          match.anySetThat<string>().haveExactElements(new Set(['a', 'b', 'c', 'd'])));
+    });
+
+    should(`handle delete correctly`, () => {
+      subject.next({type: 'delete', value: 'b'});
+
+      assert(setSpySubject).to
+          .emitWith(match.anySetThat<string>().haveExactElements(new Set(['a', 'c'])));
+      assert(scanSpySubject).to
+          .emitWith(match.anySetThat<string>().haveExactElements(new Set(['a', 'c'])));
+    });
+
+    should(`handle init correctly`, () => {
+      subject.next({type: 'init', value: new Set(['e', 'c'])});
+
+      assert(setSpySubject).to
+          .emitWith(match.anySetThat<string>().haveExactElements(new Set(['c', 'e'])));
+      assert(scanSpySubject).to
+          .emitWith(match.anySetThat<string>().haveExactElements(new Set(['c', 'e'])));
+    });
+  });
+
   test('setAll', () => {
     should(`set all the items correctly`, () => {
       subject.setAll(new Set(['e', 'c']));
 
       assert(setSpySubject).to
-          .emitWith(match.anyIterableThat<string, Set<string>>().haveElements(['c', 'e']));
+          .emitWith(match.anySetThat<string>().haveExactElements(new Set(['c', 'e'])));
       assert(scanSpySubject).to
-          .emitWith(match.anyIterableThat<string, Set<string>>().haveElements(['c', 'e']));
+          .emitWith(match.anySetThat<string>().haveExactElements(new Set(['c', 'e'])));
     });
   });
 });

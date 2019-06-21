@@ -59,6 +59,36 @@ test('@gs-tools/rxjs/state/array-subject', () => {
     });
   });
 
+  test('next', () => {
+    should(`handle delete correctly`, () => {
+      subject.next({type: 'delete', index: 1});
+
+      assert(scanSpySubject).to
+          .emitWith(match.anyArrayThat<string>().haveExactElements(['a', 'c']));
+    });
+
+    should(`handle init correctly`, () => {
+      subject.next({type: 'init', value: ['e', 'c']});
+
+      assert(scanSpySubject).to
+          .emitWith(match.anyArrayThat<string>().haveExactElements(['e', 'c']));
+    });
+
+    should(`handle insert correctly`, () => {
+      subject.next({type: 'insert', index: 0, value: '0'});
+
+      assert(scanSpySubject).to
+          .emitWith(match.anyArrayThat<string>().haveExactElements(['0', 'a', 'b', 'c']));
+    });
+
+    should(`handle set correctly`, () => {
+      subject.next({type: 'set', index: 1, value: '1'});
+
+      assert(scanSpySubject).to
+          .emitWith(match.anyArrayThat<string>().haveExactElements(['a', '1', 'c']));
+    });
+  });
+
   test('setAll', () => {
     should(`set all the items correctly`, () => {
       subject.setAll(['e', 'c']);

@@ -27,7 +27,7 @@ export class SetSubject<T> extends Subject<SetDiff<T>> {
     }
 
     this.innerSet.add(value);
-    this.next({value, type: 'add'});
+    super.next({value, type: 'add'});
   }
 
   delete(value: T): void {
@@ -36,13 +36,27 @@ export class SetSubject<T> extends Subject<SetDiff<T>> {
     }
 
     this.innerSet.delete(value);
-    this.next({value, type: 'delete'});
+    super.next({value, type: 'delete'});
+  }
+
+  next(newDiff: SetDiff<T>): void {
+    switch (newDiff.type) {
+      case 'delete':
+        this.delete(newDiff.value);
+        return;
+      case 'add':
+        this.add(newDiff.value);
+        return;
+      case 'init':
+        this.setAll(newDiff.value);
+        return;
+    }
   }
 
   setAll(newItems: Set<T>): void {
     for (const diffItem of diff(this.innerSet, newItems)) {
       applyDiff(this.innerSet, diffItem);
-      this.next(diffItem);
+      super.next(diffItem);
     }
   }
 }

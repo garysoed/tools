@@ -27,7 +27,7 @@ export class ArraySubject<T> extends Subject<ArrayDiff<T>> {
     }
 
     this.innerArray.splice(index, 1);
-    this.next({index, type: 'delete'});
+    super.next({index, type: 'delete'});
   }
 
   insert(payload: T): void {
@@ -36,13 +36,30 @@ export class ArraySubject<T> extends Subject<ArrayDiff<T>> {
 
   insertAt(index: number, payload: T): void {
     this.innerArray.splice(index, 0, payload);
-    this.next({index, value: payload, type: 'insert'});
+    super.next({index, value: payload, type: 'insert'});
+  }
+
+  next(arrayDiff: ArrayDiff<T>): void {
+    switch (arrayDiff.type) {
+      case 'delete':
+        this.deleteAt(arrayDiff.index);
+        return;
+      case 'init':
+        this.setAll(arrayDiff.value);
+        return;
+      case 'insert':
+        this.insertAt(arrayDiff.index, arrayDiff.value);
+        return;
+      case 'set':
+        this.setAt(arrayDiff.index, arrayDiff.value);
+        return;
+    }
   }
 
   setAll(newItems: T[]): void {
     for (const diffItem of diff(this.innerArray, newItems)) {
       applyDiff(this.innerArray, diffItem);
-      this.next(diffItem);
+      super.next(diffItem);
     }
   }
 
@@ -52,6 +69,6 @@ export class ArraySubject<T> extends Subject<ArrayDiff<T>> {
     }
 
     this.innerArray[index] = payload;
-    this.next({index, value: payload, type: 'set'});
+    super.next({index, value: payload, type: 'set'});
   }
 }

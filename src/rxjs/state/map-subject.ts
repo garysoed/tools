@@ -26,7 +26,21 @@ export class MapSubject<K, V> extends Subject<MapDiff<K, V>> {
     }
 
     this.innerMap.delete(key);
-    this.next({key, type: 'delete'});
+    super.next({key, type: 'delete'});
+  }
+
+  next(newDiff: MapDiff<K, V>): void {
+    switch (newDiff.type) {
+      case 'delete':
+        this.delete(newDiff.key);
+        return;
+      case 'init':
+        this.setAll(newDiff.value);
+        return;
+      case 'set':
+        this.set(newDiff.key, newDiff.value);
+        return;
+    }
   }
 
   set(key: K, value: V): void {
@@ -35,7 +49,7 @@ export class MapSubject<K, V> extends Subject<MapDiff<K, V>> {
     }
 
     this.innerMap.set(key, value);
-    this.next({key, value, type: 'set'});
+    super.next({key, value, type: 'set'});
   }
 
   setAll(newItems: Map<K, V>): void {
