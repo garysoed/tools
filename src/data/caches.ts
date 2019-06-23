@@ -1,5 +1,5 @@
-import { pipe } from '../collect/pipe';
 import { keys } from '../collect/operators/keys';
+import { pipe } from '../collect/pipe';
 import { createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
 import { asImmutableSet } from '../collect/types/immutable-set';
 import { PropertyAnnotator } from './property-annotation';

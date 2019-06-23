@@ -1,8 +1,8 @@
-import { pipe } from '../collect/pipe';
 import { getKey } from '../collect/operators/get-key';
 import { mapPick } from '../collect/operators/map-pick';
 import { sort } from '../collect/operators/sort';
 import { Orderings } from '../collect/orderings';
+import { pipe } from '../collect/pipe';
 import { createImmutableList, ImmutableList } from '../collect/types/immutable-list';
 import { asImmutableMap, createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
 
