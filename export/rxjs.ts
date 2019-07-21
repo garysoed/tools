@@ -1,3 +1,4 @@
+export { assertNonNull } from '../src/rxjs/assert-non-null';
 export { debug } from '../src/rxjs/debug';
 export { filterNonNull } from '../src/rxjs/filter-non-null';
 export { mapNonNull } from '../src/rxjs/map-non-null';
