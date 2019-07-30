@@ -1,7 +1,9 @@
 import { EqualType, HasPropertiesType, InstanceofType, Type } from '@gs-types';
+
 import { generatorFrom } from '../generators';
 import { eager } from '../operators/eager-finite';
 import { pipe } from '../pipe';
+
 import { Stream } from './stream';
 
 export interface ImmutableMap<K, V> extends Stream<[K, V], K>, Iterable<[K, V]> {

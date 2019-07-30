@@ -1,5 +1,6 @@
 import { pipe } from '../pipe';
 import { Stream } from '../types/stream';
+
 import { getKey } from './get-key';
 import { head } from './head';
 

@@ -1,6 +1,6 @@
 import { Converter, Result, Serializable } from '@nabu';
 
-class TupleConverter<T extends Array<unknown>> implements Converter<T, Serializable> {
+class TupleConverter<T extends unknown[]> implements Converter<T, Serializable> {
   constructor(private readonly elementConverters_: Array<Converter<unknown, Serializable>>) { }
 
   convertBackward(value: Serializable): Result<T> {
@@ -53,7 +53,7 @@ export function tupleConverter<T0>(
 export function tupleConverter<T0, T1>(
   elementConverters: [Converter<T0, Serializable>, Converter<T1, Serializable>],
 ): TupleConverter<[T0, T1]>;
-export function tupleConverter<T extends Array<unknown>>(
+export function tupleConverter<T extends unknown[]>(
     elementConverters: Array<Converter<unknown, Serializable>>,
 ): TupleConverter<T> {
   return new TupleConverter(elementConverters);
