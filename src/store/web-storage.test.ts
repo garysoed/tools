@@ -2,10 +2,11 @@ import { assert, should, test } from '@gs-testing';
 import { binary, compose, identity, strict } from '@nabu';
 import { BehaviorSubject } from '@rxjs';
 import { scan } from '@rxjs/operators';
-import { createImmutableSet } from '../collect/types/immutable-set';
+
 import { ArrayDiff } from '../rxjs/state/array-observable';
 import { applyDiff } from '../rxjs/state/diff-array';
 import { integerConverter } from '../serializer/integer-converter';
+
 import { INDEXES_PARSER, WebStorage } from './web-storage';
 
 function setStorage(storage: Storage, key: string, value: string): void {
@@ -35,7 +36,7 @@ test('store.WebStorage', () => {
       setStorage(
           localStorage,
           PREFIX,
-          INDEXES_BINARY_CONVERTER.convertForward(createImmutableSet([id])),
+          INDEXES_BINARY_CONVERTER.convertForward([id]),
       );
       setStorage(localStorage, path, ITEM_BINARY_CONVERTER.convertForward(123));
 
@@ -59,7 +60,7 @@ test('store.WebStorage', () => {
 
       assert(localStorage.getItem(path)).to.beNull();
       assert(localStorage.getItem(PREFIX)).to
-          .equal(INDEXES_BINARY_CONVERTER.convertForward(createImmutableSet([])));
+          .equal(INDEXES_BINARY_CONVERTER.convertForward([]));
       assert(idsSubject.getValue()).to.beEmpty();
       assert(itemSubject.getValue()).to.beNull();
     });
@@ -75,7 +76,7 @@ test('store.WebStorage', () => {
       setStorage(
           localStorage,
           PREFIX,
-          INDEXES_BINARY_CONVERTER.convertForward(createImmutableSet([id])),
+          INDEXES_BINARY_CONVERTER.convertForward([id]),
       );
 
       assert(hasSubject.getValue()).to.beTrue();
@@ -114,7 +115,7 @@ test('store.WebStorage', () => {
       setStorage(
           localStorage,
           PREFIX,
-          INDEXES_BINARY_CONVERTER.convertForward(createImmutableSet([id1, id2, id3])),
+          INDEXES_BINARY_CONVERTER.convertForward([id1, id2, id3]),
       );
 
       assert(idsSubject.getValue()).to.haveElements([id1, id2, id3]);
@@ -150,7 +151,7 @@ test('store.WebStorage', () => {
       setStorage(
           localStorage,
           PREFIX,
-          INDEXES_BINARY_CONVERTER.convertForward(createImmutableSet(['oldId'])),
+          INDEXES_BINARY_CONVERTER.convertForward(['oldId']),
       );
 
       const idsSubject = new BehaviorSubject<string[]>([]);

@@ -1,8 +1,8 @@
 import { binary, compose, Converter, identity, Serializable, strict, StrictConverter } from '@nabu';
 import { Observable } from '@rxjs';
 import { map, shareReplay, take, tap } from '@rxjs/operators';
-import { createImmutableList, ImmutableList } from '../collect/types/immutable-list';
-import { createImmutableSet } from '../collect/types/immutable-set';
+
+import { createImmutableList } from '../collect/types/immutable-list';
 import { cache } from '../data/cache';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { SimpleIdGenerator } from '../random/simple-id-generator';
@@ -11,6 +11,7 @@ import { ArrayDiff } from '../rxjs/state/array-observable';
 import { diffArray } from '../rxjs/state/diff-array';
 import { WebStorageObservable } from '../rxjs/web-storage-observable';
 import { listConverter } from '../serializer/list-converter';
+
 import { EditableStorage } from './editable-storage';
 
 export const INDEXES_PARSER = listConverter<string>(identity<string>());
@@ -18,7 +19,7 @@ export const INDEXES_PARSER = listConverter<string>(identity<string>());
 export class WebStorage<T> implements EditableStorage<T> {
   private readonly converter: StrictConverter<T, string>;
   private readonly idGenerator: BaseIdGenerator = new SimpleIdGenerator();
-  private readonly indexesConverter: StrictConverter<ImmutableList<string>, string>;
+  private readonly indexesConverter: StrictConverter<string[], string>;
   private readonly storage: WebStorageObservable;
 
   /**
@@ -47,7 +48,7 @@ export class WebStorage<T> implements EditableStorage<T> {
             take(1),
             tap(ids => {
               const newArray = ids.filter(v => v !== id);
-              const result = this.indexesConverter.convertForward(createImmutableList(newArray));
+              const result = this.indexesConverter.convertForward(newArray);
               this.storage.setItem(this.prefix, result);
               this.storage.removeItem(getPath(id, this.prefix));
             }),
@@ -104,7 +105,7 @@ export class WebStorage<T> implements EditableStorage<T> {
             take(1),
             tap(ids => {
               const newIds = this.indexesConverter.convertForward(
-                  createImmutableSet(new Set([...ids, id])),
+                  [...new Set([...ids, id])],
               );
               this.storage.setItem(this.prefix, newIds);
 
