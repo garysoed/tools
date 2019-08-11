@@ -1,4 +1,5 @@
-import { Subject, Subscriber, Subscription, SubscriptionLike } from '@rxjs';
+import { Observable, Subject, Subscriber, Subscription, SubscriptionLike } from '@rxjs';
+
 import { ArrayDiff } from './array-observable';
 import { applyDiff, diff } from './diff-array';
 
