@@ -8,6 +8,8 @@ export function getSymbol(type: LogLevel): string {
       return '⚙';
     case LogLevel.FAILURE:
       return '✖';
+    case LogLevel.INFO:
+      return '•';
     case LogLevel.PROGRESS:
       return '…';
     case LogLevel.SUCCESS:

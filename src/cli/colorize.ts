@@ -9,12 +9,14 @@ export function colorize(type: LogLevel, text: string): string {
       return chalk.red.bold(text);
     case LogLevel.DEBUG:
       return chalk.gray(text);
+    case LogLevel.INFO:
+      return chalk.white(text);
     case LogLevel.FAILURE:
       return chalk.red(text);
     case LogLevel.PROGRESS:
-      return chalk.white(text);
+      return chalk.cyan(text);
     case LogLevel.SUCCESS:
-      return chalk.green(text);
+      return chalk.green.bold(text);
     case LogLevel.WARNING:
       return chalk.yellow(text);
   }
