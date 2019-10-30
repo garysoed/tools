@@ -1,5 +1,6 @@
 import { assert, should } from '@gs-testing';
 import { createSpy, fake, resetCalls, Spy } from '@gs-testing';
+
 import { cache } from '../data/cache';
 
 describe('data.cache', () => {
@@ -8,29 +9,37 @@ describe('data.cache', () => {
    */
   class TestClass {
     constructor(
-        readonly spyAdd_: Spy<number, [number, number]>,
-        readonly spyGetProperty_: Spy<number, []>,
+        readonly spyAdd: Spy<number, [number, number]>,
+        readonly spyGetProperty: Spy<number, []>,
+        readonly spyGetter: Spy<number, []>,
     ) { }
 
     @cache()
     add(a: number, b: number): number {
-      return this.spyAdd_(a, b);
+      return this.spyAdd(a, b);
     }
 
     @cache()
     getProperty(): number {
-      return this.spyGetProperty_();
+      return this.spyGetProperty();
+    }
+
+    @cache()
+    get getter(): number {
+      return this.spyGetter();
     }
   }
 
   let test: TestClass;
   let spyAdd: Spy<number, [number, number]>;
   let spyGetProperty: Spy<number, []>;
+  let spyGetter: Spy<number, []>;
 
   beforeEach(() => {
     spyAdd = createSpy('spyAdd');
     spyGetProperty = createSpy('spyGetProperty');
-    test = new TestClass(spyAdd, spyGetProperty);
+    spyGetter = createSpy('spyGetter');
+    test = new TestClass(spyAdd, spyGetProperty, spyGetter);
   });
 
   should('cache the method', () => {
@@ -42,6 +51,17 @@ describe('data.cache', () => {
     resetCalls(spyGetProperty);
     assert(test.getProperty()).to.equal(value);
     assert(spyGetProperty).toNot.haveBeenCalled();
+  });
+
+  should(`cache the getter`, () => {
+    const value = 123;
+    fake(spyGetter).always().return(value);
+
+    assert(test.getter).to.equal(value);
+
+    resetCalls(spyGetter);
+    assert(test.getter).to.equal(value);
+    assert(spyGetter).toNot.haveBeenCalled();
   });
 
   should('cache based on the args', () => {
