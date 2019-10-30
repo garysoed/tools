@@ -1,22 +1,18 @@
-import { MessageType } from './message-type';
+import { LogLevel } from '@santa';
 
-export function getSymbol(type: MessageType): string {
+export function getSymbol(type: LogLevel): string {
   switch (type) {
-    case MessageType.ALERT:
+    case LogLevel.ERROR:
       return '‼';
-    case MessageType.DEBUG:
+    case LogLevel.DEBUG:
       return '⚙';
-    case MessageType.FAILURE:
+    case LogLevel.FAILURE:
       return '✖';
-    case MessageType.INFO:
-      return '•';
-    case MessageType.PROGRESS:
+    case LogLevel.PROGRESS:
       return '…';
-    case MessageType.MISSING:
-      return '?';
-    case MessageType.SUCCESS:
+    case LogLevel.SUCCESS:
       return '✔';
-    case MessageType.WARNING:
+    case LogLevel.WARNING:
       return '!';
   }
 }

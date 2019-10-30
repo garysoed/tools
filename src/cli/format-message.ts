@@ -1,6 +1,7 @@
+import { LogLevel } from '@santa';
+
 import { colorize } from './colorize';
 import { getSymbol } from './get-symbol';
-import { MessageType } from './message-type';
 
 const COL_WIDTH = 80;
 const PREFIX_WIDTH = 4;
@@ -10,7 +11,7 @@ function formatLine(prefix: string, text: string, pad: string): string {
   return `${prefix} ${pad}${text}`;
 }
 
-function formatMessageLine(type: MessageType, text: string, indent: number = 0): string {
+function formatMessageLine(type: LogLevel, text: string, indent: number = 0): string {
   const textWidth = COL_WIDTH - PREFIX_WIDTH - indent * INDENT.length;
 
   // Split the text into multiple lines.
@@ -46,6 +47,6 @@ function formatMessageLine(type: MessageType, text: string, indent: number = 0):
   return rendered.map(line => colorize(type, line)).join('\n');
 }
 
-export function formatMessage(type: MessageType, text: string, indent: number = 0): string {
+export function formatMessage(type: LogLevel, text: string, indent: number = 0): string {
   return text.split('\n').map(line => formatMessageLine(type, line, indent)).join('\n');
 }

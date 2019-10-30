@@ -19,6 +19,7 @@
       "@nabu": ["node_modules/nabu/export/index.ts"],
       "@rxjs": ["node_modules/rxjs"],
       "@rxjs/operators": ["node_modules/rxjs/operators"],
+      "@santa": ["node_modules/santa/export/index.ts"],
     },
     "pretty": true,
     "sourceMap": true,

@@ -1,24 +1,21 @@
 import chalk from 'chalk';
 
-import { MessageType } from './message-type';
+import { LogLevel } from '@santa';
 
-export function colorize(type: MessageType, text: string): string {
+
+export function colorize(type: LogLevel, text: string): string {
   switch (type) {
-    case MessageType.ALERT:
-      return chalk.magenta(text);
-    case MessageType.DEBUG:
+    case LogLevel.ERROR:
+      return chalk.red.bold(text);
+    case LogLevel.DEBUG:
       return chalk.gray(text);
-    case MessageType.FAILURE:
+    case LogLevel.FAILURE:
       return chalk.red(text);
-    case MessageType.INFO:
-      return chalk.blue(text);
-    case MessageType.PROGRESS:
+    case LogLevel.PROGRESS:
       return chalk.white(text);
-    case MessageType.MISSING:
-      return chalk.yellow(text);
-    case MessageType.SUCCESS:
+    case LogLevel.SUCCESS:
       return chalk.green(text);
-    case MessageType.WARNING:
+    case LogLevel.WARNING:
       return chalk.yellow(text);
   }
 }
