@@ -1,6 +1,6 @@
-import { getKey } from '../collect/operators/get-key';
-import { head } from '../collect/operators/head';
-import { pipe } from '../collect/pipe';
+import { getKey } from '../collection/operators/get-key';
+import { head } from '../collection/operators/head';
+import { pipe } from '../collection/pipe';
 import { Errors } from '../error';
 import { hash } from '../util/hash';
 

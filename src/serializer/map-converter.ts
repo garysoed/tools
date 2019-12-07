@@ -1,6 +1,6 @@
 import { Converter, Serializable } from '@nabu';
 
-import { createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
+import { createImmutableMap, ImmutableMap } from '../collection/types/immutable-map';
 
 import { iterableConverter } from './iterable-converter';
 import { tupleConverter } from './tuple-converter';

@@ -1,8 +1,8 @@
 // tslint:disable:no-non-null-assertion
 import { assert, should, test } from '@gs-testing';
-import { flat } from '../collect/operators/flat';
-import { map } from '../collect/operators/map';
-import { pipe } from '../collect/pipe';
+import { flat } from '../collection/operators/flat';
+import { map } from '../collection/operators/map';
+import { pipe } from '../collection/pipe';
 import { ClassAnnotator } from './class-annotation';
 
 const annotation = new ClassAnnotator((_, a, b) => ({

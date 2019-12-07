@@ -1,5 +1,5 @@
 import { Converter, Result } from '@nabu';
-import { createImmutableList } from '../collect/types/immutable-list';
+import { createImmutableList } from '../collection/types/immutable-list';
 import { Path } from '../path/path';
 import { RelativePath } from '../path/relative-path';
 

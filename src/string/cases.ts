@@ -1,8 +1,8 @@
-import { countable } from '../collect/generators';
-import { map } from '../collect/operators/map';
-import { zip } from '../collect/operators/zip';
-import { pipe } from '../collect/pipe';
-import { createImmutableList, ImmutableList } from '../collect/types/immutable-list';
+import { countable } from '../collection/generators';
+import { map } from '../collection/operators/map';
+import { zip } from '../collection/operators/zip';
+import { pipe } from '../collection/pipe';
+import { createImmutableList, ImmutableList } from '../collection/types/immutable-list';
 
 const CAMEL_CASE_REGEX: RegExp = /^[a-z][a-zA-Z0-9]*$/;
 const LOWER_CASE_REGEX: RegExp = /^[a-z][a-z0-9\-]*$/;

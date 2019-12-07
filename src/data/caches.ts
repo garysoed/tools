@@ -1,7 +1,7 @@
-import { keys } from '../collect/operators/keys';
-import { pipe } from '../collect/pipe';
-import { createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
-import { asImmutableSet } from '../collect/types/immutable-set';
+import { keys } from '../collection/operators/keys';
+import { pipe } from '../collection/pipe';
+import { createImmutableMap, ImmutableMap } from '../collection/types/immutable-map';
+import { asImmutableSet } from '../collection/types/immutable-set';
 import { PropertyAnnotator } from './property-annotation';
 
 const __CACHES = Symbol('caches');

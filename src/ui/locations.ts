@@ -1,10 +1,10 @@
-import { filter } from '../collect/operators/filter';
-import { head } from '../collect/operators/head';
-import { size } from '../collect/operators/size';
-import { skip } from '../collect/operators/skip';
-import { pipe } from '../collect/pipe';
-import { asImmutableList, createImmutableList, ImmutableList } from '../collect/types/immutable-list';
-import { createImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
+import { filter } from '../collection/operators/filter';
+import { head } from '../collection/operators/head';
+import { size } from '../collection/operators/size';
+import { skip } from '../collection/operators/skip';
+import { pipe } from '../collection/pipe';
+import { asImmutableList, createImmutableList, ImmutableList } from '../collection/types/immutable-list';
+import { createImmutableMap, ImmutableMap } from '../collection/types/immutable-map';
 
 
 const MATCHER_REGEXP_: RegExp = /:([^:\/]+)/;

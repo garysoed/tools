@@ -1,7 +1,7 @@
 import { Converter, Result } from '@nabu';
-import { hasEntry } from '../collect/operators/has-entry';
-import { pipe } from '../collect/pipe';
-import { createImmutableSet, ImmutableSet } from '../collect/types/immutable-set';
+import { hasEntry } from '../collection/operators/has-entry';
+import { pipe } from '../collection/pipe';
+import { createImmutableSet, ImmutableSet } from '../collection/types/immutable-set';
 
 
 class StringMatchConverter<T extends string> implements Converter<T, string> {

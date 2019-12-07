@@ -2,7 +2,7 @@ import { binary, compose, Converter, identity, Serializable, strict, StrictConve
 import { Observable, of as observableOf } from '@rxjs';
 import { map, pairwise, shareReplay, startWith, switchMap, take, tap } from '@rxjs/operators';
 
-import { createImmutableList } from '../collect/types/immutable-list';
+import { createImmutableList } from '../collection/types/immutable-list';
 import { cache } from '../data/cache';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { SimpleIdGenerator } from '../random/simple-id-generator';

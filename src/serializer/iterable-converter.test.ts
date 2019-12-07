@@ -1,7 +1,7 @@
 import { arrayThat, assert, should, test } from '@gs-testing';
 
-import { createImmutableList } from '../collect/types/immutable-list';
-import { createImmutableSet } from '../collect/types/immutable-set';
+import { createImmutableList } from '../collection/types/immutable-list';
+import { createImmutableSet } from '../collection/types/immutable-set';
 
 import { integerConverter } from './integer-converter';
 import { iterableConverter } from './iterable-converter';

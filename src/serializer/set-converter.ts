@@ -1,5 +1,5 @@
 import { Converter, Serializable } from '@nabu';
-import { createImmutableSet, ImmutableSet } from '../collect/types/immutable-set';
+import { createImmutableSet, ImmutableSet } from '../collection/types/immutable-set';
 import { iterableConverter } from './iterable-converter';
 
 export function setConverter<T>(

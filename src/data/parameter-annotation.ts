@@ -1,20 +1,20 @@
-import { declareFinite } from '../collect/operators/declare-finite';
-import { declareKeyed } from '../collect/operators/declare-keyed';
-import { distinct } from '../collect/operators/distinct';
-import { filterPick } from '../collect/operators/filter-pick';
-import { flat } from '../collect/operators/flat';
-import { getKey } from '../collect/operators/get-key';
-import { head } from '../collect/operators/head';
-import { keys } from '../collect/operators/keys';
-import { map } from '../collect/operators/map';
-import { mapPick } from '../collect/operators/map-pick';
-import { pick } from '../collect/operators/pick';
-import { sort } from '../collect/operators/sort';
-import { Orderings } from '../collect/orderings';
-import { pipe } from '../collect/pipe';
-import { asImmutableList, createImmutableList, ImmutableList } from '../collect/types/immutable-list';
-import { asImmutableMap, ImmutableMap } from '../collect/types/immutable-map';
-import { createInfiniteMap } from '../collect/types/infinite-map';
+import { declareFinite } from '../collection/operators/declare-finite';
+import { declareKeyed } from '../collection/operators/declare-keyed';
+import { distinct } from '../collection/operators/distinct';
+import { filterPick } from '../collection/operators/filter-pick';
+import { flat } from '../collection/operators/flat';
+import { getKey } from '../collection/operators/get-key';
+import { head } from '../collection/operators/head';
+import { keys } from '../collection/operators/keys';
+import { map } from '../collection/operators/map';
+import { mapPick } from '../collection/operators/map-pick';
+import { pick } from '../collection/operators/pick';
+import { sort } from '../collection/operators/sort';
+import { Orderings } from '../collection/orderings';
+import { pipe } from '../collection/pipe';
+import { asImmutableList, createImmutableList, ImmutableList } from '../collection/types/immutable-list';
+import { asImmutableMap, ImmutableMap } from '../collection/types/immutable-map';
+import { createInfiniteMap } from '../collection/types/infinite-map';
 
 type Annotator<A extends any[], D> = (
     target: Object,
