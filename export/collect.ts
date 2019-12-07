@@ -1,1 +1,3 @@
-export { intersect } from '../src/collect/sets';
+import * as setsImport from '../src/collect/sets';
+
+export const sets = setsImport;

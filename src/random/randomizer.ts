@@ -1,4 +1,4 @@
-import { MathRng } from './math-rng';
+import { mathRng } from './math-rng';
 import { Rng } from './rng';
 
 const ID_CHARS: string[] = [];
@@ -21,7 +21,7 @@ for (let i = 97; i < 123; i++) {
  * Generates random objects.
  */
 export class RandomizerImpl {
-  constructor(private readonly rng_: Rng) { }
+  constructor(private readonly rng: Rng) { }
 
   /**
    * Picks an integer from the given interval.
@@ -31,7 +31,7 @@ export class RandomizerImpl {
    * @return Integer picked randomly in the given interval.
    */
   intRange(from: number, to: number): number {
-    return from + Math.floor(this.rng_.next() * (to - from));
+    return from + Math.floor(this.rng.next().value * (to - from));
   }
 
   /**
@@ -62,6 +62,6 @@ export class RandomizerImpl {
   }
 }
 
-export function Randomizer(rng: Rng = new MathRng()): RandomizerImpl {
-  return new RandomizerImpl(rng);
+export function Randomizer(rng: () => Rng = mathRng): RandomizerImpl {
+  return new RandomizerImpl(rng());
 }

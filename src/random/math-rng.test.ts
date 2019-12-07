@@ -1,20 +1,16 @@
-import { assert, should } from '@gs-testing';
-import { fake, spy } from '@gs-testing';
-import { MathRng } from './math-rng';
+import { assert, fake, should, spy } from '@gs-testing';
 
-describe('random.MathJs', () => {
-  let mathJs: MathRng;
+import * as iterables from '../collect/iterables';
 
-  beforeEach(() => {
-    mathJs = new MathRng();
-  });
+import { mathRng } from './math-rng';
 
+
+describe('random.mathRng', () => {
   describe('next', () => {
     should('return the value returned from Math.random', () => {
-      const value = 123;
-      fake(spy(Math, 'random')).always().return(value);
+      fake(spy(Math, 'random')).always().returnValues(1, 2, 3, 4, 5, 6, 7, 8, 9);
 
-      assert(mathJs.next()).to.equal(value);
+      assert(iterables.take(5, mathRng())).to.haveElements([1, 2, 3, 4, 5]);
     });
   });
 });

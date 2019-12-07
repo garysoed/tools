@@ -2,6 +2,7 @@ import { createGeneratorOperatorCopyAll } from '../create-operator';
 import { countable } from '../generators';
 import { pipe } from '../pipe';
 import { GeneratorOperator } from '../types/operator';
+
 import { declareFinite } from './declare-finite';
 import { map } from './map';
 import { takeWhile } from './take-while';
