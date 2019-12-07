@@ -1,4 +1,5 @@
-import { assert, match, should, test } from '@gs-testing';
+import { assert, should, stringThat, test } from '@gs-testing';
+
 import { anyParamsFunctionConverter, noParamFunctionConverter, oneParamFunctionConverter } from './function-converter';
 
 test('serializer.FunctionConverter', () => {
@@ -47,7 +48,7 @@ test('serializer.FunctionConverter', () => {
 
       assert(parser.convertForward(fn)).to
           .haveProperties({
-            result: match.anyStringThat().match(/function test\(a\)/),
+            result: stringThat().match(/function test\(a\)/),
           });
     });
 
@@ -64,7 +65,7 @@ test('serializer.FunctionConverter', () => {
 
       assert(parser.convertForward(fn)).to
           .haveProperties({
-            result: match.anyStringThat().match(/function test\(a\)/),
+            result: stringThat().match(/function test\(a\)/),
           });
     });
   });

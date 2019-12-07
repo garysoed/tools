@@ -1,12 +1,14 @@
 // tslint:disable:no-non-null-assertion
-import { assert, match, setup, should, test } from '@gs-testing';
+import { assert, should, test } from '@gs-testing';
+
 import { flat } from '../collect/operators/flat';
 import { map } from '../collect/operators/map';
 import { mapPick } from '../collect/operators/map-pick';
 import { pipe } from '../collect/pipe';
+
 import { ParameterAnnotator } from './parameter-annotation';
 
-const annotation = new ParameterAnnotator((_, propertyKey, index, pad) => {
+const annotation = new ParameterAnnotator((_, propertyKey, index, pad: number) => {
   return `${propertyKey.toString()}_${index + pad}`;
 });
 

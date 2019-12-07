@@ -1,25 +1,12 @@
-import { of as observableOf, OperatorFunction } from '@rxjs';
-import { pairwise, startWith, switchMap } from '@rxjs/operators';
 import { assertUnreachable } from '../../typescript/assert-unreachable';
+
 import { ArrayDiff } from './array-observable';
 
-export function diffArray<T>(): OperatorFunction<T[], ArrayDiff<T>> {
-  return source => source
-      .pipe(
-          startWith(null),
-          pairwise(),
-          switchMap(([oldArray, rawNewArray]) => {
-            const newArray = rawNewArray || [];
-            if (oldArray === null) {
-              return observableOf({value: [...newArray], type: 'init' as 'init'});
-            }
 
-            return observableOf(...diff(oldArray, newArray));
-          }),
-      );
-}
-
-export function diff<T>(oldArray: T[], newArray: T[]): Iterable<ArrayDiff<T>> {
+export function diff<T>(
+    oldArray: ReadonlyArray<T>,
+    newArray: ReadonlyArray<T>,
+): Iterable<ArrayDiff<T>> {
   const diffs: Array<ArrayDiff<T>> = [];
   let currArrayLength = oldArray.length;
   let i = 0;

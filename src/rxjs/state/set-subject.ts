@@ -54,7 +54,7 @@ export class SetSubject<T> extends Subject<SetDiff<T>> {
     }
   }
 
-  setAll(newItems: Set<T>): void {
+  setAll(newItems: ReadonlySet<T>): void {
     for (const diffItem of diff(this.innerSet, newItems)) {
       applyDiff(this.innerSet, diffItem);
       super.next(diffItem);

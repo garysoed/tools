@@ -1,3 +1,6 @@
+export { intersect } from '../src/collect/sets';
+
+
 export { countable } from '../src/collect/generators';
 export { ImmutableList, asImmutableList, createImmutableList } from '../src/collect/types/immutable-list';
 export { ImmutableMap, asImmutableMap, createImmutableMap, ImmutableMapType } from '../src/collect/types/immutable-map';

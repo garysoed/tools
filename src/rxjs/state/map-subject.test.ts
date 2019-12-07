@@ -1,12 +1,13 @@
-import { assert, createSpySubject, match, setup, should, SpySubject, test } from '@gs-testing';
+import { assert, createSpySubject, mapThat, objectThat, setup, should, SpySubject, test } from '@gs-testing';
 import { scan } from '@rxjs/operators';
+
 import { MapDiff, scanMap } from './map-observable';
 import { MapSubject } from './map-subject';
 
 test('@gs-tools/rxjs/state/map-subject', () => {
   let subject: MapSubject<string, number>;
-  let mapSpySubject: SpySubject<Map<string, number>>;
-  let scanSpySubject: SpySubject<Map<string, number>>;
+  let mapSpySubject: SpySubject<ReadonlyMap<string, number>>;
+  let scanSpySubject: SpySubject<ReadonlyMap<string, number>>;
 
   setup(() => {
     subject = new MapSubject([['a', 1], ['b', 2], ['c', 3]]);
@@ -42,14 +43,14 @@ test('@gs-tools/rxjs/state/map-subject', () => {
       subject.delete('b');
 
       assert(mapSpySubject).to.emitWith(
-          match.anyMapThat<string, number>().haveExactElements(new Map([
+          mapThat<string, number>().haveExactElements(new Map([
             ['a', 1],
             ['c', 3],
           ])),
       );
 
       assert(scanSpySubject).to.emitWith(
-          match.anyMapThat<string, number>().haveExactElements(new Map([
+          mapThat<string, number>().haveExactElements(new Map([
             ['a', 1],
             ['c', 3],
           ])),
@@ -72,9 +73,9 @@ test('@gs-tools/rxjs/state/map-subject', () => {
       const spySubject = createSpySubject();
       subject.subscribe(spySubject);
 
-      assert(spySubject).to.emitWith(match.anyObjectThat().haveProperties({
+      assert(spySubject).to.emitWith(objectThat().haveProperties({
         type: 'init',
-        value: match.anyMapThat<string, number>().haveExactElements(new Map([
+        value: mapThat<string, number>().haveExactElements(new Map([
           ['a', 1],
           ['b', 2],
           ['c', 3],
@@ -82,7 +83,7 @@ test('@gs-tools/rxjs/state/map-subject', () => {
       }));
 
       subject.delete('b');
-      assert(spySubject).to.emitWith(match.anyObjectThat().haveProperties({
+      assert(spySubject).to.emitWith(objectThat().haveProperties({
         key: 'b',
         type: 'delete',
       }));
@@ -94,14 +95,14 @@ test('@gs-tools/rxjs/state/map-subject', () => {
       subject.next({type: 'delete', key: 'b'});
 
       assert(mapSpySubject).to.emitWith(
-          match.anyMapThat<string, number>().haveExactElements(new Map([
+          mapThat<string, number>().haveExactElements(new Map([
             ['a', 1],
             ['c', 3],
           ])),
       );
 
       assert(scanSpySubject).to.emitWith(
-          match.anyMapThat<string, number>().haveExactElements(new Map([
+          mapThat<string, number>().haveExactElements(new Map([
             ['a', 1],
             ['c', 3],
           ])),
@@ -112,7 +113,7 @@ test('@gs-tools/rxjs/state/map-subject', () => {
       subject.next({type: 'init', value: new Map([['e', 5], ['c', 4], ['b', 2]])});
 
       assert(mapSpySubject).to.emitWith(
-          match.anyMapThat<string, number>().haveExactElements(new Map([
+          mapThat<string, number>().haveExactElements(new Map([
             ['b', 2],
             ['c', 4],
             ['e', 5],
@@ -120,7 +121,7 @@ test('@gs-tools/rxjs/state/map-subject', () => {
       );
 
       assert(scanSpySubject).to.emitWith(
-          match.anyMapThat<string, number>().haveExactElements(new Map([
+          mapThat<string, number>().haveExactElements(new Map([
             ['b', 2],
             ['c', 4],
             ['e', 5],
@@ -132,7 +133,7 @@ test('@gs-tools/rxjs/state/map-subject', () => {
       subject.next({type: 'set', key: 'b', value: 6});
 
       assert(mapSpySubject).to.emitWith(
-          match.anyMapThat<string, number>().haveExactElements(new Map([
+          mapThat<string, number>().haveExactElements(new Map([
             ['a', 1],
             ['b', 6],
             ['c', 3],
@@ -140,7 +141,7 @@ test('@gs-tools/rxjs/state/map-subject', () => {
       );
 
       assert(scanSpySubject).to.emitWith(
-          match.anyMapThat<string, number>().haveExactElements(new Map([
+          mapThat<string, number>().haveExactElements(new Map([
             ['a', 1],
             ['b', 6],
             ['c', 3],
@@ -154,7 +155,7 @@ test('@gs-tools/rxjs/state/map-subject', () => {
       subject.setAll(new Map([['e', 5], ['c', 4], ['b', 2]]));
 
       assert(mapSpySubject).to.emitWith(
-          match.anyMapThat<string, number>().haveExactElements(new Map([
+          mapThat<string, number>().haveExactElements(new Map([
             ['b', 2],
             ['c', 4],
             ['e', 5],
@@ -162,7 +163,7 @@ test('@gs-tools/rxjs/state/map-subject', () => {
       );
 
       assert(scanSpySubject).to.emitWith(
-          match.anyMapThat<string, number>().haveExactElements(new Map([
+          mapThat<string, number>().haveExactElements(new Map([
             ['b', 2],
             ['c', 4],
             ['e', 5],
@@ -176,7 +177,7 @@ test('@gs-tools/rxjs/state/map-subject', () => {
       subject.set('b', 6);
 
       assert(mapSpySubject).to.emitWith(
-          match.anyMapThat<string, number>().haveExactElements(new Map([
+          mapThat<string, number>().haveExactElements(new Map([
             ['a', 1],
             ['b', 6],
             ['c', 3],
@@ -184,7 +185,7 @@ test('@gs-tools/rxjs/state/map-subject', () => {
       );
 
       assert(scanSpySubject).to.emitWith(
-          match.anyMapThat<string, number>().haveExactElements(new Map([
+          mapThat<string, number>().haveExactElements(new Map([
             ['a', 1],
             ['b', 6],
             ['c', 3],

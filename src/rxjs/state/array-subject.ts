@@ -1,7 +1,8 @@
-import { Observable, Subject, Subscriber, Subscription, SubscriptionLike } from '@rxjs';
+import { Subject, Subscriber, Subscription, SubscriptionLike } from '@rxjs';
 
 import { ArrayDiff } from './array-observable';
 import { applyDiff, diff } from './diff-array';
+
 
 export class ArraySubject<T> extends Subject<ArrayDiff<T>> {
   private readonly innerArray: T[];
@@ -57,7 +58,7 @@ export class ArraySubject<T> extends Subject<ArrayDiff<T>> {
     }
   }
 
-  setAll(newItems: T[]): void {
+  setAll(newItems: ReadonlyArray<T>): void {
     for (const diffItem of diff(this.innerArray, newItems)) {
       applyDiff(this.innerArray, diffItem);
       super.next(diffItem);

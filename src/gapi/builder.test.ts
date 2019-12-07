@@ -1,6 +1,7 @@
-import { assert, createSpy, fake, match, setup, should, Spy, spy, test } from '@gs-testing';
+import { arrayThat, assert, createSpy, fake, objectThat, setup, should, Spy, test } from '@gs-testing';
 import { ReplaySubject } from '@rxjs';
 import { take } from '@rxjs/operators';
+
 import { Builder } from './builder';
 
 test('@gs-tools/gapi/builder', () => {
@@ -41,10 +42,10 @@ test('@gs-tools/gapi/builder', () => {
         .subscribe(subject);
 
     await subject.pipe(take(1)).toPromise();
-    assert(mockGapiClientInit).to.haveBeenCalledWith(match.anyObjectThat().haveProperties({
+    assert(mockGapiClientInit).to.haveBeenCalledWith(objectThat().haveProperties({
       apiKey: API_KEY,
       clientId: CLIENT_ID,
-      discoveryDocs: match.anyArrayThat().haveExactElements([discoveryDoc]),
+      discoveryDocs: arrayThat().haveExactElements([discoveryDoc]),
       scope: `${SCOPE1} ${SCOPE2}`,
     }));
   });

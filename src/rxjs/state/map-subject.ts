@@ -1,4 +1,5 @@
 import { Subject, Subscriber, Subscription, SubscriptionLike } from '@rxjs';
+
 import { MapDiff } from './map-observable';
 
 export class MapSubject<K, V> extends Subject<MapDiff<K, V>> {
@@ -52,7 +53,7 @@ export class MapSubject<K, V> extends Subject<MapDiff<K, V>> {
     super.next({key, value, type: 'set'});
   }
 
-  setAll(newItems: Map<K, V>): void {
+  setAll(newItems: ReadonlyMap<K, V>): void {
     // Delete the extra items.
     for (const [existingKey] of this.innerMap) {
       if (!newItems.has(existingKey)) {

@@ -19,7 +19,8 @@ export interface MapSet<K, V> {
 
 export type MapDiff<K, V> = MapInit<K, V>|MapDelete<K>|MapSet<K, V>;
 
-export function scanMap<K, V>(): (obs: Observable<MapDiff<K, V>>) => Observable<Map<K, V>> {
+export function scanMap<K, V>():
+    (obs: Observable<MapDiff<K, V>>) => Observable<ReadonlyMap<K, V>> {
   return obs => obs.pipe(
       scan<MapDiff<K, V>, Map<K, V>>(
           (acc, diff) => {

@@ -1,5 +1,6 @@
-import { assert, match, should, test } from '@gs-testing';
+import { assert, objectThat, should, test } from '@gs-testing';
 import { Converter, Serializable, strict } from '@nabu';
+
 import { IsSerializable } from './is-serializable';
 import { isSerializable } from './is-serializable-converter';
 
@@ -22,7 +23,7 @@ test('serializer.IsSerializableConverter', () => {
     should(`convert correctly`, () => {
       const data = {a: 1, b: 2};
       assert(strict(converter).convertBackward(data)).to.haveProperties({
-        data: match.anyObjectThat().haveProperties(data),
+        data: objectThat().haveProperties(data),
       });
     });
   });

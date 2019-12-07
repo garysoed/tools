@@ -1,4 +1,5 @@
-import { assert, match, should, test } from '@gs-testing';
+import { assert, objectThat, should, test } from '@gs-testing';
+
 import { getValue, setValue } from './jsons';
 
 test('data.Jsons', () => {
@@ -19,9 +20,9 @@ test('data.Jsons', () => {
       const innerObj = { };
       const obj = { a: innerObj };
       setValue(obj, 'a.b.c', 123);
-      assert(obj).to.haveProperties({a: match.anyObjectThat().haveProperties({})});
+      assert(obj).to.haveProperties({a: objectThat().haveProperties({})});
       assert(innerObj).to.haveProperties({
-        b: match.anyObjectThat().haveProperties({c: 123}),
+        b: objectThat().haveProperties({c: 123}),
       });
     });
 

@@ -18,7 +18,7 @@ export interface SetDelete<T> {
 
 export type SetDiff<T> = SetInit<T>|SetDelete<T>|SetAdd<T>;
 
-export function scanSet<T>(): (obs: Observable<SetDiff<T>>) => Observable<Set<T>> {
+export function scanSet<T>(): (obs: Observable<SetDiff<T>>) => Observable<ReadonlySet<T>> {
   return source => source
       .pipe(
           scan<SetDiff<T>, Set<T>>(

@@ -1,6 +1,8 @@
-import { assert, match, should, test } from '@gs-testing';
+import { arrayThat, assert, should, test } from '@gs-testing';
+
 import { createImmutableList } from '../collect/types/immutable-list';
 import { createImmutableSet } from '../collect/types/immutable-set';
+
 import { integerConverter } from './integer-converter';
 import { iterableConverter } from './iterable-converter';
 
@@ -13,7 +15,7 @@ test('serializer.IterableConverter', () => {
       );
 
       assert(converter.convertBackward([1, 2, 3])).to.haveProperties({
-        result: match.anyArrayThat().haveExactElements([1, 2, 3]),
+        result: arrayThat().haveExactElements([1, 2, 3]),
       });
     });
 
@@ -44,7 +46,7 @@ test('serializer.IterableConverter', () => {
       );
 
       assert(converter.convertForward(createImmutableSet([1, 2, 3]))).to.haveProperties({
-        result: match.anyArrayThat().haveElements([1, 2, 3]),
+        result: arrayThat().haveElements([1, 2, 3]),
       });
     });
 

@@ -62,7 +62,7 @@ export function mapArray<F, T>(mapFn: (from: F) => T):
       );
 }
 
-export function scanArray<T>(): (obs: Observable<ArrayDiff<T>>) => Observable<T[]> {
+export function scanArray<T>(): (obs: Observable<ArrayDiff<T>>) => Observable<ReadonlyArray<T>> {
   return source => source
       .pipe(
           scan<ArrayDiff<T>, T[]>(

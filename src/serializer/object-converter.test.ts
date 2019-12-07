@@ -1,4 +1,5 @@
-import { assert, match, should, test } from '@gs-testing';
+import { assert, objectThat, should, test } from '@gs-testing';
+
 import { integerConverter } from './integer-converter';
 import { objectConverter } from './object-converter';
 
@@ -8,7 +9,7 @@ test('serializer.ObjectConverter', () => {
       const converter = objectConverter({a: integerConverter(), b: integerConverter()});
 
       assert(converter.convertBackward({a: 12, b: 34})).to.haveProperties({
-        result: match.anyObjectThat().haveProperties({a: 12, b: 34}),
+        result: objectThat().haveProperties({a: 12, b: 34}),
       });
     });
 
@@ -36,7 +37,7 @@ test('serializer.ObjectConverter', () => {
       const converter = objectConverter({a: integerConverter(), b: integerConverter()});
 
       assert(converter.convertForward({a: 456, b: 123})).to.haveProperties({
-        result: match.anyObjectThat().haveProperties({a: 456, b: 123}),
+        result: objectThat().haveProperties({a: 456, b: 123}),
       });
     });
 

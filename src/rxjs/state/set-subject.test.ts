@@ -1,12 +1,13 @@
-import { assert, createSpySubject, match, setup, should, SpySubject, test } from '@gs-testing';
+import { assert, createSpySubject, iterableThat, objectThat, setThat, setup, should, SpySubject, test } from '@gs-testing';
 import { scan } from '@rxjs/operators';
+
 import { scanSet, SetDiff } from './set-observable';
 import { SetSubject } from './set-subject';
 
 test('@gs-tools/rxjs/state/set-subject', () => {
   let subject: SetSubject<string>;
-  let setSpySubject: SpySubject<Set<string>>;
-  let scanSpySubject: SpySubject<Set<string>>;
+  let setSpySubject: SpySubject<ReadonlySet<string>>;
+  let scanSpySubject: SpySubject<ReadonlySet<string>>;
 
   setup(() => {
     subject = new SetSubject(['a', 'b', 'c']);
@@ -40,9 +41,9 @@ test('@gs-tools/rxjs/state/set-subject', () => {
       subject.add('d');
 
       assert(setSpySubject).to.emitWith(
-          match.anySetThat<string>().haveExactElements(new Set(['a', 'b', 'c', 'd'])));
+          setThat<string>().haveExactElements(new Set(['a', 'b', 'c', 'd'])));
       assert(scanSpySubject).to.emitWith(
-          match.anySetThat<string>().haveExactElements(new Set(['a', 'b', 'c', 'd'])));
+          setThat<string>().haveExactElements(new Set(['a', 'b', 'c', 'd'])));
     });
 
     should(`be noop if the item is already in the set`, () => {
@@ -61,9 +62,9 @@ test('@gs-tools/rxjs/state/set-subject', () => {
       subject.delete('b');
 
       assert(setSpySubject).to
-          .emitWith(match.anySetThat<string>().haveExactElements(new Set(['a', 'c'])));
+          .emitWith(setThat<string>().haveExactElements(new Set(['a', 'c'])));
       assert(scanSpySubject).to
-          .emitWith(match.anySetThat<string>().haveExactElements(new Set(['a', 'c'])));
+          .emitWith(setThat<string>().haveExactElements(new Set(['a', 'c'])));
     });
 
     should(`be noop if the item does not exist`, () => {
@@ -82,13 +83,13 @@ test('@gs-tools/rxjs/state/set-subject', () => {
       const spySubject = createSpySubject();
       subject.subscribe(spySubject);
 
-      assert(spySubject).to.emitWith(match.anyObjectThat().haveProperties({
+      assert(spySubject).to.emitWith(objectThat().haveProperties({
         type: 'init',
-        value: match.anyIterableThat().haveElements(['a', 'b', 'c']),
+        value: iterableThat().haveElements(['a', 'b', 'c']),
       }));
 
       subject.delete('b');
-      assert(spySubject).to.emitWith(match.anyObjectThat().haveProperties({
+      assert(spySubject).to.emitWith(objectThat().haveProperties({
         type: 'delete',
         value: 'b',
       }));
@@ -100,27 +101,27 @@ test('@gs-tools/rxjs/state/set-subject', () => {
       subject.next({type: 'add', value: 'd'});
 
       assert(setSpySubject).to.emitWith(
-          match.anySetThat<string>().haveExactElements(new Set(['a', 'b', 'c', 'd'])));
+          setThat<string>().haveExactElements(new Set(['a', 'b', 'c', 'd'])));
       assert(scanSpySubject).to.emitWith(
-          match.anySetThat<string>().haveExactElements(new Set(['a', 'b', 'c', 'd'])));
+          setThat<string>().haveExactElements(new Set(['a', 'b', 'c', 'd'])));
     });
 
     should(`handle delete correctly`, () => {
       subject.next({type: 'delete', value: 'b'});
 
       assert(setSpySubject).to
-          .emitWith(match.anySetThat<string>().haveExactElements(new Set(['a', 'c'])));
+          .emitWith(setThat<string>().haveExactElements(new Set(['a', 'c'])));
       assert(scanSpySubject).to
-          .emitWith(match.anySetThat<string>().haveExactElements(new Set(['a', 'c'])));
+          .emitWith(setThat<string>().haveExactElements(new Set(['a', 'c'])));
     });
 
     should(`handle init correctly`, () => {
       subject.next({type: 'init', value: new Set(['e', 'c'])});
 
       assert(setSpySubject).to
-          .emitWith(match.anySetThat<string>().haveExactElements(new Set(['c', 'e'])));
+          .emitWith(setThat<string>().haveExactElements(new Set(['c', 'e'])));
       assert(scanSpySubject).to
-          .emitWith(match.anySetThat<string>().haveExactElements(new Set(['c', 'e'])));
+          .emitWith(setThat<string>().haveExactElements(new Set(['c', 'e'])));
     });
   });
 
@@ -129,9 +130,9 @@ test('@gs-tools/rxjs/state/set-subject', () => {
       subject.setAll(new Set(['e', 'c']));
 
       assert(setSpySubject).to
-          .emitWith(match.anySetThat<string>().haveExactElements(new Set(['c', 'e'])));
+          .emitWith(setThat<string>().haveExactElements(new Set(['c', 'e'])));
       assert(scanSpySubject).to
-          .emitWith(match.anySetThat<string>().haveExactElements(new Set(['c', 'e'])));
+          .emitWith(setThat<string>().haveExactElements(new Set(['c', 'e'])));
     });
   });
 });
