@@ -1,6 +1,8 @@
 import { assert, setup, should, test } from '@gs-testing';
+
 import { pipe } from '../pipe';
 import { createImmutableList, ImmutableList } from '../types/immutable-list';
+
 import { size } from './size';
 
 test('collect.operators.size', () => {
