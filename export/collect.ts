@@ -1,1 +1,1 @@
-export { $ } from '../src/collect/fluent';
+export { $ } from '../src/collect/chain';
