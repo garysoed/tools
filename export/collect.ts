@@ -1,3 +1,1 @@
-import * as setsImport from '../src/collect/sets';
-
-export const sets = setsImport;
+export { $ } from '../src/collect/fluent';

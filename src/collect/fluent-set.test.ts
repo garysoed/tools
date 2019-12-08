@@ -1,11 +1,11 @@
 import { assert, should, test } from '@gs-testing';
 
-import { intersect } from './sets';
+import { FluentSet } from './fluent-set';
 
-test('@tools/collect/sets', () => {
+test('@tools/collect/fluent-set', () => {
   test('intersect', () => {
     should(`create a set containing common entries`, () => {
-      assert(intersect(new Set([1, 2, 3]), new Set([2, 3, 4]))).to
+      assert(new FluentSet(new Set([1, 2, 3])).intersect(new Set([2, 3, 4]))).to
           .haveExactElements(new Set([2, 3]));
     });
   });
