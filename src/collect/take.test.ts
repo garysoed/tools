@@ -4,39 +4,37 @@ import { $ } from './chain';
 import { take } from './take';
 
 test('@tools/collect/take', () => {
-  test('take', () => {
-    should(`return iterable that only returns the first few elements`, () => {
-      const inf = function*(): Generator<number> {
-        while (true) {
-          yield 1;
-        }
-      };
+  should(`return iterable that only returns the first few elements`, () => {
+    const inf = function*(): Generator<number> {
+      while (true) {
+        yield 1;
+      }
+    };
 
-      assert($(inf(), take(5))).to.haveElements([1, 1, 1, 1, 1]);
-    });
+    assert($(inf(), take(5))).to.haveElements([1, 1, 1, 1, 1]);
+  });
 
-    should(`return empty iterable if count is zero`, () => {
-      const inf = function*(): Generator<number> {
-        while (true) {
-          yield 1;
-        }
-      };
+  should(`return empty iterable if count is zero`, () => {
+    const inf = function*(): Generator<number> {
+      while (true) {
+        yield 1;
+      }
+    };
 
-      assert($(inf(), take(0))).to.beEmpty();
-    });
+    assert($(inf(), take(0))).to.beEmpty();
+  });
 
-    should(`return all elements if count is too big`, () => {
-      assert($([1, 2, 3], take(5))).to.haveElements([1, 2, 3]);
-    });
+  should(`return all elements if count is too big`, () => {
+    assert($([1, 2, 3], take(5))).to.haveElements([1, 2, 3]);
+  });
 
-    should(`return empty iterable if count is negative`, () => {
-      const inf = function*(): Generator<number> {
-        while (true) {
-          yield 1;
-        }
-      };
+  should(`return empty iterable if count is negative`, () => {
+    const inf = function*(): Generator<number> {
+      while (true) {
+        yield 1;
+      }
+    };
 
-      assert($(inf(), take(-5))).to.beEmpty();
-    });
+    assert($(inf(), take(-5))).to.beEmpty();
   });
 });

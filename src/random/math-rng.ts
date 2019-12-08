@@ -1,7 +1,7 @@
 import { Rng } from './rng';
 
-export function* mathRng(): Rng {
+export function* mathRng(): Rng<void> {
   while (true) {
-    yield Math.random();
+    yield {state: undefined, value: Math.random()};
   }
 }
