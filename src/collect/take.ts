@@ -3,9 +3,9 @@ import { Operator } from './operator';
 /**
  * Grabs the first `count` elements from the iterable.
  */
-export function take<T>(count: number): Operator<Iterable<T>, Iterable<T>> {
+export function take<T>(count: number): Operator<Iterable<T>, readonly T[]> {
   return (fromIterable: Iterable<T>) => {
-    return (function*(): Generator<T> {
+    const iterable = (function*(): Generator<T> {
       let i = 0;
       for (const item of fromIterable) {
         if (i >= count) {
@@ -15,5 +15,7 @@ export function take<T>(count: number): Operator<Iterable<T>, Iterable<T>> {
         i++;
       }
     })();
+
+    return [...iterable];
   };
 }
