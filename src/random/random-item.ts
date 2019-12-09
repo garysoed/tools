@@ -1,7 +1,7 @@
 /**
  * Carries result of RNG.
  */
-export interface RngResult<S, V> {
+export interface RandomItem<S, I> {
+  readonly item: I;
   readonly state: S;
-  readonly value: V;
 }

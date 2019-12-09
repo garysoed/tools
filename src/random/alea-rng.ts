@@ -41,7 +41,7 @@ export function* aleaRng(seed: number|State): Rng<Readonly<State>> {
     state.s1 = state.s2;
     state.c = t | 0;
     state.s2 = t - state.c;
-    yield {state: {...state}, value: state.s2};
+    yield {state: {...state}, item: state.s2};
   }
 }
 

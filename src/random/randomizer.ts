@@ -31,7 +31,7 @@ export class RandomizerImpl {
    * @return Integer picked randomly in the given interval.
    */
   intRange(from: number, to: number): number {
-    return from + Math.floor(this.rng.next().value.value * (to - from));
+    return from + Math.floor(this.rng.next().value.item * (to - from));
   }
 
   /**
