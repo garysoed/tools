@@ -1,3 +1,5 @@
-export { pickWeightedRandom } from '../src/random/pick-weighted-random';
-export { RandomItem } from '../src/random/random-item';
 export { SimpleIdGenerator } from '../src/random/simple-id-generator';
+export { RandomGenerator, RandomResult } from '../src/random/random-generator';
+
+export { pickWeightedRandom } from '../src/random/operators/pick-weighted-random';
+export { randomTakeMultiple } from '../src/random/operators/random-take-multiple';

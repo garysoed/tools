@@ -1,7 +1,8 @@
 import { assert, should, test } from '@gs-testing';
 
+import { fakeRng } from '../testing/fake-rng';
+
 import { pickWeightedRandom } from './pick-weighted-random';
-import { fakeRng } from './testing/fake-rng';
 
 
 test('@tools/random/pick-weighted-random', () => {

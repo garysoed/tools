@@ -1,4 +1,4 @@
-import { RandomGenerator, RandomResult } from './random-generator';
+import { RandomGenerator, RandomResult } from '../random-generator';
 
 export function pickWeightedRandom<T>(
     items: ReadonlyArray<readonly [T, number]>,
