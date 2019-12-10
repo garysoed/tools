@@ -1,11 +1,11 @@
 import { assert, createSpyObject, fake, should, SpyObj, test } from '@gs-testing';
 
+import { RandomGenerator } from './random-generator';
 import { RandomizerImpl } from './randomizer';
-import { Rng } from './rng';
 
 
 test('random.Randomizer', () => {
-  let mockRng: SpyObj<Rng<any>>;
+  let mockRng: SpyObj<RandomGenerator>;
   let randomizer: RandomizerImpl;
 
   beforeEach(() => {
@@ -15,14 +15,14 @@ test('random.Randomizer', () => {
 
   test('intRange', () => {
     should('return the correct integer from the range', () => {
-      fake(mockRng.next).always().return({value: {item: 0.4, state: undefined}, done: true});
+      fake(mockRng.next).always().return([0.4, mockRng]);
       assert(randomizer.intRange(0, 10)).to.equal(4);
     });
   });
 
   test('list', () => {
     should('return the correct member of the list', () => {
-      fake(mockRng.next).always().return({value: {item: 0.6, state: undefined}, done: true});
+      fake(mockRng.next).always().return([0.6, mockRng]);
       assert(randomizer.list(['a', 'b', 'c', 'd', 'e'])).to.equal('d');
     });
   });
@@ -30,13 +30,13 @@ test('random.Randomizer', () => {
   test('shortId', () => {
     should('generate the correct ID', () => {
       fake(mockRng.next).always().returnValues(
-          {value: {item: 0 / 62, state: undefined}, done: false},
-          {value: {item: 10 / 62, state: undefined}, done: false},
-          {value: {item: 11 / 62, state: undefined}, done: false},
-          {value: {item: 12 / 62, state: undefined}, done: false},
-          {value: {item: 36 / 62, state: undefined}, done: false},
-          {value: {item: 37 / 62, state: undefined}, done: false},
-          {value: {item: 38 / 62, state: undefined}, done: false},
+          [0 / 62, mockRng],
+          [10 / 62, mockRng],
+          [11 / 62, mockRng],
+          [12 / 62, mockRng],
+          [36 / 62, mockRng],
+          [37 / 62, mockRng],
+          [38 / 62, mockRng],
       );
       assert(randomizer.shortId()).to.equal('0ABCabc');
     });

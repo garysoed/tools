@@ -1,15 +1,17 @@
-import { RandomItem } from './random-item';
+import { RandomGenerator, RandomResult } from './random-generator';
 
-export function pickWeightedRandom<T, S>(
+export function pickWeightedRandom<T>(
     items: ReadonlyArray<readonly [T, number]>,
-    randomItem: RandomItem<S, number>,
-): RandomItem<S, T|null> {
+    randomItem: RandomGenerator,
+): RandomResult<T|null> {
   const totalWeight = items.reduce<number>(
       (totalWeight, [, weight]) => totalWeight + weight,
       0,
   );
 
-  let currentTotal = totalWeight * randomItem.item;
+  const [choice, nextRng] = randomItem.next();
+
+  let currentTotal = totalWeight * choice;
   for (const [entry, weight] of items) {
     if (weight <= 0) {
       continue;
@@ -17,9 +19,9 @@ export function pickWeightedRandom<T, S>(
 
     currentTotal -= weight;
     if (currentTotal <= 0) {
-      return {state: randomItem.state, item: entry};
+      return [entry, nextRng];
     }
   }
 
-  return {state: randomItem.state, item: null};
+  return [null, nextRng];
 }

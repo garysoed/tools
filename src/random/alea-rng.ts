@@ -23,26 +23,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { Rng } from './rng';
+import { RandomGenerator, RandomResult } from './random-generator';
 
 export interface State {
-  c: number;
-  s0: number;
-  s1: number;
-  s2: number;
+  readonly c: number;
+  readonly s0: number;
+  readonly s1: number;
+  readonly s2: number;
 }
 
-export function* aleaRng(seed: number|State): Rng<Readonly<State>> {
+export function aleaRng(seed: number|State): RandomGenerator {
   const state = typeof seed === 'number' ? createState(seed) : seed;
 
-  while (true) {
-    const t = state.s0 * 2091639 + state.c * 2.3283064365386963e-10; // 2^-32
-    state.s0 = state.s1;
-    state.s1 = state.s2;
-    state.c = t | 0;
-    state.s2 = t - state.c;
-    yield {state: {...state}, item: state.s2};
-  }
+  return {
+    next(): RandomResult<number> {
+      const t = state.s0 * 2091639 + state.c * 2.3283064365386963e-10; // 2^-32
+      const newC = t | 0;
+      const newState = {
+        s0: state.s1,
+        s1: state.s2,
+        s2: t - newC,
+        c: newC,
+      };
+
+      return [state.s2, aleaRng(newState)];
+    },
+  };
 }
 
 function createState(seed: number): State {

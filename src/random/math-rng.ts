@@ -1,7 +1,9 @@
-import { Rng } from './rng';
+import { RandomGenerator, RandomResult } from './random-generator';
 
-export function* mathRng(): Rng<void> {
-  while (true) {
-    yield {state: undefined, item: Math.random()};
-  }
+export function mathRng(): RandomGenerator {
+  return {
+    next(): RandomResult<number> {
+      return [Math.random(), mathRng()];
+    },
+  };
 }
