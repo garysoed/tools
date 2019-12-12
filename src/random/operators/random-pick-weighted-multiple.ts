@@ -1,28 +1,26 @@
+import { OrderedMap } from '../../collect/ordered-map';
 import { RandomGenerator, RandomResult } from '../random-generator';
+
+import { randomPickWeighted } from './random-pick-weighted';
 
 export function randomPickWeightedMultiple<T>(
     items: ReadonlyArray<readonly [T, number]>,
     count: number,
     randomGenerator: RandomGenerator,
 ): RandomResult<readonly T[]> {
-  const totalWeight = items.reduce<number>(
-      (totalWeight, [, weight]) => totalWeight + weight,
-      0,
-  );
-
-  const [choice, nextRng] = randomGenerator.next();
-
-  let currentTotal = totalWeight * choice;
-  for (const [entry, weight] of items) {
-    if (weight <= 0) {
-      continue;
+  const pickedItems: T[] = [];
+  const orderedMap = new OrderedMap([...items]);
+  let generator = randomGenerator;
+  for (let i = 0; i < count; i++) {
+    const [result, nextGenerator] = randomPickWeighted([...orderedMap], generator);
+    if (result === null) {
+      return [pickedItems, nextGenerator];
     }
 
-    currentTotal -= weight;
-    if (currentTotal <= 0) {
-      return [entry, nextRng];
-    }
+    generator = nextGenerator;
+    pickedItems.push(result);
+    orderedMap.delete(result);
   }
 
-  return [null, nextRng];
+  return [pickedItems, generator];
 }

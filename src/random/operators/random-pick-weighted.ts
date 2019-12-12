@@ -1,6 +1,6 @@
 import { RandomGenerator, RandomResult } from '../random-generator';
 
-export function pickWeightedRandom<T>(
+export function randomPickWeighted<T>(
     items: ReadonlyArray<readonly [T, number]>,
     randomItem: RandomGenerator,
 ): RandomResult<T|null> {
