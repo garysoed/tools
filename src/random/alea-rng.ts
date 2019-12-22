@@ -23,6 +23,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import { HasPropertiesType, NumberType } from '@gs-types';
+
 import { RandomGenerator, RandomResult } from './random-generator';
 
 export interface State {
@@ -32,8 +34,15 @@ export interface State {
   readonly s2: number;
 }
 
-export function aleaRng(seed: number|State): RandomGenerator {
-  const state = typeof seed === 'number' ? createState(seed) : seed;
+const STATE_TYPE = HasPropertiesType<State>({
+  c: NumberType,
+  s0: NumberType,
+  s1: NumberType,
+  s2: NumberType,
+});
+
+export function aleaRng(seed: any): RandomGenerator {
+  const state = STATE_TYPE.check(seed) ? seed : createState(seed);
 
   return {
     next(): RandomResult<number> {
@@ -51,7 +60,7 @@ export function aleaRng(seed: number|State): RandomGenerator {
   };
 }
 
-function createState(seed: number): State {
+function createState(seed: any): State {
   // Apply the seeding algorithm from Baagoe.
   const masher = new Masher();
   const state = {

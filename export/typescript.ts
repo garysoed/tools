@@ -1,4 +1,4 @@
-import * as Enums from '../src/typescript/enums';
+import * as enums from '../src/typescript/enums';
 
 export { assertUnreachable } from '../src/typescript/assert-unreachable';
-export { Enums };
+export { enums };

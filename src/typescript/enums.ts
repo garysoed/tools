@@ -32,7 +32,7 @@ export function fromNumberString<E>(stringValue: string, enumSet: any): E {
  * @param enumSet Enum whose values should be returned.
  * @return Array of enum values.
  */
-export function getAllValues<E>(enumSet: any): E[] {
+export function getAllValues<E>(enumSet: any): readonly E[] {
   const values: E[] = [];
   for (const key in enumSet) {
     if (isNaN(Number(key))) {
