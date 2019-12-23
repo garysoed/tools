@@ -1,5 +1,5 @@
-import { mathRng } from './math-rng';
 import { RandomGenerator } from './random-generator';
+import { mathSeed } from './seed/math-seed';
 
 const ID_CHARS: string[] = [];
 // Add the numbers.
@@ -62,6 +62,6 @@ export class RandomizerImpl {
   }
 }
 
-export function Randomizer(rng: () => RandomGenerator = mathRng): RandomizerImpl {
+export function Randomizer(rng: () => RandomGenerator = mathSeed): RandomizerImpl {
   return new RandomizerImpl(rng());
 }

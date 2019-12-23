@@ -25,7 +25,8 @@
 
 import { HasPropertiesType, NumberType } from '@gs-types';
 
-import { RandomGenerator, RandomResult } from './random-generator';
+import { RandomSeed } from './random-seed';
+
 
 export interface State {
   readonly c: number;
@@ -41,11 +42,11 @@ const STATE_TYPE = HasPropertiesType<State>({
   s2: NumberType,
 });
 
-export function aleaRng(seed: any): RandomGenerator {
+export function aleaSeed(seed: any): RandomSeed {
   const state = STATE_TYPE.check(seed) ? seed : createState(seed);
 
   return {
-    next(): RandomResult<number> {
+    next(): [number, RandomSeed] {
       const t = state.s0 * 2091639 + state.c * 2.3283064365386963e-10; // 2^-32
       const newC = t | 0;
       const newState = {
@@ -55,7 +56,7 @@ export function aleaRng(seed: any): RandomGenerator {
         c: newC,
       };
 
-      return [state.s2, aleaRng(newState)];
+      return [state.s2, aleaSeed(newState)];
     },
   };
 }

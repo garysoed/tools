@@ -1,7 +1,7 @@
 export { SimpleIdGenerator } from '../src/random/simple-id-generator';
 export { RandomGenerator, RandomResult } from '../src/random/random-generator';
 
-export { aleaRng as alea } from '../src/random/alea-rng';
+export { aleaSeed } from '../src/random/seed/alea-seed';
 
 export { randomPick } from '../src/random/operators/random-pick';
 export { randomPickWeighted } from '../src/random/operators/random-pick-weighted';
