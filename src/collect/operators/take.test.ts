@@ -11,7 +11,7 @@ test('@tools/collect/take', () => {
       }
     };
 
-    assert($(inf(), take(5))).to.haveElements([1, 1, 1, 1, 1]);
+    assert($(inf(), take(5))).to.startWith([1, 1, 1, 1, 1]);
   });
 
   should(`return empty iterable if count is zero`, () => {
@@ -25,7 +25,7 @@ test('@tools/collect/take', () => {
   });
 
   should(`return all elements if count is too big`, () => {
-    assert($([1, 2, 3], take(5))).to.haveElements([1, 2, 3]);
+    assert($([1, 2, 3], take(5))).to.startWith([1, 2, 3]);
   });
 
   should(`return empty iterable if count is negative`, () => {

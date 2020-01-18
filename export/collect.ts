@@ -14,3 +14,5 @@ export { join as $join } from '../src/collect/operators/join';
 export { map as $map } from '../src/collect/operators/map';
 export { recordToMap as $recordToMap } from '../src/collect/operators/record-to-map';
 export { size as $size } from '../src/collect/operators/size';
+export { take as $take } from '../src/collect/operators/take';
+export { zip as $zip } from '../src/collect/operators/zip';

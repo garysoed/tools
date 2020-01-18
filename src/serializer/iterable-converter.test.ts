@@ -46,7 +46,7 @@ test('serializer.IterableConverter', () => {
       );
 
       assert(converter.convertForward(createImmutableSet([1, 2, 3]))).to.haveProperties({
-        result: arrayThat().haveElements([1, 2, 3]),
+        result: arrayThat().haveExactElements([1, 2, 3]),
       });
     });
 

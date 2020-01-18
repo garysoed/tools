@@ -1,4 +1,5 @@
 import { assert, mocks, should } from '@gs-testing';
+
 import { GLOBALS, hash, HASHED_OBJECTS, HASHED_VALUES } from './hash';
 
 
@@ -30,7 +31,7 @@ describe('util.hash', () => {
     GLOBALS.lastHash = nextValue;
     const key = 123;
     assert(hash(key)).to.equal(`${nextValue}`);
-    assert(HASHED_VALUES).to.haveElements([[key, nextValue]]);
+    assert(HASHED_VALUES).to.haveExactElements(new Map([[key, nextValue]]));
     assert(GLOBALS.lastHash).to.equal(nextValue + 1);
   });
 
@@ -39,6 +40,6 @@ describe('util.hash', () => {
     const key = 123;
     HASHED_VALUES.set(key, hashValue);
     assert(hash(key)).to.equal(`${hashValue}`);
-    assert(HASHED_VALUES).to.haveElements([[key, hashValue]]);
+    assert(HASHED_VALUES).to.haveExactElements(new Map([[key, hashValue]]));
   });
 });

@@ -17,6 +17,6 @@ test('@tools/random/operators/random-pick-weighted-multiple', () => {
         fakeGenerator,
     );
 
-    assert(result).to.haveElements(['b', 'c']);
+    assert(result).to.haveExactElements(['b', 'c']);
   });
 });

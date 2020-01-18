@@ -118,7 +118,7 @@ test('store.WebStorage', () => {
           INDEXES_BINARY_CONVERTER.convertForward([id1, id2, id3]),
       );
 
-      assert(idsSubject.getValue()).to.haveElements([id1, id2, id3]);
+      assert(idsSubject.getValue()).to.haveExactElements([id1, id2, id3]);
     });
   });
 
@@ -172,7 +172,7 @@ test('store.WebStorage', () => {
       storage.read(id).subscribe(itemSubject);
 
       storage.update(id, 123).subscribe();
-      assert(idsSubject.getValue()).to.haveElements([oldId, id]);
+      assert(idsSubject.getValue()).to.haveExactElements([oldId, id]);
       assert(itemSubject.getValue()).to.equal(123);
       assert(localStorage.getItem(path)).to.equal(ITEM_BINARY_CONVERTER.convertForward(123));
     });

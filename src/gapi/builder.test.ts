@@ -8,7 +8,7 @@ test('@gs-tools/gapi/builder', () => {
   const API_KEY = 'apiKey';
   const CLIENT_ID = 'clientId';
   let builder: Builder;
-  let mockGapiClientInit: Spy;
+  let mockGapiClientInit: Spy<unknown, [unknown]>;
 
   setup(() => {
     const mockGapiLoad = createSpy<any, [string, Function]>('gapi.load');

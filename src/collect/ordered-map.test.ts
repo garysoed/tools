@@ -126,7 +126,7 @@ test('@tools/collect/ordered-map', () => {
     should(`return keys in order`, () => {
       const map = new OrderedMap([['a', 1], ['b', 2], ['c', 3]]);
 
-      assert([...map.keys()]).to.haveElements(['a', 'b', 'c']);
+      assert([...map.keys()]).to.haveExactElements(['a', 'b', 'c']);
     });
   });
 

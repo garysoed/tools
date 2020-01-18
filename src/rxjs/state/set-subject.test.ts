@@ -85,7 +85,7 @@ test('@gs-tools/rxjs/state/set-subject', () => {
 
       assert(spySubject).to.emitWith(objectThat().haveProperties({
         type: 'init',
-        value: iterableThat().haveElements(['a', 'b', 'c']),
+        value: iterableThat().startWith(['a', 'b', 'c']),
       }));
 
       subject.delete('b');
