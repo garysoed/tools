@@ -1,12 +1,3 @@
-import { filter } from '../collection/operators/filter';
-import { head } from '../collection/operators/head';
-import { size } from '../collection/operators/size';
-import { skip } from '../collection/operators/skip';
-import { pipe } from '../collection/pipe';
-import { asImmutableList, createImmutableList, ImmutableList } from '../collection/types/immutable-list';
-import { createImmutableMap, ImmutableMap } from '../collection/types/immutable-map';
-
-
 const MATCHER_REGEXP_: RegExp = /:([^:\/]+)/;
 
 /**
@@ -21,7 +12,7 @@ const MATCHER_REGEXP_: RegExp = /:([^:\/]+)/;
  * @param matcher The matcher string.
  * @return Object containing the matches if it matches, or null otherwise.
  */
-export function getMatches(path: string, matcher: string): ImmutableMap<string, string> | null {
+export function getMatches(path: string, matcher: string): ReadonlyMap<string, string>|null {
   let exactMatch = false;
 
   let trimmedMatcher = matcher;
@@ -32,21 +23,14 @@ export function getMatches(path: string, matcher: string): ImmutableMap<string, 
   const hashParts = getParts_(path);
   const matcherParts = getParts_(trimmedMatcher);
 
-  if (exactMatch && pipe(matcherParts, size()) !== pipe(hashParts, size())) {
+  if (exactMatch && matcherParts.length !== hashParts.length) {
     return null;
   }
 
   const matches = new Map<string, string>();
-  for (let i = 0; i < pipe(matcherParts, size()); i++) {
-    const matchPart = pipe(matcherParts, skip(i), head<string>());
-    if (matchPart === undefined) {
-      return null;
-    }
-
-    const hashPart = pipe(hashParts, skip(i), head<string>());
-    if (hashPart === undefined) {
-      return null;
-    }
+  for (let i = 0; i < matcherParts.length; i++) {
+    const matchPart = matcherParts[i];
+    const hashPart = hashParts[i];
 
     const matcherResult = MATCHER_REGEXP_.exec(matchPart);
 
@@ -57,18 +41,14 @@ export function getMatches(path: string, matcher: string): ImmutableMap<string, 
     }
   }
 
-  return createImmutableMap(matches);
+  return matches;
 }
 
 /**
  * @return Parts of the given path.
  */
-export function getParts_(path: string): ImmutableList<string> {
-  return pipe(
-      createImmutableList(normalizePath(path).split('/')),
-      filter(part => part !== '.'),
-      asImmutableList(),
-  );
+export function getParts_(path: string): readonly string[] {
+  return normalizePath(path).split('/').filter(part => part !== '.');
 }
 
 /**

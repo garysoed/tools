@@ -1,4 +1,4 @@
-import { assert, should, test, tupleThat } from '@gs-testing';
+import { assert, should, test } from '@gs-testing';
 
 import { getMatches, getParts_, normalizePath } from './locations';
 
@@ -8,17 +8,17 @@ test('ui.Locations', () => {
     should('split the normalized parts', () => {
       const path = '/a/./b/c';
 
-      assert(getParts_(path)()).to.startWith(['', 'a', 'b', 'c']);
+      assert(getParts_(path)).to.haveExactElements(['', 'a', 'b', 'c']);
     });
   });
 
   test('getMatches', () => {
     should('return the correct matches', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getMatches('/hello/_/location', '/:a/_/:b')!()).to.startWith([
-        tupleThat<[string, string]>().haveExactElements(['a', 'hello']),
-        tupleThat<[string, string]>().haveExactElements(['b', 'location']),
-      ]);
+      assert(getMatches('/hello/_/location', '/:a/_/:b')!).to.haveExactElements(new Map([
+        ['a', 'hello'],
+        ['b', 'location'],
+      ]));
     });
 
     should('return null if the matcher does not match the hash', () => {
@@ -27,16 +27,15 @@ test('ui.Locations', () => {
 
     should('return the matches for exact match', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getMatches('/hello/_/location', `/:a/_/:b$`)!()).to.startWith([
-        tupleThat<[string, string]>().haveExactElements(['a', 'hello']),
-        tupleThat<[string, string]>().haveExactElements(['b', 'location']),
-      ]);
+      assert(getMatches('/hello/_/location', `/:a/_/:b$`)!).to.haveExactElements(new Map([
+        ['a', 'hello'],
+        ['b', 'location'],
+      ]));
     });
 
     should('return null for exact match if the number of parts are not the same', () => {
       assert(getMatches('/hello/_', `/:a/_/:b$`)).to.beNull();
     });
-
   });
 
   test('normalizePath', () => {

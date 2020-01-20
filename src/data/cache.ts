@@ -1,6 +1,3 @@
-import { getKey } from '../collection/operators/get-key';
-import { head } from '../collection/operators/head';
-import { pipe } from '../collection/pipe';
 import { Errors } from '../error';
 import { hash } from '../util/hash';
 
@@ -42,9 +39,9 @@ function createCachedFunctionCall(
           return hash(arg);
         })
         .join('_');
-    const cachedValue = pipe(cacheData, getKey(argsHash), head());
+    const cachedValue = cacheData.get(argsHash);
     if (cachedValue !== undefined) {
-      return cachedValue[1];
+      return cachedValue;
     }
 
     const result = origFn.apply(instance, args);

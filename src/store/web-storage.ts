@@ -2,7 +2,6 @@ import { binary, compose, Converter, identity, Serializable, strict, StrictConve
 import { Observable, of as observableOf } from '@rxjs';
 import { map, pairwise, shareReplay, startWith, switchMap, take, tap } from '@rxjs/operators';
 
-import { createImmutableList } from '../collection/types/immutable-list';
 import { cache } from '../data/cache';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { SimpleIdGenerator } from '../random/simple-id-generator';
@@ -136,12 +135,11 @@ export class WebStorage<T> implements EditableStorage<T> {
         .pipe(
             map(indexesStr => {
               if (!indexesStr) {
-                return createImmutableList<string>();
+                return [];
               }
 
               return this.indexesConverter.convertBackward(indexesStr);
             }),
-            map(immutableList => [...immutableList]),
             shareReplay(1),
         );
   }

@@ -1,73 +1,68 @@
-import { declareFinite } from '../collection/operators/declare-finite';
-import { declareKeyed } from '../collection/operators/declare-keyed';
-import { distinct } from '../collection/operators/distinct';
-import { filterPick } from '../collection/operators/filter-pick';
-import { flat } from '../collection/operators/flat';
-import { getKey } from '../collection/operators/get-key';
-import { head } from '../collection/operators/head';
-import { keys } from '../collection/operators/keys';
-import { map } from '../collection/operators/map';
-import { mapPick } from '../collection/operators/map-pick';
-import { pick } from '../collection/operators/pick';
-import { sort } from '../collection/operators/sort';
-import { Orderings } from '../collection/orderings';
-import { pipe } from '../collection/pipe';
-import { createImmutableList, ImmutableList } from '../collection/types/immutable-list';
-import { asImmutableMap, createImmutableMap, ImmutableMap } from '../collection/types/immutable-map';
+import { following } from '../collect/compare/following';
+import { withMap } from '../collect/compare/with-map';
+import { asArray } from '../collect/operators/as-array';
+import { asMap } from '../collect/operators/as-map';
+import { asSet } from '../collect/operators/as-set';
+import { $ } from '../collect/operators/chain';
+import { filter } from '../collect/operators/filter';
+import { flat } from '../collect/operators/flat';
+import { map } from '../collect/operators/map';
+import { OrderedMap } from '../collect/structures/ordered-map';
+import { ReadonlyOrderedMap } from '../collect/structures/readonly-ordered-map';
 
 type Annotator<A extends any[], D> = (target: Object, key: string|symbol, ...args: A) => D;
 
 export class PropertyAnnotation<D> {
   constructor(
-      private readonly data: ImmutableMap<Object, ImmutableMap<string|symbol, ImmutableList<D>>>,
+      private readonly data: ReadonlyMap<Object, ReadonlyMap<string|symbol, readonly D[]>>,
   ) { }
 
-  getAll(): ImmutableMap<Object, ImmutableMap<string|symbol, ImmutableList<D>>> {
+  getAll(): ReadonlyMap<Object, ReadonlyMap<string|symbol, readonly D[]>> {
     return this.data;
   }
 
-  getAttachedValues(ctorFn: Object, key: string|symbol): ImmutableMap<Object, ImmutableList<D>> {
-    const ctorChain = [...getCtorChain(ctorFn)()];
+  getAttachedValues(ctorFn: Object, key: string|symbol): ReadonlyOrderedMap<Object, readonly D[]> {
+    const ctorChain = getCtorChain(ctorFn);
+    const ctorsSet = new Set(ctorChain);
 
-    return pipe(
+    const entries = $(
         this.data,
-        getKey(...ctorChain),
-        mapPick(
-            1,
-            keyToDataMap => pipe(
-                keyToDataMap,
-                getKey(key),
-                pick(1),
-                head(),
-            ),
-        ),
-        filterPick(1, (data): data is ImmutableList<D> => !!data),
-        sort(Orderings.map(([ctor]) => ctor, Orderings.following<Object>(ctorChain))),
-        asImmutableMap(),
+        filter(([key]) => ctorsSet.has(key)),
+        map(([k, keyToDataMap]) => {
+          const dataMap = keyToDataMap.get(key);
+          return [k, dataMap] as [Object, ReadonlyArray<D>|undefined];
+        }),
+        filter((entry): entry is [Object, readonly D[]] => !!entry[1]),
+        asArray(),
     );
+
+    entries.sort(withMap(([ctor]) => ctor, following(ctorChain)));
+    return new OrderedMap(entries);
   }
 
   getAttachedValuesForCtor(
       ctorFn: Object,
-  ): ImmutableMap<string|symbol, ImmutableMap<Object, ImmutableList<D>>> {
-    return pipe(
-        // Get the keys
-        pipe(
-            this.data,
-            getKey(...getCtorChain(ctorFn)()),
-            pick(1),
-            flat<[string|symbol, ImmutableList<D>]>(),
-            declareKeyed(([key]) => key),
-            keys(),
-            distinct<string|symbol, any>(),
-        ),
+  ): ReadonlyMap<string|symbol, ReadonlyMap<Object, readonly D[]>> {
+    const ctors = new Set([...getCtorChain(ctorFn)]);
+
+    // Get the keys
+    const keys = $(
+        this.data,
+        filter(([key]) => ctors.has(key)),
+        map(([, value]) => [...value]),
+        flat(),
+        map(([key]) => key),
+        asSet(),
+    );
+
+
+    return $(
+        keys,
         map(key => [
           key,
           this.getAttachedValues(ctorFn, key),
-        ] as [string|symbol, ImmutableMap<Object, ImmutableList<D>>]),
-        declareKeyed(([key]) => key),
-        declareFinite(),
-        asImmutableMap(),
+        ] as [string|symbol, ReadonlyMap<Object, readonly D[]>]),
+        asMap(),
     );
   }
 }
@@ -80,20 +75,7 @@ export class PropertyAnnotator<D, A extends any[]> {
   ) { }
 
   get data(): PropertyAnnotation<D> {
-    return new PropertyAnnotation(
-        pipe(
-            createImmutableMap(this.dataMap),
-            mapPick(
-                1,
-                mapObj => pipe(
-                    createImmutableMap(mapObj),
-                    mapPick(1, data => createImmutableList(data)),
-                    asImmutableMap(),
-                ),
-            ),
-            asImmutableMap(),
-        ),
-    );
+    return new PropertyAnnotation(this.dataMap);
   }
 
   get decorator(): (...args: A) => PropertyDecorator {
@@ -112,13 +94,13 @@ export class PropertyAnnotator<D, A extends any[]> {
   }
 }
 
-function getCtorChain(ctorFn: Object): ImmutableList<Object> {
+function getCtorChain(ctorFn: Object): readonly Object[] {
   const ctors: Object[] = [];
-  let currentCtor = ctorFn;
+  let currentCtor: Object|null = ctorFn;
   while (currentCtor !== null) {
     ctors.push(currentCtor);
     currentCtor = Object.getPrototypeOf(currentCtor);
   }
 
-  return createImmutableList(ctors);
+  return ctors;
 }

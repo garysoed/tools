@@ -1,21 +1,12 @@
-import { pipe } from '../collection/pipe';
-import { countable } from '../collection/generators';
-import { filter } from '../collection/operators/filter';
-import { head } from '../collection/operators/head';
-import { push } from '../collection/operators/push';
-import { size } from '../collection/operators/size';
-import { skip } from '../collection/operators/skip';
-import { tail } from '../collection/operators/tail';
-import { take } from '../collection/operators/take';
-import { zip } from '../collection/operators/zip';
-import { asImmutableList, createImmutableList, ImmutableList } from '../collection/types/immutable-list';
 import { Errors } from '../error';
 import { AbsolutePath } from '../path/absolute-path';
 import { Path } from '../path/path';
 import { RelativePath } from '../path/relative-path';
 import { assertUnreachable } from '../typescript/assert-unreachable';
+
 import { absolutePathParser } from './absolute-path-parser';
 import { relativePathParser } from './relative-path-parser';
+
 
 export class Paths {
   static absolutePath(pathString: string): AbsolutePath {
@@ -30,11 +21,9 @@ export class Paths {
   static getDirPath(path: AbsolutePath): AbsolutePath;
   static getDirPath(path: RelativePath): RelativePath;
   static getDirPath(path: AbsolutePath | RelativePath): Path {
-    const parts = pipe(
-        path.getParts(),
-        take(pipe(path.getParts(), size()) - 1),
-        asImmutableList<string>(),
-    );
+    const rawParts = path.getParts();
+    const parts = rawParts.slice(0, rawParts.length - 1);
+
     if (path instanceof AbsolutePath) {
       return new AbsolutePath(parts);
     } else if (path instanceof RelativePath) {
@@ -58,35 +47,31 @@ export class Paths {
   static getItemName(path: Path): string | null {
     const parts = path.getParts();
 
-    return pipe(parts, tail()) || null;
+    return parts[parts.length - 1] || null;
   }
 
   static getRelativePath(srcPath: AbsolutePath, destPath: AbsolutePath): RelativePath {
     let commonCount = 0;
     const thisParts = srcPath.getParts();
     const thatParts = destPath.getParts();
-    while (commonCount < Math.min(pipe(thisParts, size()), pipe(thatParts, size())) - 1) {
-      if (pipe(thisParts, skip(commonCount), head()) !==
-          pipe(thatParts, skip(commonCount), head())) {
+    while (commonCount < Math.min(thisParts.length, thatParts.length - 1)) {
+      if (thisParts[commonCount] !== thatParts[commonCount]) {
         break;
       }
 
       commonCount++;
     }
 
-    const upCount = pipe(thisParts, size()) - commonCount;
+    const upCount = thisParts.length - commonCount;
     const parts: string[] = [];
     for (let i = 0; i < upCount; i++) {
       parts.push('..');
     }
 
-    return new RelativePath(
-        pipe(
-            createImmutableList(parts),
-            push(...pipe(thatParts, skip(upCount))()),
-            asImmutableList<string>(),
-        )(),
-    );
+    return new RelativePath([
+      ...parts,
+      ...thatParts.slice(upCount),
+    ]);
   }
 
   /**
@@ -94,31 +79,31 @@ export class Paths {
    * @return Subpaths to the root from the given path. For example, if path is '/a/b/c', this would
    *     return ['/a/b/c', '/a/b', '/a', '/'].
    */
-  static getSubPathsToRoot(path: AbsolutePath): ImmutableList<AbsolutePath> {
+  static getSubPathsToRoot(path: AbsolutePath): readonly AbsolutePath[] {
     const subpaths: AbsolutePath[] = [];
     let currentPath = path;
-    while (currentPath && pipe(currentPath.getParts(), size()) > 0) {
+    while (currentPath && currentPath.getParts().length > 0) {
       subpaths.push(currentPath);
       currentPath = Paths.getDirPath(currentPath);
     }
 
-    return createImmutableList(subpaths);
+    return subpaths;
   }
 
   static join(root: AbsolutePath, ...paths: RelativePath[]): AbsolutePath;
   static join(root: RelativePath, ...paths: RelativePath[]): RelativePath;
   static join(root: AbsolutePath | RelativePath, ...paths: RelativePath[]): Path {
-    const srcParts = [...root.getParts()()];
+    const srcParts = [...root.getParts()];
     for (const path of paths) {
-      for (const part of path.getParts()()) {
+      for (const part of path.getParts()) {
         srcParts.push(part);
       }
     }
 
     if (root instanceof AbsolutePath) {
-      return Paths.normalize(new AbsolutePath(createImmutableList(srcParts)()));
+      return Paths.normalize(new AbsolutePath(srcParts));
     } else if (root instanceof RelativePath) {
-      return Paths.normalize(new RelativePath(createImmutableList(srcParts)()));
+      return Paths.normalize(new RelativePath(srcParts));
     } else {
       throw assertUnreachable(root);
     }
@@ -128,7 +113,7 @@ export class Paths {
   static normalize(path: RelativePath): RelativePath;
   static normalize(path: AbsolutePath | RelativePath): Path {
     // Removes all instances of '' parts.
-    const noEmptyParts = [...pipe(path.getParts(), filter(part => !!part))()];
+    const noEmptyParts = path.getParts().filter(part => !!part);
 
     // Removes all instances of '.' part except the first one.
     const noCurrentParts: string[] = [];
@@ -140,12 +125,9 @@ export class Paths {
     }
 
     // Copy all trailing '..' part.
-    const nonDoubleDotEntry = pipe(
-        createImmutableList(noCurrentParts),
-        zip(countable()),
-        filter(([part]) => part !== '..'),
-        head(),
-    );
+    const nonDoubleDotEntry = noCurrentParts
+        .map((value, index) => [value, index] as [string, number])
+        .filter(([part]) => part !== '..')[0];
     const nonDoubleIndex = nonDoubleDotEntry ? nonDoubleDotEntry[1] + 1 : 0;
     const normalizedParts: string[] = [];
     for (let i = 0; i < nonDoubleIndex; i++) {
@@ -164,9 +146,9 @@ export class Paths {
     }
 
     if (path instanceof AbsolutePath) {
-      return new AbsolutePath(createImmutableList(normalizedParts)());
+      return new AbsolutePath(normalizedParts);
     } else if (path instanceof RelativePath) {
-      return new RelativePath(createImmutableList(normalizedParts)());
+      return new RelativePath(normalizedParts);
     } else {
       throw assertUnreachable(path);
     }

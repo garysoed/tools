@@ -1,6 +1,6 @@
 import { assert, should, test } from '@gs-testing';
 import { strict } from '@nabu';
-import { createImmutableList } from '../collection/types/immutable-list';
+
 import { RelativePath } from './relative-path';
 import { relativePathParser } from './relative-path-parser';
 
@@ -25,7 +25,7 @@ test('path.RelativePathParser', () => {
   test('convertForward', () => {
     should(`return the correct string`, () => {
       const converted = strict(relativePathParser())
-          .convertForward(new RelativePath(createImmutableList(['a', 'b', 'c'])()));
+          .convertForward(new RelativePath(['a', 'b', 'c']));
       assert(converted).to.equal('a/b/c');
     });
   });

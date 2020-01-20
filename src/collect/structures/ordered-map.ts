@@ -9,7 +9,7 @@ export class OrderedMap<K, V> implements ReadonlyMap<K, V>, Sortable<[K, V]> {
   private readonly _keys = this.source.map(([key]) => key);
   private readonly _map = new Map(this.source);
 
-  constructor(private readonly source: ReadonlyArray<readonly [K, V]>) { }
+  constructor(private readonly source: ReadonlyArray<readonly [K, V]> = []) { }
 
   [Symbol.iterator](): IterableIterator<[K, V]> {
     const keys = [...this._keys];

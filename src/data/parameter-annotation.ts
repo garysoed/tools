@@ -1,20 +1,8 @@
-import { declareFinite } from '../collection/operators/declare-finite';
-import { declareKeyed } from '../collection/operators/declare-keyed';
-import { distinct } from '../collection/operators/distinct';
-import { filterPick } from '../collection/operators/filter-pick';
-import { flat } from '../collection/operators/flat';
-import { getKey } from '../collection/operators/get-key';
-import { head } from '../collection/operators/head';
-import { keys } from '../collection/operators/keys';
-import { map } from '../collection/operators/map';
-import { mapPick } from '../collection/operators/map-pick';
-import { pick } from '../collection/operators/pick';
-import { sort } from '../collection/operators/sort';
-import { Orderings } from '../collection/orderings';
-import { pipe } from '../collection/pipe';
-import { asImmutableList, createImmutableList, ImmutableList } from '../collection/types/immutable-list';
-import { asImmutableMap, ImmutableMap } from '../collection/types/immutable-map';
-import { createInfiniteMap } from '../collection/types/infinite-map';
+import { following } from '../collect/compare/following';
+import { withMap } from '../collect/compare/with-map';
+import { OrderedMap } from '../collect/structures/ordered-map';
+import { ReadonlyOrderedMap } from '../collect/structures/readonly-ordered-map';
+
 
 type Annotator<A extends any[], D> = (
     target: Object,
@@ -24,18 +12,18 @@ type Annotator<A extends any[], D> = (
 
 export class ParameterAnnotation<D> {
   constructor(
-      private readonly data: ImmutableMap<
+      private readonly data: ReadonlyMap<
           Object,
-          ImmutableMap<
+          ReadonlyMap<
               string|symbol,
-              ImmutableMap<number, ImmutableList<D>>
+              ReadonlyMap<number, readonly D[]>
           >
       >,
   ) { }
 
-  getAll(): ImmutableMap<
+  getAll(): ReadonlyMap<
       Object,
-      ImmutableMap<string|symbol, ImmutableMap<number, ImmutableList<D>>>
+      ReadonlyMap<string|symbol, ReadonlyMap<number, readonly D[]>>
   > {
     return this.data;
   }
@@ -44,86 +32,107 @@ export class ParameterAnnotation<D> {
       ctorFn: Object,
       key: string|symbol,
       index: number,
-  ): ImmutableMap<Object, ImmutableList<D>> {
-    const ctorChain = [...getCtorChain(ctorFn)];
+  ): ReadonlyOrderedMap<Object, readonly D[]> {
+    const ctorChain = getCtorChain(ctorFn);
+    const ctorSet = new Set(ctorChain);
 
-    return pipe(
-        this.data,
-        getKey(...ctorChain),
-        mapPick(
-            1,
-            keyToDataMap => pipe(
-                keyToDataMap,
-                getKey(key),
-                mapPick(
-                    1,
-                    indexToDataMap => pipe(
-                        indexToDataMap,
-                        getKey(index),
-                        pick(1),
-                        head(),
-                    ),
-                ),
-                filterPick(1, (data): data is ImmutableList<D> => !!data),
-                pick(1),
-                flat<D>(),
-                declareFinite(),
-                asImmutableList(),
-            ),
-        ),
-        sort(Orderings.map(([ctor]) => ctor, Orderings.following<Object>(ctorChain))),
-        asImmutableMap<Object, ImmutableList<D>>(),
-    );
+    const collectedInheritanceMap = new OrderedMap<Object, D[]>();
+    for (const [ctor, propertyKeyMap] of this.data) {
+      if (!ctorSet.has(ctor)) {
+        continue;
+      }
+
+      const collectedValues: D[] = collectedInheritanceMap.get(ctor) || [];
+      for (const [propertyKey, paramMap] of propertyKeyMap) {
+        if (propertyKey !== key) {
+          continue;
+        }
+
+        for (const [annotatedIndex, values] of paramMap) {
+          if (annotatedIndex !== index) {
+            continue;
+          }
+          collectedValues.push(...values);
+        }
+      }
+      collectedInheritanceMap.set(ctor, collectedValues);
+    }
+
+    sortInheritanceMap(collectedInheritanceMap, ctorChain);
+    return collectedInheritanceMap;
   }
 
   getAttachedValuesForCtor(
       ctorFn: Object,
-  ): ImmutableMap<string|symbol, ImmutableMap<number, ImmutableMap<Object, ImmutableList<D>>>> {
-    return pipe(
-        // Get the keys
-        this.data,
-        getKey(...getCtorChain(ctorFn)),
-        pick(1),
-        flat<[string|symbol, ImmutableMap<number, ImmutableList<D>>]>(),
-        declareKeyed(([key]) => key),
-        keys(),
-        distinct<string|symbol, any>(),
-        map(key => [
-          key,
-          this.getAttachedValuesForKey(ctorFn, key),
-        ] as [string|symbol, ImmutableMap<number, ImmutableMap<Object, ImmutableList<D>>>]),
-        declareFinite(),
-        asImmutableMap(),
-    );
+  ): ReadonlyMap<string|symbol, ReadonlyMap<number, ReadonlyOrderedMap<Object, readonly D[]>>> {
+    const ctorChain = getCtorChain(ctorFn);
+    const ctorSet = new Set(ctorChain);
+    const collectedPropertyKeyMap = new Map<string|symbol, Map<number, OrderedMap<Object, D[]>>>();
+    for (const [ctor, propertyKeyMap] of this.data) {
+      if (!ctorSet.has(ctor)) {
+        continue;
+      }
+
+      // Deeply insert the map.
+      for (const [propertyKey, paramMap] of propertyKeyMap) {
+        const collectedParamMap = collectedPropertyKeyMap.get(propertyKey) ||
+            new Map<number, OrderedMap<Object, D[]>>();
+        for (const [index, values] of paramMap) {
+          const collectedInheritanceMap = collectedParamMap.get(index) ||
+              new OrderedMap<Object, D[]>();
+          const collectedValues: D[] = collectedInheritanceMap.get(ctor) || [];
+          collectedValues.push(...values);
+          collectedInheritanceMap.set(ctor, collectedValues);
+          collectedParamMap.set(index, collectedInheritanceMap);
+        }
+        collectedPropertyKeyMap.set(propertyKey, collectedParamMap);
+      }
+    }
+
+    // Sort the OrderedMaps.
+    for (const [, paramMap] of collectedPropertyKeyMap) {
+      for (const [, inheritanceMap] of paramMap) {
+        inheritanceMap.sort(withMap(([ctor]) => ctor, following<Object>(ctorChain)));
+      }
+    }
+
+    return collectedPropertyKeyMap;
   }
 
   getAttachedValuesForKey(
       ctorFn: Object,
       key: string|symbol,
-  ): ImmutableMap<number, ImmutableMap<Object, ImmutableList<D>>> {
-    return pipe(
-        // Get the indexes.
-        pipe(
-            this.data,
-            getKey(...getCtorChain(ctorFn)()),
-            pick(1),
-            flat<[string|symbol, ImmutableMap<number, ImmutableList<D>>]>(),
-            declareKeyed(([key]) => key),
-            getKey(key),
-            pick(1),
-            flat<[number, ImmutableList<D>]>(),
-            declareKeyed(([index]) => index),
-            keys(),
-            distinct<number, any>(),
-        ),
-        map(index => [
-          index,
-          this.getAttachedValues(ctorFn, key, index),
-        ] as [number, ImmutableMap<Object, ImmutableList<D>>]),
-        declareFinite(),
-        declareKeyed(([index]) => index),
-        asImmutableMap(),
-    );
+  ): ReadonlyMap<number, ReadonlyOrderedMap<Object, readonly D[]>> {
+    const collectedParamMap = new Map<number, OrderedMap<Object, D[]>>();
+    const ctorChain = getCtorChain(ctorFn);
+    const ctorSet = new Set(ctorChain);
+    for (const [ctor, propertyKeyMap] of this.data) {
+      if (!ctorSet.has(ctor)) {
+        continue;
+      }
+
+      for (const [propertyKey, paramMap] of propertyKeyMap) {
+        if (propertyKey !== key) {
+          continue;
+        }
+
+        for (const [index, values] of paramMap) {
+          const collectedInheritanceMap = collectedParamMap.get(index) ||
+              new OrderedMap<Object, D[]>();
+          const collectedValues: D[] = collectedInheritanceMap.get(ctor) || [];
+          collectedValues.push(...values);
+          collectedInheritanceMap.set(ctor, collectedValues);
+          collectedParamMap.set(index, collectedInheritanceMap);
+        }
+      }
+    }
+
+    // Sort the inheritance maps.
+    for (const [, inheritanceMap] of collectedParamMap) {
+      sortInheritanceMap(inheritanceMap, ctorChain);
+    }
+
+    return collectedParamMap;
   }
 }
 
@@ -135,33 +144,7 @@ export class ParameterAnnotator<D, A extends any[]> {
   ) { }
 
   get data(): ParameterAnnotation<D> {
-    return new ParameterAnnotation(
-        pipe(
-            createInfiniteMap(this.dataMap),
-            mapPick(
-                1,
-                mapObj => pipe(
-                    createInfiniteMap(mapObj),
-                    mapPick(
-                        1,
-                        subMapObj => pipe(
-                            createInfiniteMap(subMapObj),
-                            mapPick(
-                                1,
-                                data => createImmutableList<D>(data),
-                            ),
-                            declareFinite(),
-                            asImmutableMap(),
-                        ),
-                    ),
-                    declareFinite(),
-                    asImmutableMap(),
-                ),
-            ),
-            declareFinite(),
-            asImmutableMap(),
-        ),
-    );
+    return new ParameterAnnotation(this.dataMap);
   }
 
   get decorator(): (...args: A) => ParameterDecorator {
@@ -182,13 +165,20 @@ export class ParameterAnnotator<D, A extends any[]> {
   }
 }
 
-function getCtorChain(ctorFn: Object): ImmutableList<Object> {
+function getCtorChain(ctorFn: Object): readonly Object[] {
   const ctors: Object[] = [];
-  let currentCtor = ctorFn;
+  let currentCtor: Object|null = ctorFn;
   while (currentCtor !== null) {
     ctors.push(currentCtor);
     currentCtor = Object.getPrototypeOf(currentCtor);
   }
 
-  return createImmutableList(ctors);
+  return ctors;
+}
+
+function sortInheritanceMap(
+    inheritanceMap: OrderedMap<Object, unknown>,
+    ctorChain: readonly Object[],
+): void {
+  inheritanceMap.sort(withMap(([ctor]) => ctor, following<Object>(ctorChain)));
 }

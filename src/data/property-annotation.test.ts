@@ -1,12 +1,14 @@
 // tslint:disable:no-non-null-assertion
 import { assert, should, test } from '@gs-testing';
-import { flat } from '../collection/operators/flat';
-import { map } from '../collection/operators/map';
-import { mapPick } from '../collection/operators/map-pick';
-import { pipe } from '../collection/pipe';
+
+import { asArray } from '../collect/operators/as-array';
+import { $ } from '../collect/operators/chain';
+import { flat } from '../collect/operators/flat';
+import { map } from '../collect/operators/map';
+
 import { PropertyAnnotator } from './property-annotation';
 
-const annotation = new PropertyAnnotator((_, propertyKey, value) => {
+const annotation = new PropertyAnnotator((_, propertyKey, value: string) => {
   return propertyKey.toString() + value;
 });
 
@@ -40,13 +42,12 @@ test('data.PropertyAnnotation', () => {
         ctorFn: Object,
         key: string|symbol,
     ): Array<Object|string> {
-      return [
-        ...pipe(
-            annotation.data.getAttachedValues(ctorFn, key),
-            map(([obj, valuesList]) => [obj, ...valuesList]),
-            flat<Object|string>(),
-        )(),
-      ];
+      return $(
+          annotation.data.getAttachedValues(ctorFn, key),
+          map(([obj, valuesList]) => [obj, ...valuesList]),
+          flat<Object|string>(),
+          asArray(),
+      );
     }
 
     should(`return the correct values`, () => {
@@ -91,21 +92,22 @@ test('data.PropertyAnnotation', () => {
 
   test('getAttachedValuesForCtor', () => {
     function getFlatAttachedValues(ctorFn: Object): Array<Object|number> {
-      return [
-        ...pipe(
-            annotation.data.getAttachedValuesForCtor(ctorFn),
-            mapPick(
-                1,
-                indexMap => pipe(
-                    indexMap,
-                    map(([key, values]) => [key, ...values()]),
-                    flat<Object|string|symbol|number>(),
-                ),
-            ),
-            map(([key, values]) => [key, ...values()]),
-            flat<Object|string|symbol|number>(),
-        )(),
-      ];
+      return $(
+          annotation.data.getAttachedValuesForCtor(ctorFn),
+          map(([key, indexMap]) => {
+            const values = $(
+                indexMap,
+                map(([key, values]) => [key, ...values]),
+                flat<Object|string>(),
+                asArray(),
+            );
+
+            return [key, values] as [string|symbol, Array<string|Object>];
+          }),
+          map(([key, values]) => [key, ...values]),
+          flat(),
+          asArray(),
+      );
     }
 
     should(`return the correct values`, () => {

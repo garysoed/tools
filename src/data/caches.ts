@@ -1,7 +1,3 @@
-import { keys } from '../collection/operators/keys';
-import { pipe } from '../collection/pipe';
-import { createImmutableMap, ImmutableMap } from '../collection/types/immutable-map';
-import { asImmutableSet } from '../collection/types/immutable-set';
 import { PropertyAnnotator } from './property-annotation';
 
 const __CACHES = Symbol('caches');
@@ -21,12 +17,8 @@ export function clear(instance: Object, propertyKey: string | symbol): void {
  * @param target Object to clear all the cache from.
  */
 export function clearAll(instance: Object): void {
-  const keysSet = pipe(
-      CACHE_ANNOTATOR.data.getAttachedValuesForCtor(instance.constructor),
-      keys(),
-      asImmutableSet(),
-  );
-  for (const key of keysSet()) {
+  const keysSet = CACHE_ANNOTATOR.data.getAttachedValuesForCtor(instance.constructor).keys();
+  for (const key of keysSet) {
     clear(instance, key);
   }
 }
@@ -36,8 +28,8 @@ export function clearAll(instance: Object): void {
  * @param propertyKey Key of the property whose cache should be retrieved.
  */
 export function getCache(instance: Object, propertyKey: string | symbol):
-    ImmutableMap<string, any> {
-  return createImmutableMap(getCache_(instance, propertyKey));
+    ReadonlyMap<string, any> {
+  return getCache_(instance, propertyKey);
 }
 
 function getCache_(instance: Object, propertyKey: string | symbol): Map<string, any> {

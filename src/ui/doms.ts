@@ -1,5 +1,3 @@
-import { createImmutableList, ImmutableList } from '../collection/types/immutable-list';
-
 /**
  * Methods to manipulate DOM objects.
  */
@@ -8,7 +6,7 @@ export class Doms {
    * @param node Node whose next siblings should be returned.
    * @return The next siblings of the node.
    */
-  static getNextSiblings(node: Node): ImmutableList<Node> {
+  static getNextSiblings(node: Node): readonly Node[] {
     const nodes = [];
     let currentNode = node.nextSibling;
     while (currentNode) {
@@ -16,6 +14,6 @@ export class Doms {
       currentNode = currentNode.nextSibling;
     }
 
-    return createImmutableList(nodes);
+    return nodes;
   }
 }

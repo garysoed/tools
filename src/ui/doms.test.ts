@@ -27,7 +27,7 @@ describe('ui.Doms', () => {
       parentEl.appendChild(element3);
       parentEl.appendChild(element4);
 
-      assert(Doms.getNextSiblings(element2)()).to.startWith([element3, element4]);
+      assert(Doms.getNextSiblings(element2)).to.haveExactElements([element3, element4]);
     });
   });
 });

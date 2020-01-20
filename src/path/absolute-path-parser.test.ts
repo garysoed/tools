@@ -1,7 +1,6 @@
 import { assert, should, test } from '@gs-testing';
-
 import { SuccessResult } from '@nabu';
-import { createImmutableList } from '../collection/types/immutable-list';
+
 import { AbsolutePath } from './absolute-path';
 import { absolutePathParser } from './absolute-path-parser';
 
@@ -23,8 +22,7 @@ test('path.AbsolutePathParser', () => {
 
   test('convertForward', () => {
     should(`return the correct string`, () => {
-      const result = absolutePathParser()
-          .convertForward(new AbsolutePath(createImmutableList(['a', 'b', 'c'])()));
+      const result = absolutePathParser().convertForward(new AbsolutePath(['a', 'b', 'c']));
       assert(result).to.haveProperties({result: '/a/b/c'});
     });
   });

@@ -1,8 +1,5 @@
 import { arrayThat, assert, should, test } from '@gs-testing';
 
-import { createImmutableList } from '../collection/types/immutable-list';
-import { createImmutableSet } from '../collection/types/immutable-set';
-
 import { integerConverter } from './integer-converter';
 import { iterableConverter } from './iterable-converter';
 
@@ -21,7 +18,7 @@ test('serializer.IterableConverter', () => {
 
     should(`fail if one of the items cannot be converted`, () => {
       const converter = iterableConverter(
-          content => createImmutableList([...content]),
+          content => [...content],
           integerConverter(),
       );
 
@@ -30,7 +27,7 @@ test('serializer.IterableConverter', () => {
 
     should(`fail if input is not an array`, () => {
       const converter = iterableConverter(
-          content => createImmutableList([...content]),
+          content => [...content],
           integerConverter(),
       );
 
@@ -41,23 +38,22 @@ test('serializer.IterableConverter', () => {
   test('convertForward', () => {
     should(`convert correctly`, () => {
       const converter = iterableConverter(
-          content => createImmutableList([...content]),
+          content => [...content],
           integerConverter(),
       );
 
-      assert(converter.convertForward(createImmutableSet([1, 2, 3]))).to.haveProperties({
+      assert(converter.convertForward([1, 2, 3])).to.haveProperties({
         result: arrayThat().haveExactElements([1, 2, 3]),
       });
     });
 
     should(`fail if one of the items cannot be converted`, () => {
       const converter = iterableConverter(
-          content => createImmutableList([...content]),
+          content => [...content],
           integerConverter(),
       );
 
-      assert(converter.convertForward(createImmutableSet([1, 2.34, 3])))
-          .to.haveProperties({success: false});
+      assert(converter.convertForward([1, 2.34, 3])).to.haveProperties({success: false});
     });
   });
 });

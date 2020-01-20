@@ -1,12 +1,8 @@
 // tslint:disable:no-non-null-assertion
 import { assert, should, test } from '@gs-testing';
 
-import { flat } from '../collection/operators/flat';
-import { map } from '../collection/operators/map';
-import { mapPick } from '../collection/operators/map-pick';
-import { pipe } from '../collection/pipe';
-
 import { ParameterAnnotator } from './parameter-annotation';
+
 
 const annotation = new ParameterAnnotator((_, propertyKey, index, pad: number) => {
   return `${propertyKey.toString()}_${index + pad}`;
@@ -51,13 +47,13 @@ test('data.ParameterAnnotator', () => {
         key: string|symbol,
         index: number,
     ): Array<Object|string> {
-      return [
-        ...pipe(
-            annotation.data.getAttachedValues(ctorFn, key, index),
-            map(([obj, valuesList]) => [obj, ...valuesList]),
-            flat<Object|string>(),
-        )(),
-      ];
+      const values: Array<Object|string|symbol|number> = [];
+      for (const [clazz, attachedValues] of annotation.data.getAttachedValues(ctorFn, key, index)) {
+        values.push(clazz);
+        values.push(...attachedValues);
+      }
+
+      return values;
     }
 
     should(`return the correct values`, () => {
@@ -116,29 +112,19 @@ test('data.ParameterAnnotator', () => {
 
   test('getAttachedValuesForCtor', () => {
     function getFlatAttachedValues(ctorFn: Object): Array<Object|string|symbol|number> {
-      return [
-        ...pipe(
-            annotation.data.getAttachedValuesForCtor(ctorFn),
-            mapPick(
-                1,
-                indexMap => pipe(
-                    indexMap,
-                    mapPick(
-                        1,
-                        objMap => pipe(
-                            objMap,
-                            map(([obj, valuesList]) => [obj, ...valuesList]),
-                            flat(),
-                        ),
-                    ),
-                    map(([key, values]) => [key, ...values()]),
-                    flat<Object|string|symbol|number>(),
-                ),
-            ),
-            map(([key, values]) => [key, ...values()]),
-            flat<Object|string|symbol|number>(),
-        )(),
-      ];
+      const values: Array<Object|string|symbol|number> = [];
+      for (const [propertyKey, paramMap] of annotation.data.getAttachedValuesForCtor(ctorFn)) {
+        values.push(propertyKey);
+        for (const [index, inheritanceMap] of paramMap) {
+          values.push(index);
+          for (const [clazz, attachedValues] of inheritanceMap) {
+            values.push(clazz);
+            values.push(...attachedValues);
+          }
+        }
+      }
+
+      return values;
     }
 
     should(`return the correct values`, () => {
@@ -159,7 +145,6 @@ test('data.ParameterAnnotator', () => {
         'methodA_1',
         'methodB',
         0,
-        DescendantClass,
         ParentClass,
         'methodB_4',
       ]);
@@ -196,21 +181,16 @@ test('data.ParameterAnnotator', () => {
 
   test('getAttachedValuesForKey', () => {
     function getFlatAttachedValues(ctorFn: Object, key: string|symbol): Array<Object|number> {
-      return [
-        ...pipe(
-            annotation.data.getAttachedValuesForKey(ctorFn, key),
-            mapPick(
-                1,
-                indexMap => pipe(
-                    indexMap,
-                    map(([key, values]) => [key, ...values()]),
-                    flat<Object|string|symbol|number>(),
-                ),
-            ),
-            map(([key, values]) => [key, ...values()]),
-            flat<Object|string|symbol|number>(),
-        )(),
-      ];
+      const values: Array<Object|number> = [];
+      for (const [index, inheritanceMap] of annotation.data.getAttachedValuesForKey(ctorFn, key)) {
+        values.push(index);
+        for (const [clazz, attachedValues] of inheritanceMap) {
+          values.push(clazz);
+          values.push(...attachedValues);
+        }
+      }
+
+      return values;
     }
 
     should(`return the correct values`, () => {
@@ -251,7 +231,6 @@ test('data.ParameterAnnotator', () => {
       // Check method B
       assert(getFlatAttachedValues(DescendantClass, 'methodB')).to.haveExactElements([
         0,
-        DescendantClass,
         ParentClass,
         'methodB_4',
       ]);

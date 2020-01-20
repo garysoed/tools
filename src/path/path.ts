@@ -1,15 +1,13 @@
-import { createImmutableList, ImmutableList } from '../collection/types/immutable-list';
-
 export abstract class Path {
   static readonly SEPARATOR: string = '/';
 
-  private readonly parts_: ImmutableList<string>;
+  private readonly parts_: readonly string[];
 
   constructor(parts: Iterable<string>) {
-    this.parts_ = createImmutableList([...parts]);
+    this.parts_ = [...parts];
   }
 
-  getParts(): ImmutableList<string> {
+  getParts(): readonly string[] {
     return this.parts_;
   }
 }
