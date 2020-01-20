@@ -6,6 +6,7 @@ export { asSet as $asSet } from '../src/collect/operators/as-set';
 export { diff as $diff } from '../src/collect/operators/diff';
 export { every as $every } from '../src/collect/operators/every';
 export { filter as $filter } from '../src/collect/operators/filter';
+export { filterDefined as $filterDefined } from '../src/collect/operators/filter-defined';
 export { filterNonNull as $filterNonNull } from '../src/collect/operators/filter-non-null';
 export { first as $first } from '../src/collect/operators/first';
 export { flat as $flat } from '../src/collect/operators/flat';
@@ -17,3 +18,5 @@ export { recordToMap as $recordToMap } from '../src/collect/operators/record-to-
 export { size as $size } from '../src/collect/operators/size';
 export { take as $take } from '../src/collect/operators/take';
 export { zip as $zip } from '../src/collect/operators/zip';
+
+export { iterableFrom } from '../src/collect/structures/iterable-from';
