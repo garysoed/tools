@@ -1,4 +1,4 @@
-import { OrderedMap } from '../../collect/ordered-map';
+import { OrderedMap } from '../../collect/structures/ordered-map';
 import { RandomGenerator, RandomResult } from '../random-generator';
 
 import { randomPickWeighted } from './random-pick-weighted';

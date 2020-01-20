@@ -1,11 +1,14 @@
-// tslint:disable:no-non-null-assertion
 import { assert, should, test } from '@gs-testing';
-import { flat } from '../collection/operators/flat';
-import { map } from '../collection/operators/map';
-import { pipe } from '../collection/pipe';
+
+import { asArray } from '../collect/operators/as-array';
+import { $ } from '../collect/operators/chain';
+import { flat } from '../collect/operators/flat';
+import { map } from '../collect/operators/map';
+
 import { ClassAnnotator } from './class-annotation';
 
-const annotation = new ClassAnnotator((_, a, b) => ({
+
+const annotation = new ClassAnnotator((_, a: number, b: number) => ({
   data: a + b,
   newTarget: undefined,
 }));
@@ -23,13 +26,12 @@ class DescendantClass extends ChildClass { }
 test('data.ClassAnnotator', () => {
   test('getAttachedValues', () => {
     function getFlatAttachedValues(ctorFn: Function): Array<Object|string> {
-      return [
-        ...pipe(
-            annotation.data.getAttachedValues(ctorFn),
-            map(([obj, valuesList]) => [obj, ...valuesList]),
-            flat<Object|string>(),
-        )(),
-      ];
+      return $(
+          annotation.data.getAttachedValues(ctorFn),
+          map(([obj, valuesList]) => [obj, ...valuesList]),
+          flat<Object|string>(),
+          asArray(),
+      );
     }
 
     should(`return the correct values`, () => {

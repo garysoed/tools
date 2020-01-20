@@ -1,10 +1,11 @@
-import { getKey } from '../collection/operators/get-key';
-import { mapPick } from '../collection/operators/map-pick';
-import { sort } from '../collection/operators/sort';
-import { Orderings } from '../collection/orderings';
-import { pipe } from '../collection/pipe';
-import { createImmutableList, ImmutableList } from '../collection/types/immutable-list';
-import { asImmutableMap, createImmutableMap, ImmutableMap } from '../collection/types/immutable-map';
+import { following } from '../collect/compare/following';
+import { withMap } from '../collect/compare/with-map';
+import { asArray } from '../collect/operators/as-array';
+import { asOrderedMap } from '../collect/operators/as-ordered-map';
+import { $ } from '../collect/operators/chain';
+import { filter } from '../collect/operators/filter';
+import { map } from '../collect/operators/map';
+
 
 interface AnnotationResult<D> {
   data: D;
@@ -15,28 +16,32 @@ type Annotator<A extends any[], D> = (target: Function, ...args: A) => Annotatio
 
 export class ClassAnnotation<D> {
   constructor(
-      private readonly data: ImmutableMap<Function, ImmutableList<D>>,
+      private readonly data: ReadonlyMap<Function, readonly D[]>,
   ) { }
 
-  getAllValues(): ImmutableMap<Function, ImmutableList<D>> {
+  getAllValues(): ReadonlyMap<Function, readonly D[]> {
     return this.data;
   }
 
-  getAttachedValues(ctorFn: Function): ImmutableMap<Function, ImmutableList<D>> {
+  getAttachedValues(ctorFn: Function): ReadonlyMap<Function, readonly D[]> {
     // Collect the ctor hierarchy.
     const ctors: Function[] = [];
-    let currentCtor = ctorFn;
+    let currentCtor: Function|null = ctorFn;
     while (currentCtor !== null) {
       ctors.push(currentCtor);
       currentCtor = Object.getPrototypeOf(currentCtor);
     }
 
-    return pipe(
+    const ctorsSet = new Set(ctors);
+
+    const orderedMap = $(
         this.data,
-        getKey(...ctors),
-        sort(Orderings.map(([ctor]) => ctor, Orderings.following(ctors))),
-        asImmutableMap(),
+        filter(([key]) => ctorsSet.has(key)),
+        asArray(),
+        asOrderedMap(),
     );
+    orderedMap.sort(withMap(([ctor]) => ctor, following(ctors)));
+    return orderedMap;
   }
 }
 
@@ -48,13 +53,7 @@ export class ClassAnnotator<D, A extends any[]> {
   ) { }
 
   get data(): ClassAnnotation<D> {
-    return new ClassAnnotation(
-        pipe(
-            createImmutableMap(this.dataMap),
-            mapPick(1, data => createImmutableList(data)),
-            asImmutableMap<Function, ImmutableList<D>>(),
-        ),
-    );
+    return new ClassAnnotation(this.dataMap);
   }
 
   get decorator(): (...args: A) => ClassDecorator {

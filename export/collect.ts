@@ -9,6 +9,7 @@ export { filter as $filter } from '../src/collect/operators/filter';
 export { filterNonNull as $filterNonNull } from '../src/collect/operators/filter-non-null';
 export { first as $first } from '../src/collect/operators/first';
 export { flat as $flat } from '../src/collect/operators/flat';
+export { head as $head } from '../src/collect/operators/head';
 export { intersect as $intersect } from '../src/collect/operators/intersect';
 export { join as $join } from '../src/collect/operators/join';
 export { map as $map } from '../src/collect/operators/map';

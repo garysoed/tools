@@ -1,4 +1,9 @@
-export class OrderedMap<K, V> implements ReadonlyMap<K, V> {
+import { Ordering } from '../compare/ordering';
+import { withMap } from '../compare/with-map';
+
+import { Sortable } from './sortable';
+
+export class OrderedMap<K, V> implements ReadonlyMap<K, V>, Sortable<[K, V]> {
   readonly [Symbol.toStringTag] = 'OrderedMap';
 
   private readonly _keys = this.source.map(([key]) => key);
@@ -75,6 +80,10 @@ export class OrderedMap<K, V> implements ReadonlyMap<K, V> {
 
     this._map.set(key, value);
     return this;
+  }
+
+  sort(ordering: Ordering<[K, V]>): void {
+    this._keys.sort(withMap(key => [key, this.get(key)!] as [K, V], ordering));
   }
 
   splice(start: number, deleteCount: number, ...toAdd: ReadonlyArray<[K, V]>): Array<[K, V]> {
