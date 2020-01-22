@@ -3,7 +3,7 @@ import { map, scan } from '@rxjs/operators';
 
 export interface ArrayInit<T> {
   type: 'init';
-  value: T[];
+  value: readonly T[];
 }
 
 export interface ArrayInsert<T> {

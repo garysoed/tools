@@ -1,3 +1,4 @@
+export { $ as $pipe } from '../src/collect/operators/chain';
 export { $ } from '../src/collect/operators/chain';
 
 export { asArray as $asArray } from '../src/collect/operators/as-array';
@@ -19,4 +20,5 @@ export { size as $size } from '../src/collect/operators/size';
 export { take as $take } from '../src/collect/operators/take';
 export { zip as $zip } from '../src/collect/operators/zip';
 
+export { countableIterable } from '../src/collect/structures/countable-iterable';
 export { iterableFrom } from '../src/collect/structures/iterable-from';

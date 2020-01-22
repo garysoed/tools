@@ -1,9 +1,10 @@
-import { assert, should, test } from '@gs-testing';
-import { createSpy, fake, resetCalls, Spy } from '@gs-testing';
+import { assert, createSpy, fake, resetCalls, should, Spy, test } from '@gs-testing';
+
 import { cache } from './cache';
 import { clear, clearAll } from './caches';
 
-test.skip('data.Caches', () => {
+
+test('data.Caches', () => {
   /**
    * @test
    */
