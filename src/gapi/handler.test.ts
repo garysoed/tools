@@ -1,6 +1,7 @@
-import { assert, should, test, setup, SpyObj, createSpyObject, fake } from '@gs-testing';
-import { Handler } from './handler';
+import { assert, createSpyObject, fake, setup, should, SpyObj, test } from '@gs-testing';
 import { ReplaySubject, Subject } from '@rxjs';
+
+import { Handler } from './handler';
 
 
 test('@gs-tools/gapi/handler', () => {
