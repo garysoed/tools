@@ -1,2 +1,2 @@
-export { Builder as GapiBuilder } from '../src/gapi/builder';
-export { Handler as GapiHandler } from '../src/gapi/handler';
+import * as sheetsImport from '../src/gapi/sheets';
+export const sheets = sheetsImport;
