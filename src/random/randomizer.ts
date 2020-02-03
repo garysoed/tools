@@ -1,4 +1,4 @@
-import { RandomGenerator } from './random-generator';
+import { RandomGenerator, RandomResult } from './random-generator';
 import { mathSeed } from './seed/math-seed';
 
 const ID_CHARS: string[] = [];
@@ -17,51 +17,46 @@ for (let i = 97; i < 123; i++) {
   ID_CHARS.push(String.fromCharCode(i));
 }
 
+
 /**
- * Generates random objects.
+ * Picks an integer from the given interval.
+ *
+ * @param from The start interval (inclusive).
+ * @param to The end interval (exclusive).
+ * @return Integer picked randomly in the given interval.
  */
-export class RandomizerImpl {
-  constructor(private readonly rng: RandomGenerator) { }
-
-  /**
-   * Picks an integer from the given interval.
-   *
-   * @param from The start interval (inclusive).
-   * @param to The end interval (exclusive).
-   * @return Integer picked randomly in the given interval.
-   */
-  intRange(from: number, to: number): number {
-    return from + Math.floor(this.rng.next()[0] * (to - from));
-  }
-
-  /**
-   * Picks an item randomly from the given list.
-   *
-   * @param values The list to pick the value from.
-   * @return A value from the given list.
-   */
-  list<T>(values: T[]): T {
-    return values[this.intRange(0, values.length)];
-  }
-
-  /**
-   * Generates a random short ID.
-   *
-   * A short ID is a 7 characters long ID. Each character is a case sensitive alphanumeric
-   * character.
-   *
-   * @return A randomly generated short ID.
-   */
-  shortId(): string {
-    const id: string[] = [];
-    for (let i = 0; i < 7; i++) {
-      id.push(this.list(ID_CHARS));
-    }
-
-    return id.join('');
-  }
+export function intRange(from: number, to: number, rng: RandomGenerator): RandomResult<number> {
+  const [value, nextRng] = rng.next();
+  return [from + Math.floor(value * (to - from)), nextRng];
 }
 
-export function Randomizer(rng: () => RandomGenerator = mathSeed): RandomizerImpl {
-  return new RandomizerImpl(rng());
+/**
+ * Picks an item randomly from the given list.
+ *
+ * @param values The list to pick the value from.
+ * @return A value from the given list.
+ */
+export function list<T>(values: T[], rng: RandomGenerator): RandomResult<T> {
+  const [value, nextRng] = intRange(0, values.length, rng);
+  return [values[value], nextRng];
+}
+
+/**
+ * Generates a random short ID.
+ *
+ * A short ID is a 7 characters long ID. Each character is a case sensitive alphanumeric
+ * character.
+ *
+ * @return A randomly generated short ID.
+ */
+export function shortId(rng: RandomGenerator): RandomResult<string> {
+  let nextRng = rng;
+  const id: string[] = [];
+  for (let i = 0; i < 7; i++) {
+    const [value, next] = list(ID_CHARS, nextRng);
+    id.push(value);
+    nextRng = next;
+  }
+
+  return [id.join(''), nextRng];
 }

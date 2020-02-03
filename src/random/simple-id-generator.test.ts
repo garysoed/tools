@@ -1,23 +1,18 @@
-import { assert, createSpyInstance, fake, should, SpyObj } from '@gs-testing';
+import { assert, should } from '@gs-testing';
 
-import { RandomizerImpl } from './randomizer';
+import { RandomGenerator } from './random-generator';
 import { SimpleIdGenerator } from './simple-id-generator';
+import { fakeSeed } from './testing/fake-seed';
 
 
 describe('random.SimpleIdGenerator', () => {
-  let generator: SimpleIdGenerator;
-  let mockRandom: SpyObj<RandomizerImpl>;
-
-  beforeEach(() => {
-    mockRandom = createSpyInstance(RandomizerImpl);
-    generator = new SimpleIdGenerator(mockRandom);
-  });
-
   describe('generate', () => {
     should(`generate the ID correctly`, () => {
-      fake(mockRandom.shortId).always().return('id');
+      const seed = fakeSeed([13 / 62]);
+      const generator = new SimpleIdGenerator(new RandomGenerator(seed));
 
-      assert(generator.generate(['id', 'id-id', 'id-id-id'])).to.equal('id-id-id-id');
+      assert(generator.generate(['DDDDDDD', 'DDDDDDD-DDDDDDD', 'DDDDDDD-DDDDDDD-DDDDDDD']))
+          .to.equal('DDDDDDD-DDDDDDD-DDDDDDD-DDDDDDD');
     });
   });
 });

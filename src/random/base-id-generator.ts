@@ -1,3 +1,5 @@
+import { RandomResult } from './random-generator';
+
 /**
  * Base class of all ID generators.
  */
@@ -10,9 +12,9 @@ export abstract class BaseIdGenerator {
    */
   generate(existingIds: Iterable<string>): string {
     const existingSet = new Set(existingIds);
-    let id = this.newId_();
+    let id = this.newId();
     while (existingSet.has(id)) {
-      id = this.resolveConflict_(id);
+      id = this.resolveConflict(id);
     }
 
     return id;
@@ -24,7 +26,7 @@ export abstract class BaseIdGenerator {
    *
    * @return The newly generated ID.
    */
-  protected abstract newId_(): string;
+  protected abstract newId(): string;
 
   /**
    * Attempts to resolve a conflict for the given ID.
@@ -35,5 +37,5 @@ export abstract class BaseIdGenerator {
    * @param id The conflicting ID.
    * @return Best effort new ID.
    */
-  protected abstract resolveConflict_(id: string): string;
+  protected abstract resolveConflict(id: string): string;
 }

@@ -1,14 +1,14 @@
 import { assert, should, test } from '@gs-testing';
 
-import { randomTakeMultiple } from '../operators/random-take-multiple';
+import { RandomGenerator } from '../random-generator';
 
 import { aleaSeed } from './alea-seed';
 
 test('@tools/random/alea-rng', () => {
   should(`produce the same sequence with the same seed`, () => {
     const seed = 123;
-    assert(randomTakeMultiple(aleaSeed(seed), 5, values => values)[0]).to
-        .haveExactElements(randomTakeMultiple(aleaSeed(seed), 5, values => values)[0]);
+    assert(new RandomGenerator(aleaSeed(seed)).next(5)[0]).to
+        .haveExactElements(new RandomGenerator(aleaSeed(seed)).next(5)[0]);
   });
 
   should(`produce the same sequence when branched`, () => {
@@ -16,7 +16,7 @@ test('@tools/random/alea-rng', () => {
     const rng = aleaSeed(seed);
     const [, newGenerator1] = rng.next();
     const [, newGenerator2] = rng.next();
-    assert(randomTakeMultiple(newGenerator1, 5, values => values)[0]).to.haveExactElements(
-        randomTakeMultiple(newGenerator2, 5, values => values)[0]);
+    assert(new RandomGenerator(newGenerator1).next(5)[0]).to.haveExactElements(
+        new RandomGenerator(newGenerator2).next(5)[0]);
   });
 });

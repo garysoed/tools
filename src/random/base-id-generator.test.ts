@@ -1,15 +1,16 @@
 import { assert, should } from '@gs-testing';
+
 import { BaseIdGenerator } from './base-id-generator';
 
 /**
  * @test
  */
 class TestIdGenerator extends BaseIdGenerator {
-  protected newId_(): string {
+  protected newId(): string {
     return `1`;
   }
 
-  protected resolveConflict_(id: string): string {
+  protected resolveConflict(id: string): string {
     return `${parseInt(id, 10) + 1}`;
   }
 }
