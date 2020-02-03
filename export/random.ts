@@ -3,7 +3,8 @@ export { RandomGenerator, RandomResult } from '../src/random/random-generator';
 
 export { aleaSeed } from '../src/random/seed/alea-seed';
 
-export { randomPick } from '../src/random/operators/random-pick';
+export { randomInt } from '../src/random/operators/random-int';
+export { randomItem } from '../src/random/operators/random-item';
 export { randomPickWeighted } from '../src/random/operators/random-pick-weighted';
 export { randomPickWeightedMultiple } from '../src/random/operators/random-pick-weighted-multiple';
-export { randomTakeMultiple } from '../src/random/operators/random-take-multiple';
+export { randomShortId } from '../src/random/operators/random-short-id';

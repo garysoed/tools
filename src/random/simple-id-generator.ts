@@ -1,7 +1,7 @@
 import { BaseIdGenerator } from '../random/base-id-generator';
 
+import { randomShortId } from './operators/random-short-id';
 import { RandomGenerator } from './random-generator';
-import { shortId } from './randomizer';
 import { mathSeed } from './seed/math-seed';
 
 
@@ -14,13 +14,13 @@ export class SimpleIdGenerator extends BaseIdGenerator {
   }
 
   protected newId(): string {
-    const [id, next] = shortId(this.rng);
+    const [id, next] = randomShortId(this.rng);
     this.rng = next;
     return id;
   }
 
   protected resolveConflict(id: string): string {
-    const [nextId, next] = shortId(this.rng);
+    const [nextId, next] = randomShortId(this.rng);
     this.rng = next;
     return `${id}-${nextId}`;
   }
