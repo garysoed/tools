@@ -1,4 +1,4 @@
-import { sheets_v4 } from 'googleapis';
+import { ExtendedValue, GridData } from './type/sheets';
 
 export interface Coordinate {
   readonly column: number;
@@ -11,14 +11,14 @@ export interface Coordinate {
 export function getCellContentByRange(
     start: Coordinate,
     end: Coordinate,
-    sheetData: sheets_v4.Schema$GridData,
-): ReadonlyArray<readonly sheets_v4.Schema$ExtendedValue[]> {
+    sheetData: GridData,
+): ReadonlyArray<readonly ExtendedValue[]> {
   const rowData = sheetData.rowData;
   if (!rowData) {
     return [];
   }
 
-  const contents: sheets_v4.Schema$ExtendedValue[][] = [];
+  const contents: ExtendedValue[][] = [];
 
   for (let r = start.row; r < end.row; r++) {
     const row = rowData[r];
@@ -26,7 +26,7 @@ export function getCellContentByRange(
       continue;
     }
 
-    const rowContents: sheets_v4.Schema$ExtendedValue[] = [];
+    const rowContents: ExtendedValue[] = [];
 
     for (let c = start.column; c < end.column; c++) {
       const values = row.values;
@@ -49,8 +49,8 @@ export function getCellContentByRange(
 
 export function getCellContent(
     coordinate: Coordinate,
-    sheetData: sheets_v4.Schema$GridData,
-): sheets_v4.Schema$ExtendedValue|null {
+    sheetData: GridData,
+): ExtendedValue|null {
   return getCellContentByRange(
       coordinate,
       {row: coordinate.row + 1, column: coordinate.column + 1},

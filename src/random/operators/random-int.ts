@@ -1,4 +1,4 @@
-import { RandomGenerator, RandomResult } from '../random-generator';
+import { Random } from '../random';
 
 /**
  * Picks an integer from the given interval.
@@ -7,7 +7,8 @@ import { RandomGenerator, RandomResult } from '../random-generator';
  * @param to The end interval (exclusive).
  * @return Integer picked randomly in the given interval.
  */
-export function randomInt(from: number, to: number, rng: RandomGenerator): RandomResult<number> {
-  const [value, nextRng] = rng.next();
-  return [from + Math.floor(value * (to - from)), nextRng];
+export function randomInt(from: number, to: number, rng: Random<unknown>): Random<number> {
+  return rng.next(({random, rng}) => {
+    return rng.map(() => from + Math.floor(random * (to - from)));
+  });
 }

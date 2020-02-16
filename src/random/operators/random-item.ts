@@ -1,6 +1,7 @@
-import { RandomGenerator, RandomResult } from '../random-generator';
+import { Random } from '../random';
 
 import { randomInt } from './random-int';
+
 
 /**
  * Picks an item randomly from the given list.
@@ -8,7 +9,6 @@ import { randomInt } from './random-int';
  * @param values The list to pick the value from.
  * @return A value from the given list.
  */
-export function randomItem<T>(values: T[], rng: RandomGenerator): RandomResult<T> {
-  const [value, nextRng] = randomInt(0, values.length, rng);
-  return [values[value], nextRng];
+export function randomItem<T>(values: readonly T[], rng: Random<unknown>): Random <T> {
+  return randomInt(0, values.length, rng).map(index => values[index]);
 }

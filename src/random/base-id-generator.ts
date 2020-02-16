@@ -1,5 +1,3 @@
-import { RandomResult } from './random-generator';
-
 /**
  * Base class of all ID generators.
  */

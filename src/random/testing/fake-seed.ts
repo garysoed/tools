@@ -1,13 +1,10 @@
 import { RandomSeed } from '../seed/random-seed';
 
-export function fakeSeed([value, ...rest]: number[]): RandomSeed {
-  return {
-    next(): [number, RandomSeed] {
-      if (rest.length <= 0) {
-        return [value, fakeSeed([value])];
-      }
+export class FakeSeed implements RandomSeed {
+  constructor(readonly values: number[] = []) {}
 
-      return [value, fakeSeed(rest)];
-    },
-  };
+  next(): readonly [number, RandomSeed] {
+    const [value, ...rest] = this.values;
+    return [value, new FakeSeed(rest.length <= 0 ? [value] : rest)];
+  }
 }

@@ -1,6 +1,7 @@
-import { RandomGenerator, RandomResult } from '../random-generator';
+import { Random } from '../random';
 
 import { randomItem } from './random-item';
+
 
 const ID_CHARS: string[] = [];
 // Add the numbers.
@@ -26,14 +27,14 @@ for (let i = 97; i < 123; i++) {
  *
  * @return A randomly generated short ID.
  */
-export function randomShortId(rng: RandomGenerator): RandomResult<string> {
+export function randomShortId(rng: Random<unknown>): Random<string> {
   let nextRng = rng;
   const id: string[] = [];
   for (let i = 0; i < 7; i++) {
-    const [value, next] = randomItem(ID_CHARS, nextRng);
-    id.push(value);
-    nextRng = next;
+    const rngItem = randomItem(ID_CHARS, nextRng);
+    id.push(rngItem.value);
+    nextRng = rngItem;
   }
 
-  return [id.join(''), nextRng];
+  return nextRng.map(() => id.join(''));
 }

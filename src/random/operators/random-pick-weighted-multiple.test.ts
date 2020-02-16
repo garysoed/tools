@@ -1,23 +1,23 @@
 import { assert, should, test } from '@gs-testing';
 
-import { RandomGenerator } from '../random-generator';
-import { fakeSeed } from '../testing/fake-seed';
+import { fromSeed } from '../random';
+import { FakeSeed } from '../testing/fake-seed';
 
 import { randomPickWeightedMultiple } from './random-pick-weighted-multiple';
 
 
 test('@tools/random/operators/random-pick-weighted-multiple', () => {
   should(`return the items according to the RNG`, () => {
-    const seed = fakeSeed([0.5]);
-    const [result] = randomPickWeightedMultiple(
+    const seed = new FakeSeed([0.5]);
+    const result = randomPickWeightedMultiple(
         [
           ['a', 1],
           ['b', 2],
           ['c', 3],
         ],
         2,
-        new RandomGenerator(seed),
-    );
+        fromSeed(seed),
+    ).value;
 
     assert(result).to.haveExactElements(['b', 'c']);
   });

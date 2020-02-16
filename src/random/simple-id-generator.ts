@@ -1,7 +1,7 @@
 import { BaseIdGenerator } from '../random/base-id-generator';
 
 import { randomShortId } from './operators/random-short-id';
-import { RandomGenerator } from './random-generator';
+import { fromSeed, Random } from './random';
 import { mathSeed } from './seed/math-seed';
 
 
@@ -9,19 +9,19 @@ import { mathSeed } from './seed/math-seed';
  * Simple implementation of ID generator that uses short IDs.
  */
 export class SimpleIdGenerator extends BaseIdGenerator {
-  constructor(private rng: RandomGenerator = new RandomGenerator(mathSeed())) {
+  constructor(private rng: Random<unknown> = fromSeed(mathSeed())) {
     super();
   }
 
   protected newId(): string {
-    const [id, next] = randomShortId(this.rng);
-    this.rng = next;
-    return id;
+    const rng = randomShortId(this.rng);
+    this.rng = rng;
+    return rng.value;
   }
 
   protected resolveConflict(id: string): string {
-    const [nextId, next] = randomShortId(this.rng);
-    this.rng = next;
-    return `${id}-${nextId}`;
+    const rng = randomShortId(this.rng);
+    this.rng = rng;
+    return `${id}-${rng.value}`;
   }
 }

@@ -17,8 +17,16 @@ export { join as $join } from '../src/collect/operators/join';
 export { map as $map } from '../src/collect/operators/map';
 export { recordToMap as $recordToMap } from '../src/collect/operators/record-to-map';
 export { size as $size } from '../src/collect/operators/size';
+export { sort as $sort } from '../src/collect/operators/sort';
 export { take as $take } from '../src/collect/operators/take';
 export { zip as $zip } from '../src/collect/operators/zip';
 
 export { countableIterable } from '../src/collect/structures/countable-iterable';
 export { iterableFrom } from '../src/collect/structures/iterable-from';
+
+export { compound } from '../src/collect/compare/compound';
+export { natural } from '../src/collect/compare/natural';
+export { normal } from '../src/collect/compare/normal';
+export { withMap } from '../src/collect/compare/with-map';
+
+export { Ordering } from '../src/collect/compare/ordering';
