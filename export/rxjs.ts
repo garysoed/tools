@@ -1,3 +1,4 @@
+export { assertByType } from '../src/rxjs/assert-by-type';
 export { assertNonNull } from '../src/rxjs/assert-non-null';
 export { branch } from '../src/rxjs/branch';
 export { debug } from '../src/rxjs/debug';
