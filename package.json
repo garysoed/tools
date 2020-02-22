@@ -2,7 +2,6 @@
   "name": "gs-tools",
   "version": "1.0.0",
   "description": "Common tools",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -24,7 +23,7 @@
     "ansi-styles": "^3.2.1",
     "chance": "^1.0.18",
     "express": "^4.17.1",
-    "rxjs": "^6.5.2"
+    "rxjs": "^6.5.4"
   },
   "devDependencies": {
     "@types/gapi": "0.0.36",

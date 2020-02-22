@@ -1,4 +1,4 @@
-import { NumberType, StringType, Type } from '@gs-types';
+import { NumberType, StringType, Type } from 'gs-types';
 import { CompareResult } from './compare-result';
 import { Ordering } from './ordering';
 

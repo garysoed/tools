@@ -1,4 +1,4 @@
-import { assert, should, test } from '@gs-testing';
+import { assert, should, test } from 'gs-testing';
 import {matches} from './matches';
 
 test('@tools/collect/compare/matches', () => {

@@ -1,4 +1,4 @@
-import { Serializable } from '@nabu';
+import { Serializable } from 'nabu';
 import { Ctor, Immutable } from './types';
 import { ImmutableObject } from './immutable-object';
 

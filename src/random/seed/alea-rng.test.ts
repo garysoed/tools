@@ -1,4 +1,4 @@
-import { assert, should, test } from '@gs-testing';
+import { assert, should, test } from 'gs-testing';
 
 import { fromSeed, Random } from '../random';
 

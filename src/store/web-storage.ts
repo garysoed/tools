@@ -1,6 +1,6 @@
-import { binary, compose, Converter, identity, Serializable, strict, StrictConverter } from '@nabu';
-import { Observable, of as observableOf } from '@rxjs';
-import { map, pairwise, shareReplay, startWith, switchMap, take, tap } from '@rxjs/operators';
+import { binary, compose, Converter, identity, Serializable, strict, StrictConverter } from 'nabu';
+import { Observable, of as observableOf } from 'rxjs';
+import { map, pairwise, shareReplay, startWith, switchMap, take, tap } from 'rxjs/operators';
 
 import { cache } from '../data/cache';
 import { BaseIdGenerator } from '../random/base-id-generator';

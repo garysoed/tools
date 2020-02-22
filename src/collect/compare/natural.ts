@@ -1,4 +1,4 @@
-import { numberType, stringType } from '@gs-types';
+import { numberType, stringType } from 'gs-types';
 
 import { byType } from './by-type';
 import { CompareResult } from './compare-result';

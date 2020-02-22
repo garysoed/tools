@@ -1,5 +1,5 @@
-import { assert, setup, should, test } from '@gs-testing';
-import { SerializableObject } from '@nabu';
+import { assert, setup, should, test } from 'gs-testing';
+import { SerializableObject } from 'nabu';
 import { generateImmutable as createImmutable, ImmutableFactory } from './immutable-factory';
 
 interface SerializableParent extends SerializableObject {

@@ -1,5 +1,5 @@
-import { EMPTY, fromEventPattern, Observable, of as observableOf } from '@rxjs';
-import { filter, map, startWith, switchMap } from '@rxjs/operators';
+import { EMPTY, fromEventPattern, Observable, of as observableOf } from 'rxjs';
+import { filter, map, startWith, switchMap } from 'rxjs/operators';
 
 export class Handler {
   ensureSignedIn(): Observable<unknown> {

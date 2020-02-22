@@ -1,5 +1,5 @@
-import { assert, createSpySubject, iterableThat, objectThat, setThat, setup, should, SpySubject, test } from '@gs-testing';
-import { scan } from '@rxjs/operators';
+import { assert, createSpySubject, iterableThat, objectThat, setThat, setup, should, SpySubject, test } from 'gs-testing';
+import { scan } from 'rxjs/operators';
 
 import { scanSet, SetDiff } from './set-observable';
 import { SetSubject } from './set-subject';

@@ -1,4 +1,4 @@
-import { arrayThat, assert, iterableThat, should, test, tupleThat } from '@gs-testing';
+import { arrayThat, assert, iterableThat, should, test, tupleThat } from 'gs-testing';
 
 import { $ } from './chain';
 import { split } from './split';

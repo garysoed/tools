@@ -1,4 +1,4 @@
-import { deepClone, Serializable } from '@nabu';
+import { deepClone, Serializable } from 'nabu';
 import { Ctor, Immutable, Setter, WritableKeysOf } from './types';
 
 export type ImmutableOf<O, S> = {

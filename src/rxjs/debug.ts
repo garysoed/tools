@@ -1,6 +1,6 @@
-import { stringify, Verbosity } from '@moirai';
-import { MonoTypeOperatorFunction, Observable } from '@rxjs';
-import { finalize, tap } from '@rxjs/operators';
+import { stringify, Verbosity } from 'moirai';
+import { MonoTypeOperatorFunction, Observable } from 'rxjs';
+import { finalize, tap } from 'rxjs/operators';
 
 const SUBSCRIBED_KEYS = new Set<string>();
 

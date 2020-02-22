@@ -1,4 +1,4 @@
-import { assert, should, test, tupleThat } from '@gs-testing';
+import { assert, should, test, tupleThat } from 'gs-testing';
 
 import { OrderedMap } from './ordered-map';
 

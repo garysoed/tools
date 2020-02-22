@@ -1,4 +1,4 @@
-import { Type } from '@gs-types';
+import { Type } from 'gs-types';
 
 import { CompareResult } from './compare-result';
 import { normal } from './normal';

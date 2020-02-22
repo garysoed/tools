@@ -1,4 +1,4 @@
-import { Converter, Result } from '@nabu';
+import { Converter, Result } from 'nabu';
 
 import { AbsolutePath } from '../path/absolute-path';
 import { Path } from '../path/path';

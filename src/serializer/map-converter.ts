@@ -1,4 +1,4 @@
-import { Converter, Serializable } from '@nabu';
+import { Converter, Serializable } from 'nabu';
 
 import { iterableConverter } from './iterable-converter';
 import { tupleConverter } from './tuple-converter';

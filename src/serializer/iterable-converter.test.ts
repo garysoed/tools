@@ -1,4 +1,4 @@
-import { arrayThat, assert, should, test } from '@gs-testing';
+import { arrayThat, assert, should, test } from 'gs-testing';
 
 import { integerConverter } from './integer-converter';
 import { iterableConverter } from './iterable-converter';

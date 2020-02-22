@@ -1,5 +1,5 @@
-import { from, Observable } from '@rxjs';
-import { mapTo, shareReplay } from '@rxjs/operators';
+import { from, Observable } from 'rxjs';
+import { mapTo, shareReplay } from 'rxjs/operators';
 
 import { Handler } from './handler';
 

@@ -1,4 +1,4 @@
-import { assert, should, test } from '@gs-testing';
+import { assert, should, test } from 'gs-testing';
 import { Color } from './color';
 import { Colors } from './colors';
 import { RgbColor } from './rgb-color';

@@ -1,4 +1,5 @@
-import { Subscription } from '@rxjs';
+import { Subscription } from 'rxjs';
+
 import { Disposable } from './disposable';
 
 /**
@@ -20,7 +21,7 @@ export const Flags = {
  * Base class of all disposable objects.
  */
 export class BaseDisposable implements Disposable {
-  private readonly disposableHandlers_: (() => void)[] = [];
+  private readonly disposableHandlers_: Array<() => void> = [];
   private isDisposed_: boolean = false;
 
   constructor() {
@@ -69,15 +70,15 @@ export class BaseDisposable implements Disposable {
   }
 
   /**
-   * Override this method for custom logic that are ran during disposal.
-   */
-  // tslint:disable-next-line:prefer-function-over-method
-  protected disposeInternal(): void { /* noop */ }
-
-  /**
    * True iff the object has been disposed.
    */
   isDisposed(): boolean {
     return this.isDisposed_;
   }
+
+  /**
+   * Override this method for custom logic that are ran during disposal.
+   */
+  // tslint:disable-next-line:prefer-function-over-method
+  protected disposeInternal(): void { /* noop */ }
 }

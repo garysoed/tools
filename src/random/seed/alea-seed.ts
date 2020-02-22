@@ -23,7 +23,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { HasPropertiesType, NumberType } from '@gs-types';
+import { HasPropertiesType, NumberType } from 'gs-types';
 
 import { RandomSeed } from './random-seed';
 

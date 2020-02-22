@@ -1,5 +1,5 @@
 // tslint:disable:no-non-null-assertion
-import { assert, should, test } from '@gs-testing';
+import { assert, should, test } from 'gs-testing';
 
 import { asArray } from '../collect/operators/as-array';
 import { $ } from '../collect/operators/chain';

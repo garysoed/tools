@@ -1,4 +1,4 @@
-import { Environment } from '@gs-testing';
+import { Environment } from 'gs-testing';
 import { Flags, TRACKED_DISPOSABLES } from '../base-disposable';
 import { Disposable } from '../disposable';
 

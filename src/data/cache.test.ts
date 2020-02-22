@@ -1,4 +1,4 @@
-import { assert, createSpy, fake, resetCalls, should, Spy } from '@gs-testing';
+import { assert, createSpy, fake, resetCalls, should, Spy } from 'gs-testing';
 
 import { cache } from '../data/cache';
 

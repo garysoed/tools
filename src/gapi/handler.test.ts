@@ -1,5 +1,5 @@
-import { assert, createSpyObject, fake, setup, should, SpyObj, test } from '@gs-testing';
-import { ReplaySubject, Subject } from '@rxjs';
+import { assert, createSpyObject, fake, setup, should, SpyObj, test } from 'gs-testing';
+import { ReplaySubject, Subject } from 'rxjs';
 
 import { Handler } from './handler';
 

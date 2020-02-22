@@ -1,5 +1,5 @@
-import { merge, Observable } from '@rxjs';
-import { filter } from '@rxjs/operators';
+import { merge, Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 type Operator<A, B> = (obs: Observable<A>) => Observable<B>;
 

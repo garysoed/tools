@@ -1,4 +1,4 @@
-import { assert, should } from '@gs-testing';
+import { assert, should } from 'gs-testing';
 import { floatConverter } from './float-converter';
 
 describe('serializer.FloatConverter', () => {

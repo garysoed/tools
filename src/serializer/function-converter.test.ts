@@ -1,4 +1,4 @@
-import { assert, should, stringThat, test } from '@gs-testing';
+import { assert, should, stringThat, test } from 'gs-testing';
 
 import { anyParamsFunctionConverter, noParamFunctionConverter, oneParamFunctionConverter } from './function-converter';
 

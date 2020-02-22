@@ -1,4 +1,4 @@
-// import { assert, Matchers, TestBase } from '@gs-testing';
+// import { assert, Matchers, TestBase } from 'gs-testing';
 //
 
 // import { Serializer } from '../data/a-serializable';

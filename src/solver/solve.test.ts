@@ -1,4 +1,4 @@
-import { assert, should } from '@gs-testing';
+import { assert, should } from 'gs-testing';
 
 import { Solve } from './solve';
 import { Spec } from './spec';

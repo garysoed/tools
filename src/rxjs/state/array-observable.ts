@@ -1,5 +1,5 @@
-import { Observable } from '@rxjs';
-import { map, scan } from '@rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, scan } from 'rxjs/operators';
 
 export interface ArrayInit<T> {
   type: 'init';

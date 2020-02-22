@@ -1,5 +1,5 @@
-import { assert, should, test } from '@gs-testing';
-import { numberType } from '@gs-types';
+import { assert, should, test } from 'gs-testing';
+import { numberType } from 'gs-types';
 
 import { byType } from './by-type';
 

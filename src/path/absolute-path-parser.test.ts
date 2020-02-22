@@ -1,5 +1,5 @@
-import { assert, should, test } from '@gs-testing';
-import { SuccessResult } from '@nabu';
+import { assert, should, test } from 'gs-testing';
+import { SuccessResult } from 'nabu';
 
 import { AbsolutePath } from './absolute-path';
 import { absolutePathParser } from './absolute-path-parser';

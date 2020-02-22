@@ -1,4 +1,4 @@
-import { Converter, Result, Serializable } from '@nabu';
+import { Converter, Result, Serializable } from 'nabu';
 
 class TupleConverter<T extends unknown[]> implements Converter<T, Serializable> {
   constructor(private readonly elementConverters_: Array<Converter<unknown, Serializable>>) { }

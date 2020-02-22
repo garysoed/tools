@@ -1,5 +1,5 @@
-import { assert, should, test } from '@gs-testing';
-import { strict } from '@nabu';
+import { assert, should, test } from 'gs-testing';
+import { strict } from 'nabu';
 
 import { RelativePath } from './relative-path';
 import { relativePathParser } from './relative-path-parser';

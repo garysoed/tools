@@ -1,4 +1,4 @@
-import { Type } from '@gs-types';
+import { Type } from 'gs-types';
 
 export class AssertionShouldBuilder {
   constructor(

@@ -1,4 +1,4 @@
-import { assert, objectThat, should, test } from '@gs-testing';
+import { assert, objectThat, should, test } from 'gs-testing';
 
 import { integerConverter } from './integer-converter';
 import { objectConverter } from './object-converter';

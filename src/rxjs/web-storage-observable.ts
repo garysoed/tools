@@ -1,5 +1,5 @@
-import { fromEvent, merge, Observable, of as observableOf, Subject } from '@rxjs';
-import { map, startWith, tap } from '@rxjs/operators';
+import { fromEvent, merge, Observable, of as observableOf, Subject } from 'rxjs';
+import { map, startWith, tap } from 'rxjs/operators';
 
 export class WebStorageObservable {
   private readonly invalidateSubject: Subject<void> = new Subject();

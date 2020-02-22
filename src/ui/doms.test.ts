@@ -1,4 +1,4 @@
-import { assert, should } from '@gs-testing';
+import { assert, should } from 'gs-testing';
 
 import { Doms } from './doms';
 

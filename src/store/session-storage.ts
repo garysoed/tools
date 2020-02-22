@@ -1,4 +1,4 @@
-import { Converter, Serializable } from '@nabu';
+import { Converter, Serializable } from 'nabu';
 import { WebStorage } from '../store/web-storage';
 
 export class SessionStorage<T> extends WebStorage<T> {

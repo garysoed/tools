@@ -1,5 +1,5 @@
-import { assert, createSpySubject, mapThat, objectThat, setup, should, SpySubject, test } from '@gs-testing';
-import { scan } from '@rxjs/operators';
+import { assert, createSpySubject, mapThat, objectThat, setup, should, SpySubject, test } from 'gs-testing';
+import { scan } from 'rxjs/operators';
 
 import { MapDiff, scanMap } from './map-observable';
 import { MapSubject } from './map-subject';

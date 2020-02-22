@@ -1,7 +1,7 @@
-import { assert, should, test } from '@gs-testing';
-import { binary, compose, identity, strict } from '@nabu';
-import { BehaviorSubject } from '@rxjs';
-import { scan } from '@rxjs/operators';
+import { assert, should, test } from 'gs-testing';
+import { binary, compose, identity, strict } from 'nabu';
+import { BehaviorSubject } from 'rxjs';
+import { scan } from 'rxjs/operators';
 
 import { ArrayDiff } from '../rxjs/state/array-observable';
 import { applyDiff } from '../rxjs/state/diff-array';

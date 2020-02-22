@@ -1,4 +1,4 @@
-import { Converter, Result, Serializable } from '@nabu';
+import { Converter, Result, Serializable } from 'nabu';
 
 class PercentConverter implements Converter<number, Serializable> {
   convertBackward(value: Serializable): Result<number> {

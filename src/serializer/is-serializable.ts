@@ -1,4 +1,4 @@
-import { Serializable } from '@nabu';
+import { Serializable } from 'nabu';
 
 export interface IsSerializable {
   serialize(): Serializable;

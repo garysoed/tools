@@ -1,4 +1,4 @@
-import { Subject, Subscriber, Subscription, SubscriptionLike } from '@rxjs';
+import { Subject, Subscriber, Subscription, SubscriptionLike } from 'rxjs';
 
 import { MapDiff } from './map-observable';
 

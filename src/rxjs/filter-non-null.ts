@@ -1,5 +1,5 @@
-import { Observable } from '@rxjs';
-import { filter } from '@rxjs/operators';
+import { Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 export function filterNonNull<T>(): (source: Observable<T>) => Observable<Exclude<T, null>> {
   return source => source.pipe(

@@ -1,6 +1,6 @@
-import { arrayThat, assert, createSpy, fake, objectThat, setup, should, Spy, test } from '@gs-testing';
-import { ReplaySubject } from '@rxjs';
-import { take } from '@rxjs/operators';
+import { arrayThat, assert, createSpy, fake, objectThat, setup, should, Spy, test } from 'gs-testing';
+import { ReplaySubject } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 import { Builder } from './builder';
 

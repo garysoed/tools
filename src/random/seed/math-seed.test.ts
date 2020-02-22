@@ -1,4 +1,4 @@
-import { assert, fake, should, spy } from '@gs-testing';
+import { assert, fake, should, spy } from 'gs-testing';
 
 import { fromSeed } from '../random';
 

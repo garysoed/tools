@@ -1,4 +1,4 @@
-import { arrayThat, assert, createSpySubject, objectThat, setup, should, SpySubject, test } from '@gs-testing';
+import { arrayThat, assert, createSpySubject, objectThat, setup, should, SpySubject, test } from 'gs-testing';
 
 import { scanArray } from './array-observable';
 import { ArraySubject } from './array-subject';

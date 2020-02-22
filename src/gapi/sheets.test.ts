@@ -1,4 +1,4 @@
-import { arrayThat, assert, should, test } from '@gs-testing';
+import { arrayThat, assert, should, test } from 'gs-testing';
 
 import { getCellContent, getCellContentByRange } from './sheets';
 import { CellData, ExtendedValue, GridData } from './type/sheets';

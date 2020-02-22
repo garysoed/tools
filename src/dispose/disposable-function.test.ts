@@ -1,4 +1,4 @@
-import { assert, createSpy, should, Spy } from '@gs-testing';
+import { assert, createSpy, should, Spy } from 'gs-testing';
 
 import { DisposableFunction } from './disposable-function';
 import { TestDispose } from './testing/test-dispose';

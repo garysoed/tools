@@ -1,7 +1,9 @@
-import { compose, human, Result } from '@nabu';
+import { compose, human, Result } from 'nabu';
+
 import { floatConverter } from '../serializer/float-converter';
 import { integerConverter } from '../serializer/integer-converter';
 import { percentConverter } from '../serializer/percent-converter';
+
 import { Color } from './color';
 import { HslColor } from './hsl-color';
 import { RgbColor } from './rgb-color';
