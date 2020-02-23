@@ -12,7 +12,7 @@ export function getCellContentByRange(
     start: Coordinate,
     end: Coordinate,
     sheetData: GridData,
-): ReadonlyArray<readonly ExtendedValue[]> {
+): ReadonlyArray<ReadonlyArray<ExtendedValue|undefined>> {
   const rowData = sheetData.rowData;
   if (!rowData) {
     return [];
@@ -35,6 +35,10 @@ export function getCellContentByRange(
       }
 
       const cell = values[c];
+      if (!cell) {
+        continue;
+      }
+
       const value = cell.effectiveValue;
       if (value) {
         rowContents[c - start.column] = value;

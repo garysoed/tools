@@ -8,9 +8,9 @@ function createCell(stringValue: string): CellData {
 }
 
 function getStringValues(
-    values: ReadonlyArray<readonly ExtendedValue[]>,
-): ReadonlyArray<readonly string[]> {
-  return values.map(row => row.map(value => value.stringValue!));
+    values: ReadonlyArray<ReadonlyArray<ExtendedValue|undefined>>,
+): ReadonlyArray<ReadonlyArray<string|undefined>> {
+  return values.map(row => row.map(value => value?.stringValue));
 }
 
 test('@tools/gapi/sheets', () => {
@@ -35,6 +35,31 @@ test('@tools/gapi/sheets', () => {
           arrayThat<string[]>().haveExactElements([
             arrayThat<string>().haveExactElements(['1,1', '1,2']),
             arrayThat<string>().haveExactElements(['2,1', '2,2']),
+            arrayThat<string>().haveExactElements(['3,1', '3,2']),
+          ]),
+      );
+    });
+
+    should(`return undefined for empty cells`, () => {
+      const data: GridData = {
+        rowData: [
+          {values: [createCell('0,0'), createCell('0,1'), createCell('0,2')]},
+          {values: [createCell('1,0'), createCell('1,1')]},
+          {values: [createCell('2,0'), createCell('2,1')]},
+          {values: [createCell('3,0'), createCell('3,1'), createCell('3,2'), createCell('3,3')]},
+        ],
+      };
+
+      const contents = getStringValues(getCellContentByRange(
+          {row: 1, column: 1},
+          {row: 4, column: 3},
+          data,
+      ));
+
+      assert(contents).to.equal(
+          arrayThat<Array<string|undefined>>().haveExactElements([
+            arrayThat<string|undefined>().haveExactElements(['1,1']),
+            arrayThat<string|undefined>().haveExactElements(['2,1']),
             arrayThat<string>().haveExactElements(['3,1', '3,2']),
           ]),
       );
@@ -65,7 +90,7 @@ test('@tools/gapi/sheets', () => {
       );
     });
 
-    should(`return empty string if there are no row data`, () => {
+    should(`return empty array if there are no row data`, () => {
       const contents = getCellContentByRange(
           {row: 1, column: 1},
           {row: 3, column: 3},
