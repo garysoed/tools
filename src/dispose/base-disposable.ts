@@ -1,6 +1,8 @@
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 import { Disposable } from './disposable';
+
 
 /**
  * Contains undisposed objects.
@@ -22,10 +24,10 @@ export const Flags = {
  */
 export class BaseDisposable implements Disposable {
   private readonly disposableHandlers_: Array<() => void> = [];
-  private isDisposed_: boolean = false;
+  readonly #isDisposed$ = new BehaviorSubject(false);
+  protected readonly onDispose$ = this.#isDisposed$.pipe(filter(isDisposed => isDisposed));
 
   constructor() {
-    this.isDisposed_ = false;
     if (Flags.enableTracking) {
       TRACKED_DISPOSABLES.push(this);
     }
@@ -52,7 +54,7 @@ export class BaseDisposable implements Disposable {
    * Dispose this object.
    */
   dispose(): void {
-    if (this.isDisposed_) {
+    if (this.#isDisposed$.getValue()) {
       return;
     }
 
@@ -66,14 +68,14 @@ export class BaseDisposable implements Disposable {
       }
     }
 
-    this.isDisposed_ = true;
+    this.#isDisposed$.next(true);
   }
 
   /**
    * True iff the object has been disposed.
    */
   isDisposed(): boolean {
-    return this.isDisposed_;
+    return this.#isDisposed$.getValue();
   }
 
   /**
