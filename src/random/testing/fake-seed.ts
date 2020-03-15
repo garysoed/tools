@@ -1,7 +1,7 @@
 import { RandomSeed } from '../seed/random-seed';
 
 export class FakeSeed implements RandomSeed {
-  constructor(readonly values: number[] = []) {}
+  constructor(public values: number[] = []) {}
 
   next(): readonly [number, RandomSeed] {
     const [value, ...rest] = this.values;

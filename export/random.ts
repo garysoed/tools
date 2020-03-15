@@ -1,5 +1,6 @@
 export { SimpleIdGenerator } from '../src/random/simple-id-generator';
 
+export { RandomSeed } from '../src/random/seed/random-seed';
 export { aleaSeed } from '../src/random/seed/alea-seed';
 
 export { Random, fromSeed } from '../src/random/random';
