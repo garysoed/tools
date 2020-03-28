@@ -13,8 +13,8 @@ export function debug<T>(...keys: string[]): MonoTypeOperatorFunction<T> {
     console.debug(`[${key}] ●`);
     source.pipe(
         tap(
-            v => console.debug(`[${key}] | ${stringify(v, Number.POSITIVE_INFINITY)}`),
-            e => console.debug(`[${key}] ✖ ${stringify(e, Number.POSITIVE_INFINITY)}`),
+            v => console.debug(`[${key}] | ${stringify(v, 10)}`),
+            e => console.debug(`[${key}] ✖ ${stringify(e, 10)}`),
             () => console.debug(`[${key}] -`),
         ),
         finalize(() => SUBSCRIBED_KEYS.delete(key)),

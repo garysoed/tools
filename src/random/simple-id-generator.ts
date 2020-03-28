@@ -1,5 +1,4 @@
-import { BaseIdGenerator } from '../random/base-id-generator';
-
+import { BaseIdGenerator } from './base-id-generator';
 import { randomShortId } from './operators/random-short-id';
 import { fromSeed, Random } from './random';
 import { mathSeed } from './seed/math-seed';
