@@ -12,9 +12,10 @@ export interface ArrayInsert<T> {
   value: T;
 }
 
-export interface ArrayDelete {
+export interface ArrayDelete<T> {
   index: number;
   type: 'delete';
+  value: T;
 }
 
 export interface ArraySet<T> {
@@ -23,7 +24,7 @@ export interface ArraySet<T> {
   value: T;
 }
 
-export type ArrayDiff<T> = ArrayInit<T>|ArrayInsert<T>|ArrayDelete|ArraySet<T>;
+export type ArrayDiff<T> = ArrayInit<T>|ArrayInsert<T>|ArrayDelete<T>|ArraySet<T>;
 
 export interface ArrayObservable<T> {
   getDiffs(): Observable<ArrayDiff<T>>;
@@ -39,6 +40,7 @@ export function mapArray<F, T>(mapFn: (from: F) => T):
                 return {
                   index: diff.index,
                   type: 'delete',
+                  value: mapFn(diff.value),
                 };
               case 'init':
                 return {

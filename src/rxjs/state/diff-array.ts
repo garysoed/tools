@@ -1,3 +1,6 @@
+import { of as observableOf, OperatorFunction, pipe } from 'rxjs';
+import { map, pairwise, startWith, switchMap } from 'rxjs/operators';
+
 import { assertUnreachable } from '../../typescript/assert-unreachable';
 
 import { ArrayDiff } from './array-observable';
@@ -24,10 +27,19 @@ export function diff<T>(
 
   // Delete the extra items.
   for (let i = currArrayLength - 1; i >= newArray.length; i--) {
-    diffs.push({index: i, type: 'delete'});
+    diffs.push({index: i, type: 'delete', value: oldArray[i]});
   }
 
   return diffs;
+}
+
+export function diffArray<T>(): OperatorFunction<readonly T[], ArrayDiff<T>> {
+  return pipe(
+      startWith([] as readonly T[]),
+      pairwise(),
+      map(([oldArray, newArray]) => diff(oldArray, newArray)),
+      switchMap(diffs => observableOf(...diffs)),
+  );
 }
 
 export function applyDiff<T>(array: T[], diff: ArrayDiff<T>): void {

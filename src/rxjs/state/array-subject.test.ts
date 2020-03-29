@@ -62,7 +62,7 @@ test('@gs-tools/rxjs/state/array-subject', () => {
 
   test('next', () => {
     should(`handle delete correctly`, () => {
-      subject.next({type: 'delete', index: 1});
+      subject.next({type: 'delete', index: 1, value: 'b'});
 
       assert(scanSpySubject).to
           .emitWith(arrayThat<string>().haveExactElements(['a', 'c']));

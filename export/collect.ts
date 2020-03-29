@@ -22,8 +22,8 @@ export { sort as $sort } from '../src/collect/operators/sort';
 export { take as $take } from '../src/collect/operators/take';
 export { zip as $zip } from '../src/collect/operators/zip';
 
+export { arrayFrom } from '../src/collect/structures/array-from';
 export { countableIterable } from '../src/collect/structures/countable-iterable';
-export { iterableFrom } from '../src/collect/structures/iterable-from';
 
 export { compound } from '../src/collect/compare/compound';
 export { natural } from '../src/collect/compare/natural';

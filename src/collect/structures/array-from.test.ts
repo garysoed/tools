@@ -1,6 +1,6 @@
 import { assert, should, test } from 'gs-testing';
 
-import { iterableFrom } from './iterable-from';
+import { arrayFrom } from './array-from';
 
 test('@tools/collect/structures/iterable-from', () => {
   should(`convert node list correctly`, () => {
@@ -13,6 +13,6 @@ test('@tools/collect/structures/iterable-from', () => {
     root.appendChild(child2);
     root.appendChild(child3);
 
-    assert([...iterableFrom(root.childNodes)]).to.haveExactElements([child1, child2, child3]);
+    assert([...arrayFrom(root.childNodes)]).to.haveExactElements([child1, child2, child3]);
   });
 });

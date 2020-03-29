@@ -28,8 +28,8 @@ export class ArraySubject<T> extends Subject<ArrayDiff<T>> {
       return;
     }
 
-    this.innerArray.splice(index, 1);
-    super.next({index, type: 'delete'});
+    const [deleted] = this.innerArray.splice(index, 1);
+    super.next({index, type: 'delete', value: deleted});
   }
 
   insert(payload: T): void {

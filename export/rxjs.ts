@@ -8,6 +8,7 @@ export { mapNonNull } from '../src/rxjs/map-non-null';
 export { switchMapNonNull } from '../src/rxjs/switch-map-non-null';
 
 export { ArraySubject } from '../src/rxjs/state/array-subject';
+export { diffArray } from '../src/rxjs/state/diff-array';
 export { mapArray, scanArray, ArrayDiff } from '../src/rxjs/state/array-observable';
 export { scanMap, MapSet, MapInit, MapDelete, MapDiff } from '../src/rxjs/state/map-observable';
 export { MapSubject } from '../src/rxjs/state/map-subject';
