@@ -16,6 +16,7 @@ export { intersect as $intersect } from '../src/collect/operators/intersect';
 export { join as $join } from '../src/collect/operators/join';
 export { map as $map } from '../src/collect/operators/map';
 export { recordToMap as $recordToMap } from '../src/collect/operators/record-to-map';
+export { reverse as $reverse } from '../src/collect/operators/reverse';
 export { size as $size } from '../src/collect/operators/size';
 export { some as $some } from '../src/collect/operators/some';
 export { sort as $sort } from '../src/collect/operators/sort';

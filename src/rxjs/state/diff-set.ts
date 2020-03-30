@@ -1,3 +1,6 @@
+import { of as observableOf, OperatorFunction, pipe } from 'rxjs';
+import { map, pairwise, startWith, switchMap } from 'rxjs/operators';
+
 import { SetDiff } from './set-observable';
 
 
@@ -19,6 +22,15 @@ export function diff<T>(oldSet: ReadonlySet<T>, newSet: ReadonlySet<T>): Iterabl
   }
 
   return diffs;
+}
+
+export function diffSet<T>(): OperatorFunction<ReadonlySet<T>, SetDiff<T>> {
+  return pipe(
+      startWith(new Set<T>()),
+      pairwise(),
+      map(([oldSet, newSet]) => diff(oldSet, newSet)),
+      switchMap(diffs => observableOf(...diffs)),
+  );
 }
 
 export function applyDiff<T>(set: Set<T>, diff: SetDiff<T>): void {
