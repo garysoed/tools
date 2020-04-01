@@ -23,7 +23,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { HasPropertiesType, NumberType } from 'gs-types';
+import { hasPropertiesType, numberType } from 'gs-types';
 
 import { RandomSeed } from './random-seed';
 
@@ -35,11 +35,11 @@ export interface State {
   readonly s2: number;
 }
 
-const STATE_TYPE = HasPropertiesType<State>({
-  c: NumberType,
-  s0: NumberType,
-  s1: NumberType,
-  s2: NumberType,
+const STATE_TYPE = hasPropertiesType<State>({
+  c: numberType,
+  s0: numberType,
+  s1: numberType,
+  s2: numberType,
 });
 
 export function aleaSeed(seed: any): RandomSeed {

@@ -1,4 +1,5 @@
-import { NumberType, StringType, Type } from 'gs-types';
+import { numberType, stringType, Type } from 'gs-types';
+
 import { CompareResult } from './compare-result';
 import { Ordering } from './ordering';
 
@@ -78,7 +79,7 @@ export const Orderings = {
       const maxLength = Math.min(item1Chunks.length, item2Chunks.length);
       const ordering = Orderings
           .compound<any>([
-            Orderings.type([NumberType, StringType]),
+            Orderings.type([numberType, stringType]),
             Orderings.normal(),
           ]);
 

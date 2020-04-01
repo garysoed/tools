@@ -1,5 +1,5 @@
 import { assert, should, test } from 'gs-testing';
-import { NumberType } from 'gs-types';
+import { numberType } from 'gs-types';
 import { Converter, Serializable, strict } from 'nabu';
 import { typeBased } from './type-based-converter';
 
@@ -7,7 +7,7 @@ test('serializer.TypeBasedConverter', () => {
   let converter: Converter<number, Serializable>;
 
   beforeEach(() => {
-    converter = typeBased(NumberType);
+    converter = typeBased(numberType);
   });
 
   test('convertBackward', () => {
