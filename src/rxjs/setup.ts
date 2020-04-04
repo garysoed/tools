@@ -16,20 +16,12 @@ function addSetupKey(target: Target, key: string|symbol): void {
   target[__keys] = keys;
 }
 
-export function setup(): MethodDecorator {
-  return <T>(
+export function setup(): PropertyDecorator {
+  return (
       target: Object,
       propertyKey: string|symbol,
-      descriptor: TypedPropertyDescriptor<T>,
-  ): TypedPropertyDescriptor<T> => {
+  ): void => {
     addSetupKey(target, propertyKey);
-
-    if (descriptor) {
-      if (!descriptor.get) {
-        throw new Error(`Key ${propertyKey.toString()} should be a getter`);
-      }
-    }
-    return descriptor;
   };
 }
 
