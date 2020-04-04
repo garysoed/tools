@@ -1,22 +1,17 @@
-import { assert, createSpySubject, iterableThat, objectThat, setThat, setup, should, SpySubject, test } from 'gs-testing';
+import { assert, createSpySubject, iterableThat, objectThat, setThat, should, test } from 'gs-testing';
 import { scan } from 'rxjs/operators';
 
 import { scanSet, SetDiff } from './set-observable';
 import { SetSubject } from './set-subject';
 
-test('@gs-tools/rxjs/state/set-subject', () => {
-  let subject: SetSubject<string>;
-  let setSpySubject: SpySubject<ReadonlySet<string>>;
-  let scanSpySubject: SpySubject<ReadonlySet<string>>;
 
-  setup(() => {
-    subject = new SetSubject(['a', 'b', 'c']);
+test('@gs-tools/rxjs/state/set-subject', init => {
+  const _ = init(() => {
+    const subject = new SetSubject(['a', 'b', 'c']);
 
-    setSpySubject = new SpySubject();
-    subject.pipe(scanSet()).subscribe(setSpySubject);
+    const setSpySubject = createSpySubject(subject.pipe(scanSet()));
 
-    scanSpySubject = new SpySubject();
-    subject
+    const scan$ = subject
         .pipe(
             scan<SetDiff<string>, Set<string>>(
                 (acc, diff) => {
@@ -32,64 +27,62 @@ test('@gs-tools/rxjs/state/set-subject', () => {
                   }
                 },
                 new Set()),
-        )
-        .subscribe(scanSpySubject);
+        );
+    const scanSpySubject = createSpySubject(scan$);
+    return {subject, setSpySubject, scanSpySubject};
   });
 
   test('add', () => {
     should(`set the item correctly`, () => {
-      subject.add('d');
+      _.subject.add('d');
 
-      assert(setSpySubject).to.emitWith(
+      assert(_.setSpySubject).to.emitWith(
           setThat<string>().haveExactElements(new Set(['a', 'b', 'c', 'd'])));
-      assert(scanSpySubject).to.emitWith(
+      assert(_.scanSpySubject).to.emitWith(
           setThat<string>().haveExactElements(new Set(['a', 'b', 'c', 'd'])));
     });
 
     should(`be noop if the item is already in the set`, () => {
-      setSpySubject.reset();
-      scanSpySubject.reset();
+      _.subject.add('b');
 
-      subject.add('b');
-
-      assert(setSpySubject).toNot.emit();
-      assert(scanSpySubject).toNot.emit();
+      assert(_.setSpySubject).to.emitWith(
+          setThat<string>().haveExactElements(new Set(['a', 'b', 'c'])));
+      assert(_.scanSpySubject).to.emitWith(
+          setThat<string>().haveExactElements(new Set(['a', 'b', 'c'])));
     });
   });
 
   test('delete', () => {
     should(`delete the item correctly`, () => {
-      subject.delete('b');
+      _.subject.delete('b');
 
-      assert(setSpySubject).to
+      assert(_.setSpySubject).to
           .emitWith(setThat<string>().haveExactElements(new Set(['a', 'c'])));
-      assert(scanSpySubject).to
+      assert(_.scanSpySubject).to
           .emitWith(setThat<string>().haveExactElements(new Set(['a', 'c'])));
     });
 
     should(`be noop if the item does not exist`, () => {
-      setSpySubject.reset();
-      scanSpySubject.reset();
+      _.subject.delete('d');
 
-      subject.delete('d');
-
-      assert(setSpySubject).toNot.emit();
-      assert(scanSpySubject).toNot.emit();
+      assert(_.setSpySubject).to.emitWith(
+          setThat<string>().haveExactElements(new Set(['a', 'b', 'c'])));
+      assert(_.scanSpySubject).to.emitWith(
+          setThat<string>().haveExactElements(new Set(['a', 'b', 'c'])));
     });
   });
 
   test('getDiffs', () => {
     should(`emit correctly`, () => {
-      const spySubject = createSpySubject();
-      subject.subscribe(spySubject);
+      const spySubject = createSpySubject(_.subject);
 
-      assert(spySubject).to.emitWith(objectThat().haveProperties({
+      assert(spySubject).to.emitWith(objectThat<SetDiff<string>>().haveProperties({
         type: 'init',
         value: iterableThat().startWith(['a', 'b', 'c']),
       }));
 
-      subject.delete('b');
-      assert(spySubject).to.emitWith(objectThat().haveProperties({
+      _.subject.delete('b');
+      assert(spySubject).to.emitWith(objectThat<SetDiff<string>>().haveProperties({
         type: 'delete',
         value: 'b',
       }));
@@ -98,40 +91,40 @@ test('@gs-tools/rxjs/state/set-subject', () => {
 
   test('next', () => {
     should(`handle add correctly`, () => {
-      subject.next({type: 'add', value: 'd'});
+      _.subject.next({type: 'add', value: 'd'});
 
-      assert(setSpySubject).to.emitWith(
+      assert(_.setSpySubject).to.emitWith(
           setThat<string>().haveExactElements(new Set(['a', 'b', 'c', 'd'])));
-      assert(scanSpySubject).to.emitWith(
+      assert(_.scanSpySubject).to.emitWith(
           setThat<string>().haveExactElements(new Set(['a', 'b', 'c', 'd'])));
     });
 
     should(`handle delete correctly`, () => {
-      subject.next({type: 'delete', value: 'b'});
+      _.subject.next({type: 'delete', value: 'b'});
 
-      assert(setSpySubject).to
+      assert(_.setSpySubject).to
           .emitWith(setThat<string>().haveExactElements(new Set(['a', 'c'])));
-      assert(scanSpySubject).to
+      assert(_.scanSpySubject).to
           .emitWith(setThat<string>().haveExactElements(new Set(['a', 'c'])));
     });
 
     should(`handle init correctly`, () => {
-      subject.next({type: 'init', value: new Set(['e', 'c'])});
+      _.subject.next({type: 'init', value: new Set(['e', 'c'])});
 
-      assert(setSpySubject).to
+      assert(_.setSpySubject).to
           .emitWith(setThat<string>().haveExactElements(new Set(['c', 'e'])));
-      assert(scanSpySubject).to
+      assert(_.scanSpySubject).to
           .emitWith(setThat<string>().haveExactElements(new Set(['c', 'e'])));
     });
   });
 
   test('setAll', () => {
     should(`set all the items correctly`, () => {
-      subject.setAll(new Set(['e', 'c']));
+      _.subject.setAll(new Set(['e', 'c']));
 
-      assert(setSpySubject).to
+      assert(_.setSpySubject).to
           .emitWith(setThat<string>().haveExactElements(new Set(['c', 'e'])));
-      assert(scanSpySubject).to
+      assert(_.scanSpySubject).to
           .emitWith(setThat<string>().haveExactElements(new Set(['c', 'e'])));
     });
   });

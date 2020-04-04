@@ -44,12 +44,6 @@ export class BaseDisposable implements Disposable {
     });
   }
 
-  addSubscription(...subscriptions: Subscription[]): void {
-    subscriptions.forEach(subscription => {
-      this.disposableHandlers_.push(() => subscription.unsubscribe());
-    });
-  }
-
   /**
    * Dispose this object.
    */

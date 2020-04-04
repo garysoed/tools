@@ -1,23 +1,21 @@
-import { arrayThat, assert, createSpy, fake, objectThat, setup, should, Spy, test } from 'gs-testing';
+import { arrayThat, assert, createSpy, createSpySubject, fake, objectThat, should, Spy, test } from 'gs-testing';
 import { ReplaySubject } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 import { Builder } from './builder';
 
-test('@gs-tools/gapi/builder', () => {
+test('@gs-tools/gapi/builder', init => {
   const API_KEY = 'apiKey';
   const CLIENT_ID = 'clientId';
-  let builder: Builder;
-  let mockGapiClientInit: Spy<unknown, [unknown]>;
 
-  setup(() => {
+  const _ = init(() => {
     const mockGapiLoad = createSpy<any, [string, Function]>('gapi.load');
     fake(mockGapiLoad).always().call((_, handler) => handler());
 
-    mockGapiClientInit = createSpy('gapi.client.init');
+    const mockGapiClientInit = createSpy('gapi.client.init');
     fake(mockGapiClientInit).always().return(Promise.resolve());
 
-    builder = new Builder(API_KEY, CLIENT_ID);
+    const builder = new Builder(API_KEY, CLIENT_ID);
 
     Object.assign(window, {
       gapi: {
@@ -25,6 +23,8 @@ test('@gs-tools/gapi/builder', () => {
         load: mockGapiLoad,
       },
     });
+
+    return {builder, mockGapiClientInit};
   });
 
   should(`build correctly`, async () => {
@@ -32,17 +32,15 @@ test('@gs-tools/gapi/builder', () => {
     const SCOPE1 = 'scope1';
     const SCOPE2 = 'scope2';
 
-    const subject = new ReplaySubject(1);
-    builder
+    const gapi$ = _.builder
         .addLibrary({
           discoveryDoc,
           scopes: [SCOPE1, SCOPE2],
         })
-        .build()
-        .subscribe(subject);
+        .build();
 
-    await subject.pipe(take(1)).toPromise();
-    assert(mockGapiClientInit).to.haveBeenCalledWith(objectThat().haveProperties({
+    await gapi$.pipe(take(1)).toPromise();
+    assert(_.mockGapiClientInit).to.haveBeenCalledWith(objectThat().haveProperties({
       apiKey: API_KEY,
       clientId: CLIENT_ID,
       discoveryDocs: arrayThat().haveExactElements([discoveryDoc]),

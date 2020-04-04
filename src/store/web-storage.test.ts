@@ -1,7 +1,7 @@
-import { assert, should, test } from 'gs-testing';
+import { arrayThat, assert, createSpySubject, should, teardown, test } from 'gs-testing';
 import { binary, compose, identity, strict } from 'nabu';
-import { BehaviorSubject } from 'rxjs';
-import { scan } from 'rxjs/operators';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { scan, takeUntil } from 'rxjs/operators';
 
 import { ArrayDiff } from '../rxjs/state/array-observable';
 import { applyDiff } from '../rxjs/state/diff-array';
@@ -14,19 +14,22 @@ function setStorage(storage: Storage, key: string, value: string): void {
   window.dispatchEvent(new StorageEvent('storage'));
 }
 
-test('store.WebStorage', () => {
+test('store.WebStorage', init => {
   const PREFIX = 'store.WebStorage.prefix';
   const INDEXES_BINARY_CONVERTER = strict(compose(INDEXES_PARSER, binary()));
   const ITEM_BINARY_CONVERTER = strict(compose(integerConverter(), binary()));
-  let storage: WebStorage<number>;
 
-  beforeEach(() => {
+  const _ = init(() => {
+    const onTestDone$ = new Subject<void>();
     localStorage.clear();
-    storage = new WebStorage(localStorage, PREFIX, identity<number>());
+    const storage = new WebStorage(localStorage, PREFIX, identity<number>());
+    return {storage, onTestDone$};
   });
 
-  afterEach(() => {
+  teardown(() => {
     localStorage.clear();
+    _.onTestDone$.next();
+    _.onTestDone$.complete();
   });
 
   test('delete', () => {
@@ -40,8 +43,7 @@ test('store.WebStorage', () => {
       );
       setStorage(localStorage, path, ITEM_BINARY_CONVERTER.convertForward(123));
 
-      const idsSubject = new BehaviorSubject<string[]>([]);
-      storage.listIds()
+      const listIds$ = _.storage.listIds()
           .pipe(
               scan<ArrayDiff<string>, string[]>(
                   (acc, value) => {
@@ -50,19 +52,17 @@ test('store.WebStorage', () => {
                     return acc;
                   },
                   []),
-          )
-          .subscribe(idsSubject);
+          );
+      const idsSubject = createSpySubject(listIds$);
+      const itemSubject = createSpySubject(_.storage.read(id));
 
-      const itemSubject = new BehaviorSubject<number|null>(null);
-      storage.read(id).subscribe(itemSubject);
-
-      storage.delete(id).subscribe();
+      _.storage.delete(id).pipe(takeUntil(_.onTestDone$)).subscribe();
 
       assert(localStorage.getItem(path)).to.beNull();
       assert(localStorage.getItem(PREFIX)).to
           .equal(INDEXES_BINARY_CONVERTER.convertForward([]));
-      assert(idsSubject.getValue()).to.beEmpty();
-      assert(itemSubject.getValue()).to.beNull();
+      assert(idsSubject).to.emitWith(arrayThat<string>().beEmpty());
+      assert(itemSubject).to.emitWith(null);
     });
   });
 
@@ -70,8 +70,7 @@ test('store.WebStorage', () => {
     should('resolve with true if the object is in the storage', () => {
       const id = 'id';
 
-      const hasSubject = new BehaviorSubject<boolean|null>(null);
-      storage.has(id).subscribe(hasSubject);
+      const hasSubject = createSpySubject(_.storage.has(id));
 
       setStorage(
           localStorage,
@@ -79,16 +78,15 @@ test('store.WebStorage', () => {
           INDEXES_BINARY_CONVERTER.convertForward([id]),
       );
 
-      assert(hasSubject.getValue()).to.beTrue();
+      assert(hasSubject).to.emitWith(true);
     });
 
     should('resolve with false if the object is in the storage', () => {
       const id = 'id';
 
-      const hasSubject = new BehaviorSubject<boolean|null>(null);
-      storage.has(id).subscribe(hasSubject);
+      const hasSubject = createSpySubject(_.storage.has(id));
 
-      assert(hasSubject.getValue()).to.beFalse();
+      assert(hasSubject).to.emitWith(false);
     });
   });
 
@@ -98,8 +96,7 @@ test('store.WebStorage', () => {
       const id2 = 'id2';
       const id3 = 'id3';
 
-      const idsSubject = new BehaviorSubject<string[]>([]);
-      storage.listIds()
+      const listIds$ = _.storage.listIds()
           .pipe(
               scan<ArrayDiff<string>, string[]>(
                   (acc, value) => {
@@ -109,8 +106,8 @@ test('store.WebStorage', () => {
                   },
                   [],
               ),
-          )
-          .subscribe(idsSubject);
+          );
+      const idsSubject = createSpySubject(listIds$);
 
       setStorage(
           localStorage,
@@ -118,7 +115,7 @@ test('store.WebStorage', () => {
           INDEXES_BINARY_CONVERTER.convertForward([id1, id2, id3]),
       );
 
-      assert(idsSubject.getValue()).to.haveExactElements([id1, id2, id3]);
+      assert(idsSubject).to.emitWith(arrayThat<string>().haveExactElements([id1, id2, id3]));
     });
   });
 
@@ -127,18 +124,16 @@ test('store.WebStorage', () => {
       const id = 'id';
       const path = `${PREFIX}/${id}`;
 
-      const itemSubject = new BehaviorSubject<number|null>(null);
-      storage.read(id).subscribe(itemSubject);
+      const itemSubject = createSpySubject(_.storage.read(id));
 
       setStorage(localStorage, path, ITEM_BINARY_CONVERTER.convertForward(123));
 
-      assert(itemSubject.getValue()).to.equal(123);
+      assert(itemSubject).to.emitWith(123);
     });
 
     should('resolve with null if the object does not exist', () => {
-      const itemSubject = new BehaviorSubject<number|null>(null);
-      storage.read('id').subscribe(itemSubject);
-      assert(itemSubject.getValue()).to.beNull();
+      const itemSubject = createSpySubject(_.storage.read('id'));
+      assert(itemSubject).to.emitWith(null);
     });
   });
 
@@ -154,8 +149,7 @@ test('store.WebStorage', () => {
           INDEXES_BINARY_CONVERTER.convertForward(['oldId']),
       );
 
-      const idsSubject = new BehaviorSubject<string[]>([]);
-      storage.listIds()
+      const listIds$ = _.storage.listIds()
           .pipe(
               scan<ArrayDiff<string>, string[]>(
                   (acc, value) => {
@@ -165,15 +159,14 @@ test('store.WebStorage', () => {
                   },
                   [],
               ),
-          )
-          .subscribe(idsSubject);
+          );
+      const idsSubject = createSpySubject(listIds$);
 
-      const itemSubject = new BehaviorSubject<number|null>(null);
-      storage.read(id).subscribe(itemSubject);
+      const itemSubject = createSpySubject(_.storage.read(id));
 
-      storage.update(id, 123).subscribe();
-      assert(idsSubject.getValue()).to.haveExactElements([oldId, id]);
-      assert(itemSubject.getValue()).to.equal(123);
+      _.storage.update(id, 123).pipe(takeUntil(_.onTestDone$)).subscribe();
+      assert(idsSubject).to.emitWith(arrayThat<string>().haveExactElements([oldId, id]));
+      assert(itemSubject).to.emitWith(123);
       assert(localStorage.getItem(path)).to.equal(ITEM_BINARY_CONVERTER.convertForward(123));
     });
   });

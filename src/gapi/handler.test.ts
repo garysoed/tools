@@ -1,22 +1,20 @@
-import { assert, createSpyObject, fake, setup, should, SpyObj, test } from 'gs-testing';
+import { assert, createSpyObject, createSpySubject, fake, should, SpyObj, teardown, test } from 'gs-testing';
 import { ReplaySubject, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { Handler } from './handler';
 
 
-test('@gs-tools/gapi/handler', () => {
-  let mockAuthInstance: SpyObj<gapi.auth2.GoogleAuth> & {isSignedIn: SpyObj<gapi.auth2.IsSignedIn>};
-  let isSignedInSubject: Subject<boolean>;
-  let handler: Handler;
-
-  setup(() => {
-    isSignedInSubject = new Subject();
+test('@gs-tools/gapi/handler', init => {
+  const _ = init(() => {
+    const onTestDone$ = new Subject<void>();
+    const isSignedIn$ = new Subject<boolean>();
     const mockIsSignedIn = createSpyObject<gapi.auth2.IsSignedIn>('IsSignedIn', ['get', 'listen']);
     fake(mockIsSignedIn.listen).always().call((handler: (signedIn: boolean) => any) => {
-      isSignedInSubject.subscribe(handler);
+      isSignedIn$.pipe(takeUntil(onTestDone$)).subscribe(handler);
     });
 
-    mockAuthInstance = Object.assign<
+    const mockAuthInstance = Object.assign<
         SpyObj<gapi.auth2.GoogleAuth>,
         {isSignedIn: SpyObj<gapi.auth2.IsSignedIn>}
     >(
@@ -31,53 +29,61 @@ test('@gs-tools/gapi/handler', () => {
       },
     });
 
-    handler = new Handler();
+    const handler = new Handler();
+
+    return {
+      handler,
+      isSignedInSubject: isSignedIn$,
+      mockAuthInstance,
+      onTestDone$,
+    };
+  });
+
+  teardown(() => {
+    _.onTestDone$.next();
+    _.onTestDone$.complete();
   });
 
   test('ensureSignedIn', () => {
-    should(`sign in and emit on success`, async () => {
-      fake(mockAuthInstance.isSignedIn.get).always().returnValues(false, true);
+    should(`sign in and emit on success`, () => {
+      fake(_.mockAuthInstance.isSignedIn.get).always().returnValues(false, true);
 
-      const subject = new ReplaySubject<unknown>(1);
-      handler.ensureSignedIn().subscribe(subject);
+      const subject = createSpySubject(_.handler.ensureSignedIn());
 
       // Sign in.
-      isSignedInSubject.next(true);
+      _.isSignedInSubject.next(true);
 
-      await assert(subject).to.emit();
-      assert(mockAuthInstance.signIn).to.haveBeenCalledWith();
+      assert(subject).to.emit();
+      assert(_.mockAuthInstance.signIn).to.haveBeenCalledWith();
     });
 
-    should(`sign in and not emit on failure`, async () => {
-      fake(mockAuthInstance.isSignedIn.get).always().return(false);
+    should(`sign in and not emit on failure`, () => {
+      fake(_.mockAuthInstance.isSignedIn.get).always().return(false);
 
-      const subject = new ReplaySubject<unknown>(1);
-      handler.ensureSignedIn().subscribe(subject);
+      const subject = createSpySubject(_.handler.ensureSignedIn());
 
-      await assert(subject).toNot.emit();
-      assert(mockAuthInstance.signIn).to.haveBeenCalledWith();
+      assert(subject).toNot.emit();
+      assert(_.mockAuthInstance.signIn).to.haveBeenCalledWith();
     });
 
-    should(`not sign in if already signed in`, async () => {
-      fake(mockAuthInstance.isSignedIn.get).always().return(true);
+    should(`not sign in if already signed in`, () => {
+      fake(_.mockAuthInstance.isSignedIn.get).always().return(true);
 
-      const subject = new ReplaySubject<unknown>(1);
-      handler.ensureSignedIn().subscribe(subject);
+      const subject = createSpySubject(_.handler.ensureSignedIn());
 
-      await assert(subject).to.emit();
-      assert(mockAuthInstance.signIn).toNot.haveBeenCalled();
+      assert(subject).to.emit();
+      assert(_.mockAuthInstance.signIn).toNot.haveBeenCalled();
     });
   });
 
   test('isSignedIn', () => {
-    should(`emit true if signed in and update its value`, async () => {
-      fake(mockAuthInstance.isSignedIn.get).always().returnValues(false, true);
+    should(`emit true if signed in and update its value`, () => {
+      fake(_.mockAuthInstance.isSignedIn.get).always().returnValues(false, true);
 
-      const subject = new ReplaySubject(2);
-      handler.isSignedIn().subscribe(subject);
+      const subject = createSpySubject(_.handler.isSignedIn());
 
-      isSignedInSubject.next(true);
-      await assert(subject).to.emitSequence([false, true]);
+      _.isSignedInSubject.next(true);
+      assert(subject).to.emitSequence([false, true]);
     });
   });
 });

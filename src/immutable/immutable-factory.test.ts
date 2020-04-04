@@ -1,6 +1,8 @@
-import { assert, setup, should, test } from 'gs-testing';
+import { assert, should, test } from 'gs-testing';
 import { SerializableObject } from 'nabu';
-import { generateImmutable as createImmutable, ImmutableFactory } from './immutable-factory';
+
+import { generateImmutable as createImmutable } from './immutable-factory';
+
 
 interface SerializableParent extends SerializableObject {
   pIndex: number;
@@ -46,19 +48,18 @@ class ChildSpec extends ParentSpec {
   }
 }
 
-test('@gs-tools/immutable/immutable-factory', () => {
+test('@gs-tools/immutable/immutable-factory', init => {
   test('parentSpec', () => {
-    let factory: ImmutableFactory<ParentSpec, SerializableParent>;
-
-    setup(() => {
-      factory = createImmutable(ParentSpec);
+    const _ = init(() => {
+      const factory = createImmutable(ParentSpec);
+      return {factory};
     });
 
     should(`be immutable`, () => {
       const pIndex = 123;
       const pName = 'pName';
 
-      const instance = factory.create({pIndex, pName});
+      const instance = _.factory.create({pIndex, pName});
       assert(instance.index).to.equal(pIndex);
       assert(instance.name).to.equal(pName);
 
@@ -71,11 +72,10 @@ test('@gs-tools/immutable/immutable-factory', () => {
     });
   });
 
-  test('childSpec', () => {
-    let factory: ImmutableFactory<ChildSpec, SerializableChild>;
-
-    setup(() => {
-      factory = createImmutable(ChildSpec);
+  test('childSpec', init => {
+    const _ = init(() => {
+      const factory = createImmutable(ChildSpec);
+      return {factory};
     });
 
     should(`be immutable`, () => {
@@ -84,7 +84,7 @@ test('@gs-tools/immutable/immutable-factory', () => {
       const cIndex = 456;
       const cName = 'cName';
 
-      const instance = factory.create({cIndex, cName, pIndex, pName});
+      const instance = _.factory.create({cIndex, cName, pIndex, pName});
       assert(instance.cIndex).to.equal(cIndex);
       assert(instance.index).to.equal(pIndex);
       assert(instance.name).to.equal(cName);

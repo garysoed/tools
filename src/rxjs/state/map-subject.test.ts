@@ -1,22 +1,16 @@
-import { assert, createSpySubject, mapThat, objectThat, setup, should, SpySubject, test } from 'gs-testing';
+import { assert, createSpySubject, mapThat, objectThat, should, test } from 'gs-testing';
 import { scan } from 'rxjs/operators';
 
 import { MapDiff, scanMap } from './map-observable';
 import { MapSubject } from './map-subject';
 
-test('@gs-tools/rxjs/state/map-subject', () => {
-  let subject: MapSubject<string, number>;
-  let mapSpySubject: SpySubject<ReadonlyMap<string, number>>;
-  let scanSpySubject: SpySubject<ReadonlyMap<string, number>>;
+test('@gs-tools/rxjs/state/map-subject', init => {
+  const _ = init(() => {
+    const subject = new MapSubject([['a', 1], ['b', 2], ['c', 3]]);
 
-  setup(() => {
-    subject = new MapSubject([['a', 1], ['b', 2], ['c', 3]]);
+    const mapSpySubject = createSpySubject(subject.pipe(scanMap()));
 
-    mapSpySubject = new SpySubject();
-    subject.pipe(scanMap()).subscribe(mapSpySubject);
-
-    scanSpySubject = new SpySubject();
-    subject
+    const scan$ = subject
         .pipe(
             scan<MapDiff<string, number>, Map<string, number>>(
                 (acc, diff) => {
@@ -34,22 +28,24 @@ test('@gs-tools/rxjs/state/map-subject', () => {
                   }
                 },
                 new Map<string, number>()),
-        )
-        .subscribe(scanSpySubject);
+        );
+    const scanSpySubject = createSpySubject(scan$);
+
+    return {subject, mapSpySubject, scanSpySubject};
   });
 
   test('delete', () => {
     should(`delete the item correctly`, () => {
-      subject.delete('b');
+      _.subject.delete('b');
 
-      assert(mapSpySubject).to.emitWith(
+      assert(_.mapSpySubject).to.emitWith(
           mapThat<string, number>().haveExactElements(new Map([
             ['a', 1],
             ['c', 3],
           ])),
       );
 
-      assert(scanSpySubject).to.emitWith(
+      assert(_.scanSpySubject).to.emitWith(
           mapThat<string, number>().haveExactElements(new Map([
             ['a', 1],
             ['c', 3],
@@ -58,22 +54,31 @@ test('@gs-tools/rxjs/state/map-subject', () => {
     });
 
     should(`be noop if the item does not exist`, () => {
-      mapSpySubject.reset();
-      scanSpySubject.reset();
+      _.subject.delete('d');
 
-      subject.delete('d');
+      assert(_.mapSpySubject).to.emitWith(
+          mapThat<string, number>().haveExactElements(new Map([
+            ['a', 1],
+            ['b', 2],
+            ['c', 3],
+          ])),
+      );
 
-      assert(mapSpySubject).toNot.emit();
-      assert(scanSpySubject).toNot.emit();
+      assert(_.scanSpySubject).to.emitWith(
+          mapThat<string, number>().haveExactElements(new Map([
+            ['a', 1],
+            ['b', 2],
+            ['c', 3],
+          ])),
+      );
     });
   });
 
   test('getDiffs', () => {
     should(`emit correctly`, () => {
-      const spySubject = createSpySubject();
-      subject.subscribe(spySubject);
+      const spySubject = createSpySubject(_.subject);
 
-      assert(spySubject).to.emitWith(objectThat().haveProperties({
+      assert(spySubject).to.emitWith(objectThat<MapDiff<string, number>>().haveProperties({
         type: 'init',
         value: mapThat<string, number>().haveExactElements(new Map([
           ['a', 1],
@@ -82,8 +87,8 @@ test('@gs-tools/rxjs/state/map-subject', () => {
         ])),
       }));
 
-      subject.delete('b');
-      assert(spySubject).to.emitWith(objectThat().haveProperties({
+      _.subject.delete('b');
+      assert(spySubject).to.emitWith(objectThat<MapDiff<string, number>>().haveProperties({
         key: 'b',
         type: 'delete',
       }));
@@ -92,16 +97,16 @@ test('@gs-tools/rxjs/state/map-subject', () => {
 
   test('next', () => {
     should(`handle delete correctly`, () => {
-      subject.next({type: 'delete', key: 'b'});
+      _.subject.next({type: 'delete', key: 'b'});
 
-      assert(mapSpySubject).to.emitWith(
+      assert(_.mapSpySubject).to.emitWith(
           mapThat<string, number>().haveExactElements(new Map([
             ['a', 1],
             ['c', 3],
           ])),
       );
 
-      assert(scanSpySubject).to.emitWith(
+      assert(_.scanSpySubject).to.emitWith(
           mapThat<string, number>().haveExactElements(new Map([
             ['a', 1],
             ['c', 3],
@@ -110,9 +115,9 @@ test('@gs-tools/rxjs/state/map-subject', () => {
     });
 
     should(`handle init correctly`, () => {
-      subject.next({type: 'init', value: new Map([['e', 5], ['c', 4], ['b', 2]])});
+      _.subject.next({type: 'init', value: new Map([['e', 5], ['c', 4], ['b', 2]])});
 
-      assert(mapSpySubject).to.emitWith(
+      assert(_.mapSpySubject).to.emitWith(
           mapThat<string, number>().haveExactElements(new Map([
             ['b', 2],
             ['c', 4],
@@ -120,7 +125,7 @@ test('@gs-tools/rxjs/state/map-subject', () => {
           ])),
       );
 
-      assert(scanSpySubject).to.emitWith(
+      assert(_.scanSpySubject).to.emitWith(
           mapThat<string, number>().haveExactElements(new Map([
             ['b', 2],
             ['c', 4],
@@ -130,9 +135,9 @@ test('@gs-tools/rxjs/state/map-subject', () => {
     });
 
     should(`handle set correctly`, () => {
-      subject.next({type: 'set', key: 'b', value: 6});
+      _.subject.next({type: 'set', key: 'b', value: 6});
 
-      assert(mapSpySubject).to.emitWith(
+      assert(_.mapSpySubject).to.emitWith(
           mapThat<string, number>().haveExactElements(new Map([
             ['a', 1],
             ['b', 6],
@@ -140,7 +145,7 @@ test('@gs-tools/rxjs/state/map-subject', () => {
           ])),
       );
 
-      assert(scanSpySubject).to.emitWith(
+      assert(_.scanSpySubject).to.emitWith(
           mapThat<string, number>().haveExactElements(new Map([
             ['a', 1],
             ['b', 6],
@@ -152,9 +157,9 @@ test('@gs-tools/rxjs/state/map-subject', () => {
 
   test('setAll', () => {
     should(`set all the items correctly`, () => {
-      subject.setAll(new Map([['e', 5], ['c', 4], ['b', 2]]));
+      _.subject.setAll(new Map([['e', 5], ['c', 4], ['b', 2]]));
 
-      assert(mapSpySubject).to.emitWith(
+      assert(_.mapSpySubject).to.emitWith(
           mapThat<string, number>().haveExactElements(new Map([
             ['b', 2],
             ['c', 4],
@@ -162,7 +167,7 @@ test('@gs-tools/rxjs/state/map-subject', () => {
           ])),
       );
 
-      assert(scanSpySubject).to.emitWith(
+      assert(_.scanSpySubject).to.emitWith(
           mapThat<string, number>().haveExactElements(new Map([
             ['b', 2],
             ['c', 4],
@@ -174,9 +179,9 @@ test('@gs-tools/rxjs/state/map-subject', () => {
 
   test('set', () => {
     should(`set the item correctly`, () => {
-      subject.set('b', 6);
+      _.subject.set('b', 6);
 
-      assert(mapSpySubject).to.emitWith(
+      assert(_.mapSpySubject).to.emitWith(
           mapThat<string, number>().haveExactElements(new Map([
             ['a', 1],
             ['b', 6],
@@ -184,7 +189,7 @@ test('@gs-tools/rxjs/state/map-subject', () => {
           ])),
       );
 
-      assert(scanSpySubject).to.emitWith(
+      assert(_.scanSpySubject).to.emitWith(
           mapThat<string, number>().haveExactElements(new Map([
             ['a', 1],
             ['b', 6],
@@ -194,13 +199,23 @@ test('@gs-tools/rxjs/state/map-subject', () => {
     });
 
     should(`be noop if the item is already set`, () => {
-      mapSpySubject.reset();
-      scanSpySubject.reset();
+      _.subject.set('b', 2);
 
-      subject.set('b', 2);
+      assert(_.mapSpySubject).to.emitWith(
+          mapThat<string, number>().haveExactElements(new Map([
+            ['a', 1],
+            ['b', 2],
+            ['c', 3],
+          ])),
+      );
 
-      assert(mapSpySubject).toNot.emit();
-      assert(scanSpySubject).toNot.emit();
+      assert(_.scanSpySubject).to.emitWith(
+          mapThat<string, number>().haveExactElements(new Map([
+            ['a', 1],
+            ['b', 2],
+            ['c', 3],
+          ])),
+      );
     });
   });
 });
