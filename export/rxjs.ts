@@ -17,4 +17,4 @@ export { MapSubject } from '../src/rxjs/state/map-subject';
 export { scanSet, SetAdd, SetInit, SetDelete, SetDiff } from '../src/rxjs/state/set-observable';
 export { SetSubject } from '../src/rxjs/state/set-subject';
 
-export { setup, runSetup } from '../src/rxjs/setup';
+export { Runnable } from '../src/rxjs/runnable';
