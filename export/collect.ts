@@ -2,6 +2,7 @@ export { $ as $pipe } from '../src/collect/operators/chain';
 export { $ } from '../src/collect/operators/chain';
 
 export { asArray as $asArray } from '../src/collect/operators/as-array';
+export { asOrderedMap as $asOrderedMap } from '../src/collect/operators/as-ordered-map';
 export { asMap as $asMap } from '../src/collect/operators/as-map';
 export { asSet as $asSet } from '../src/collect/operators/as-set';
 export { diff as $diff } from '../src/collect/operators/diff';
@@ -32,3 +33,5 @@ export { normal } from '../src/collect/compare/normal';
 export { withMap } from '../src/collect/compare/with-map';
 
 export { Ordering } from '../src/collect/compare/ordering';
+export { OrderedMap } from '../src/collect/structures/ordered-map';
+export { ReadonlyOrderedMap } from '../src/collect/structures/readonly-ordered-map';

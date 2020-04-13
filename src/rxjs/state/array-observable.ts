@@ -30,7 +30,7 @@ export interface ArrayObservable<T> {
   getDiffs(): Observable<ArrayDiff<T>>;
 }
 
-export function mapArray<F, T>(mapFn: (from: F) => T):
+export function mapArrayDiff<F, T>(mapFn: (from: F) => T):
     (obs: Observable<ArrayDiff<F>>) => Observable<ArrayDiff<T>> {
   return source => source
       .pipe(
