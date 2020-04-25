@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+
 import { ReadableStorage } from './readable-storage';
 
 export interface EditableStorage<TFull> extends ReadableStorage<TFull> {
@@ -10,12 +11,12 @@ export interface EditableStorage<TFull> extends ReadableStorage<TFull> {
    *
    * @param id ID of the object to delete.
    */
-  delete(id: string): Observable<unknown>;
+  delete(id: string): void;
 
   /**
    * Deletes the object at the given index.
    */
-  deleteAt(index: number): Observable<unknown>;
+  deleteAt(index: number): void;
 
   /**
    * Reserves a new ID in the storage.
@@ -27,7 +28,7 @@ export interface EditableStorage<TFull> extends ReadableStorage<TFull> {
   /**
    * Inserts the object at the given index.
    */
-  insertAt(index: number, id: string, instance: TFull): Observable<unknown>;
+  insertAt(index: number, id: string, instance: TFull): void;
 
   /**
    * Updates the given object. If it doesn't exist, add the object.
@@ -35,10 +36,10 @@ export interface EditableStorage<TFull> extends ReadableStorage<TFull> {
    * @param id ID of the object to update.
    * @param instance Object to update.
    */
-  update(id: string, instance: TFull): Observable<unknown>;
+  update(id: string, instance: TFull): void;
 
   /**
    * Sets the object at the given index.
    */
-  updateAt(index: number, id: string, instance: TFull): Observable<unknown>;
+  updateAt(index: number, id: string, instance: TFull): void;
 }

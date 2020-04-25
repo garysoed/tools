@@ -3,7 +3,7 @@ import { scan } from 'rxjs/operators';
 
 export interface MapInit<K, V> {
   type: 'init';
-  value: Map<K, V>;
+  value: ReadonlyMap<K, V>;
 }
 
 export interface MapDelete<K> {
