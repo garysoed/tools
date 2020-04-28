@@ -58,16 +58,24 @@ function getCells(
         continue;
       }
 
+      const ids = new Set<SheetsCell>();
       const subRows: SheetsCell[][] = [];
       for (let r = ri.start; r < ri.start + ri.count; r++) {
         const subCols: SheetsCell[] = [];
         for (let c = ci.start; c < ci.start + ci.count; c++) {
-          subCols.push(sheetsTable[r][c]);
+          const sheetsCell = sheetsTable[r][c];
+          ids.add(sheetsCell);
+          subCols.push(sheetsCell);
         }
         subRows.push(subCols);
       }
 
-      cols.push({isSingle: false, value: subRows});
+      // Check if there is only one cell. If there is, only add that one.
+      if (ids.size === 1) {
+        cols.push({isSingle: true, value: subRows[0][0].value});
+      } else {
+        cols.push({isSingle: false, value: subRows});
+      }
     }
     rows.push(cols);
   }

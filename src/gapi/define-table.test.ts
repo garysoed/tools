@@ -77,13 +77,10 @@ test('@tools/gapi/define-table', init => {
     assert(data).to.equal(arrayThat<readonly Cell[]>().haveExactElements([
       arrayThat<Cell>().haveExactElements([
         singleCellMatcher('1_1'),
-        multiCellMatcher([[_.sheetsTable[1][2], _.sheetsTable[1][3], _.sheetsTable[1][4]]]),
+        singleCellMatcher('2_0'),
       ]),
       arrayThat<Cell>().haveExactElements([
-        multiCellMatcher([
-          [_.sheetsTable[2][1]],
-          [_.sheetsTable[3][1]],
-        ]),
+        singleCellMatcher('0_2'),
         multiCellMatcher([
           [_.sheetsTable[2][2], _.sheetsTable[2][3], _.sheetsTable[2][4]],
           [_.sheetsTable[3][2], _.sheetsTable[3][3], _.sheetsTable[3][4]],
@@ -101,16 +98,13 @@ test('@tools/gapi/define-table', init => {
 
     assert(rows).to.equal(arrayThat<Cell>().haveExactElements([
       singleCellMatcher('0_1'),
-      multiCellMatcher([
-        [_.sheetsTable[2][0]],
-        [_.sheetsTable[3][0]],
-      ]),
+      singleCellMatcher('0_2'),
       singleCellMatcher('0_4'),
       singleCellMatcher('0_5'),
     ]));
     assert(cols).to.equal(arrayThat<Cell>().haveExactElements([
       singleCellMatcher('1_0'),
-      multiCellMatcher([[_.sheetsTable[0][2], _.sheetsTable[0][3], _.sheetsTable[0][4]]]),
+      singleCellMatcher('2_0'),
     ]));
   });
 });

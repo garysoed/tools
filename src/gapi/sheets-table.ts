@@ -26,7 +26,7 @@ export interface Merge {
   readonly endColumnIndex: number;
 }
 
-interface RawSheets {
+export interface RawSheets {
   readonly merges?: readonly Merge[];
   readonly data: readonly GridData[];
 }
