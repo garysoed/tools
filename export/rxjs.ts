@@ -10,6 +10,7 @@ export { switchMapNonNull } from '../src/rxjs/switch-map-non-null';
 
 export { mapArrayDiff, scanArray, ArrayDiff } from '../src/rxjs/state/array-observable';
 export { diffArray } from '../src/rxjs/state/diff-array';
+export { diffMap } from '../src/rxjs/state/diff-map';
 export { diffSet } from '../src/rxjs/state/diff-set';
 export { scanMap, MapSet, MapInit, MapDelete, MapDiff } from '../src/rxjs/state/map-observable';
 export { scanSet, SetAdd, SetInit, SetDelete, SetDiff } from '../src/rxjs/state/set-observable';
