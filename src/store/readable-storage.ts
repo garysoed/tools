@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+
 import { ArrayDiff } from '../rxjs/state/array-observable';
 
 export interface ReadableStorage<TFull> {
@@ -11,12 +12,12 @@ export interface ReadableStorage<TFull> {
    * Checks if the object corresponding to the given ID exists in the storage.
    *
    * @param id ID of the object to be checked.
-   * @return Observable that emits true iff the object exists in the storage.
+   * @returns Observable that emits true iff the object exists in the storage.
    */
   has(id: string): Observable<boolean>;
 
   /**
-   * @return IDs of the data in the storage.
+   * @returns IDs of the data in the storage.
    */
   listIds(): Observable<ArrayDiff<string>>;
 
@@ -24,7 +25,7 @@ export interface ReadableStorage<TFull> {
    * Reads the object corresponding to the given ID.
    *
    * @param id ID of the object to be read.
-   * @return Observable that emits the object corresponding to the given ID, or null if the object
+   * @returns Observable that emits the object corresponding to the given ID, or null if the object
    *     does not exist.
    */
   read(id: string): Observable<TFull|null>;

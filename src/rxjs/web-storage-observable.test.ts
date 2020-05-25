@@ -1,4 +1,5 @@
-import { assert, should, test } from 'gs-testing';
+import { assert, run, should, test } from 'gs-testing';
+
 import { WebStorageObservable } from './web-storage-observable';
 
 interface Entry {
@@ -42,25 +43,23 @@ class FakeStorage implements Storage {
   }
 }
 
-test('gs-tools.rxjs.WebStorageObservable', () => {
-  let entries: Entry[];
-  let obs: WebStorageObservable;
-
-  beforeEach(() => {
-    entries = [
+test('gs-tools.rxjs.WebStorageObservable', init => {
+  const _ = init(() => {
+    const entries = [
       {key: 'key1', value: 'value1'},
       {key: 'key2', value: 'value2'},
       {key: 'key3', value: 'value3'},
     ];
-    obs = new WebStorageObservable(new FakeStorage(entries));
+    const obs = new WebStorageObservable(new FakeStorage(entries));
+    return {obs, entries};
   });
 
   test('getLength', () => {
     should(`emit the lengths correctly`, () => {
-      const lengthObs = obs.getLength();
+      const lengthObs = _.obs.getLength();
       assert(lengthObs).to.emitWith(3);
 
-      entries.splice(0, 1);
+      _.entries.splice(0, 1);
       window.dispatchEvent(new CustomEvent('storage'));
 
       assert(lengthObs).to.emitWith(2);
@@ -69,22 +68,22 @@ test('gs-tools.rxjs.WebStorageObservable', () => {
 
   test('getItem', () => {
     should(`emit the items correctly`, () => {
-      const itemObs = obs.getItem('key3');
-      assert(itemObs).to.emitWith('value3');
+      const item$ = _.obs.getItem('key3');
+      assert(item$).to.emitWith('value3');
 
-      entries.splice(2, 1);
+      _.entries.splice(2, 1);
       window.dispatchEvent(new CustomEvent('storage'));
 
-      assert(itemObs).to.emitWith(null);
+      assert(item$).to.emitWith(null);
     });
   });
 
   test('key', () => {
     should(`emit the keys correctly`, () => {
-      const keyObs = obs.key(2);
+      const keyObs = _.obs.key(2);
       assert(keyObs).to.emitWith('key3');
 
-      entries.splice(2, 1);
+      _.entries.splice(2, 1);
       window.dispatchEvent(new CustomEvent('storage'));
 
       assert(keyObs).to.emitWith(null);
@@ -93,21 +92,21 @@ test('gs-tools.rxjs.WebStorageObservable', () => {
 
   test('removeItem', () => {
     should(`remove the items correctly`, () => {
-      const keyObs = obs.key(2);
+      const key$ = _.obs.key(2);
 
-      obs.removeItem('key3');
+      run(_.obs.removeItem('key3'));
 
-      assert(keyObs).to.emitWith(null);
+      assert(key$).to.emitWith(null);
     });
   });
 
   test('setItem', () => {
     should(`set the item correctly`, () => {
-      const itemObs = obs.getItem('key3');
+      const item$ = _.obs.getItem('key3');
 
-      obs.setItem('key3', 'newValue');
+      run(_.obs.setItem('key3', 'newValue'));
 
-      assert(itemObs).to.emitWith('newValue');
+      assert(item$).to.emitWith('newValue');
     });
   });
 });

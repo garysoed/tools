@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable, of as observableOf } from 'rxjs';
+import { BehaviorSubject, defer, Observable, of as observableOf } from 'rxjs';
 import { map, shareReplay, tap } from 'rxjs/operators';
 
 import { BaseIdGenerator } from '../random/base-id-generator';
@@ -24,28 +24,34 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
         );
   }
 
-  delete(id: string): void {
-    const array = this.arrayData$.getValue();
-    const map = new Map(this.mapData$.getValue());
+  delete(id: string): Observable<unknown> {
+    return defer(() => {
+      const array = this.arrayData$.getValue();
+      const map = new Map(this.mapData$.getValue());
 
-    const filteredArray = array.filter(v => v !== id);
-    this.arrayData$.next(filteredArray);
+      const filteredArray = array.filter(v => v !== id);
+      this.arrayData$.next(filteredArray);
 
-    map.delete(id);
-    this.mapData$.next(map);
+      map.delete(id);
+      this.mapData$.next(map);
+      return observableOf({});
+    });
   }
 
-  deleteAt(index: number): void {
-    const array = [...this.arrayData$.getValue()];
-    const map = new Map(this.mapData$.getValue());
+  deleteAt(index: number): Observable<unknown> {
+    return defer(() => {
+      const array = [...this.arrayData$.getValue()];
+      const map = new Map(this.mapData$.getValue());
 
-    const [key] = array.splice(index, 1);
-    this.arrayData$.next(array);
+      const [key] = array.splice(index, 1);
+      this.arrayData$.next(array);
 
-    if (key) {
-      map.delete(key);
-      this.mapData$.next(map);
-    }
+      if (key) {
+        map.delete(key);
+        this.mapData$.next(map);
+      }
+      return observableOf({});
+    });
   }
 
   findIndex(id: string): Observable<number|null> {
@@ -72,15 +78,19 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
         );
   }
 
-  insertAt(index: number, id: string, instance: T): void {
-    const array = [...this.arrayData$.getValue()];
-    const map = new Map(this.mapData$.getValue());
+  insertAt(index: number, id: string, instance: T): Observable<unknown> {
+    return defer(() => {
+      const array = [...this.arrayData$.getValue()];
+      const map = new Map(this.mapData$.getValue());
 
-    array.splice(index, 0, id);
-    this.arrayData$.next(array);
+      array.splice(index, 0, id);
+      this.arrayData$.next(array);
 
-    map.set(id, instance);
-    this.mapData$.next(map);
+      map.set(id, instance);
+      this.mapData$.next(map);
+
+      return observableOf({});
+    });
   }
 
   listIds(): Observable<ArrayDiff<string>> {
@@ -95,33 +105,39 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
         );
   }
 
-  update(id: string, instance: T): void {
-    const array = [...this.arrayData$.getValue()];
-    const map = new Map(this.mapData$.getValue());
+  update(id: string, instance: T): Observable<unknown> {
+    return defer(() => {
+      const array = [...this.arrayData$.getValue()];
+      const map = new Map(this.mapData$.getValue());
 
-    if (map.has(id)) {
-      return;
-    }
+      if (map.has(id)) {
+        return observableOf({});
+      }
 
-    map.set(id, instance);
-    this.mapData$.next(map);
+      map.set(id, instance);
+      this.mapData$.next(map);
 
-    array.push(id);
-    this.arrayData$.next(array);
+      array.push(id);
+      this.arrayData$.next(array);
+      return observableOf({});
+    });
   }
 
-  updateAt(index: number, id: string, instance: T): void {
-    const array = [...this.arrayData$.getValue()];
-    const map = new Map(this.mapData$.getValue());
+  updateAt(index: number, id: string, instance: T): Observable<unknown> {
+    return defer(() => {
+      const array = [...this.arrayData$.getValue()];
+      const map = new Map(this.mapData$.getValue());
 
-    if (map.has(id)) {
-      return;
-    }
+      if (map.has(id)) {
+        return observableOf({});
+      }
 
-    map.set(id, instance);
-    this.mapData$.next(map);
+      map.set(id, instance);
+      this.mapData$.next(map);
 
-    array.splice(index, 0, id);
-    this.arrayData$.next(array);
+      array.splice(index, 0, id);
+      this.arrayData$.next(array);
+      return observableOf({});
+    });
   }
 }

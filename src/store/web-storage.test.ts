@@ -1,4 +1,4 @@
-import { arrayThat, assert, createSpySubject, should, teardown, test } from 'gs-testing';
+import { arrayThat, assert, createSpySubject, run, should, teardown, test } from 'gs-testing';
 import { binary, compose, identity, strict } from 'nabu';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { scan, takeUntil } from 'rxjs/operators';
@@ -56,7 +56,7 @@ test('store.WebStorage', init => {
       const idsSubject = createSpySubject(listIds$);
       const itemSubject = createSpySubject(_.storage.read(id));
 
-      _.storage.delete(id).pipe(takeUntil(_.onTestDone$)).subscribe();
+      run(_.storage.delete(id));
 
       assert(localStorage.getItem(path)).to.beNull();
       assert(localStorage.getItem(PREFIX)).to
@@ -164,7 +164,7 @@ test('store.WebStorage', init => {
 
       const itemSubject = createSpySubject(_.storage.read(id));
 
-      _.storage.update(id, 123).pipe(takeUntil(_.onTestDone$)).subscribe();
+      run(_.storage.update(id, 123));
       assert(idsSubject).to.emitWith(arrayThat<string>().haveExactElements([oldId, id]));
       assert(itemSubject).to.emitWith(123);
       assert(localStorage.getItem(path)).to.equal(ITEM_BINARY_CONVERTER.convertForward(123));

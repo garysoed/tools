@@ -1,5 +1,5 @@
 import { binary, compose, Converter, identity, Serializable, strict, StrictConverter } from 'nabu';
-import { Observable, of as observableOf } from 'rxjs';
+import { concat, Observable, of as observableOf } from 'rxjs';
 import { map, pairwise, shareReplay, startWith, switchMap, take, tap } from 'rxjs/operators';
 
 import { cache } from '../data/cache';
@@ -45,11 +45,13 @@ export class WebStorage<T> implements EditableStorage<T> {
     return this.listIdsAsArray()
         .pipe(
             take(1),
-            tap(ids => {
+            switchMap(ids => {
               const newArray = ids.filter(v => v !== id);
               const result = this.indexesConverter.convertForward(newArray);
-              this.storage.setItem(this.prefix, result);
-              this.storage.removeItem(getPath(id, this.prefix));
+              return concat(
+                  this.storage.setItem(this.prefix, result),
+                  this.storage.removeItem(getPath(id, this.prefix)),
+              );
             }),
         );
   }
@@ -58,7 +60,7 @@ export class WebStorage<T> implements EditableStorage<T> {
     throw new Error('Method not implemented.');
   }
 
-  findIndex(id: string): Observable<number | null> {
+  findIndex(id: string): Observable<number|null> {
     throw new Error('Method not implemented.');
   }
 
@@ -113,14 +115,16 @@ export class WebStorage<T> implements EditableStorage<T> {
     return this.listIdsAsArray()
         .pipe(
             take(1),
-            tap(ids => {
+            switchMap(ids => {
               const newIds = this.indexesConverter.convertForward(
                   [...new Set([...ids, id])],
               );
-              this.storage.setItem(this.prefix, newIds);
-
               const itemResult = this.converter.convertForward(instance);
-              this.storage.setItem(path, itemResult);
+
+              return concat(
+                  this.storage.setItem(this.prefix, newIds),
+                  this.storage.setItem(path, itemResult),
+              );
             }),
         );
   }
