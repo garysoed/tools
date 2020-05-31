@@ -7,6 +7,7 @@ export { filterDefined } from '../src/rxjs/filter-defined';
 export { filterNonNull } from '../src/rxjs/filter-non-null';
 export { mapNonNull } from '../src/rxjs/map-non-null';
 export { switchMapNonNull } from '../src/rxjs/switch-map-non-null';
+export { usingResource } from '../src/rxjs/using-resource';
 
 export { mapArrayDiff, scanArray, ArrayDiff } from '../src/rxjs/state/array-observable';
 export { diffArray } from '../src/rxjs/state/diff-array';
