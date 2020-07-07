@@ -26,14 +26,14 @@ export interface Merge {
   readonly endColumnIndex: number;
 }
 
-export interface RawSheets {
+export interface RawSheet {
   readonly merges?: readonly Merge[];
   readonly data: readonly GridData[];
 }
 
 // tslint:disable-next-line: cyclomatic-complexity
 export function createSheetsTable(
-    raw: RawSheets,
+    raw: RawSheet,
     fromRow: number,
     toRow: number,
     fromColumn: number,

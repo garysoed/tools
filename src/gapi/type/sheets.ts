@@ -6,7 +6,6 @@ export interface ExtendedValue {
 
 export interface CellData {
   readonly effectiveValue?: ExtendedValue;
-  readonly userEnteredFormat?: unknown;
 }
 
 export interface GridData {

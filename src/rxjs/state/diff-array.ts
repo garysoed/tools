@@ -9,25 +9,25 @@ import { ArrayDiff } from './array-observable';
 export function diff<T>(
     oldArray: ReadonlyArray<T>,
     newArray: ReadonlyArray<T>,
-): Iterable<ArrayDiff<T>> {
+): ReadonlyArray<ArrayDiff<T>> {
   const diffs: Array<ArrayDiff<T>> = [];
-  let currArrayLength = oldArray.length;
+  const currArray = [...oldArray];
   let i = 0;
 
   // Insert the missing items.
   while (i < newArray.length) {
-    const existingItem = oldArray[i];
+    const existingItem = currArray[i];
     const newItem = newArray[i];
     if (existingItem !== newItem) {
+      currArray.splice(i, 0, newItem);
       diffs.push({index: i, type: 'insert', value: newItem});
-      currArrayLength++;
     }
     i++;
   }
 
   // Delete the extra items.
-  for (let i = currArrayLength - 1; i >= newArray.length; i--) {
-    diffs.push({index: i, type: 'delete', value: oldArray[i]});
+  for (let i = currArray.length - 1; i >= newArray.length; i--) {
+    diffs.push({index: i, type: 'delete', value: currArray[i]});
   }
 
   return diffs;

@@ -1,6 +1,8 @@
 export { assertByType } from '../src/rxjs/assert-by-type';
 export { assertNonNull } from '../src/rxjs/assert-non-null';
 export { branch } from '../src/rxjs/branch';
+export { convertBackward } from '../src/rxjs/convert-backward';
+export { convertForward } from '../src/rxjs/convert-forward';
 export { debug } from '../src/rxjs/debug';
 export { filterByType } from '../src/rxjs/filter-by-type';
 export { filterDefined } from '../src/rxjs/filter-defined';
