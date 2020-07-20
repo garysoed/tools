@@ -8,6 +8,7 @@ export { asSet as $asSet } from '../src/collect/operators/as-set';
 export { diff as $diff } from '../src/collect/operators/diff';
 export { every as $every } from '../src/collect/operators/every';
 export { filter as $filter } from '../src/collect/operators/filter';
+export { filterByType as $filterByType } from '../src/collect/operators/filter-by-type';
 export { filterDefined as $filterDefined } from '../src/collect/operators/filter-defined';
 export { filterNonNull as $filterNonNull } from '../src/collect/operators/filter-non-null';
 export { first as $first } from '../src/collect/operators/first';

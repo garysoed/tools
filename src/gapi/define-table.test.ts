@@ -1,9 +1,9 @@
 import { arrayThat, assert, MatcherType, objectThat, should, test } from 'gs-testing';
-import { object } from 'gs-testing/src/mock/mocks';
 
 import { Cell, defineTable, MultiCell, SingleCell } from './define-table';
 import { createSheetsTable, Merge, SheetsCell, SheetsTable } from './sheets-table';
 import { CellData, ExtendedValue, RowData } from './type/sheets';
+
 
 function createMerge(
     startRow: number,

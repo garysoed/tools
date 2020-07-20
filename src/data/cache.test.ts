@@ -1,9 +1,9 @@
-import { assert, createSpy, fake, resetCalls, should, Spy } from 'gs-testing';
+import { assert, createSpy, fake, resetCalls, should, Spy, test } from 'gs-testing';
 
 import { cache } from '../data/cache';
 
 
-describe('data.cache', () => {
+test('data.cache', init => {
   /**
    * @test
    */
@@ -30,47 +30,43 @@ describe('data.cache', () => {
     }
   }
 
-  let test: TestClass;
-  let spyAdd: Spy<number, [number, number]>;
-  let spyGetProperty: Spy<number, []>;
-  let spyGetter: Spy<number, []>;
-
-  beforeEach(() => {
-    spyAdd = createSpy('spyAdd');
-    spyGetProperty = createSpy('spyGetProperty');
-    spyGetter = createSpy('spyGetter');
-    test = new TestClass(spyAdd, spyGetProperty, spyGetter);
+  const _ = init(() => {
+    const spyAdd = createSpy<number, [number, number]>('spyAdd');
+    const spyGetProperty = createSpy<number, []>('spyGetProperty');
+    const spyGetter = createSpy<number, []>('spyGetter');
+    const test = new TestClass(spyAdd, spyGetProperty, spyGetter);
+    return {test, spyAdd, spyGetProperty, spyGetter};
   });
 
   should('cache the method', () => {
     const value = 123;
-    fake(spyGetProperty).always().return(value);
+    fake(_.spyGetProperty).always().return(value);
 
-    assert(test.getProperty()).to.equal(value);
+    assert(_.test.getProperty()).to.equal(value);
 
-    resetCalls(spyGetProperty);
-    assert(test.getProperty()).to.equal(value);
-    assert(spyGetProperty).toNot.haveBeenCalled();
+    resetCalls(_.spyGetProperty);
+    assert(_.test.getProperty()).to.equal(value);
+    assert(_.spyGetProperty).toNot.haveBeenCalled();
   });
 
   should(`cache the getter`, () => {
     const value = 123;
-    fake(spyGetter).always().return(value);
+    fake(_.spyGetter).always().return(value);
 
-    assert(test.getter).to.equal(value);
+    assert(_.test.getter).to.equal(value);
 
-    resetCalls(spyGetter);
-    assert(test.getter).to.equal(value);
-    assert(spyGetter).toNot.haveBeenCalled();
+    resetCalls(_.spyGetter);
+    assert(_.test.getter).to.equal(value);
+    assert(_.spyGetter).toNot.haveBeenCalled();
   });
 
   should('cache based on the args', () => {
-    fake(spyAdd).always().call((a, b) => a + b);
-    assert(test.add(1, 2)).to.equal(3);
-    assert(test.add(1, 2)).to.equal(3);
-    assert(spyAdd).to.haveBeenCalled(1);
+    fake(_.spyAdd).always().call((a, b) => a + b);
+    assert(_.test.add(1, 2)).to.equal(3);
+    assert(_.test.add(1, 2)).to.equal(3);
+    assert(_.spyAdd).to.haveBeenCalled(1);
 
-    resetCalls(spyAdd);
-    assert(test.add(1, 3)).to.equal(4);
+    resetCalls(_.spyAdd);
+    assert(_.test.add(1, 3)).to.equal(4);
   });
 });
