@@ -29,8 +29,10 @@ export { arrayFrom } from '../src/collect/structures/array-from';
 export { countableIterable } from '../src/collect/structures/countable-iterable';
 
 export { compound } from '../src/collect/compare/compound';
+export { isOneOf } from '../src/collect/compare/is-one-of';
 export { natural } from '../src/collect/compare/natural';
 export { normal } from '../src/collect/compare/normal';
+export { reversed } from '../src/collect/compare/reversed';
 export { withMap } from '../src/collect/compare/with-map';
 
 export { Ordering } from '../src/collect/compare/ordering';
