@@ -9,7 +9,7 @@
       "actions": [
         "webpack --config-name docs",
         "api-extractor run --local --verbose",
-        "thoth --assets=./docassets --outdir=./docassets --project=gs-tools"
+        "thoth --assets=./docassets --outdir=../thoth/run/gs-tools --project=gs-tools"
       ]
     }
   ]
