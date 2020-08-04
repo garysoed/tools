@@ -3,6 +3,14 @@
     {
       "command": "link",
       "actions": ["npm link gs-testing gs-types dev nabu moirai"]
+    },
+    {
+      "command": "docs",
+      "actions": [
+        "webpack --config-name docs",
+        "api-extractor run --local --verbose",
+        "thoth --assets=./docassets --outdir=./docassets --project=gs-tools"
+      ]
     }
   ]
 }

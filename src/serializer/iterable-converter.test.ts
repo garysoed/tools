@@ -12,7 +12,7 @@ test('serializer.IterableConverter', () => {
       );
 
       assert(converter.convertBackward([1, 2, 3])).to.haveProperties({
-        result: arrayThat().haveExactElements([1, 2, 3]),
+        result: arrayThat<number>().haveExactElements([1, 2, 3]),
       });
     });
 
@@ -43,7 +43,7 @@ test('serializer.IterableConverter', () => {
       );
 
       assert(converter.convertForward([1, 2, 3])).to.haveProperties({
-        result: arrayThat().haveExactElements([1, 2, 3]),
+        result: arrayThat<number>().haveExactElements([1, 2, 3]),
       });
     });
 

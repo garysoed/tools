@@ -1,4 +1,4 @@
-import { arrayThat, assert, should, test } from 'gs-testing';
+import { arrayThat, assert, should, test, tupleThat } from 'gs-testing';
 
 import { integerConverter } from './integer-converter';
 import { tupleConverter } from './tuple-converter';
@@ -10,7 +10,7 @@ test('serializer.TupleConverter', () => {
           [integerConverter(), integerConverter()],
       );
       assert(converter.convertBackward([12.34, 34.56])).to
-          .haveProperties({result: arrayThat().haveExactElements([12, 35])});
+          .haveProperties({result: tupleThat<[number, number]>().haveExactElements([12, 35])});
     });
 
     should(`fail if one of the types is incorrect`, () => {
@@ -48,7 +48,7 @@ test('serializer.TupleConverter', () => {
           [integerConverter(), integerConverter()],
       );
       assert(converter.convertForward([12, 34])).to
-          .haveProperties({result: arrayThat().haveExactElements([12, 34])});
+          .haveProperties({result: tupleThat<[number, number]>().haveExactElements([12, 34])});
     });
 
     should(`fail if one of the items cannot be converted`, () => {

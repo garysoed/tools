@@ -7,4 +7,10 @@ module.exports = webpackBuilder(__dirname)
         .setOutput('bundle.js', '/out')
         .addTypeScript()
     )
+    .forDevelopment('docs', builder => builder
+        .addEntry('docs', glob.sync('./docassets/index.ts'))
+        .setOutput('index.js', '/out')
+        .setSingleRun(true)
+        .addTypeScript()
+    )
 .build();

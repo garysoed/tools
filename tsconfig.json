@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
     "alwaysStrict": true,
+    "assumeChangesOnlyAffectDirectDependencies": true,
     "baseUrl": ".",
+    "declaration": true,
+    "declarationMap": true,
     "experimentalDecorators": true,
     "lib": [
       "dom",

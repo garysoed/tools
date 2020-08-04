@@ -78,7 +78,7 @@ test('@gs-tools/rxjs/state/set-subject', init => {
 
       assert(spySubject).to.emitWith(objectThat<SetDiff<string>>().haveProperties({
         type: 'init',
-        value: iterableThat().startWith(['a', 'b', 'c']),
+        value: setThat<string>().haveExactElements(new Set(['a', 'b', 'c'])),
       }));
 
       _.subject.delete('b');
