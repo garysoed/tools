@@ -8,7 +8,7 @@ module.exports = webpackBuilder(__dirname)
         .addTypeScript()
     )
     .forDevelopment('docs', builder => builder
-        .addEntry('docs', glob.sync('./docassets/index.ts'))
+        .addEntry('docs', ['./docassets/index.ts'])
         .setOutput('index.js', '/out')
         .setSingleRun(true)
         .addTypeScript()

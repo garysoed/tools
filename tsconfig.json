@@ -23,6 +23,9 @@
   },
   "include": [
     "src/**/*.test.ts",
-    "export/**/*.ts"
+    "export/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }

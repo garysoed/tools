@@ -1,4 +1,5 @@
 import { DisposableFunction as IDisposableFunction } from '../interfaces/disposable-function';
+
 import { BaseDisposable } from './base-disposable';
 
 /**

@@ -2,7 +2,7 @@
   "commands": [
     {
       "command": "link",
-      "actions": ["npm link gs-testing gs-types dev nabu moirai"]
+      "actions": ["npm link gs-testing gs-types dev nabu moirai rxjs"]
     },
     {
       "command": "docs",

@@ -7,17 +7,6 @@ interface Json {
   [key: string]: any;
 }
 
-export function clone<T extends Json>(original: Json): T {
-  const cloneObj: Json = {};
-  for (const key in original) {
-    if (original.hasOwnProperty(key)) {
-      cloneObj[key] = original[key];
-    }
-  }
-
-  return cloneObj as T;
-}
-
 /**
  * Searchs for the value in the JSON at the given path.
  *

@@ -47,15 +47,15 @@ export { HslColor } from '../src/color/hsl-color';
 export { RgbColor } from '../src/color/rgb-color';
 
 // data
-import * as Jsons from '../src/data/jsons';
+export { getValue, setValue } from '../src/data/jsons';
 export { ClassAnnotation, ClassAnnotator } from '../src/data/class-annotation';
 export { ParameterAnnotation, ParameterAnnotator } from '../src/data/parameter-annotation';
 export { PropertyAnnotation, PropertyAnnotator } from '../src/data/property-annotation';
 export { cache } from '../src/data/cache';
-export { Jsons };
 
 // dispose
 export { BaseDisposable } from '../src/dispose/base-disposable';
+export { Disposable } from '../src/dispose/disposable';
 export { DisposableFunction } from '../src/dispose/disposable-function';
 
 // error
@@ -63,9 +63,8 @@ export { Errors } from '../src/error/errors';
 
 // gapi
 // tslint:disable-next-line: ordered-imports
-import * as sheets from '../src/gapi/sheets';
-import * as sheetsApi from '../src/gapi/type/sheets';
-export { sheets, sheetsApi };
+export { Coordinate, getCellContentByRange, getCellContent } from '../src/gapi/sheets';
+export { ExtendedValue, CellData, GridData, GridRange, RowData } from '../src/gapi/type/sheets';
 export { createSheetsTable, Merge, RawSheet } from '../src/gapi/sheets-table';
 export { asSingleCell, asMultiCell, defineTable, Cell, SingleCell, MultiCell } from '../src/gapi/define-table';
 
@@ -127,10 +126,8 @@ export { LocalStorage } from '../src/store/local-storage';
 export { Cases } from '../src/string/cases';
 
 // typescript
-import * as enums from '../src/typescript/enums';
-
 export { assertUnreachable } from '../src/typescript/assert-unreachable';
-export { enums };
+export { fromLowerCaseString, fromNumberString, getAllValues, toLowerCaseString } from '../src/typescript/enums';
 
 // util
 export { diff } from '../src/util/diff';

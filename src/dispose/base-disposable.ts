@@ -1,5 +1,7 @@
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
+
+import { cache } from '../data/cache';
 
 import { Disposable } from './disposable';
 
@@ -24,8 +26,7 @@ export const Flags = {
  */
 export class BaseDisposable implements Disposable {
   private readonly disposableHandlers_: Array<() => void> = [];
-  readonly #isDisposed$ = new BehaviorSubject(false);
-  protected readonly onDispose$ = this.#isDisposed$.pipe(filter(isDisposed => isDisposed));
+  readonly isDisposed$ = new BehaviorSubject(false);
 
   constructor() {
     if (Flags.enableTracking) {
@@ -48,7 +49,7 @@ export class BaseDisposable implements Disposable {
    * Dispose this object.
    */
   dispose(): void {
-    if (this.#isDisposed$.getValue()) {
+    if (this.isDisposed$.getValue()) {
       return;
     }
 
@@ -62,19 +63,20 @@ export class BaseDisposable implements Disposable {
       }
     }
 
-    this.#isDisposed$.next(true);
+    this.isDisposed$.next(true);
   }
 
-  /**
-   * True iff the object has been disposed.
-   */
   isDisposed(): boolean {
-    return this.#isDisposed$.getValue();
+    return this.isDisposed$.getValue();
   }
 
   /**
    * Override this method for custom logic that are ran during disposal.
    */
-  // tslint:disable-next-line:prefer-function-over-method
   protected disposeInternal(): void { /* noop */ }
+
+  @cache()
+  protected get onDispose$(): Observable<{}> {
+    return this.isDisposed$.pipe(filter(isDisposed => isDisposed));
+  }
 }
