@@ -2,9 +2,9 @@
 import { assert, should, test } from 'gs-testing';
 
 import { asArray } from '../collect/operators/as-array';
-import { $ } from '../collect/operators/chain';
 import { flat } from '../collect/operators/flat';
 import { map } from '../collect/operators/map';
+import { $pipe } from '../collect/operators/pipe';
 
 import { PropertyAnnotator } from './property-annotation';
 
@@ -42,7 +42,7 @@ test('data.PropertyAnnotation', () => {
         ctorFn: Object,
         key: string|symbol,
     ): Array<Object|string> {
-      return $(
+      return $pipe(
           annotation.data.getAttachedValues(ctorFn, key),
           map(([obj, valuesList]) => [obj, ...valuesList]),
           flat<Object|string>(),
@@ -92,10 +92,10 @@ test('data.PropertyAnnotation', () => {
 
   test('getAttachedValuesForCtor', () => {
     function getFlatAttachedValues(ctorFn: Object): Array<Object|number> {
-      return $(
+      return $pipe(
           annotation.data.getAttachedValuesForCtor(ctorFn),
           map(([key, indexMap]) => {
-            const values = $(
+            const values = $pipe(
                 indexMap,
                 map(([key, values]) => [key, ...values]),
                 flat<Object|string>(),

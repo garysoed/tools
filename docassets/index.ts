@@ -1,6 +1,5 @@
 // collect
-export { $ as $pipe } from '../src/collect/operators/chain';
-export { $ } from '../src/collect/operators/chain';
+export { $pipe } from '../src/collect/operators/pipe';
 
 export { asArray as $asArray } from '../src/collect/operators/as-array';
 export { asOrderedMap as $asOrderedMap } from '../src/collect/operators/as-ordered-map';

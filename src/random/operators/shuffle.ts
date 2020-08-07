@@ -1,8 +1,8 @@
 import { normal } from '../../collect/compare/normal';
 import { withMap } from '../../collect/compare/with-map';
 import { asArray } from '../../collect/operators/as-array';
-import { $ } from '../../collect/operators/chain';
 import { map } from '../../collect/operators/map';
+import { $pipe } from '../../collect/operators/pipe';
 import { sort } from '../../collect/operators/sort';
 import { zip } from '../../collect/operators/zip';
 import { Random } from '../random';
@@ -13,7 +13,7 @@ export function shuffle<T>(
     getBaseWeight: (item: T) => number = () => 0,
 ): Random<readonly T[]> {
   return rng.next(items.length, ({random: randomWeights, rng}) => {
-    const weightedTileSpecs = $(
+    const weightedTileSpecs = $pipe(
         items,
         zip(randomWeights),
         map(([item, randomWeight]) => {

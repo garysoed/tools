@@ -2,9 +2,8 @@ import { following } from '../collect/compare/following';
 import { withMap } from '../collect/compare/with-map';
 import { asArray } from '../collect/operators/as-array';
 import { asOrderedMap } from '../collect/operators/as-ordered-map';
-import { $ } from '../collect/operators/chain';
 import { filter } from '../collect/operators/filter';
-import { map } from '../collect/operators/map';
+import { $pipe } from '../collect/operators/pipe';
 
 
 interface AnnotationResult<D> {
@@ -34,7 +33,7 @@ export class ClassAnnotation<D> {
 
     const ctorsSet = new Set(ctors);
 
-    const orderedMap = $(
+    const orderedMap = $pipe(
         this.data,
         filter(([key]) => ctorsSet.has(key)),
         asArray(),

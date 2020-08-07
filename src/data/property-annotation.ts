@@ -3,10 +3,10 @@ import { withMap } from '../collect/compare/with-map';
 import { asArray } from '../collect/operators/as-array';
 import { asMap } from '../collect/operators/as-map';
 import { asSet } from '../collect/operators/as-set';
-import { $ } from '../collect/operators/chain';
 import { filter } from '../collect/operators/filter';
 import { flat } from '../collect/operators/flat';
 import { map } from '../collect/operators/map';
+import { $pipe } from '../collect/operators/pipe';
 import { OrderedMap } from '../collect/structures/ordered-map';
 import { ReadonlyOrderedMap } from '../collect/structures/readonly-ordered-map';
 
@@ -25,7 +25,7 @@ export class PropertyAnnotation<D> {
     const ctorChain = getCtorChain(ctorFn);
     const ctorsSet = new Set(ctorChain);
 
-    const entries = $(
+    const entries = $pipe(
         this.data,
         filter(([key]) => ctorsSet.has(key)),
         map(([k, keyToDataMap]) => {
@@ -46,7 +46,7 @@ export class PropertyAnnotation<D> {
     const ctors = new Set([...getCtorChain(ctorFn)]);
 
     // Get the keys
-    const keys = $(
+    const keys = $pipe(
         this.data,
         filter(([key]) => ctors.has(key)),
         map(([, value]) => [...value]),
@@ -56,7 +56,7 @@ export class PropertyAnnotation<D> {
     );
 
 
-    return $(
+    return $pipe(
         keys,
         map(key => [
           key,

@@ -1,7 +1,7 @@
 import { assert, should, test } from 'gs-testing';
 
 import { asArray } from '../collect/operators/as-array';
-import { $ } from '../collect/operators/chain';
+import { $pipe } from '../collect/operators/pipe';
 import { flat } from '../collect/operators/flat';
 import { map } from '../collect/operators/map';
 
@@ -26,7 +26,7 @@ class DescendantClass extends ChildClass { }
 test('data.ClassAnnotator', () => {
   test('getAttachedValues', () => {
     function getFlatAttachedValues(ctorFn: Function): Array<Object|string> {
-      return $(
+      return $pipe(
           annotation.data.getAttachedValues(ctorFn),
           map(([obj, valuesList]) => [obj, ...valuesList]),
           flat<Object|string>(),

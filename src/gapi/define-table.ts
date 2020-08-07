@@ -1,6 +1,6 @@
 import { asArray } from '../collect/operators/as-array';
-import { $ } from '../collect/operators/chain';
 import { flat } from '../collect/operators/flat';
+import { $pipe } from '../collect/operators/pipe';
 
 import { SheetsCell, SheetsTable } from './sheets-table';
 import { ExtendedValue } from './type/sheets';
@@ -32,7 +32,7 @@ export function defineTable(sheetsTable: SheetsTable): Table {
   const rowIndex = getRowIndex(sheetsTable);
 
   const [cols] = getCells([{start: 0, count: 1}], colIndex, sheetsTable);
-  const rows = $(
+  const rows = $pipe(
       getCells(rowIndex, [{start: 0, count: 1}], sheetsTable),
       flat(),
       asArray(),

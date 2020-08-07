@@ -1,6 +1,6 @@
 import { arrayThat, assert, iterableThat, should, test, tupleThat } from 'gs-testing';
 
-import { $ } from './chain';
+import { $pipe } from './pipe';
 import { split } from './split';
 
 
@@ -14,7 +14,7 @@ test('@tools/collect/split', () => {
       }
     };
 
-    assert($(inf(), split(5))).to.equal(
+    assert($pipe(inf(), split(5))).to.equal(
         tupleThat<[readonly number[], Iterable<number>]>().haveExactElements([
           arrayThat<number>().haveExactElements([0, 1, 2, 3, 4]),
           iterableThat<number, Iterable<number>>().startWith([5, 6, 7, 8, 9]),
@@ -30,7 +30,7 @@ test('@tools/collect/split', () => {
       }
     };
 
-    assert($(inf(), split(0))).to.equal(
+    assert($pipe(inf(), split(0))).to.equal(
         tupleThat<[readonly number[], Iterable<number>]>().haveExactElements([
           arrayThat<number>().beEmpty(),
           iterableThat<number, Iterable<number>>().startWith([0, 1, 2, 3, 4]),
@@ -38,7 +38,7 @@ test('@tools/collect/split', () => {
   });
 
   should(`return tuple with all elements in the first element if count is too big`, () => {
-    assert($([1, 2, 3], split(5))).to.equal(
+    assert($pipe([1, 2, 3], split(5))).to.equal(
         tupleThat<[readonly number[], Iterable<number>]>().haveExactElements([
           arrayThat<number>().haveExactElements([1, 2, 3]),
           iterableThat<number, Iterable<number>>().beEmpty(),
@@ -54,7 +54,7 @@ test('@tools/collect/split', () => {
       }
     };
 
-    assert($(inf(), split(-5))).to.equal(
+    assert($pipe(inf(), split(-5))).to.equal(
         tupleThat<[readonly number[], Iterable<number>]>().haveExactElements([
           arrayThat<number>().beEmpty(),
           iterableThat<number, Iterable<number>>().startWith([0, 1, 2, 3, 4]),

@@ -1,6 +1,6 @@
 import { assert, should, test } from 'gs-testing';
 
-import { $ } from './chain';
+import { $pipe } from './pipe';
 import { take } from './take';
 
 test('@tools/collect/take', () => {
@@ -11,7 +11,7 @@ test('@tools/collect/take', () => {
       }
     };
 
-    assert($(inf(), take(5))).to.startWith([1, 1, 1, 1, 1]);
+    assert($pipe(inf(), take(5))).to.startWith([1, 1, 1, 1, 1]);
   });
 
   should(`return empty iterable if count is zero`, () => {
@@ -21,11 +21,11 @@ test('@tools/collect/take', () => {
       }
     };
 
-    assert($(inf(), take(0))).to.beEmpty();
+    assert($pipe(inf(), take(0))).to.beEmpty();
   });
 
   should(`return all elements if count is too big`, () => {
-    assert($([1, 2, 3], take(5))).to.startWith([1, 2, 3]);
+    assert($pipe([1, 2, 3], take(5))).to.startWith([1, 2, 3]);
   });
 
   should(`return empty iterable if count is negative`, () => {
@@ -35,6 +35,6 @@ test('@tools/collect/take', () => {
       }
     };
 
-    assert($(inf(), take(-5))).to.beEmpty();
+    assert($pipe(inf(), take(-5))).to.beEmpty();
   });
 });
