@@ -10,6 +10,9 @@ const SPLIT_REGEXP = /([0-9]+)/;
 
 /**
  * Natural ordering that pays attention to numerical values in the string.
+ *
+ * @returns Function that orders the items in a natural order.
+ * @thModule collect.compare
  */
 export function natural(): Ordering<string> {
   return (item1: string, item2: string): CompareResult => {

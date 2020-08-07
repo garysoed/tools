@@ -4798,6 +4798,68 @@
         },
         {
           "kind": "Function",
+          "canonicalReference": "gs-tools!byType:function(1)",
+          "docComment": "/**\n * Order the items by the types.\n *\n * @param types - Array of types to order the items with.\n *\n * @returns `Ordering` that sorts a collection by types, in the same order as the given types array.  @thModule collect.compare\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function byType(types: "
+            },
+            {
+              "kind": "Reference",
+              "text": "ReadonlyArray",
+              "canonicalReference": "!ReadonlyArray:interface"
+            },
+            {
+              "kind": "Content",
+              "text": "<"
+            },
+            {
+              "kind": "Reference",
+              "text": "Type",
+              "canonicalReference": "gs-types!Type:class"
+            },
+            {
+              "kind": "Content",
+              "text": "<any>>"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "Ordering",
+              "canonicalReference": "gs-tools!Ordering:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<any>"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 6,
+            "endIndex": 8
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "types",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 5
+              }
+            }
+          ],
+          "name": "byType"
+        },
+        {
+          "kind": "Function",
           "canonicalReference": "gs-tools!cache:function(1)",
           "docComment": "/**\n * Caches the given method.\n */\n",
           "excerptTokens": [
@@ -5767,9 +5829,34 @@
           }
         },
         {
+          "kind": "TypeAlias",
+          "canonicalReference": "gs-tools!CompareResult:type",
+          "docComment": "/**\n * Result of comparison.\n *\n * @remarks\n *\n * If `-1`, the first item is smaller than the second. If `1`, the first item is larger than the second. Otherwise, no comparison is done. The two items are either equal or uncomparable.\n *\n * @hidden\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare type CompareResult = "
+            },
+            {
+              "kind": "Content",
+              "text": "-1 | 0 | 1"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "CompareResult",
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 2
+          }
+        },
+        {
           "kind": "Function",
           "canonicalReference": "gs-tools!compound:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Returns function to sort items by the given array of `Ordering`s.\n *\n * @remarks\n *\n * The given array of `Ordering`s are used for tie breaking.\n *\n * @param orderings - Orderings to check.\n *\n * @typeParam T - Type of items to compare.\n *\n * @returns Ordering object that uses the given array of `Ordering`s to break ties.  @thModule collect.compare\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -7729,6 +7816,67 @@
         },
         {
           "kind": "Function",
+          "canonicalReference": "gs-tools!following:function(1)",
+          "docComment": "/**\n * Returns function to sort items by equality with the given array of items.\n *\n * @remarks\n *\n * The returned function will try to sort items in the same order as the given array of items. Items that are not in the given array will be treated as equal value.\n *\n * @param specs - Array of items to compare.\n *\n * @typeParam T - Type of items to compare.\n *\n * @returns Function that tries to sort the items following the order of the given array of items.  @thModule collect.compare\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function following<T>(specs: "
+            },
+            {
+              "kind": "Content",
+              "text": "readonly T[]"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "Ordering",
+              "canonicalReference": "gs-tools!Ordering:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T>"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 3,
+            "endIndex": 5
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "specs",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "typeParameters": [
+            {
+              "typeParameterName": "T",
+              "constraintTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              },
+              "defaultTypeTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              }
+            }
+          ],
+          "name": "following"
+        },
+        {
+          "kind": "Function",
           "canonicalReference": "gs-tools!fromLowerCaseString:function(1)",
           "docComment": "/**\n * Converts enum name (as lower case string) to the corresponding enum value.\n *\n * @param stringValue - The string value to convert to enum value.\n *\n * @param enumSet - The set of enum values.  @return The enum value corresponding to the enum name.\n */\n",
           "excerptTokens": [
@@ -9360,7 +9508,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!isOneOf:function(1)",
-          "docComment": "/**\n * Orders items matching the given list at the start of the list.\n */\n",
+          "docComment": "/**\n * Orders items matching the given list at the start of the list.\n *\n * @typeParam T - Type of item to order.\n *\n * @returns Ordering that sorts item earlier if it matches one of the given items.  @thModule collect.compare\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -10414,6 +10562,67 @@
           "extendsTokenRanges": []
         },
         {
+          "kind": "Function",
+          "canonicalReference": "gs-tools!matches:function(1)",
+          "docComment": "/**\n * Returns function that orders items at the front iif the predicate returns true for them.\n *\n * @param predicate - Predicate function to determine the ordering of items.\n *\n * @typeParam T - Type of item to check.\n *\n * @returns Function that orders items at the front iif the predicate returns true for them.  @thModule collect.compare\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function matches<T>(predicate: "
+            },
+            {
+              "kind": "Content",
+              "text": "(input: T) => boolean"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "Ordering",
+              "canonicalReference": "gs-tools!Ordering:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T>"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 3,
+            "endIndex": 5
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "predicate",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "typeParameters": [
+            {
+              "typeParameterName": "T",
+              "constraintTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              },
+              "defaultTypeTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              }
+            }
+          ],
+          "name": "matches"
+        },
+        {
           "kind": "Interface",
           "canonicalReference": "gs-tools!Merge:interface",
           "docComment": "",
@@ -10599,7 +10808,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!natural:function(1)",
-          "docComment": "/**\n * Natural ordering that pays attention to numerical values in the string.\n */\n",
+          "docComment": "/**\n * Natural ordering that pays attention to numerical values in the string.\n *\n * @returns Function that orders the items in a natural order.  @thModule collect.compare\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -10631,11 +10840,19 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!normal:function(1)",
-          "docComment": "/**\n * Ordering by comparators `<` and `>`.\n *\n * For numbers, this is the natural ordering of the number. For strings, this is the alphabetical ordering. For booleans, this ordering treats `false` as smaller.\n */\n",
+          "docComment": "/**\n * Ordering by comparators `<` and `>`.\n *\n * @remarks\n *\n * For numbers, this is the natural ordering of the number. For strings, this is the alphabetical ordering. For booleans, this ordering treats `false` as smaller.\n *\n * @typeParam T - Type of item to compare.\n *\n * @returns Ordering function using `<` and `>`.  @thModule collect.compare\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "export declare function normal<T>(): "
+              "text": "export declare function normal<T extends "
+            },
+            {
+              "kind": "Content",
+              "text": "string | number | boolean"
+            },
+            {
+              "kind": "Content",
+              "text": ">(): "
             },
             {
               "kind": "Reference",
@@ -10652,8 +10869,8 @@
             }
           ],
           "returnTypeTokenRange": {
-            "startIndex": 1,
-            "endIndex": 3
+            "startIndex": 3,
+            "endIndex": 5
           },
           "releaseTag": "Public",
           "overloadIndex": 1,
@@ -10662,8 +10879,8 @@
             {
               "typeParameterName": "T",
               "constraintTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
+                "startIndex": 1,
+                "endIndex": 2
               },
               "defaultTypeTokenRange": {
                 "startIndex": 0,
@@ -11512,7 +11729,7 @@
         {
           "kind": "TypeAlias",
           "canonicalReference": "gs-tools!Ordering:type",
-          "docComment": "",
+          "docComment": "/**\n * Function that compares two items and returns a comparison result.\n *\n * @typeParam T - Type of items to compare.\n *\n * @returns The comparison result.  @hidden\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -13574,7 +13791,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!reversed:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Returns `Ordering` that reverses the ordering.\n *\n * @param ordering - Ordering function to reverse.\n *\n * @typeParam T - Type of items to sort.\n *\n * @returns `Ordering` object that reverses the ordering of the given `Ordering`.  @thModule collect.compare\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -15828,7 +16045,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!withMap:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Returns ordering after mapping.\n *\n * @remarks\n *\n * This applies the mapping function to every item, then uses the given `Ordering` to figure out the ordering.\n *\n * @param mapFn - The mapping function.\n *\n * @param ordering - Ordering to apply.\n *\n * @typeParam T1 - Type of item to sort.\n *\n * @typeParam T2 - Output type of the mapping function.\n *\n * @returns Ordering that applies the mapping function before passing it to the given `Ordering`.  @thModule collect.compare\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",

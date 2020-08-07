@@ -29,8 +29,11 @@ export { zip as $zip } from '../src/collect/operators/zip';
 export { arrayFrom } from '../src/collect/structures/array-from';
 export { countableIterable } from '../src/collect/structures/countable-iterable';
 
+export { byType } from '../src/collect/compare/by-type';
 export { compound } from '../src/collect/compare/compound';
+export { following } from '../src/collect/compare/following';
 export { isOneOf } from '../src/collect/compare/is-one-of';
+export { matches } from '../src/collect/compare/matches';
 export { natural } from '../src/collect/compare/natural';
 export { normal } from '../src/collect/compare/normal';
 export { reversed } from '../src/collect/compare/reversed';
@@ -130,3 +133,7 @@ export { fromLowerCaseString, fromNumberString, getAllValues, toLowerCaseString 
 
 // util
 export { diff } from '../src/util/diff';
+
+
+// Type only exports.
+export { CompareResult } from '../src/collect/compare/compare-result';
