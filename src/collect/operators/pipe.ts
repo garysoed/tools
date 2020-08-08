@@ -15,6 +15,7 @@ import { Operator } from './operator';
  *   $map(v => v + 1),
  *   $asSet(),
  * );  // Set([2, 3, 4])
+ * ```
  *
  * @typeParam F - Type of the source.
  * @param source - The starting object.

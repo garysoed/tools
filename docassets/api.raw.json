@@ -18,7 +18,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$asArray:function(1)",
-          "docComment": "/**\n * Converts the iterable to an {@link Array}.\n *\n * @typeParam T - Type of items in the array.\n *\n * @returns `Operator` to convert {@link Iterable}s to arrays.  @thModule collect.operators\n */\n",
+          "docComment": "/**\n * Converts the {@link Iterable} to an {@link Array}.\n *\n * @typeParam T - Type of items in the array.\n *\n * @returns `Operator` to convert `Iterable` to arrays.  @thModule collect.operators\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -72,7 +72,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$asMap:function(1)",
-          "docComment": "/**\n * Converts the iterable to a {@link Map}.\n *\n * @typeParam K - Type of keys in the map.\n *\n * @typeParam V - Type of values in the map.\n *\n * @returns `Operator` to convert {@link Iterable}s to maps.  @thModule collect.operators\n */\n",
+          "docComment": "/**\n * Converts the {@link Iterable} to a {@link Map}.\n *\n * @typeParam K - Type of keys in the map.\n *\n * @typeParam V - Type of values in the map.\n *\n * @returns `Operator` to convert `Iterable`s to maps.  @thModule collect.operators\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -146,7 +146,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$asOrderedMap:function(1)",
-          "docComment": "/**\n * Converts the iterable to an {@link OrderedMap}.\n *\n * @typeParam K - Type of keys in the map.\n *\n * @typeParam V - Type of values in the map.\n *\n * @returns `Operator` to convert {@link Iterable}s to `OrderedMap`s.  @thModule collect.operators\n */\n",
+          "docComment": "/**\n * Converts the {@link Iterable} to an {@link OrderedMap}.\n *\n * @typeParam K - Type of keys in the map.\n *\n * @typeParam V - Type of values in the map.\n *\n * @returns `Operator` to convert `Iterable`s to `OrderedMap`s.  @thModule collect.operators\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -220,7 +220,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$asSet:function(1)",
-          "docComment": "/**\n * Converts the iterable to a {@link Set}.\n *\n * @typeParam T - Type of items in the set.\n *\n * @returns `Operator` to convert {@link Iterable}s to sets.  @thModule collect.operators\n */\n",
+          "docComment": "/**\n * Converts the {@link Iterable} to a {@link Set}.\n *\n * @typeParam T - Type of items in the set.\n *\n * @returns `Operator` to convert `Iterable`s to sets.  @thModule collect.operators\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -283,7 +283,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$diff:function(1)",
-          "docComment": "/**\n * Returns Operator that returns elements that are in the original iterable but not in the given set.\n *\n * @param other - Set to compare to.\n *\n * @typeParam T - Type of item.\n *\n * @returns Operator that returns elements that are in the original iterable but not in the given set.\n *\n * @thModule collect.operators\n */\n",
+          "docComment": "/**\n * Returns elements that are in the original {@link Iterable} but not in the given set.\n *\n * @param other - Set to compare to.\n *\n * @typeParam T - Type of item.\n *\n * @returns Operator that returns elements that are in the original `Iterable` but not in the given set.\n *\n * @thModule collect.operators\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -367,7 +367,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$every:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Returns `true` iff all the elements in the collection is `true`.\n *\n * @remarks\n *\n * The given collection needs to have a finite size.\n *\n * @returns Operator that returns `true` iff all the elements in the it6erable is `true`.  @thModule collect.operators\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -385,7 +385,7 @@
             {
               "kind": "Reference",
               "text": "FiniteIterable",
-              "canonicalReference": "gs-tools!~FiniteIterable:type"
+              "canonicalReference": "gs-tools!FiniteIterable:type"
             },
             {
               "kind": "Content",
@@ -408,7 +408,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$filter:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Filters out items that do not fulfill the given predicate.\n *\n * @remarks\n *\n * The given predicate can use type guard to set the value of the returned {@link Iterable}.\n *\n * @param predicate - Function that takes in an item and returns true iff the item should be in the resulting `Iterable`.\n *\n * @typeParam T1 - Type of item in the `Iterable`.\n *\n * @typeParam T2 - Type of `Iterable` whose items pass the given predicate, if the predicate has a type guard.\n *\n * @returns `Operator` that filters out items that do not fulfill the given predicate.  @thModule collect.operators\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -420,7 +420,7 @@
             },
             {
               "kind": "Content",
-              "text": ">(filterFn: "
+              "text": ">(predicate: "
             },
             {
               "kind": "Content",
@@ -479,7 +479,7 @@
           "overloadIndex": 1,
           "parameters": [
             {
-              "parameterName": "filterFn",
+              "parameterName": "predicate",
               "parameterTypeTokenRange": {
                 "startIndex": 3,
                 "endIndex": 6
@@ -515,11 +515,11 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$filter:function(2)",
-          "docComment": "",
+          "docComment": "/**\n * @param predicate - Function that takes in an item and returns true iff the item should be in the resulting `Iterable`.\n *\n * @typeParam T - Type of item in the `Iterable`.\n *\n * @returns `Operator` that filters out items that do not fulfill the given predicate.\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "export declare function filter<T>(filterFn: "
+              "text": "export declare function filter<T>(predicate: "
             },
             {
               "kind": "Content",
@@ -569,7 +569,7 @@
           "overloadIndex": 2,
           "parameters": [
             {
-              "parameterName": "filterFn",
+              "parameterName": "predicate",
               "parameterTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
@@ -594,7 +594,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$filterByType:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Returns elements in the {@link Iterable} of the given {@link Type}.\n *\n * @param type - Expected type of the item.\n *\n * @typeParam T - Expected type of item.\n *\n * @returns Operator that returns elements of the given `Type`.  @thModule collect.operators\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -678,7 +678,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$filterDefined:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Filters out any `undefined`.\n *\n * @typeParam T - Type of item in the input `Iterable` that is not `undefined`.\n *\n * @returns Operator that filters out any `undefined`.\n *\n * @thModule collect.operators\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -700,7 +700,7 @@
             },
             {
               "kind": "Content",
-              "text": "<T | undefined>, "
+              "text": "<T>, "
             },
             {
               "kind": "Reference",
@@ -750,7 +750,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$filterNonNull:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Filters out any `null`s from the {@link Iterable}.\n *\n * @typeParam T - Type of item in the input `Iterable` that is not `null`.\n *\n * @returns Operator that filters out any `null`.  @thModule collect.operators\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -822,7 +822,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$first:function(1)",
-          "docComment": "/**\n * Returns the first element in the iterable, or null if there are none.\n */\n",
+          "docComment": "/**\n * Returns the first element in the {@link Iterable}, or null if there are none.\n *\n * @typeParam T - Type of item in the given `Iterable`.\n *\n * @returns `Operator` that returns the first element in the iterable, or null if there are none.  @thModule collect.operators\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -876,7 +876,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$flat:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Flattens the {@link Iterable} of `Iterable`s.\n *\n * @remarks\n *\n * If the input value is an `Iterable` of {@link Map}s, the resulting `Iterable` will contain `[key, value]` pairs of the maps.\n *\n * @typeParam T - Type of item in the given `Iterable`.\n *\n * @returns `Operator` that flattens the `Iterable` of `Iterable`s..  @thModule collect.operators\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -948,7 +948,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$flat:function(2)",
-          "docComment": "",
+          "docComment": "/**\n * @typeParam K - Type of the keys in the input map.\n *\n * @typeParam V - Type of the values in the input map.\n *\n * @returns `Operator` that flattens an `Iterable` of Maps to `Iterable` of `[key, value]` tuples in the maps.\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -1030,66 +1030,12 @@
         },
         {
           "kind": "Function",
-          "canonicalReference": "gs-tools!$head:function(1)",
-          "docComment": "",
-          "excerptTokens": [
-            {
-              "kind": "Content",
-              "text": "export declare function head<T>(): "
-            },
-            {
-              "kind": "Reference",
-              "text": "Operator",
-              "canonicalReference": "gs-tools!Operator:type"
-            },
-            {
-              "kind": "Content",
-              "text": "<"
-            },
-            {
-              "kind": "Reference",
-              "text": "Iterable",
-              "canonicalReference": "!Iterable:interface"
-            },
-            {
-              "kind": "Content",
-              "text": "<T>, T | undefined>"
-            },
-            {
-              "kind": "Content",
-              "text": ";"
-            }
-          ],
-          "returnTypeTokenRange": {
-            "startIndex": 1,
-            "endIndex": 5
-          },
-          "releaseTag": "Public",
-          "overloadIndex": 1,
-          "parameters": [],
-          "typeParameters": [
-            {
-              "typeParameterName": "T",
-              "constraintTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
-              },
-              "defaultTypeTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
-              }
-            }
-          ],
-          "name": "$head"
-        },
-        {
-          "kind": "Function",
           "canonicalReference": "gs-tools!$intersect:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Returns {@link Set} of items that are in the input `Set` and in the given `Set`.\n *\n * @param otherSet - Other set to compare to.\n *\n * @typeParam T - Type of items in the `Set`.\n *\n * @returns `Operator` that returns `Set` of items in the input and the given `Set`s.  @thModule collect.operators\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "export declare function intersect<T>(setB: "
+              "text": "export declare function intersect<T>(otherSet: "
             },
             {
               "kind": "Reference",
@@ -1144,7 +1090,7 @@
           "overloadIndex": 1,
           "parameters": [
             {
-              "parameterName": "setB",
+              "parameterName": "otherSet",
               "parameterTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 3
@@ -1169,7 +1115,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$join:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Joins the items in the given array together as one string.\n *\n * @param separator - Separator to join the items together.\n *\n * @returns `Operator` that joins all items in the given array as one string using the given separator.  @thModule collect.operators\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -1217,7 +1163,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$map:function(1)",
-          "docComment": "/**\n * Returns iterable with the values mapped from the given function.\n */\n",
+          "docComment": "/**\n * Maps each item in the given {@link Iterable} to another.\n *\n * @param mapFn - The mapping function\n *\n * @typeParam F - Original type of the items.\n *\n * @typeParam T - Type of the mapped items.\n *\n * @returns `Operator` that maps each item in the original `Iterable`.  @thModule collect.operators\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -1307,7 +1253,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$pipe:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Chains together a sequence of `Operator`s to operate on the given `source`.\n *\n * @remarks\n *\n * Use this to chain together the `Operator`s found in this module.\n *\n * @param source - The starting object.\n *\n * @typeParam F - Type of the source.\n *\n * @returns The object returned after a sequence of `Operators` applied on the `source`.  @thModule collect.operators\n *\n * @example\n *\n * Increments all items in the array and return it as a `Set`.\n * ```\n * $pipe(\n *   [1, 2, 3, 1],\n *   $map(v => v + 1),\n *   $asSet(),\n * );  // Set([2, 3, 4])\n * ```\n *\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -3262,7 +3208,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$recordToMap:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Converts the input record to {@link Map}.\n *\n * @returns `Operator` that converts the given `Record` to a `Map`.  @thModule collect.operators\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -3288,8 +3234,8 @@
             },
             {
               "kind": "Reference",
-              "text": "Map",
-              "canonicalReference": "!Map:interface"
+              "text": "ReadonlyMap",
+              "canonicalReference": "!ReadonlyMap:interface"
             },
             {
               "kind": "Content",
@@ -3312,7 +3258,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$reverse:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Reverses the items in the given {@link Array}.\n *\n * @typeParam T - Type of items in the `Array`.\n *\n * @returns `Operator` that reverses the items in the `Array`.  @thModule collect.operators\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -3357,7 +3303,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$size:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Returns the size of the input collection.\n *\n * @remarks\n *\n * The input collection needs to have a known size, so it cannot be an {@link Iterable}.\n *\n * @returns `Operator` that returns the number of items in the given collection.  @thModule collect.operators\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -3375,7 +3321,7 @@
             {
               "kind": "Reference",
               "text": "HasSize",
-              "canonicalReference": "gs-tools!~HasSize:type"
+              "canonicalReference": "gs-tools!HasSize:type"
             },
             {
               "kind": "Content",
@@ -3398,7 +3344,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$some:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Returns `true` iff at least one element in the given {@link Iterable} is `true`.\n *\n * @returns `Operator` that returns `true` iff at least one element in the given `Iterable` is `true`.  @thModule collect.operators\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -3416,7 +3362,7 @@
             {
               "kind": "Reference",
               "text": "FiniteIterable",
-              "canonicalReference": "gs-tools!~FiniteIterable:type"
+              "canonicalReference": "gs-tools!FiniteIterable:type"
             },
             {
               "kind": "Content",
@@ -3439,7 +3385,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$sort:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Sorts the given `Array`.\n *\n * @param ordering - Object that determines how to sort the items.\n *\n * @typeParam T - Type of the items to sort.\n *\n * @returns `Ordering` that sorts the given `Array`.  @thModule collect.operators\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -3505,7 +3451,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$take:function(1)",
-          "docComment": "/**\n * Grabs the first `count` elements from the iterable.\n */\n",
+          "docComment": "/**\n * Returns {@link Array} with the first `count` elements from the {@link Iterable}.\n *\n * @param count - Number of items to take.\n *\n * @typeParam T - Type of items.\n *\n * @returns `Operator` that returns the first `count` elements from the `Iterable`.  @thModule collect.operators\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -3575,7 +3521,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!$zip:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Combines two {@link Iterable}s together to form an `Iterable` of pairs made of each element in the original `Iterable`s paired together in order.\n *\n * @remarks\n *\n * If the `Iterable`s have different lengths, the returned `Iterable` will have the length of the shorted one. The rest of the items will be ignored.\n *\n * @param other - `Iterable` to zip with.\n *\n * @typeParam T1 - Type of the items in the first `Iterable`.\n *\n * @typeParam T2 - Type of the items in the second `Iterable`.\n *\n * @returns `Operator` that zips the input `Iterable` with the given `Iterable`.  @thModule collect.operators\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -7815,6 +7761,49 @@
           "name": "filterNonNull"
         },
         {
+          "kind": "TypeAlias",
+          "canonicalReference": "gs-tools!FiniteIterable:type",
+          "docComment": "/**\n * {@link Iterable}s that are finite but only has one type param.\n *\n * @typeParam T - Type of items in the `Iterable`.  @hidden\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare type FiniteIterable<T> = "
+            },
+            {
+              "kind": "Reference",
+              "text": "ReadonlySet",
+              "canonicalReference": "!ReadonlySet:interface"
+            },
+            {
+              "kind": "Content",
+              "text": "<T> | readonly T[]"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "FiniteIterable",
+          "typeParameters": [
+            {
+              "typeParameterName": "T",
+              "constraintTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              },
+              "defaultTypeTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              }
+            }
+          ],
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 3
+          }
+        },
+        {
           "kind": "Function",
           "canonicalReference": "gs-tools!following:function(1)",
           "docComment": "/**\n * Returns function to sort items by equality with the given array of items.\n *\n * @remarks\n *\n * The returned function will try to sort items in the same order as the given array of items. Items that are not in the given array will be treated as equal value.\n *\n * @param specs - Array of items to compare.\n *\n * @typeParam T - Type of items to compare.\n *\n * @returns Function that tries to sort the items following the order of the given array of items.  @thModule collect.compare\n */\n",
@@ -8451,6 +8440,45 @@
             }
           ],
           "extendsTokenRanges": []
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "gs-tools!HasSize:type",
+          "docComment": "/**\n * Collections with a known size.\n *\n * @hidden\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare type HasSize = "
+            },
+            {
+              "kind": "Reference",
+              "text": "ReadonlySet",
+              "canonicalReference": "!ReadonlySet:interface"
+            },
+            {
+              "kind": "Content",
+              "text": "<any> | "
+            },
+            {
+              "kind": "Reference",
+              "text": "ReadonlyMap",
+              "canonicalReference": "!ReadonlyMap:interface"
+            },
+            {
+              "kind": "Content",
+              "text": "<any, any> | readonly any[]"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "HasSize",
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 5
+          }
         },
         {
           "kind": "Class",
@@ -10976,6 +11004,55 @@
             }
           ],
           "name": "objectConverter"
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "gs-tools!Operator:type",
+          "docComment": "/**\n * Maps the input object to an output object.\n *\n * @param from - Original object to map.\n *\n * @typeParam F - Original type of the object.\n *\n * @typeParam T - Mapped type of the object.\n *\n * @returns The mapped object.  @hidden\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare type Operator<F, T> = "
+            },
+            {
+              "kind": "Content",
+              "text": "(from: F) => T"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Operator",
+          "typeParameters": [
+            {
+              "typeParameterName": "F",
+              "constraintTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              },
+              "defaultTypeTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              }
+            },
+            {
+              "typeParameterName": "T",
+              "constraintTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              },
+              "defaultTypeTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              }
+            }
+          ],
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 2
+          }
         },
         {
           "kind": "Class",

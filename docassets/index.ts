@@ -137,3 +137,4 @@ export { diff } from '../src/util/diff';
 export { CompareResult } from '../src/collect/compare/compare-result';
 export { FiniteIterable } from '../src/collect/operators/finite-iterable';
 export { HasSize } from '../src/collect/operators/size';
+export { Operator } from '../src/collect/operators/operator';
