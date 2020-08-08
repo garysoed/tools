@@ -1,7 +1,13 @@
 import { Operator } from './operator';
 
 /**
- * Returns iterable with the values mapped from the given function.
+ * Maps each item in the given {@link Iterable} to another.
+ *
+ * @typeParam F - Original type of the items.
+ * @typeParam T - Type of the mapped items.
+ * @param mapFn - The mapping function
+ * @returns `Operator` that maps each item in the original `Iterable`.
+ * @thModule collect.operators
  */
 export function map<F, T>(mapFn: (from: F) => T): Operator<Iterable<F>, Iterable<T>> {
   return (fromIterable: Iterable<F>) => {

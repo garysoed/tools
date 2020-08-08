@@ -1,5 +1,26 @@
 import { Operator } from './operator';
 
+/**
+ * Chains together a sequence of `Operator`s to operate on the given `source`.
+ *
+ * @remarks
+ * Use this to chain together the `Operator`s found in this module.
+ *
+ * @example
+ * Increments all items in the array and return it as a `Set`.
+ *
+ * ```
+ * $pipe(
+ *   [1, 2, 3, 1],
+ *   $map(v => v + 1),
+ *   $asSet(),
+ * );  // Set([2, 3, 4])
+ *
+ * @typeParam F - Type of the source.
+ * @param source - The starting object.
+ * @returns The object returned after a sequence of `Operators` applied on the `source`.
+ * @thModule collect.operators
+ */
 export function $pipe<F>(source: F): F;
 export function $pipe<F, T0>(source: F, fn0: Operator<F, T0>): T0;
 export function $pipe<F, T0, T1>(
