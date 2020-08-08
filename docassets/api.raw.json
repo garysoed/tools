@@ -3730,7 +3730,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!arrayFrom:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Converts from various objects to {@link Array}.\n *\n * @remarks\n *\n * This supports various DOM objects.\n *\n * @param attrs - Map of attributes.\n *\n * @returns `Array` of objects in the given input.  @thModule collect.structures\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -3783,7 +3783,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!arrayFrom:function(2)",
-          "docComment": "",
+          "docComment": "/**\n * @param nodeListOf - List of `Node`s.\n *\n * @typeParam N - Type of {@link Node}s in the list.\n *\n * @returns `Array` of `Node`s in the list.\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -3853,7 +3853,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!arrayFrom:function(3)",
-          "docComment": "",
+          "docComment": "/**\n * @param filelist - List of {@link File}\n *\n * @returns `Array` of `File`s in the list.\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -3906,7 +3906,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!arrayFrom:function(4)",
-          "docComment": "",
+          "docComment": "/**\n * @param nodeListOf - Collection of {@link Element}s/\n *\n * @returns `Array` of `Element`s in the collection.\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -6097,7 +6097,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!countableIterable:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Creates an infinite {@link Iterable} containing countable numbers (0, 1, 2, ...).\n *\n * @returns Infinite `Iterable` containing countable numbers.  @thModule collect.structures\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -11057,7 +11057,7 @@
         {
           "kind": "Class",
           "canonicalReference": "gs-tools!OrderedMap:class",
-          "docComment": "",
+          "docComment": "/**\n * Map whose entries are ordered.\n *\n * @typeParam K - Type of the keys in the `Map`.\n *\n * @typeParam V - Type of the values in the `Map`.  @thModule collect.structures\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -11116,7 +11116,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!OrderedMap#[Symbol.iterator]:member(1)",
-              "docComment": "",
+              "docComment": "/**\n * @returns {@link Iterator} for the map.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11185,7 +11185,7 @@
             {
               "kind": "Constructor",
               "canonicalReference": "gs-tools!OrderedMap:constructor(1)",
-              "docComment": "/**\n * Constructs a new instance of the `OrderedMap` class\n */\n",
+              "docComment": "/**\n * Constructs a new instance of the `OrderedMap` class\n *\n * @param source - Array of entry pairs of the map.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11220,7 +11220,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!OrderedMap#clear:member(1)",
-              "docComment": "",
+              "docComment": "/**\n * Removes all entries in the map.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11248,7 +11248,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!OrderedMap#delete:member(1)",
-              "docComment": "",
+              "docComment": "/**\n * Removes the entry corresponding to the given key.\n *\n * @param key - Key of the entry to delete.\n *\n * @returns True iff deletion was successful.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11292,7 +11292,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!OrderedMap#entries:member(1)",
-              "docComment": "",
+              "docComment": "/**\n * @returns {@link Iterator} that iterates all entries in the map.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11325,7 +11325,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!OrderedMap#forEach:member(1)",
-              "docComment": "",
+              "docComment": "/**\n * Calls the given function for every entry in the map.\n *\n * @remarks\n *\n * The given function takes the `value` of the entry, `key` of the `entry` and a reference to the map object.\n *\n * @param callbackfn - Function to call for every entry in the map.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11378,7 +11378,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!OrderedMap#get:member(1)",
-              "docComment": "",
+              "docComment": "/**\n * @param key - Key of the entry to return.\n *\n * @returns Value corresponding to the given key, or `undefined` if such value does not exist.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11422,7 +11422,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!OrderedMap#getAt:member(1)",
-              "docComment": "",
+              "docComment": "/**\n * @param index - Index of the entry to return.\n *\n * @returns Entry at the given index, or undefined if none exists.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11466,7 +11466,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!OrderedMap#has:member(1)",
-              "docComment": "",
+              "docComment": "/**\n * @param key - Key to check.\n *\n * @returns True iff an entry corresponding to the given key exists in the map.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11510,7 +11510,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!OrderedMap#keys:member(1)",
-              "docComment": "",
+              "docComment": "/**\n * @returns {@link Iterator} that iterates through the keys in the map.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11543,7 +11543,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!OrderedMap#set:member(1)",
-              "docComment": "",
+              "docComment": "/**\n * @param key - Key of entry to set.\n *\n * @param value - Value of the entry to set.\n *\n * @returns The current instance of the map with the given key set to the given value.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11602,7 +11602,7 @@
             {
               "kind": "Property",
               "canonicalReference": "gs-tools!OrderedMap#size:member",
-              "docComment": "",
+              "docComment": "/**\n * @returns Number of elements in the map.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11628,7 +11628,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!OrderedMap#sort:member(1)",
-              "docComment": "",
+              "docComment": "/**\n * Sorts the map with the given {@link Ordering}.\n *\n * @param ordering - `Ordering` to sort the map with.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11677,7 +11677,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!OrderedMap#splice:member(1)",
-              "docComment": "",
+              "docComment": "/**\n * @param start - Index to start modifying the map.\n *\n * @param deleteCount - Number of entries starting at the given start index to delete.\n *\n * @param toAdd - Entries to add at the given start index.\n *\n * @returns Array of deleted entries.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11761,7 +11761,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!OrderedMap#values:member(1)",
-              "docComment": "",
+              "docComment": "/**\n * @returns {@link Iterator} that iterates through the values in the map.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -13746,7 +13746,7 @@
         {
           "kind": "Interface",
           "canonicalReference": "gs-tools!ReadonlyOrderedMap:interface",
-          "docComment": "",
+          "docComment": "/**\n * {@link OrderedMap} that cannot be modified\n *\n * @typeParam K - Type of keys in the map.\n *\n * @typeParam V - Type of values in the map.  @thModule collect.structures\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -13792,7 +13792,7 @@
             {
               "kind": "MethodSignature",
               "canonicalReference": "gs-tools!ReadonlyOrderedMap#getAt:member(1)",
-              "docComment": "",
+              "docComment": "/**\n * @param index - Index to return the entries at\n *\n * @returns The entry at the given index, or `undefined` if none exists.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -13835,7 +13835,7 @@
             {
               "kind": "PropertySignature",
               "canonicalReference": "gs-tools!ReadonlyOrderedMap#size:member",
-              "docComment": "",
+              "docComment": "/**\n * @returns Number of entries in the map.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
