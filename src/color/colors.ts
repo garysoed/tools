@@ -57,7 +57,7 @@ function fromRgb(cssColor: string): Color|null {
     return null;
   }
 
-  return RgbColor.newInstance(resultR.result, resultG.result, resultB.result);
+  return new RgbColor(resultR.result, resultG.result, resultB.result);
 }
 
 function fromHsl(cssColor: string): Color|null {
@@ -106,7 +106,7 @@ function fromHsl(cssColor: string): Color|null {
     return null;
   }
 
-  return HslColor.newInstance(resultH.result, resultS.result, resultL.result);
+  return new HslColor(resultH.result, resultS.result, resultL.result);
 }
 
 function fromHex(cssColor: string): Color|null {
@@ -144,88 +144,123 @@ function fromHex(cssColor: string): Color|null {
     return null;
   }
 
-  return RgbColor.newInstance(r, g, b);
+  return new RgbColor(r, g, b);
 }
 
-export const Colors = {
-  /**
-   * Creates a color object from the given CSS color string.
-   *
-   * This ignores the alpha attribute and does not work with named colors.
-   * @param cssColor CSS color string.
-   * @return The Color object created from the CSS color string, or null if the string is invalid.
-   */
-  fromCssColor(cssColor: string): Color|null {
-    if (RGB_REGEXP.test(cssColor) || RGBA_REGEXP.test(cssColor)) {
-      return fromRgb(cssColor);
-    } else if (HSL_REGEXP.test(cssColor) || HSLA_REGEXP.test(cssColor)) {
-      return fromHsl(cssColor);
-    } else if (HEX_REGEXP.test(cssColor)) {
-      return fromHex(cssColor);
+/**
+ * Creates a color object from the given CSS color string.
+ *
+ * @remarks
+ * This ignores the alpha attribute and does not work with named colors.
+ *
+ * @param cssColor - CSS color string.
+ * @returns The Color object created from the CSS color string, or null if the string is invalid.
+ * @thModule color
+ */
+export function fromCssColor(cssColor: string): Color|null {
+  if (RGB_REGEXP.test(cssColor) || RGBA_REGEXP.test(cssColor)) {
+    return fromRgb(cssColor);
+  } else if (HSL_REGEXP.test(cssColor) || HSLA_REGEXP.test(cssColor)) {
+    return fromHsl(cssColor);
+  } else if (HEX_REGEXP.test(cssColor)) {
+    return fromHex(cssColor);
+  }
+
+  return null;
+}
+
+/**
+ * Computes the contrast ratio.
+ *
+ * @param foreground - Foreground color.
+ * @param background - Background color.
+ * @returns The contrast ratio.
+ * @thModule color
+ */
+export function getContrast(foreground: Color, background: Color): number {
+  const fgLuminance = foreground.luminance;
+  const bgLuminance = background.luminance;
+
+  return (Math.max(fgLuminance, bgLuminance) + 0.05)
+      / (Math.min(fgLuminance, bgLuminance) + 0.05);
+}
+
+/**
+ * Computes the Euclidean distance between the two colors.
+ *
+ * @remarks
+ * This uses the RGB components to compute the distance. The resulting distance is the square of
+ * the distance.
+ *
+ * @param color1 - First color
+ * @param color2 - Second color
+ * @returns The Euclidean distance between the two given colors.
+ * @thModule color
+ */
+export function getDistance(color1: Color, color2: Color): number {
+  return (color1.red - color2.red) ** 2
+      + (color1.green - color2.green) ** 2
+      + (color1.blue - color2.blue) ** 2;
+}
+
+/**
+ * Mixes the two colors together.
+ *
+ * @remarks
+ * This performs additive blending between the two colors.
+ *
+ * @param color1 - The first color to mix.
+ * @param color2 - The second color to mix.
+ * @param amount - Ratio of first color to mix.
+ * @returns Mixture of the two given colors: color1 * amount + color2 * (1 - amount).
+ * @thModule color
+ */
+export function mix(color1: Color, color2: Color, amount: number): Color {
+  // TODO: Validate amount.
+  // TODO: Replace with blend.
+  return new RgbColor(
+      Math.round(color1.red * amount + color2.red * (1 - amount)),
+      Math.round(color1.green * amount + color2.green * (1 - amount)),
+      Math.round(color1.blue * amount + color2.blue * (1 - amount)));
+}
+
+/**
+ * Neonize a color.
+ *
+ * @remarks
+ * This picks color among RGBCMY that is the closest to the given color, then does additive blend
+ * with that color.
+ *
+ * @param color - Color to neonize.
+ * @param ratio - How close to the neon color the resulting color should be.
+ * @returns The neonized color.
+ * @thModule color
+ */
+export function neonize(color: Color, ratio: number): Color {
+  const targets = [
+    new RgbColor(255, 0, 0),
+    new RgbColor(255, 255, 0),
+    new RgbColor(0, 255, 0),
+    new RgbColor(0, 255, 255),
+    new RgbColor(0, 0, 255),
+    new RgbColor(255, 0, 255),
+  ];
+
+  const colorHue = color.hue;
+
+  let minHueDiff = Number.POSITIVE_INFINITY;
+  let selectedTarget = null;
+  for (const target of targets) {
+    const hueDiff = Math.abs(target.hue - colorHue);
+    if (hueDiff < minHueDiff) {
+      minHueDiff = hueDiff;
+      selectedTarget = target;
     }
+  }
 
-    return null;
-  },
+  if (!selectedTarget) {
+    return color;
+  }
 
-  /**
-   * @param foreground Foreground color.
-   * @param background Background color.
-   * @return The contrast ratio.
-   */
-  getContrast(foreground: Color, background: Color): number {
-    const fgLuminance = foreground.getLuminance();
-    const bgLuminance = background.getLuminance();
-
-    return (Math.max(fgLuminance, bgLuminance) + 0.05)
-        / (Math.min(fgLuminance, bgLuminance) + 0.05);
-  },
-
-  getDistance(color1: Color, color2: Color): number {
-    return (color1.getRed() - color2.getRed()) ** 2
-        + (color1.getGreen() - color2.getGreen()) ** 2
-        + (color1.getBlue() - color2.getBlue()) ** 2;
-  },
-
-  /**
-   * @param color1 The first color to mix.
-   * @param color2 The second color to mix.
-   * @param amount Ratio of first color to mix.
-   * @return Mixture of the two given colors: color1 * amount + color2 * (1 - amount).
-   */
-  mix(color1: Color, color2: Color, amount: number): Color {
-    // TODO: Validate amount.
-    return RgbColor.newInstance(
-        Math.round(color1.getRed() * amount + color2.getRed() * (1 - amount)),
-        Math.round(color1.getGreen() * amount + color2.getGreen() * (1 - amount)),
-        Math.round(color1.getBlue() * amount + color2.getBlue() * (1 - amount)));
-  },
-
-  neonize(color: Color, ratio: number): Color {
-    const targets = [
-      RgbColor.newInstance(255, 0, 0),
-      RgbColor.newInstance(255, 255, 0),
-      RgbColor.newInstance(0, 255, 0),
-      RgbColor.newInstance(0, 255, 255),
-      RgbColor.newInstance(0, 0, 255),
-      RgbColor.newInstance(255, 0, 255),
-    ];
-
-    const colorHue = color.getHue();
-
-    let minHueDiff = Number.POSITIVE_INFINITY;
-    let selectedTarget = null;
-    for (const target of targets) {
-      const hueDiff = Math.abs(target.getHue() - colorHue);
-      if (hueDiff < minHueDiff) {
-        minHueDiff = hueDiff;
-        selectedTarget = target;
-      }
-    }
-
-    if (!selectedTarget) {
-      return color;
-    }
-
-    return Colors.mix(selectedTarget, color, ratio);
-  },
-};
+  return mix(selectedTarget, color, ratio);
+}

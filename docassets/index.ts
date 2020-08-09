@@ -1,3 +1,9 @@
+/**
+ * Provides various utilities for development that are too small to be in their own package.
+ *
+ * @packageDocumentation
+ */
+
 // collect
 export { $pipe } from '../src/collect/operators/pipe';
 
@@ -43,7 +49,7 @@ export { ReadonlyOrderedMap } from '../src/collect/structures/readonly-ordered-m
 
 // color
 export { Color } from '../src/color/color';
-export { Colors } from '../src/color/colors';
+export { fromCssColor, getContrast, getDistance, mix, neonize } from '../src/color/colors';
 export { HslColor } from '../src/color/hsl-color';
 export { RgbColor } from '../src/color/rgb-color';
 

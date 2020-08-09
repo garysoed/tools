@@ -1,96 +1,30 @@
 import { cache } from '../data/cache';
 import { Errors } from '../error';
-import { BaseColor } from './base-color';
 
+import { Color } from './color';
 
-export class RgbColor extends BaseColor {
-  private readonly blue_: number;
-  private readonly green_: number;
-  private readonly red_: number;
-
-  constructor(red: number, green: number, blue: number) {
+/**
+ * `Color` based on its red, green, and blue components.
+ *
+ * @thModule color
+ */
+export class RgbColor extends Color {
+  constructor(
+      /**
+       * {@inheritDoc Color.red}
+       */
+      readonly red: number,
+      /**
+       * {@inheritDoc Color.green}
+       */
+      readonly green: number,
+      /**
+       * {@inheritDoc Color.blue}
+       */
+      readonly blue: number,
+  ) {
     super();
-    this.red_ = red;
-    this.green_ = green;
-    this.blue_ = blue;
-  }
 
-  getBlue(): number {
-    return this.blue_;
-  }
-
-  @cache()
-  getChroma(): number {
-    return (this.getMax_() - this.getMin_()) / 255;
-  }
-
-  getGreen(): number {
-    return this.green_;
-  }
-
-  @cache()
-  getHue(): number {
-    const chroma = this.getChroma();
-    if (chroma === 0) {
-      return 0;
-    }
-
-    const red = this.getRed();
-    const green = this.getGreen();
-    const blue = this.getBlue();
-    const max = this.getMax_();
-
-    let h1;
-    switch (max) {
-      case red:
-        h1 = ((green - blue) / chroma / 255) % 6;
-        break;
-      case green:
-        h1 = ((blue - red) / chroma / 255) + 2;
-        break;
-      case blue:
-        h1 = ((red - green) / chroma / 255) + 4;
-        break;
-      default:
-        throw new Error(`Should not be able to reach here`);
-    }
-
-    return h1 * 60;
-  }
-
-  @cache()
-  getLightness(): number {
-    return (this.getMax_() + this.getMin_()) / 2 / 255;
-  }
-
-  @cache()
-  private getMax_(): number {
-    return Math.max(this.getRed(), this.getGreen(), this.getBlue());
-  }
-
-  @cache()
-  private getMin_(): number {
-    return Math.min(this.getRed(), this.getGreen(), this.getBlue());
-  }
-
-  getRed(): number {
-    return this.red_;
-  }
-
-  @cache()
-  getSaturation(): number {
-    const denominator = (1 - Math.abs(this.getLightness() * 2 - 1));
-
-    return denominator === 0 ? 0 : this.getChroma() / denominator;
-  }
-
-  /**
-   * Creates an instance of the class.
-   * @param red The red component of the color.
-   * @param green The green component of the color.
-   * @param blue The blue component of the color.
-   */
-  static newInstance(red: number, green: number, blue: number): RgbColor {
     if (!Number.isInteger(red)) {
       throw Errors.assert('red').should('be an integer').butWas(red);
     }
@@ -126,7 +60,74 @@ export class RgbColor extends BaseColor {
     if (green < 0) {
       throw Errors.assert('green').should('be positive').butWas(green);
     }
+  }
 
-    return new RgbColor(red, green, blue);
+  /**
+   * {@inheritDoc Color.chroma}
+   */
+  @cache()
+  get chroma(): number {
+    return (this.max - this.min) / 255;
+  }
+
+  /**
+   * {@inheritDoc Color.hue}
+   */
+  @cache()
+  get hue(): number {
+    const chroma = this.chroma;
+    if (chroma === 0) {
+      return 0;
+    }
+
+    const red = this.red;
+    const green = this.green;
+    const blue = this.blue;
+    const max = this.max;
+
+    let h1;
+    switch (max) {
+      case red:
+        h1 = ((green - blue) / chroma / 255) % 6;
+        break;
+      case green:
+        h1 = ((blue - red) / chroma / 255) + 2;
+        break;
+      case blue:
+        h1 = ((red - green) / chroma / 255) + 4;
+        break;
+      default:
+        throw new Error(`Should not be able to reach here`);
+    }
+
+    return h1 * 60;
+  }
+
+  /**
+   * {@inheritDoc Color.lightness}
+   */
+  @cache()
+  get lightness(): number {
+    return (this.max + this.min) / 2 / 255;
+  }
+
+  /**
+   * {@inheritDoc Color.saturation}
+   */
+  @cache()
+  get saturation(): number {
+    const denominator = (1 - Math.abs(this.lightness * 2 - 1));
+
+    return denominator === 0 ? 0 : this.chroma / denominator;
+  }
+
+  @cache()
+  private get max(): number {
+    return Math.max(this.red, this.green, this.blue);
+  }
+
+  @cache()
+  private get min(): number {
+    return Math.min(this.red, this.green, this.blue);
   }
 }

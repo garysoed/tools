@@ -7,7 +7,7 @@
   },
   "kind": "Package",
   "canonicalReference": "gs-tools!",
-  "docComment": "",
+  "docComment": "/**\n * Provides various utilities for development that are too small to be in their own package.\n *\n * @packageDocumentation\n */\n",
   "name": "gs-tools",
   "members": [
     {
@@ -5432,26 +5432,26 @@
           "implementsTokenRanges": []
         },
         {
-          "kind": "Interface",
-          "canonicalReference": "gs-tools!Color:interface",
-          "docComment": "",
+          "kind": "Class",
+          "canonicalReference": "gs-tools!Color:class",
+          "docComment": "/**\n * Base class of all colors.\n *\n * @remarks\n *\n * This class provides some simple implementations of some color properties.\n *\n * @thModule color\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "export interface Color "
+              "text": "export declare abstract class Color "
             }
           ],
           "releaseTag": "Public",
           "name": "Color",
           "members": [
             {
-              "kind": "MethodSignature",
-              "canonicalReference": "gs-tools!Color#getBlue:member(1)",
+              "kind": "Property",
+              "canonicalReference": "gs-tools!Color#blue:member",
               "docComment": "/**\n * Blue component of the color.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "getBlue(): "
+                  "text": "abstract get blue(): "
                 },
                 {
                   "kind": "Content",
@@ -5462,23 +5462,22 @@
                   "text": ";"
                 }
               ],
-              "returnTypeTokenRange": {
+              "releaseTag": "Public",
+              "name": "blue",
+              "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
               },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "getBlue"
+              "isStatic": false
             },
             {
-              "kind": "MethodSignature",
-              "canonicalReference": "gs-tools!Color#getChroma:member(1)",
-              "docComment": "/**\n * The chroma of the color.\n */\n",
+              "kind": "Property",
+              "canonicalReference": "gs-tools!Color#chroma:member",
+              "docComment": "/**\n * Chroma of the color.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "getChroma(): "
+                  "text": "abstract get chroma(): "
                 },
                 {
                   "kind": "Content",
@@ -5489,23 +5488,22 @@
                   "text": ";"
                 }
               ],
-              "returnTypeTokenRange": {
+              "releaseTag": "Public",
+              "name": "chroma",
+              "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
               },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "getChroma"
+              "isStatic": false
             },
             {
-              "kind": "MethodSignature",
-              "canonicalReference": "gs-tools!Color#getGreen:member(1)",
+              "kind": "Property",
+              "canonicalReference": "gs-tools!Color#green:member",
               "docComment": "/**\n * Green component of the color.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "getGreen(): "
+                  "text": "abstract get green(): "
                 },
                 {
                   "kind": "Content",
@@ -5516,23 +5514,22 @@
                   "text": ";"
                 }
               ],
-              "returnTypeTokenRange": {
+              "releaseTag": "Public",
+              "name": "green",
+              "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
               },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "getGreen"
+              "isStatic": false
             },
             {
-              "kind": "MethodSignature",
-              "canonicalReference": "gs-tools!Color#getHue:member(1)",
+              "kind": "Property",
+              "canonicalReference": "gs-tools!Color#hue:member",
               "docComment": "/**\n * Hue component of the color.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "getHue(): "
+                  "text": "abstract get hue(): "
                 },
                 {
                   "kind": "Content",
@@ -5543,23 +5540,22 @@
                   "text": ";"
                 }
               ],
-              "returnTypeTokenRange": {
+              "releaseTag": "Public",
+              "name": "hue",
+              "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
               },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "getHue"
+              "isStatic": false
             },
             {
-              "kind": "MethodSignature",
-              "canonicalReference": "gs-tools!Color#getLightness:member(1)",
+              "kind": "Property",
+              "canonicalReference": "gs-tools!Color#lightness:member",
               "docComment": "/**\n * Lightness component of the color.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "getLightness(): "
+                  "text": "abstract get lightness(): "
                 },
                 {
                   "kind": "Content",
@@ -5570,23 +5566,22 @@
                   "text": ";"
                 }
               ],
-              "returnTypeTokenRange": {
+              "releaseTag": "Public",
+              "name": "lightness",
+              "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
               },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "getLightness"
+              "isStatic": false
             },
             {
-              "kind": "MethodSignature",
-              "canonicalReference": "gs-tools!Color#getLuminance:member(1)",
+              "kind": "Property",
+              "canonicalReference": "gs-tools!Color#luminance:member",
               "docComment": "/**\n * Luminance of the color.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "getLuminance(): "
+                  "text": "get luminance(): "
                 },
                 {
                   "kind": "Content",
@@ -5597,23 +5592,22 @@
                   "text": ";"
                 }
               ],
-              "returnTypeTokenRange": {
+              "releaseTag": "Public",
+              "name": "luminance",
+              "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
               },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "getLuminance"
+              "isStatic": false
             },
             {
-              "kind": "MethodSignature",
-              "canonicalReference": "gs-tools!Color#getRed:member(1)",
+              "kind": "Property",
+              "canonicalReference": "gs-tools!Color#red:member",
               "docComment": "/**\n * Red component of the color.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "getRed(): "
+                  "text": "abstract get red(): "
                 },
                 {
                   "kind": "Content",
@@ -5624,23 +5618,22 @@
                   "text": ";"
                 }
               ],
-              "returnTypeTokenRange": {
+              "releaseTag": "Public",
+              "name": "red",
+              "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
               },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "getRed"
+              "isStatic": false
             },
             {
-              "kind": "MethodSignature",
-              "canonicalReference": "gs-tools!Color#getSaturation:member(1)",
+              "kind": "Property",
+              "canonicalReference": "gs-tools!Color#saturation:member",
               "docComment": "/**\n * Saturation component of the color.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "getSaturation(): "
+                  "text": "abstract get saturation(): "
                 },
                 {
                   "kind": "Content",
@@ -5651,128 +5644,16 @@
                   "text": ";"
                 }
               ],
-              "returnTypeTokenRange": {
+              "releaseTag": "Public",
+              "name": "saturation",
+              "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
               },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "getSaturation"
+              "isStatic": false
             }
           ],
-          "extendsTokenRanges": []
-        },
-        {
-          "kind": "Variable",
-          "canonicalReference": "gs-tools!Colors:var",
-          "docComment": "",
-          "excerptTokens": [
-            {
-              "kind": "Content",
-              "text": "Colors: "
-            },
-            {
-              "kind": "Content",
-              "text": "{\n    fromCssColor(cssColor: string): "
-            },
-            {
-              "kind": "Reference",
-              "text": "Color",
-              "canonicalReference": "gs-tools!Color:interface"
-            },
-            {
-              "kind": "Content",
-              "text": " | null;\n    getContrast(foreground: "
-            },
-            {
-              "kind": "Reference",
-              "text": "Color",
-              "canonicalReference": "gs-tools!Color:interface"
-            },
-            {
-              "kind": "Content",
-              "text": ", background: "
-            },
-            {
-              "kind": "Reference",
-              "text": "Color",
-              "canonicalReference": "gs-tools!Color:interface"
-            },
-            {
-              "kind": "Content",
-              "text": "): number;\n    getDistance(color1: "
-            },
-            {
-              "kind": "Reference",
-              "text": "Color",
-              "canonicalReference": "gs-tools!Color:interface"
-            },
-            {
-              "kind": "Content",
-              "text": ", color2: "
-            },
-            {
-              "kind": "Reference",
-              "text": "Color",
-              "canonicalReference": "gs-tools!Color:interface"
-            },
-            {
-              "kind": "Content",
-              "text": "): number;\n    mix(color1: "
-            },
-            {
-              "kind": "Reference",
-              "text": "Color",
-              "canonicalReference": "gs-tools!Color:interface"
-            },
-            {
-              "kind": "Content",
-              "text": ", color2: "
-            },
-            {
-              "kind": "Reference",
-              "text": "Color",
-              "canonicalReference": "gs-tools!Color:interface"
-            },
-            {
-              "kind": "Content",
-              "text": ", amount: number): "
-            },
-            {
-              "kind": "Reference",
-              "text": "Color",
-              "canonicalReference": "gs-tools!Color:interface"
-            },
-            {
-              "kind": "Content",
-              "text": ";\n    neonize(color: "
-            },
-            {
-              "kind": "Reference",
-              "text": "Color",
-              "canonicalReference": "gs-tools!Color:interface"
-            },
-            {
-              "kind": "Content",
-              "text": ", ratio: number): "
-            },
-            {
-              "kind": "Reference",
-              "text": "Color",
-              "canonicalReference": "gs-tools!Color:interface"
-            },
-            {
-              "kind": "Content",
-              "text": ";\n}"
-            }
-          ],
-          "releaseTag": "Public",
-          "name": "Colors",
-          "variableTypeTokenRange": {
-            "startIndex": 1,
-            "endIndex": 22
-          }
+          "implementsTokenRanges": []
         },
         {
           "kind": "TypeAlias",
@@ -7866,6 +7747,54 @@
         },
         {
           "kind": "Function",
+          "canonicalReference": "gs-tools!fromCssColor:function(1)",
+          "docComment": "/**\n * Creates a color object from the given CSS color string.\n *\n * @remarks\n *\n * This ignores the alpha attribute and does not work with named colors.\n *\n * @param cssColor - CSS color string.\n *\n * @returns The Color object created from the CSS color string, or null if the string is invalid.  @thModule color\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function fromCssColor(cssColor: "
+            },
+            {
+              "kind": "Content",
+              "text": "string"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "Color",
+              "canonicalReference": "gs-tools!Color:class"
+            },
+            {
+              "kind": "Content",
+              "text": " | null"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 3,
+            "endIndex": 5
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "cssColor",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "name": "fromCssColor"
+        },
+        {
+          "kind": "Function",
           "canonicalReference": "gs-tools!fromLowerCaseString:function(1)",
           "docComment": "/**\n * Converts enum name (as lower case string) to the corresponding enum value.\n *\n * @param stringValue - The string value to convert to enum value.\n *\n * @param enumSet - The set of enum values.  @return The enum value corresponding to the enum name.\n */\n",
           "excerptTokens": [
@@ -8276,6 +8205,126 @@
           "name": "getCellContentByRange"
         },
         {
+          "kind": "Function",
+          "canonicalReference": "gs-tools!getContrast:function(1)",
+          "docComment": "/**\n * Computes the contrast ratio.\n *\n * @param foreground - Foreground color.\n *\n * @param background - Background color.\n *\n * @returns The contrast ratio.  @thModule color\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function getContrast(foreground: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Color",
+              "canonicalReference": "gs-tools!Color:class"
+            },
+            {
+              "kind": "Content",
+              "text": ", background: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Color",
+              "canonicalReference": "gs-tools!Color:class"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Content",
+              "text": "number"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 5,
+            "endIndex": 6
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "foreground",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "parameterName": "background",
+              "parameterTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              }
+            }
+          ],
+          "name": "getContrast"
+        },
+        {
+          "kind": "Function",
+          "canonicalReference": "gs-tools!getDistance:function(1)",
+          "docComment": "/**\n * Computes the Euclidean distance between the two colors.\n *\n * @remarks\n *\n * This uses the RGB components to compute the distance. The resulting distance is the square of the distance.\n *\n * @param color1 - First color\n *\n * @param color2 - Second color\n *\n * @returns The Euclidean distance between the two given colors.  @thModule color\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function getDistance(color1: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Color",
+              "canonicalReference": "gs-tools!Color:class"
+            },
+            {
+              "kind": "Content",
+              "text": ", color2: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Color",
+              "canonicalReference": "gs-tools!Color:class"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Content",
+              "text": "number"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 5,
+            "endIndex": 6
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "color1",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "parameterName": "color2",
+              "parameterTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              }
+            }
+          ],
+          "name": "getDistance"
+        },
+        {
           "kind": "Interface",
           "canonicalReference": "gs-tools!GridData:interface",
           "docComment": "",
@@ -8483,7 +8532,7 @@
         {
           "kind": "Class",
           "canonicalReference": "gs-tools!HslColor:class",
-          "docComment": "",
+          "docComment": "/**\n * `Color` based on its hue, saturation, and lightness.\n *\n * @thModule color\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -8491,8 +8540,8 @@
             },
             {
               "kind": "Reference",
-              "text": "BaseColor",
-              "canonicalReference": "gs-tools!BaseColor:class"
+              "text": "Color",
+              "canonicalReference": "gs-tools!Color:class"
             },
             {
               "kind": "Content",
@@ -8509,7 +8558,7 @@
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "constructor(hue: "
+                  "text": "constructor(hueRaw: "
                 },
                 {
                   "kind": "Content",
@@ -8517,7 +8566,7 @@
                 },
                 {
                   "kind": "Content",
-                  "text": ", saturation: "
+                  "text": ", \n    saturation: "
                 },
                 {
                   "kind": "Content",
@@ -8525,7 +8574,7 @@
                 },
                 {
                   "kind": "Content",
-                  "text": ", lightness: "
+                  "text": ", \n    lightness: "
                 },
                 {
                   "kind": "Content",
@@ -8540,7 +8589,7 @@
               "overloadIndex": 1,
               "parameters": [
                 {
-                  "parameterName": "hue",
+                  "parameterName": "hueRaw",
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 2
@@ -8563,13 +8612,91 @@
               ]
             },
             {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!HslColor#getBlue:member(1)",
+              "kind": "Property",
+              "canonicalReference": "gs-tools!HslColor#blue:member",
+              "docComment": "/**\n * Blue component of the color.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get blue(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "releaseTag": "Public",
+              "name": "blue",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "gs-tools!HslColor#chroma:member",
+              "docComment": "/**\n * Chroma of the color.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get chroma(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "releaseTag": "Public",
+              "name": "chroma",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "gs-tools!HslColor#green:member",
+              "docComment": "/**\n * Green component of the color.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get green(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "releaseTag": "Public",
+              "name": "green",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "gs-tools!HslColor#hue:member",
               "docComment": "",
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "getBlue(): "
+                  "text": "readonly hue: "
                 },
                 {
                   "kind": "Content",
@@ -8580,24 +8707,22 @@
                   "text": ";"
                 }
               ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
+              "releaseTag": "Public",
+              "name": "hue",
+              "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
               },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "getBlue"
+              "isStatic": false
             },
             {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!HslColor#getChroma:member(1)",
-              "docComment": "",
+              "kind": "Property",
+              "canonicalReference": "gs-tools!HslColor#lightness:member",
+              "docComment": "/**\n * Lightness component of the color.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "getChroma(): "
+                  "text": "readonly lightness: "
                 },
                 {
                   "kind": "Content",
@@ -8608,24 +8733,22 @@
                   "text": ";"
                 }
               ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
+              "releaseTag": "Public",
+              "name": "lightness",
+              "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
               },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "getChroma"
+              "isStatic": false
             },
             {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!HslColor#getGreen:member(1)",
-              "docComment": "",
+              "kind": "Property",
+              "canonicalReference": "gs-tools!HslColor#red:member",
+              "docComment": "/**\n * Red component of the color.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "getGreen(): "
+                  "text": "get red(): "
                 },
                 {
                   "kind": "Content",
@@ -8636,24 +8759,22 @@
                   "text": ";"
                 }
               ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
+              "releaseTag": "Public",
+              "name": "red",
+              "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
               },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "getGreen"
+              "isStatic": false
             },
             {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!HslColor#getHue:member(1)",
-              "docComment": "",
+              "kind": "Property",
+              "canonicalReference": "gs-tools!HslColor#saturation:member",
+              "docComment": "/**\n * Saturation component of the color.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "getHue(): "
+                  "text": "readonly saturation: "
                 },
                 {
                   "kind": "Content",
@@ -8664,174 +8785,13 @@
                   "text": ";"
                 }
               ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
+              "releaseTag": "Public",
+              "name": "saturation",
+              "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
               },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "getHue"
-            },
-            {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!HslColor#getLightness:member(1)",
-              "docComment": "",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "getLightness(): "
-                },
-                {
-                  "kind": "Content",
-                  "text": "number"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
-                "startIndex": 1,
-                "endIndex": 2
-              },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "getLightness"
-            },
-            {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!HslColor#getRed:member(1)",
-              "docComment": "",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "getRed(): "
-                },
-                {
-                  "kind": "Content",
-                  "text": "number"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
-                "startIndex": 1,
-                "endIndex": 2
-              },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "getRed"
-            },
-            {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!HslColor#getSaturation:member(1)",
-              "docComment": "",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "getSaturation(): "
-                },
-                {
-                  "kind": "Content",
-                  "text": "number"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
-                "startIndex": 1,
-                "endIndex": 2
-              },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "getSaturation"
-            },
-            {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!HslColor.newInstance:member(1)",
-              "docComment": "/**\n * Creates an instance of the class.\n *\n * @param hue - The hue component of the color.\n *\n * @param saturation - The saturation component of the color.\n *\n * @param lightness - The lightness component of the color.\n */\n",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "static newInstance(hue: "
-                },
-                {
-                  "kind": "Content",
-                  "text": "number"
-                },
-                {
-                  "kind": "Content",
-                  "text": ", saturation: "
-                },
-                {
-                  "kind": "Content",
-                  "text": "number"
-                },
-                {
-                  "kind": "Content",
-                  "text": ", lightness: "
-                },
-                {
-                  "kind": "Content",
-                  "text": "number"
-                },
-                {
-                  "kind": "Content",
-                  "text": "): "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "HslColor",
-                  "canonicalReference": "gs-tools!HslColor:class"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isStatic": true,
-              "returnTypeTokenRange": {
-                "startIndex": 7,
-                "endIndex": 8
-              },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [
-                {
-                  "parameterName": "hue",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 1,
-                    "endIndex": 2
-                  }
-                },
-                {
-                  "parameterName": "saturation",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 3,
-                    "endIndex": 4
-                  }
-                },
-                {
-                  "parameterName": "lightness",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 5,
-                    "endIndex": 6
-                  }
-                }
-              ],
-              "name": "newInstance"
+              "isStatic": false
             }
           ],
           "extendsTokenRange": {
@@ -10767,6 +10727,82 @@
           "extendsTokenRanges": []
         },
         {
+          "kind": "Function",
+          "canonicalReference": "gs-tools!mix:function(1)",
+          "docComment": "/**\n * Mixes the two colors together.\n *\n * @remarks\n *\n * This performs additive blending between the two colors.\n *\n * @param color1 - The first color to mix.\n *\n * @param color2 - The second color to mix.\n *\n * @param amount - Ratio of first color to mix.\n *\n * @returns Mixture of the two given colors: color1 * amount + color2 * (1 - amount).  @thModule color\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function mix(color1: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Color",
+              "canonicalReference": "gs-tools!Color:class"
+            },
+            {
+              "kind": "Content",
+              "text": ", color2: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Color",
+              "canonicalReference": "gs-tools!Color:class"
+            },
+            {
+              "kind": "Content",
+              "text": ", amount: "
+            },
+            {
+              "kind": "Content",
+              "text": "number"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "Color",
+              "canonicalReference": "gs-tools!Color:class"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 7,
+            "endIndex": 8
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "color1",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "parameterName": "color2",
+              "parameterTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              }
+            },
+            {
+              "parameterName": "amount",
+              "parameterTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              }
+            }
+          ],
+          "name": "mix"
+        },
+        {
           "kind": "Interface",
           "canonicalReference": "gs-tools!MultiCell:interface",
           "docComment": "",
@@ -10864,6 +10900,66 @@
           "overloadIndex": 1,
           "parameters": [],
           "name": "natural"
+        },
+        {
+          "kind": "Function",
+          "canonicalReference": "gs-tools!neonize:function(1)",
+          "docComment": "/**\n * Neonize a color.\n *\n * @remarks\n *\n * This picks color among RGBCMY that is the closest to the given color, then does additive blend with that color.\n *\n * @param color - Color to neonize.\n *\n * @param ratio - How close to the neon color the resulting color should be.\n *\n * @returns The neonized color.  @thModule color\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function neonize(color: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Color",
+              "canonicalReference": "gs-tools!Color:class"
+            },
+            {
+              "kind": "Content",
+              "text": ", ratio: "
+            },
+            {
+              "kind": "Content",
+              "text": "number"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "Color",
+              "canonicalReference": "gs-tools!Color:class"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 5,
+            "endIndex": 6
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "color",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "parameterName": "ratio",
+              "parameterTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              }
+            }
+          ],
+          "name": "neonize"
         },
         {
           "kind": "Function",
@@ -11602,7 +11698,7 @@
             {
               "kind": "Property",
               "canonicalReference": "gs-tools!OrderedMap#size:member",
-              "docComment": "/**\n * Number of elements in the map.\n *\n * @returns Number of elements in the map.\n */\n",
+              "docComment": "/**\n * Number of elements in the map.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -13934,7 +14030,7 @@
         {
           "kind": "Class",
           "canonicalReference": "gs-tools!RgbColor:class",
-          "docComment": "",
+          "docComment": "/**\n * `Color` based on its red, green, and blue components.\n *\n * @thModule color\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -13942,8 +14038,8 @@
             },
             {
               "kind": "Reference",
-              "text": "BaseColor",
-              "canonicalReference": "gs-tools!BaseColor:class"
+              "text": "Color",
+              "canonicalReference": "gs-tools!Color:class"
             },
             {
               "kind": "Content",
@@ -13960,7 +14056,7 @@
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "constructor(red: "
+                  "text": "constructor(\n    red: "
                 },
                 {
                   "kind": "Content",
@@ -13968,7 +14064,7 @@
                 },
                 {
                   "kind": "Content",
-                  "text": ", green: "
+                  "text": ", \n    green: "
                 },
                 {
                   "kind": "Content",
@@ -13976,7 +14072,7 @@
                 },
                 {
                   "kind": "Content",
-                  "text": ", blue: "
+                  "text": ", \n    blue: "
                 },
                 {
                   "kind": "Content",
@@ -14014,13 +14110,13 @@
               ]
             },
             {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!RgbColor#getBlue:member(1)",
-              "docComment": "",
+              "kind": "Property",
+              "canonicalReference": "gs-tools!RgbColor#blue:member",
+              "docComment": "/**\n * Blue component of the color.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "getBlue(): "
+                  "text": "readonly blue: "
                 },
                 {
                   "kind": "Content",
@@ -14031,24 +14127,22 @@
                   "text": ";"
                 }
               ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
+              "releaseTag": "Public",
+              "name": "blue",
+              "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
               },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "getBlue"
+              "isStatic": false
             },
             {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!RgbColor#getChroma:member(1)",
-              "docComment": "",
+              "kind": "Property",
+              "canonicalReference": "gs-tools!RgbColor#chroma:member",
+              "docComment": "/**\n * Chroma of the color.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "getChroma(): "
+                  "text": "get chroma(): "
                 },
                 {
                   "kind": "Content",
@@ -14059,24 +14153,22 @@
                   "text": ";"
                 }
               ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
+              "releaseTag": "Public",
+              "name": "chroma",
+              "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
               },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "getChroma"
+              "isStatic": false
             },
             {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!RgbColor#getGreen:member(1)",
-              "docComment": "",
+              "kind": "Property",
+              "canonicalReference": "gs-tools!RgbColor#green:member",
+              "docComment": "/**\n * Green component of the color.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "getGreen(): "
+                  "text": "readonly green: "
                 },
                 {
                   "kind": "Content",
@@ -14087,24 +14179,22 @@
                   "text": ";"
                 }
               ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
+              "releaseTag": "Public",
+              "name": "green",
+              "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
               },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "getGreen"
+              "isStatic": false
             },
             {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!RgbColor#getHue:member(1)",
-              "docComment": "",
+              "kind": "Property",
+              "canonicalReference": "gs-tools!RgbColor#hue:member",
+              "docComment": "/**\n * Hue component of the color.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "getHue(): "
+                  "text": "get hue(): "
                 },
                 {
                   "kind": "Content",
@@ -14115,24 +14205,22 @@
                   "text": ";"
                 }
               ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
+              "releaseTag": "Public",
+              "name": "hue",
+              "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
               },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "getHue"
+              "isStatic": false
             },
             {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!RgbColor#getLightness:member(1)",
-              "docComment": "",
+              "kind": "Property",
+              "canonicalReference": "gs-tools!RgbColor#lightness:member",
+              "docComment": "/**\n * Lightness component of the color.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "getLightness(): "
+                  "text": "get lightness(): "
                 },
                 {
                   "kind": "Content",
@@ -14143,24 +14231,22 @@
                   "text": ";"
                 }
               ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
+              "releaseTag": "Public",
+              "name": "lightness",
+              "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
               },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "getLightness"
+              "isStatic": false
             },
             {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!RgbColor#getRed:member(1)",
-              "docComment": "",
+              "kind": "Property",
+              "canonicalReference": "gs-tools!RgbColor#red:member",
+              "docComment": "/**\n * Red component of the color.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "getRed(): "
+                  "text": "readonly red: "
                 },
                 {
                   "kind": "Content",
@@ -14171,24 +14257,22 @@
                   "text": ";"
                 }
               ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
+              "releaseTag": "Public",
+              "name": "red",
+              "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
               },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "getRed"
+              "isStatic": false
             },
             {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!RgbColor#getSaturation:member(1)",
-              "docComment": "",
+              "kind": "Property",
+              "canonicalReference": "gs-tools!RgbColor#saturation:member",
+              "docComment": "/**\n * Saturation component of the color.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "getSaturation(): "
+                  "text": "get saturation(): "
                 },
                 {
                   "kind": "Content",
@@ -14199,90 +14283,13 @@
                   "text": ";"
                 }
               ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
+              "releaseTag": "Public",
+              "name": "saturation",
+              "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
               },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "getSaturation"
-            },
-            {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!RgbColor.newInstance:member(1)",
-              "docComment": "/**\n * Creates an instance of the class.\n *\n * @param red - The red component of the color.\n *\n * @param green - The green component of the color.\n *\n * @param blue - The blue component of the color.\n */\n",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "static newInstance(red: "
-                },
-                {
-                  "kind": "Content",
-                  "text": "number"
-                },
-                {
-                  "kind": "Content",
-                  "text": ", green: "
-                },
-                {
-                  "kind": "Content",
-                  "text": "number"
-                },
-                {
-                  "kind": "Content",
-                  "text": ", blue: "
-                },
-                {
-                  "kind": "Content",
-                  "text": "number"
-                },
-                {
-                  "kind": "Content",
-                  "text": "): "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "RgbColor",
-                  "canonicalReference": "gs-tools!RgbColor:class"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isStatic": true,
-              "returnTypeTokenRange": {
-                "startIndex": 7,
-                "endIndex": 8
-              },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [
-                {
-                  "parameterName": "red",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 1,
-                    "endIndex": 2
-                  }
-                },
-                {
-                  "parameterName": "green",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 3,
-                    "endIndex": 4
-                  }
-                },
-                {
-                  "parameterName": "blue",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 5,
-                    "endIndex": 6
-                  }
-                }
-              ],
-              "name": "newInstance"
+              "isStatic": false
             }
           ],
           "extendsTokenRange": {
