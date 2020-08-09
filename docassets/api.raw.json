@@ -11116,7 +11116,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!OrderedMap#[Symbol.iterator]:member(1)",
-              "docComment": "/**\n * @returns {@link Iterator} for the map.\n */\n",
+              "docComment": "/**\n * Iterates through the entries in the map.\n *\n * @returns {@link Iterator} for the map.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11158,7 +11158,7 @@
             {
               "kind": "Property",
               "canonicalReference": "gs-tools!OrderedMap#[Symbol.toStringTag]:member",
-              "docComment": "",
+              "docComment": "/**\n * Default tag when stringifying `OrderedMap`.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11292,7 +11292,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!OrderedMap#entries:member(1)",
-              "docComment": "/**\n * @returns {@link Iterator} that iterates all entries in the map.\n */\n",
+              "docComment": "/**\n * Returns all entries in the map.\n *\n * @returns {@link Iterator} that iterates all entries in the map.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11378,7 +11378,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!OrderedMap#get:member(1)",
-              "docComment": "/**\n * @param key - Key of the entry to return.\n *\n * @returns Value corresponding to the given key, or `undefined` if such value does not exist.\n */\n",
+              "docComment": "/**\n * Returns value corresponding to the given key.\n *\n * @remarks\n *\n * Returns `undefined` if the value doesn't exist.\n *\n * @param key - Key of the entry to return.\n *\n * @returns Value corresponding to the given key, or `undefined` if such value does not exist.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11422,7 +11422,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!OrderedMap#getAt:member(1)",
-              "docComment": "/**\n * @param index - Index of the entry to return.\n *\n * @returns Entry at the given index, or undefined if none exists.\n */\n",
+              "docComment": "/**\n * Returns entry at the given index.\n *\n * @remarks\n *\n * Returns `undefined` if the value doesn't exist.\n *\n * @param index - Index of the entry to return.\n *\n * @returns Entry at the given index, or undefined if none exists.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11466,7 +11466,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!OrderedMap#has:member(1)",
-              "docComment": "/**\n * @param key - Key to check.\n *\n * @returns True iff an entry corresponding to the given key exists in the map.\n */\n",
+              "docComment": "/**\n * Returns true iff entry corresponding to the key exists.\n *\n * @param key - Key to check.\n *\n * @returns True iff an entry corresponding to the given key exists in the map.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11510,7 +11510,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!OrderedMap#keys:member(1)",
-              "docComment": "/**\n * @returns {@link Iterator} that iterates through the keys in the map.\n */\n",
+              "docComment": "/**\n * Returns keys in the map.\n *\n * @returns {@link Iterator} that iterates through the keys in the map.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11543,7 +11543,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!OrderedMap#set:member(1)",
-              "docComment": "/**\n * @param key - Key of entry to set.\n *\n * @param value - Value of the entry to set.\n *\n * @returns The current instance of the map with the given key set to the given value.\n */\n",
+              "docComment": "/**\n * Sets the entry with the given `key` to the given `value`.\n *\n * @param key - Key of entry to set.\n *\n * @param value - Value of the entry to set.\n *\n * @returns The current instance of the map with the given key set to the given value.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11602,7 +11602,7 @@
             {
               "kind": "Property",
               "canonicalReference": "gs-tools!OrderedMap#size:member",
-              "docComment": "/**\n * @returns Number of elements in the map.\n */\n",
+              "docComment": "/**\n * Number of elements in the map.\n *\n * @returns Number of elements in the map.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11677,7 +11677,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!OrderedMap#splice:member(1)",
-              "docComment": "/**\n * @param start - Index to start modifying the map.\n *\n * @param deleteCount - Number of entries starting at the given start index to delete.\n *\n * @param toAdd - Entries to add at the given start index.\n *\n * @returns Array of deleted entries.\n */\n",
+              "docComment": "/**\n * Modifies the map by deleting and adding entries to the map.\n *\n * @param start - Index to start modifying the map.\n *\n * @param deleteCount - Number of entries starting at the given start index to delete.\n *\n * @param toAdd - Entries to add at the given start index.\n *\n * @returns Array of deleted entries.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -11761,7 +11761,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!OrderedMap#values:member(1)",
-              "docComment": "/**\n * @returns {@link Iterator} that iterates through the values in the map.\n */\n",
+              "docComment": "/**\n * Returns values in the map.\n *\n * @returns {@link Iterator} that iterates through the values in the map.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
