@@ -4807,7 +4807,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!cache:function(1)",
-          "docComment": "/**\n * Caches the given method.\n */\n",
+          "docComment": "/**\n * Caches the given method.\n *\n * @remarks\n *\n * This only calls the implementation once. Subsequent calls to the function will return the first return value without calling the implementation.\n *\n * This only support getters and methods with 0 arguments.\n *\n * @thDecorator accessor method  @thModule data\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",

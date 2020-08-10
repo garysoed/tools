@@ -9,7 +9,7 @@ export const CACHE_ANNOTATOR = new PropertyAnnotator(() => undefined);
  * @param propertyKey Key of the property whose cache should be cleared.
  */
 export function clear(instance: Object, propertyKey: string | symbol): void {
-  getCache_(instance, propertyKey).clear();
+  getCaches_(instance).delete(propertyKey);
 }
 
 /**
@@ -27,29 +27,15 @@ export function clearAll(instance: Object): void {
  * @param target Object to get the cache of.
  * @param propertyKey Key of the property whose cache should be retrieved.
  */
-export function getCache(instance: Object, propertyKey: string | symbol):
-    ReadonlyMap<string, any> {
-  return getCache_(instance, propertyKey);
+export function getCache(instance: Object, propertyKey: string|symbol): unknown {
+  return getCaches_(instance).get(propertyKey);
 }
 
-function getCache_(instance: Object, propertyKey: string | symbol): Map<string, any> {
-  const caches = getCaches_(instance);
-  const value = caches.get(propertyKey);
-  if (value !== undefined) {
-    return value;
-  }
-
-  const cache = new Map<string, any>();
-  caches.set(propertyKey, cache);
-
-  return cache;
-}
-
-function getCaches_(target: any): Map<string | symbol, Map<string, any>> {
+function getCaches_(target: any): Map<string|symbol, unknown> {
   if (target[__CACHES] !== undefined) {
     return target[__CACHES];
   } else {
-    const caches = new Map<string | symbol, Map<string, any>>();
+    const caches = new Map<string|symbol, unknown>();
     target[__CACHES] = caches;
 
     return caches;
@@ -59,7 +45,6 @@ function getCaches_(target: any): Map<string | symbol, Map<string, any>> {
 export function setCacheValue(
     instance: Object,
     propertyKey: string | symbol,
-    key: string,
     value: any): void {
-  getCache_(instance, propertyKey).set(key, value);
+  getCaches_(instance).set(propertyKey, value);
 }

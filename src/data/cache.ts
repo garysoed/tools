@@ -1,10 +1,19 @@
 import { Errors } from '../error';
-import { hash } from '../util/hash';
 
 import { CACHE_ANNOTATOR, getCache, setCacheValue } from './caches';
 
+
 /**
  * Caches the given method.
+ *
+ * @remarks
+ * This only calls the implementation once. Subsequent calls to the function will return the first
+ * return value without calling the implementation.
+ *
+ * This only support getters and methods with 0 arguments.
+ *
+ * @thDecorator accessor method
+ * @thModule data
  */
 export function cache(): MethodDecorator {
   return (
@@ -13,6 +22,9 @@ export function cache(): MethodDecorator {
       descriptor: TypedPropertyDescriptor<any>): TypedPropertyDescriptor<any> => {
     const {get, value} = descriptor;
     if (value instanceof Function) {
+      if (value.length > 0) {
+        throw Errors.assert('attached function').shouldBe('a method with 0 arguments').butNot();
+      }
       descriptor.value = createCachedFunctionCall(value, propertyKey);
     } else if (get instanceof Function) {
       descriptor.get = createCachedFunctionCall(get, propertyKey);
@@ -30,22 +42,16 @@ function createCachedFunctionCall(
     origFn: Function,
     propertyKey: string|symbol,
 ): (...args: unknown[]) => unknown {
-  return function(this: any, ...args: any[]): any {
+  return function(this: any): any {
     // tslint:disable-next-line:no-invalid-this no-this-assignment
     const instance = this;
-    const cacheData = getCache(instance, propertyKey);
-    const argsHash = args
-        .map((arg: any) => {
-          return hash(arg);
-        })
-        .join('_');
-    const cachedValue = cacheData.get(argsHash);
+    const cachedValue = getCache(instance, propertyKey);
     if (cachedValue !== undefined) {
       return cachedValue;
     }
 
-    const result = origFn.apply(instance, args);
-    setCacheValue(instance, propertyKey, argsHash, result);
+    const result = origFn.apply(instance);
+    setCacheValue(instance, propertyKey, result);
 
     return result;
   };
