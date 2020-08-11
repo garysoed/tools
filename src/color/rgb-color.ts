@@ -1,5 +1,4 @@
 import { cache } from '../data/cache';
-import { Errors } from '../error';
 
 import { Color } from './color';
 
@@ -26,39 +25,39 @@ export class RgbColor extends Color {
     super();
 
     if (!Number.isInteger(red)) {
-      throw Errors.assert('red').should('be an integer').butWas(red);
+      throw new Error(`red should be an integer but was ${red}`);
     }
 
     if (red > 255) {
-      throw Errors.assert('red').should('be <= 255').butWas(red);
+      throw new Error(`red should be <= 255 but was ${red}`);
     }
 
     if (red < 0) {
-      throw Errors.assert('red').should('be positive').butWas(red);
+      throw new Error(`red should be positive but was ${red}`);
     }
 
     if (!Number.isInteger(blue)) {
-      throw Errors.assert('blue').should('be an integer').butWas(blue);
+      throw new Error(`blue should be an integer but was ${blue}`);
     }
 
     if (blue > 255) {
-      throw Errors.assert('blue').should('be <= 255').butWas(blue);
+      throw new Error(`blue should be <= 255 but was ${blue}`);
     }
 
     if (blue < 0) {
-      throw Errors.assert('blue').should('be positive').butWas(blue);
+      throw new Error(`blue should be positive but was ${blue}`);
     }
 
     if (!Number.isInteger(green)) {
-      throw Errors.assert('green').should('be an integer').butWas(green);
+      throw new Error(`green should be an integer but was ${green}`);
     }
 
     if (green > 255) {
-      throw Errors.assert('green').should('be <= 255').butWas(green);
+      throw new Error(`green should be <= 255 but was ${green}`);
     }
 
     if (green < 0) {
-      throw Errors.assert('green').should('be positive').butWas(green);
+      throw new Error(`green should be positive but was ${green}`);
     }
   }
 

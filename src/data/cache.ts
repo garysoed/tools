@@ -1,5 +1,3 @@
-import { Errors } from '../error';
-
 import { CACHE_ANNOTATOR, getCache, setCacheValue } from './caches';
 
 
@@ -23,13 +21,13 @@ export function cache(): MethodDecorator {
     const {get, value} = descriptor;
     if (value instanceof Function) {
       if (value.length > 0) {
-        throw Errors.assert('attached function').shouldBe('a method with 0 arguments').butNot();
+        throw new Error('attached function should be a method with 0 arguments');
       }
       descriptor.value = createCachedFunctionCall(value, propertyKey);
     } else if (get instanceof Function) {
       descriptor.get = createCachedFunctionCall(get, propertyKey);
     } else {
-      throw Errors.assert('attached function').shouldBe('a method or getter').butNot();
+      throw new Error('attached function should be a method or getter');
     }
 
     CACHE_ANNOTATOR.decorator()(target, propertyKey);

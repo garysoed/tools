@@ -1,4 +1,3 @@
-import { Errors } from '../error';
 import { AbsolutePath } from '../path/absolute-path';
 import { Path } from '../path/path';
 import { RelativePath } from '../path/relative-path';
@@ -12,7 +11,7 @@ export class Paths {
   static absolutePath(pathString: string): AbsolutePath {
     const result = absolutePathParser().convertBackward(pathString);
     if (!result.success) {
-      throw Errors.assert('pathString').shouldBe('a valid absolute path').butWas(pathString);
+      throw new Error(`pathString should be a valid absolute path but was ${pathString}`);
     }
 
     return result.result;
@@ -157,7 +156,7 @@ export class Paths {
   static relativePath(pathString: string): RelativePath {
     const result = relativePathParser().convertBackward(pathString);
     if (!result.success) {
-      throw Errors.assert('pathString').shouldBe('a valid relative path').butWas(pathString);
+      throw new Error(`pathString should be a valid relative path but was ${pathString}`);
     }
 
     return result.result;

@@ -1,5 +1,4 @@
 import { cache } from '../data/cache';
-import { Errors } from '../error';
 
 import { Color } from './color';
 
@@ -24,11 +23,11 @@ export class HslColor extends Color {
     super();
 
     if (lightness > 1 || lightness < 0) {
-      throw Errors.assert('lightness').should('be >= 0 and <= 1').butWas(lightness);
+      throw new Error(`lightness should be >= 0 and <= 1 but was ${lightness}`);
     }
 
     if (saturation > 1 || saturation < 0) {
-      throw Errors.assert('saturation').should('be >= 0 and <= 1').butWas(saturation);
+      throw new Error(`saturation should be >= 0 and <= 1 but was ${saturation}`);
     }
   }
 

@@ -59,14 +59,6 @@ export { ParameterAnnotation, ParameterAnnotator } from '../src/data/parameter-a
 export { PropertyAnnotation, PropertyAnnotator } from '../src/data/property-annotation';
 export { cache } from '../src/data/cache';
 
-// dispose
-export { BaseDisposable } from '../src/dispose/base-disposable';
-export { Disposable } from '../src/dispose/disposable';
-export { DisposableFunction } from '../src/dispose/disposable-function';
-
-// error
-export { Errors } from '../src/error/errors';
-
 // gapi
 // tslint:disable-next-line: ordered-imports
 export { Coordinate, getCellContentByRange, getCellContent } from '../src/gapi/sheets';
