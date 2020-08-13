@@ -60,10 +60,16 @@ export { PropertyAnnotation, PropertyAnnotator } from '../src/data/property-anno
 export { cache } from '../src/data/cache';
 
 // gapi
-// tslint:disable-next-line: ordered-imports
 export { ExtendedValue, CellData, GridData, GridRange, RowData } from '../src/gapi/type/sheets';
 export { createSheetsTable, Merge, RawSheet } from '../src/gapi/sheets-table';
 export { asSingleCell, asMultiCell, defineTable, Cell, SingleCell, MultiCell } from '../src/gapi/define-table';
+
+// path
+export { AbsolutePath } from '../src/path/absolute-path';
+export { absolutePathParser } from '../src/path/absolute-path-parser';
+export { Path, SEPARATOR } from '../src/path/path';
+export { absolutePath, getDirPath, getFilenameParts, getItemName, getRelativePath, getSubPathsToRoot, join, normalize, relativePath, setFilenameExt } from '../src/path/paths';
+
 
 // random
 export { SimpleIdGenerator } from '../src/random/simple-id-generator';
@@ -137,3 +143,4 @@ export { HasSize } from '../src/collect/operators/size';
 export { Operator } from '../src/collect/operators/operator';
 export { Library } from '../src/gapi/builder';
 export { SheetsTable, SheetsCell } from '../src/gapi/sheets-table';
+export { AbsolutePathParser } from '../src/path/absolute-path-parser';

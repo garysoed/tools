@@ -8,7 +8,6 @@ import { Handler } from './handler';
  * Represents Google API library.
  *
  * @thHidden
- * @thModule gapi
  */
 export interface Library {
   /**

@@ -1,13 +1,20 @@
+/**
+ * Represents a path.
+ *
+ * @thModule path
+ */
 export abstract class Path {
-  static readonly SEPARATOR: string = '/';
-
-  private readonly parts_: readonly string[];
-
-  constructor(parts: Iterable<string>) {
-    this.parts_ = [...parts];
-  }
-
-  getParts(): readonly string[] {
-    return this.parts_;
-  }
+  constructor(
+      /**
+       * Parts of the path.
+       */
+      readonly parts: readonly string[],
+  ) { }
 }
+
+/**
+ * Separator between path parts.
+ *
+ * @thHidden
+ */
+export const SEPARATOR = '/';

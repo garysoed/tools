@@ -3614,6 +3614,295 @@
           "name": "$zip"
         },
         {
+          "kind": "Class",
+          "canonicalReference": "gs-tools!AbsolutePath:class",
+          "docComment": "/**\n * Path that is an absolute path.\n *\n * @thModule path\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare class AbsolutePath extends "
+            },
+            {
+              "kind": "Reference",
+              "text": "Path",
+              "canonicalReference": "gs-tools!Path:class"
+            },
+            {
+              "kind": "Content",
+              "text": " "
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "AbsolutePath",
+          "members": [
+            {
+              "kind": "Method",
+              "canonicalReference": "gs-tools!AbsolutePath#toString:member(1)",
+              "docComment": "/**\n * String representation of the path.\n *\n * @returns String representation of the absolute path.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "toString(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [],
+              "name": "toString"
+            }
+          ],
+          "extendsTokenRange": {
+            "startIndex": 1,
+            "endIndex": 3
+          },
+          "implementsTokenRanges": []
+        },
+        {
+          "kind": "Function",
+          "canonicalReference": "gs-tools!absolutePath:function(1)",
+          "docComment": "/**\n * Creates an {@link AbsolutePath} by parsing the given string.\n *\n * @param pathString - String to parse as `AbsolutePath`.\n *\n * @returns The parsed string as `AbsolutePath`.\n *\n * @thModule path\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function absolutePath(pathString: "
+            },
+            {
+              "kind": "Content",
+              "text": "string"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "AbsolutePath",
+              "canonicalReference": "gs-tools!AbsolutePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 3,
+            "endIndex": 4
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "pathString",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "name": "absolutePath"
+        },
+        {
+          "kind": "Class",
+          "canonicalReference": "gs-tools!AbsolutePathParser:class",
+          "docComment": "/**\n * Parses the string to {@link AbsolutePath}.\n *\n * @thHidden\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare class AbsolutePathParser implements "
+            },
+            {
+              "kind": "Reference",
+              "text": "Converter",
+              "canonicalReference": "nabu!Converter:interface"
+            },
+            {
+              "kind": "Content",
+              "text": "<"
+            },
+            {
+              "kind": "Reference",
+              "text": "AbsolutePath",
+              "canonicalReference": "gs-tools!AbsolutePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": ", string> "
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "AbsolutePathParser",
+          "members": [
+            {
+              "kind": "Method",
+              "canonicalReference": "gs-tools!AbsolutePathParser#convertBackward:member(1)",
+              "docComment": "/**\n * Parses the input as an absolute path.\n *\n * @param value - Value to be parsed.\n *\n * @returns Result of parsing.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "convertBackward(value: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Result",
+                  "canonicalReference": "nabu!Result:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<"
+                },
+                {
+                  "kind": "Reference",
+                  "text": "AbsolutePath",
+                  "canonicalReference": "gs-tools!AbsolutePath:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ">"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 7
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "value",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  }
+                }
+              ],
+              "name": "convertBackward"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "gs-tools!AbsolutePathParser#convertForward:member(1)",
+              "docComment": "/**\n * Converts the path to string.\n *\n * @param input - Absolute path to be converted to string.\n *\n * @returns Result of stringifying the path.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "convertForward(input: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "AbsolutePath",
+                  "canonicalReference": "gs-tools!AbsolutePath:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Result",
+                  "canonicalReference": "nabu!Result:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<string>"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 5
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "input",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  }
+                }
+              ],
+              "name": "convertForward"
+            }
+          ],
+          "implementsTokenRanges": [
+            {
+              "startIndex": 1,
+              "endIndex": 5
+            }
+          ]
+        },
+        {
+          "kind": "Function",
+          "canonicalReference": "gs-tools!absolutePathParser:function(1)",
+          "docComment": "/**\n * Creates parser for {@link AbsolutePath}.\n *\n * @returns Converter for `AbsolutePath`.  @thModule path\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function absolutePathParser(): "
+            },
+            {
+              "kind": "Reference",
+              "text": "Converter",
+              "canonicalReference": "nabu!Converter:interface"
+            },
+            {
+              "kind": "Content",
+              "text": "<"
+            },
+            {
+              "kind": "Reference",
+              "text": "AbsolutePath",
+              "canonicalReference": "gs-tools!AbsolutePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": ", string>"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 5
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [],
+          "name": "absolutePathParser"
+        },
+        {
           "kind": "Function",
           "canonicalReference": "gs-tools!aleaSeed:function(1)",
           "docComment": "",
@@ -7519,6 +7808,96 @@
         },
         {
           "kind": "Function",
+          "canonicalReference": "gs-tools!getDirPath:function(1)",
+          "docComment": "/**\n * Returns the directory part of the path.\n *\n * @remarks\n *\n * If this is given `AbsolutePath`, this returns `AbsolutePath`. If this is given `RelativePath`, this returns `RelativePath`.\n *\n * @param path - Path to return the directory's path of.\n *\n * @thModule path\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function getDirPath(path: "
+            },
+            {
+              "kind": "Reference",
+              "text": "AbsolutePath",
+              "canonicalReference": "gs-tools!AbsolutePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "AbsolutePath",
+              "canonicalReference": "gs-tools!AbsolutePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 3,
+            "endIndex": 4
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "path",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "name": "getDirPath"
+        },
+        {
+          "kind": "Function",
+          "canonicalReference": "gs-tools!getDirPath:function(2)",
+          "docComment": "/**\n * @param path - Path to return the directory's path of.\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function getDirPath(path: "
+            },
+            {
+              "kind": "Reference",
+              "text": "RelativePath",
+              "canonicalReference": "gs-tools!RelativePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "RelativePath",
+              "canonicalReference": "gs-tools!RelativePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 3,
+            "endIndex": 4
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 2,
+          "parameters": [
+            {
+              "parameterName": "path",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "name": "getDirPath"
+        },
+        {
+          "kind": "Function",
           "canonicalReference": "gs-tools!getDistance:function(1)",
           "docComment": "/**\n * Computes the Euclidean distance between the two colors.\n *\n * @remarks\n *\n * This uses the RGB components to compute the distance. The resulting distance is the square of the distance.\n *\n * @param color1 - First color\n *\n * @param color2 - Second color\n *\n * @returns The Euclidean distance between the two given colors.  @thModule color\n */\n",
           "excerptTokens": [
@@ -7576,6 +7955,207 @@
             }
           ],
           "name": "getDistance"
+        },
+        {
+          "kind": "Function",
+          "canonicalReference": "gs-tools!getFilenameParts:function(1)",
+          "docComment": "/**\n * Splits the given filename into its name and extension.\n *\n * @param filename - File name to split into parts.\n *\n * @returns Object with the file's extension and name.\n *\n * @thModule path\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function getFilenameParts(filename: "
+            },
+            {
+              "kind": "Content",
+              "text": "string"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Content",
+              "text": "{\n    extension: string;\n    name: string;\n}"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 3,
+            "endIndex": 4
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "filename",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "name": "getFilenameParts"
+        },
+        {
+          "kind": "Function",
+          "canonicalReference": "gs-tools!getItemName:function(1)",
+          "docComment": "/**\n * Returns the item part of the path.\n *\n * @param path - Path to return the item name.\n *\n * @returns The item part, or null if the path is a directory\n *\n * @thModule path\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function getItemName(path: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Path",
+              "canonicalReference": "gs-tools!Path:class"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Content",
+              "text": "string | null"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 3,
+            "endIndex": 4
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "path",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "name": "getItemName"
+        },
+        {
+          "kind": "Function",
+          "canonicalReference": "gs-tools!getRelativePath:function(1)",
+          "docComment": "/**\n * Returns the relative path from the `srcPath` to the `destPath`.\n *\n * @param srcPath - The starting path.\n *\n * @param destPath - The destination path.\n *\n * @returns Relative path from the source path to the destination path.\n *\n * @thModule path\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function getRelativePath(srcPath: "
+            },
+            {
+              "kind": "Reference",
+              "text": "AbsolutePath",
+              "canonicalReference": "gs-tools!AbsolutePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": ", destPath: "
+            },
+            {
+              "kind": "Reference",
+              "text": "AbsolutePath",
+              "canonicalReference": "gs-tools!AbsolutePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "RelativePath",
+              "canonicalReference": "gs-tools!RelativePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 5,
+            "endIndex": 6
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "srcPath",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "parameterName": "destPath",
+              "parameterTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              }
+            }
+          ],
+          "name": "getRelativePath"
+        },
+        {
+          "kind": "Function",
+          "canonicalReference": "gs-tools!getSubPathsToRoot:function(1)",
+          "docComment": "/**\n * Navigate to the root path and returns subpaths to the root path.\n *\n * @remarks\n *\n * For example, if path is '/a/b/c', this would return ['/a/b/c', '/a/b', '/a', '/'].\n *\n * @param path - Path to return the subpaths to.\n *\n * @returns Subpaths to the root from the given path.\n *\n * @thModule path\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function getSubPathsToRoot(path: "
+            },
+            {
+              "kind": "Reference",
+              "text": "AbsolutePath",
+              "canonicalReference": "gs-tools!AbsolutePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Content",
+              "text": "readonly "
+            },
+            {
+              "kind": "Reference",
+              "text": "AbsolutePath",
+              "canonicalReference": "gs-tools!AbsolutePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": "[]"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 3,
+            "endIndex": 6
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "path",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "name": "getSubPathsToRoot"
         },
         {
           "kind": "Interface",
@@ -8813,9 +9393,147 @@
           "name": "isOneOf"
         },
         {
+          "kind": "Function",
+          "canonicalReference": "gs-tools!join:function(1)",
+          "docComment": "/**\n * Joins the given paths together in order.\n *\n * @remarks\n *\n * If the root path is absolute, the resulting path will also be absolute. Similarly, if the root path is relative, the resulting path will also be relative.\n *\n * @param root - The root path.\n *\n * @param paths - Paths to join together.\n *\n * @thModule path\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function join(root: "
+            },
+            {
+              "kind": "Reference",
+              "text": "AbsolutePath",
+              "canonicalReference": "gs-tools!AbsolutePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": ", ...paths: "
+            },
+            {
+              "kind": "Content",
+              "text": "readonly "
+            },
+            {
+              "kind": "Reference",
+              "text": "RelativePath",
+              "canonicalReference": "gs-tools!RelativePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": "[]"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "AbsolutePath",
+              "canonicalReference": "gs-tools!AbsolutePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 7,
+            "endIndex": 8
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "root",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "parameterName": "paths",
+              "parameterTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 6
+              }
+            }
+          ],
+          "name": "join"
+        },
+        {
+          "kind": "Function",
+          "canonicalReference": "gs-tools!join:function(2)",
+          "docComment": "/**\n * @param root - The root path.\n *\n * @param paths - Paths to join together.\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function join(root: "
+            },
+            {
+              "kind": "Reference",
+              "text": "RelativePath",
+              "canonicalReference": "gs-tools!RelativePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": ", ...paths: "
+            },
+            {
+              "kind": "Content",
+              "text": "readonly "
+            },
+            {
+              "kind": "Reference",
+              "text": "RelativePath",
+              "canonicalReference": "gs-tools!RelativePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": "[]"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "RelativePath",
+              "canonicalReference": "gs-tools!RelativePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 7,
+            "endIndex": 8
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 2,
+          "parameters": [
+            {
+              "parameterName": "root",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "parameterName": "paths",
+              "parameterTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 6
+              }
+            }
+          ],
+          "name": "join"
+        },
+        {
           "kind": "Interface",
           "canonicalReference": "gs-tools!Library:interface",
-          "docComment": "/**\n * Represents Google API library.\n *\n * @thHidden  @thModule gapi\n */\n",
+          "docComment": "/**\n * Represents Google API library.\n *\n * @thHidden\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -10335,6 +11053,96 @@
         },
         {
           "kind": "Function",
+          "canonicalReference": "gs-tools!normalize:function(1)",
+          "docComment": "/**\n * Normalizes the given path.\n *\n * @remarks\n *\n * This removes all instances where the part is empty, and removes any unnecessary `..` and `.`.\n *\n * @param path - Absolute path to normalize.\n *\n * @returns The normalized absolute path.\n *\n * @thModule path\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function normalize(path: "
+            },
+            {
+              "kind": "Reference",
+              "text": "AbsolutePath",
+              "canonicalReference": "gs-tools!AbsolutePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "AbsolutePath",
+              "canonicalReference": "gs-tools!AbsolutePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 3,
+            "endIndex": 4
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "path",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "name": "normalize"
+        },
+        {
+          "kind": "Function",
+          "canonicalReference": "gs-tools!normalize:function(2)",
+          "docComment": "/**\n * @param path - Absolute path to normalize.\n *\n * @returns The normalized absolute path.\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function normalize(path: "
+            },
+            {
+              "kind": "Reference",
+              "text": "RelativePath",
+              "canonicalReference": "gs-tools!RelativePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "RelativePath",
+              "canonicalReference": "gs-tools!RelativePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 3,
+            "endIndex": 4
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 2,
+          "parameters": [
+            {
+              "parameterName": "path",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "name": "normalize"
+        },
+        {
+          "kind": "Function",
           "canonicalReference": "gs-tools!objectConverter:function(1)",
           "docComment": "",
           "excerptTokens": [
@@ -11800,6 +12608,78 @@
               "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 3
+              },
+              "isStatic": false
+            }
+          ],
+          "implementsTokenRanges": []
+        },
+        {
+          "kind": "Class",
+          "canonicalReference": "gs-tools!Path:class",
+          "docComment": "/**\n * Represents a path.\n *\n * @thModule path\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare abstract class Path "
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Path",
+          "members": [
+            {
+              "kind": "Constructor",
+              "canonicalReference": "gs-tools!Path:constructor(1)",
+              "docComment": "/**\n * Constructs a new instance of the `Path` class\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "constructor(\n    parts: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "readonly string[]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ");"
+                }
+              ],
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "parts",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "gs-tools!Path#parts:member",
+              "docComment": "/**\n * Parts of the path.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "readonly parts: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "readonly string[]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "releaseTag": "Public",
+              "name": "parts",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
               },
               "isStatic": false
             }
@@ -13282,6 +14162,50 @@
         },
         {
           "kind": "Function",
+          "canonicalReference": "gs-tools!relativePath:function(1)",
+          "docComment": "/**\n * Creates an {@link RelativePath} by parsing the given string.\n *\n * @param pathString - String to parse as `RelativePath`.\n *\n * @returns The parsed string as `RelativePath`.  @thModule path\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function relativePath(pathString: "
+            },
+            {
+              "kind": "Content",
+              "text": "string"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "RelativePath",
+              "canonicalReference": "gs-tools!RelativePath:class"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 3,
+            "endIndex": 4
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "pathString",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "name": "relativePath"
+        },
+        {
+          "kind": "Function",
           "canonicalReference": "gs-tools!reversed:function(1)",
           "docComment": "/**\n * Returns `Ordering` that reverses the ordering.\n *\n * @param ordering - Ordering function to reverse.\n *\n * @typeParam T - Type of items to sort.\n *\n * @returns `Ordering` object that reverses the ordering of the given `Ordering`.  @thModule collect.compare\n */\n",
           "excerptTokens": [
@@ -14005,6 +14929,23 @@
           "name": "scanSet"
         },
         {
+          "kind": "Variable",
+          "canonicalReference": "gs-tools!SEPARATOR:var",
+          "docComment": "/**\n * Separator between path parts.\n *\n * @thHidden\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "SEPARATOR = \"/\""
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "SEPARATOR",
+          "variableTypeTokenRange": {
+            "startIndex": 0,
+            "endIndex": 0
+          }
+        },
+        {
           "kind": "Interface",
           "canonicalReference": "gs-tools!SetAdd:interface",
           "docComment": "",
@@ -14315,6 +15256,64 @@
             "startIndex": 1,
             "endIndex": 7
           }
+        },
+        {
+          "kind": "Function",
+          "canonicalReference": "gs-tools!setFilenameExt:function(1)",
+          "docComment": "/**\n * Given a filename and an extension, create an item name.\n *\n * @param filename - The filename without extension.\n *\n * @param extension - The extension name.\n *\n * @returns The item name with the filename and extension parts.  @thModule\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function setFilenameExt(filename: "
+            },
+            {
+              "kind": "Content",
+              "text": "string"
+            },
+            {
+              "kind": "Content",
+              "text": ", extension: "
+            },
+            {
+              "kind": "Content",
+              "text": "string"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Content",
+              "text": "string"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 5,
+            "endIndex": 6
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "filename",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "parameterName": "extension",
+              "parameterTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              }
+            }
+          ],
+          "name": "setFilenameExt"
         },
         {
           "kind": "Interface",
@@ -14734,7 +15733,7 @@
         {
           "kind": "Interface",
           "canonicalReference": "gs-tools!SheetsCell:interface",
-          "docComment": "/**\n * Cell in Google Sheets.\n *\n * @thHidden  @thModule gapi.sheets\n */\n",
+          "docComment": "/**\n * Cell in Google Sheets.\n *\n * @thHidden\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -14876,7 +15875,7 @@
         {
           "kind": "TypeAlias",
           "canonicalReference": "gs-tools!SheetsTable:type",
-          "docComment": "/**\n * Simpler representation of Google Sheets table.\n *\n * @thHidden  @thModule gapi.sheets\n */\n",
+          "docComment": "/**\n * Simpler representation of Google Sheets table.\n *\n * @thHidden\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",

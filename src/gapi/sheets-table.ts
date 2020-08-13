@@ -13,7 +13,6 @@ interface PartialSheetsCell {
  * Cell in Google Sheets.
  *
  * @thHidden
- * @thModule gapi.sheets
  */
 export interface SheetsCell {
   readonly fromRow: number;
@@ -27,7 +26,6 @@ export interface SheetsCell {
  * Simpler representation of Google Sheets table.
  *
  * @thHidden
- * @thModule gapi.sheets
  */
 export type SheetsTable = ReadonlyArray<ReadonlyArray<SheetsCell>>;
 
