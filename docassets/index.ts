@@ -61,7 +61,6 @@ export { cache } from '../src/data/cache';
 
 // gapi
 // tslint:disable-next-line: ordered-imports
-export { Coordinate, getCellContentByRange, getCellContent } from '../src/gapi/sheets';
 export { ExtendedValue, CellData, GridData, GridRange, RowData } from '../src/gapi/type/sheets';
 export { createSheetsTable, Merge, RawSheet } from '../src/gapi/sheets-table';
 export { asSingleCell, asMultiCell, defineTable, Cell, SingleCell, MultiCell } from '../src/gapi/define-table';
@@ -136,3 +135,5 @@ export { CompareResult } from '../src/collect/compare/compare-result';
 export { FiniteIterable } from '../src/collect/operators/finite-iterable';
 export { HasSize } from '../src/collect/operators/size';
 export { Operator } from '../src/collect/operators/operator';
+export { Library } from '../src/gapi/builder';
+export { SheetsTable, SheetsCell } from '../src/gapi/sheets-table';

@@ -9,6 +9,12 @@ interface PartialSheetsCell {
   normalized: boolean;
 }
 
+/**
+ * Cell in Google Sheets.
+ *
+ * @thHidden
+ * @thModule gapi.sheets
+ */
 export interface SheetsCell {
   readonly fromRow: number;
   readonly fromColumn: number;
@@ -17,8 +23,19 @@ export interface SheetsCell {
   readonly value: ExtendedValue;
 }
 
+/**
+ * Simpler representation of Google Sheets table.
+ *
+ * @thHidden
+ * @thModule gapi.sheets
+ */
 export type SheetsTable = ReadonlyArray<ReadonlyArray<SheetsCell>>;
 
+/**
+ * Merge data in Google Sheets.
+ *
+ * @thModule gapi.sheets
+ */
 export interface Merge {
   readonly startRowIndex: number;
   readonly endRowIndex: number;
@@ -26,12 +43,32 @@ export interface Merge {
   readonly endColumnIndex: number;
 }
 
+/**
+ * A raw Google Sheets table.
+ *
+ * @thModule gapi.sheets
+ */
 export interface RawSheet {
   readonly merges?: readonly Merge[];
   readonly data: readonly GridData[];
 }
 
-// tslint:disable-next-line: cyclomatic-complexity
+/**
+ * Extracts a section of Google Sheets table as a `SheetsTable`.
+ *
+ * @remarks
+ * A `SheetsTable` is a simple representation of Google Sheets table. This table is a 2D array of
+ * `SheetsCell`. Cells that are merged have the same instance in different slots in the array.
+ *
+ * @param raw - Raw data from Google Sheet.
+ * @param fromRow - Start row index.
+ * @param toRow - End row index, exclusive.
+ * @param fromColumn - Start column index.
+ * @param toColumn - End column index, exclusive.
+ * @returns Simpler representation of Google Sheets table.
+ *
+ * @thModule gapi.sheets
+ */
 export function createSheetsTable(
     raw: RawSheet,
     fromRow: number,

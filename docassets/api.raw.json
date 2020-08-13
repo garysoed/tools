@@ -3959,7 +3959,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!asMultiCell:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Asserts and casts Google Sheet's `Cell` object as a multicell.\n *\n * @param cell - Google Sheet's `Cell` object.\n *\n * @returns The cell object as a `MultiCell`.\n *\n * @thModule gapi.sheets\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -4209,7 +4209,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!asSingleCell:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Asserts and casts Google Sheet's `Cell` object as a single cell.\n *\n * @param cell - Google Sheet's `Cell` object.\n *\n * @returns The cell object as a `SingleCell`.\n *\n * @thModule gapi.sheets\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -4250,245 +4250,6 @@
             }
           ],
           "name": "asSingleCell"
-        },
-        {
-          "kind": "Class",
-          "canonicalReference": "gs-tools!BaseDisposable:class",
-          "docComment": "/**\n * Base class of all disposable objects.\n */\n",
-          "excerptTokens": [
-            {
-              "kind": "Content",
-              "text": "export declare class BaseDisposable implements "
-            },
-            {
-              "kind": "Reference",
-              "text": "Disposable",
-              "canonicalReference": "gs-tools!Disposable:interface"
-            },
-            {
-              "kind": "Content",
-              "text": " "
-            }
-          ],
-          "releaseTag": "Public",
-          "name": "BaseDisposable",
-          "members": [
-            {
-              "kind": "Constructor",
-              "canonicalReference": "gs-tools!BaseDisposable:constructor(1)",
-              "docComment": "/**\n * Constructs a new instance of the `BaseDisposable` class\n */\n",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "constructor();"
-                }
-              ],
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": []
-            },
-            {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!BaseDisposable#addDisposable:member(1)",
-              "docComment": "/**\n * Adds the given disposable so they are disposed when this object is disposed.\n *\n * @param disposables - Disposable objects to be disposed when this object is disposed.\n */\n",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "addDisposable(...disposables: "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "Disposable",
-                  "canonicalReference": "gs-tools!Disposable:interface"
-                },
-                {
-                  "kind": "Content",
-                  "text": "[]"
-                },
-                {
-                  "kind": "Content",
-                  "text": "): "
-                },
-                {
-                  "kind": "Content",
-                  "text": "void"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
-                "startIndex": 4,
-                "endIndex": 5
-              },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [
-                {
-                  "parameterName": "disposables",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 1,
-                    "endIndex": 3
-                  }
-                }
-              ],
-              "name": "addDisposable"
-            },
-            {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!BaseDisposable#dispose:member(1)",
-              "docComment": "/**\n * Dispose this object.\n */\n",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "dispose(): "
-                },
-                {
-                  "kind": "Content",
-                  "text": "void"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
-                "startIndex": 1,
-                "endIndex": 2
-              },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "dispose"
-            },
-            {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!BaseDisposable#disposeInternal:member(1)",
-              "docComment": "/**\n * Override this method for custom logic that are ran during disposal.\n */\n",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "protected disposeInternal(): "
-                },
-                {
-                  "kind": "Content",
-                  "text": "void"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
-                "startIndex": 1,
-                "endIndex": 2
-              },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "disposeInternal"
-            },
-            {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!BaseDisposable#isDisposed:member(1)",
-              "docComment": "",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "isDisposed(): "
-                },
-                {
-                  "kind": "Content",
-                  "text": "boolean"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
-                "startIndex": 1,
-                "endIndex": 2
-              },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "isDisposed"
-            },
-            {
-              "kind": "Property",
-              "canonicalReference": "gs-tools!BaseDisposable#isDisposed$:member",
-              "docComment": "",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "readonly isDisposed$: "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "BehaviorSubject",
-                  "canonicalReference": "rxjs!BehaviorSubject:class"
-                },
-                {
-                  "kind": "Content",
-                  "text": "<boolean>"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "releaseTag": "Public",
-              "name": "isDisposed$",
-              "propertyTypeTokenRange": {
-                "startIndex": 1,
-                "endIndex": 3
-              },
-              "isStatic": false
-            },
-            {
-              "kind": "Property",
-              "canonicalReference": "gs-tools!BaseDisposable#onDispose$:member",
-              "docComment": "",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "protected get onDispose$(): "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "Observable",
-                  "canonicalReference": "rxjs!Observable:class"
-                },
-                {
-                  "kind": "Content",
-                  "text": "<{}>"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "releaseTag": "Public",
-              "name": "onDispose$",
-              "propertyTypeTokenRange": {
-                "startIndex": 1,
-                "endIndex": 3
-              },
-              "isStatic": false
-            }
-          ],
-          "implementsTokenRanges": [
-            {
-              "startIndex": 1,
-              "endIndex": 3
-            }
-          ]
         },
         {
           "kind": "Function",
@@ -5038,7 +4799,7 @@
         {
           "kind": "TypeAlias",
           "canonicalReference": "gs-tools!Cell:type",
-          "docComment": "",
+          "docComment": "/**\n * A cell in the table.\n *\n * @thModule gapi.sheets\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -5910,72 +5671,6 @@
           "name": "convertForward"
         },
         {
-          "kind": "Interface",
-          "canonicalReference": "gs-tools!Coordinate:interface",
-          "docComment": "",
-          "excerptTokens": [
-            {
-              "kind": "Content",
-              "text": "export interface Coordinate "
-            }
-          ],
-          "releaseTag": "Public",
-          "name": "Coordinate",
-          "members": [
-            {
-              "kind": "PropertySignature",
-              "canonicalReference": "gs-tools!Coordinate#column:member",
-              "docComment": "",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "readonly column: "
-                },
-                {
-                  "kind": "Content",
-                  "text": "number"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "releaseTag": "Public",
-              "name": "column",
-              "propertyTypeTokenRange": {
-                "startIndex": 1,
-                "endIndex": 2
-              }
-            },
-            {
-              "kind": "PropertySignature",
-              "canonicalReference": "gs-tools!Coordinate#row:member",
-              "docComment": "",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "readonly row: "
-                },
-                {
-                  "kind": "Content",
-                  "text": "number"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "releaseTag": "Public",
-              "name": "row",
-              "propertyTypeTokenRange": {
-                "startIndex": 1,
-                "endIndex": 2
-              }
-            }
-          ],
-          "extendsTokenRanges": []
-        },
-        {
           "kind": "Function",
           "canonicalReference": "gs-tools!countableIterable:function(1)",
           "docComment": "/**\n * Creates an infinite {@link Iterable} containing countable numbers (0, 1, 2, ...).\n *\n * @returns Infinite `Iterable` containing countable numbers.  @thModule collect.structures\n */\n",
@@ -6010,7 +5705,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!createSheetsTable:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Extracts a section of Google Sheets table as a `SheetsTable`.\n *\n * @remarks\n *\n * A `SheetsTable` is a simple representation of Google Sheets table. This table is a 2D array of `SheetsCell`. Cells that are merged have the same instance in different slots in the array.\n *\n * @param raw - Raw data from Google Sheet.\n *\n * @param fromRow - Start row index.\n *\n * @param toRow - End row index, exclusive.\n *\n * @param fromColumn - Start column index.\n *\n * @param toColumn - End column index, exclusive.\n *\n * @returns Simpler representation of Google Sheets table.\n *\n * @thModule gapi.sheets\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -6176,7 +5871,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!defineTable:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Given a `SheetsTable`, return a data table.\n *\n * @remarks\n *\n * A `SheetsTable` may contain merged row and column headers. This function tries to determine rows and columns using the merged headers.\n *\n * This means that the intersection of a merged row and a merged column will produce a cell that contains a sub table.\n *\n * This function is useful for interpreting sheets data easily, as it allows you to search by known rows and columns and pay attention to merged headings.\n *\n * @param sheetsTable - Simple representation of Google Sheets table.\n *\n * @returns The interpreted table.\n *\n * @thModule gapi.sheets\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -6494,254 +6189,6 @@
             }
           ],
           "name": "diffSet"
-        },
-        {
-          "kind": "Interface",
-          "canonicalReference": "gs-tools!Disposable:interface",
-          "docComment": "",
-          "excerptTokens": [
-            {
-              "kind": "Content",
-              "text": "export interface Disposable "
-            }
-          ],
-          "releaseTag": "Public",
-          "name": "Disposable",
-          "members": [
-            {
-              "kind": "MethodSignature",
-              "canonicalReference": "gs-tools!Disposable#dispose:member(1)",
-              "docComment": "/**\n * Dispose this object.\n */\n",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "dispose(): "
-                },
-                {
-                  "kind": "Content",
-                  "text": "void"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "returnTypeTokenRange": {
-                "startIndex": 1,
-                "endIndex": 2
-              },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "dispose"
-            },
-            {
-              "kind": "MethodSignature",
-              "canonicalReference": "gs-tools!Disposable#isDisposed:member(1)",
-              "docComment": "/**\n * @return True iff the object has been disposed.\n */\n",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "isDisposed(): "
-                },
-                {
-                  "kind": "Content",
-                  "text": "boolean"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "returnTypeTokenRange": {
-                "startIndex": 1,
-                "endIndex": 2
-              },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "isDisposed"
-            }
-          ],
-          "extendsTokenRanges": []
-        },
-        {
-          "kind": "Class",
-          "canonicalReference": "gs-tools!DisposableFunction:class",
-          "docComment": "/**\n * Wrapper around a function that executes the function when this object is disposed.\n */\n",
-          "excerptTokens": [
-            {
-              "kind": "Content",
-              "text": "export declare class DisposableFunction extends "
-            },
-            {
-              "kind": "Reference",
-              "text": "BaseDisposable",
-              "canonicalReference": "gs-tools!BaseDisposable:class"
-            },
-            {
-              "kind": "Content",
-              "text": " "
-            },
-            {
-              "kind": "Content",
-              "text": "implements "
-            },
-            {
-              "kind": "Reference",
-              "text": "IDisposableFunction",
-              "canonicalReference": "gs-tools!DisposableFunction:interface"
-            },
-            {
-              "kind": "Content",
-              "text": " "
-            }
-          ],
-          "releaseTag": "Public",
-          "name": "DisposableFunction",
-          "members": [
-            {
-              "kind": "Constructor",
-              "canonicalReference": "gs-tools!DisposableFunction:constructor(1)",
-              "docComment": "/**\n * Constructs a new instance of the `DisposableFunction` class\n *\n * @param fn - Function to execute when this object is disposed.\n */\n",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "constructor(fn_: "
-                },
-                {
-                  "kind": "Content",
-                  "text": "() => void"
-                },
-                {
-                  "kind": "Content",
-                  "text": ");"
-                }
-              ],
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [
-                {
-                  "parameterName": "fn_",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 1,
-                    "endIndex": 2
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!DisposableFunction#disposeInternal:member(1)",
-              "docComment": "",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "disposeInternal(): "
-                },
-                {
-                  "kind": "Content",
-                  "text": "void"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
-                "startIndex": 1,
-                "endIndex": 2
-              },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "disposeInternal"
-            },
-            {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!DisposableFunction.of:member(1)",
-              "docComment": "",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "static of(fn: "
-                },
-                {
-                  "kind": "Content",
-                  "text": "() => void"
-                },
-                {
-                  "kind": "Content",
-                  "text": "): "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "DisposableFunction",
-                  "canonicalReference": "gs-tools!DisposableFunction:class"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isStatic": true,
-              "returnTypeTokenRange": {
-                "startIndex": 3,
-                "endIndex": 4
-              },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [
-                {
-                  "parameterName": "fn",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 1,
-                    "endIndex": 2
-                  }
-                }
-              ],
-              "name": "of"
-            },
-            {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!DisposableFunction#run:member(1)",
-              "docComment": "/**\n * Runs the inner function.\n */\n",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "run(): "
-                },
-                {
-                  "kind": "Content",
-                  "text": "void"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
-                "startIndex": 1,
-                "endIndex": 2
-              },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [],
-              "name": "run"
-            }
-          ],
-          "extendsTokenRange": {
-            "startIndex": 1,
-            "endIndex": 3
-          },
-          "implementsTokenRanges": [
-            {
-              "startIndex": 4,
-              "endIndex": 6
-            }
-          ]
         },
         {
           "kind": "Interface",
@@ -7164,36 +6611,6 @@
               "endIndex": 3
             }
           ]
-        },
-        {
-          "kind": "Variable",
-          "canonicalReference": "gs-tools!Errors:var",
-          "docComment": "",
-          "excerptTokens": [
-            {
-              "kind": "Content",
-              "text": "Errors: "
-            },
-            {
-              "kind": "Content",
-              "text": "{\n    assert(fieldName: string): "
-            },
-            {
-              "kind": "Reference",
-              "text": "AssertionBuilder",
-              "canonicalReference": "gs-tools!AssertionBuilder:class"
-            },
-            {
-              "kind": "Content",
-              "text": ";\n}"
-            }
-          ],
-          "releaseTag": "Public",
-          "name": "Errors",
-          "variableTypeTokenRange": {
-            "startIndex": 1,
-            "endIndex": 4
-          }
         },
         {
           "kind": "Interface",
@@ -8039,170 +7456,6 @@
             }
           ],
           "name": "getAllValues"
-        },
-        {
-          "kind": "Function",
-          "canonicalReference": "gs-tools!getCellContent:function(1)",
-          "docComment": "",
-          "excerptTokens": [
-            {
-              "kind": "Content",
-              "text": "export declare function getCellContent(coordinate: "
-            },
-            {
-              "kind": "Reference",
-              "text": "Coordinate",
-              "canonicalReference": "gs-tools!Coordinate:interface"
-            },
-            {
-              "kind": "Content",
-              "text": ", sheetData: "
-            },
-            {
-              "kind": "Reference",
-              "text": "GridData",
-              "canonicalReference": "gs-tools!GridData:interface"
-            },
-            {
-              "kind": "Content",
-              "text": "): "
-            },
-            {
-              "kind": "Reference",
-              "text": "ExtendedValue",
-              "canonicalReference": "gs-tools!ExtendedValue:interface"
-            },
-            {
-              "kind": "Content",
-              "text": " | null"
-            },
-            {
-              "kind": "Content",
-              "text": ";"
-            }
-          ],
-          "returnTypeTokenRange": {
-            "startIndex": 5,
-            "endIndex": 7
-          },
-          "releaseTag": "Public",
-          "overloadIndex": 1,
-          "parameters": [
-            {
-              "parameterName": "coordinate",
-              "parameterTypeTokenRange": {
-                "startIndex": 1,
-                "endIndex": 2
-              }
-            },
-            {
-              "parameterName": "sheetData",
-              "parameterTypeTokenRange": {
-                "startIndex": 3,
-                "endIndex": 4
-              }
-            }
-          ],
-          "name": "getCellContent"
-        },
-        {
-          "kind": "Function",
-          "canonicalReference": "gs-tools!getCellContentByRange:function(1)",
-          "docComment": "/**\n * Given the range, return the values of the cells in the range.\n */\n",
-          "excerptTokens": [
-            {
-              "kind": "Content",
-              "text": "export declare function getCellContentByRange(start: "
-            },
-            {
-              "kind": "Reference",
-              "text": "Coordinate",
-              "canonicalReference": "gs-tools!Coordinate:interface"
-            },
-            {
-              "kind": "Content",
-              "text": ", end: "
-            },
-            {
-              "kind": "Reference",
-              "text": "Coordinate",
-              "canonicalReference": "gs-tools!Coordinate:interface"
-            },
-            {
-              "kind": "Content",
-              "text": ", sheetData: "
-            },
-            {
-              "kind": "Reference",
-              "text": "GridData",
-              "canonicalReference": "gs-tools!GridData:interface"
-            },
-            {
-              "kind": "Content",
-              "text": "): "
-            },
-            {
-              "kind": "Reference",
-              "text": "ReadonlyArray",
-              "canonicalReference": "!ReadonlyArray:interface"
-            },
-            {
-              "kind": "Content",
-              "text": "<"
-            },
-            {
-              "kind": "Reference",
-              "text": "ReadonlyArray",
-              "canonicalReference": "!ReadonlyArray:interface"
-            },
-            {
-              "kind": "Content",
-              "text": "<"
-            },
-            {
-              "kind": "Reference",
-              "text": "ExtendedValue",
-              "canonicalReference": "gs-tools!ExtendedValue:interface"
-            },
-            {
-              "kind": "Content",
-              "text": " | undefined>>"
-            },
-            {
-              "kind": "Content",
-              "text": ";"
-            }
-          ],
-          "returnTypeTokenRange": {
-            "startIndex": 7,
-            "endIndex": 13
-          },
-          "releaseTag": "Public",
-          "overloadIndex": 1,
-          "parameters": [
-            {
-              "parameterName": "start",
-              "parameterTypeTokenRange": {
-                "startIndex": 1,
-                "endIndex": 2
-              }
-            },
-            {
-              "parameterName": "end",
-              "parameterTypeTokenRange": {
-                "startIndex": 3,
-                "endIndex": 4
-              }
-            },
-            {
-              "parameterName": "sheetData",
-              "parameterTypeTokenRange": {
-                "startIndex": 5,
-                "endIndex": 6
-              }
-            }
-          ],
-          "name": "getCellContentByRange"
         },
         {
           "kind": "Function",
@@ -9560,6 +8813,72 @@
           "name": "isOneOf"
         },
         {
+          "kind": "Interface",
+          "canonicalReference": "gs-tools!Library:interface",
+          "docComment": "/**\n * Represents Google API library.\n *\n * @thHidden  @thModule gapi\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export interface Library "
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Library",
+          "members": [
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "gs-tools!Library#discoveryDoc:member",
+              "docComment": "/**\n * Discovery doc string.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "readonly discoveryDoc: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "releaseTag": "Public",
+              "name": "discoveryDoc",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "gs-tools!Library#scopes:member",
+              "docComment": "/**\n * Scopes to be used for accessing the library.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "readonly scopes: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "readonly string[]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "releaseTag": "Public",
+              "name": "scopes",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "extendsTokenRanges": []
+        },
+        {
           "kind": "Function",
           "canonicalReference": "gs-tools!listConverter:function(1)",
           "docComment": "",
@@ -10613,7 +9932,7 @@
         {
           "kind": "Interface",
           "canonicalReference": "gs-tools!Merge:interface",
-          "docComment": "",
+          "docComment": "/**\n * Merge data in Google Sheets.\n *\n * @thModule gapi.sheets\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -10805,7 +10124,7 @@
         {
           "kind": "Interface",
           "canonicalReference": "gs-tools!MultiCell:interface",
-          "docComment": "",
+          "docComment": "/**\n * Cell that contains multiple cells in the sheet.\n *\n * @remarks\n *\n * If the cell has a merged row header, or a merged column header, the cell will be a multicell.\n *\n * @thModule gapi.sheets\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -10818,7 +10137,7 @@
             {
               "kind": "PropertySignature",
               "canonicalReference": "gs-tools!MultiCell#isSingle:member",
-              "docComment": "",
+              "docComment": "/**\n * The cell has multiple subcells.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -10843,7 +10162,7 @@
             {
               "kind": "PropertySignature",
               "canonicalReference": "gs-tools!MultiCell#value:member",
-              "docComment": "",
+              "docComment": "/**\n * Subtable in the cell.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -13758,7 +13077,7 @@
         {
           "kind": "Interface",
           "canonicalReference": "gs-tools!RawSheet:interface",
-          "docComment": "",
+          "docComment": "/**\n * A raw Google Sheets table.\n *\n * @thModule gapi.sheets\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -15413,6 +14732,196 @@
           "implementsTokenRanges": []
         },
         {
+          "kind": "Interface",
+          "canonicalReference": "gs-tools!SheetsCell:interface",
+          "docComment": "/**\n * Cell in Google Sheets.\n *\n * @thHidden  @thModule gapi.sheets\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export interface SheetsCell "
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "SheetsCell",
+          "members": [
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "gs-tools!SheetsCell#fromColumn:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "readonly fromColumn: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "releaseTag": "Public",
+              "name": "fromColumn",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "gs-tools!SheetsCell#fromRow:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "readonly fromRow: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "releaseTag": "Public",
+              "name": "fromRow",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "gs-tools!SheetsCell#toColumn:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "readonly toColumn: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "releaseTag": "Public",
+              "name": "toColumn",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "gs-tools!SheetsCell#toRow:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "readonly toRow: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "releaseTag": "Public",
+              "name": "toRow",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "gs-tools!SheetsCell#value:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "readonly value: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ExtendedValue",
+                  "canonicalReference": "gs-tools!ExtendedValue:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "releaseTag": "Public",
+              "name": "value",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "extendsTokenRanges": []
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "gs-tools!SheetsTable:type",
+          "docComment": "/**\n * Simpler representation of Google Sheets table.\n *\n * @thHidden  @thModule gapi.sheets\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare type SheetsTable = "
+            },
+            {
+              "kind": "Reference",
+              "text": "ReadonlyArray",
+              "canonicalReference": "!ReadonlyArray:interface"
+            },
+            {
+              "kind": "Content",
+              "text": "<"
+            },
+            {
+              "kind": "Reference",
+              "text": "ReadonlyArray",
+              "canonicalReference": "!ReadonlyArray:interface"
+            },
+            {
+              "kind": "Content",
+              "text": "<"
+            },
+            {
+              "kind": "Reference",
+              "text": "SheetsCell",
+              "canonicalReference": "gs-tools!SheetsCell:interface"
+            },
+            {
+              "kind": "Content",
+              "text": ">>"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "SheetsTable",
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 7
+          }
+        },
+        {
           "kind": "Function",
           "canonicalReference": "gs-tools!shuffle:function(1)",
           "docComment": "",
@@ -15647,7 +15156,7 @@
         {
           "kind": "Interface",
           "canonicalReference": "gs-tools!SingleCell:interface",
-          "docComment": "",
+          "docComment": "/**\n * Cell that contains a single cell in the sheet.\n *\n * @remarks\n *\n * If the cell has unmerged row header and column header, the cell will be a single cell.\n *\n * @thModule gapi.sheets\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -15660,7 +15169,7 @@
             {
               "kind": "PropertySignature",
               "canonicalReference": "gs-tools!SingleCell#isSingle:member",
-              "docComment": "",
+              "docComment": "/**\n * The cell does not have multiple subcells.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -15685,7 +15194,7 @@
             {
               "kind": "PropertySignature",
               "canonicalReference": "gs-tools!SingleCell#value:member",
-              "docComment": "",
+              "docComment": "/**\n * Value inside the cell.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
