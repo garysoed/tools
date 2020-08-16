@@ -144,3 +144,4 @@ export { Operator } from '../src/collect/operators/operator';
 export { Library } from '../src/gapi/builder';
 export { SheetsTable, SheetsCell } from '../src/gapi/sheets-table';
 export { AbsolutePathParser } from '../src/path/absolute-path-parser';
+export { BaseIdGenerator } from '../src/random/base-id-generator';

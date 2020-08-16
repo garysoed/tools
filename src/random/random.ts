@@ -2,6 +2,12 @@ import { RandomSeed } from './seed/random-seed';
 
 type Getter<R, A, B> = (values: {random: R; rng: Random<undefined>; value: A}) => Random<B>;
 
+/**
+ * Generates random values.
+ *
+ * @typeParam T - Type of generated values.
+ * @thModule random
+ */
 export class Random<T> {
   constructor(
       readonly value: T,
