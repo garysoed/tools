@@ -61,7 +61,7 @@ export { cache } from '../src/data/cache';
 
 // gapi
 export { ExtendedValue, CellData, GridData, GridRange, RowData } from '../src/gapi/type/sheets';
-export { createSheetsTable, Merge, RawSheet } from '../src/gapi/sheets-table';
+export { createSheetsTable, Merge, RawSheet, SheetsTable } from '../src/gapi/sheets-table';
 export { asSingleCell, asMultiCell, defineTable, Cell, SingleCell, MultiCell } from '../src/gapi/define-table';
 
 // path
@@ -131,10 +131,10 @@ export { Cases } from '../src/string/cases';
 // typescript
 export { assertUnreachable } from '../src/typescript/assert-unreachable';
 export { fromLowerCaseString, fromNumberString, getAllValues, toLowerCaseString } from '../src/typescript/enums';
+export { asTuple } from '../src/typescript/as-tuple';
 
 // util
 export { diff } from '../src/util/diff';
-
 
 // Type only exports.
 export { CompareResult } from '../src/collect/compare/compare-result';
@@ -142,6 +142,6 @@ export { FiniteIterable } from '../src/collect/operators/finite-iterable';
 export { HasSize } from '../src/collect/operators/size';
 export { Operator } from '../src/collect/operators/operator';
 export { Library } from '../src/gapi/builder';
-export { SheetsTable, SheetsCell } from '../src/gapi/sheets-table';
+export { SheetsCell } from '../src/gapi/sheets-table';
 export { AbsolutePathParser } from '../src/path/absolute-path-parser';
 export { BaseIdGenerator } from '../src/random/base-id-generator';

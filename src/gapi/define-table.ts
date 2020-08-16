@@ -69,7 +69,7 @@ export interface Table {
   readonly rows: readonly Cell[];
 
   /**
-   * Content of the table, sans headers.
+   * Content of the table, sans headers. The first index is row, then column.
    */
   readonly data: ReadonlyArray<readonly Cell[]>;
 }
