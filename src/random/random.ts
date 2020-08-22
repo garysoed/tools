@@ -14,7 +14,11 @@ export class Random<T> {
       private readonly seed: RandomSeed,
   ) { }
 
-  get<T2>(getter: (arg: {rng: Random<undefined>; value: T}) => Random<T2>): Random<T2> {
+  get<T2>(getter: (arg: {rng: Random<undefined>; value: T}) => Random<T2>): Random<T2>;
+  get<T2>(
+      getter: (arg: {rng: Random<undefined>; value: T}) => Promise<Random<T2>>,
+  ): Promise<Random<T2>>;
+  get<R>(getter: (arg: {rng: Random<undefined>; value: T}) => R): R {
     return getter({value: this.value, rng: fromSeed(this.seed)});
   }
 

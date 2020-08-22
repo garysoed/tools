@@ -28,12 +28,10 @@ class TestColor extends Color {
   }
 }
 
-test('color.Color', () => {
-  test('@tools/color/color', () => {
-    should('return the correct value of luminance', () => {
-      const color = new TestColor(126, 126, 184);
+test('@tools/color/color', () => {
+  should('return the correct value of luminance', () => {
+    const color = new TestColor(126, 126, 184);
 
-      assert(color.luminance).to.beCloseTo(0.23, 2);
-    });
+    assert(color.luminance).to.beCloseTo(0.23, 2);
   });
 });

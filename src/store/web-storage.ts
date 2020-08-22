@@ -1,17 +1,17 @@
 import { binary, compose, Converter, identity, Serializable, strict, StrictConverter } from 'nabu';
-import { concat, Observable, of as observableOf } from 'rxjs';
-import { map, pairwise, shareReplay, startWith, switchMap, take, tap } from 'rxjs/operators';
+import { concat, Observable } from 'rxjs';
+import { map, shareReplay, switchMap, take } from 'rxjs/operators';
 
 import { cache } from '../data/cache';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { SimpleIdGenerator } from '../random/simple-id-generator';
 import { mapNonNull } from '../rxjs/map-non-null';
-import { ArrayDiff } from '../rxjs/state/array-observable';
-import { diff } from '../rxjs/state/diff-array';
+import { ArrayDiff, diffArray } from '../rxjs/state/array-diff';
 import { WebStorageObservable } from '../rxjs/web-storage-observable';
 import { listConverter } from '../serializer/list-converter';
 
 import { EditableStorage } from './editable-storage';
+
 
 export const INDEXES_PARSER = listConverter<string>(identity<string>());
 
@@ -85,18 +85,7 @@ export class WebStorage<T> implements EditableStorage<T> {
   }
 
   listIds(): Observable<ArrayDiff<string>> {
-    return this.listIdsAsArray().pipe(
-        startWith(null),
-        pairwise(),
-        switchMap(([oldArray, rawNewArray]) => {
-          const newArray = rawNewArray || [];
-          if (oldArray === null) {
-            return observableOf<ArrayDiff<string>>({value: [...newArray], type: 'init'});
-          }
-
-          return observableOf(...diff(oldArray, newArray));
-        }),
-    );
+    return this.listIdsAsArray().pipe(diffArray());
   }
 
   read(id: string): Observable<T|null> {

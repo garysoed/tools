@@ -2,8 +2,7 @@ import { BehaviorSubject, defer, Observable, of as observableOf } from 'rxjs';
 import { map, shareReplay, tap } from 'rxjs/operators';
 
 import { BaseIdGenerator } from '../random/base-id-generator';
-import { ArrayDiff } from '../rxjs/state/array-observable';
-import { diffArray } from '../rxjs/state/diff-array';
+import { ArrayDiff, diffArray } from '../rxjs/state/array-diff';
 
 import { EditableStorage } from './editable-storage';
 

@@ -1,13 +1,12 @@
 import { arrayThat, assert, createSpySubject, run, should, teardown, test } from 'gs-testing';
 import { binary, compose, identity, strict } from 'nabu';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { scan, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
-import { ArrayDiff } from '../rxjs/state/array-observable';
-import { applyDiff } from '../rxjs/state/diff-array';
+import { scanArray } from '../rxjs/state/array-diff';
 import { integerConverter } from '../serializer/integer-converter';
 
 import { INDEXES_PARSER, WebStorage } from './web-storage';
+
 
 function setStorage(storage: Storage, key: string, value: string): void {
   storage.setItem(key, value);
@@ -44,15 +43,7 @@ test('store.WebStorage', init => {
       setStorage(localStorage, path, ITEM_BINARY_CONVERTER.convertForward(123));
 
       const listIds$ = _.storage.listIds()
-          .pipe(
-              scan<ArrayDiff<string>, string[]>(
-                  (acc, value) => {
-                    applyDiff(acc, value);
-
-                    return acc;
-                  },
-                  []),
-          );
+          .pipe(scanArray());
       const idsSubject = createSpySubject(listIds$);
       const itemSubject = createSpySubject(_.storage.read(id));
 
@@ -96,17 +87,7 @@ test('store.WebStorage', init => {
       const id2 = 'id2';
       const id3 = 'id3';
 
-      const listIds$ = _.storage.listIds()
-          .pipe(
-              scan<ArrayDiff<string>, string[]>(
-                  (acc, value) => {
-                    applyDiff(acc, value);
-
-                    return acc;
-                  },
-                  [],
-              ),
-          );
+      const listIds$ = _.storage.listIds().pipe(scanArray());
       const idsSubject = createSpySubject(listIds$);
 
       setStorage(
@@ -149,17 +130,7 @@ test('store.WebStorage', init => {
           INDEXES_BINARY_CONVERTER.convertForward(['oldId']),
       );
 
-      const listIds$ = _.storage.listIds()
-          .pipe(
-              scan<ArrayDiff<string>, string[]>(
-                  (acc, value) => {
-                    applyDiff(acc, value);
-
-                    return acc;
-                  },
-                  [],
-              ),
-          );
+      const listIds$ = _.storage.listIds().pipe(scanArray());
       const idsSubject = createSpySubject(listIds$);
 
       const itemSubject = createSpySubject(_.storage.read(id));

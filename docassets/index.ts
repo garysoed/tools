@@ -101,13 +101,9 @@ export { mapNonNull } from '../src/rxjs/map-non-null';
 export { switchMapNonNull } from '../src/rxjs/switch-map-non-null';
 export { usingResource } from '../src/rxjs/using-resource';
 
-export { mapArrayDiff, scanArray, ArrayDiff } from '../src/rxjs/state/array-observable';
-export { diffArray } from '../src/rxjs/state/diff-array';
-export { diffMap } from '../src/rxjs/state/diff-map';
-export { diffSet } from '../src/rxjs/state/diff-set';
-export { scanMap, MapSet, MapInit, MapDelete, MapDiff } from '../src/rxjs/state/map-observable';
-export { scanSet, SetAdd, SetInit, SetDelete, SetDiff } from '../src/rxjs/state/set-observable';
-export { SetSubject } from '../src/rxjs/state/set-subject';
+export { mapArrayDiff, scanArray, ArrayDiff, diffArray } from '../src/rxjs/state/array-diff';
+export { scanMap, MapSet, MapInit, MapDelete, MapDiff, diffMap } from '../src/rxjs/state/map-diff';
+export { scanSet, SetAdd, SetInit, SetDelete, SetDiff, diffSet } from '../src/rxjs/state/set-diff';
 
 export { Runnable } from '../src/rxjs/runnable';
 
