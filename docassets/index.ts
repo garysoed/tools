@@ -10,6 +10,7 @@ export { $pipe } from '../src/collect/operators/pipe';
 export { asArray as $asArray } from '../src/collect/operators/as-array';
 export { asOrderedMap as $asOrderedMap } from '../src/collect/operators/as-ordered-map';
 export { asMap as $asMap } from '../src/collect/operators/as-map';
+export { asRecord as $asRecord } from '../src/collect/operators/as-record';
 export { asSet as $asSet } from '../src/collect/operators/as-set';
 export { diff as $diff } from '../src/collect/operators/diff';
 export { every as $every } from '../src/collect/operators/every';
@@ -89,8 +90,8 @@ export { FakeSeed } from '../src/random/testing/fake-seed';
 
 // rxjs
 export { assertByType } from '../src/rxjs/assert-by-type';
+export { assertDefined } from '../src/rxjs/assert-defined';
 export { assertNonNull } from '../src/rxjs/assert-non-null';
-export { branch } from '../src/rxjs/branch';
 export { convertBackward } from '../src/rxjs/convert-backward';
 export { convertForward } from '../src/rxjs/convert-forward';
 export { debug } from '../src/rxjs/debug';
