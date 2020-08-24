@@ -219,6 +219,69 @@
         },
         {
           "kind": "Function",
+          "canonicalReference": "gs-tools!$asRecord:function(1)",
+          "docComment": "/**\n * Converts the {@link Iterable} to a record.\n *\n * @typeParam V - Type of values in the record.\n *\n * @returns `Operator` to convert `Iterable`s to maps.  @thModule collect.operators\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function asRecord<V>(): "
+            },
+            {
+              "kind": "Reference",
+              "text": "Operator",
+              "canonicalReference": "gs-tools!Operator:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<"
+            },
+            {
+              "kind": "Reference",
+              "text": "Iterable",
+              "canonicalReference": "!Iterable:interface"
+            },
+            {
+              "kind": "Content",
+              "text": "<[string, V]>, "
+            },
+            {
+              "kind": "Reference",
+              "text": "Record",
+              "canonicalReference": "!Record:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<string, V>>"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 7
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [],
+          "typeParameters": [
+            {
+              "typeParameterName": "V",
+              "constraintTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              },
+              "defaultTypeTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              }
+            }
+          ],
+          "name": "$asRecord"
+        },
+        {
+          "kind": "Function",
           "canonicalReference": "gs-tools!$asSet:function(1)",
           "docComment": "/**\n * Converts the {@link Iterable} to a {@link Set}.\n *\n * @typeParam T - Type of items in the set.\n *\n * @returns `Operator` to convert `Iterable`s to sets.  @thModule collect.operators\n */\n",
           "excerptTokens": [
@@ -3949,7 +4012,7 @@
         {
           "kind": "TypeAlias",
           "canonicalReference": "gs-tools!ArrayDiff:type",
-          "docComment": "",
+          "docComment": "/**\n * Differences between arrays.\n *\n * @typeParam T - Type of the array element.  @thHidden\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -4371,6 +4434,89 @@
         },
         {
           "kind": "Function",
+          "canonicalReference": "gs-tools!assertDefined:function(1)",
+          "docComment": "",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function assertDefined<T>(msg?: "
+            },
+            {
+              "kind": "Content",
+              "text": "string"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Content",
+              "text": "(source: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Observable",
+              "canonicalReference": "rxjs!Observable:class"
+            },
+            {
+              "kind": "Content",
+              "text": "<T>) => "
+            },
+            {
+              "kind": "Reference",
+              "text": "Observable",
+              "canonicalReference": "rxjs!Observable:class"
+            },
+            {
+              "kind": "Content",
+              "text": "<"
+            },
+            {
+              "kind": "Reference",
+              "text": "Exclude",
+              "canonicalReference": "!Exclude:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T, undefined>>"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 3,
+            "endIndex": 10
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "msg",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "typeParameters": [
+            {
+              "typeParameterName": "T",
+              "constraintTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              },
+              "defaultTypeTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              }
+            }
+          ],
+          "name": "assertDefined"
+        },
+        {
+          "kind": "Function",
           "canonicalReference": "gs-tools!assertNonNull:function(1)",
           "docComment": "",
           "excerptTokens": [
@@ -4542,72 +4688,24 @@
         },
         {
           "kind": "Function",
-          "canonicalReference": "gs-tools!branch:function(1)",
-          "docComment": "",
+          "canonicalReference": "gs-tools!asTuple:function(1)",
+          "docComment": "/**\n * Declares the given array as a tuple.\n *\n * @param v - Tuple to typecast.\n *\n * @returns The input tuple.  @thModule typescript\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "export declare function branch<V, P extends "
+              "text": "export declare function asTuple(tuple: "
             },
             {
               "kind": "Content",
-              "text": "V"
-            },
-            {
-              "kind": "Content",
-              "text": ", U>(conditionFn: "
-            },
-            {
-              "kind": "Content",
-              "text": "(value: V) => "
-            },
-            {
-              "kind": "Reference",
-              "text": "value",
-              "canonicalReference": "gs-tools!~value"
-            },
-            {
-              "kind": "Content",
-              "text": " is P"
-            },
-            {
-              "kind": "Content",
-              "text": ", passOperator: "
-            },
-            {
-              "kind": "Reference",
-              "text": "Operator",
-              "canonicalReference": "gs-tools!~Operator:type"
-            },
-            {
-              "kind": "Content",
-              "text": "<P, U>"
-            },
-            {
-              "kind": "Content",
-              "text": ", failOperator: "
-            },
-            {
-              "kind": "Reference",
-              "text": "Operator",
-              "canonicalReference": "gs-tools!~Operator:type"
-            },
-            {
-              "kind": "Content",
-              "text": "<V, U>"
+              "text": "[]"
             },
             {
               "kind": "Content",
               "text": "): "
             },
             {
-              "kind": "Reference",
-              "text": "Operator",
-              "canonicalReference": "gs-tools!~Operator:type"
-            },
-            {
               "kind": "Content",
-              "text": "<V, U>"
+              "text": "[]"
             },
             {
               "kind": "Content",
@@ -4615,122 +4713,42 @@
             }
           ],
           "returnTypeTokenRange": {
-            "startIndex": 13,
-            "endIndex": 15
+            "startIndex": 3,
+            "endIndex": 4
           },
           "releaseTag": "Public",
           "overloadIndex": 1,
           "parameters": [
             {
-              "parameterName": "conditionFn",
+              "parameterName": "tuple",
               "parameterTypeTokenRange": {
-                "startIndex": 3,
-                "endIndex": 6
-              }
-            },
-            {
-              "parameterName": "passOperator",
-              "parameterTypeTokenRange": {
-                "startIndex": 7,
-                "endIndex": 9
-              }
-            },
-            {
-              "parameterName": "failOperator",
-              "parameterTypeTokenRange": {
-                "startIndex": 10,
-                "endIndex": 12
-              }
-            }
-          ],
-          "typeParameters": [
-            {
-              "typeParameterName": "V",
-              "constraintTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
-              },
-              "defaultTypeTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
-              }
-            },
-            {
-              "typeParameterName": "P",
-              "constraintTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
-              },
-              "defaultTypeTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
-              }
-            },
-            {
-              "typeParameterName": "U",
-              "constraintTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
-              },
-              "defaultTypeTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
               }
             }
           ],
-          "name": "branch"
+          "name": "asTuple"
         },
         {
           "kind": "Function",
-          "canonicalReference": "gs-tools!branch:function(2)",
+          "canonicalReference": "gs-tools!asTuple:function(2)",
           "docComment": "",
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "export declare function branch<V, U>(conditionFn: "
+              "text": "export declare function asTuple<T0>(tuple: "
             },
             {
               "kind": "Content",
-              "text": "(value: V) => boolean"
-            },
-            {
-              "kind": "Content",
-              "text": ", passOperator: "
-            },
-            {
-              "kind": "Reference",
-              "text": "Operator",
-              "canonicalReference": "gs-tools!~Operator:type"
-            },
-            {
-              "kind": "Content",
-              "text": "<V, U>"
-            },
-            {
-              "kind": "Content",
-              "text": ", failOperator: "
-            },
-            {
-              "kind": "Reference",
-              "text": "Operator",
-              "canonicalReference": "gs-tools!~Operator:type"
-            },
-            {
-              "kind": "Content",
-              "text": "<V, U>"
+              "text": "[T0]"
             },
             {
               "kind": "Content",
               "text": "): "
             },
             {
-              "kind": "Reference",
-              "text": "Operator",
-              "canonicalReference": "gs-tools!~Operator:type"
-            },
-            {
               "kind": "Content",
-              "text": "<V, U>"
+              "text": "[T0]"
             },
             {
               "kind": "Content",
@@ -4738,48 +4756,23 @@
             }
           ],
           "returnTypeTokenRange": {
-            "startIndex": 9,
-            "endIndex": 11
+            "startIndex": 3,
+            "endIndex": 4
           },
           "releaseTag": "Public",
           "overloadIndex": 2,
           "parameters": [
             {
-              "parameterName": "conditionFn",
+              "parameterName": "tuple",
               "parameterTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
-              }
-            },
-            {
-              "parameterName": "passOperator",
-              "parameterTypeTokenRange": {
-                "startIndex": 3,
-                "endIndex": 5
-              }
-            },
-            {
-              "parameterName": "failOperator",
-              "parameterTypeTokenRange": {
-                "startIndex": 6,
-                "endIndex": 8
               }
             }
           ],
           "typeParameters": [
             {
-              "typeParameterName": "V",
-              "constraintTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
-              },
-              "defaultTypeTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
-              }
-            },
-            {
-              "typeParameterName": "U",
+              "typeParameterName": "T0",
               "constraintTokenRange": {
                 "startIndex": 0,
                 "endIndex": 0
@@ -4790,7 +4783,211 @@
               }
             }
           ],
-          "name": "branch"
+          "name": "asTuple"
+        },
+        {
+          "kind": "Function",
+          "canonicalReference": "gs-tools!asTuple:function(3)",
+          "docComment": "",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function asTuple<T0, T1>(tuple: "
+            },
+            {
+              "kind": "Content",
+              "text": "[T0, T1]"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Content",
+              "text": "[T0, T1]"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 3,
+            "endIndex": 4
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 3,
+          "parameters": [
+            {
+              "parameterName": "tuple",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "typeParameters": [
+            {
+              "typeParameterName": "T0",
+              "constraintTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              },
+              "defaultTypeTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              }
+            },
+            {
+              "typeParameterName": "T1",
+              "constraintTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              },
+              "defaultTypeTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              }
+            }
+          ],
+          "name": "asTuple"
+        },
+        {
+          "kind": "Class",
+          "canonicalReference": "gs-tools!BaseIdGenerator:class",
+          "docComment": "/**\n * Base class of all ID generators.\n *\n * @thHidden\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare abstract class BaseIdGenerator "
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "BaseIdGenerator",
+          "members": [
+            {
+              "kind": "Method",
+              "canonicalReference": "gs-tools!BaseIdGenerator#generate:member(1)",
+              "docComment": "/**\n * Generates a new ID that is different from any of the given existing IDs.\n *\n * @param existingIds - IDs that already exist.\n *\n * @returns Newly generated ID.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "generate(existingIds: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Iterable",
+                  "canonicalReference": "!Iterable:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<string>"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 4,
+                "endIndex": 5
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "existingIds",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 3
+                  }
+                }
+              ],
+              "name": "generate"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "gs-tools!BaseIdGenerator#newId:member(1)",
+              "docComment": "/**\n * Generates a new ID.\n *\n * @returns The newly generated ID.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "protected abstract newId(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [],
+              "name": "newId"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "gs-tools!BaseIdGenerator#resolveConflict:member(1)",
+              "docComment": "/**\n * Attempts to resolve a conflict for the given ID.\n *\n * @remarks\n *\n * This is a best effort method to come up with another ID based on the knowledge that the given ID already conflicts.\n *\n * @param id - The conflicting ID.\n *\n * @returns Best effort new ID.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "protected abstract resolveConflict(id: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "id",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  }
+                }
+              ],
+              "name": "resolveConflict"
+            }
+          ],
+          "implementsTokenRanges": []
         },
         {
           "kind": "Function",
@@ -6291,7 +6488,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!diffArray:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Emits diffs of the input arrays.\n *\n * @remarks\n *\n * The first emission is always compared to empty array. Note that if the input array emissions change a lot, there can be more output diffs than the input arrays.\n *\n * @typeParam T - Type of the array element.\n *\n * @returns Operator that takes in arrays and emits diffs between subsequent array emissions.\n *\n * @thModule rxjs.state\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -6345,7 +6542,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!diffMap:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Emits diffs of the input maps.\n *\n * @remarks\n *\n * The first emission is always compared to empty map. Note that if the input map emissions change a lot, there can be more output diffs than the input maps.\n *\n * @typeParam K - Type of the map keys.\n *\n * @typeParam V - Type of the map values.\n *\n * @returns Operator that takes in maps and emits diffs between subsequent map emissions.\n *\n * @thModule rxjs.state\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -6419,7 +6616,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!diffSet:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Emits diffs of the input sets.\n *\n * @remarks\n *\n * The first emission is always compared to empty set. Note that if the input set emissions change a lot, there can be more output diffs than the input sets.\n *\n * @typeParam T - Type of the set element.\n *\n * @returns Operator that takes in sets and emits diffs between subsequent set emissions.\n *\n * @thModule rxjs.state\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -9907,7 +10104,7 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!mapArrayDiff:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Maps the value of the array diffs.\n *\n * @param mapFn - Map function to apply.\n *\n * @typeParam F - Original type of the array.\n *\n * @typeParam T - Destination type of the array.\n *\n * @returns Operator that maps the values of any input array diff using the given mapping function.\n *\n * @thModule rxjs.state\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -9922,13 +10119,9 @@
               "text": "): "
             },
             {
-              "kind": "Content",
-              "text": "(obs: "
-            },
-            {
               "kind": "Reference",
-              "text": "Observable",
-              "canonicalReference": "rxjs!Observable:class"
+              "text": "OperatorFunction",
+              "canonicalReference": "rxjs!OperatorFunction:interface"
             },
             {
               "kind": "Content",
@@ -9941,16 +10134,7 @@
             },
             {
               "kind": "Content",
-              "text": "<F>>) => "
-            },
-            {
-              "kind": "Reference",
-              "text": "Observable",
-              "canonicalReference": "rxjs!Observable:class"
-            },
-            {
-              "kind": "Content",
-              "text": "<"
+              "text": "<F>, "
             },
             {
               "kind": "Reference",
@@ -9968,7 +10152,7 @@
           ],
           "returnTypeTokenRange": {
             "startIndex": 3,
-            "endIndex": 12
+            "endIndex": 9
           },
           "releaseTag": "Public",
           "overloadIndex": 1,
@@ -10143,7 +10327,7 @@
         {
           "kind": "Interface",
           "canonicalReference": "gs-tools!MapDelete:interface",
-          "docComment": "",
+          "docComment": "/**\n * Deletes the entry from the map.\n *\n * @typeParam K - Type of the map keys.\n *\n * @typeParam V - Type of the map values.  @thHidden\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -10173,7 +10357,7 @@
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "key: "
+                  "text": "readonly key: "
                 },
                 {
                   "kind": "Content",
@@ -10198,7 +10382,7 @@
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "type: "
+                  "text": "readonly type: "
                 },
                 {
                   "kind": "Content",
@@ -10222,7 +10406,7 @@
         {
           "kind": "TypeAlias",
           "canonicalReference": "gs-tools!MapDiff:type",
-          "docComment": "",
+          "docComment": "/**\n * Differences between maps.\n *\n * @typeParam K - Type of the map keys.\n *\n * @typeParam V - Type of the map values.  @thHidden\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -10294,7 +10478,7 @@
         {
           "kind": "Interface",
           "canonicalReference": "gs-tools!MapInit:interface",
-          "docComment": "",
+          "docComment": "/**\n * Initializes the map by setting it to the given map.\n *\n * @typeParam K - Type of the map keys.\n *\n * @typeParam V - Type of the map values.  @thHidden\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -10335,7 +10519,7 @@
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "type: "
+                  "text": "readonly type: "
                 },
                 {
                   "kind": "Content",
@@ -10360,7 +10544,7 @@
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "value: "
+                  "text": "readonly value: "
                 },
                 {
                   "kind": "Reference",
@@ -10474,7 +10658,7 @@
         {
           "kind": "Interface",
           "canonicalReference": "gs-tools!MapSet:interface",
-          "docComment": "",
+          "docComment": "/**\n * Sets the entry of the map.\n *\n * @typeParam K - Type of the map keys.\n *\n * @typeParam V - Type of the map values.  @thHidden\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -10515,7 +10699,7 @@
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "key: "
+                  "text": "readonly key: "
                 },
                 {
                   "kind": "Content",
@@ -10540,7 +10724,7 @@
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "type: "
+                  "text": "readonly type: "
                 },
                 {
                   "kind": "Content",
@@ -10565,7 +10749,7 @@
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "value: "
+                  "text": "readonly value: "
                 },
                 {
                   "kind": "Content",
@@ -13109,7 +13293,7 @@
         {
           "kind": "Class",
           "canonicalReference": "gs-tools!Random:class",
-          "docComment": "",
+          "docComment": "/**\n * Generates random values.\n *\n * @typeParam T - Type of generated values.  @thModule random\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -13240,6 +13424,104 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 6
+                  }
+                }
+              ],
+              "typeParameters": [
+                {
+                  "typeParameterName": "T2",
+                  "constraintTokenRange": {
+                    "startIndex": 0,
+                    "endIndex": 0
+                  },
+                  "defaultTypeTokenRange": {
+                    "startIndex": 0,
+                    "endIndex": 0
+                  }
+                }
+              ],
+              "name": "get"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "gs-tools!Random#get:member(2)",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get<T2>(getter: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "(arg: {\n        rng: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Random",
+                  "canonicalReference": "gs-tools!Random:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<undefined>;\n        value: T;\n    }) => "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Promise",
+                  "canonicalReference": "!Promise:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<"
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Random",
+                  "canonicalReference": "gs-tools!Random:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<T2>>"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Promise",
+                  "canonicalReference": "!Promise:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<"
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Random",
+                  "canonicalReference": "gs-tools!Random:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<T2>>"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 9,
+                "endIndex": 13
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 2,
+              "parameters": [
+                {
+                  "parameterName": "getter",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 8
                   }
                 }
               ],
@@ -14692,20 +14974,16 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!scanArray:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Given a sequence of `ArrayDiff`s, rebuild the array.\n *\n * @typeParam T - Type of element in the array.\n *\n * @returns Operator that emits arrays as applied to the input diffs.  @thModule rxjs.state\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
               "text": "export declare function scanArray<T>(): "
             },
             {
-              "kind": "Content",
-              "text": "(obs: "
-            },
-            {
               "kind": "Reference",
-              "text": "Observable",
-              "canonicalReference": "rxjs!Observable:class"
+              "text": "OperatorFunction",
+              "canonicalReference": "rxjs!OperatorFunction:interface"
             },
             {
               "kind": "Content",
@@ -14718,16 +14996,7 @@
             },
             {
               "kind": "Content",
-              "text": "<T>>) => "
-            },
-            {
-              "kind": "Reference",
-              "text": "Observable",
-              "canonicalReference": "rxjs!Observable:class"
-            },
-            {
-              "kind": "Content",
-              "text": "<"
+              "text": "<T>, "
             },
             {
               "kind": "Reference",
@@ -14745,7 +15014,7 @@
           ],
           "returnTypeTokenRange": {
             "startIndex": 1,
-            "endIndex": 10
+            "endIndex": 7
           },
           "releaseTag": "Public",
           "overloadIndex": 1,
@@ -14768,20 +15037,16 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!scanMap:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Given a sequence of `MapDiff`s, rebuild the map.\n *\n * @typeParam K - Type of the map keys.\n *\n * @typeParam V - Type of the map values.\n *\n * @returns Operator that emits maps as applied to the input diffs.  @thModule rxjs.state\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
               "text": "export declare function scanMap<K, V>(): "
             },
             {
-              "kind": "Content",
-              "text": "(obs: "
-            },
-            {
               "kind": "Reference",
-              "text": "Observable",
-              "canonicalReference": "rxjs!Observable:class"
+              "text": "OperatorFunction",
+              "canonicalReference": "rxjs!OperatorFunction:interface"
             },
             {
               "kind": "Content",
@@ -14794,16 +15059,7 @@
             },
             {
               "kind": "Content",
-              "text": "<K, V>>) => "
-            },
-            {
-              "kind": "Reference",
-              "text": "Observable",
-              "canonicalReference": "rxjs!Observable:class"
-            },
-            {
-              "kind": "Content",
-              "text": "<"
+              "text": "<K, V>, "
             },
             {
               "kind": "Reference",
@@ -14821,7 +15077,7 @@
           ],
           "returnTypeTokenRange": {
             "startIndex": 1,
-            "endIndex": 10
+            "endIndex": 7
           },
           "releaseTag": "Public",
           "overloadIndex": 1,
@@ -14855,20 +15111,16 @@
         {
           "kind": "Function",
           "canonicalReference": "gs-tools!scanSet:function(1)",
-          "docComment": "",
+          "docComment": "/**\n * Given a sequence of `SetDiff`s, rebuild the set.\n *\n * @typeParam T - Type of element in the set.\n *\n * @returns Operator that emits sets as applied to the input diffs.  @thModule rxjs.state\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
               "text": "export declare function scanSet<T>(): "
             },
             {
-              "kind": "Content",
-              "text": "(obs: "
-            },
-            {
               "kind": "Reference",
-              "text": "Observable",
-              "canonicalReference": "rxjs!Observable:class"
+              "text": "OperatorFunction",
+              "canonicalReference": "rxjs!OperatorFunction:interface"
             },
             {
               "kind": "Content",
@@ -14881,16 +15133,7 @@
             },
             {
               "kind": "Content",
-              "text": "<T>>) => "
-            },
-            {
-              "kind": "Reference",
-              "text": "Observable",
-              "canonicalReference": "rxjs!Observable:class"
-            },
-            {
-              "kind": "Content",
-              "text": "<"
+              "text": "<T>, "
             },
             {
               "kind": "Reference",
@@ -14908,7 +15151,7 @@
           ],
           "returnTypeTokenRange": {
             "startIndex": 1,
-            "endIndex": 10
+            "endIndex": 7
           },
           "releaseTag": "Public",
           "overloadIndex": 1,
@@ -14948,7 +15191,7 @@
         {
           "kind": "Interface",
           "canonicalReference": "gs-tools!SetAdd:interface",
-          "docComment": "",
+          "docComment": "/**\n * Adds the given value to the set.\n *\n * @typeParam T - Type of the set element.  @thHidden\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -14978,7 +15221,7 @@
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "type: "
+                  "text": "readonly type: "
                 },
                 {
                   "kind": "Content",
@@ -15003,7 +15246,7 @@
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "value: "
+                  "text": "readonly value: "
                 },
                 {
                   "kind": "Content",
@@ -15120,7 +15363,7 @@
         {
           "kind": "Interface",
           "canonicalReference": "gs-tools!SetDelete:interface",
-          "docComment": "",
+          "docComment": "/**\n * Deletes the given value from the set.\n *\n * @typeParam T - Type of the set element.  @thHidden\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -15150,7 +15393,7 @@
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "type: "
+                  "text": "readonly type: "
                 },
                 {
                   "kind": "Content",
@@ -15175,7 +15418,7 @@
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "value: "
+                  "text": "readonly value: "
                 },
                 {
                   "kind": "Content",
@@ -15199,7 +15442,7 @@
         {
           "kind": "TypeAlias",
           "canonicalReference": "gs-tools!SetDiff:type",
-          "docComment": "",
+          "docComment": "/**\n * Differences between sets.\n *\n * @typeParam T - Type of the set element.  @thHidden\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -15318,7 +15561,7 @@
         {
           "kind": "Interface",
           "canonicalReference": "gs-tools!SetInit:interface",
-          "docComment": "",
+          "docComment": "/**\n * Initializes the set by setting it to the given set.\n *\n * @typeParam T - Type of the set element.  @thHidden\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -15348,7 +15591,7 @@
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "type: "
+                  "text": "readonly type: "
                 },
                 {
                   "kind": "Content",
@@ -15373,7 +15616,7 @@
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "value: "
+                  "text": "readonly value: "
                 },
                 {
                   "kind": "Reference",
@@ -15398,337 +15641,6 @@
             }
           ],
           "extendsTokenRanges": []
-        },
-        {
-          "kind": "Class",
-          "canonicalReference": "gs-tools!SetSubject:class",
-          "docComment": "",
-          "excerptTokens": [
-            {
-              "kind": "Content",
-              "text": "export declare class SetSubject<T> extends "
-            },
-            {
-              "kind": "Reference",
-              "text": "Subject",
-              "canonicalReference": "rxjs!Subject:class"
-            },
-            {
-              "kind": "Content",
-              "text": "<"
-            },
-            {
-              "kind": "Reference",
-              "text": "SetDiff",
-              "canonicalReference": "gs-tools!SetDiff:type"
-            },
-            {
-              "kind": "Content",
-              "text": "<T>> "
-            }
-          ],
-          "releaseTag": "Public",
-          "typeParameters": [
-            {
-              "typeParameterName": "T",
-              "constraintTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
-              },
-              "defaultTypeTokenRange": {
-                "startIndex": 0,
-                "endIndex": 0
-              }
-            }
-          ],
-          "name": "SetSubject",
-          "members": [
-            {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!SetSubject#_subscribe:member(1)",
-              "docComment": "/**\n * @deprecated\n *\n * This is an internal implementation detail, do not use.\n */\n",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "_subscribe(subscriber: "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "Subscriber",
-                  "canonicalReference": "rxjs!Subscriber:class"
-                },
-                {
-                  "kind": "Content",
-                  "text": "<"
-                },
-                {
-                  "kind": "Reference",
-                  "text": "SetDiff",
-                  "canonicalReference": "gs-tools!SetDiff:type"
-                },
-                {
-                  "kind": "Content",
-                  "text": "<T>>"
-                },
-                {
-                  "kind": "Content",
-                  "text": "): "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "Subscription",
-                  "canonicalReference": "rxjs!Subscription:class"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
-                "startIndex": 6,
-                "endIndex": 7
-              },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [
-                {
-                  "parameterName": "subscriber",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 1,
-                    "endIndex": 5
-                  }
-                }
-              ],
-              "name": "_subscribe"
-            },
-            {
-              "kind": "Constructor",
-              "canonicalReference": "gs-tools!SetSubject:constructor(1)",
-              "docComment": "/**\n * Constructs a new instance of the `SetSubject` class\n */\n",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "constructor(init?: "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "Iterable",
-                  "canonicalReference": "!Iterable:interface"
-                },
-                {
-                  "kind": "Content",
-                  "text": "<T>"
-                },
-                {
-                  "kind": "Content",
-                  "text": ");"
-                }
-              ],
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [
-                {
-                  "parameterName": "init",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 1,
-                    "endIndex": 3
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!SetSubject#add:member(1)",
-              "docComment": "",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "add(value: "
-                },
-                {
-                  "kind": "Content",
-                  "text": "T"
-                },
-                {
-                  "kind": "Content",
-                  "text": "): "
-                },
-                {
-                  "kind": "Content",
-                  "text": "void"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
-                "startIndex": 3,
-                "endIndex": 4
-              },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [
-                {
-                  "parameterName": "value",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 1,
-                    "endIndex": 2
-                  }
-                }
-              ],
-              "name": "add"
-            },
-            {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!SetSubject#delete:member(1)",
-              "docComment": "",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "delete(value: "
-                },
-                {
-                  "kind": "Content",
-                  "text": "T"
-                },
-                {
-                  "kind": "Content",
-                  "text": "): "
-                },
-                {
-                  "kind": "Content",
-                  "text": "void"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
-                "startIndex": 3,
-                "endIndex": 4
-              },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [
-                {
-                  "parameterName": "value",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 1,
-                    "endIndex": 2
-                  }
-                }
-              ],
-              "name": "delete"
-            },
-            {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!SetSubject#next:member(1)",
-              "docComment": "",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "next(newDiff: "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "SetDiff",
-                  "canonicalReference": "gs-tools!SetDiff:type"
-                },
-                {
-                  "kind": "Content",
-                  "text": "<T>"
-                },
-                {
-                  "kind": "Content",
-                  "text": "): "
-                },
-                {
-                  "kind": "Content",
-                  "text": "void"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
-                "startIndex": 4,
-                "endIndex": 5
-              },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [
-                {
-                  "parameterName": "newDiff",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 1,
-                    "endIndex": 3
-                  }
-                }
-              ],
-              "name": "next"
-            },
-            {
-              "kind": "Method",
-              "canonicalReference": "gs-tools!SetSubject#setAll:member(1)",
-              "docComment": "",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "setAll(newItems: "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "ReadonlySet",
-                  "canonicalReference": "!ReadonlySet:interface"
-                },
-                {
-                  "kind": "Content",
-                  "text": "<T>"
-                },
-                {
-                  "kind": "Content",
-                  "text": "): "
-                },
-                {
-                  "kind": "Content",
-                  "text": "void"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isStatic": false,
-              "returnTypeTokenRange": {
-                "startIndex": 4,
-                "endIndex": 5
-              },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [
-                {
-                  "parameterName": "newItems",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 1,
-                    "endIndex": 3
-                  }
-                }
-              ],
-              "name": "setAll"
-            }
-          ],
-          "extendsTokenRange": {
-            "startIndex": 1,
-            "endIndex": 5
-          },
-          "implementsTokenRanges": []
         },
         {
           "kind": "Interface",
@@ -15875,7 +15787,7 @@
         {
           "kind": "TypeAlias",
           "canonicalReference": "gs-tools!SheetsTable:type",
-          "docComment": "/**\n * Simpler representation of Google Sheets table.\n *\n * @thHidden\n */\n",
+          "docComment": "/**\n * Simpler representation of Google Sheets table.\n *\n * @thModule gapi.sheets\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -16019,7 +15931,7 @@
         {
           "kind": "Class",
           "canonicalReference": "gs-tools!SimpleIdGenerator:class",
-          "docComment": "/**\n * Simple implementation of ID generator that uses short IDs.\n */\n",
+          "docComment": "/**\n * Simple implementation of ID generator that uses short IDs.\n *\n * @thModule random\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -16041,7 +15953,7 @@
             {
               "kind": "Constructor",
               "canonicalReference": "gs-tools!SimpleIdGenerator:constructor(1)",
-              "docComment": "/**\n * Constructs a new instance of the `SimpleIdGenerator` class\n */\n",
+              "docComment": "/**\n * Constructs a new instance of the `SimpleIdGenerator` class\n *\n * @param rng - The random number generator.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -16076,7 +15988,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!SimpleIdGenerator#newId:member(1)",
-              "docComment": "",
+              "docComment": "/**\n * Generates a new ID.\n *\n * @returns The newly generated ID.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -16104,7 +16016,7 @@
             {
               "kind": "Method",
               "canonicalReference": "gs-tools!SimpleIdGenerator#resolveConflict:member(1)",
-              "docComment": "",
+              "docComment": "/**\n * Attempts to resolve a conflict for the given ID.\n *\n * @remarks\n *\n * This is a best effort method to come up with another ID based on the knowledge that the given ID already conflicts.\n *\n * @param id - The conflicting ID.\n *\n * @returns Best effort new ID.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
