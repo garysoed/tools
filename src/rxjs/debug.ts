@@ -1,21 +1,34 @@
-import { stringify } from 'moirai';
+import { stringify, Verbosity } from 'moirai';
 import { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
+import { Logger } from 'santa';
 
 const SUBSCRIBED_KEYS = new Set<string>();
 
-export function debug<T>(...keys: string[]): MonoTypeOperatorFunction<T> {
-  const baseKey = keys.join('::');
+export function debug<T>(
+    logger: Logger,
+    ...keys: string[]): MonoTypeOperatorFunction<T>;
+export function debug<T>(
+    logger: Logger,
+    verbosity: Verbosity,
+    ...keys: string[]): MonoTypeOperatorFunction<T>;
+export function debug<T>(
+    logger: Logger,
+    verbosityOrKey: Verbosity|string,
+    ...keys: string[]): MonoTypeOperatorFunction<T> {
+  const verbosity = typeof verbosityOrKey === 'number' ? verbosityOrKey : 10;
+  const normalizedKeys = typeof verbosityOrKey === 'number' ? keys : [verbosityOrKey, ...keys];
+  const baseKey = normalizedKeys.join('::');
 
   return source => new Observable(subscriber => {
     const key = generateKey(baseKey);
     SUBSCRIBED_KEYS.add(key);
-    console.debug(`[${key}] ●`);
+    logger.debug(`[${key}] ●`);
     source.pipe(
         tap(
-            v => console.debug(`[${key}] | ${stringify(v, 10)}`),
-            e => console.debug(`[${key}] ✖ ${stringify(e, 10)}`),
-            () => console.debug(`[${key}] -`),
+            v => logger.debug(`[${key}] | ${stringify(v, verbosity)}`),
+            e => logger.debug(`[${key}] ✖ ${stringify(e, verbosity)}`),
+            () => logger.debug(`[${key}] -`),
         ),
         finalize(() => SUBSCRIBED_KEYS.delete(key)),
     ).subscribe(subscriber);
