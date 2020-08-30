@@ -1,4 +1,4 @@
-import { stringify, Verbosity } from 'moirai';
+import { stringify } from 'moirai';
 import { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
 

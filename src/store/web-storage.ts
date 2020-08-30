@@ -1,4 +1,4 @@
-import { binary, compose, Converter, identity, Serializable, strict, StrictConverter } from 'nabu';
+import { binary, compose, Converter, identity, json, Serializable, strict, StrictConverter } from 'nabu';
 import { concat, Observable } from 'rxjs';
 import { map, shareReplay, switchMap, take } from 'rxjs/operators';
 
@@ -29,12 +29,12 @@ export class WebStorage<T> implements EditableStorage<T> {
       storage: Storage,
       private readonly prefix: string,
       converter: Converter<T, Serializable>,
+      grammar: Converter<Serializable, string>,
   ) {
     this.storage = new WebStorageObservable(storage);
 
-    const binaryGrammar = binary();
-    this.converter = strict(compose(converter, binaryGrammar));
-    this.indexesConverter = strict(compose(INDEXES_PARSER, binaryGrammar));
+    this.converter = strict(compose(converter, grammar));
+    this.indexesConverter = strict(compose(INDEXES_PARSER, grammar));
   }
 
   clear(): Observable<unknown> {
