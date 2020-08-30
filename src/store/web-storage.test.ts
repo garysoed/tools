@@ -1,5 +1,5 @@
 import { arrayThat, assert, createSpySubject, run, should, teardown, test } from 'gs-testing';
-import { binary, compose, identity, strict } from 'nabu';
+import { binary, compose, identity, json, strict } from 'nabu';
 import { Subject } from 'rxjs';
 
 import { scanArray } from '../rxjs/state/array-diff';
@@ -21,7 +21,7 @@ test('store.WebStorage', init => {
   const _ = init(() => {
     const onTestDone$ = new Subject<void>();
     localStorage.clear();
-    const storage = new WebStorage(localStorage, PREFIX, identity<number>());
+    const storage = new WebStorage(localStorage, PREFIX, identity<number>(), json());
     return {storage, onTestDone$};
   });
 
