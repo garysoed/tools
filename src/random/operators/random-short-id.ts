@@ -27,14 +27,12 @@ for (let i = 97; i < 123; i++) {
  *
  * @return A randomly generated short ID.
  */
-export function randomShortId(rng: Random<unknown>): Random<string> {
-  let nextRng = rng;
+export function randomShortId(rng: Random): string {
   const id: string[] = [];
   for (let i = 0; i < 7; i++) {
-    const rngItem = randomItem(ID_CHARS, nextRng);
-    id.push(rngItem.value);
-    nextRng = rngItem;
+    const rngItem = randomItem(ID_CHARS, rng);
+    id.push(rngItem);
   }
 
-  return nextRng.map(() => id.join(''));
+  return id.join('');
 }

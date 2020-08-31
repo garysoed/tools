@@ -43,10 +43,10 @@ const STATE_TYPE = hasPropertiesType<State>({
 });
 
 export function aleaSeed(seed: any): RandomSeed {
-  const state = STATE_TYPE.check(seed) ? seed : createState(seed);
+  let state = STATE_TYPE.check(seed) ? seed : createState(seed);
 
   return {
-    next(): [number, RandomSeed] {
+    next(): number {
       const t = state.s0 * 2091639 + state.c * 2.3283064365386963e-10; // 2^-32
       const newC = t | 0;
       const newState = {
@@ -56,7 +56,9 @@ export function aleaSeed(seed: any): RandomSeed {
         c: newC,
       };
 
-      return [state.s2, aleaSeed(newState)];
+      state = newState;
+
+      return state.s2;
     },
   };
 }

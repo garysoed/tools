@@ -13,7 +13,7 @@ export class SimpleIdGenerator extends BaseIdGenerator {
   /**
    * @param rng - The random number generator.
    */
-  constructor(private rng: Random<unknown> = fromSeed(mathSeed())) {
+  constructor(private readonly rng: Random = fromSeed(mathSeed())) {
     super();
   }
 
@@ -21,17 +21,13 @@ export class SimpleIdGenerator extends BaseIdGenerator {
    * {@inheritDoc BaseIdGenerator.newId}
    */
   protected newId(): string {
-    const rng = randomShortId(this.rng);
-    this.rng = rng;
-    return rng.value;
+    return randomShortId(this.rng);
   }
 
   /**
    * {@inheritDoc BaseIdGenerator.resolveConflict}
    */
   protected resolveConflict(id: string): string {
-    const rng = randomShortId(this.rng);
-    this.rng = rng;
-    return `${id}-${rng.value}`;
+    return `${id}-${randomShortId(this.rng)}`;
   }
 }

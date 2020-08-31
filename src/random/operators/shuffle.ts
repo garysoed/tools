@@ -9,22 +9,18 @@ import { Random } from '../random';
 
 export function shuffle<T>(
     items: readonly T[],
-    rng: Random<unknown>,
+    rng: Random,
     getBaseWeight: (item: T) => number = () => 0,
-): Random<readonly T[]> {
-  return rng.next(items.length, ({random: randomWeights, rng}) => {
-    const weightedTileSpecs = $pipe(
-        items,
-        zip(randomWeights),
-        map(([item, randomWeight]) => {
-          return {item, weight: getBaseWeight(item) + randomWeight};
-        }),
-        asArray(),
-        sort(withMap(({weight}) => weight, normal())),
-        map(({item}) => item),
-        asArray(),
-    );
-
-    return rng.map(() => weightedTileSpecs);
-  });
+): readonly T[] {
+  return $pipe(
+      items,
+      zip(rng.iterable()),
+      map(([item, randomWeight]) => {
+        return {item, weight: getBaseWeight(item) + randomWeight};
+      }),
+      asArray(),
+      sort(withMap(({weight}) => weight, normal())),
+      map(({item}) => item),
+      asArray(),
+  );
 }

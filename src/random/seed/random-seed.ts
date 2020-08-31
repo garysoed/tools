@@ -1,3 +1,3 @@
 export interface RandomSeed {
-  next(): readonly [number, RandomSeed];
+  next(): number;
 }

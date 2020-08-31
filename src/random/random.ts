@@ -1,58 +1,29 @@
 import { RandomSeed } from './seed/random-seed';
 
-type Getter<R, A, B> = (values: {random: R; rng: Random<undefined>; value: A}) => Random<B>;
-
 /**
  * Generates random values.
  *
  * @typeParam T - Type of generated values.
  * @thModule random
  */
-export class Random<T> {
+export class Random {
   constructor(
-      readonly value: T,
       private readonly seed: RandomSeed,
   ) { }
 
-  get<T2>(getter: (arg: {rng: Random<undefined>; value: T}) => Random<T2>): Random<T2>;
-  get<T2>(
-      getter: (arg: {rng: Random<undefined>; value: T}) => Promise<Random<T2>>,
-  ): Promise<Random<T2>>;
-  get<R>(getter: (arg: {rng: Random<undefined>; value: T}) => R): R {
-    return getter({value: this.value, rng: fromSeed(this.seed)});
+  iterable(): Iterable<number> {
+    return (function*(random: Random): Generator<number> {
+      while (true) {
+        yield random.next();
+      }
+    })(this);
   }
 
-  map<T2>(fn: (value: T) => T2): Random<T2> {
-    return new Random(fn(this.value), this.seed);
-  }
-
-  next<T2>(getter: Getter<number, T, T2>): Random<T2>;
-  next<T2>(count: number, getter: Getter<readonly number[], T, T2>): Random<T2>;
-  next(
-      countOrGetter: number|Getter<number, T, unknown>,
-      getter?: Getter<readonly number[], T, unknown>,
-  ): Random<unknown> {
-    if (typeof countOrGetter === 'function') {
-      const [random, nextSeed] = this.seed.next();
-      return countOrGetter({random, value: this.value, rng: fromSeed(nextSeed)});
-    }
-
-    if (!getter) {
-      throw new Error('Unsupported');
-    }
-
-    const randoms: number[] = [];
-    let nextSeed = this.seed;
-    for (let i = 0; i < countOrGetter; i++) {
-      const result = nextSeed.next();
-      randoms.push(result[0]);
-      nextSeed = result[1];
-    }
-
-    return getter({random: randoms, value: this.value, rng: fromSeed(nextSeed)});
+  next(): number {
+    return this.seed.next();
   }
 }
 
-export function fromSeed(seed: RandomSeed): Random<undefined> {
-  return new Random(undefined, seed);
+export function fromSeed(seed: RandomSeed): Random {
+  return new Random(seed);
 }

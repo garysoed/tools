@@ -9,7 +9,7 @@ test('@tools/random/operators/shuffle', () => {
   should(`order the items correctly`, () => {
     const seed = new FakeSeed([0.5, 0, 1]);
 
-    const shuffled = shuffle([5, 2, 4], fromSeed(seed), v => Math.floor(v / 2)).value;
+    const shuffled = shuffle([5, 2, 4], fromSeed(seed), v => Math.floor(v / 2));
     assert(shuffled).to.haveExactElements([2, 5, 4]);
   });
 });

@@ -18,6 +18,6 @@ test('@tools/random/operators/random-short-id', () => {
       38 / 62,
     ]));
 
-    assert(randomShortId(rng).value).to.equal('0ABCabc');
+    assert(randomShortId(rng)).to.equal('0ABCabc');
   });
 });

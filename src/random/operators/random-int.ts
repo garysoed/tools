@@ -7,8 +7,6 @@ import { Random } from '../random';
  * @param to The end interval (exclusive).
  * @return Integer picked randomly in the given interval.
  */
-export function randomInt(from: number, to: number, rng: Random<unknown>): Random<number> {
-  return rng.next(({random, rng}) => {
-    return rng.map(() => from + Math.floor(random * (to - from)));
-  });
+export function randomInt(from: number, to: number, rng: Random): number {
+  return from + Math.floor(rng.next() * (to - from));
 }

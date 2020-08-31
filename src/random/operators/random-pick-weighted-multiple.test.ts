@@ -17,7 +17,7 @@ test('@tools/random/operators/random-pick-weighted-multiple', () => {
         ],
         2,
         fromSeed(seed),
-    ).value;
+    );
 
     assert(result).to.haveExactElements(['b', 'c']);
   });
