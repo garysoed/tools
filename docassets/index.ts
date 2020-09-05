@@ -65,12 +65,14 @@ export { ExtendedValue, CellData, GridData, GridRange, RowData } from '../src/ga
 export { createSheetsTable, Merge, RawSheet, SheetsTable } from '../src/gapi/sheets-table';
 export { asSingleCell, asMultiCell, defineTable, Cell, SingleCell, MultiCell } from '../src/gapi/define-table';
 
+// math
+export { mod } from '../src/math/mod';
+
 // path
 export { AbsolutePath } from '../src/path/absolute-path';
 export { absolutePathParser } from '../src/path/absolute-path-parser';
 export { Path, SEPARATOR } from '../src/path/path';
 export { absolutePath, getDirPath, getFilenameParts, getItemName, getRelativePath, getSubPathsToRoot, join, normalize, relativePath, setFilenameExt } from '../src/path/paths';
-
 
 // random
 export { SimpleIdGenerator } from '../src/random/simple-id-generator';
