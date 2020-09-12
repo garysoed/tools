@@ -129,7 +129,7 @@ export class StateService {
    * @param value - New value to associate with the ID.
    * @returns True if the ID has existed in the global state.
    */
-  set<T>(id: StateId<T>, value: T): boolean {
+  set<T, U extends T>(id: StateId<T>, value: U): boolean {
     const existingMap = new Map(this.payloads$.getValue());
     const hasId = existingMap.has(id);
 
