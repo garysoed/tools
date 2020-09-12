@@ -9,11 +9,11 @@ export interface IdObject {
   /**
    * ID corresponding to the object.
    */
-  readonly id: StateId<unknown>;
+  readonly id: string;
   /**
    * The value stored.
    */
-  readonly obj: object;
+  readonly obj: any;
 }
 
 /**

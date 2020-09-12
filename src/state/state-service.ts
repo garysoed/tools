@@ -23,7 +23,7 @@ import { StateId } from './state-id';
  */
 export class StateService {
   private readonly idGenerator = new SimpleIdGenerator();
-  private readonly payloads$ = new BehaviorSubject<ReadonlyMap<StateId<any>, any>>(new Map());
+  private readonly payloads$ = new BehaviorSubject<ReadonlyMap<string, any>>(new Map());
 
   /**
    * Adds the given value to the global state.
@@ -36,16 +36,14 @@ export class StateService {
     const existingMap = new Map(this.payloads$.getValue());
     const existingIdValues = $pipe(
         existingMap.keys(),
-        $map(({id}) => id),
         $asSet(),
     );
 
     const newIdValue = this.idGenerator.generate(existingIdValues);
-    const newId = {id: newIdValue};
-    existingMap.set(newId, value);
+    existingMap.set(newIdValue, value);
     this.payloads$.next(existingMap);
 
-    return newId;
+    return {id: newIdValue};
   }
 
   /**
@@ -55,7 +53,7 @@ export class StateService {
    * @param id - ID of the value to be deleted.
    * @returns True iff the ID existed in the global state.
    */
-  delete<T>(id: StateId<T>): boolean {
+  delete<T>({id}: StateId<T>): boolean {
     const existingMap = new Map(this.payloads$.getValue());
     if (!existingMap.has(id)) {
       return false;
@@ -73,10 +71,10 @@ export class StateService {
    * @param id - ID of the value to retrieve.
    * @returns Observable that returns the value associated with the ID, or null if none exists.
    */
-  get<T>(id: StateId<T>): Observable<T|null> {
+  get<T>({id}: StateId<T>): Observable<T|null> {
     return this.payloads$.pipe(
         map(payloads => {
-          return payloads.get(id) || null;
+          return payloads.get(id) ?? null;
         }),
         distinctUntilChanged(),
     );
@@ -93,7 +91,7 @@ export class StateService {
     const newPayloads = $pipe(
         payloads,
         $map(({id, obj}) => {
-          return [id, obj] as [StateId<any>, any];
+          return [id, obj] as [string, any];
         }),
         $asMap(),
     );
@@ -118,6 +116,7 @@ export class StateService {
               return observableOf(diff.key);
           }
         }),
+        map(id => ({id})),
     );
   }
 
@@ -129,7 +128,7 @@ export class StateService {
    * @param value - New value to associate with the ID.
    * @returns True if the ID has existed in the global state.
    */
-  set<T, U extends T>(id: StateId<T>, value: U): boolean {
+  set<T, U extends T>({id}: StateId<T>, value: U): boolean {
     const existingMap = new Map(this.payloads$.getValue());
     const hasId = existingMap.has(id);
 
