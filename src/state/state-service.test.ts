@@ -2,6 +2,7 @@ import { arrayThat, assert, createSpySubject, objectThat, should, test } from 'g
 import { map } from 'rxjs/operators';
 
 import { IdObject, Snapshot } from './snapshot';
+import { createId } from './state-id';
 import { StateService } from './state-service';
 
 
@@ -37,7 +38,7 @@ test('@tools/state/state-service', init => {
     });
 
     should(`return false if the object does not exist`, () => {
-      const otherId = {id: 'other'};
+      const otherId = createId<string>('other');
       assert(_.service.delete(otherId)).to.beFalse();
 
       assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([_.addedId.id]);
@@ -56,21 +57,21 @@ test('@tools/state/state-service', init => {
     });
 
     should(`emit null if the object does not exist`, () => {
-      assert(_.service.get({id: 'other'})).to.emitWith(null);
+      assert(_.service.get(createId<string>('other'))).to.emitWith(null);
     });
 
     should(`handle falsy object that are not null`, () => {
       _.service.set(_.addedId, '');
-      assert(_.service.get({id: 'other'})).to.emitWith(null);
+      assert(_.service.get(createId<string>('other'))).to.emitWith(null);
     });
   });
 
   test('init', () => {
     should(`initialize all the values in the service`, () => {
-      const rootId = {id: 'root'};
-      const idA = {id: 'A'};
-      const idB = {id: 'B'};
-      const idC = {id: 'C'};
+      const rootId = createId<string>('root');
+      const idA = createId<string>('A');
+      const idB = createId<string>('B');
+      const idC = createId<string>('C');
       const valueA = 'valueA';
       const valueB = 'valueB';
       const valueC = 'valueC';
@@ -113,7 +114,7 @@ test('@tools/state/state-service', init => {
 
     should(`return false if the ID doesn't exist`, () => {
       const newValue = {value: 'new'};
-      const otherId = {id: 'otherId'};
+      const otherId = createId<{value: string}>('otherId');
       assert(_.service.set(otherId, newValue)).to.beFalse();
 
       assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([_.addedId.id, otherId.id]);
@@ -132,7 +133,7 @@ test('@tools/state/state-service', init => {
       const idB = _.service.add<string>(valueB);
       const idC = _.service.add<string>(valueC);
 
-      assert(_.service.snapshot(idA)).to.equal(objectThat<Snapshot<{}>>().haveProperties({
+      assert(_.service.snapshot(idA)).to.equal(objectThat<Snapshot<string>>().haveProperties({
         rootId: idA,
         payloads: arrayThat<IdObject>().haveExactElements([
           objectThat<IdObject>().haveProperties({id: idA.id, obj: valueA}),

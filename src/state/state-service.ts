@@ -1,3 +1,4 @@
+import { Type } from 'gs-types';
 import { BehaviorSubject, EMPTY, Observable, of as observableOf } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 
@@ -11,7 +12,8 @@ import { SimpleIdGenerator } from '../random/simple-id-generator';
 import { diffMap } from '../rxjs/state/map-diff';
 
 import { Snapshot } from './snapshot';
-import { StateId } from './state-id';
+import { createId, StateId } from './state-id';
+
 
 /**
  * Manages global states.
@@ -43,7 +45,7 @@ export class StateService {
     existingMap.set(newIdValue, value);
     this.payloads$.next(existingMap);
 
-    return {id: newIdValue};
+    return createId(newIdValue);
   }
 
   /**
@@ -116,7 +118,7 @@ export class StateService {
               return observableOf(diff.key);
           }
         }),
-        map(id => ({id})),
+        map(id => createId(id)),
     );
   }
 
