@@ -119,6 +119,11 @@ export { setConverter } from '../src/serializer/set-converter';
 export { stringMatchConverter } from '../src/serializer/string-match-converter';
 export { typeBased } from '../src/serializer/type-based-converter';
 
+// state
+export { Snapshot } from '../src/state/snapshot';
+export { createId, StateId } from '../src/state/state-id';
+export { StateService } from '../src/state/state-service';
+
 // store
 export { InMemoryStorage } from '../src/store/in-memory-storage';
 export { EditableStorage } from '../src/store/editable-storage';
