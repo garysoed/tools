@@ -49,6 +49,13 @@ export class StateService {
   }
 
   /**
+   * Removes all added entries.
+   */
+  clear(): void {
+    this.payloads$.next(new Map());
+  }
+
+  /**
    * Deletes the given ID from the global state.
    *
    * @typeParams T = Type of the value to be deleted.

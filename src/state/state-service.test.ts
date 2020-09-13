@@ -24,6 +24,25 @@ test('@tools/state/state-service', init => {
     });
   });
 
+  test('clear', () => {
+    should(`delete the objects and return true if it exists`, () => {
+      const addedId1 = _.service.add<string>('initValue1');
+      const addedId2 = _.service.add<string>('initValue2');
+      _.service.clear();
+
+      assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([
+        // additions
+        addedId1.id,
+        addedId2.id,
+        // deletions
+        addedId1.id,
+        addedId2.id,
+      ]);
+      assert(_.service.get(addedId1)).to.emitWith(null);
+      assert(_.service.get(addedId2)).to.emitWith(null);
+    });
+  });
+
   test('delete', _, init => {
     const _ = init(_ => {
       const addedId = _.service.add<string>('initValue');
