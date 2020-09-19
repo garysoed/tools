@@ -1,4 +1,3 @@
-import { Type } from 'gs-types';
 import { BehaviorSubject, EMPTY, Observable, of as observableOf } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 
