@@ -2,6 +2,7 @@ import { BehaviorSubject, defer, Observable, of as observableOf } from 'rxjs';
 import { map, shareReplay, tap } from 'rxjs/operators';
 
 import { BaseIdGenerator } from '../random/base-id-generator';
+import { SimpleIdGenerator } from '../random/simple-id-generator';
 import { ArrayDiff, diffArray } from '../rxjs/state/array-diff';
 
 import { EditableStorage } from './editable-storage';
@@ -11,7 +12,9 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
   private readonly arrayData$ = new BehaviorSubject<readonly string[]>([]);
   private readonly mapData$ = new BehaviorSubject<ReadonlyMap<string, T>>(new Map());
 
-  constructor(private readonly idGenerator: BaseIdGenerator) { }
+  constructor(
+      private readonly idGenerator: BaseIdGenerator = new SimpleIdGenerator(),
+  ) { }
 
   clear(): Observable<unknown> {
     return observableOf({})
@@ -108,10 +111,6 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
     return defer(() => {
       const array = [...this.arrayData$.getValue()];
       const map = new Map(this.mapData$.getValue());
-
-      if (map.has(id)) {
-        return observableOf({});
-      }
 
       map.set(id, instance);
       this.mapData$.next(map);
