@@ -4,13 +4,14 @@ orbs:
 workflows:
   node-tests:
     jobs:
-      steps:
-        - checkout
-        - run: npm install
-        - run: mkdir ~/junit
-        - run:
-            command: karma start ./karma.conf.js
-            environment:
-              JUNIT_REPORT_PATH: ./junit/
-              JUNIT_REPORT_NAME: test-results.xml
-            when: always
+      test:
+        steps:
+          - checkout
+          - run: npm install
+          - run: mkdir ~/junit
+          - run:
+              command: karma start ./karma.conf.js
+              environment:
+                JUNIT_REPORT_PATH: ./junit/
+                JUNIT_REPORT_NAME: test-results.xml
+              when: always
