@@ -1,17 +1,19 @@
 version: 2.1
 orbs:
   node: circleci/node@3.0.0
+
+jobs:
+  test:
+    steps:
+      - checkout
+      - run: npm install
+      - run: mkdir ~/junit
+      - run:
+          command: karma start ./karma.conf.js
+          environment:
+            JUNIT_REPORT_PATH: ./junit/
+            JUNIT_REPORT_NAME: test-results.xml
+          when: always
 workflows:
   node-tests:
-    jobs:
-      test:
-        steps:
-          - checkout
-          - run: npm install
-          - run: mkdir ~/junit
-          - run:
-              command: karma start ./karma.conf.js
-              environment:
-                JUNIT_REPORT_PATH: ./junit/
-                JUNIT_REPORT_NAME: test-results.xml
-              when: always
+      node/test
