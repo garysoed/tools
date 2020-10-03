@@ -18,4 +18,5 @@ jobs:
           when: always
 workflows:
   node-tests:
+    jobs:
       node/test
