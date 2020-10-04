@@ -1,3 +1,4 @@
+export { SequentialIdGenerator } from '../src/random/sequential-id-generator';
 export { SimpleIdGenerator } from '../src/random/simple-id-generator';
 
 export { RandomSeed } from '../src/random/seed/random-seed';

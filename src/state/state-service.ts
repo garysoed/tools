@@ -7,6 +7,7 @@ import { asSet as $asSet } from '../collect/operators/as-set';
 import { map as $map } from '../collect/operators/map';
 import { $pipe } from '../collect/operators/pipe';
 import { cache } from '../data/cache';
+import { BaseIdGenerator } from '../random/base-id-generator';
 import { SimpleIdGenerator } from '../random/simple-id-generator';
 import { diffMap } from '../rxjs/state/map-diff';
 
@@ -23,8 +24,9 @@ import { createId, StateId } from './state-id';
  * @thModule state
  */
 export class StateService {
-  private readonly idGenerator = new SimpleIdGenerator();
   private readonly payloads$ = new BehaviorSubject<ReadonlyMap<string, any>>(new Map());
+
+  constructor(private readonly idGenerator: BaseIdGenerator = new SimpleIdGenerator()) {}
 
   /**
    * Adds the given value to the global state.

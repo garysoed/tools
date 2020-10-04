@@ -77,6 +77,7 @@ export { Path, SEPARATOR } from '../src/path/path';
 export { absolutePath, getDirPath, getFilenameParts, getItemName, getRelativePath, getSubPathsToRoot, join, normalize, relativePath, setFilenameExt } from '../src/path/paths';
 
 // random
+export { SequentialIdGenerator } from '../src/random/sequential-id-generator';
 export { SimpleIdGenerator } from '../src/random/simple-id-generator';
 
 export { RandomSeed } from '../src/random/seed/random-seed';
@@ -124,6 +125,7 @@ export { typeBased } from '../src/serializer/type-based-converter';
 // state
 export { Snapshot } from '../src/state/snapshot';
 export { createId, StateId } from '../src/state/state-id';
+export { fakeStateService } from '../src/state/testing/state-service';
 export { StateService } from '../src/state/state-service';
 
 // store
