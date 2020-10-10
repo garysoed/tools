@@ -161,5 +161,19 @@ test('@tools/state/state-service', init => {
         ]),
       }));
     });
+
+    should(`return null if the object for the root ID is missing`, () => {
+      const valueA = 'valueA';
+      const valueB = 'valueB';
+      const valueC = 'valueC';
+
+      const idA = _.service.add<string>(valueA);
+      _.service.add<string>(valueB);
+      _.service.add<string>(valueC);
+
+      _.service.delete(idA);
+
+      assert(_.service.snapshot(idA)).to.beNull();
+    });
   });
 });

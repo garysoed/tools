@@ -152,11 +152,17 @@ export class StateService {
    *
    * @typeParams T - Type of the root object.
    * @param rootId - ID of the root object.
-   * @returns All the objects in the global state.
+   * @returns All the objects in the global state, or null if the object corresponding to the root
+   *     ID doesn't exist..
    */
-  snapshot<T>(rootId: StateId<T>): Snapshot<T> {
+  snapshot<T>(rootId: StateId<T>): Snapshot<T>|null {
+    const payloadMap = this.payloads$.getValue();
+    if (!payloadMap.has(rootId.id)) {
+      return null;
+    }
+
     const payloads = $pipe(
-        this.payloads$.getValue(),
+        payloadMap,
         $map(([id, obj]) => ({id, obj})),
         $asArray(),
     );
