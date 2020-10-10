@@ -1,141 +1,63 @@
-import { BehaviorSubject, defer, Observable, of as observableOf } from 'rxjs';
-import { map, shareReplay, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { SimpleIdGenerator } from '../random/simple-id-generator';
-import { ArrayDiff, diffArray } from '../rxjs/state/array-diff';
 
 import { EditableStorage } from './editable-storage';
 
 
 export class InMemoryStorage<T> implements EditableStorage<T> {
-  private readonly arrayData$ = new BehaviorSubject<readonly string[]>([]);
-  private readonly mapData$ = new BehaviorSubject<ReadonlyMap<string, T>>(new Map());
+  private readonly data$ = new BehaviorSubject<ReadonlyMap<string, T>>(new Map());
 
   constructor(
       private readonly idGenerator: BaseIdGenerator = new SimpleIdGenerator(),
   ) { }
 
-  clear(): Observable<unknown> {
-    return observableOf({})
-        .pipe(
-            tap(() => {
-              this.arrayData$.next([]);
-              this.mapData$.next(new Map());
-            }),
-        );
+  add(instance: T): string {
+    const data = this.data$.getValue();
+    const newId = this.idGenerator.generate([...data.keys()]);
+    this.data$.next(new Map([...data, [newId, instance]]));
+    return newId;
   }
 
-  delete(id: string): Observable<unknown> {
-    return defer(() => {
-      const array = this.arrayData$.getValue();
-      const map = new Map(this.mapData$.getValue());
-
-      const filteredArray = array.filter(v => v !== id);
-      this.arrayData$.next(filteredArray);
-
-      map.delete(id);
-      this.mapData$.next(map);
-      return observableOf({});
-    });
+  clear(): void {
+    return this.data$.next(new Map());
   }
 
-  deleteAt(index: number): Observable<unknown> {
-    return defer(() => {
-      const array = [...this.arrayData$.getValue()];
-      const map = new Map(this.mapData$.getValue());
+  delete(id: string): boolean {
+    const data = this.data$.getValue();
+    if (!data.has(id)) {
+      return false;
+    }
 
-      const [key] = array.splice(index, 1);
-      this.arrayData$.next(array);
-
-      if (key) {
-        map.delete(key);
-        this.mapData$.next(map);
-      }
-      return observableOf({});
-    });
-  }
-
-  findIndex(id: string): Observable<number|null> {
-    return this.arrayData$
-        .pipe(
-            map(array => array.findIndex(value => value === id)),
-            shareReplay(1),
-        );
-  }
-
-  generateId(): Observable<string> {
-    return this.mapData$
-        .pipe(
-            map(map => this.idGenerator.generate(map.keys())),
-            shareReplay(1),
-        );
+    const newData = new Map(data);
+    newData.delete(id);
+    this.data$.next(newData);
+    return true;
   }
 
   has(id: string): Observable<boolean> {
-    return this.mapData$
-        .pipe(
-            map(map => map.has(id)),
-            shareReplay(1),
-        );
+    return this.data$.pipe(map(map => map.has(id)));
   }
 
-  insertAt(index: number, id: string, instance: T): Observable<unknown> {
-    return defer(() => {
-      const array = [...this.arrayData$.getValue()];
-      const map = new Map(this.mapData$.getValue());
-
-      array.splice(index, 0, id);
-      this.arrayData$.next(array);
-
-      map.set(id, instance);
-      this.mapData$.next(map);
-
-      return observableOf({});
-    });
+  get idList$(): Observable<ReadonlySet<string>> {
+    return this.data$.pipe(map(data => new Set(data.keys())));
   }
 
-  listIds(): Observable<ArrayDiff<string>> {
-    return this.arrayData$.pipe(diffArray());
+  read(id: string): Observable<T|undefined> {
+    return this.data$.pipe(map(map => map.get(id) ?? undefined));
   }
 
-  read(id: string): Observable<T|null> {
-    return this.mapData$
-        .pipe(
-            map(map => map.get(id) || null),
-            shareReplay(1),
-        );
-  }
+  update(id: string, instance: T): boolean {
+    const data = this.data$.getValue();
+    if (!data.has(id)) {
+      return false;
+    }
 
-  update(id: string, instance: T): Observable<unknown> {
-    return defer(() => {
-      const array = [...this.arrayData$.getValue()];
-      const map = new Map(this.mapData$.getValue());
-
-      map.set(id, instance);
-      this.mapData$.next(map);
-
-      array.push(id);
-      this.arrayData$.next(array);
-      return observableOf({});
-    });
-  }
-
-  updateAt(index: number, id: string, instance: T): Observable<unknown> {
-    return defer(() => {
-      const array = [...this.arrayData$.getValue()];
-      const map = new Map(this.mapData$.getValue());
-
-      if (map.has(id)) {
-        return observableOf({});
-      }
-
-      map.set(id, instance);
-      this.mapData$.next(map);
-
-      array.splice(index, 0, id);
-      this.arrayData$.next(array);
-      return observableOf({});
-    });
+    const newData = new Map(data);
+    newData.set(id, instance);
+    this.data$.next(newData);
+    return true;
   }
 }

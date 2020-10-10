@@ -1,13 +1,13 @@
 import { Observable } from 'rxjs';
 
-import { ArrayDiff } from '../rxjs/state/array-diff';
 
-export interface ReadableStorage<TFull> {
-  /**
-   * Finds the index of the given ID.
-   */
-  findIndex(id: string): Observable<number|null>;
-
+/**
+ * Storage that can be read.
+ *
+ * @typeParam T - Type of data stored in the storage.
+ * @thModule store
+ */
+export interface ReadableStorage<T> {
   /**
    * Checks if the object corresponding to the given ID exists in the storage.
    *
@@ -19,14 +19,14 @@ export interface ReadableStorage<TFull> {
   /**
    * @returns IDs of the data in the storage.
    */
-  listIds(): Observable<ArrayDiff<string>>;
+  readonly idList$: Observable<ReadonlySet<string>>;
 
   /**
    * Reads the object corresponding to the given ID.
    *
    * @param id ID of the object to be read.
-   * @returns Observable that emits the object corresponding to the given ID, or null if the object
-   *     does not exist.
+   * @returns Observable that emits the object corresponding to the given ID, or undefined if the
+   *     object does not exist.
    */
-  read(id: string): Observable<TFull|null>;
+  read(id: string): Observable<T|undefined>;
 }

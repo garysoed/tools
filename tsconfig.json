@@ -16,6 +16,7 @@
     "noImplicitThis": true,
     "outDir": "out",
     "pretty": true,
+    "resolveJsonModule": true,
     "sourceMap": true,
     "strict": true,
     "strictFunctionTypes": true,

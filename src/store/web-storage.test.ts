@@ -1,7 +1,9 @@
-import { arrayThat, assert, createSpySubject, run, should, teardown, test } from 'gs-testing';
-import { binary, compose, identity, strict } from 'nabu';
+import { arrayThat, assert, createSpy, createSpySubject, run, runEnvironment, setThat, should, teardown, test } from 'gs-testing';
+import { BrowserSnapshotsEnv } from 'gs-testing/export/browser';
+import { binary, compose, identity, json, strict } from 'nabu';
 import { Subject } from 'rxjs';
 
+import { SequentialIdGenerator } from '../../export/random';
 import { scanArray } from '../rxjs/state/array-diff';
 import { integerConverter } from '../serializer/integer-converter';
 
@@ -13,132 +15,158 @@ function setStorage(storage: Storage, key: string, value: string): void {
   window.dispatchEvent(new StorageEvent('storage'));
 }
 
-test('store.WebStorage', init => {
+test('@tools/store/web-storage', init => {
   const PREFIX = 'store.WebStorage.prefix';
   const INDEXES_BINARY_CONVERTER = strict(compose(INDEXES_PARSER, binary()));
   const ITEM_BINARY_CONVERTER = strict(compose(integerConverter(), binary()));
 
   const _ = init(() => {
-    const onTestDone$ = new Subject<void>();
     localStorage.clear();
-    const storage = new WebStorage(localStorage, PREFIX, identity<number>(), binary());
-    return {storage, onTestDone$};
+    const storage = new WebStorage(
+        localStorage,
+        PREFIX,
+        identity<number>(),
+        json(),
+        new SequentialIdGenerator(),
+    );
+    return {storage};
   });
 
   teardown(() => {
     localStorage.clear();
-    _.onTestDone$.next();
-    _.onTestDone$.complete();
   });
 
+  test('add', () => {
+    should(`add the new item with the generated new ID`, () => {
+      const value = 123;
+      const id = _.storage.add(value);
+
+      assert(_.storage.read(id)).to.emitWith(value);
+      assert(localStorage.getItem(PREFIX)).to.equal(`["${id}"]`);
+      assert(localStorage.getItem(`${PREFIX}/${id}`)).to.equal(`${value}`);
+    });
+  });
+
+  test('clear', () => {
+    should(`delete all the items`, () => {
+      const id1 = _.storage.add(1);
+      const id2 = _.storage.add(2);
+      const id3 = _.storage.add(3);
+      _.storage.clear();
+
+      assert(_.storage.idList$).to.emitWith(setThat<string>().beEmpty());
+      assert(localStorage.getItem(PREFIX)).to.beNull();
+      assert(localStorage.getItem(`${PREFIX}/${id1}`)).to.beNull();
+      assert(localStorage.getItem(`${PREFIX}/${id2}`)).to.beNull();
+      assert(localStorage.getItem(`${PREFIX}/${id3}`)).to.beNull();
+    });
+  });
+
+
   test('delete', () => {
-    should('remove the correct object', () => {
-      const id = 'id';
-      const path = `${PREFIX}/${id}`;
-      setStorage(
-          localStorage,
-          PREFIX,
-          INDEXES_BINARY_CONVERTER.convertForward([id]),
-      );
-      setStorage(localStorage, path, ITEM_BINARY_CONVERTER.convertForward(123));
+    should(`delete the specified item`, () => {
+      const id = _.storage.add(1);
 
-      const listIds$ = _.storage.listIds()
-          .pipe(scanArray());
-      const idsSubject = createSpySubject(listIds$);
-      const itemSubject = createSpySubject(_.storage.read(id));
+      assert(_.storage.delete(id)).to.beTrue();
+      assert(_.storage.idList$).to.emitWith(setThat<string>().beEmpty());
+      assert(localStorage.getItem(PREFIX)).to.equal(`[]`);
+      assert(localStorage.getItem(`${PREFIX}/${id}`)).to.beNull();
+    });
 
-      run(_.storage.delete(id));
-
-      assert(localStorage.getItem(path)).to.beNull();
-      assert(localStorage.getItem(PREFIX)).to
-          .equal(INDEXES_BINARY_CONVERTER.convertForward([]));
-      assert(idsSubject).to.emitWith(arrayThat<string>().beEmpty());
-      assert(itemSubject).to.emitWith(null);
+    should(`return false if the specified item doesn't exist`, () => {
+      assert(_.storage.delete('non existent')).to.beFalse();
     });
   });
 
   test('has', () => {
-    should('resolve with true if the object is in the storage', () => {
-      const id = 'id';
+    should(`emit true if the object with the ID exists`, () => {
+      const id = _.storage.add(1);
 
-      const hasSubject = createSpySubject(_.storage.has(id));
-
-      setStorage(
-          localStorage,
-          PREFIX,
-          INDEXES_BINARY_CONVERTER.convertForward([id]),
-      );
-
-      assert(hasSubject).to.emitWith(true);
+      assert(_.storage.has(id)).to.emitWith(true);
     });
 
-    should('resolve with false if the object is in the storage', () => {
+    should(`emit false if the object with the ID doesn't exist`, () => {
+      assert(_.storage.has('non existent')).to.emitWith(false);
+    });
+
+    should(`respond to changes in the storage`, () => {
       const id = 'id';
 
-      const hasSubject = createSpySubject(_.storage.has(id));
+      const has$ = createSpySubject(_.storage.has(id));
+      setStorage(localStorage, PREFIX, `["${id}"]`);
 
-      assert(hasSubject).to.emitWith(false);
+      assert(has$).to.emitSequence([false, true]);
     });
   });
 
-  test('listIds', () => {
-    should('return the indexes', async () => {
+  test('idList$', () => {
+    should(`emit all the IDs in the storage`, () => {
+      const id1 = _.storage.add(1);
+      const id2 = _.storage.add(2);
+      const id3 = _.storage.add(3);
+
+      assert(_.storage.idList$).to
+          .emitWith(setThat<string>().haveExactElements(new Set([id1, id2, id3])));
+    });
+
+    should(`respond to changes in the storage`, () => {
       const id1 = 'id1';
       const id2 = 'id2';
       const id3 = 'id3';
 
-      const listIds$ = _.storage.listIds().pipe(scanArray());
-      const idsSubject = createSpySubject(listIds$);
+      const ids$ = createSpySubject(_.storage.idList$);
+      setStorage(localStorage, PREFIX, `["${id1}"]`);
+      setStorage(localStorage, PREFIX, `["${id1}","${id2}"]`);
+      setStorage(localStorage, PREFIX, `["${id1}","${id2}","${id3}"]`);
 
-      setStorage(
-          localStorage,
-          PREFIX,
-          INDEXES_BINARY_CONVERTER.convertForward([id1, id2, id3]),
-      );
-
-      assert(idsSubject).to.emitWith(arrayThat<string>().haveExactElements([id1, id2, id3]));
+      assert(ids$).to.emitSequence([
+        setThat<string>().haveExactElements(new Set([])),
+        setThat<string>().haveExactElements(new Set([id1])),
+        setThat<string>().haveExactElements(new Set([id1, id2])),
+        setThat<string>().haveExactElements(new Set([id1, id2, id3])),
+      ]);
     });
   });
 
   test('read', () => {
-    should('resolve with the object', () => {
-      const id = 'id';
-      const path = `${PREFIX}/${id}`;
+    should(`return the object corresponding to the item`, () => {
+      const value = 123;
+      const id = _.storage.add(value);
 
-      const itemSubject = createSpySubject(_.storage.read(id));
-
-      setStorage(localStorage, path, ITEM_BINARY_CONVERTER.convertForward(123));
-
-      assert(itemSubject).to.emitWith(123);
+      assert(_.storage.read(id)).to.emitWith(value);
     });
 
-    should('resolve with null if the object does not exist', () => {
-      const itemSubject = createSpySubject(_.storage.read('id'));
-      assert(itemSubject).to.emitWith(null);
+    should(`return undefined if the object doesn't exist`, () => {
+      assert(_.storage.read('non existent')).to.emitWith(undefined);
+    });
+
+    should(`respond to changes in the storage`, () => {
+      const id = 'id';
+      const value = 123;
+
+      const value$ = createSpySubject(_.storage.read(id));
+      setStorage(localStorage, PREFIX, `["${id}"]`);
+      setStorage(localStorage, `${PREFIX}/${id}`, `${value}`);
+
+      assert(value$).to.emitSequence([undefined, undefined, value]);
     });
   });
 
   test('update', () => {
-    should('store the correct object in the storage', () => {
-      const id = 'id';
-      const path = `${PREFIX}/${id}`;
-      const oldId = 'oldId';
+    should(`update the object corresponding to the ID`, () => {
+      const value = 123;
+      const id = _.storage.add(value);
 
-      setStorage(
-          localStorage,
-          PREFIX,
-          INDEXES_BINARY_CONVERTER.convertForward(['oldId']),
-      );
+      const value2 = 345;
 
-      const listIds$ = _.storage.listIds().pipe(scanArray());
-      const idsSubject = createSpySubject(listIds$);
+      assert(_.storage.update(id, value2)).to.beTrue();
+      assert(_.storage.read(id)).to.emitWith(value2);
+      assert(localStorage.getItem(PREFIX)).to.equal(`["${id}"]`);
+      assert(localStorage.getItem(`${PREFIX}/${id}`)).to.equal(`${value2}`);
+    });
 
-      const itemSubject = createSpySubject(_.storage.read(id));
-
-      run(_.storage.update(id, 123));
-      assert(idsSubject).to.emitWith(arrayThat<string>().haveExactElements([oldId, id]));
-      assert(itemSubject).to.emitWith(123);
-      assert(localStorage.getItem(path)).to.equal(ITEM_BINARY_CONVERTER.convertForward(123));
+    should(`return false if the object for the ID doesn't exist`, () => {
+      assert(_.storage.update('non existent', 123)).to.beFalse();
     });
   });
 });

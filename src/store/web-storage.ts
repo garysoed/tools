@@ -1,13 +1,9 @@
-import { binary, compose, Converter, identity, json, Serializable, strict, StrictConverter } from 'nabu';
-import { concat, Observable } from 'rxjs';
-import { map, shareReplay, switchMap, take } from 'rxjs/operators';
+import { compose, Converter, identity, Serializable, strict, StrictConverter } from 'nabu';
+import { fromEvent, merge, Observable, Subject } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
-import { cache } from '../data/cache';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { SimpleIdGenerator } from '../random/simple-id-generator';
-import { mapNonNull } from '../rxjs/map-non-null';
-import { ArrayDiff, diffArray } from '../rxjs/state/array-diff';
-import { WebStorageObservable } from '../rxjs/web-storage-observable';
 import { listConverter } from '../serializer/list-converter';
 
 import { EditableStorage } from './editable-storage';
@@ -16,128 +12,113 @@ import { EditableStorage } from './editable-storage';
 export const INDEXES_PARSER = listConverter<string>(identity<string>());
 
 export class WebStorage<T> implements EditableStorage<T> {
+  private readonly onInvalidatedLocally$: Subject<void> = new Subject();
+
   private readonly converter: StrictConverter<T, string>;
-  private readonly idGenerator: BaseIdGenerator = new SimpleIdGenerator();
-  private readonly indexesConverter: StrictConverter<string[], string>;
-  private readonly storage: WebStorageObservable;
+  private readonly indexesConverter: StrictConverter<readonly string[], string>;
 
   /**
    * @param storage Reference to storage instance.
    * @param prefix The prefix of the IDs added by this storage.
    */
   constructor(
-      storage: Storage,
+      private readonly storage: Storage,
       private readonly prefix: string,
       converter: Converter<T, Serializable>,
       grammar: Converter<Serializable, string>,
+      private readonly idGenerator: BaseIdGenerator = new SimpleIdGenerator(),
   ) {
-    this.storage = new WebStorageObservable(storage);
-
     this.converter = strict(compose(converter, grammar));
     this.indexesConverter = strict(compose(INDEXES_PARSER, grammar));
   }
 
-  clear(): Observable<unknown> {
-    return this.storage.clear();
+  add(instance: T): string {
+    const ids = this.getIds();
+    const newId = this.idGenerator.generate(ids);
+
+    this.setIds([...ids, newId]);
+
+    this.storage.setItem(this.getPath(newId), this.converter.convertForward(instance));
+    this.onInvalidatedLocally$.next();
+    return newId;
   }
 
-  delete(id: string): Observable<unknown> {
-    return this.listIdsAsArray()
-        .pipe(
-            take(1),
-            switchMap(ids => {
-              const newArray = ids.filter(v => v !== id);
-              const result = this.indexesConverter.convertForward(newArray);
-              return concat(
-                  this.storage.setItem(this.prefix, result),
-                  this.storage.removeItem(getPath(id, this.prefix)),
-              );
-            }),
-        );
+  clear(): void {
+    for (const id of this.getIds()) {
+      this.delete(id);
+    }
+
+    this.storage.removeItem(this.prefix);
   }
 
-  deleteAt(index: number): Observable<unknown> {
-    throw new Error('Method not implemented.');
-  }
+  delete(id: string): boolean {
+    const ids = new Set(this.getIds());
+    if (!ids.has(id)) {
+      return false;
+    }
 
-  findIndex(id: string): Observable<number|null> {
-    throw new Error('Method not implemented.');
-  }
-
-  generateId(): Observable<string> {
-    return this.listIdsAsArray()
-        .pipe(
-            map(ids => this.idGenerator.generate(ids)),
-            shareReplay(1),
-        );
+    this.storage.removeItem(this.getPath(id));
+    this.setIds([...ids].filter(storedId => storedId !== id));
+    this.onInvalidatedLocally$.next();
+    return true;
   }
 
   has(id: string): Observable<boolean> {
-    return this.listIdsAsArray()
-        .pipe(
-            map(ids => ids.indexOf(id) >= 0),
-            shareReplay(1),
-        );
+    return this.idList$.pipe(map(ids => ids.has(id)));
   }
 
-  insertAt(index: number, id: string, instance: T): Observable<unknown> {
-    throw new Error('Method not implemented.');
+  get idList$(): Observable<ReadonlySet<string>> {
+    return this.onInvalidate$.pipe(
+        startWith({}),
+        map(() => new Set(this.getIds())),
+    );
   }
 
-  listIds(): Observable<ArrayDiff<string>> {
-    return this.listIdsAsArray().pipe(diffArray());
+  read(id: string): Observable<T|undefined> {
+    const path = this.getPath(id);
+
+    return this.onInvalidate$.pipe(
+        startWith({}),
+        map(() => this.storage.getItem(path)),
+        map(itemStr => {
+          if (!itemStr) {
+            return undefined;
+          }
+
+          return this.converter.convertBackward(itemStr);
+        }),
+    );
   }
 
-  read(id: string): Observable<T|null> {
-    const path = getPath(id, this.prefix);
+  update(id: string, instance: T): boolean {
+    const ids = new Set(this.getIds());
+    if (!ids.has(id)) {
+      return false;
+    }
 
-    return this.storage.getItem(path)
-        .pipe(
-            mapNonNull(itemStr => this.converter.convertBackward(itemStr)),
-            shareReplay(1),
-        );
+    this.storage.setItem(this.getPath(id), this.converter.convertForward(instance));
+    this.onInvalidatedLocally$.next();
+    return true;
   }
 
-  update(id: string, instance: T): Observable<unknown> {
-    const path = getPath(id, this.prefix);
+  private getIds(): readonly string[] {
+    const indexesStr = this.storage.getItem(this.prefix);
+    if (!indexesStr) {
+      return [];
+    }
 
-    return this.listIdsAsArray()
-        .pipe(
-            take(1),
-            switchMap(ids => {
-              const newIds = this.indexesConverter.convertForward(
-                  [...new Set([...ids, id])],
-              );
-              const itemResult = this.converter.convertForward(instance);
-
-              return concat(
-                  this.storage.setItem(this.prefix, newIds),
-                  this.storage.setItem(path, itemResult),
-              );
-            }),
-        );
+    return this.indexesConverter.convertBackward(indexesStr);
   }
 
-  updateAt(index: number, id: string, instance: T): Observable<unknown> {
-    throw new Error('Method not implemented.');
+  private getPath(key: string): string {
+    return `${this.prefix}/${key}`;
   }
 
-  @cache()
-  private listIdsAsArray(): Observable<string[]> {
-    return this.storage.getItem(this.prefix)
-        .pipe(
-            map(indexesStr => {
-              if (!indexesStr) {
-                return [];
-              }
-
-              return this.indexesConverter.convertBackward(indexesStr);
-            }),
-            shareReplay(1),
-        );
+  private get onInvalidate$(): Observable<unknown> {
+    return merge(this.onInvalidatedLocally$, fromEvent(window, 'storage'));
   }
-}
 
-function getPath(key: string, prefix: string): string {
-  return `${prefix}/${key}`;
+  private setIds(ids: readonly string[]): void {
+    this.storage.setItem(this.prefix, this.indexesConverter.convertForward(ids));
+  }
 }
