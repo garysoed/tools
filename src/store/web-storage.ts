@@ -2,8 +2,6 @@ import { compose, Converter, identity, Serializable, strict, StrictConverter } f
 import { fromEvent, merge, Observable, Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
-import { BaseIdGenerator } from '../random/base-id-generator';
-import { SimpleIdGenerator } from '../random/simple-id-generator';
 import { listConverter } from '../serializer/list-converter';
 
 import { EditableStorage } from './editable-storage';
@@ -26,21 +24,9 @@ export class WebStorage<T> implements EditableStorage<T> {
       private readonly prefix: string,
       converter: Converter<T, Serializable>,
       grammar: Converter<Serializable, string>,
-      private readonly idGenerator: BaseIdGenerator = new SimpleIdGenerator(),
   ) {
     this.converter = strict(compose(converter, grammar));
     this.indexesConverter = strict(compose(INDEXES_PARSER, grammar));
-  }
-
-  add(instance: T): string {
-    const ids = this.getIds();
-    const newId = this.idGenerator.generate(ids);
-
-    this.setIds([...ids, newId]);
-
-    this.storage.setItem(this.getPath(newId), this.converter.convertForward(instance));
-    this.onInvalidatedLocally$.next();
-    return newId;
   }
 
   clear(): void {
@@ -58,7 +44,7 @@ export class WebStorage<T> implements EditableStorage<T> {
     }
 
     this.storage.removeItem(this.getPath(id));
-    this.setIds([...ids].filter(storedId => storedId !== id));
+    this.setIds(new Set([...ids].filter(storedId => storedId !== id)));
     this.onInvalidatedLocally$.next();
     return true;
   }
@@ -70,7 +56,7 @@ export class WebStorage<T> implements EditableStorage<T> {
   get idList$(): Observable<ReadonlySet<string>> {
     return this.onInvalidate$.pipe(
         startWith({}),
-        map(() => new Set(this.getIds())),
+        map(() => this.getIds()),
     );
   }
 
@@ -91,23 +77,22 @@ export class WebStorage<T> implements EditableStorage<T> {
   }
 
   update(id: string, instance: T): boolean {
-    const ids = new Set(this.getIds());
-    if (!ids.has(id)) {
-      return false;
-    }
+    const ids = this.getIds();
+    const hasExistingId = ids.has(id);
 
     this.storage.setItem(this.getPath(id), this.converter.convertForward(instance));
+    this.setIds(new Set([...ids, id]));
     this.onInvalidatedLocally$.next();
-    return true;
+    return hasExistingId;
   }
 
-  private getIds(): readonly string[] {
+  private getIds(): ReadonlySet<string> {
     const indexesStr = this.storage.getItem(this.prefix);
     if (!indexesStr) {
-      return [];
+      return new Set();
     }
 
-    return this.indexesConverter.convertBackward(indexesStr);
+    return new Set(this.indexesConverter.convertBackward(indexesStr));
   }
 
   private getPath(key: string): string {
@@ -118,7 +103,7 @@ export class WebStorage<T> implements EditableStorage<T> {
     return merge(this.onInvalidatedLocally$, fromEvent(window, 'storage'));
   }
 
-  private setIds(ids: readonly string[]): void {
-    this.storage.setItem(this.prefix, this.indexesConverter.convertForward(ids));
+  private setIds(ids: ReadonlySet<string>): void {
+    this.storage.setItem(this.prefix, this.indexesConverter.convertForward([...ids]));
   }
 }

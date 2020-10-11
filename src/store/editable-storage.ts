@@ -8,13 +8,6 @@ import { ReadableStorage } from './readable-storage';
  * @thModule store
  */
 export interface EditableStorage<T> extends ReadableStorage<T> {
-  /**
-   * Adds the given object to the storage.
-   *
-   * @param instance - Object to be added to the storage.
-   * @returns ID associated with the added instance.
-   */
-  add(instance: T): string;
 
   /**
    * Clears all data in the storage.

@@ -7,23 +7,15 @@ import { InMemoryStorage } from './in-memory-storage';
 
 test('@tools/store/in-memory-storage', init => {
   const _ = init(() => {
-    const storage = new InMemoryStorage<number>(new SequentialIdGenerator());
+    const storage = new InMemoryStorage<number>();
     return {storage};
-  });
-
-  test('add', () => {
-    should(`add the new item with the generated new ID`, () => {
-      const value = 123;
-      const id = _.storage.add(value);
-      assert(_.storage.read(id)).to.emitWith(value);
-    });
   });
 
   test('clear', () => {
     should(`delete all the items`, () => {
-      _.storage.add(1);
-      _.storage.add(2);
-      _.storage.add(3);
+      _.storage.update('id1', 1);
+      _.storage.update('id2', 2);
+      _.storage.update('id3', 3);
       _.storage.clear();
 
       assert(_.storage.idList$).to.emitWith(setThat<string>().beEmpty());
@@ -32,7 +24,8 @@ test('@tools/store/in-memory-storage', init => {
 
   test('delete', () => {
     should(`delete the specified item`, () => {
-      const id = _.storage.add(1);
+      const id = 'id';
+      _.storage.update(id, 1);
 
       assert(_.storage.delete(id)).to.beTrue();
       assert(_.storage.idList$).to.emitWith(setThat<string>().beEmpty());
@@ -45,7 +38,8 @@ test('@tools/store/in-memory-storage', init => {
 
   test('has', () => {
     should(`emit true if the object with the ID exists`, () => {
-      const id = _.storage.add(1);
+      const id = 'id';
+      _.storage.update(id, 1);
 
       assert(_.storage.has(id)).to.emitWith(true);
     });
@@ -57,9 +51,12 @@ test('@tools/store/in-memory-storage', init => {
 
   test('idList$', () => {
     should(`emit all the IDs in the storage`, () => {
-      const id1 = _.storage.add(1);
-      const id2 = _.storage.add(2);
-      const id3 = _.storage.add(3);
+      const id1 = 'id1';
+      const id2 = 'id2';
+      const id3 = 'id3';
+      _.storage.update(id1, 1);
+      _.storage.update(id2, 2);
+      _.storage.update(id3, 3);
 
       assert(_.storage.idList$).to
           .emitWith(setThat<string>().haveExactElements(new Set([id1, id2, id3])));
@@ -69,7 +66,8 @@ test('@tools/store/in-memory-storage', init => {
   test('read', () => {
     should(`return the object corresponding to the item`, () => {
       const value = 123;
-      const id = _.storage.add(value);
+      const id = 'id';
+      _.storage.update(id, value);
 
       assert(_.storage.read(id)).to.emitWith(value);
     });
@@ -82,7 +80,8 @@ test('@tools/store/in-memory-storage', init => {
   test('update', () => {
     should(`update the object corresponding to the ID`, () => {
       const value = 123;
-      const id = _.storage.add(value);
+      const id = 'id';
+      _.storage.update(id, value);
 
       const value2 = 345;
 
@@ -91,7 +90,11 @@ test('@tools/store/in-memory-storage', init => {
     });
 
     should(`return false if the object for the ID doesn't exist`, () => {
-      assert(_.storage.update('non existent', 123)).to.beFalse();
+      const value = 123;
+      const id = 'id';
+
+      assert(_.storage.update(id, value)).to.beFalse();
+      assert(_.storage.read(id)).to.emitWith(value);
     });
   });
 });
