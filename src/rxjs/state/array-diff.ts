@@ -69,7 +69,9 @@ export type ArrayDiff<T> = ArrayInit<T>|ArrayInsert<T>|ArrayDelete<T>|ArraySet<T
  *
  * @thModule rxjs.state
  */
-export function diffArray<T>(): OperatorFunction<readonly T[], ArrayDiff<T>> {
+export function diffArray<T>(
+    diffFn: (a: T, b: T) => boolean = (a, b) => a === b,
+): OperatorFunction<readonly T[], ArrayDiff<T>> {
   return pipe(
       startWith([] as readonly T[]),
       pairwise(),
@@ -82,7 +84,7 @@ export function diffArray<T>(): OperatorFunction<readonly T[], ArrayDiff<T>> {
         while (i < newArray.length) {
           const existingItem = currArray[i];
           const newItem = newArray[i];
-          if (existingItem !== newItem) {
+          if (!diffValue(existingItem, newItem, diffFn)) {
             currArray.splice(i, 0, newItem);
             diffs.push({index: i, type: 'insert', value: newItem});
           }
@@ -98,6 +100,14 @@ export function diffArray<T>(): OperatorFunction<readonly T[], ArrayDiff<T>> {
       }),
       switchMap(diffs => observableOf(...diffs)),
   );
+}
+
+function diffValue<T>(a: T|undefined, b: T|undefined, helper: (a: T, b: T) => boolean): boolean {
+  if (a !== undefined && b !== undefined) {
+    return helper(a, b);
+  }
+
+  return a === b;
 }
 
 
