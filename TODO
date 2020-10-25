@@ -1,15 +1,6 @@
-gs-tools
-  ✔ Fix compilation errors @done
-  ✔ Fix test errors @done(18-11-25 12:12)
-  ✔ Removed Parse and Converter @done(18-11-25 14:58)
-  ☐ Rework GAPI.
-  ☐ What to do with `inject/`? Kinda redundant with grapevine.
-  ☐ Clean up bazel
-  ☐ Delete cached-storage. rxjs with `@cache` should be enough.
-  ☐ Clean up BUILD files
-  ☐ For some reason, `caches_test` can only be successful when ran in isolation.
-  ☐ Delete the index.ts
-  ☐ Delete custom gs. types.
-  ☐ Delete async/
+colors.ts:
+  ☐ Validate `amount` in `mix`
+  ☐ Replace `mix` with `blend`
+  ☐ Support other blending functions
+general:
   ☐ Gather TODOs
-  ☐ TS Docs

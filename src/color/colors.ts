@@ -216,8 +216,6 @@ export function getDistance(color1: Color, color2: Color): number {
  * @thModule color
  */
 export function mix(color1: Color, color2: Color, amount: number): Color {
-  // TODO: Validate amount.
-  // TODO: Replace with blend.
   return new RgbColor(
       Math.round(color1.red * amount + color2.red * (1 - amount)),
       Math.round(color1.green * amount + color2.green * (1 - amount)),
