@@ -1,5 +1,4 @@
 import { assert, objectThat, should, test } from 'gs-testing';
-import { SerializableObject } from 'nabu';
 
 import { integerConverter } from './integer-converter';
 import { objectConverter } from './object-converter';
@@ -44,7 +43,7 @@ test('serializer.ObjectConverter', () => {
       const converter = objectConverter({a: integerConverter(), b: integerConverter()});
 
       assert(converter.convertForward({a: 456, b: 123})).to.haveProperties({
-        result: objectThat<SerializableObject>().haveProperties({a: 456, b: 123}),
+        result: objectThat<Record<string, unknown>>().haveProperties({a: 456, b: 123}),
       });
     });
 

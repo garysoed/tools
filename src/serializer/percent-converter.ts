@@ -1,7 +1,7 @@
-import { Converter, Result, Serializable } from 'nabu';
+import { Converter, Result } from 'nabu';
 
-class PercentConverter implements Converter<number, Serializable> {
-  convertBackward(value: Serializable): Result<number> {
+class PercentConverter implements Converter<number, unknown> {
+  convertBackward(value: unknown): Result<number> {
     if (typeof value !== 'string') {
       return {success: false};
     }
@@ -23,7 +23,7 @@ class PercentConverter implements Converter<number, Serializable> {
     }
   }
 
-  convertForward(input: number): Result<Serializable> {
+  convertForward(input: number): Result<unknown> {
     return {result: `${(input * 100).toString(10)}%`, success: true};
   }
 }

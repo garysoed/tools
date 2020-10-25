@@ -1,9 +1,9 @@
-import { Converter, Result, Serializable } from 'nabu';
+import { Converter, Result } from 'nabu';
 
-class IntegerConverter implements Converter<number, Serializable> {
+class IntegerConverter implements Converter<number, unknown> {
   constructor(private readonly round_: boolean) { }
 
-  convertBackward(value: Serializable): Result<number> {
+  convertBackward(value: unknown): Result<number> {
     if (typeof value !== 'number') {
       return {success: false};
     }
@@ -20,7 +20,7 @@ class IntegerConverter implements Converter<number, Serializable> {
     return {result: value, success: true};
   }
 
-  convertForward(input: number): Result<Serializable> {
+  convertForward(input: number): Result<unknown> {
     if (Math.round(input) !== input) {
       return {success: false};
     }

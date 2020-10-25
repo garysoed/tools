@@ -1,7 +1,7 @@
-import { Converter, Result, Serializable } from 'nabu';
+import { Converter, Result } from 'nabu';
 
-class FloatConverter implements Converter<number, Serializable> {
-  convertBackward(input: Serializable): Result<number> {
+class FloatConverter implements Converter<number, unknown> {
+  convertBackward(input: unknown): Result<number> {
     if (typeof input !== 'number') {
       return {success: false};
     }
@@ -9,7 +9,7 @@ class FloatConverter implements Converter<number, Serializable> {
     return {result: input, success: true};
   }
 
-  convertForward(value: number): Result<Serializable> {
+  convertForward(value: number): Result<unknown> {
     return {result: value, success: true};
   }
 }

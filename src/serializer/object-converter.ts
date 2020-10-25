@@ -1,10 +1,10 @@
-import { Converter, Result, Serializable } from 'nabu';
+import { Converter, Result } from 'nabu';
 
 export class ObjectConverter<T extends {}> implements
-    Converter<{[K in keyof T]: T[K]}, Serializable> {
-  constructor(private readonly spec_: {[spec in keyof T]: Converter<T[spec], Serializable>}) { }
+    Converter<{[K in keyof T]: T[K]}, unknown> {
+  constructor(private readonly spec_: {[spec in keyof T]: Converter<T[spec], unknown>}) { }
 
-  convertBackward(input: Serializable): Result<{[K in keyof T]: T[K]}> {
+  convertBackward(input: unknown): Result<{[K in keyof T]: T[K]}> {
     if (!(input instanceof Object)) {
       return {success: false};
     }
@@ -15,7 +15,7 @@ export class ObjectConverter<T extends {}> implements
         continue;
       }
 
-      const inputValue = (input as any)[key] as Serializable;
+      const inputValue = (input as any)[key] as unknown;
       if (inputValue === undefined) {
         return {success: false};
       }
@@ -31,18 +31,14 @@ export class ObjectConverter<T extends {}> implements
     return {result: output, success: true};
   }
 
-  convertForward(value: {[K in keyof T]: T[K]}): Result<Serializable> {
-    const serializable: {[K in keyof T]: Serializable} = {} as any;
+  convertForward(value: {[K in keyof T]: T[K]}): Result<unknown> {
+    const serializable: Record<keyof T, unknown> = {} as any;
     for (const key in this.spec_) {
       if (!this.spec_.hasOwnProperty(key)) {
         continue;
       }
 
       const objectValue = value[key];
-      if (objectValue === undefined) {
-        return {success: false};
-      }
-
       const conversionResult = this.spec_[key].convertForward(objectValue);
       if (!conversionResult.success) {
         return {success: false};
@@ -55,7 +51,7 @@ export class ObjectConverter<T extends {}> implements
 }
 
 export function objectConverter<T extends {}>(
-    spec: {[K in keyof T]: Converter<T[K], Serializable>},
+    spec: {[K in keyof T]: Converter<T[K], unknown>},
 ): ObjectConverter<T> {
   return new ObjectConverter<T>(spec);
 }

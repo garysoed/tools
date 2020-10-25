@@ -1,9 +1,9 @@
-import { Converter, Result, Serializable } from 'nabu';
+import { Converter, Result } from 'nabu';
 
-class FunctionConverter<F extends Function> implements Converter<F, Serializable> {
+class FunctionConverter<F extends Function> implements Converter<F, unknown> {
   constructor(private readonly paramCount_: number|null) { }
 
-  convertBackward(input: Serializable): Result<F> {
+  convertBackward(input: unknown): Result<F> {
     if (typeof input !== 'string') {
       return {success: false};
     }
@@ -24,7 +24,7 @@ class FunctionConverter<F extends Function> implements Converter<F, Serializable
     return {result: fn, success: true};
   }
 
-  convertForward(value: F): Result<Serializable> {
+  convertForward(value: F): Result<unknown> {
     if (this.paramCount_ !== null && value.length !== this.paramCount_) {
       return {success: false};
     }

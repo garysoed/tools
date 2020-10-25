@@ -1,29 +1,29 @@
 import { assert, should, test } from 'gs-testing';
 import { numberType } from 'gs-types';
-import { Converter, Serializable, strict } from 'nabu';
+import { strict } from 'nabu';
 
 import { typeBased } from './type-based-converter';
 
-test('serializer.TypeBasedConverter', () => {
-  let converter: Converter<number, Serializable>;
 
-  beforeEach(() => {
-    converter = typeBased(numberType);
+test('serializer.TypeBasedConverter', init => {
+  const _ = init(() => {
+    const converter = typeBased(numberType);
+    return {converter};
   });
 
   test('convertBackward', () => {
     should(`convert correctly`, () => {
-      assert(strict(converter).convertBackward(123)).to.equal(123);
+      assert(strict(_.converter).convertBackward(123)).to.equal(123);
     });
 
     should(`fail if the type is wrong`, () => {
-      assert(converter.convertBackward('abc').success).to.beFalse();
+      assert(_.converter.convertBackward('abc').success).to.beFalse();
     });
   });
 
   test('convertForward', () => {
     should(`convert correctly`, () => {
-      assert(strict(converter).convertForward(123)).to.equal(123);
+      assert(strict(_.converter).convertForward(123)).to.equal(123);
     });
   });
 });

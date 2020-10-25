@@ -1,19 +1,19 @@
 import { assert, objectThat, should, test } from 'gs-testing';
-import { Converter, Serializable, SerializableObject, strict } from 'nabu';
+import { Converter, strict } from 'nabu';
 
 import { IsSerializable } from './is-serializable';
 import { isSerializable } from './is-serializable-converter';
 
 class TestClass implements IsSerializable {
-  constructor(readonly data: Serializable) { }
+  constructor(readonly data: unknown) { }
 
-  serialize(): Serializable {
+  serialize(): unknown {
     return this.data;
   }
 }
 
 test('serializer.IsSerializableConverter', () => {
-  let converter: Converter<TestClass, Serializable>;
+  let converter: Converter<TestClass, unknown>;
 
   beforeEach(() => {
     converter = isSerializable(TestClass);
@@ -23,7 +23,7 @@ test('serializer.IsSerializableConverter', () => {
     should(`convert correctly`, () => {
       const data = {a: 1, b: 2};
       assert(strict(converter).convertBackward(data)).to.haveProperties({
-        data: objectThat<SerializableObject>().haveProperties(data),
+        data: objectThat<Record<string, unknown>>().haveProperties(data),
       });
     });
   });

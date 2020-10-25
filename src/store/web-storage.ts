@@ -1,4 +1,4 @@
-import { compose, Converter, identity, Serializable, strict, StrictConverter } from 'nabu';
+import { compose, Converter, identity, strict, StrictConverter } from 'nabu';
 import { fromEvent, merge, Observable, Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -9,7 +9,7 @@ import { EditableStorage } from './editable-storage';
 
 export const INDEXES_PARSER = listConverter<string>(identity<string>());
 
-export class WebStorage<T> implements EditableStorage<T> {
+export class WebStorage<T, S> implements EditableStorage<T> {
   private readonly onInvalidatedLocally$: Subject<void> = new Subject();
 
   private readonly converter: StrictConverter<T, string>;
@@ -22,8 +22,8 @@ export class WebStorage<T> implements EditableStorage<T> {
   constructor(
       private readonly storage: Storage,
       private readonly prefix: string,
-      converter: Converter<T, Serializable>,
-      grammar: Converter<Serializable, string>,
+      converter: Converter<T, S>,
+      grammar: Converter<S, string>,
   ) {
     this.converter = strict(compose(converter, grammar));
     this.indexesConverter = strict(compose(INDEXES_PARSER, grammar));
