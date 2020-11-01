@@ -1,10 +1,10 @@
 import { numberType, stringType } from 'gs-types';
 
-import { byType } from './by-type';
 import { CompareResult } from './compare-result';
+import { Ordering } from './ordering';
+import { byType } from './by-type';
 import { compound } from './compound';
 import { normal } from './normal';
-import { Ordering } from './ordering';
 
 const SPLIT_REGEXP = /([0-9]+)/;
 

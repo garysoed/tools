@@ -1,12 +1,12 @@
 import { assert, createSpySubject, objectThat, setThat, should, test } from 'gs-testing';
 import { of as observableOf } from 'rxjs';
 
-import { diffSet, mapSetDiff, scanSet, SetDiff } from './set-diff';
+import { SetDiff, diffSet, mapSetDiff, scanSet } from './set-diff';
 
 
 test('@tools/rxjs/state/set-diff', () => {
   test('diff', () => {
-    should(`emit the correct diffs`, () => {
+    should('emit the correct diffs', () => {
       const sets$ = observableOf(new Set([1, 2, 3]), new Set([3, 2, 4]));
       const diff$ = createSpySubject(sets$.pipe(diffSet()));
 
@@ -21,7 +21,7 @@ test('@tools/rxjs/state/set-diff', () => {
   });
 
   test('mapSetDiff', () => {
-    should(`emit the correct mapped values`, () => {
+    should('emit the correct mapped values', () => {
       const sets$ = observableOf(new Set([1, 2, 3]), new Set([3, 2, 4]));
       const diff$ = createSpySubject(sets$.pipe(diffSet(), mapSetDiff(v => `${v}`)));
 
@@ -36,7 +36,7 @@ test('@tools/rxjs/state/set-diff', () => {
   });
 
   test('scanSet', () => {
-    should(`emit the correct sets`, () => {
+    should('emit the correct sets', () => {
       const sets$ = observableOf(new Set([1, 2, 3]), new Set([3, 2, 4]));
       const diff$ = createSpySubject(sets$.pipe(diffSet(), scanSet()));
 

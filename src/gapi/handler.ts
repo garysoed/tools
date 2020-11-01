@@ -1,4 +1,4 @@
-import { defer, EMPTY, fromEventPattern, Observable, of as observableOf } from 'rxjs';
+import { EMPTY, Observable, defer, fromEventPattern, of as observableOf } from 'rxjs';
 import { map, shareReplay, startWith, switchMap, switchMapTo } from 'rxjs/operators';
 
 /**
@@ -40,11 +40,11 @@ export class Handler {
           handler => authInstance.isSignedIn.listen(signedIn => handler(signedIn)),
       );
     })
-    .pipe(
-        map(() => authInstance.isSignedIn.get()),
-        startWith(authInstance.isSignedIn.get()),
-        shareReplay({bufferSize: 1, refCount: true}),
-    );
+        .pipe(
+            map(() => authInstance.isSignedIn.get()),
+            startWith(authInstance.isSignedIn.get()),
+            shareReplay({bufferSize: 1, refCount: true}),
+        );
   }
 
   /**
@@ -52,7 +52,7 @@ export class Handler {
    *
    * @returns Observable that emits when sign in is successful.
    */
-  signIn(): Observable<{}> {
+  signIn(): Observable<unknown> {
     return defer(async () => {
       return gapi.auth2.getAuthInstance().signIn();
     });

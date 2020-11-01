@@ -1,7 +1,7 @@
 import { Converter, Result } from 'nabu';
-
-import { Path, SEPARATOR } from '../path/path';
 import { RelativePath } from '../path/relative-path';
+import { SEPARATOR } from '../path/path';
+
 
 /**
  * Parses the string to {@link RelativePath}.

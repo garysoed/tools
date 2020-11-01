@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { CACHE_ANNOTATOR, getCache, setCacheValue } from './caches';
 
 
@@ -41,15 +42,13 @@ function createCachedFunctionCall(
     propertyKey: string|symbol,
 ): (...args: unknown[]) => unknown {
   return function(this: any): any {
-    // tslint:disable-next-line:no-invalid-this no-this-assignment
-    const instance = this;
-    const cachedValue = getCache(instance, propertyKey);
+    const cachedValue = getCache(this, propertyKey);
     if (cachedValue !== undefined) {
       return cachedValue;
     }
 
-    const result = origFn.apply(instance);
-    setCacheValue(instance, propertyKey, result);
+    const result = origFn.apply(this);
+    setCacheValue(this, propertyKey, result);
 
     return result;
   };

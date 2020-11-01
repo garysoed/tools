@@ -42,7 +42,7 @@ const STATE_TYPE = hasPropertiesType<State>({
   s2: numberType,
 });
 
-export function aleaSeed(seed: any): RandomSeed {
+export function aleaSeed(seed: unknown): RandomSeed {
   let state = STATE_TYPE.check(seed) ? seed : createState(seed);
 
   return {

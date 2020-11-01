@@ -1,10 +1,6 @@
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
-import { BaseIdGenerator } from '../random/base-id-generator';
-import { SimpleIdGenerator } from '../random/simple-id-generator';
-
 import { EditableStorage } from './editable-storage';
+import { map } from 'rxjs/operators';
 
 
 export class InMemoryStorage<T> implements EditableStorage<T> {

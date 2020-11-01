@@ -5,7 +5,7 @@ import { split } from './split';
 
 
 test('@tools/collect/split', () => {
-  should(`return tuple that splits at the correct position`, () => {
+  should('return tuple that splits at the correct position', () => {
     const inf = function*(): Generator<number> {
       let i = 0;
       while (true) {
@@ -21,7 +21,7 @@ test('@tools/collect/split', () => {
         ]));
   });
 
-  should(`return tuple with empty array in first element if count is zero`, () => {
+  should('return tuple with empty array in first element if count is zero', () => {
     const inf = function*(): Generator<number> {
       let i = 0;
       while (true) {
@@ -37,7 +37,7 @@ test('@tools/collect/split', () => {
         ]));
   });
 
-  should(`return tuple with all elements in the first element if count is too big`, () => {
+  should('return tuple with all elements in the first element if count is too big', () => {
     assert($pipe([1, 2, 3], split(5))).to.equal(
         tupleThat<[readonly number[], Iterable<number>]>().haveExactElements([
           arrayThat<number>().haveExactElements([1, 2, 3]),
@@ -45,7 +45,7 @@ test('@tools/collect/split', () => {
         ]));
   });
 
-  should(`return tuple with empty array if count is negative`, () => {
+  should('return tuple with empty array if count is negative', () => {
     const inf = function*(): Generator<number> {
       let i = 0;
       while (true) {

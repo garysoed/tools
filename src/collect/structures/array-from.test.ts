@@ -3,7 +3,7 @@ import { assert, should, test } from 'gs-testing';
 import { arrayFrom } from './array-from';
 
 test('@tools/collect/structures/iterable-from', () => {
-  should(`convert node list correctly`, () => {
+  should('convert node list correctly', () => {
     const child1 = document.createElement('div');
     const child2 = document.createElement('div');
     const child3 = document.createElement('div');

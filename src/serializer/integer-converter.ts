@@ -29,6 +29,6 @@ class IntegerConverter implements Converter<number, unknown> {
   }
 }
 
-export function integerConverter(round: boolean = true): IntegerConverter {
+export function integerConverter(round = true): IntegerConverter {
   return new IntegerConverter(round);
 }

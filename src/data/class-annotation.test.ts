@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { assert, should, test } from 'gs-testing';
 
-import { asArray } from '../collect/operators/as-array';
 import { $pipe } from '../collect/operators/pipe';
+import { asArray } from '../collect/operators/as-array';
 import { flat } from '../collect/operators/flat';
 import { map } from '../collect/operators/map';
 
@@ -34,7 +35,7 @@ test('data.ClassAnnotator', () => {
       );
     }
 
-    should(`return the correct values`, () => {
+    should('return the correct values', () => {
       assert(getFlatAttachedValues(DescendantClass)).to.haveExactElements([
         DescendantClass,
         15,

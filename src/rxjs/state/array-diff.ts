@@ -1,4 +1,4 @@
-import { of as observableOf, OperatorFunction, pipe } from 'rxjs';
+import { OperatorFunction, of as observableOf, pipe } from 'rxjs';
 import { map, pairwise, scan, startWith, switchMap } from 'rxjs/operators';
 
 

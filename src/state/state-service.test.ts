@@ -2,8 +2,8 @@ import { arrayThat, assert, createSpySubject, objectThat, should, test } from 'g
 import { map } from 'rxjs/operators';
 
 import { IdObject, Snapshot } from './snapshot';
-import { createId } from './state-id';
 import { StateService } from './state-service';
+import { createId } from './state-id';
 
 
 test('@tools/state/state-service', init => {
@@ -14,7 +14,7 @@ test('@tools/state/state-service', init => {
   });
 
   test('add', () => {
-    should(`add the object and give it a unique ID`, () => {
+    should('add the object and give it a unique ID', () => {
       const value = 'value';
 
       const id = _.service.add<string>(value);
@@ -25,7 +25,7 @@ test('@tools/state/state-service', init => {
   });
 
   test('clear', () => {
-    should(`delete the objects and return true if it exists`, () => {
+    should('delete the objects and return true if it exists', () => {
       const addedId1 = _.service.add<string>('initValue1');
       const addedId2 = _.service.add<string>('initValue2');
       _.service.clear();
@@ -49,14 +49,14 @@ test('@tools/state/state-service', init => {
       return {..._, addedId};
     });
 
-    should(`delete the object and return true if it exists`, () => {
+    should('delete the object and return true if it exists', () => {
       assert(_.service.delete(_.addedId)).to.beTrue();
 
       assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([_.addedId.id, _.addedId.id]);
       assert(_.service.get(_.addedId)).to.emitWith(null);
     });
 
-    should(`return false if the object does not exist`, () => {
+    should('return false if the object does not exist', () => {
       const otherId = createId<string>('other');
       assert(_.service.delete(otherId)).to.beFalse();
 
@@ -71,22 +71,22 @@ test('@tools/state/state-service', init => {
       return {..._, addedId, addedValue};
     });
 
-    should(`emit the correct object if it exists`, () => {
+    should('emit the correct object if it exists', () => {
       assert(_.service.get(_.addedId)).to.emitWith(_.addedValue);
     });
 
-    should(`emit null if the object does not exist`, () => {
+    should('emit null if the object does not exist', () => {
       assert(_.service.get(createId<string>('other'))).to.emitWith(null);
     });
 
-    should(`handle falsy object that are not null`, () => {
+    should('handle falsy object that are not null', () => {
       _.service.set(_.addedId, '');
       assert(_.service.get(createId<string>('other'))).to.emitWith(null);
     });
   });
 
   test('init', () => {
-    should(`initialize all the values in the service`, () => {
+    should('initialize all the values in the service', () => {
       const rootId = createId<string>('root');
       const idA = createId<string>('A');
       const idB = createId<string>('B');
@@ -123,7 +123,7 @@ test('@tools/state/state-service', init => {
       return {..._, addedId, addedValue};
     });
 
-    should(`update the value correctly and return true if the ID exist`, () => {
+    should('update the value correctly and return true if the ID exist', () => {
       const newValue = 'newValue';
       assert(_.service.set(_.addedId, newValue)).to.beTrue();
 
@@ -131,7 +131,7 @@ test('@tools/state/state-service', init => {
       assert(_.service.get(_.addedId)).to.emitWith(newValue);
     });
 
-    should(`return false if the ID doesn't exist`, () => {
+    should('return false if the ID doesn\'t exist', () => {
       const newValue = {value: 'new'};
       const otherId = createId<{value: string}>('otherId');
       assert(_.service.set(otherId, newValue)).to.beFalse();
@@ -143,7 +143,7 @@ test('@tools/state/state-service', init => {
   });
 
   test('snapshot', () => {
-    should(`return all the objects`, () => {
+    should('return all the objects', () => {
       const valueA = 'valueA';
       const valueB = 'valueB';
       const valueC = 'valueC';
@@ -162,7 +162,7 @@ test('@tools/state/state-service', init => {
       }));
     });
 
-    should(`return null if the object for the root ID is missing`, () => {
+    should('return null if the object for the root ID is missing', () => {
       const valueA = 'valueA';
       const valueB = 'valueB';
       const valueC = 'valueC';

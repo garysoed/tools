@@ -28,7 +28,7 @@ test('@tools/store/web-storage', init => {
   });
 
   test('clear', () => {
-    should(`delete all the items`, () => {
+    should('delete all the items', () => {
       const id1 = 'id1';
       const id2 = 'id2';
       const id3 = 'id3';
@@ -47,34 +47,34 @@ test('@tools/store/web-storage', init => {
 
 
   test('delete', () => {
-    should(`delete the specified item`, () => {
+    should('delete the specified item', () => {
       const id = 'id';
       _.storage.update(id, 1);
 
       assert(_.storage.delete(id)).to.beTrue();
       assert(_.storage.idList$).to.emitWith(setThat<string>().beEmpty());
-      assert(localStorage.getItem(PREFIX)).to.equal(`[]`);
+      assert(localStorage.getItem(PREFIX)).to.equal('[]');
       assert(localStorage.getItem(`${PREFIX}/${id}`)).to.beNull();
     });
 
-    should(`return false if the specified item doesn't exist`, () => {
+    should('return false if the specified item doesn\'t exist', () => {
       assert(_.storage.delete('non existent')).to.beFalse();
     });
   });
 
   test('has', () => {
-    should(`emit true if the object with the ID exists`, () => {
+    should('emit true if the object with the ID exists', () => {
       const id = 'id';
       _.storage.update(id, 1);
 
       assert(_.storage.has(id)).to.emitWith(true);
     });
 
-    should(`emit false if the object with the ID doesn't exist`, () => {
+    should('emit false if the object with the ID doesn\'t exist', () => {
       assert(_.storage.has('non existent')).to.emitWith(false);
     });
 
-    should(`respond to changes in the storage`, () => {
+    should('respond to changes in the storage', () => {
       const id = 'id';
 
       const has$ = createSpySubject(_.storage.has(id));
@@ -85,7 +85,7 @@ test('@tools/store/web-storage', init => {
   });
 
   test('idList$', () => {
-    should(`emit all the IDs in the storage`, () => {
+    should('emit all the IDs in the storage', () => {
       const id1 = 'id1';
       const id2 = 'id2';
       const id3 = 'id3';
@@ -97,7 +97,7 @@ test('@tools/store/web-storage', init => {
           .emitWith(setThat<string>().haveExactElements(new Set([id1, id2, id3])));
     });
 
-    should(`respond to changes in the storage`, () => {
+    should('respond to changes in the storage', () => {
       const id1 = 'id1';
       const id2 = 'id2';
       const id3 = 'id3';
@@ -117,7 +117,7 @@ test('@tools/store/web-storage', init => {
   });
 
   test('read', () => {
-    should(`return the object corresponding to the item`, () => {
+    should('return the object corresponding to the item', () => {
       const value = 123;
       const id = 'id';
       _.storage.update(id, value);
@@ -125,11 +125,11 @@ test('@tools/store/web-storage', init => {
       assert(_.storage.read(id)).to.emitWith(value);
     });
 
-    should(`return undefined if the object doesn't exist`, () => {
+    should('return undefined if the object doesn\'t exist', () => {
       assert(_.storage.read('non existent')).to.emitWith(undefined);
     });
 
-    should(`respond to changes in the storage`, () => {
+    should('respond to changes in the storage', () => {
       const id = 'id';
       const value = 123;
 
@@ -142,7 +142,7 @@ test('@tools/store/web-storage', init => {
   });
 
   test('update', () => {
-    should(`update the object corresponding to the ID`, () => {
+    should('update the object corresponding to the ID', () => {
       const value = 123;
       const id = 'id';
       _.storage.update(id, value);
@@ -155,7 +155,7 @@ test('@tools/store/web-storage', init => {
       assert(localStorage.getItem(`${PREFIX}/${id}`)).to.equal(`${value2}`);
     });
 
-    should(`return false if the object for the ID doesn't exist`, () => {
+    should('return false if the object for the ID doesn\'t exist', () => {
       const value = 123;
       const id = 'id';
 

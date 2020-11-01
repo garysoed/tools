@@ -1,7 +1,8 @@
-import { following } from '../collect/compare/following';
-import { withMap } from '../collect/compare/with-map';
+/* eslint-disable @typescript-eslint/ban-types */
 import { OrderedMap } from '../collect/structures/ordered-map';
 import { ReadonlyOrderedMap } from '../collect/structures/readonly-ordered-map';
+import { following } from '../collect/compare/following';
+import { withMap } from '../collect/compare/with-map';
 
 
 type Annotator<A extends any[], D> = (
@@ -24,7 +25,7 @@ export class ParameterAnnotation<D> {
   getAll(): ReadonlyMap<
       Object,
       ReadonlyMap<string|symbol, ReadonlyMap<number, readonly D[]>>
-  > {
+      > {
     return this.data;
   }
 

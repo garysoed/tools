@@ -6,7 +6,7 @@ import { normal } from './normal';
 
 
 test('@tools/collect/compare/compound', () => {
-  should(`use the first ordering and use the subsequent ones for tie breaking`, () => {
+  should('use the first ordering and use the subsequent ones for tie breaking', () => {
     const ordering = compound([
       () => 0 as CompareResult,
       normal<number>(),
@@ -15,7 +15,7 @@ test('@tools/collect/compare/compound', () => {
     assert(ordering(1, 0)).to.equal(1);
   });
 
-  should(`return 0 if none of the given orderings can break ties`, () => {
+  should('return 0 if none of the given orderings can break ties', () => {
     const ordering = compound([
       () => 0 as CompareResult,
     ]);

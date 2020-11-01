@@ -7,7 +7,7 @@ import { BaseIdGenerator } from './base-id-generator';
  * @thModule random
  */
 export class SequentialIdGenerator extends BaseIdGenerator {
-  private value: number = 0;
+  private value = 0;
 
   constructor() {
     super();

@@ -1,4 +1,4 @@
-import { compose, human, Result } from 'nabu';
+import { Result, compose, human } from 'nabu';
 
 import { floatConverter } from '../serializer/float-converter';
 import { integerConverter } from '../serializer/integer-converter';
@@ -34,8 +34,8 @@ function fromRgb(cssColor: string): Color|null {
         .split(',')
         .map((match: string, index: number) => {
           return index <= 2 ?
-              INTEGER_PARSER.convertBackward(match) :
-              FLOAT_PARSER.convertBackward(match);
+            INTEGER_PARSER.convertBackward(match) :
+            FLOAT_PARSER.convertBackward(match);
         });
     results = [...list];
   } else {

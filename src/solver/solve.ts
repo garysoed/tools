@@ -39,8 +39,8 @@ export class Solve {
         }
 
         bestIndex = trueAtLowerValues ?
-            Math.max(bestIndex, guessIndex) :
-            Math.min(bestIndex, guessIndex);
+          Math.max(bestIndex, guessIndex) :
+          Math.min(bestIndex, guessIndex);
       }
 
       if (result === trueAtLowerValues) {

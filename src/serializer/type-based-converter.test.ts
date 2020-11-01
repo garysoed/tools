@@ -12,17 +12,17 @@ test('serializer.TypeBasedConverter', init => {
   });
 
   test('convertBackward', () => {
-    should(`convert correctly`, () => {
+    should('convert correctly', () => {
       assert(strict(_.converter).convertBackward(123)).to.equal(123);
     });
 
-    should(`fail if the type is wrong`, () => {
+    should('fail if the type is wrong', () => {
       assert(_.converter.convertBackward('abc').success).to.beFalse();
     });
   });
 
   test('convertForward', () => {
-    should(`convert correctly`, () => {
+    should('convert correctly', () => {
       assert(strict(_.converter).convertForward(123)).to.equal(123);
     });
   });

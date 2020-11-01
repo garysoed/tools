@@ -1,13 +1,13 @@
-import { assert, should, test } from 'gs-testing';
-import { strict } from 'nabu';
 import { AbsolutePath } from './absolute-path';
-import { pathParser } from './path-parser';
 import { RelativePath } from './relative-path';
+import { assert, should, test } from 'gs-testing';
+import { pathParser } from './path-parser';
+import { strict } from 'nabu';
 
 
 test('path.PathParser', () => {
   test('convertBackward', () => {
-    should(`parse absolute paths correctly`, () => {
+    should('parse absolute paths correctly', () => {
       const path = strict(pathParser()).convertBackward('/a/b/c');
 
       assert(path).to.beAnInstanceOf(AbsolutePath);
@@ -15,7 +15,7 @@ test('path.PathParser', () => {
       assert(path!.toString()).to.equal('/a/b/c');
     });
 
-    should(`parse relative paths correctly`, () => {
+    should('parse relative paths correctly', () => {
       const path = strict(pathParser()).convertBackward('a/b/c');
 
       assert(path).to.beAnInstanceOf(RelativePath);
@@ -23,7 +23,7 @@ test('path.PathParser', () => {
       assert(path!.toString()).to.equal('a/b/c');
     });
 
-    should(`fail if the string is not a valid path`, () => {
+    should('fail if the string is not a valid path', () => {
       const path = pathParser().convertBackward('');
 
       assert(path).to.haveProperties({success: false});

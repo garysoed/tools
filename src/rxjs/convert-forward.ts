@@ -1,5 +1,5 @@
 import { Converter } from 'nabu';
-import { EMPTY, of as observableOf, OperatorFunction, pipe } from 'rxjs';
+import { EMPTY, OperatorFunction, of as observableOf, pipe } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 export function convertForward<F, T>(

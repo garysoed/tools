@@ -1,4 +1,4 @@
-import { Observable, of as observableOf, OperatorFunction, pipe } from 'rxjs';
+import { OperatorFunction, of as observableOf, pipe } from 'rxjs';
 import { map, pairwise, scan, startWith, switchMap } from 'rxjs/operators';
 
 /**
@@ -107,7 +107,7 @@ export function mapValueMapDiff<K, V1, V2>(mapFn: (from: V1, key: K) => V2):
         switch (diff.type) {
           case 'delete':
             return diff;
-          case 'init':
+          case 'init':{
             const newMap = new Map<K, V2>();
             for (const [key, value] of diff.value) {
               const newValue = mapFn(value, key);
@@ -117,6 +117,7 @@ export function mapValueMapDiff<K, V1, V2>(mapFn: (from: V1, key: K) => V2):
               type: 'init',
               value: newMap,
             };
+          }
           case 'set':
             return {
               key: diff.key,

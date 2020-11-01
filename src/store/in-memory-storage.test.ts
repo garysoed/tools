@@ -1,8 +1,5 @@
-import { assert, setThat, should, test } from 'gs-testing';
-
-import { SequentialIdGenerator } from '../random/sequential-id-generator';
-
 import { InMemoryStorage } from './in-memory-storage';
+import { assert, setThat, should, test } from 'gs-testing';
 
 
 test('@tools/store/in-memory-storage', init => {
@@ -12,7 +9,7 @@ test('@tools/store/in-memory-storage', init => {
   });
 
   test('clear', () => {
-    should(`delete all the items`, () => {
+    should('delete all the items', () => {
       _.storage.update('id1', 1);
       _.storage.update('id2', 2);
       _.storage.update('id3', 3);
@@ -23,7 +20,7 @@ test('@tools/store/in-memory-storage', init => {
   });
 
   test('delete', () => {
-    should(`delete the specified item`, () => {
+    should('delete the specified item', () => {
       const id = 'id';
       _.storage.update(id, 1);
 
@@ -31,26 +28,26 @@ test('@tools/store/in-memory-storage', init => {
       assert(_.storage.idList$).to.emitWith(setThat<string>().beEmpty());
     });
 
-    should(`return false if the specified item doesn't exist`, () => {
+    should('return false if the specified item doesn\'t exist', () => {
       assert(_.storage.delete('non existent')).to.beFalse();
     });
   });
 
   test('has', () => {
-    should(`emit true if the object with the ID exists`, () => {
+    should('emit true if the object with the ID exists', () => {
       const id = 'id';
       _.storage.update(id, 1);
 
       assert(_.storage.has(id)).to.emitWith(true);
     });
 
-    should(`emit false if the object with the ID doesn't exist`, () => {
+    should('emit false if the object with the ID doesn\'t exist', () => {
       assert(_.storage.has('non existent')).to.emitWith(false);
     });
   });
 
   test('idList$', () => {
-    should(`emit all the IDs in the storage`, () => {
+    should('emit all the IDs in the storage', () => {
       const id1 = 'id1';
       const id2 = 'id2';
       const id3 = 'id3';
@@ -64,7 +61,7 @@ test('@tools/store/in-memory-storage', init => {
   });
 
   test('read', () => {
-    should(`return the object corresponding to the item`, () => {
+    should('return the object corresponding to the item', () => {
       const value = 123;
       const id = 'id';
       _.storage.update(id, value);
@@ -72,13 +69,13 @@ test('@tools/store/in-memory-storage', init => {
       assert(_.storage.read(id)).to.emitWith(value);
     });
 
-    should(`return undefined if the object doesn't exist`, () => {
+    should('return undefined if the object doesn\'t exist', () => {
       assert(_.storage.read('non existent')).to.emitWith(undefined);
     });
   });
 
   test('update', () => {
-    should(`update the object corresponding to the ID`, () => {
+    should('update the object corresponding to the ID', () => {
       const value = 123;
       const id = 'id';
       _.storage.update(id, value);
@@ -89,7 +86,7 @@ test('@tools/store/in-memory-storage', init => {
       assert(_.storage.read(id)).to.emitWith(value2);
     });
 
-    should(`return false if the object for the ID doesn't exist`, () => {
+    should('return false if the object for the ID doesn\'t exist', () => {
       const value = 123;
       const id = 'id';
 

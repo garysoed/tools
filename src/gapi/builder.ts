@@ -1,4 +1,4 @@
-import { defer, Observable } from 'rxjs';
+import { Observable, defer } from 'rxjs';
 import { mapTo, shareReplay } from 'rxjs/operators';
 
 import { Handler } from './handler';
@@ -59,21 +59,21 @@ export class Builder {
    */
   build(): Observable<Handler> {
     return defer(async () => new Promise((resolve, reject) => {
-          gapi.load('client:auth2', async () => {
-            try {
-              await gapi.client.init({
-                apiKey: this.apiKey,
-                clientId: this.clientId,
-                discoveryDocs: this.discoveryDocs,
-                scope: this.scopes.join(' '),
-              });
-            } catch (e) {
-              reject(e);
-            }
-
-            resolve();
+      gapi.load('client:auth2', async () => {
+        try {
+          await gapi.client.init({
+            apiKey: this.apiKey,
+            clientId: this.clientId,
+            discoveryDocs: this.discoveryDocs,
+            scope: this.scopes.join(' '),
           });
-        }))
+        } catch (e) {
+          reject(e);
+        }
+
+        resolve();
+      });
+    }))
         .pipe(
             mapTo(new Handler()),
             shareReplay({bufferSize: 1, refCount: true}),

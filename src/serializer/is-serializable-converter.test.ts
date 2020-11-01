@@ -1,5 +1,5 @@
-import { assert, objectThat, should, test } from 'gs-testing';
 import { Converter, strict } from 'nabu';
+import { assert, objectThat, should, test } from 'gs-testing';
 
 import { IsSerializable } from './is-serializable';
 import { isSerializable } from './is-serializable-converter';
@@ -20,7 +20,7 @@ test('serializer.IsSerializableConverter', () => {
   });
 
   test('convertBackward', () => {
-    should(`convert correctly`, () => {
+    should('convert correctly', () => {
       const data = {a: 1, b: 2};
       assert(strict(converter).convertBackward(data)).to.haveProperties({
         data: objectThat<Record<string, unknown>>().haveProperties(data),
@@ -29,9 +29,10 @@ test('serializer.IsSerializableConverter', () => {
   });
 
   test('convertForward', () => {
-    should(`convert correctly`, () => {
+    should('convert correctly', () => {
       const data = {a: 1, b: 2};
-      assert(strict(converter).convertForward(new TestClass(data)) as {}).to.haveProperties(data);
+      assert(strict(converter).convertForward(new TestClass(data)) as Record<string, unknown>).to
+          .haveProperties(data);
     });
   });
 });

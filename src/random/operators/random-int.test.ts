@@ -1,7 +1,7 @@
 import { assert, should, test } from 'gs-testing';
 
-import { fromSeed } from '../random';
 import { FakeSeed } from '../testing/fake-seed';
+import { fromSeed } from '../random';
 
 import { randomInt } from './random-int';
 

@@ -1,8 +1,8 @@
 import { Type } from 'gs-types';
 
 import { CompareResult } from './compare-result';
-import { normal } from './normal';
 import { Ordering } from './ordering';
+import { normal } from './normal';
 import { reversed } from './reversed';
 
 /**

@@ -1,10 +1,10 @@
 import { assert, should, test } from 'gs-testing';
 
-import { join } from './join';
 import { $pipe } from './pipe';
+import { join } from './join';
 
 test('@tools/collect/operators/join', () => {
-  should(`join the items`, () => {
+  should('join the items', () => {
     assert($pipe(['a', 'b', 'c'], join(','))).to.equal('a,b,c');
   });
 });

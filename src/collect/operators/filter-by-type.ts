@@ -1,7 +1,7 @@
 import { Type } from 'gs-types';
 
-import { filter } from './filter';
 import { Operator } from './operator';
+import { filter } from './filter';
 
 /**
  * Returns elements in the {@link Iterable} of the given {@link Type}.

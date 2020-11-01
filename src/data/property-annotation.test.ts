@@ -1,10 +1,10 @@
-// tslint:disable:no-non-null-assertion
+/* eslint-disable @typescript-eslint/ban-types */
 import { assert, should, test } from 'gs-testing';
 
+import { $pipe } from '../collect/operators/pipe';
 import { asArray } from '../collect/operators/as-array';
 import { flat } from '../collect/operators/flat';
 import { map } from '../collect/operators/map';
-import { $pipe } from '../collect/operators/pipe';
 
 import { PropertyAnnotator } from './property-annotation';
 
@@ -50,7 +50,7 @@ test('data.PropertyAnnotation', () => {
       );
     }
 
-    should(`return the correct values`, () => {
+    should('return the correct values', () => {
       // Check method A
       assert(getFlatAttachedValues(DescendantClass, 'methodA')).to.haveExactElements([
         DescendantClass,
@@ -110,7 +110,7 @@ test('data.PropertyAnnotation', () => {
       );
     }
 
-    should(`return the correct values`, () => {
+    should('return the correct values', () => {
       assert(getFlatAttachedValues(DescendantClass)).to.haveExactElements([
         'methodA',
         DescendantClass,

@@ -1,8 +1,8 @@
-import { arrayThat, assert, MatcherType, objectThat, should, test } from 'gs-testing';
+import { MatcherType, arrayThat, assert, objectThat, should, test } from 'gs-testing';
 
-import { Cell, defineTable, MultiCell, SingleCell } from './define-table';
-import { createSheetsTable, Merge, SheetsCell, SheetsTable } from './sheets-table';
+import { Cell, MultiCell, SingleCell, defineTable } from './define-table';
 import { CellData, ExtendedValue, RowData } from './type/sheets';
+import { Merge, SheetsCell, SheetsTable, createSheetsTable } from './sheets-table';
 
 
 function createMerge(
@@ -71,7 +71,7 @@ test('@tools/gapi/define-table', init => {
     return {sheetsTable: createSheetsTable({data: [{rowData: rows}], merges}, 0, 6, 0, 5)};
   });
 
-  should(`return the correct table`, () => {
+  should('return the correct table', () => {
     const {cols, rows, data} = defineTable(_.sheetsTable);
 
     assert(data).to.equal(arrayThat<readonly Cell[]>().haveExactElements([

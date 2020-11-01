@@ -1,7 +1,7 @@
-import { assert, createSpy, run, should, test } from 'gs-testing';
 import {Observable, of as observableOf} from 'rxjs';
-import {tap} from 'rxjs/operators';
 import { Runnable } from './runnable';
+import { assert, createSpy, run, should, test } from 'gs-testing';
+import {tap} from 'rxjs/operators';
 
 class TestClass extends Runnable {
   constructor(private readonly handler: (value: number) => void) {
@@ -20,7 +20,7 @@ class TestClass extends Runnable {
 
 test('@tools/rxjs/runnable', () => {
   test('run', () => {
-    should(`call the handler with all emissions`, () => {
+    should('call the handler with all emissions', () => {
       const mockHandler = createSpy<void, [number]>('Handler');
       const obj = new TestClass(mockHandler);
       run(obj.run());

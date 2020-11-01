@@ -1,6 +1,6 @@
 import { Converter, Result } from 'nabu';
 
-class FunctionConverter<F extends Function> implements Converter<F, unknown> {
+class FunctionConverter<F extends (...args: any[]) => unknown> implements Converter<F, unknown> {
   constructor(private readonly paramCount_: number|null) { }
 
   convertBackward(input: unknown): Result<F> {

@@ -1,6 +1,6 @@
 import { Converter, Result } from 'nabu';
 
-export class ObjectConverter<T extends {}> implements
+export class ObjectConverter<T extends Record<string, unknown>> implements
     Converter<{[K in keyof T]: T[K]}, unknown> {
   constructor(private readonly spec_: {[spec in keyof T]: Converter<T[spec], unknown>}) { }
 
@@ -50,7 +50,7 @@ export class ObjectConverter<T extends {}> implements
   }
 }
 
-export function objectConverter<T extends {}>(
+export function objectConverter<T extends Record<string, unknown>>(
     spec: {[K in keyof T]: Converter<T[K], unknown>},
 ): ObjectConverter<T> {
   return new ObjectConverter<T>(spec);

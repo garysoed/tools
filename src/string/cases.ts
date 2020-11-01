@@ -1,8 +1,8 @@
 
-const CAMEL_CASE_REGEX: RegExp = /^[a-z][a-zA-Z0-9]*$/;
-const LOWER_CASE_REGEX: RegExp = /^[a-z][a-z0-9\-]*$/;
-const PASCAL_CASE_REGEX: RegExp = /^[A-Z][a-zA-Z0-9]*$/;
-const UPPER_CASE_REGEX: RegExp = /^[A-Z][A-Z0-9_]*$/;
+const CAMEL_CASE_REGEX = /^[a-z][a-zA-Z0-9]*$/;
+const LOWER_CASE_REGEX = /^[a-z][a-z0-9-]*$/;
+const PASCAL_CASE_REGEX = /^[A-Z][a-zA-Z0-9]*$/;
+const UPPER_CASE_REGEX = /^[A-Z][A-Z0-9_]*$/;
 
 /**
  * Utility class to convert between different capitalization styles.

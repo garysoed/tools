@@ -1,8 +1,8 @@
 import { assert, should, test } from 'gs-testing';
 
 import { Color } from './color';
-import { fromCssColor, getContrast, mix } from './colors';
 import { RgbColor } from './rgb-color';
+import { fromCssColor, getContrast, mix } from './colors';
 
 function getRgb(color: Color): [number, number, number] {
   return [

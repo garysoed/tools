@@ -168,7 +168,7 @@ export class OrderedMap<K, V> implements ReadonlyMap<K, V>, Sortable<[K, V]> {
    * @param ordering - `Ordering` to sort the map with.
    */
   sort(ordering: Ordering<[K, V]>): void {
-    this.keys_.sort(withMap(key => [key, this.get(key)!] as [K, V], ordering));
+    this.keys_.sort(withMap(key => [key, this.get(key)] as [K, V], ordering));
   }
 
   /**

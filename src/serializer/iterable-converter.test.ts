@@ -5,7 +5,7 @@ import { iterableConverter } from './iterable-converter';
 
 test('serializer.IterableConverter', () => {
   test('convertBackward', () => {
-    should(`convert correctly`, () => {
+    should('convert correctly', () => {
       const converter = iterableConverter(
           content => [...content],
           integerConverter(),
@@ -16,7 +16,7 @@ test('serializer.IterableConverter', () => {
       });
     });
 
-    should(`fail if one of the items cannot be converted`, () => {
+    should('fail if one of the items cannot be converted', () => {
       const converter = iterableConverter(
           content => [...content],
           integerConverter(),
@@ -25,7 +25,7 @@ test('serializer.IterableConverter', () => {
       assert(converter.convertBackward([1, '2', 3])).to.haveProperties({success: false});
     });
 
-    should(`fail if input is not an array`, () => {
+    should('fail if input is not an array', () => {
       const converter = iterableConverter(
           content => [...content],
           integerConverter(),
@@ -36,7 +36,7 @@ test('serializer.IterableConverter', () => {
   });
 
   test('convertForward', () => {
-    should(`convert correctly`, () => {
+    should('convert correctly', () => {
       const converter = iterableConverter(
           content => [...content],
           integerConverter(),
@@ -47,7 +47,7 @@ test('serializer.IterableConverter', () => {
       });
     });
 
-    should(`fail if one of the items cannot be converted`, () => {
+    should('fail if one of the items cannot be converted', () => {
       const converter = iterableConverter(
           content => [...content],
           integerConverter(),

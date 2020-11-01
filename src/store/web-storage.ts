@@ -1,5 +1,5 @@
-import { compose, Converter, identity, strict, StrictConverter } from 'nabu';
-import { fromEvent, merge, Observable, Subject } from 'rxjs';
+import { Converter, StrictConverter, compose, identity, strict } from 'nabu';
+import { Observable, Subject, fromEvent, merge } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 import { listConverter } from '../serializer/list-converter';

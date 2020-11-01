@@ -1,9 +1,9 @@
 import { assert, fake, should, spy } from 'gs-testing';
 
-import { asArray } from '../../collect/operators/as-array';
 import { $pipe } from '../../collect/operators/pipe';
-import { take } from '../../collect/operators/take';
+import { asArray } from '../../collect/operators/as-array';
 import { fromSeed } from '../random';
+import { take } from '../../collect/operators/take';
 
 import { mathSeed } from './math-seed';
 

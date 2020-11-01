@@ -1,6 +1,6 @@
+import { Logger } from 'santa';
 import { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
-import { Logger } from 'santa';
 
 const SUBSCRIBED_KEYS = new Set<string>();
 
@@ -13,9 +13,9 @@ export function debug<T>(logger: Logger, ...keys: string[]): MonoTypeOperatorFun
     logger.debug(`[${key}] ●`);
     source.pipe(
         tap(
-            v => logger.debug(`[${key}]`, `|`, v),
-            e => logger.debug(`[${key}]`, `✖`, e),
-            () => logger.debug(`[${key}]`, `-`),
+            v => logger.debug(`[${key}]`, '|', v),
+            e => logger.debug(`[${key}]`, '✖', e),
+            () => logger.debug(`[${key}]`, '-'),
         ),
         finalize(() => SUBSCRIBED_KEYS.delete(key)),
     ).subscribe(subscriber);

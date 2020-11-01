@@ -6,13 +6,13 @@ import { asMap as $asMap } from '../collect/operators/as-map';
 import { asSet as $asSet } from '../collect/operators/as-set';
 import { map as $map } from '../collect/operators/map';
 import { $pipe } from '../collect/operators/pipe';
-import { cache } from '../data/cache';
 import { BaseIdGenerator } from '../random/base-id-generator';
 import { SimpleIdGenerator } from '../random/simple-id-generator';
+import { cache } from '../data/cache';
 import { diffMap } from '../rxjs/state/map-diff';
 
 import { Snapshot } from './snapshot';
-import { createId, StateId } from './state-id';
+import { StateId, createId } from './state-id';
 
 
 /**

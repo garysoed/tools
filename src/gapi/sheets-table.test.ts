@@ -1,7 +1,7 @@
-import { arrayThat, assert, MatcherType, objectThat, should, test } from 'gs-testing';
+import { MatcherType, arrayThat, assert, objectThat, should, test } from 'gs-testing';
 
-import { createSheetsTable, Merge, SheetsCell } from './sheets-table';
 import { CellData, ExtendedValue, RowData } from './type/sheets';
+import { Merge, SheetsCell, createSheetsTable } from './sheets-table';
 
 
 function createMerge(
@@ -40,7 +40,7 @@ function matchCell(
 
 test('@tools/gapi/sheets-table', () => {
   test('createSheetsTable', () => {
-    should(`return the correct table`, () => {
+    should('return the correct table', () => {
       // Table:
       // 0_0 1_0 2_0 --- ---
       // 0_1 1_1 --- --- ---

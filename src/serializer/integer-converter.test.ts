@@ -27,7 +27,7 @@ describe('serializer.IntegerConverter', () => {
       assert(integerConverter().convertForward(123)).to.haveProperties({result: 123});
     });
 
-    should(`fail if not an integer`, () => {
+    should('fail if not an integer', () => {
       assert(integerConverter().convertForward(123.456)).to.haveProperties({success: false});
     });
   });

@@ -1,7 +1,7 @@
-import { Converter, firstSuccess, Result } from 'nabu';
+import { Converter, Result, firstSuccess } from 'nabu';
 
-import { absolutePathParser } from '../path/absolute-path-parser';
 import { Path } from '../path/path';
+import { absolutePathParser } from '../path/absolute-path-parser';
 import { relativePathParser } from '../path/relative-path-parser';
 
 

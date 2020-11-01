@@ -1,15 +1,14 @@
-import { arrayThat, assert, createSpy, createSpySubject, fake, objectThat, should, Spy, test } from 'gs-testing';
-import { ReplaySubject } from 'rxjs';
+import { Builder } from './builder';
+import { arrayThat, assert, createSpy, fake, objectThat, should, test } from 'gs-testing';
 import { take } from 'rxjs/operators';
 
-import { Builder } from './builder';
 
 test('@gs-tools/gapi/builder', init => {
   const API_KEY = 'apiKey';
   const CLIENT_ID = 'clientId';
 
   const _ = init(() => {
-    const mockGapiLoad = createSpy<any, [string, Function]>('gapi.load');
+    const mockGapiLoad = createSpy<any, [string, (...args: any[]) => unknown]>('gapi.load');
     fake(mockGapiLoad).always().call((_, handler) => handler());
 
     const mockGapiClientInit = createSpy('gapi.client.init');
@@ -27,7 +26,7 @@ test('@gs-tools/gapi/builder', init => {
     return {builder, mockGapiClientInit};
   });
 
-  should(`build correctly`, async () => {
+  should('build correctly', async () => {
     const discoveryDoc = 'discoveryDoc';
     const SCOPE1 = 'scope1';
     const SCOPE2 = 'scope2';

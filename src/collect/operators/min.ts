@@ -1,8 +1,8 @@
 import { Ordering } from '../compare/ordering';
 
-import { first } from './first';
-import { Operator } from './operator';
 import { $pipe } from './pipe';
+import { Operator } from './operator';
+import { first } from './first';
 import { sort } from './sort';
 
 

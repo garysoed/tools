@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { PropertyAnnotator } from './property-annotation';
 
 const __CACHES = Symbol('caches');
@@ -45,6 +46,6 @@ function getCaches_(target: any): Map<string|symbol, unknown> {
 export function setCacheValue(
     instance: Object,
     propertyKey: string | symbol,
-    value: any): void {
+    value: unknown): void {
   getCaches_(instance).set(propertyKey, value);
 }

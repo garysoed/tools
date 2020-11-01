@@ -1,5 +1,5 @@
-import { filter } from './filter';
 import { Operator } from './operator';
+import { filter } from './filter';
 
 /**
  * Filters out any `undefined`.

@@ -1,4 +1,4 @@
-// tslint:disable:no-non-null-assertion
+/* eslint-disable @typescript-eslint/ban-types */
 import { assert, should, test } from 'gs-testing';
 
 import { ParameterAnnotator } from './parameter-annotation';
@@ -12,15 +12,19 @@ class ParentClass {
   methodA(
       @annotation.decorator(1)
       @annotation.decorator(2)
-      _param0: {},
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          _param0: Object,
       @annotation.decorator(3)
-      _param1: {},
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          _param1: Object,
   ): void {
     // noop
   }
 
   methodB(
-      @annotation.decorator(4) _param0: {},
+      @annotation.decorator(4)
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          _param0: {},
   ): void {
     // noop
   }
@@ -31,10 +35,12 @@ class ChildClass extends ParentClass { }
 class DescendantClass extends ChildClass {
   methodA(
       @annotation.decorator(5)
-      _param0: {},
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          _param0: Object,
       @annotation.decorator(6)
       @annotation.decorator(7)
-      _param1: {},
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          _param1: Object,
   ): void {
     // noop
   }
@@ -56,7 +62,7 @@ test('data.ParameterAnnotator', () => {
       return values;
     }
 
-    should(`return the correct values`, () => {
+    should('return the correct values', () => {
       // Check method A, param 0.
       assert(getFlatAttachedValues(DescendantClass, 'methodA', 0)).to.haveExactElements([
         DescendantClass,
@@ -127,7 +133,7 @@ test('data.ParameterAnnotator', () => {
       return values;
     }
 
-    should(`return the correct values`, () => {
+    should('return the correct values', () => {
       // Check method A, param 0.
       assert(getFlatAttachedValues(DescendantClass)).to.haveExactElements([
         'methodA',
@@ -193,7 +199,7 @@ test('data.ParameterAnnotator', () => {
       return values;
     }
 
-    should(`return the correct values`, () => {
+    should('return the correct values', () => {
       // Check method A.
       assert(getFlatAttachedValues(DescendantClass, 'methodA')).to.haveExactElements([
         1,

@@ -1,9 +1,10 @@
-import { following } from '../collect/compare/following';
-import { withMap } from '../collect/compare/with-map';
+/* eslint-disable @typescript-eslint/ban-types */
+import { $pipe } from '../collect/operators/pipe';
 import { asArray } from '../collect/operators/as-array';
 import { asOrderedMap } from '../collect/operators/as-ordered-map';
 import { filter } from '../collect/operators/filter';
-import { $pipe } from '../collect/operators/pipe';
+import { following } from '../collect/compare/following';
+import { withMap } from '../collect/compare/with-map';
 
 
 interface AnnotationResult<D> {

@@ -1,4 +1,4 @@
-import { assert, createSpy, fake, resetCalls, should, Spy, test } from 'gs-testing';
+import { Spy, assert, createSpy, fake, resetCalls, should, test } from 'gs-testing';
 
 import { cache } from '../data/cache';
 
@@ -42,7 +42,7 @@ test('data.cache', init => {
     assert(_.spyGetProperty).toNot.haveBeenCalled();
   });
 
-  should(`cache the getter`, () => {
+  should('cache the getter', () => {
     const value = 123;
     fake(_.spyGetter).always().return(value);
 

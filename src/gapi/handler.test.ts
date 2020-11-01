@@ -1,5 +1,5 @@
-import { assert, createSpyObject, createSpySubject, fake, should, SpyObj, teardown, test } from 'gs-testing';
-import { ReplaySubject, Subject } from 'rxjs';
+import { SpyObj, assert, createSpyObject, createSpySubject, fake, should, teardown, test } from 'gs-testing';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { Handler } from './handler';
@@ -45,7 +45,7 @@ test('@gs-tools/gapi/handler', init => {
   });
 
   test('ensureSignedIn', () => {
-    should(`sign in and emit on success`, () => {
+    should('sign in and emit on success', () => {
       fake(_.mockAuthInstance.isSignedIn.get).always().returnValues(false, true);
 
       const subject = createSpySubject(_.handler.ensureSignedIn());
@@ -57,7 +57,7 @@ test('@gs-tools/gapi/handler', init => {
       assert(_.mockAuthInstance.signIn).to.haveBeenCalledWith();
     });
 
-    should(`sign in and not emit on failure`, () => {
+    should('sign in and not emit on failure', () => {
       fake(_.mockAuthInstance.isSignedIn.get).always().return(false);
 
       const subject = createSpySubject(_.handler.ensureSignedIn());
@@ -66,7 +66,7 @@ test('@gs-tools/gapi/handler', init => {
       assert(_.mockAuthInstance.signIn).to.haveBeenCalledWith();
     });
 
-    should(`not sign in if already signed in`, () => {
+    should('not sign in if already signed in', () => {
       fake(_.mockAuthInstance.isSignedIn.get).always().return(true);
 
       const subject = createSpySubject(_.handler.ensureSignedIn());
@@ -77,7 +77,7 @@ test('@gs-tools/gapi/handler', init => {
   });
 
   test('isSignedIn', () => {
-    should(`emit true if signed in and update its value`, () => {
+    should('emit true if signed in and update its value', () => {
       fake(_.mockAuthInstance.isSignedIn.get).always().returnValues(false, true);
 
       const subject = createSpySubject(_.handler.isSignedIn());

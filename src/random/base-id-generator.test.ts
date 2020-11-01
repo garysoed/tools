@@ -7,7 +7,7 @@ import { BaseIdGenerator } from './base-id-generator';
  */
 class TestIdGenerator extends BaseIdGenerator {
   protected newId(): string {
-    return `1`;
+    return '1';
   }
 
   protected resolveConflict(id: string): string {

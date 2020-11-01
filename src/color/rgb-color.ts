@@ -96,7 +96,7 @@ export class RgbColor extends Color {
         h1 = ((red - green) / chroma / 255) + 4;
         break;
       default:
-        throw new Error(`Should not be able to reach here`);
+        throw new Error('Should not be able to reach here');
     }
 
     return h1 * 60;

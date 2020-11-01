@@ -1,9 +1,9 @@
+import { $pipe } from '../collect/operators/pipe';
 import { asArray } from '../collect/operators/as-array';
 import { flat } from '../collect/operators/flat';
-import { $pipe } from '../collect/operators/pipe';
 
-import { SheetsCell, SheetsTable } from './sheets-table';
 import { ExtendedValue } from './type/sheets';
+import { SheetsCell, SheetsTable } from './sheets-table';
 
 /**
  * Cell that contains a single cell in the sheet.

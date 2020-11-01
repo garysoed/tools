@@ -1,12 +1,12 @@
 import { assert, createSpySubject, mapThat, objectThat, should, test } from 'gs-testing';
 import { of as observableOf } from 'rxjs';
 
-import { diffMap, MapDiff, mapValueMapDiff, scanMap } from './map-diff';
+import { MapDiff, diffMap, mapValueMapDiff, scanMap } from './map-diff';
 
 
 test('@tools/rxjs/state/map-diff', () => {
   test('diff', () => {
-    should(`emit the correct diffs`, () => {
+    should('emit the correct diffs', () => {
       const maps$ = observableOf(
           new Map([['a', 1], ['b', 2], ['c', 3]]),
           new Map([['b', 6], ['c', 3], ['d', 4]]),
@@ -25,7 +25,7 @@ test('@tools/rxjs/state/map-diff', () => {
   });
 
   test('mapValueMapDiff', () => {
-    should(`emit the correct mapped values`, () => {
+    should('emit the correct mapped values', () => {
       const maps$ = observableOf(
           new Map([['a', 1], ['b', 2], ['c', 3]]),
           new Map([['b', 6], ['c', 3], ['d', 4]]),
@@ -47,7 +47,7 @@ test('@tools/rxjs/state/map-diff', () => {
   });
 
   test('scanMap', () => {
-    should(`emit the correct maps`, () => {
+    should('emit the correct maps', () => {
       const maps$ = observableOf(
           new Map([['a', 1], ['b', 2], ['c', 3]]),
           new Map([['b', 6], ['c', 3], ['d', 4]]),
