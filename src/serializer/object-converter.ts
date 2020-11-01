@@ -50,7 +50,8 @@ export class ObjectConverter<T extends Record<string, unknown>> implements
   }
 }
 
-export function objectConverter<T extends Record<string, unknown>>(
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function objectConverter<T extends {}>(
     spec: {[K in keyof T]: Converter<T[K], unknown>},
 ): ObjectConverter<T> {
   return new ObjectConverter<T>(spec);
