@@ -1,9 +1,9 @@
-import { assert, createSpySubject, should, test } from 'gs-testing';
-import { of as observableOf } from 'rxjs';
+import {assert, createSpySubject, should, test} from 'gs-testing';
+import {of as observableOf} from 'rxjs';
 
-import { integerConverter } from '../serializer/integer-converter';
+import {integerConverter} from '../serializer/integer-converter';
 
-import { convertBackward } from './convert-backward';
+import {convertBackward} from './convert-backward';
 
 
 test('@tools/rxjs/convert-backward', () => {

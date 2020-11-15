@@ -1,4 +1,4 @@
-import { Observable, Unsubscribable, using } from 'rxjs';
+import {Observable, Unsubscribable, using} from 'rxjs';
 
 interface Resource<R> extends Unsubscribable {
   readonly resource: R;

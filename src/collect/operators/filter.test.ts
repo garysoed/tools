@@ -1,7 +1,7 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { $pipe } from './pipe';
-import { filter } from './filter';
+import {filter} from './filter';
+import {$pipe} from './pipe';
 
 test('@tools/collect/operators/filter', () => {
   should('exclude items that do not pass the check function', () => {

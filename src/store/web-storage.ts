@@ -1,10 +1,10 @@
-import { Converter, StrictConverter, compose, identity, strict } from 'nabu';
-import { Observable, Subject, fromEvent, merge } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import {Converter, StrictConverter, compose, identity, strict} from 'nabu';
+import {Observable, Subject, fromEvent, merge} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 
-import { listConverter } from '../serializer/list-converter';
+import {listConverter} from '../serializer/list-converter';
 
-import { EditableStorage } from './editable-storage';
+import {EditableStorage} from './editable-storage';
 
 
 export const INDEXES_PARSER = listConverter<string>(identity<string>());

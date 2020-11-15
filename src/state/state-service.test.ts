@@ -1,9 +1,9 @@
-import { arrayThat, assert, createSpySubject, objectThat, should, test } from 'gs-testing';
-import { map } from 'rxjs/operators';
+import {arrayThat, assert, createSpySubject, objectThat, should, test} from 'gs-testing';
+import {map} from 'rxjs/operators';
 
-import { IdObject, Snapshot } from './snapshot';
-import { StateService } from './state-service';
-import { createId } from './state-id';
+import {IdObject, Snapshot} from './snapshot';
+import {createId} from './state-id';
+import {StateService} from './state-service';
 
 
 test('@tools/state/state-service', init => {

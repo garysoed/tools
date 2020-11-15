@@ -1,8 +1,8 @@
-import { assert, should, test, tupleThat } from 'gs-testing';
+import {assert, should, test, tupleThat} from 'gs-testing';
 
-import { $pipe } from './pipe';
-import { asArray } from './as-array';
-import { zip } from './zip';
+import {asArray} from './as-array';
+import {$pipe} from './pipe';
+import {zip} from './zip';
 
 test('@tools/collect/operators/zip', () => {
   should('combine the values together', () => {

@@ -1,4 +1,4 @@
-import { cache } from '../data/cache';
+import {cache} from '../data/cache';
 
 /**
  * Base class of all colors.

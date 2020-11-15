@@ -1,4 +1,4 @@
-import { Ordering } from '../compare/ordering';
+import {Ordering} from '../compare/ordering';
 
 /**
  * Collections that can be sorted.

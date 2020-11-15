@@ -1,5 +1,5 @@
-import { Operator } from './operator';
-import { take } from './take';
+import {Operator} from './operator';
+import {take} from './take';
 
 /**
  * Returns the first element in the {@link Iterable}, or null if there are none.

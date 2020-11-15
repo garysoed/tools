@@ -1,9 +1,9 @@
-import { Type } from 'gs-types';
+import {Type} from 'gs-types';
 
-import { CompareResult } from './compare-result';
-import { Ordering } from './ordering';
-import { normal } from './normal';
-import { reversed } from './reversed';
+import {CompareResult} from './compare-result';
+import {normal} from './normal';
+import {Ordering} from './ordering';
+import {reversed} from './reversed';
 
 /**
  * Order the items by the types.

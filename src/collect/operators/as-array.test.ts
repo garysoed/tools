@@ -1,6 +1,7 @@
-import { $pipe } from './pipe';
-import { asArray } from './as-array';
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
+
+import {asArray} from './as-array';
+import {$pipe} from './pipe';
 
 
 test('@tools/collect/operators/as-array', () => {

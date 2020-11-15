@@ -1,7 +1,7 @@
-import { Converter } from 'nabu';
+import {Converter} from 'nabu';
 
-import { iterableConverter } from './iterable-converter';
-import { tupleConverter } from './tuple-converter';
+import {iterableConverter} from './iterable-converter';
+import {tupleConverter} from './tuple-converter';
 
 export function mapConverter<K, V>(
     keyConverter: Converter<K, unknown>,

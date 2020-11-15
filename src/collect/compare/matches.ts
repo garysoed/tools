@@ -1,5 +1,5 @@
-import { CompareResult } from './compare-result';
-import { Ordering } from './ordering';
+import {CompareResult} from './compare-result';
+import {Ordering} from './ordering';
 
 /**
  * Returns function that orders items at the front iif the predicate returns true for them.

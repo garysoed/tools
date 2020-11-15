@@ -1,5 +1,6 @@
-import { assert, should, test } from 'gs-testing';
-import { percentConverter } from './percent-converter';
+import {assert, should, test} from 'gs-testing';
+
+import {percentConverter} from './percent-converter';
 
 
 test('serializer.PercentConverter', () => {

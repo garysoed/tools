@@ -1,4 +1,4 @@
-import { BaseIdGenerator } from './base-id-generator';
+import {BaseIdGenerator} from './base-id-generator';
 
 
 /**

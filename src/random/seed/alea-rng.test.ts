@@ -1,11 +1,11 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { $pipe } from '../../collect/operators/pipe';
-import { asArray } from '../../collect/operators/as-array';
-import { fromSeed } from '../random';
-import { take } from '../../collect/operators/take';
+import {asArray} from '../../collect/operators/as-array';
+import {$pipe} from '../../collect/operators/pipe';
+import {take} from '../../collect/operators/take';
+import {fromSeed} from '../random';
 
-import { aleaSeed } from './alea-seed';
+import {aleaSeed} from './alea-seed';
 
 
 test('@tools/random/alea-rng', () => {

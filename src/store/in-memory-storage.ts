@@ -1,6 +1,7 @@
-import { BehaviorSubject, Observable } from 'rxjs';
-import { EditableStorage } from './editable-storage';
-import { map } from 'rxjs/operators';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+
+import {EditableStorage} from './editable-storage';
 
 
 export class InMemoryStorage<T> implements EditableStorage<T> {

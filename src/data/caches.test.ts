@@ -1,7 +1,7 @@
-import { Spy, assert, createSpy, fake, resetCalls, should, test } from 'gs-testing';
+import {Spy, assert, createSpy, fake, resetCalls, should, test} from 'gs-testing';
 
-import { cache } from './cache';
-import { clear, clearAll } from './caches';
+import {cache} from './cache';
+import {clear, clearAll} from './caches';
 
 
 test('data.Caches', () => {

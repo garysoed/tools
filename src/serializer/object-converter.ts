@@ -1,4 +1,4 @@
-import { Converter, Result } from 'nabu';
+import {Converter, Result} from 'nabu';
 
 export class ObjectConverter<T extends Record<string, unknown>> implements
     Converter<{[K in keyof T]: T[K]}, unknown> {

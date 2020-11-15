@@ -1,7 +1,7 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { $pipe } from './pipe';
-import { diff } from './diff';
+import {diff} from './diff';
+import {$pipe} from './pipe';
 
 test('@tools/collect/operators/diff', () => {
   should('return set with elements removed from the first set', () => {

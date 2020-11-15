@@ -1,6 +1,7 @@
-import { Builder } from './builder';
-import { arrayThat, assert, createSpy, fake, objectThat, should, test } from 'gs-testing';
-import { take } from 'rxjs/operators';
+import {arrayThat, assert, createSpy, fake, objectThat, should, test} from 'gs-testing';
+import {take} from 'rxjs/operators';
+
+import {Builder} from './builder';
 
 
 test('@gs-tools/gapi/builder', init => {

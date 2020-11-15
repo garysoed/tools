@@ -1,6 +1,6 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { natural } from './natural';
+import {natural} from './natural';
 
 test('@tools/collect/compare/natural', () => {
   should('put \'a\' before \'b\'', () => {

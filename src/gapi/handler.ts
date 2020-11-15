@@ -1,5 +1,5 @@
-import { EMPTY, Observable, defer, fromEventPattern, of as observableOf } from 'rxjs';
-import { map, shareReplay, startWith, switchMap, switchMapTo } from 'rxjs/operators';
+import {EMPTY, Observable, defer, fromEventPattern, of as observableOf} from 'rxjs';
+import {map, shareReplay, startWith, switchMap, switchMapTo} from 'rxjs/operators';
 
 /**
  * Manages sign in status of the app.

@@ -1,7 +1,7 @@
-import { assert, should, test } from 'gs-testing';
-import { numberType } from 'gs-types';
+import {assert, should, test} from 'gs-testing';
+import {numberType} from 'gs-types';
 
-import { byType } from './by-type';
+import {byType} from './by-type';
 
 test('@tools/collect/compare/by-type', () => {
   should('return -1 if the first item is earlier in the type list', () => {

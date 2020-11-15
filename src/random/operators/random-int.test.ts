@@ -1,9 +1,9 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { FakeSeed } from '../testing/fake-seed';
-import { fromSeed } from '../random';
+import {fromSeed} from '../random';
+import {FakeSeed} from '../testing/fake-seed';
 
-import { randomInt } from './random-int';
+import {randomInt} from './random-int';
 
 test('@tools/random/operators/random-int', () => {
   should('return the correct integer from the range', () => {

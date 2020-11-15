@@ -1,4 +1,4 @@
-import { ReadableStorage } from './readable-storage';
+import {ReadableStorage} from './readable-storage';
 
 
 /**

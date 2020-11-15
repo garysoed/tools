@@ -1,9 +1,9 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { normal } from '../compare/normal';
+import {normal} from '../compare/normal';
 
-import { $pipe } from './pipe';
-import { max } from './max';
+import {max} from './max';
+import {$pipe} from './pipe';
 
 
 test('@tools/collect/operators/max', () => {

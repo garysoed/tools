@@ -1,7 +1,7 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { $pipe } from './pipe';
-import { join } from './join';
+import {join} from './join';
+import {$pipe} from './pipe';
 
 test('@tools/collect/operators/join', () => {
   should('join the items', () => {

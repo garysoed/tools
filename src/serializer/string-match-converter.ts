@@ -1,4 +1,4 @@
-import { Converter, Result } from 'nabu';
+import {Converter, Result} from 'nabu';
 
 
 class StringMatchConverter<T extends string> implements Converter<T, string> {

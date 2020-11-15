@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { OrderedMap } from '../collect/structures/ordered-map';
-import { ReadonlyOrderedMap } from '../collect/structures/readonly-ordered-map';
-import { following } from '../collect/compare/following';
-import { withMap } from '../collect/compare/with-map';
+import {following} from '../collect/compare/following';
+import {withMap} from '../collect/compare/with-map';
+import {OrderedMap} from '../collect/structures/ordered-map';
+import {ReadonlyOrderedMap} from '../collect/structures/readonly-ordered-map';
 
 
 type Annotator<A extends any[], D> = (

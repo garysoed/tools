@@ -1,8 +1,8 @@
-import { SpyObj, assert, createSpyObject, createSpySubject, fake, should, teardown, test } from 'gs-testing';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {SpyObj, assert, createSpyObject, createSpySubject, fake, should, teardown, test} from 'gs-testing';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
-import { Handler } from './handler';
+import {Handler} from './handler';
 
 
 test('@gs-tools/gapi/handler', init => {

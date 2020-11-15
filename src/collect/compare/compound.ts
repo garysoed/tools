@@ -1,5 +1,5 @@
-import { CompareResult } from './compare-result';
-import { Ordering } from './ordering';
+import {CompareResult} from './compare-result';
+import {Ordering} from './ordering';
 
 /**
  * Returns function to sort items by the given array of `Ordering`s.

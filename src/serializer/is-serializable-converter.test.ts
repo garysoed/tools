@@ -1,8 +1,8 @@
-import { Converter, strict } from 'nabu';
-import { assert, objectThat, should, test } from 'gs-testing';
+import {assert, objectThat, should, test} from 'gs-testing';
+import {Converter, strict} from 'nabu';
 
-import { IsSerializable } from './is-serializable';
-import { isSerializable } from './is-serializable-converter';
+import {IsSerializable} from './is-serializable';
+import {isSerializable} from './is-serializable-converter';
 
 class TestClass implements IsSerializable {
   constructor(readonly data: unknown) { }

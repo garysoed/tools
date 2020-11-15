@@ -1,6 +1,6 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { normal } from './normal';
+import {normal} from './normal';
 
 test('@tools/collect/compare/normal', () => {
   should('return -1 if the first item is smaller than the second', () => {

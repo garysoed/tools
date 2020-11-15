@@ -1,4 +1,4 @@
-import { Operator } from './operator';
+import {Operator} from './operator';
 
 /**
  * Converts the {@link Iterable} to an {@link Array}.

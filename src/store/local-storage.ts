@@ -1,6 +1,6 @@
-import { Converter } from 'nabu';
+import {Converter} from 'nabu';
 
-import { WebStorage } from './web-storage';
+import {WebStorage} from './web-storage';
 
 export class LocalStorage<T, S> extends WebStorage<T, S> {
   constructor(

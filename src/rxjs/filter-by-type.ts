@@ -1,6 +1,6 @@
-import { Observable } from 'rxjs';
-import { Type } from 'gs-types';
-import { filter } from 'rxjs/operators';
+import {Type} from 'gs-types';
+import {Observable} from 'rxjs';
+import {filter} from 'rxjs/operators';
 
 export function filterByType<F, T extends F>(
     type: Type<T>,

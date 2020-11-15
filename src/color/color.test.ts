@@ -1,6 +1,6 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { Color } from './color';
+import {Color} from './color';
 
 class TestColor extends Color {
   constructor(

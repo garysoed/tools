@@ -1,6 +1,6 @@
-import { Logger } from 'santa';
-import { MonoTypeOperatorFunction, Observable } from 'rxjs';
-import { finalize, tap } from 'rxjs/operators';
+import {MonoTypeOperatorFunction, Observable} from 'rxjs';
+import {finalize, tap} from 'rxjs/operators';
+import {Logger} from 'santa';
 
 const SUBSCRIBED_KEYS = new Set<string>();
 

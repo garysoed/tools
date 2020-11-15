@@ -1,8 +1,8 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { $pipe } from './pipe';
-import { skip } from './skip';
-import { take } from './take';
+import {$pipe} from './pipe';
+import {skip} from './skip';
+import {take} from './take';
 
 test('@tools/collect/skip', () => {
   should('return iterable that skips the first few elements', () => {

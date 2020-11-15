@@ -1,4 +1,4 @@
-import { Converter, Result } from 'nabu';
+import {Converter, Result} from 'nabu';
 
 class PercentConverter implements Converter<number, unknown> {
   convertBackward(value: unknown): Result<number> {

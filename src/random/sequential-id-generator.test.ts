@@ -1,6 +1,6 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { SequentialIdGenerator } from './sequential-id-generator';
+import {SequentialIdGenerator} from './sequential-id-generator';
 
 
 test('@tools/random/sequential-id-generator', () => {

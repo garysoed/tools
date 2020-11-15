@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { $pipe } from '../collect/operators/pipe';
-import { asArray } from '../collect/operators/as-array';
-import { flat } from '../collect/operators/flat';
-import { map } from '../collect/operators/map';
+import {asArray} from '../collect/operators/as-array';
+import {flat} from '../collect/operators/flat';
+import {map} from '../collect/operators/map';
+import {$pipe} from '../collect/operators/pipe';
 
-import { PropertyAnnotator } from './property-annotation';
+import {PropertyAnnotator} from './property-annotation';
 
 const annotation = new PropertyAnnotator((_, propertyKey, value: string) => {
   return propertyKey.toString() + value;

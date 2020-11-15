@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { $pipe } from '../collect/operators/pipe';
-import { asArray } from '../collect/operators/as-array';
-import { flat } from '../collect/operators/flat';
-import { map } from '../collect/operators/map';
+import {asArray} from '../collect/operators/as-array';
+import {flat} from '../collect/operators/flat';
+import {map} from '../collect/operators/map';
+import {$pipe} from '../collect/operators/pipe';
 
-import { ClassAnnotator } from './class-annotation';
+import {ClassAnnotator} from './class-annotation';
 
 
 const annotation = new ClassAnnotator((_, a: number, b: number) => ({

@@ -1,4 +1,4 @@
-import { StateId } from './state-id';
+import {StateId} from './state-id';
 
 /**
  * Pair of ID and object.

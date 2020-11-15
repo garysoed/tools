@@ -1,4 +1,4 @@
-import { Operator } from './operator';
+import {Operator} from './operator';
 
 type FiniteIterable<T> = ReadonlySet<T>|readonly T[];
 

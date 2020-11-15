@@ -1,7 +1,7 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { $pipe } from './pipe';
-import { intersect } from './intersect';
+import {intersect} from './intersect';
+import {$pipe} from './pipe';
 
 test('@tools/collect/intersect', () => {
   test('intersect', () => {

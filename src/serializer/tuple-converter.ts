@@ -1,4 +1,4 @@
-import { Converter, Result } from 'nabu';
+import {Converter, Result} from 'nabu';
 
 class TupleConverter<T extends unknown[]> implements Converter<T, unknown> {
   constructor(private readonly elementConverters_: Array<Converter<unknown, unknown>>) { }

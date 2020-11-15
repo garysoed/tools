@@ -1,5 +1,6 @@
-import { assert, should, test } from 'gs-testing';
-import { stringMatchConverter } from './string-match-converter';
+import {assert, should, test} from 'gs-testing';
+
+import {stringMatchConverter} from './string-match-converter';
 
 test('serializable.StringMatchConverter', () => {
   test('convertBackward', () => {

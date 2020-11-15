@@ -1,4 +1,4 @@
-import { Operator } from './operator';
+import {Operator} from './operator';
 
 /**
  * Filters out items that do not fulfill the given predicate.

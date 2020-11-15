@@ -1,6 +1,6 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { arrayFrom } from './array-from';
+import {arrayFrom} from './array-from';
 
 test('@tools/collect/structures/iterable-from', () => {
   should('convert node list correctly', () => {

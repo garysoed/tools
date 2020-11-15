@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 export function assertNonNull<T>(msg?: string):
     (source: Observable<T>) => Observable<Exclude<T, null>> {

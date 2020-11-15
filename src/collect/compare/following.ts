@@ -1,6 +1,6 @@
-import { CompareResult } from './compare-result';
-import { Ordering } from './ordering';
-import { normal } from './normal';
+import {CompareResult} from './compare-result';
+import {normal} from './normal';
+import {Ordering} from './ordering';
 
 /**
  * Returns function to sort items by equality with the given array of items.

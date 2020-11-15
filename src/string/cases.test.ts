@@ -1,6 +1,6 @@
-import { assert, should } from 'gs-testing';
+import {assert, should} from 'gs-testing';
 
-import { Cases } from './cases';
+import {Cases} from './cases';
 
 
 describe('string.Cases', () => {

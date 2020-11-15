@@ -23,9 +23,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { hasPropertiesType, numberType } from 'gs-types';
+import {hasPropertiesType, numberType} from 'gs-types';
 
-import { RandomSeed } from './random-seed';
+import {RandomSeed} from './random-seed';
 
 
 export interface State {

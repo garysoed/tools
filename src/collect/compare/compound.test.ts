@@ -1,8 +1,8 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { CompareResult } from './compare-result';
-import { compound } from './compound';
-import { normal } from './normal';
+import {CompareResult} from './compare-result';
+import {compound} from './compound';
+import {normal} from './normal';
 
 
 test('@tools/collect/compare/compound', () => {

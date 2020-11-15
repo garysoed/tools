@@ -1,6 +1,6 @@
-import { Converter } from 'nabu';
-import { EMPTY, OperatorFunction, of as observableOf, pipe } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import {Converter} from 'nabu';
+import {EMPTY, OperatorFunction, of as observableOf, pipe} from 'rxjs';
+import {switchMap} from 'rxjs/operators';
 
 export function convertForward<F, T>(
     converter: Converter<F, T>,

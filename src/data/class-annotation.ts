@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { $pipe } from '../collect/operators/pipe';
-import { asArray } from '../collect/operators/as-array';
-import { asOrderedMap } from '../collect/operators/as-ordered-map';
-import { filter } from '../collect/operators/filter';
-import { following } from '../collect/compare/following';
-import { withMap } from '../collect/compare/with-map';
+import {following} from '../collect/compare/following';
+import {withMap} from '../collect/compare/with-map';
+import {asArray} from '../collect/operators/as-array';
+import {asOrderedMap} from '../collect/operators/as-ordered-map';
+import {filter} from '../collect/operators/filter';
+import {$pipe} from '../collect/operators/pipe';
 
 
 interface AnnotationResult<D> {

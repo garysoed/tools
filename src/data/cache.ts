@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { CACHE_ANNOTATOR, getCache, setCacheValue } from './caches';
+import {CACHE_ANNOTATOR, getCache, setCacheValue} from './caches';
 
 
 /**

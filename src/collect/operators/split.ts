@@ -1,4 +1,4 @@
-import { Operator } from './operator';
+import {Operator} from './operator';
 
 /**
  * Splits the {@link Iterable} into an {@link Array} containing `count` items and `Iterable`

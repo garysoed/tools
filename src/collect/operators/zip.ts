@@ -1,4 +1,4 @@
-import { Operator } from './operator';
+import {Operator} from './operator';
 
 /**
  * Combines two {@link Iterable}s together to form an `Iterable` of pairs made of each element in

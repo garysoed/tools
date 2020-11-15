@@ -1,6 +1,6 @@
-import { Converter } from 'nabu';
+import {Converter} from 'nabu';
 
-import { iterableConverter } from './iterable-converter';
+import {iterableConverter} from './iterable-converter';
 
 
 export function listConverter<T>(itemConverter: Converter<T, unknown>):

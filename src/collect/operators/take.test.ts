@@ -1,7 +1,7 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { $pipe } from './pipe';
-import { take } from './take';
+import {$pipe} from './pipe';
+import {take} from './take';
 
 test('@tools/collect/take', () => {
   should('return iterable that only returns the first few elements', () => {

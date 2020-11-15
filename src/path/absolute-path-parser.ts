@@ -1,7 +1,7 @@
-import { Converter, Result } from 'nabu';
+import {Converter, Result} from 'nabu';
 
-import { AbsolutePath } from '../path/absolute-path';
-import { SEPARATOR } from '../path/path';
+import {AbsolutePath} from '../path/absolute-path';
+import {SEPARATOR} from '../path/path';
 
 /**
  * Parses the string to {@link AbsolutePath}.

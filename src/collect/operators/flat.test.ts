@@ -1,7 +1,7 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { $pipe } from './pipe';
-import { flat } from './flat';
+import {flat} from './flat';
+import {$pipe} from './pipe';
 
 test('@tools/collect/operators/flat', () => {
   should('flatten the elements', () => {

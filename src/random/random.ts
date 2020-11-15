@@ -1,4 +1,4 @@
-import { RandomSeed } from './seed/random-seed';
+import {RandomSeed} from './seed/random-seed';
 
 /**
  * Generates random values.

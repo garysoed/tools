@@ -1,7 +1,7 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { $pipe } from './pipe';
-import { asRecord } from './as-record';
+import {asRecord} from './as-record';
+import {$pipe} from './pipe';
 
 test('@tools/collect/operators/as-record', () => {
   should('return the correct record', () => {

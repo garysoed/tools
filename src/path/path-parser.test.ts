@@ -1,8 +1,9 @@
-import { AbsolutePath } from './absolute-path';
-import { RelativePath } from './relative-path';
-import { assert, should, test } from 'gs-testing';
-import { pathParser } from './path-parser';
-import { strict } from 'nabu';
+import {assert, should, test} from 'gs-testing';
+import {strict} from 'nabu';
+
+import {AbsolutePath} from './absolute-path';
+import {pathParser} from './path-parser';
+import {RelativePath} from './relative-path';
 
 
 test('path.PathParser', () => {

@@ -1,11 +1,11 @@
-import { $pipe } from '../../collect/operators/pipe';
-import { Random } from '../random';
-import { asArray } from '../../collect/operators/as-array';
-import { map } from '../../collect/operators/map';
-import { normal } from '../../collect/compare/normal';
-import { sort } from '../../collect/operators/sort';
-import { withMap } from '../../collect/compare/with-map';
-import { zip } from '../../collect/operators/zip';
+import {normal} from '../../collect/compare/normal';
+import {withMap} from '../../collect/compare/with-map';
+import {asArray} from '../../collect/operators/as-array';
+import {map} from '../../collect/operators/map';
+import {$pipe} from '../../collect/operators/pipe';
+import {sort} from '../../collect/operators/sort';
+import {zip} from '../../collect/operators/zip';
+import {Random} from '../random';
 
 export function shuffle<T>(
     items: readonly T[],

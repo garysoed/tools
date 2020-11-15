@@ -1,10 +1,10 @@
-import { AbsolutePath } from '../path/absolute-path';
-import { Path } from '../path/path';
-import { RelativePath } from '../path/relative-path';
-import { assertUnreachable } from '../typescript/assert-unreachable';
+import {AbsolutePath} from '../path/absolute-path';
+import {Path} from '../path/path';
+import {RelativePath} from '../path/relative-path';
+import {assertUnreachable} from '../typescript/assert-unreachable';
 
-import { absolutePathParser } from './absolute-path-parser';
-import { relativePathParser } from './relative-path-parser';
+import {absolutePathParser} from './absolute-path-parser';
+import {relativePathParser} from './relative-path-parser';
 
 /**
  * Creates an {@link AbsolutePath} by parsing the given string.

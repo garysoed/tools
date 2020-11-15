@@ -1,6 +1,6 @@
-import { Random } from '../random';
+import {Random} from '../random';
 
-import { randomInt } from './random-int';
+import {randomInt} from './random-int';
 
 
 /**

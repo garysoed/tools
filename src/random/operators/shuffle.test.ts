@@ -1,9 +1,9 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { FakeSeed } from '../testing/fake-seed';
-import { fromSeed } from '../random';
+import {fromSeed} from '../random';
+import {FakeSeed} from '../testing/fake-seed';
 
-import { shuffle } from './shuffle';
+import {shuffle} from './shuffle';
 
 test('@tools/random/operators/shuffle', () => {
   should('order the items correctly', () => {

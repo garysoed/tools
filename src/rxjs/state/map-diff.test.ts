@@ -1,7 +1,7 @@
-import { assert, createSpySubject, mapThat, objectThat, should, test } from 'gs-testing';
-import { of as observableOf } from 'rxjs';
+import {assert, createSpySubject, mapThat, objectThat, should, test} from 'gs-testing';
+import {of as observableOf} from 'rxjs';
 
-import { MapDiff, diffMap, mapValueMapDiff, scanMap } from './map-diff';
+import {MapDiff, diffMap, mapValueMapDiff, scanMap} from './map-diff';
 
 
 test('@tools/rxjs/state/map-diff', () => {

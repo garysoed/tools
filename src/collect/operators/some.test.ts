@@ -1,7 +1,7 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { $pipe } from './pipe';
-import { some } from './some';
+import {$pipe} from './pipe';
+import {some} from './some';
 
 test('@tools/collect/operators/some', () => {
   should('return true if one of the elements is true', () => {

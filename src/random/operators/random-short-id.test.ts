@@ -1,9 +1,9 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { FakeSeed } from '../testing/fake-seed';
-import { fromSeed } from '../random';
+import {fromSeed} from '../random';
+import {FakeSeed} from '../testing/fake-seed';
 
-import { randomShortId } from './random-short-id';
+import {randomShortId} from './random-short-id';
 
 
 test('@tools/random/operators/random-short-id', () => {

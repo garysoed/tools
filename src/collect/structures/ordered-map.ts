@@ -1,7 +1,7 @@
-import { Ordering } from '../compare/ordering';
-import { withMap } from '../compare/with-map';
+import {Ordering} from '../compare/ordering';
+import {withMap} from '../compare/with-map';
 
-import { Sortable } from './sortable';
+import {Sortable} from './sortable';
 
 /**
  * Map whose entries are ordered.

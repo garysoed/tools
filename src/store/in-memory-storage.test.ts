@@ -1,5 +1,6 @@
-import { InMemoryStorage } from './in-memory-storage';
-import { assert, setThat, should, test } from 'gs-testing';
+import {assert, setThat, should, test} from 'gs-testing';
+
+import {InMemoryStorage} from './in-memory-storage';
 
 
 test('@tools/store/in-memory-storage', init => {

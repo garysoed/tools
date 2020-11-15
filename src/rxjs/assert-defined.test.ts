@@ -1,7 +1,7 @@
-import { assert, should, test } from 'gs-testing';
-import { of as observableOf } from 'rxjs';
+import {assert, should, test} from 'gs-testing';
+import {of as observableOf} from 'rxjs';
 
-import { assertDefined } from './assert-defined';
+import {assertDefined} from './assert-defined';
 
 
 test('@tools/rxjs/assert-defined', () => {

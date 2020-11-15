@@ -1,11 +1,11 @@
 // tslint:disable:no-non-null-assertion
-import { assert, should, test } from 'gs-testing';
-import { strict } from 'nabu';
+import {assert, should, test} from 'gs-testing';
+import {strict} from 'nabu';
 
-import { AbsolutePath } from './absolute-path';
-import { RelativePath } from './relative-path';
-import { absolutePath, getDirPath, getFilenameParts, getItemName, getRelativePath, join, normalize, relativePath, setFilenameExt } from './paths';
-import { pathParser } from './path-parser';
+import {AbsolutePath} from './absolute-path';
+import {pathParser} from './path-parser';
+import {absolutePath, getDirPath, getFilenameParts, getItemName, getRelativePath, join, normalize, relativePath, setFilenameExt} from './paths';
+import {RelativePath} from './relative-path';
 
 test('path.Paths', () => {
   test('absolutePath', () => {

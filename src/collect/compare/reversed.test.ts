@@ -1,7 +1,7 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { normal } from './normal';
-import { reversed } from './reversed';
+import {normal} from './normal';
+import {reversed} from './reversed';
 
 test('@tools/collect/compare/reversed', () => {
   should('return 1 if the first item is smaller than the second', () => {

@@ -1,4 +1,4 @@
-import { Operator } from './operator';
+import {Operator} from './operator';
 
 /**
  * Returns {@link Array} with the first `count` elements from the {@link Iterable}.

@@ -1,7 +1,7 @@
-import { $pipe } from './pipe';
-import { Operator } from './operator';
-import { asSet } from './as-set';
-import { filter } from './filter';
+import {asSet} from './as-set';
+import {filter} from './filter';
+import {Operator} from './operator';
+import {$pipe} from './pipe';
 
 /**
  * Returns elements that are in the original {@link Iterable} but not in the given set.

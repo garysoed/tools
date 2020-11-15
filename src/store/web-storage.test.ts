@@ -1,7 +1,7 @@
-import { assert, createSpySubject, setThat, should, teardown, test } from 'gs-testing';
-import { identity, json } from 'nabu';
+import {assert, createSpySubject, setThat, should, teardown, test} from 'gs-testing';
+import {identity, json} from 'nabu';
 
-import { WebStorage } from './web-storage';
+import {WebStorage} from './web-storage';
 
 
 function setStorage(storage: Storage, key: string, value: string): void {

@@ -1,4 +1,4 @@
-import { CompareResult } from './compare-result';
+import {CompareResult} from './compare-result';
 
 /**
  * Function that compares two items and returns a comparison result.

@@ -1,6 +1,6 @@
-import { Converter, Result } from 'nabu';
+import {Converter, Result} from 'nabu';
 
-import { IsSerializable } from './is-serializable';
+import {IsSerializable} from './is-serializable';
 
 class IsSerializableConverter<T extends IsSerializable> implements Converter<T, unknown> {
   constructor(private readonly ctor_: new (data: unknown) => T) { }

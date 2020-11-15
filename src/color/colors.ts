@@ -1,12 +1,12 @@
-import { Result, compose, human } from 'nabu';
+import {Result, compose, human} from 'nabu';
 
-import { floatConverter } from '../serializer/float-converter';
-import { integerConverter } from '../serializer/integer-converter';
-import { percentConverter } from '../serializer/percent-converter';
+import {floatConverter} from '../serializer/float-converter';
+import {integerConverter} from '../serializer/integer-converter';
+import {percentConverter} from '../serializer/percent-converter';
 
-import { Color } from './color';
-import { HslColor } from './hsl-color';
-import { RgbColor } from './rgb-color';
+import {Color} from './color';
+import {HslColor} from './hsl-color';
+import {RgbColor} from './rgb-color';
 
 const RGB_REGEXP = /^rgb\((.*)\)$/;
 const RGBA_REGEXP = /^rgba\((.*)\)$/;

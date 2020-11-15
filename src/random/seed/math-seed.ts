@@ -1,4 +1,4 @@
-import { RandomSeed } from './random-seed';
+import {RandomSeed} from './random-seed';
 
 
 export function mathSeed(): RandomSeed {

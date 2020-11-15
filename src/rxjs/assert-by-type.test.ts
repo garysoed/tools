@@ -1,8 +1,8 @@
-import { assert, should, test } from 'gs-testing';
-import { numberType } from 'gs-types';
-import { of as observableOf } from 'rxjs';
+import {assert, should, test} from 'gs-testing';
+import {numberType} from 'gs-types';
+import {of as observableOf} from 'rxjs';
 
-import { assertByType } from './assert-by-type';
+import {assertByType} from './assert-by-type';
 
 test('@tools/rxjs/assert-by-type', () => {
   should('emit the item if type is correct', () => {

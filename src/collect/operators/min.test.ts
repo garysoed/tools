@@ -1,9 +1,9 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { normal } from '../compare/normal';
+import {normal} from '../compare/normal';
 
-import { $pipe } from './pipe';
-import { min } from './min';
+import {min} from './min';
+import {$pipe} from './pipe';
 
 
 test('@tools/collect/operators/min', () => {

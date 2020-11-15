@@ -1,7 +1,7 @@
-import { Observable, defer } from 'rxjs';
-import { mapTo, shareReplay } from 'rxjs/operators';
+import {Observable, defer} from 'rxjs';
+import {mapTo, shareReplay} from 'rxjs/operators';
 
-import { Handler } from './handler';
+import {Handler} from './handler';
 
 
 /**

@@ -1,18 +1,18 @@
-import { BehaviorSubject, EMPTY, Observable, of as observableOf } from 'rxjs';
-import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import {BehaviorSubject, EMPTY, Observable, of as observableOf} from 'rxjs';
+import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
 
-import { asArray as $asArray } from '../collect/operators/as-array';
-import { asMap as $asMap } from '../collect/operators/as-map';
-import { asSet as $asSet } from '../collect/operators/as-set';
-import { map as $map } from '../collect/operators/map';
-import { $pipe } from '../collect/operators/pipe';
-import { BaseIdGenerator } from '../random/base-id-generator';
-import { SimpleIdGenerator } from '../random/simple-id-generator';
-import { cache } from '../data/cache';
-import { diffMap } from '../rxjs/state/map-diff';
+import {asArray as $asArray} from '../collect/operators/as-array';
+import {asMap as $asMap} from '../collect/operators/as-map';
+import {asSet as $asSet} from '../collect/operators/as-set';
+import {map as $map} from '../collect/operators/map';
+import {$pipe} from '../collect/operators/pipe';
+import {cache} from '../data/cache';
+import {BaseIdGenerator} from '../random/base-id-generator';
+import {SimpleIdGenerator} from '../random/simple-id-generator';
+import {diffMap} from '../rxjs/state/map-diff';
 
-import { Snapshot } from './snapshot';
-import { StateId, createId } from './state-id';
+import {Snapshot} from './snapshot';
+import {StateId, createId} from './state-id';
 
 
 /**

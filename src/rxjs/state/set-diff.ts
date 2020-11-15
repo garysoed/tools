@@ -1,5 +1,5 @@
-import { OperatorFunction, of as observableOf, pipe } from 'rxjs';
-import { map, pairwise, scan, startWith, switchMap } from 'rxjs/operators';
+import {OperatorFunction, of as observableOf, pipe} from 'rxjs';
+import {map, pairwise, scan, startWith, switchMap} from 'rxjs/operators';
 
 /**
  * Adds the given value to the set.

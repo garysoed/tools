@@ -1,7 +1,8 @@
+import {assert, createSpy, run, should, test} from 'gs-testing';
 import {Observable, of as observableOf} from 'rxjs';
-import { Runnable } from './runnable';
-import { assert, createSpy, run, should, test } from 'gs-testing';
 import {tap} from 'rxjs/operators';
+
+import {Runnable} from './runnable';
 
 class TestClass extends Runnable {
   constructor(private readonly handler: (value: number) => void) {

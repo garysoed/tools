@@ -1,8 +1,8 @@
-import { assert, should } from 'gs-testing';
+import {assert, should} from 'gs-testing';
 
-import { FakeSeed } from './testing/fake-seed';
-import { SimpleIdGenerator } from './simple-id-generator';
-import { fromSeed } from './random';
+import {fromSeed} from './random';
+import {SimpleIdGenerator} from './simple-id-generator';
+import {FakeSeed} from './testing/fake-seed';
 
 
 describe('random.SimpleIdGenerator', () => {

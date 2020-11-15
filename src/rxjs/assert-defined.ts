@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 export function assertDefined<T>(msg?: string):
     (source: Observable<T>) => Observable<Exclude<T, undefined>> {

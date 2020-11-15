@@ -1,7 +1,7 @@
-import { OrderedMap } from '../../collect/structures/ordered-map';
-import { Random } from '../random';
+import {OrderedMap} from '../../collect/structures/ordered-map';
+import {Random} from '../random';
 
-import { randomPickWeighted } from './random-pick-weighted';
+import {randomPickWeighted} from './random-pick-weighted';
 
 
 export function randomPickWeightedMultiple<T>(

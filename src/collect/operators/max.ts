@@ -1,10 +1,10 @@
-import { Ordering } from '../compare/ordering';
-import { reversed } from '../compare/reversed';
+import {Ordering} from '../compare/ordering';
+import {reversed} from '../compare/reversed';
 
-import { $pipe } from './pipe';
-import { Operator } from './operator';
-import { first } from './first';
-import { sort } from './sort';
+import {first} from './first';
+import {Operator} from './operator';
+import {$pipe} from './pipe';
+import {sort} from './sort';
 
 
 /**

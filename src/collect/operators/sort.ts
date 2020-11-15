@@ -1,6 +1,6 @@
-import { Ordering } from '../compare/ordering';
+import {Ordering} from '../compare/ordering';
 
-import { Operator } from './operator';
+import {Operator} from './operator';
 
 /**
  * Sorts the given `Array`.

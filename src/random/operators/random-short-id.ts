@@ -1,6 +1,6 @@
-import { Random } from '../random';
+import {Random} from '../random';
 
-import { randomItem } from './random-item';
+import {randomItem} from './random-item';
 
 
 const ID_CHARS: string[] = [];

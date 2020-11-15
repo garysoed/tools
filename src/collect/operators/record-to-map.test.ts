@@ -1,7 +1,7 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { $pipe } from './pipe';
-import { recordToMap } from './record-to-map';
+import {$pipe} from './pipe';
+import {recordToMap} from './record-to-map';
 
 test('@tools/collect/operators/record-to-map', () => {
   should('convert to map correctly', () => {

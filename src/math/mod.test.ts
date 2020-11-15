@@ -1,5 +1,6 @@
-import { assert, should, test } from 'gs-testing';
-import { mod } from './mod';
+import {assert, should, test} from 'gs-testing';
+
+import {mod} from './mod';
 
 
 test('@tools/math/mod', () => {

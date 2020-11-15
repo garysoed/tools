@@ -1,6 +1,6 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { following } from './following';
+import {following} from './following';
 
 test('@tools/collect/compare/following', () => {
   should('follow the given array', () => {

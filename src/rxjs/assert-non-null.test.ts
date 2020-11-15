@@ -1,7 +1,7 @@
-import { assert, should, test } from 'gs-testing';
-import { of as observableOf } from 'rxjs';
+import {assert, should, test} from 'gs-testing';
+import {of as observableOf} from 'rxjs';
 
-import { assertNonNull } from './assert-non-null';
+import {assertNonNull} from './assert-non-null';
 
 
 test('@tools/rxjs/assert-non-null', () => {

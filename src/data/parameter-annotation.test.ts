@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { ParameterAnnotator } from './parameter-annotation';
+import {ParameterAnnotator} from './parameter-annotation';
 
 
 const annotation = new ParameterAnnotator((_, propertyKey, index, pad: number) => {

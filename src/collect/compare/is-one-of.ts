@@ -1,5 +1,5 @@
-import { Ordering } from './ordering';
-import { matches } from './matches';
+import {matches} from './matches';
+import {Ordering} from './ordering';
 
 /**
  * Orders items matching the given list at the start of the list.

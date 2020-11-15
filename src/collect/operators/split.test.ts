@@ -1,7 +1,7 @@
-import { arrayThat, assert, iterableThat, should, test, tupleThat } from 'gs-testing';
+import {arrayThat, assert, iterableThat, should, test, tupleThat} from 'gs-testing';
 
-import { $pipe } from './pipe';
-import { split } from './split';
+import {$pipe} from './pipe';
+import {split} from './split';
 
 
 test('@tools/collect/split', () => {

@@ -1,4 +1,4 @@
-import { Observable, merge } from 'rxjs';
+import {Observable, merge} from 'rxjs';
 
 export abstract class Runnable {
   private readonly setupObs$: Array<Observable<unknown>> = [];

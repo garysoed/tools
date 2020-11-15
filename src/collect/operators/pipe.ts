@@ -1,4 +1,4 @@
-import { Operator } from './operator';
+import {Operator} from './operator';
 
 /**
  * Chains together a sequence of `Operator`s to operate on the given `source`.

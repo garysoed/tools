@@ -1,8 +1,8 @@
-import { MatcherType, arrayThat, assert, objectThat, should, test } from 'gs-testing';
+import {MatcherType, arrayThat, assert, objectThat, should, test} from 'gs-testing';
 
-import { Cell, MultiCell, SingleCell, defineTable } from './define-table';
-import { CellData, ExtendedValue, RowData } from './type/sheets';
-import { Merge, SheetsCell, SheetsTable, createSheetsTable } from './sheets-table';
+import {Cell, MultiCell, SingleCell, defineTable} from './define-table';
+import {Merge, SheetsCell, SheetsTable, createSheetsTable} from './sheets-table';
+import {CellData, ExtendedValue, RowData} from './type/sheets';
 
 
 function createMerge(

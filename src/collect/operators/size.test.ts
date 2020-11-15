@@ -1,7 +1,7 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { $pipe } from './pipe';
-import { size } from './size';
+import {$pipe} from './pipe';
+import {size} from './size';
 
 test('@tools/collect/size', () => {
   should('return the correct size for an array', () => {

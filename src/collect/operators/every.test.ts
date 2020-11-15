@@ -1,7 +1,7 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { $pipe } from './pipe';
-import { every } from './every';
+import {every} from './every';
+import {$pipe} from './pipe';
 
 test('@tools/collect/operators/every', () => {
   should('return true if all elements are true', () => {

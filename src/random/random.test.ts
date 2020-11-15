@@ -1,10 +1,10 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { $pipe } from '../collect/operators/pipe';
-import { take } from '../collect/operators/take';
+import {$pipe} from '../collect/operators/pipe';
+import {take} from '../collect/operators/take';
 
-import { FakeSeed } from './testing/fake-seed';
-import { fromSeed } from './random';
+import {fromSeed} from './random';
+import {FakeSeed} from './testing/fake-seed';
 
 
 test('@tools/random/random', () => {

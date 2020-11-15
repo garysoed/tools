@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { $pipe } from '../collect/operators/pipe';
-import { OrderedMap } from '../collect/structures/ordered-map';
-import { ReadonlyOrderedMap } from '../collect/structures/readonly-ordered-map';
-import { asArray } from '../collect/operators/as-array';
-import { asMap } from '../collect/operators/as-map';
-import { asSet } from '../collect/operators/as-set';
-import { filter } from '../collect/operators/filter';
-import { flat } from '../collect/operators/flat';
-import { following } from '../collect/compare/following';
-import { map } from '../collect/operators/map';
-import { withMap } from '../collect/compare/with-map';
+import {following} from '../collect/compare/following';
+import {withMap} from '../collect/compare/with-map';
+import {asArray} from '../collect/operators/as-array';
+import {asMap} from '../collect/operators/as-map';
+import {asSet} from '../collect/operators/as-set';
+import {filter} from '../collect/operators/filter';
+import {flat} from '../collect/operators/flat';
+import {map} from '../collect/operators/map';
+import {$pipe} from '../collect/operators/pipe';
+import {OrderedMap} from '../collect/structures/ordered-map';
+import {ReadonlyOrderedMap} from '../collect/structures/readonly-ordered-map';
 
 type Annotator<A extends any[], D> = (target: Object, key: string|symbol, ...args: A) => D;
 

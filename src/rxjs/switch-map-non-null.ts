@@ -1,5 +1,5 @@
-import { Observable, of as observableOf } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import {Observable, of as observableOf} from 'rxjs';
+import {switchMap} from 'rxjs/operators';
 
 export function switchMapNonNull<A, B>(
     fn: (input: Exclude<A, null>) => Observable<B>,

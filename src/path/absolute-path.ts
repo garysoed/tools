@@ -1,4 +1,4 @@
-import { Path, SEPARATOR } from '../path/path';
+import {Path, SEPARATOR} from '../path/path';
 
 /**
  * Path that is an absolute path.

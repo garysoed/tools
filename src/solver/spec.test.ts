@@ -1,6 +1,6 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { Spec } from './spec';
+import {Spec} from './spec';
 
 
 test('solver.Spec', () => {

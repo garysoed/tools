@@ -1,9 +1,9 @@
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import { FakeSeed } from '../testing/fake-seed';
-import { fromSeed } from '../random';
+import {fromSeed} from '../random';
+import {FakeSeed} from '../testing/fake-seed';
 
-import { randomPickWeightedMultiple } from './random-pick-weighted-multiple';
+import {randomPickWeightedMultiple} from './random-pick-weighted-multiple';
 
 
 test('@tools/random/operators/random-pick-weighted-multiple', () => {

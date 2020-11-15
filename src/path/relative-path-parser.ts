@@ -1,6 +1,7 @@
-import { Converter, Result } from 'nabu';
-import { RelativePath } from '../path/relative-path';
-import { SEPARATOR } from '../path/path';
+import {Converter, Result} from 'nabu';
+
+import {SEPARATOR} from '../path/path';
+import {RelativePath} from '../path/relative-path';
 
 
 /**

@@ -1,6 +1,6 @@
-import { OrderedMap } from '../structures/ordered-map';
+import {OrderedMap} from '../structures/ordered-map';
 
-import { Operator } from './operator';
+import {Operator} from './operator';
 
 /**
  * Converts the {@link Iterable} to an {@link OrderedMap}.

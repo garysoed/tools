@@ -1,8 +1,8 @@
-import { SuccessResult } from 'nabu';
-import { assert, should, test } from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
+import {SuccessResult} from 'nabu';
 
-import { AbsolutePath } from './absolute-path';
-import { absolutePathParser } from './absolute-path-parser';
+import {AbsolutePath} from './absolute-path';
+import {absolutePathParser} from './absolute-path-parser';
 
 test('path.AbsolutePathParser', () => {
   test('convertBackward', () => {

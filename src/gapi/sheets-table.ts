@@ -1,4 +1,4 @@
-import { ExtendedValue, GridData } from './type/sheets';
+import {ExtendedValue, GridData} from './type/sheets';
 
 interface PartialSheetsCell {
   fromRow: number;

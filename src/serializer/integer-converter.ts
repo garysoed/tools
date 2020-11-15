@@ -1,4 +1,4 @@
-import { Converter, Result } from 'nabu';
+import {Converter, Result} from 'nabu';
 
 class IntegerConverter implements Converter<number, unknown> {
   constructor(private readonly round_: boolean) { }

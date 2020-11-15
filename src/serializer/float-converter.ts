@@ -1,4 +1,4 @@
-import { Converter, Result } from 'nabu';
+import {Converter, Result} from 'nabu';
 
 class FloatConverter implements Converter<number, unknown> {
   convertBackward(input: unknown): Result<number> {

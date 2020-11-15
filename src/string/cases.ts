@@ -1,4 +1,3 @@
-
 const CAMEL_CASE_REGEX = /^[a-z][a-zA-Z0-9]*$/;
 const LOWER_CASE_REGEX = /^[a-z][a-z0-9-]*$/;
 const PASCAL_CASE_REGEX = /^[A-Z][a-zA-Z0-9]*$/;

@@ -1,5 +1,5 @@
-import { FiniteIterable } from './finite-iterable';
-import { Operator } from './operator';
+import {FiniteIterable} from './finite-iterable';
+import {Operator} from './operator';
 
 
 /**

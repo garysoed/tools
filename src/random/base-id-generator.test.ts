@@ -1,6 +1,6 @@
-import { assert, should } from 'gs-testing';
+import {assert, should} from 'gs-testing';
 
-import { BaseIdGenerator } from './base-id-generator';
+import {BaseIdGenerator} from './base-id-generator';
 
 /**
  * @test

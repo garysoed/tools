@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { PropertyAnnotator } from './property-annotation';
+import {PropertyAnnotator} from './property-annotation';
 
 const __CACHES = Symbol('caches');
 

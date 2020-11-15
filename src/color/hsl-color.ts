@@ -1,6 +1,6 @@
-import { cache } from '../data/cache';
+import {cache} from '../data/cache';
 
-import { Color } from './color';
+import {Color} from './color';
 
 /**
  * `Color` based on its hue, saturation, and lightness.

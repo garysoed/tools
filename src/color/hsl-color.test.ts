@@ -1,6 +1,6 @@
-import { assert, should } from 'gs-testing';
+import {assert, should} from 'gs-testing';
 
-import { HslColor } from './hsl-color';
+import {HslColor} from './hsl-color';
 
 
 describe('color.HslColor', () => {

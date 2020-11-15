@@ -1,9 +1,9 @@
-import { Ordering } from '../compare/ordering';
+import {Ordering} from '../compare/ordering';
 
-import { $pipe } from './pipe';
-import { Operator } from './operator';
-import { first } from './first';
-import { sort } from './sort';
+import {first} from './first';
+import {Operator} from './operator';
+import {$pipe} from './pipe';
+import {sort} from './sort';
 
 
 /**

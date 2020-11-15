@@ -1,6 +1,7 @@
-import { assert, should, test, tupleThat } from 'gs-testing';
-import { integerConverter } from './integer-converter';
-import { tupleConverter } from './tuple-converter';
+import {assert, should, test, tupleThat} from 'gs-testing';
+
+import {integerConverter} from './integer-converter';
+import {tupleConverter} from './tuple-converter';
 
 
 test('serializer.TupleConverter', () => {

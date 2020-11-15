@@ -1,4 +1,4 @@
-import { Converter, Result } from 'nabu';
+import {Converter, Result} from 'nabu';
 
 class IterableConverter<T, I extends Iterable<T>> implements Converter<I, unknown> {
   constructor(

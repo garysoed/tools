@@ -1,6 +1,6 @@
-import { assert, should, test, tupleThat } from 'gs-testing';
+import {assert, should, test, tupleThat} from 'gs-testing';
 
-import { OrderedMap } from './ordered-map';
+import {OrderedMap} from './ordered-map';
 
 test('@tools/collect/ordered-map', () => {
   test('Symbol.iterator', () => {

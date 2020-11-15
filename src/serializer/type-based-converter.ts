@@ -1,5 +1,5 @@
-import { Converter, Result } from 'nabu';
-import { Type } from 'gs-types';
+import {Type} from 'gs-types';
+import {Converter, Result} from 'nabu';
 
 class TypeBasedConverter<T> implements Converter<T, unknown> {
   constructor(private readonly type: Type<T>) { }
