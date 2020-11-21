@@ -8,6 +8,7 @@
  * @param stringValue The string value to convert to enum value.
  * @param enumSet The set of enum values.
  * @return The enum value corresponding to the enum name.
+ * @thModule typescript
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function fromLowerCaseString<E>(stringValue: string, enumSet: any): E {
@@ -20,6 +21,7 @@ export function fromLowerCaseString<E>(stringValue: string, enumSet: any): E {
  * @param stringValue The number to convert to enum value.
  * @param enumSet The set of enum values.
  * @return The enum value corresponding to the enum number.
+ * @thModule typescript
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function fromNumberString<E extends string>(stringValue: string, enumSet: any): E {
@@ -33,6 +35,7 @@ export function fromNumberString<E extends string>(stringValue: string, enumSet:
  *
  * @param enumSet Enum whose values should be returned.
  * @return Array of enum values.
+ * @thModule typescript
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function getAllValues<E>(enumSet: any): readonly E[] {
@@ -52,6 +55,7 @@ export function getAllValues<E>(enumSet: any): readonly E[] {
  * @param enumValue The enum value to convert.
  * @param enumSet The set of enum values.
  * @return The lower case version of the enum name that corresponds to the enum value.
+ * @thModule typescript
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function toLowerCaseString<E>(enumValue: E, enumSet: any): string {
