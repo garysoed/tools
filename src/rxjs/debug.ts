@@ -4,8 +4,16 @@ import {Logger} from 'santa';
 
 const SUBSCRIBED_KEYS = new Set<string>();
 
-export function debug<T>(logger: Logger, ...keys: string[]): MonoTypeOperatorFunction<T> {
+const DEFAULT_LOGGER = {
+  debug(...parts: unknown[]): void {
+    // eslint-disable-next-line no-console
+    console.debug(...parts);
+  },
+};
+
+export function debug<T>(loggerIn: Logger|null, ...keys: string[]): MonoTypeOperatorFunction<T> {
   const baseKey = keys.join('::');
+  const logger = loggerIn ?? DEFAULT_LOGGER;
 
   return source => new Observable(subscriber => {
     const key = generateKey(baseKey);

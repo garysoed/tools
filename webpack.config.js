@@ -1,16 +1,16 @@
-const glob = require("glob");
 const webpackBuilder = require('dev/webpack/builder');
+const glob = require('glob');
 
 module.exports = webpackBuilder(__dirname)
-    .forDevelopment('[default]', builder => builder
+    .forDevelopment('main', builder => builder
         .addEntry('entry', glob.sync('./src/**/*.test.ts'))
         .setOutput('bundle.js', '/out')
-        .addTypeScript()
+        .addTypeScript(),
     )
     .forDevelopment('docs', builder => builder
         .addEntry('docs', ['./docassets/index.ts'])
         .setOutput('index.js', '/out')
         .setSingleRun(true)
-        .addTypeScript()
+        .addTypeScript(),
     )
-.build();
+    .build('main');
