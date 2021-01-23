@@ -14,6 +14,16 @@ import {diffMap} from '../rxjs/state/map-diff';
 import {Snapshot} from './snapshot';
 import {StateId, createId} from './state-id';
 
+type StateIdOf<T> = {
+  readonly [K in keyof T]: T[K] extends StateId<infer S> ? S : never;
+};
+
+
+interface Resolver<T> {
+  readonly self$: Observable<T|undefined>;
+  _<K extends keyof T>(key: K): Observable<T[K]|undefined>;
+  $<K extends keyof StateIdOf<T>>(key: K): Resolver<StateIdOf<T>[K]>;
+}
 
 /**
  * Manages global states.
@@ -27,6 +37,36 @@ export class StateService {
   private readonly payloads$ = new BehaviorSubject<ReadonlyMap<string, any>>(new Map());
 
   constructor(private readonly idGenerator: BaseIdGenerator = new SimpleIdGenerator()) {}
+
+  private createResolver<T>(self$: Observable<T|undefined>): Resolver<T> {
+    return {
+      self$,
+      _: <K extends keyof T>(key: K): Observable<T[K]|undefined> => {
+        return self$.pipe(map(value => value?.[key]));
+      },
+      $: <K extends keyof StateIdOf<T>>(key: K): Resolver<StateIdOf<T>[K]> => {
+        const subSelf$ = self$.pipe(
+            map(value => value?.[key] as StateId<StateIdOf<T>[K]>|undefined),
+            switchMap(stateId => {
+              if (stateId === undefined) {
+                return observableOf(undefined);
+              }
+
+              return this.getValue(stateId);
+            }),
+        );
+        return this.createResolver(subSelf$);
+      },
+    };
+  }
+
+  private getValue<T>({id}: StateId<T>): Observable<T|undefined> {
+    return this.payloads$.pipe(
+        map(payloads => payloads.get(id)),
+        distinctUntilChanged(),
+    );
+  }
+
 
   /**
    * Adds the given value to the global state.
@@ -128,6 +168,10 @@ export class StateService {
         }),
         map(id => createId(id)),
     );
+  }
+
+  resolve<T>(id: StateId<T>): Resolver<T> {
+    return this.createResolver(this.getValue(id));
   }
 
   /**

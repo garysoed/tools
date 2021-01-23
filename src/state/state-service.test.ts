@@ -2,7 +2,7 @@ import {arrayThat, assert, createSpySubject, objectThat, should, test} from 'gs-
 import {map} from 'rxjs/operators';
 
 import {IdObject, Snapshot} from './snapshot';
-import {createId} from './state-id';
+import {createId, StateId} from './state-id';
 import {StateService} from './state-service';
 
 
@@ -64,27 +64,6 @@ test('@tools/state/state-service', init => {
     });
   });
 
-  test('get', _, init => {
-    const _ = init(_ => {
-      const addedValue = 'addedValue';
-      const addedId = _.service.add<string>(addedValue);
-      return {..._, addedId, addedValue};
-    });
-
-    should('emit the correct object if it exists', () => {
-      assert(_.service.get(_.addedId)).to.emitWith(_.addedValue);
-    });
-
-    should('emit null if the object does not exist', () => {
-      assert(_.service.get(createId<string>('other'))).to.emitWith(null);
-    });
-
-    should('handle falsy object that are not null', () => {
-      _.service.set(_.addedId, '');
-      assert(_.service.get(createId<string>('other'))).to.emitWith(null);
-    });
-  });
-
   test('init', () => {
     should('initialize all the values in the service', () => {
       const rootId = createId<string>('root');
@@ -113,6 +92,63 @@ test('@tools/state/state-service', init => {
         ]),
       }));
       assert(_.service.get(idA)).to.emitWith(valueA);
+    });
+  });
+
+  test('resolve', _, init => {
+    test('self$', () => {
+      const _ = init(_ => {
+        const addedValue = 'addedValue';
+        const addedId = _.service.add<string>(addedValue);
+        return {..._, addedId, addedValue};
+      });
+
+      should('emit the correct object if it exists', () => {
+        assert(_.service.resolve(_.addedId).self$).to.emitWith(_.addedValue);
+      });
+
+      should('emit undefined if the object does not exist', () => {
+        assert(_.service.resolve(createId<string>('other')).self$).to.emitWith(undefined);
+      });
+
+      should('handle falsy object that are not null', () => {
+        _.service.set(_.addedId, '');
+        assert(_.service.resolve(_.addedId).self$).to.emitWith('');
+      });
+    });
+
+    test('_', () => {
+      interface Test {
+        readonly a: string;
+      }
+
+      should('emit the correct property value', () => {
+        const addedId = _.service.add<Test>({a: 'abc'});
+
+        assert(_.service.resolve(addedId)._('a')).to.emitWith('abc');
+      });
+
+      should('emit undefined if the parent does not exist', () => {
+        assert(_.service.resolve(createId<Test>('other'))._('a')).to.emitWith(undefined);
+      });
+    });
+
+    test('$', () => {
+      interface Test {
+        readonly a: StateId<string>;
+      }
+
+      should('resolve the correct value for sub state ID', () => {
+        const addedId = _.service.add<Test>({
+          a: _.service.add<string>('abc'),
+        });
+
+        assert(_.service.resolve(addedId).$('a').self$).to.emitWith('abc');
+      });
+
+      should('emit undefined if the parent does not exist', () => {
+        assert(_.service.resolve(createId<Test>('other'))._('a')).to.emitWith(undefined);
+      });
     });
   });
 
