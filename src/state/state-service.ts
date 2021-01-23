@@ -19,7 +19,12 @@ type StateIdOf<T> = {
 };
 
 
-interface Resolver<T> {
+/**
+ * Used to resolve properties of the given ID.
+ *
+ * @typeParam T - Object to be resolved.
+ */
+export interface Resolver<T> {
   readonly self$: Observable<T|undefined>;
   _<K extends keyof T>(key: K): Observable<T[K]|undefined>;
   $<K extends keyof StateIdOf<T>>(key: K): Resolver<StateIdOf<T>[K]>;
@@ -115,22 +120,6 @@ export class StateService {
   }
 
   /**
-   * Retrieves the value associated to the given ID.
-   *
-   * @typeParams T - Type of the value to be retrieved.
-   * @param id - ID of the value to retrieve.
-   * @returns Observable that returns the value associated with the ID, or null if none exists.
-   */
-  get<T>({id}: StateId<T>): Observable<T|null> {
-    return this.payloads$.pipe(
-        map(payloads => {
-          return payloads.get(id) ?? null;
-        }),
-        distinctUntilChanged(),
-    );
-  }
-
-  /**
    * Initializes the global states.
    *
    * @typeParam T - Type of the root object.
@@ -170,6 +159,13 @@ export class StateService {
     );
   }
 
+  /**
+   * Retrieves the value associated to the given ID.
+   *
+   * @typeParams T - Type of the value to be retrieved.
+   * @param id - ID of the value to retrieve.
+   * @returns Object to resolve the properties of the object corresponding to the ID..
+   */
   resolve<T>(id: StateId<T>): Resolver<T> {
     return this.createResolver(this.getValue(id));
   }

@@ -19,7 +19,7 @@ test('@tools/state/state-service', init => {
 
       const id = _.service.add<string>(value);
 
-      assert(_.service.get(id)).to.emitWith(value);
+      assert(_.service.resolve(id).self$).to.emitWith(value);
       assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([id.id]);
     });
   });
@@ -38,8 +38,8 @@ test('@tools/state/state-service', init => {
         addedId1.id,
         addedId2.id,
       ]);
-      assert(_.service.get(addedId1)).to.emitWith(null);
-      assert(_.service.get(addedId2)).to.emitWith(null);
+      assert(_.service.resolve(addedId1).self$).to.emitWith(undefined);
+      assert(_.service.resolve(addedId2).self$).to.emitWith(undefined);
     });
   });
 
@@ -53,7 +53,7 @@ test('@tools/state/state-service', init => {
       assert(_.service.delete(_.addedId)).to.beTrue();
 
       assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([_.addedId.id, _.addedId.id]);
-      assert(_.service.get(_.addedId)).to.emitWith(null);
+      assert(_.service.resolve(_.addedId).self$).to.emitWith(undefined);
     });
 
     should('return false if the object does not exist', () => {
@@ -91,7 +91,7 @@ test('@tools/state/state-service', init => {
           objectThat<IdObject>().haveProperties({id: idC.id, obj: valueC}),
         ]),
       }));
-      assert(_.service.get(idA)).to.emitWith(valueA);
+      assert(_.service.resolve(idA).self$).to.emitWith(valueA);
     });
   });
 
@@ -164,7 +164,7 @@ test('@tools/state/state-service', init => {
       assert(_.service.set(_.addedId, newValue)).to.beTrue();
 
       assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([_.addedId.id, _.addedId.id]);
-      assert(_.service.get(_.addedId)).to.emitWith(newValue);
+      assert(_.service.resolve(_.addedId).self$).to.emitWith(newValue);
     });
 
     should('return false if the ID doesn\'t exist', () => {
@@ -173,8 +173,8 @@ test('@tools/state/state-service', init => {
       assert(_.service.set(otherId, newValue)).to.beFalse();
 
       assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([_.addedId.id, otherId.id]);
-      assert(_.service.get(_.addedId)).to.emitWith(_.addedValue);
-      assert(_.service.get(otherId)).to.emitWith(newValue);
+      assert(_.service.resolve(_.addedId).self$).to.emitWith(_.addedValue);
+      assert(_.service.resolve(otherId).self$).to.emitWith(newValue);
     });
   });
 
