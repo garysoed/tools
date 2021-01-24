@@ -166,7 +166,10 @@ export class StateService {
    * @param id - ID of the value to retrieve.
    * @returns Object to resolve the properties of the object corresponding to the ID..
    */
-  resolve<T>(id: StateId<T>): Resolver<T> {
+  resolve<T>(id: StateId<T>|undefined|null): Resolver<T> {
+    if (!id) {
+      return this.createResolver<T>(observableOf(undefined));
+    }
     return this.createResolver(this.getValue(id));
   }
 
