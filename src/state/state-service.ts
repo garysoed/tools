@@ -24,10 +24,39 @@ type StateIdOf<T> = {
  *
  * @typeParam T - Object to be resolved.
  */
-export interface Resolver<T> {
-  readonly self$: Observable<T|undefined>;
+export interface Resolver<T> extends Observable<T|undefined> {
   _<K extends keyof T>(key: K): Observable<T[K]|undefined>;
   $<K extends keyof StateIdOf<T>>(key: K): Resolver<StateIdOf<T>[K]>;
+}
+
+type GetValue = <T>(stateId: StateId<T>) => Observable<T|undefined>;
+class ResolverInternal<T> extends Observable<T|undefined> implements Resolver<T> {
+  constructor(
+      private readonly source$: Observable<T|undefined>,
+      private readonly getValue: GetValue,
+  ) {
+    super(subscriber => {
+      source$.subscribe(subscriber);
+    });
+  }
+
+  _<K extends keyof T>(key: K): Observable<T[K]|undefined> {
+    return this.source$.pipe(map(value => value?.[key]));
+  }
+
+  $<K extends keyof StateIdOf<T>>(key: K): Resolver<StateIdOf<T>[K]> {
+    const subSelf$ = this.source$.pipe(
+        map(value => value?.[key] as StateId<StateIdOf<T>[K]>|undefined),
+        switchMap(stateId => {
+          if (stateId === undefined) {
+            return observableOf(undefined);
+          }
+
+          return this.getValue(stateId);
+        }),
+    );
+    return new ResolverInternal(subSelf$, this.getValue);
+  }
 }
 
 /**
@@ -42,28 +71,6 @@ export class StateService {
   private readonly payloads$ = new BehaviorSubject<ReadonlyMap<string, any>>(new Map());
 
   constructor(private readonly idGenerator: BaseIdGenerator = new SimpleIdGenerator()) {}
-
-  private createResolver<T>(self$: Observable<T|undefined>): Resolver<T> {
-    return {
-      self$,
-      _: <K extends keyof T>(key: K): Observable<T[K]|undefined> => {
-        return self$.pipe(map(value => value?.[key]));
-      },
-      $: <K extends keyof StateIdOf<T>>(key: K): Resolver<StateIdOf<T>[K]> => {
-        const subSelf$ = self$.pipe(
-            map(value => value?.[key] as StateId<StateIdOf<T>[K]>|undefined),
-            switchMap(stateId => {
-              if (stateId === undefined) {
-                return observableOf(undefined);
-              }
-
-              return this.getValue(stateId);
-            }),
-        );
-        return this.createResolver(subSelf$);
-      },
-    };
-  }
 
   private getValue<T>({id}: StateId<T>): Observable<T|undefined> {
     return this.payloads$.pipe(
@@ -168,9 +175,9 @@ export class StateService {
    */
   resolve<T>(id: StateId<T>|undefined|null): Resolver<T> {
     if (!id) {
-      return this.createResolver<T>(observableOf(undefined));
+      return new ResolverInternal<T>(observableOf(undefined), id => this.getValue(id));
     }
-    return this.createResolver(this.getValue(id));
+    return new ResolverInternal<T>(this.getValue(id), id => this.getValue(id));
   }
 
   /**

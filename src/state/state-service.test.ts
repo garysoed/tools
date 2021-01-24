@@ -19,7 +19,7 @@ test('@tools/state/state-service', init => {
 
       const id = _.service.add<string>(value);
 
-      assert(_.service.resolve(id).self$).to.emitWith(value);
+      assert(_.service.resolve(id)).to.emitWith(value);
       assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([id.id]);
     });
   });
@@ -38,8 +38,8 @@ test('@tools/state/state-service', init => {
         addedId1.id,
         addedId2.id,
       ]);
-      assert(_.service.resolve(addedId1).self$).to.emitWith(undefined);
-      assert(_.service.resolve(addedId2).self$).to.emitWith(undefined);
+      assert(_.service.resolve(addedId1)).to.emitWith(undefined);
+      assert(_.service.resolve(addedId2)).to.emitWith(undefined);
     });
   });
 
@@ -53,7 +53,7 @@ test('@tools/state/state-service', init => {
       assert(_.service.delete(_.addedId)).to.beTrue();
 
       assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([_.addedId.id, _.addedId.id]);
-      assert(_.service.resolve(_.addedId).self$).to.emitWith(undefined);
+      assert(_.service.resolve(_.addedId)).to.emitWith(undefined);
     });
 
     should('return false if the object does not exist', () => {
@@ -91,7 +91,7 @@ test('@tools/state/state-service', init => {
           objectThat<IdObject>().haveProperties({id: idC.id, obj: valueC}),
         ]),
       }));
-      assert(_.service.resolve(idA).self$).to.emitWith(valueA);
+      assert(_.service.resolve(idA)).to.emitWith(valueA);
     });
   });
 
@@ -104,16 +104,16 @@ test('@tools/state/state-service', init => {
       });
 
       should('emit the correct object if it exists', () => {
-        assert(_.service.resolve(_.addedId).self$).to.emitWith(_.addedValue);
+        assert(_.service.resolve(_.addedId)).to.emitWith(_.addedValue);
       });
 
       should('emit undefined if the object does not exist', () => {
-        assert(_.service.resolve(createId<string>('other')).self$).to.emitWith(undefined);
+        assert(_.service.resolve(createId<string>('other'))).to.emitWith(undefined);
       });
 
       should('handle falsy object that are not null', () => {
         _.service.set(_.addedId, '');
-        assert(_.service.resolve(_.addedId).self$).to.emitWith('');
+        assert(_.service.resolve(_.addedId)).to.emitWith('');
       });
     });
 
@@ -143,7 +143,7 @@ test('@tools/state/state-service', init => {
           a: _.service.add<string>('abc'),
         });
 
-        assert(_.service.resolve(addedId).$('a').self$).to.emitWith('abc');
+        assert(_.service.resolve(addedId).$('a')).to.emitWith('abc');
       });
 
       should('emit undefined if the parent does not exist', () => {
@@ -164,7 +164,7 @@ test('@tools/state/state-service', init => {
       assert(_.service.set(_.addedId, newValue)).to.beTrue();
 
       assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([_.addedId.id, _.addedId.id]);
-      assert(_.service.resolve(_.addedId).self$).to.emitWith(newValue);
+      assert(_.service.resolve(_.addedId)).to.emitWith(newValue);
     });
 
     should('return false if the ID doesn\'t exist', () => {
@@ -173,8 +173,8 @@ test('@tools/state/state-service', init => {
       assert(_.service.set(otherId, newValue)).to.beFalse();
 
       assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([_.addedId.id, otherId.id]);
-      assert(_.service.resolve(_.addedId).self$).to.emitWith(_.addedValue);
-      assert(_.service.resolve(otherId).self$).to.emitWith(newValue);
+      assert(_.service.resolve(_.addedId)).to.emitWith(_.addedValue);
+      assert(_.service.resolve(otherId)).to.emitWith(newValue);
     });
   });
 
