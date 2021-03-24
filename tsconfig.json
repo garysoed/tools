@@ -15,6 +15,10 @@
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "outDir": "out",
+    "paths": {
+      "rxjs": ["node_modules/rxjs"],
+      "rxjs/*": ["node_modules/rxjs/*"],
+    },
     "pretty": true,
     "resolveJsonModule": true,
     "sourceMap": true,
