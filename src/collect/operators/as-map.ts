@@ -8,6 +8,6 @@ import {Operator} from './operator';
  * @returns `Operator` to convert `Iterable`s to maps.
  * @thModule collect.operators
  */
-export function asMap<K, V>(): Operator<Iterable<readonly [K, V]>, Map<K, V>> {
+export function asMap<K, V>(): Operator<Iterable<readonly [K, V]>, ReadonlyMap<K, V>> {
   return iterable => new Map(iterable);
 }
