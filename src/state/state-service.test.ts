@@ -13,21 +13,11 @@ test('@tools/state/state-service', init => {
     return {onChange$, service};
   });
 
-  test('add', () => {
-    should('add the object and give it a unique ID', () => {
-      const value = 'value';
-
-      const id = _.service.add<string>(value);
-
-      assert(_.service.resolve(id)).to.emitWith(value);
-      assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([id.id]);
-    });
-  });
-
   test('clear', () => {
     should('delete the objects and return true if it exists', () => {
-      const addedId1 = _.service.add<string>('initValue1');
-      const addedId2 = _.service.add<string>('initValue2');
+      const [addedId1, addedId2] = _.service.modify(x => {
+        return [x.add('initValue1'), x.add('initValue2')];
+      });
       _.service.clear();
 
       assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([
@@ -40,27 +30,6 @@ test('@tools/state/state-service', init => {
       ]);
       assert(_.service.resolve(addedId1)).to.emitWith(undefined);
       assert(_.service.resolve(addedId2)).to.emitWith(undefined);
-    });
-  });
-
-  test('delete', _, init => {
-    const _ = init(_ => {
-      const addedId = _.service.add<string>('initValue');
-      return {..._, addedId};
-    });
-
-    should('delete the object and return true if it exists', () => {
-      assert(_.service.delete(_.addedId)).to.beTrue();
-
-      assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([_.addedId.id, _.addedId.id]);
-      assert(_.service.resolve(_.addedId)).to.emitWith(undefined);
-    });
-
-    should('return false if the object does not exist', () => {
-      const otherId = createId<string>('other');
-      assert(_.service.delete(otherId)).to.beFalse();
-
-      assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([_.addedId.id]);
     });
   });
 
@@ -95,11 +64,73 @@ test('@tools/state/state-service', init => {
     });
   });
 
+  test('modify', () => {
+    test('add', () => {
+      should('add the object and give it a unique ID', () => {
+        const value = 'value';
+
+        const id = _.service.modify(x => x.add(value));
+
+        assert(_.service.resolve(id)).to.emitWith(value);
+        assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([id.id]);
+      });
+    });
+
+    test('delete', _, init => {
+      const _ = init(_ => {
+        const addedId = _.service.modify(x => x.add('initValue'));
+        return {..._, addedId};
+      });
+
+      should('delete the object and return true if it exists', () => {
+        assert(_.service.modify(x => x.delete(_.addedId))).to.beTrue();
+
+        assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([_.addedId.id, _.addedId.id]);
+        assert(_.service.resolve(_.addedId)).to.emitWith(undefined);
+      });
+
+      should('return false if the object does not exist', () => {
+        const otherId = createId<string>('other');
+        assert(_.service.modify(x => x.delete(otherId))).to.beFalse();
+
+        assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([_.addedId.id]);
+      });
+    });
+
+    test('set',  _, init => {
+      const _ = init(_ => {
+        const addedValue = 'addedValue';
+        const addedId = _.service.modify(x => x.add(addedValue));
+        return {..._, addedId, addedValue};
+      });
+
+      should('update the value correctly and return true if the ID exist', () => {
+        const newValue = 'newValue';
+        assert(_.service.modify(x => x.set(_.addedId, newValue))).to.beTrue();
+
+        assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([_.addedId.id, _.addedId.id]);
+        assert(_.service.resolve(_.addedId)).to.emitWith(newValue);
+      });
+
+      should('return false if the ID doesn\'t exist', () => {
+        const newValue = {value: 'new'};
+        const otherId = createId<{value: string}>('otherId');
+        assert(_.service.modify(x => x.set(otherId, newValue))).to.beFalse();
+
+        assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([_.addedId.id, otherId.id]);
+        assert(_.service.resolve(_.addedId)).to.emitWith(_.addedValue);
+        assert(_.service.resolve(otherId)).to.emitWith(newValue);
+      });
+    });
+
+    should.only(`make all the changes in one transaction`);
+  });
+
   test('resolve', _, init => {
     test('self$', () => {
       const _ = init(_ => {
         const addedValue = 'addedValue';
-        const addedId = _.service.add<string>(addedValue);
+        const addedId = _.service.modify(x => x.add(addedValue));
         return {..._, addedId, addedValue};
       });
 
@@ -112,7 +143,7 @@ test('@tools/state/state-service', init => {
       });
 
       should('handle falsy object that are not null', () => {
-        _.service.set(_.addedId, '');
+        _.service.modify(x => x.set(_.addedId, ''));
         assert(_.service.resolve(_.addedId)).to.emitWith('');
       });
     });
@@ -123,7 +154,7 @@ test('@tools/state/state-service', init => {
       }
 
       should('emit the correct property value', () => {
-        const addedId = _.service.add<Test>({a: 'abc'});
+        const addedId = _.service.modify(x => x.add({a: 'abc'}));
 
         assert(_.service.resolve(addedId)._('a')).to.emitWith('abc');
       });
@@ -139,9 +170,9 @@ test('@tools/state/state-service', init => {
       }
 
       should('resolve the correct value for sub state ID', () => {
-        const addedId = _.service.add<Test>({
-          a: _.service.add<string>('abc'),
-        });
+        const addedId = _.service.modify(x => x.add({
+          a: x.add('abc'),
+        }));
 
         assert(_.service.resolve(addedId).$('a')).to.emitWith('abc');
       });
@@ -152,41 +183,15 @@ test('@tools/state/state-service', init => {
     });
   });
 
-  test('set',  _, init => {
-    const _ = init(_ => {
-      const addedValue = 'addedValue';
-      const addedId = _.service.add<string>(addedValue);
-      return {..._, addedId, addedValue};
-    });
-
-    should('update the value correctly and return true if the ID exist', () => {
-      const newValue = 'newValue';
-      assert(_.service.set(_.addedId, newValue)).to.beTrue();
-
-      assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([_.addedId.id, _.addedId.id]);
-      assert(_.service.resolve(_.addedId)).to.emitWith(newValue);
-    });
-
-    should('return false if the ID doesn\'t exist', () => {
-      const newValue = {value: 'new'};
-      const otherId = createId<{value: string}>('otherId');
-      assert(_.service.set(otherId, newValue)).to.beFalse();
-
-      assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([_.addedId.id, otherId.id]);
-      assert(_.service.resolve(_.addedId)).to.emitWith(_.addedValue);
-      assert(_.service.resolve(otherId)).to.emitWith(newValue);
-    });
-  });
-
   test('snapshot', () => {
     should('return all the objects', () => {
       const valueA = 'valueA';
       const valueB = 'valueB';
       const valueC = 'valueC';
 
-      const idA = _.service.add<string>(valueA);
-      const idB = _.service.add<string>(valueB);
-      const idC = _.service.add<string>(valueC);
+      const [idA, idB, idC] = _.service.modify(x => {
+        return [x.add(valueA), x.add(valueB), x.add(valueC)];
+      });
 
       assert(_.service.snapshot(idA)).to.equal(objectThat<Snapshot<string>>().haveProperties({
         rootId: idA,
@@ -203,11 +208,11 @@ test('@tools/state/state-service', init => {
       const valueB = 'valueB';
       const valueC = 'valueC';
 
-      const idA = _.service.add<string>(valueA);
-      _.service.add<string>(valueB);
-      _.service.add<string>(valueC);
-
-      _.service.delete(idA);
+      const [idA] = _.service.modify(x => {
+        const ids = [x.add(valueA), x.add(valueB), x.add(valueC)];
+        x.delete(ids[0]);
+        return ids;
+      });
 
       assert(_.service.snapshot(idA)).to.beNull();
     });
