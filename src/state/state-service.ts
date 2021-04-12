@@ -36,7 +36,7 @@ interface SetModification {
 
 type Modification = AddModification|DeleteModification|SetModification;
 
-class Modifier {
+export class Modifier {
   private readonly generatedIds = new Set<string>(this.existingIds);
 
   constructor(
