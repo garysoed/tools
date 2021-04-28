@@ -123,7 +123,7 @@ test('@tools/state/state-service', init => {
       });
     });
 
-    should.only(`make all the changes in one transaction`);
+    should.only('make all the changes in one transaction');
   });
 
   test('resolve', _, init => {

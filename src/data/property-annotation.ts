@@ -31,7 +31,7 @@ export class PropertyAnnotation<D> {
         filter(([key]) => ctorsSet.has(key)),
         map(([k, keyToDataMap]) => {
           const dataMap = keyToDataMap.get(key);
-          return [k, dataMap] as [Object, ReadonlyArray<D>|undefined];
+          return [k, dataMap] as [Object, readonly D[]|undefined];
         }),
         filter((entry): entry is [Object, readonly D[]] => !!entry[1]),
         asArray(),

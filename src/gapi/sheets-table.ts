@@ -27,7 +27,7 @@ export interface SheetsCell {
  *
  * @thModule gapi.sheets
  */
-export type SheetsTable = ReadonlyArray<ReadonlyArray<SheetsCell>>;
+export type SheetsTable = ReadonlyArray<readonly SheetsCell[]>;
 
 /**
  * Merge data in Google Sheets.

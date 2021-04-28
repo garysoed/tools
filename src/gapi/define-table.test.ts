@@ -26,7 +26,7 @@ function createCellData(value: string): CellData {
 function multiCellMatcher(value: SheetsTable): MatcherType<MultiCell> {
   return objectThat<MultiCell>().haveProperties({
     isSingle: false,
-    value: arrayThat<ReadonlyArray<SheetsCell>>().haveExactElements(value.map(row => {
+    value: arrayThat<readonly SheetsCell[]>().haveExactElements(value.map(row => {
       return arrayThat<SheetsCell>().haveExactElements(row.map(cell => {
         return objectThat<SheetsCell>().haveProperties(cell);
       }));
