@@ -8,6 +8,6 @@ import {Random} from '../random';
  * @param rng The random object
  * @return Random integer in the given range.
  */
-export function pickIntByFraction(from: number, to: number, rng: Random): number {
+export function randomPickInt(from: number, to: number, rng: Random): number {
   return from + Math.floor(rng.next() * (to - from));
 }

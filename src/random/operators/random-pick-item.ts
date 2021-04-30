@@ -1,6 +1,6 @@
 import {Random} from '../random';
 
-import {pickIntByFraction} from './pick-int-by-fraction';
+import {randomPickInt} from './random-pick-int';
 
 
 /**
@@ -10,7 +10,7 @@ import {pickIntByFraction} from './pick-int-by-fraction';
  * @param rng The random object.
  * @return A random item from the given array.
  */
-export function pickItemByFraction<T>(values: readonly T[], rng: Random): T|undefined {
-  const index = pickIntByFraction(0, values.length, rng);
+export function randomPickItem<T>(values: readonly T[], rng: Random): T|undefined {
+  const index = randomPickInt(0, values.length, rng);
   return values[index] ?? undefined;
 }
