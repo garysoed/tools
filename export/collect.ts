@@ -27,6 +27,8 @@ export {$sort} from '../src/collect/operators/sort';
 export {$take} from '../src/collect/operators/take';
 export {$zip} from '../src/collect/operators/zip';
 
+export {Operator} from '../src/collect/operators/operator';
+
 export {arrayFrom} from '../src/collect/structures/array-from';
 export {countableIterable} from '../src/collect/structures/countable-iterable';
 
