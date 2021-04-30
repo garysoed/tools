@@ -9,7 +9,7 @@ import {FakeSeed} from './testing/fake-seed';
 
 test('@tools/random/random', () => {
   test('[Symbol.iterator]', () => {
-    should(`iterate correctly`, () => {
+    should('iterate correctly', () => {
       const random = fromSeed(new FakeSeed([1, 2, 3]));
       const values1 = $pipe(random, take(2));
       const values2 = $pipe(random, take(3));

@@ -1,12 +1,13 @@
-import {assert, should} from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
-import {fromSeed} from './random';
+import {fromSeed} from '../random';
+import {FakeSeed} from '../testing/fake-seed';
+
 import {SimpleIdGenerator} from './simple-id-generator';
-import {FakeSeed} from './testing/fake-seed';
 
 
-describe('random.SimpleIdGenerator', () => {
-  describe('generate', () => {
+test('@tools/random/idgenerators/simple-id-generator', () => {
+  test('generate', () => {
     should('generate the ID correctly', () => {
       const seed = new FakeSeed([13 / 62]);
       const generator = new SimpleIdGenerator(fromSeed(seed));
@@ -15,4 +16,5 @@ describe('random.SimpleIdGenerator', () => {
           .to.equal('DDDDDDD-DDDDDDD-DDDDDDD-DDDDDDD');
     });
   });
+
 });

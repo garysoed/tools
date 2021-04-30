@@ -6,8 +6,8 @@ import {asMap as $asMap} from '../collect/operators/as-map';
 import {$map as $map} from '../collect/operators/map';
 import {$pipe} from '../collect/operators/pipe';
 import {cache} from '../data/cache';
-import {BaseIdGenerator} from '../random/base-id-generator';
-import {SimpleIdGenerator} from '../random/simple-id-generator';
+import {BaseIdGenerator} from '../random/idgenerators/base-id-generator';
+import {SimpleIdGenerator} from '../random/idgenerators/simple-id-generator';
 import {diffMap} from '../rxjs/state/map-diff';
 
 import {Snapshot} from './snapshot';

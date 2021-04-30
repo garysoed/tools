@@ -1,4 +1,4 @@
-import {assert, should} from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
 import {BaseIdGenerator} from './base-id-generator';
 
@@ -15,16 +15,14 @@ class TestIdGenerator extends BaseIdGenerator {
   }
 }
 
-describe('random.BaseIdGenerator', () => {
-  let generator: BaseIdGenerator;
-
-  beforeEach(() => {
-    generator = new TestIdGenerator();
+test('@tools/random/idgenerators/base-id-generator', init => {
+  const _ = init(() => {
+    return {generator: new TestIdGenerator()};
   });
 
-  describe('generate', () => {
+  test('generate', () => {
     should('keep resolving ID conflict until it is different', () => {
-      assert(generator.generate(['1', '2', '3'])).to.equal('4');
+      assert(_.generator.generate(['1', '2', '3'])).to.equal('4');
     });
   });
 });

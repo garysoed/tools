@@ -1,8 +1,7 @@
 import {$pipe} from '../../collect/operators/pipe';
 import {take} from '../../collect/operators/take';
+import {$pickItemByFraction} from '../operators/pick-item-by-fraction';
 import {Random} from '../random';
-
-import {$pickItemByFraction} from './pick-item-by-fraction';
 
 
 const ID_CHARS: string[] = [];

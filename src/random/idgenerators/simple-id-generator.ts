@@ -1,7 +1,8 @@
+import {Random, fromSeed} from '../random';
+import {mathSeed} from '../seed/math-seed';
+
 import {BaseIdGenerator} from './base-id-generator';
-import {randomShortId} from './operators/random-short-id';
-import {Random, fromSeed} from './random';
-import {mathSeed} from './seed/math-seed';
+import {randomShortId} from './random-short-id';
 
 
 /**
