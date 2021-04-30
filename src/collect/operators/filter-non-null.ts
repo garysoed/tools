@@ -1,4 +1,4 @@
-import {filter} from './filter';
+import {$filter} from './filter';
 import {Operator} from './operator';
 
 /**
@@ -8,6 +8,6 @@ import {Operator} from './operator';
  * @returns Operator that filters out any `null`.
  * @thModule collect.operators
  */
-export function filterNonNull<T>(): Operator<Iterable<T>, Iterable<Exclude<T, null>>> {
-  return filter((item): item is Exclude<T, null> => item !== null);
+export function $filterNonNull<T>(): Operator<Iterable<T>, Iterable<Exclude<T, null>>> {
+  return $filter((item): item is Exclude<T, null> => item !== null);
 }

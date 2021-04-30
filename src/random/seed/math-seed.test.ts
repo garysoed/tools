@@ -1,7 +1,7 @@
 import {assert, fake, should, spy} from 'gs-testing';
 
 import {$pipe} from '../../collect/operators/pipe';
-import {take} from '../../collect/operators/take';
+import {$take} from '../../collect/operators/take';
 import {fromSeed} from '../random';
 
 import {mathSeed} from './math-seed';
@@ -14,7 +14,7 @@ describe('@tools/random/seed/math-seed', () => {
 
       const sequence = $pipe(
           fromSeed(mathSeed()),
-          take(5),
+          $take(5),
       );
 
       assert(sequence).to.haveExactElements([1, 2, 3, 4, 5]);

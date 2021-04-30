@@ -1,10 +1,10 @@
 import {Ordering} from '../compare/ordering';
 import {reversed} from '../compare/reversed';
 
-import {first} from './first';
+import {$first} from './first';
 import {Operator} from './operator';
 import {$pipe} from './pipe';
-import {sort} from './sort';
+import {$sort} from './sort';
 
 
 /**
@@ -15,6 +15,6 @@ import {sort} from './sort';
  * @returns The largest element in the given array.
  * @thModule collect.operators
  */
-export function max<T>(ordering: Ordering<T>): Operator<readonly T[], T|null> {
-  return obj => $pipe(obj, sort(reversed(ordering)), first());
+export function $max<T>(ordering: Ordering<T>): Operator<readonly T[], T|null> {
+  return obj => $pipe(obj, $sort(reversed(ordering)), $first());
 }

@@ -1,5 +1,5 @@
 import {Operator} from './operator';
-import {take} from './take';
+import {$take} from './take';
 
 /**
  * Returns the first element in the {@link Iterable}, or null if there are none.
@@ -8,8 +8,8 @@ import {take} from './take';
  * @returns `Operator` that returns the first element in the iterable, or null if there are none.
  * @thModule collect.operators
  */
-export function first<T>(): Operator<Iterable<T>, T|null> {
+export function $first<T>(): Operator<Iterable<T>, T|null> {
   return (iterable: Iterable<T>) => {
-    return [...take<T>(1)(iterable)][0] || null;
+    return [...$take<T>(1)(iterable)][0] || null;
   };
 }

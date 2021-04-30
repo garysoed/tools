@@ -7,6 +7,6 @@ import {Operator} from './operator';
  * @returns `Operator` to convert `Iterable`s to sets.
  * @thModule collect.operators
  */
-export function asSet<T>(): Operator<Iterable<T>, Set<T>> {
+export function $asSet<T>(): Operator<Iterable<T>, Set<T>> {
   return iterable => new Set(iterable);
 }

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import {following} from '../collect/compare/following';
 import {withMap} from '../collect/compare/with-map';
-import {asArray} from '../collect/operators/as-array';
-import {asOrderedMap} from '../collect/operators/as-ordered-map';
-import {filter} from '../collect/operators/filter';
+import {$asArray} from '../collect/operators/as-array';
+import {$asOrderedMap} from '../collect/operators/as-ordered-map';
+import {$filter} from '../collect/operators/filter';
 import {$pipe} from '../collect/operators/pipe';
 
 
@@ -36,9 +36,9 @@ export class ClassAnnotation<D> {
 
     const orderedMap = $pipe(
         this.data,
-        filter(([key]) => ctorsSet.has(key)),
-        asArray(),
-        asOrderedMap(),
+        $filter(([key]) => ctorsSet.has(key)),
+        $asArray(),
+        $asOrderedMap(),
     );
     orderedMap.sort(withMap(([ctor]) => ctor, following(ctors)));
     return orderedMap;

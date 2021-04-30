@@ -14,7 +14,7 @@ import {Operator} from './operator';
  * @returns `Operator` that zips the input `Iterable` with the given `Iterable`.
  * @thModule collect.operators
  */
-export function zip<T1, T2>(other: Iterable<T2>): Operator<Iterable<T1>, Iterable<[T1, T2]>> {
+export function $zip<T1, T2>(other: Iterable<T2>): Operator<Iterable<T1>, Iterable<[T1, T2]>> {
   return fromIterable => {
     return (function*(): Generator<[T1, T2]> {
       const otherIterator = other[Symbol.iterator]();

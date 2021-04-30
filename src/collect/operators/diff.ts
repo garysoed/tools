@@ -1,5 +1,5 @@
-import {asSet} from './as-set';
-import {filter} from './filter';
+import {$asSet} from './as-set';
+import {$filter} from './filter';
 import {Operator} from './operator';
 import {$pipe} from './pipe';
 
@@ -13,6 +13,6 @@ import {$pipe} from './pipe';
  *
  * @thModule collect.operators
  */
-export function diff<T>(other: ReadonlySet<T>): Operator<Iterable<T>, ReadonlySet<T>> {
-  return iterable => $pipe(iterable, filter(item => !other.has(item)), asSet());
+export function $diff<T>(other: ReadonlySet<T>): Operator<Iterable<T>, ReadonlySet<T>> {
+  return iterable => $pipe(iterable, $filter(item => !other.has(item)), $asSet());
 }

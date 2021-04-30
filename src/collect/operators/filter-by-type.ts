@@ -1,6 +1,6 @@
 import {Type} from 'gs-types';
 
-import {filter} from './filter';
+import {$filter} from './filter';
 import {Operator} from './operator';
 
 /**
@@ -11,6 +11,6 @@ import {Operator} from './operator';
  * @returns Operator that returns elements of the given `Type`.
  * @thModule collect.operators
  */
-export function filterByType<T>(type: Type<T>): Operator<Iterable<unknown>, Iterable<T>> {
-  return filter((item): item is T => type.check(item));
+export function $filterByType<T>(type: Type<T>): Operator<Iterable<unknown>, Iterable<T>> {
+  return $filter((item): item is T => type.check(item));
 }

@@ -16,7 +16,7 @@ export type HasSize = ReadonlySet<any>|ReadonlyMap<any, any>|readonly any[];
  * @returns `Operator` that returns the number of items in the given collection.
  * @thModule collect.operators
  */
-export function size(): Operator<HasSize, number> {
+export function $size(): Operator<HasSize, number> {
   return collection => {
     if (isArray(collection)) {
       return collection.length;

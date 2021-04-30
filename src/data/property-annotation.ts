@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import {following} from '../collect/compare/following';
 import {withMap} from '../collect/compare/with-map';
-import {asArray} from '../collect/operators/as-array';
-import {asMap} from '../collect/operators/as-map';
-import {asSet} from '../collect/operators/as-set';
-import {filter} from '../collect/operators/filter';
-import {flat} from '../collect/operators/flat';
+import {$asArray} from '../collect/operators/as-array';
+import {$asMap} from '../collect/operators/as-map';
+import {$asSet} from '../collect/operators/as-set';
+import {$filter} from '../collect/operators/filter';
+import {$flat} from '../collect/operators/flat';
 import {$map} from '../collect/operators/map';
 import {$pipe} from '../collect/operators/pipe';
 import {OrderedMap} from '../collect/structures/ordered-map';
@@ -28,13 +28,13 @@ export class PropertyAnnotation<D> {
 
     const entries = $pipe(
         this.data,
-        filter(([key]) => ctorsSet.has(key)),
+        $filter(([key]) => ctorsSet.has(key)),
         $map(([k, keyToDataMap]) => {
           const dataMap = keyToDataMap.get(key);
           return [k, dataMap] as [Object, readonly D[]|undefined];
         }),
-        filter((entry): entry is [Object, readonly D[]] => !!entry[1]),
-        asArray(),
+        $filter((entry): entry is [Object, readonly D[]] => !!entry[1]),
+        $asArray(),
     );
 
     entries.sort(withMap(([ctor]) => ctor, following(ctorChain)));
@@ -49,11 +49,11 @@ export class PropertyAnnotation<D> {
     // Get the keys
     const keys = $pipe(
         this.data,
-        filter(([key]) => ctors.has(key)),
+        $filter(([key]) => ctors.has(key)),
         $map(([, value]) => [...value]),
-        flat(),
+        $flat(),
         $map(([key]) => key),
-        asSet(),
+        $asSet(),
     );
 
 
@@ -63,7 +63,7 @@ export class PropertyAnnotation<D> {
           key,
           this.getAttachedValues(ctorFn, key),
         ] as [string|symbol, ReadonlyMap<Object, readonly D[]>]),
-        asMap(),
+        $asMap(),
     );
   }
 }

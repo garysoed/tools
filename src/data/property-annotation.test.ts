@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import {assert, should, test} from 'gs-testing';
 
-import {asArray} from '../collect/operators/as-array';
-import {flat} from '../collect/operators/flat';
+import {$asArray} from '../collect/operators/as-array';
+import {$flat} from '../collect/operators/flat';
 import {$map} from '../collect/operators/map';
 import {$pipe} from '../collect/operators/pipe';
 
@@ -45,8 +45,8 @@ test('data.PropertyAnnotation', () => {
       return $pipe(
           annotation.data.getAttachedValues(ctorFn, key),
           $map(([obj, valuesList]) => [obj, ...valuesList]),
-          flat<Object|string>(),
-          asArray(),
+          $flat<Object|string>(),
+          $asArray(),
       );
     }
 
@@ -98,15 +98,15 @@ test('data.PropertyAnnotation', () => {
             const values = $pipe(
                 indexMap,
                 $map(([key, values]) => [key, ...values]),
-                flat<Object|string>(),
-                asArray(),
+                $flat<Object|string>(),
+                $asArray(),
             );
 
             return [key, values] as [string|symbol, Array<string|Object>];
           }),
           $map(([key, values]) => [key, ...values]),
-          flat(),
-          asArray(),
+          $flat(),
+          $asArray(),
       );
     }
 

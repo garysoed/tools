@@ -7,6 +7,6 @@ import {Operator} from './operator';
  * @returns `Operator` to convert `Iterable` to arrays.
  * @thModule collect.operators
  */
-export function asArray<T>(): Operator<Iterable<T>, T[]> {
+export function $asArray<T>(): Operator<Iterable<T>, T[]> {
   return iterable => [...iterable];
 }

@@ -6,7 +6,7 @@ import {Operator} from './operator';
  * @returns `Operator` that converts the given `Record` to a `Map`.
  * @thModule collect.operators
  */
-export function recordToMap(): Operator<Record<string, unknown>, ReadonlyMap<string, unknown>> {
+export function $recordToMap(): Operator<Record<string, unknown>, ReadonlyMap<string, unknown>> {
   return record => {
     const map = new Map<string, unknown>();
     for (const key of Object.keys(record)) {

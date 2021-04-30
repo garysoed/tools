@@ -1,5 +1,5 @@
 import {$pipe} from '../../collect/operators/pipe';
-import {take} from '../../collect/operators/take';
+import {$take} from '../../collect/operators/take';
 import {$pickItemByFraction} from '../operators/pick-item-by-fraction';
 import {Random} from '../random';
 
@@ -32,6 +32,6 @@ export function randomShortId(rng: Random): string {
   return $pipe(
       rng,
       $pickItemByFraction(ID_CHARS),
-      take(7),
+      $take(7),
   ).join('');
 }

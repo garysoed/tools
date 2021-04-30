@@ -10,6 +10,6 @@ import {Operator} from './operator';
  * @returns `Operator` to convert `Iterable`s to `OrderedMap`s.
  * @thModule collect.operators
  */
-export function asOrderedMap<K, V>(): Operator<Iterable<[K, V]>, OrderedMap<K, V>> {
+export function $asOrderedMap<K, V>(): Operator<Iterable<[K, V]>, OrderedMap<K, V>> {
   return iterable => new OrderedMap([...iterable]);
 }

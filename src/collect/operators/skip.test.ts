@@ -2,7 +2,7 @@ import {assert, should, test} from 'gs-testing';
 
 import {$pipe} from './pipe';
 import {skip} from './skip';
-import {take} from './take';
+import {$take} from './take';
 
 test('@tools/collect/skip', () => {
   should('return iterable that skips the first few elements', () => {
@@ -10,7 +10,7 @@ test('@tools/collect/skip', () => {
   });
 
   should('return all elements if count is zero', () => {
-    assert($pipe([0, 1, 2, 3], skip(0), take(5))).to.startWith([0, 1, 2, 3]);
+    assert($pipe([0, 1, 2, 3], skip(0), $take(5))).to.startWith([0, 1, 2, 3]);
   });
 
   should('return empty iterable if count is too big', () => {

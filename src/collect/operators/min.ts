@@ -1,9 +1,9 @@
 import {Ordering} from '../compare/ordering';
 
-import {first} from './first';
+import {$first} from './first';
 import {Operator} from './operator';
 import {$pipe} from './pipe';
-import {sort} from './sort';
+import {$sort} from './sort';
 
 
 /**
@@ -14,6 +14,6 @@ import {sort} from './sort';
  * @returns The smallest element in the given array.
  * @thModule collect.operators
  */
-export function min<T>(ordering: Ordering<T>): Operator<readonly T[], T|null> {
-  return obj => $pipe(obj, sort(ordering), first());
+export function $min<T>(ordering: Ordering<T>): Operator<readonly T[], T|null> {
+  return obj => $pipe(obj, $sort(ordering), $first());
 }

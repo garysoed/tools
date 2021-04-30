@@ -7,6 +7,6 @@ import {Operator} from './operator';
  * @returns `Operator` that reverses the items in the `Array`.
  * @thModule collect.operators
  */
-export function reverse<T>(): Operator<readonly T[], readonly T[]> {
+export function $reverse<T>(): Operator<readonly T[], readonly T[]> {
   return array => [...array].reverse();
 }

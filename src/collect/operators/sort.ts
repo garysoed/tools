@@ -10,6 +10,6 @@ import {Operator} from './operator';
  * @returns `Ordering` that sorts the given `Array`.
  * @thModule collect.operators
  */
-export function sort<T>(ordering: Ordering<T>): Operator<readonly T[], readonly T[]> {
+export function $sort<T>(ordering: Ordering<T>): Operator<readonly T[], readonly T[]> {
   return array => [...array].sort(ordering);
 }

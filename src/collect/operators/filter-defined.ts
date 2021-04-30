@@ -1,4 +1,4 @@
-import {filter} from './filter';
+import {$filter} from './filter';
 import {Operator} from './operator';
 
 /**
@@ -9,7 +9,7 @@ import {Operator} from './operator';
  *
  * @thModule collect.operators
  */
-export function filterDefined<T>():
+export function $filterDefined<T>():
     Operator<Iterable<T>, Iterable<Exclude<T, undefined>>> {
-  return filter((item): item is Exclude<T, undefined> => item !== undefined);
+  return $filter((item): item is Exclude<T, undefined> => item !== undefined);
 }

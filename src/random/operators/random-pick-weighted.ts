@@ -1,5 +1,5 @@
 import {$pipe} from '../../collect/operators/pipe';
-import {take} from '../../collect/operators/take';
+import {$take} from '../../collect/operators/take';
 import {Random} from '../random';
 
 export function randomPickWeighted<T>(
@@ -11,7 +11,7 @@ export function randomPickWeighted<T>(
       0,
   );
 
-  let currentTotal = totalWeight * $pipe(rng, take(1))[0];
+  let currentTotal = totalWeight * $pipe(rng, $take(1))[0];
   for (const [entry, weight] of items) {
     if (weight <= 0) {
       continue;

@@ -9,6 +9,6 @@ import {Operator} from './operator';
  *     `true`.
  * @thModule collect.operators
  */
-export function some(): Operator<FiniteIterable<boolean>, boolean> {
+export function $some(): Operator<FiniteIterable<boolean>, boolean> {
   return iterable => [...iterable].some(value => value);
 }

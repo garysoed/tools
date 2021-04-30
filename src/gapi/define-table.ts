@@ -1,5 +1,5 @@
-import {asArray} from '../collect/operators/as-array';
-import {flat} from '../collect/operators/flat';
+import {$asArray} from '../collect/operators/as-array';
+import {$flat} from '../collect/operators/flat';
 import {$pipe} from '../collect/operators/pipe';
 
 import {SheetsCell, SheetsTable} from './sheets-table';
@@ -104,8 +104,8 @@ export function defineTable(sheetsTable: SheetsTable): Table {
   const [cols] = getCells([{start: 0, count: 1}], colIndex, sheetsTable);
   const rows = $pipe(
       getCells(rowIndex, [{start: 0, count: 1}], sheetsTable),
-      flat(),
-      asArray(),
+      $flat(),
+      $asArray(),
   );
   const data = getCells(rowIndex, colIndex, sheetsTable);
   return {cols, rows, data};
