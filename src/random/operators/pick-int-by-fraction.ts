@@ -1,19 +1,13 @@
-import {$map} from '../../collect/operators/map';
-import {Operator} from '../../collect/operators/operator';
+import {Random} from '../random';
 
 /**
  * Picks an integer in the given interval with the given fractional position.
  *
  * @param from The start interval (inclusive).
  * @param to The end interval (exclusive).
- * @return Operator that takes in an iterable of fractions and returns an iterable of integers
- *    picked in the specified range at the specified fractional position.
+ * @param rng The random object
+ * @return Random integer in the given range.
  */
-export function $pickIntByFraction(
-    from: number,
-    to: number,
-): Operator<Iterable<number>, Iterable<number>> {
-  return $map(fraction => {
-    return from + Math.floor(fraction * (to - from));
-  });
+export function pickIntByFraction(from: number, to: number, rng: Random): number {
+  return from + Math.floor(rng.next() * (to - from));
 }

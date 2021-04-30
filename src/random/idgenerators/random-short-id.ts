@@ -1,6 +1,9 @@
+import {$asArray} from '../../collect/operators/as-array';
+import {$map} from '../../collect/operators/map';
 import {$pipe} from '../../collect/operators/pipe';
 import {$take} from '../../collect/operators/take';
-import {$pickItemByFraction} from '../operators/pick-item-by-fraction';
+import {countableIterable} from '../../collect/structures/countable-iterable';
+import {pickItemByFraction} from '../operators/pick-item-by-fraction';
 import {Random} from '../random';
 
 
@@ -30,8 +33,9 @@ for (let i = 97; i < 123; i++) {
  */
 export function randomShortId(rng: Random): string {
   return $pipe(
-      rng,
-      $pickItemByFraction(ID_CHARS),
+      countableIterable(),
       $take(7),
+      $map(() => pickItemByFraction(ID_CHARS, rng)),
+      $asArray(),
   ).join('');
 }
