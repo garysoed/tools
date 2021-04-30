@@ -16,7 +16,7 @@ export {first as $first} from '../src/collect/operators/first';
 export {flat as $flat} from '../src/collect/operators/flat';
 export {intersect as $intersect} from '../src/collect/operators/intersect';
 export {join as $join} from '../src/collect/operators/join';
-export {map as $map} from '../src/collect/operators/map';
+export {$map} from '../src/collect/operators/map';
 export {max as $max} from '../src/collect/operators/max';
 export {min as $min} from '../src/collect/operators/min';
 export {recordToMap as $recordToMap} from '../src/collect/operators/record-to-map';

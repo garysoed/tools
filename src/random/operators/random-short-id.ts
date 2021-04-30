@@ -1,6 +1,8 @@
+import {$pipe} from '../../collect/operators/pipe';
+import {take} from '../../collect/operators/take';
 import {Random} from '../random';
 
-import {randomItem} from './random-item';
+import {$pickItemByFraction} from './pick-item-by-fraction';
 
 
 const ID_CHARS: string[] = [];
@@ -28,11 +30,9 @@ for (let i = 97; i < 123; i++) {
  * @return A randomly generated short ID.
  */
 export function randomShortId(rng: Random): string {
-  const id: string[] = [];
-  for (let i = 0; i < 7; i++) {
-    const rngItem = randomItem(ID_CHARS, rng);
-    id.push(rngItem);
-  }
-
-  return id.join('');
+  return $pipe(
+      rng,
+      $pickItemByFraction(ID_CHARS),
+      take(7),
+  ).join('');
 }

@@ -1,10 +1,10 @@
 import {assert, should, test} from 'gs-testing';
 
-import {map} from './map';
+import {$map} from './map';
 import {$pipe} from './pipe';
 
 test('@tools/collect/map', () => {
   should('map the values according to the input function', () => {
-    assert($pipe([1, 2, 3], map(from => `${from + 1}`))).to.startWith(['2', '3', '4']);
+    assert($pipe([1, 2, 3], $map(from => `${from + 1}`))).to.startWith(['2', '3', '4']);
   });
 });

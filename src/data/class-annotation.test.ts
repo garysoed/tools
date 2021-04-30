@@ -3,7 +3,7 @@ import {assert, should, test} from 'gs-testing';
 
 import {asArray} from '../collect/operators/as-array';
 import {flat} from '../collect/operators/flat';
-import {map} from '../collect/operators/map';
+import {$map} from '../collect/operators/map';
 import {$pipe} from '../collect/operators/pipe';
 
 import {ClassAnnotator} from './class-annotation';
@@ -29,7 +29,7 @@ test('data.ClassAnnotator', () => {
     function getFlatAttachedValues(ctorFn: Function): Array<Object|string> {
       return $pipe(
           annotation.data.getAttachedValues(ctorFn),
-          map(([obj, valuesList]) => [obj, ...valuesList]),
+          $map(([obj, valuesList]) => [obj, ...valuesList]),
           flat<Object|string>(),
           asArray(),
       );

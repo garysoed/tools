@@ -6,8 +6,8 @@ export {RandomSeed} from '../src/random/seed/random-seed';
 export {aleaSeed} from '../src/random/seed/alea-seed';
 
 export {Random, fromSeed} from '../src/random/random';
-export {randomInt} from '../src/random/operators/random-int';
-export {randomItem} from '../src/random/operators/random-item';
+export {$pickIntByFraction} from '../src/random/operators/pick-int-by-fraction';
+export {$pickItemByFraction} from '../src/random/operators/pick-item-by-fraction';
 export {randomPickWeighted} from '../src/random/operators/random-pick-weighted';
 export {randomPickWeightedMultiple} from '../src/random/operators/random-pick-weighted-multiple';
 export {randomShortId} from '../src/random/operators/random-short-id';

@@ -9,7 +9,7 @@ import {Operator} from './operator';
  * @returns `Operator` that maps each item in the original `Iterable`.
  * @thModule collect.operators
  */
-export function map<F, T>(mapFn: (from: F) => T): Operator<Iterable<F>, Iterable<T>> {
+export function $map<F, T>(mapFn: (from: F) => T): Operator<Iterable<F>, Iterable<T>> {
   return (fromIterable: Iterable<F>) => {
     return (function*(): Generator<T> {
       for (const item of fromIterable) {

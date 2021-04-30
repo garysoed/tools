@@ -6,7 +6,7 @@ import {asMap} from '../collect/operators/as-map';
 import {asSet} from '../collect/operators/as-set';
 import {filter} from '../collect/operators/filter';
 import {flat} from '../collect/operators/flat';
-import {map} from '../collect/operators/map';
+import {$map} from '../collect/operators/map';
 import {$pipe} from '../collect/operators/pipe';
 import {OrderedMap} from '../collect/structures/ordered-map';
 import {ReadonlyOrderedMap} from '../collect/structures/readonly-ordered-map';
@@ -29,7 +29,7 @@ export class PropertyAnnotation<D> {
     const entries = $pipe(
         this.data,
         filter(([key]) => ctorsSet.has(key)),
-        map(([k, keyToDataMap]) => {
+        $map(([k, keyToDataMap]) => {
           const dataMap = keyToDataMap.get(key);
           return [k, dataMap] as [Object, readonly D[]|undefined];
         }),
@@ -50,16 +50,16 @@ export class PropertyAnnotation<D> {
     const keys = $pipe(
         this.data,
         filter(([key]) => ctors.has(key)),
-        map(([, value]) => [...value]),
+        $map(([, value]) => [...value]),
         flat(),
-        map(([key]) => key),
+        $map(([key]) => key),
         asSet(),
     );
 
 
     return $pipe(
         keys,
-        map(key => [
+        $map(key => [
           key,
           this.getAttachedValues(ctorFn, key),
         ] as [string|symbol, ReadonlyMap<Object, readonly D[]>]),

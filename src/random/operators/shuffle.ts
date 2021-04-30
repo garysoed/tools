@@ -1,7 +1,7 @@
 import {normal} from '../../collect/compare/normal';
 import {withMap} from '../../collect/compare/with-map';
 import {asArray} from '../../collect/operators/as-array';
-import {map} from '../../collect/operators/map';
+import {$map} from '../../collect/operators/map';
 import {$pipe} from '../../collect/operators/pipe';
 import {sort} from '../../collect/operators/sort';
 import {zip} from '../../collect/operators/zip';
@@ -15,12 +15,12 @@ export function shuffle<T>(
   return $pipe(
       items,
       zip(rng),
-      map(([item, randomWeight]) => {
+      $map(([item, randomWeight]) => {
         return {item, weight: getBaseWeight(item) + randomWeight};
       }),
       asArray(),
       sort(withMap(({weight}) => weight, normal())),
-      map(({item}) => item),
+      $map(({item}) => item),
       asArray(),
   );
 }
