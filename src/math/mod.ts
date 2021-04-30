@@ -10,9 +10,10 @@
  * @thModule math
  */
 export function mod(value: number, base: number): number {
-  if (value < 0) {
-    return base - (Math.abs(value) % base);
-  } else {
-    return value % base;
+  const result = value % base;
+  if (result >= 0) {
+    return result;
   }
+
+  return result + base;
 }

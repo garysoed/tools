@@ -19,4 +19,8 @@ test('@tools/math/mod', () => {
   should('return 2 for 8 mod 3', () => {
     assert(mod(8, 3)).to.equal(2);
   });
+
+  should('return 2 for -2 mod 2', () => {
+    assert(mod(-2, 2)).to.equal(0);
+  });
 });
