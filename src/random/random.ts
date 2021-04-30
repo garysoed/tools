@@ -6,21 +6,15 @@ import {RandomSeed} from './seed/random-seed';
  * @typeParam T - Type of generated values.
  * @thModule random
  */
-export class Random {
+export class Random implements Iterable<number> {
   constructor(
       private readonly seed: RandomSeed,
   ) { }
 
-  iterable(): Iterable<number> {
-    return (function*(random: Random): Generator<number> {
-      while (true) {
-        yield random.next();
-      }
-    })(this);
-  }
-
-  next(): number {
-    return this.seed.next();
+  *[Symbol.iterator](): Iterator<number, unknown, undefined> {
+    while (true) {
+      yield this.seed.next();
+    }
   }
 }
 

@@ -10,17 +10,17 @@ import {Operator} from './operator';
  */
 export function take<T>(count: number): Operator<Iterable<T>, readonly T[]> {
   return (fromIterable: Iterable<T>) => {
-    const iterable = (function*(): Generator<T> {
-      let i = 0;
-      for (const item of fromIterable) {
-        if (i >= count) {
-          break;
-        }
-        yield item;
-        i++;
-      }
-    })();
+    const iterator = fromIterable[Symbol.iterator]();
+    const results: T[] = [];
+    for (let i = 0; i < count; i++) {
+      const result = iterator.next();
+      results.push(result.value);
 
-    return [...iterable];
+      if (result.done) {
+        break;
+      }
+    }
+
+    return results;
   };
 }

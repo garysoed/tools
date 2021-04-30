@@ -14,7 +14,7 @@ export function shuffle<T>(
 ): readonly T[] {
   return $pipe(
       items,
-      zip(rng.iterable()),
+      zip(rng),
       map(([item, randomWeight]) => {
         return {item, weight: getBaseWeight(item) + randomWeight};
       }),

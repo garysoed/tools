@@ -8,22 +8,14 @@ import {FakeSeed} from './testing/fake-seed';
 
 
 test('@tools/random/random', () => {
-  test('iterable', () => {
-    should('return iterable with values', () => {
-      const values = $pipe(
-          fromSeed(new FakeSeed([1, 2, 3])).iterable(),
-          take(5),
-      );
+  test('[Symbol.iterator]', () => {
+    should(`iterate correctly`, () => {
+      const random = fromSeed(new FakeSeed([1, 2, 3]));
+      const values1 = $pipe(random, take(2));
+      const values2 = $pipe(random, take(3));
 
-      assert(values).to.haveExactElements([1, 2, 3, 3, 3]);
-    });
-  });
-
-  test('next', () => {
-    should('get the next value of the seed', () => {
-      const random = fromSeed(new FakeSeed([1, 2, 3])).next();
-
-      assert(random).to.equal(1);
+      assert(values1).to.haveExactElements([1, 2]);
+      assert(values2).to.haveExactElements([3, 3, 3]);
     });
   });
 });

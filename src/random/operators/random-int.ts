@@ -1,3 +1,5 @@
+import {$pipe} from '../../collect/operators/pipe';
+import {take} from '../../collect/operators/take';
 import {Random} from '../random';
 
 /**
@@ -8,5 +10,5 @@ import {Random} from '../random';
  * @return Integer picked randomly in the given interval.
  */
 export function randomInt(from: number, to: number, rng: Random): number {
-  return from + Math.floor(rng.next() * (to - from));
+  return from + Math.floor($pipe(rng, take(1))[0] * (to - from));
 }
