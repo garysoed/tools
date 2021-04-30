@@ -123,7 +123,21 @@ test('@tools/state/state-service', init => {
       });
     });
 
-    should.only('make all the changes in one transaction');
+    should('make all the changes in one transaction', () => {
+      const value = 'value';
+
+      const id = _.service.modify(x => x.add(value));
+
+      const value$ = createSpySubject(_.service.resolve(id));
+
+      _.service.modify(x => {
+        x.set(id, 'newValue');
+        x.delete(id);
+      });
+
+      assert(value$).to.emitSequence([value, undefined]);
+      assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([id.id, id.id]);
+    });
   });
 
   test('resolve', _, init => {
