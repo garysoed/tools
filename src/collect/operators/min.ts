@@ -1,9 +1,6 @@
 import {Ordering} from '../compare/ordering';
 
-import {$first} from './first';
 import {Operator} from './operator';
-import {$pipe} from './pipe';
-import {$sort} from './sort';
 
 
 /**
@@ -15,5 +12,22 @@ import {$sort} from './sort';
  * @thModule collect.operators
  */
 export function $min<T>(ordering: Ordering<T>): Operator<readonly T[], T|null> {
-  return obj => $pipe(obj, $sort(ordering), $first());
+  return obj => {
+    let min = null;
+    for (const item of obj) {
+      if (min === null) {
+        min = item;
+        continue;
+      }
+
+      const result = ordering(min, item);
+      if (result <= 0) {
+        continue;
+      }
+
+      min = item;
+    }
+
+    return min;
+  };
 }

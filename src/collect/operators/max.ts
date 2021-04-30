@@ -1,10 +1,6 @@
 import {Ordering} from '../compare/ordering';
-import {reversed} from '../compare/reversed';
 
-import {$first} from './first';
 import {Operator} from './operator';
-import {$pipe} from './pipe';
-import {$sort} from './sort';
 
 
 /**
@@ -16,5 +12,22 @@ import {$sort} from './sort';
  * @thModule collect.operators
  */
 export function $max<T>(ordering: Ordering<T>): Operator<readonly T[], T|null> {
-  return obj => $pipe(obj, $sort(reversed(ordering)), $first());
+  return obj => {
+    let max = null;
+    for (const item of obj) {
+      if (max === null) {
+        max = item;
+        continue;
+      }
+
+      const result = ordering(max, item);
+      if (result >= 0) {
+        continue;
+      }
+
+      max = item;
+    }
+
+    return max;
+  };
 }
