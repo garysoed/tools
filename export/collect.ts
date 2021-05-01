@@ -14,6 +14,7 @@ export {$filterNonNull} from '../src/collect/operators/filter-non-null';
 export {$find} from '../src/collect/operators/find';
 export {$first} from '../src/collect/operators/first';
 export {$flat} from '../src/collect/operators/flat';
+export {$group} from '../src/collect/operators/group';
 export {$intersect} from '../src/collect/operators/intersect';
 export {$join} from '../src/collect/operators/join';
 export {$map} from '../src/collect/operators/map';
