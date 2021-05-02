@@ -1,4 +1,4 @@
-import {RandomSeed} from './seed/random-seed';
+import {RandomGen} from './gen/random-gen';
 
 /**
  * Generates random values.
@@ -7,14 +7,16 @@ import {RandomSeed} from './seed/random-seed';
  */
 export class Random {
   constructor(
-      private readonly seed: RandomSeed,
+      private seed: RandomGen,
   ) { }
 
   next(): number {
-    return this.seed.next();
+    const [seed, value] = this.seed.next();
+    this.seed = seed;
+    return value;
   }
 }
 
-export function fromSeed(seed: RandomSeed): Random {
+export function fromSeed(seed: RandomGen): Random {
   return new Random(seed);
 }

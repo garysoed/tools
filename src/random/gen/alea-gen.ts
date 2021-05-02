@@ -25,7 +25,7 @@
 
 import {hasPropertiesType, numberType} from 'gs-types';
 
-import {RandomSeed} from './random-seed';
+import {RandomGen} from './random-gen';
 
 
 export interface State {
@@ -42,11 +42,13 @@ const STATE_TYPE = hasPropertiesType<State>({
   s2: numberType,
 });
 
-export function aleaSeed(seed: unknown): RandomSeed {
-  let state = STATE_TYPE.check(seed) ? seed : createState(seed);
+export function aleaSeed(seed: unknown): RandomGen {
+  return withState(STATE_TYPE.check(seed) ? seed : createState(seed));
+}
 
+function withState(state: State): RandomGen {
   return {
-    next(): number {
+    next(): [RandomGen, number] {
       const t = state.s0 * 2091639 + state.c * 2.3283064365386963e-10; // 2^-32
       const newC = t | 0;
       const newState = {
@@ -56,9 +58,7 @@ export function aleaSeed(seed: unknown): RandomSeed {
         c: newC,
       };
 
-      state = newState;
-
-      return state.s2;
+      return [withState(newState), state.s2];
     },
   };
 }

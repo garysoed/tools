@@ -7,10 +7,10 @@ import {$take} from '../../collect/operators/take';
 import {countableIterable} from '../../collect/structures/countable-iterable';
 import {fromSeed} from '../random';
 
-import {aleaSeed} from './alea-seed';
+import {aleaSeed} from './alea-gen';
 
 
-test('@tools/random/alea-rng', () => {
+test('@tools/random/gen/alea-gen', () => {
   should('produce the same sequence with the same seed', () => {
     const seed = 123;
     const sequence1 = $pipe(

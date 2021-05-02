@@ -3,8 +3,8 @@ export {randomShortId} from '../src/random/idgenerators/random-short-id';
 export {SequentialIdGenerator} from '../src/random/idgenerators/sequential-id-generator';
 export {SimpleIdGenerator} from '../src/random/idgenerators/simple-id-generator';
 
-export {RandomSeed} from '../src/random/seed/random-seed';
-export {aleaSeed} from '../src/random/seed/alea-seed';
+export {RandomGen as RandomSeed} from '../src/random/gen/random-gen';
+export {aleaSeed} from '../src/random/gen/alea-gen';
 
 export {Random, fromSeed} from '../src/random/random';
 export {randomPickInt} from '../src/random/operators/random-pick-int';

@@ -1,13 +1,16 @@
-import {RandomSeed} from '../seed/random-seed';
+import {RandomGen} from '../gen/random-gen';
 
-export class FakeSeed implements RandomSeed {
-  private index = 0;
+export class FakeSeed implements RandomGen {
+  constructor(
+      public values: number[] = [],
+      private readonly index = 0,
+  ) {}
 
-  constructor(public values: number[] = []) {}
-
-  next(): number {
+  next(): [FakeSeed, number] {
     const value = this.values[this.index];
-    this.index = Math.min(this.index + 1, this.values.length - 1);
-    return value;
+    return [
+      new FakeSeed(this.values, Math.min(this.index + 1, this.values.length - 1)),
+      value,
+    ];
   }
 }
