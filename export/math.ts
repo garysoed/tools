@@ -1,1 +1,1 @@
-export { mod } from '../src/math/mod';
+export {mod} from '../src/math/mod';

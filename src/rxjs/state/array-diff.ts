@@ -161,7 +161,7 @@ export function mapArrayDiff<F, T>(mapFn: (from: F) => T):
  * @returns Operator that emits arrays as applied to the input diffs.
  * @thModule rxjs.state
  */
-export function scanArray<T>(): OperatorFunction<ArrayDiff<T>, ReadonlyArray<T>> {
+export function scanArray<T>(): OperatorFunction<ArrayDiff<T>, readonly T[]> {
   return pipe(
       scan<ArrayDiff<T>, T[]>(
           (acc, diff) => {

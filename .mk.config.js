@@ -1,6 +1,6 @@
 declare({
   name: 'link',
-  as: single({
+  as: shell({
     bin: 'npm',
     flags: [
       'link',
@@ -13,9 +13,9 @@ declare({
   name: 'docs',
   as: serial({
     cmds: [
-      single({bin: 'webpack', flags: '--config-name docs'.split(' ')}),
-      single({bin: 'api-extractor', flags: 'run --local --verbose'.split(' ')}),
-      single({
+      shell({bin: 'webpack', flags: '--config-name docs'.split(' ')}),
+      shell({bin: 'api-extractor', flags: 'run --local --verbose'.split(' ')}),
+      shell({
         bin: 'thoth',
         flags: '--assets=./docassets --outdir=../thoth/run/gs-tools --project=gs-tools'.split(' '),
       }),

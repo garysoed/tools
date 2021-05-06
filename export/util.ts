@@ -1,1 +1,1 @@
-export { diff } from '../src/util/diff';
+export {diff} from '../src/util/diff';

@@ -1,1 +1,1 @@
-export { Cases } from '../src/string/cases';
+export {Cases} from '../src/string/cases';
