@@ -72,7 +72,7 @@ export class Modifier {
  * @typeParam T - Object to be resolved.
  */
 export interface Resolver<T> extends Observable<T|undefined> {
-  _<K extends keyof T>(key: K): Observable<T[K]|undefined>;
+  _<K extends keyof T>(key: K): Resolver<T[K]>;
   $<K extends keyof StateIdOf<T>>(key: K): Resolver<StateIdOf<T>[K]>;
 }
 
@@ -87,8 +87,8 @@ class ResolverInternal<T> extends Observable<T|undefined> implements Resolver<T>
     });
   }
 
-  _<K extends keyof T>(key: K): Observable<T[K]|undefined> {
-    return this.source$.pipe(map(value => value?.[key]));
+  _<K extends keyof T>(key: K): Resolver<T[K]> {
+    return new ResolverInternal(this.source$.pipe(map(value => value?.[key])), this.getValue);
   }
 
   $<K extends keyof StateIdOf<T>>(key: K): Resolver<StateIdOf<T>[K]> {
