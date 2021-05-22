@@ -4,6 +4,7 @@ export {assertNonNull} from '../src/rxjs/assert-non-null';
 export {convertBackward} from '../src/rxjs/convert-backward';
 export {convertForward} from '../src/rxjs/convert-forward';
 export {debug} from '../src/rxjs/debug';
+export {extend} from '../src/rxjs/extend';
 export {filterByType} from '../src/rxjs/filter-by-type';
 export {filterNonNullable} from '../src/rxjs/filter-non-nullable';
 export {mapNullableTo} from '../src/rxjs/map-nullable-to';
