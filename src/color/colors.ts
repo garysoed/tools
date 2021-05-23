@@ -33,9 +33,9 @@ function fromRgb(cssColor: string): Color|null {
         .replace(/ /g, '')
         .split(',')
         .map((match: string, index: number) => {
-          return index <= 2 ?
-            INTEGER_PARSER.convertBackward(match) :
-            FLOAT_PARSER.convertBackward(match);
+          return index <= 2
+            ? INTEGER_PARSER.convertBackward(match)
+            : FLOAT_PARSER.convertBackward(match);
         });
     results = [...list];
   } else {

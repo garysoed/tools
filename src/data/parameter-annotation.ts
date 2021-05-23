@@ -76,11 +76,11 @@ export class ParameterAnnotation<D> {
 
       // Deeply insert the map.
       for (const [propertyKey, paramMap] of propertyKeyMap) {
-        const collectedParamMap = collectedPropertyKeyMap.get(propertyKey) ||
-            new Map<number, OrderedMap<Object, D[]>>();
+        const collectedParamMap = collectedPropertyKeyMap.get(propertyKey)
+            || new Map<number, OrderedMap<Object, D[]>>();
         for (const [index, values] of paramMap) {
-          const collectedInheritanceMap = collectedParamMap.get(index) ||
-              new OrderedMap<Object, D[]>();
+          const collectedInheritanceMap = collectedParamMap.get(index)
+              || new OrderedMap<Object, D[]>();
           const collectedValues: D[] = collectedInheritanceMap.get(ctor) || [];
           collectedValues.push(...values);
           collectedInheritanceMap.set(ctor, collectedValues);
@@ -118,8 +118,8 @@ export class ParameterAnnotation<D> {
         }
 
         for (const [index, values] of paramMap) {
-          const collectedInheritanceMap = collectedParamMap.get(index) ||
-              new OrderedMap<Object, D[]>();
+          const collectedInheritanceMap = collectedParamMap.get(index)
+              || new OrderedMap<Object, D[]>();
           const collectedValues: D[] = collectedInheritanceMap.get(ctor) || [];
           collectedValues.push(...values);
           collectedInheritanceMap.set(ctor, collectedValues);
