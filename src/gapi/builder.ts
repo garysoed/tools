@@ -58,7 +58,7 @@ export class Builder {
    * @returns Observable that emits Handler for using Google API.
    */
   build(): Observable<Handler> {
-    return defer(async () => new Promise((resolve, reject) => {
+    return defer(async () => new Promise<void>((resolve, reject) => {
       gapi.load('client:auth2', async () => {
         try {
           await gapi.client.init({

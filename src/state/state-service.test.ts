@@ -1,7 +1,6 @@
-import {arrayThat, assert, createSpySubject, objectThat, should, test} from 'gs-testing';
+import {assert, createSpySubject, should, test} from 'gs-testing';
 import {map} from 'rxjs/operators';
 
-import {IdObject, Snapshot} from './snapshot';
 import {createId, StateId} from './state-id';
 import {StateService} from './state-service';
 
@@ -30,37 +29,6 @@ test('@tools/state/state-service', init => {
       ]);
       assert(_.service.resolve(addedId1)).to.emitWith(undefined);
       assert(_.service.resolve(addedId2)).to.emitWith(undefined);
-    });
-  });
-
-  test('init', () => {
-    should('initialize all the values in the service', () => {
-      const rootId = createId<string>('root');
-      const idA = createId<string>('A');
-      const idB = createId<string>('B');
-      const idC = createId<string>('C');
-      const valueA = 'valueA';
-      const valueB = 'valueB';
-      const valueC = 'valueC';
-      const snapshot = {
-        rootId,
-        payloads: [
-          {id: idA.id, obj: valueA},
-          {id: idB.id, obj: valueB},
-          {id: idC.id, obj: valueC},
-        ],
-      };
-
-      _.service.init(snapshot);
-      assert(_.service.snapshot(idA)).to.equal(objectThat<Snapshot<string>>().haveProperties({
-        rootId: idA,
-        payloads: arrayThat<IdObject>().haveExactElements([
-          objectThat<IdObject>().haveProperties({id: idA.id, obj: valueA}),
-          objectThat<IdObject>().haveProperties({id: idB.id, obj: valueB}),
-          objectThat<IdObject>().haveProperties({id: idC.id, obj: valueC}),
-        ]),
-      }));
-      assert(_.service.resolve(idA)).to.emitWith(valueA);
     });
   });
 
@@ -194,41 +162,6 @@ test('@tools/state/state-service', init => {
       should('emit undefined if the parent does not exist', () => {
         assert(_.service.resolve(createId<Test>('other'))._('a')).to.emitWith(undefined);
       });
-    });
-  });
-
-  test('snapshot', () => {
-    should('return all the objects', () => {
-      const valueA = 'valueA';
-      const valueB = 'valueB';
-      const valueC = 'valueC';
-
-      const [idA, idB, idC] = _.service.modify(x => {
-        return [x.add(valueA), x.add(valueB), x.add(valueC)];
-      });
-
-      assert(_.service.snapshot(idA)).to.equal(objectThat<Snapshot<string>>().haveProperties({
-        rootId: idA,
-        payloads: arrayThat<IdObject>().haveExactElements([
-          objectThat<IdObject>().haveProperties({id: idA.id, obj: valueA}),
-          objectThat<IdObject>().haveProperties({id: idB.id, obj: valueB}),
-          objectThat<IdObject>().haveProperties({id: idC.id, obj: valueC}),
-        ]),
-      }));
-    });
-
-    should('return null if the object for the root ID is missing', () => {
-      const valueA = 'valueA';
-      const valueB = 'valueB';
-      const valueC = 'valueC';
-
-      const [idA] = _.service.modify(x => {
-        const ids = [x.add(valueA), x.add(valueB), x.add(valueC)];
-        x.delete(ids[0]);
-        return ids;
-      });
-
-      assert(_.service.snapshot(idA)).to.beNull();
     });
   });
 });

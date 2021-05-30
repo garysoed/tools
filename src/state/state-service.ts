@@ -1,16 +1,11 @@
 import {BehaviorSubject, EMPTY, Observable, of as observableOf, OperatorFunction, pipe} from 'rxjs';
 import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
 
-import {$asArray as $asArray} from '../collect/operators/as-array';
-import {$asMap as $asMap} from '../collect/operators/as-map';
-import {$map as $map} from '../collect/operators/map';
-import {$pipe} from '../collect/operators/pipe';
 import {cache} from '../data/cache';
 import {BaseIdGenerator} from '../random/idgenerators/base-id-generator';
 import {SimpleIdGenerator} from '../random/idgenerators/simple-id-generator';
 import {diffMap} from '../rxjs/state/map-diff';
 
-import {Snapshot} from './snapshot';
 import {createId, StateId} from './state-id';
 
 
@@ -133,25 +128,6 @@ export class StateService {
     this.payloads$.next(new Map());
   }
 
-  /**
-   * Initializes the global states.
-   *
-   * @typeParam T - Type of the root object.
-   * @param param0 - Snapshot object to initialize the state with
-   * @returns ID of the root object.
-   */
-  init<T>({rootId, payloads}: Snapshot<T>): StateId<T> {
-    const newPayloads = $pipe(
-        payloads,
-        $map(({id, obj}) => {
-          return [id, obj] as [string, any];
-        }),
-        $asMap(),
-    );
-    this.payloads$.next(newPayloads);
-    return rootId;
-  }
-
   modify<T>(modifierFn: (modifier: Modifier) => T): T {
     const modifications: Modification[] = [];
     const returnValue = modifierFn(
@@ -220,28 +196,5 @@ export class StateService {
       return new ResolverInternal<T>(observableOf(undefined), id => this.getValue(id));
     }
     return new ResolverInternal<T>(this.getValue(id), id => this.getValue(id));
-  }
-
-  /**
-   * Dumps all the objects in the global state.
-   *
-   * @typeParams T - Type of the root object.
-   * @param rootId - ID of the root object.
-   * @returns All the objects in the global state, or null if the object corresponding to the root
-   *     ID doesn't exist..
-   */
-  snapshot<T>(rootId: StateId<T>): Snapshot<T>|null {
-    const payloadMap = this.payloads$.getValue();
-    if (!payloadMap.has(rootId.id)) {
-      return null;
-    }
-
-    const payloads = $pipe(
-        payloadMap,
-        $map(([id, obj]) => ({id, obj})),
-        $asArray(),
-    );
-
-    return {rootId, payloads};
   }
 }
