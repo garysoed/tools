@@ -9,10 +9,10 @@ test('@tools/collect/operators/scan', () => {
   should('yield accumulating results', () => {
     const result = $pipe(
         [1, 2, 3, 4, 5],
-        $scan((item, acc) => item + acc, 2),
+        $scan((acc, item) => `${item}` + `${acc}`, '2'),
         $asArray(),
     );
 
-    assert(result).to.haveExactElements([3, 5, 8, 12, 17]);
+    assert(result).to.haveExactElements(['12', '212', '3212', '43212', '543212']);
   });
 });
