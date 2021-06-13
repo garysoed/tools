@@ -1,3 +1,4 @@
+export {floatConverter} from '../src/serializer/float-converter';
 export {integerConverter} from '../src/serializer/integer-converter';
 export {listConverter} from '../src/serializer/list-converter';
 export {mapConverter} from '../src/serializer/map-converter';

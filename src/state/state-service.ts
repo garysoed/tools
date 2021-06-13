@@ -5,6 +5,7 @@ import {cache} from '../data/cache';
 import {BaseIdGenerator} from '../random/idgenerators/base-id-generator';
 import {SimpleIdGenerator} from '../random/idgenerators/simple-id-generator';
 import {diffMap} from '../rxjs/state/map-diff';
+import {assertUnreachable} from '../typescript/assert-unreachable';
 
 import {createId, StateId} from './state-id';
 
@@ -150,6 +151,8 @@ export class StateService {
         case 'set':
           resultMap.set(modification.id, modification.value);
           break;
+        default:
+          assertUnreachable(modification);
       }
     }
     this.payloads$.next(resultMap);
