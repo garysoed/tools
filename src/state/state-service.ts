@@ -31,6 +31,8 @@ interface SetModification {
   readonly value: unknown;
 }
 
+type StateIdInput<T> = StateId<T>|null|undefined;
+
 type Modification = AddModification|DeleteModification|SetModification;
 
 export class Modifier {
@@ -194,10 +196,22 @@ export class StateService {
    * @param id - ID of the value to retrieve.
    * @returns Object to resolve the properties of the object corresponding to the ID..
    */
-  resolve<T>(id: StateId<T>|undefined|null): Resolver<T> {
+  resolve<T>(id: Observable<StateIdInput<T>>|StateIdInput<T>): Resolver<T> {
     if (!id) {
       return new ResolverInternal<T>(observableOf(undefined), id => this.getValue(id));
     }
-    return new ResolverInternal<T>(this.getValue(id), id => this.getValue(id));
+
+    if (!(id instanceof Observable)) {
+      return new ResolverInternal<T>(this.getValue(id), id => this.getValue(id));
+    }
+
+    return new ResolverInternal<T>(
+        id.pipe(switchMap(id => this.resolve(id))),
+        id => this.getValue(id),
+    );
+  }
+
+  resolveOperator<T>(): OperatorFunction<StateId<T>|undefined|null, T|undefined> {
+    return switchMap(id => this.resolve(id));
   }
 }

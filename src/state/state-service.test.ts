@@ -1,4 +1,5 @@
 import {assert, createSpySubject, should, test} from 'gs-testing';
+import {of} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 import {createId, StateId} from './state-id';
@@ -127,6 +128,10 @@ test('@tools/state/state-service', init => {
       should('handle falsy object that are not null', () => {
         _.service.modify(x => x.set(_.addedId, ''));
         assert(_.service.resolve(_.addedId)).to.emitWith('');
+      });
+
+      should('handle observable state ID', () => {
+        assert(_.service.resolve(of(_.addedId))).to.emitWith(_.addedValue);
       });
     });
 
