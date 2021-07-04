@@ -81,7 +81,7 @@ class ResolverInternal<T> extends Observable<T|undefined> implements Resolver<T>
       private readonly getValue: GetValue,
   ) {
     super(subscriber => {
-      source$.subscribe(subscriber);
+      return source$.subscribe(subscriber);
     });
   }
 
