@@ -1,172 +1,107 @@
-import {assert, createSpySubject, should, test} from 'gs-testing';
+import {assert, createSpySubject, run, should, test} from 'gs-testing';
 import {of} from 'rxjs';
-import {map} from 'rxjs/operators';
 
-import {createId, StateId} from './state-id';
+import {mutableState, MutableState} from './mutable-state';
+import {createRootStateId} from './root-state-id';
 import {StateService} from './state-service';
 
 
 test('@tools/state/state-service', init => {
   const _ = init(() => {
     const service = new StateService();
-    const onChange$ = createSpySubject(service.onChange$);
-    return {onChange$, service};
+    return {service};
   });
 
-  test('clear', () => {
-    should('delete the objects and return true if it exists', () => {
-      const [addedId1, addedId2] = _.service.modify(x => {
-        return [x.add('initValue1'), x.add('initValue2')];
-      });
-      _.service.clear();
-
-      assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([
-        // additions
-        addedId1.id,
-        addedId2.id,
-        // deletions
-        addedId1.id,
-        addedId2.id,
-      ]);
-      assert(_.service.resolve(addedId1)).to.emitWith(undefined);
-      assert(_.service.resolve(addedId2)).to.emitWith(undefined);
-    });
-  });
-
-  test('modify', () => {
-    test('add', () => {
-      should('add the object and give it a unique ID', () => {
-        const value = 'value';
-
-        const id = _.service.modify(x => x.add(value));
-
-        assert(_.service.resolve(id)).to.emitWith(value);
-        assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([id.id]);
-      });
-    });
-
-    test('delete', _, init => {
-      const _ = init(_ => {
-        const addedId = _.service.modify(x => x.add('initValue'));
-        return {..._, addedId};
-      });
-
-      should('delete the object and return true if it exists', () => {
-        assert(_.service.modify(x => x.delete(_.addedId))).to.beTrue();
-
-        assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([_.addedId.id, _.addedId.id]);
-        assert(_.service.resolve(_.addedId)).to.emitWith(undefined);
-      });
-
-      should('return false if the object does not exist', () => {
-        const otherId = createId<string>('other');
-        assert(_.service.modify(x => x.delete(otherId))).to.beFalse();
-
-        assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([_.addedId.id]);
-      });
-    });
-
-    test('set',  _, init => {
-      const _ = init(_ => {
-        const addedValue = 'addedValue';
-        const addedId = _.service.modify(x => x.add(addedValue));
-        return {..._, addedId, addedValue};
-      });
-
-      should('update the value correctly and return true if the ID exist', () => {
-        const newValue = 'newValue';
-        assert(_.service.modify(x => x.set(_.addedId, newValue))).to.beTrue();
-
-        assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([_.addedId.id, _.addedId.id]);
-        assert(_.service.resolve(_.addedId)).to.emitWith(newValue);
-      });
-
-      should('return false if the ID doesn\'t exist', () => {
-        const newValue = {value: 'new'};
-        const otherId = createId<{value: string}>('otherId');
-        assert(_.service.modify(x => x.set(otherId, newValue))).to.beFalse();
-
-        assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([_.addedId.id, otherId.id]);
-        assert(_.service.resolve(_.addedId)).to.emitWith(_.addedValue);
-        assert(_.service.resolve(otherId)).to.emitWith(newValue);
-      });
-    });
-
-    should('make all the changes in one transaction', () => {
+  test('addRoot', () => {
+    should('add the object and give it a unique ID', () => {
       const value = 'value';
 
-      const id = _.service.modify(x => x.add(value));
+      const id = _.service.addRoot(value);
 
-      const value$ = createSpySubject(_.service.resolve(id));
-
-      _.service.modify(x => {
-        x.set(id, 'newValue');
-        x.delete(id);
-      });
-
-      assert(value$).to.emitSequence([value, undefined]);
-      assert(_.onChange$.pipe(map(({id}) => id))).to.emitSequence([id.id, id.id]);
+      assert(_.service._(id)).to.emitWith(value);
     });
   });
 
-  test('resolve', _, init => {
-    test('self$', () => {
-      const _ = init(_ => {
-        const addedValue = 'addedValue';
-        const addedId = _.service.modify(x => x.add(addedValue));
-        return {..._, addedId, addedValue};
-      });
-
-      should('emit the correct object if it exists', () => {
-        assert(_.service.resolve(_.addedId)).to.emitWith(_.addedValue);
-      });
-
-      should('emit undefined if the object does not exist', () => {
-        assert(_.service.resolve(createId<string>('other'))).to.emitWith(undefined);
-      });
-
-      should('handle falsy object that are not null', () => {
-        _.service.modify(x => x.set(_.addedId, ''));
-        assert(_.service.resolve(_.addedId)).to.emitWith('');
-      });
-
-      should('handle observable state ID', () => {
-        assert(_.service.resolve(of(_.addedId))).to.emitWith(_.addedValue);
-      });
-    });
-
+  test('resolveRoot', _, () => {
     test('_', () => {
       interface Test {
         readonly a: string;
       }
 
       should('emit the correct property value', () => {
-        const addedId = _.service.modify(x => x.add({a: 'abc'}));
+        const addedId = _.service.addRoot({a: 'abc'});
 
-        assert(_.service.resolve(addedId)._('a')).to.emitWith('abc');
+        assert(_.service._(addedId)._('a')).to.emitWith('abc');
       });
 
       should('emit undefined if the parent does not exist', () => {
-        assert(_.service.resolve(createId<Test>('other'))._('a')).to.emitWith(undefined);
+        assert(_.service._(createRootStateId<Test>('other'))._('a')).to.emitWith(undefined);
       });
     });
 
-    test('$', () => {
+    test('$get', () => {
       interface Test {
-        readonly a: StateId<string>;
+        readonly a: MutableState<string>;
       }
 
       should('resolve the correct value for sub state ID', () => {
-        const addedId = _.service.modify(x => x.add({
-          a: x.add('abc'),
-        }));
+        const addedId = _.service.addRoot({
+          a: mutableState('abc'),
+        });
 
-        assert(_.service.resolve(addedId).$('a')).to.emitWith('abc');
+        assert(_.service._(addedId).$('a')).to.emitWith('abc');
       });
 
       should('emit undefined if the parent does not exist', () => {
-        assert(_.service.resolve(createId<Test>('other'))._('a')).to.emitWith(undefined);
+        assert(_.service._(createRootStateId<Test>('other'))._('a')).to.emitWith(undefined);
       });
+    });
+
+    test('$set', () => {
+      should('update the value of the mutable state', () => {
+        const addedId = _.service.addRoot({
+          a: mutableState('abc'),
+        });
+
+        const a$ = createSpySubject(_.service._(addedId).$('a'));
+        run(of('xyz').pipe(_.service._(addedId).$('a').set()));
+
+        assert(a$).to.emitSequence(['abc', 'xyz']);
+      });
+    });
+  });
+
+  test('resolveMutable', () => {
+    should('emit the values in the path pointed by the object path', () => {
+      const rootId = _.service.addRoot({
+        a: mutableState({
+          b: {c: mutableState(12)},
+        }),
+      });
+
+      const path = _.service.mutablePath(rootId, root => {
+        const rv = root.$('a')._('b')._('c');
+        return rv;
+      });
+
+      const c$ = createSpySubject(_.service.$(path));
+      run(of(34).pipe(_.service._(rootId).$('a')._('b').$('c').set()));
+
+      assert(c$).to.emitSequence([12, 34]);
+
+      // Try overriding the entire tree. c should also be updated
+      run(of({b: {c: mutableState(56)}}).pipe(_.service._(rootId).$('a').set()));
+
+      assert(c$).to.emitSequence([12, 34, 56]);
+    });
+
+    should('handle mutable root IDs', () => {
+      const rootId = _.service.addRoot(mutableState(12));
+
+      const root$ = createSpySubject(_.service.$(rootId));
+      run(of(34).pipe(_.service.$(rootId).set()));
+
+      assert(root$).to.emitSequence([12, 34]);
     });
   });
 });

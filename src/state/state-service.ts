@@ -1,108 +1,16 @@
-import {BehaviorSubject, EMPTY, Observable, of as observableOf, OperatorFunction, pipe} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
 
-import {cache} from '../data/cache';
 import {BaseIdGenerator} from '../random/idgenerators/base-id-generator';
 import {SimpleIdGenerator} from '../random/idgenerators/simple-id-generator';
-import {diffMap} from '../rxjs/state/map-diff';
-import {assertUnreachable} from '../typescript/assert-unreachable';
 
-import {createId, StateId} from './state-id';
-
-
-type StateIdOf<T> = {
-  readonly [K in keyof T]: T[K] extends StateId<infer S> ? S : never;
-};
-
-interface AddModification {
-  readonly type: 'add';
-  readonly value: unknown;
-  readonly id: string;
-}
-
-interface DeleteModification {
-  readonly type: 'delete';
-  readonly id: string;
-}
-
-interface SetModification {
-  readonly type: 'set';
-  readonly id: string;
-  readonly value: unknown;
-}
-
-type StateIdInput<T> = StateId<T>|null|undefined;
-
-type Modification = AddModification|DeleteModification|SetModification;
-
-export class Modifier {
-  private readonly generatedIds = new Set<string>(this.existingIds);
-
-  constructor(
-      private readonly existingIds: ReadonlySet<string>,
-      private readonly idGenerator: BaseIdGenerator,
-      private readonly modifications: Modification[],
-  ) { }
-
-  add<T>(value: T): StateId<T> {
-    const id = this.idGenerator.generate(this.generatedIds);
-    this.generatedIds.add(id);
-    this.modifications.push({type: 'add', id, value});
-    return createId(id);
-  }
-
-  delete<T>({id}: StateId<T>): boolean {
-    this.modifications.push({type: 'delete', id});
-    return this.existingIds.has(id);
-  }
+import {createMutablePath, isMutablePath, MutablePath, PathProvider} from './mutable-path';
+import {MutableState} from './mutable-state';
+import {ImmutableResolver, ImmutableResolverInternal, MutableResolver, MutableResolverInternal} from './resolver';
+import {createRootStateId, RootStateId} from './root-state-id';
 
 
-  set<T, U extends T>({id}: StateId<T>, value: U): boolean {
-    this.modifications.push({type: 'set', id, value});
-    return this.existingIds.has(id);
-  }
-}
-
-
-/**
- * Used to resolve properties of the given ID.
- *
- * @typeParam T - Object to be resolved.
- */
-export interface Resolver<T> extends Observable<T|undefined> {
-  _<K extends keyof T>(key: K): Resolver<T[K]>;
-  $<K extends keyof StateIdOf<T>>(key: K): Resolver<StateIdOf<T>[K]>;
-}
-
-type GetValue = <T>(stateId: StateId<T>) => Observable<T|undefined>;
-class ResolverInternal<T> extends Observable<T|undefined> implements Resolver<T> {
-  constructor(
-      private readonly source$: Observable<T|undefined>,
-      private readonly getValue: GetValue,
-  ) {
-    super(subscriber => {
-      return source$.subscribe(subscriber);
-    });
-  }
-
-  _<K extends keyof T>(key: K): Resolver<T[K]> {
-    return new ResolverInternal(this.source$.pipe(map(value => value?.[key])), this.getValue);
-  }
-
-  $<K extends keyof StateIdOf<T>>(key: K): Resolver<StateIdOf<T>[K]> {
-    const subSelf$ = this.source$.pipe(
-        map(value => value?.[key] as StateId<StateIdOf<T>[K]>|undefined),
-        switchMap(stateId => {
-          if (stateId === undefined) {
-            return observableOf(undefined);
-          }
-
-          return this.getValue(stateId);
-        }),
-    );
-    return new ResolverInternal(subSelf$, this.getValue);
-  }
-}
+type InputOf<T> = Observable<T|null|undefined>|T|null|undefined;
 
 /**
  * Manages global states.
@@ -113,105 +21,93 @@ class ResolverInternal<T> extends Observable<T|undefined> implements Resolver<T>
  * @thModule state
  */
 export class StateService {
-  private readonly payloads$ = new BehaviorSubject<ReadonlyMap<string, any>>(new Map());
+  private readonly mutablePaths$ = new BehaviorSubject<ReadonlyMap<string, ImmutableResolver<MutableState<any>>>>(new Map());
+  private readonly rootStates$ = new BehaviorSubject<ReadonlyMap<string, any>>(new Map());
 
   constructor(private readonly idGenerator: BaseIdGenerator = new SimpleIdGenerator()) {}
 
-  private getValue<T>({id}: StateId<T>): Observable<T|undefined> {
-    return this.payloads$.pipe(
-        map(payloads => payloads.get(id)),
-        distinctUntilChanged(),
+  addRoot<T>(value: T): RootStateId<T> {
+    const id = this.idGenerator.generate(new Set(this.rootStates$.getValue().keys()));
+    const stateId = createRootStateId<T>(id);
+
+    const resultMap = new Map(this.rootStates$.getValue());
+    resultMap.set(stateId.id, value);
+    this.rootStates$.next(resultMap);
+    return stateId;
+  }
+
+  mutablePath<T>(root: InputOf<RootStateId<MutableState<T>>>): MutablePath<T>;
+  mutablePath<T, R>(root: InputOf<RootStateId<R>>, provider: PathProvider<R, T>): MutablePath<T>;
+  mutablePath<T, R>(root: InputOf<RootStateId<R>>, provider?: PathProvider<R, T>): MutablePath<T> {
+    const id = this.idGenerator.generate(new Set(this.mutablePaths$.getValue().keys()));
+    const path = provider ? provider(this._(root)) : this._(root as unknown as RootStateId<MutableState<unknown>>);
+
+    const resultMap = new Map(this.mutablePaths$.getValue());
+    resultMap.set(id, path);
+    this.mutablePaths$.next(resultMap);
+    return createMutablePath(id);
+  }
+
+  _<T>(id: InputOf<RootStateId<T>>): ImmutableResolver<T> {
+    return new ImmutableResolverInternal<T>(
+        normalizeInputOf(id).pipe(
+            switchMap(idOrPath => {
+              if (!idOrPath) {
+                return of(undefined);
+              }
+
+              if (isMutablePath(idOrPath)) {
+                return this.mutablePaths$.pipe(
+                    switchMap(mutablePaths => mutablePaths.get(idOrPath.id) ?? of(undefined)),
+                    distinctUntilChanged(),
+                );
+              }
+
+              return this.rootStates$.pipe(
+                  map(rootStates => rootStates.get(idOrPath.id)),
+                  distinctUntilChanged(),
+              );
+            }),
+        ),
     );
   }
 
-  /**
-   * Removes all added entries.
-   */
-  clear(): void {
-    this.payloads$.next(new Map());
-  }
+  $<T>(id: InputOf<RootStateId<MutableState<T>>|MutablePath<T>>): MutableResolver<T> {
+    const rv = new MutableResolverInternal<T>(
+        normalizeInputOf(id).pipe(
+            switchMap(idOrPath => {
+              if (!idOrPath) {
+                return of(undefined);
+              }
 
-  modify<T>(modifierFn: (modifier: Modifier) => T): T {
-    const modifications: Modification[] = [];
-    const returnValue = modifierFn(
-        new Modifier(
-            new Set(this.payloads$.getValue().keys()),
-            this.idGenerator,
-            modifications,
+              if (isMutablePath(idOrPath)) {
+                return this.mutablePaths$.pipe(
+                    switchMap(mutablePaths => mutablePaths.get(idOrPath.id) ?? of(undefined)),
+                    distinctUntilChanged(),
+                );
+              }
+
+              return this.rootStates$.pipe(
+                  map(rootStates => rootStates.get(idOrPath.id)),
+                  distinctUntilChanged(),
+              );
+            }),
         ),
     );
 
-    const resultMap = new Map(this.payloads$.getValue());
-    for (const modification of modifications) {
-      switch (modification.type) {
-        case 'add':
-          resultMap.set(modification.id, modification.value);
-          break;
-        case 'delete':
-          resultMap.delete(modification.id);
-          break;
-        case 'set':
-          resultMap.set(modification.id, modification.value);
-          break;
-        default:
-          assertUnreachable(modification);
-      }
-    }
-    this.payloads$.next(resultMap);
-    return returnValue;
-  }
-
-  modifyOperator<F, T>(modifierFn: (modifier: Modifier, input: F) => T): OperatorFunction<F, T> {
-    return pipe(
-        map(input => this.modify(modifier => modifierFn(modifier, input))),
-    );
-  }
-
-  /**
-   * @returns Observable that emits the ID of objects that has changed.
-   * TODO: This seems useless now. Replace with changes$?
-   */
-  @cache()
-  get onChange$(): Observable<StateId<unknown>> {
-    return this.payloads$.pipe(
-        diffMap(),
-        switchMap(diff => {
-          switch (diff.type) {
-            case 'init':
-              return EMPTY;
-            case 'delete':
-              return observableOf(diff.key);
-            case 'set':
-              return observableOf(diff.key);
-          }
-        }),
-        map(id => createId(id)),
-    );
-  }
-
-  /**
-   * Retrieves the value associated to the given ID.
-   *
-   * @typeParams T - Type of the value to be retrieved.
-   * @param id - ID of the value to retrieve.
-   * @returns Object to resolve the properties of the object corresponding to the ID..
-   */
-  resolve<T>(id: Observable<StateIdInput<T>>|StateIdInput<T>): Resolver<T> {
-    if (!id) {
-      return new ResolverInternal<T>(observableOf(undefined), id => this.getValue(id));
-    }
-
-    if (!(id instanceof Observable)) {
-      return new ResolverInternal<T>(this.getValue(id), id => this.getValue(id));
-    }
-
-    return new ResolverInternal<T>(
-        id.pipe(switchMap(id => this.resolve(id))),
-        id => this.getValue(id),
-    );
-  }
-
-  resolveOperator<T>(): OperatorFunction<StateId<T>|undefined|null, T|undefined> {
-    return switchMap(id => this.resolve(id));
+    return rv;
   }
 }
+
+function normalizeInputOf<T>(input: InputOf<T>): Observable<T|undefined> {
+  if (!input) {
+    return of(undefined);
+  }
+
+  if (!(input instanceof Observable)) {
+    return of(input);
+  }
+
+  return input.pipe(switchMap(inner => normalizeInputOf(inner)));
+}
+
