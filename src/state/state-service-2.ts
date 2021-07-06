@@ -28,18 +28,13 @@ type MutableStatesOf<T> = {
   readonly [K in keyof T]: T[K] extends MutableState<infer S> ? S : never;
 };
 
-/**
- * Used to resolve properties of the given ID.
- *
- * @typeParam T - Object to be resolved.
- */
-export interface Resolver2<T> extends Observable<T|undefined> {
-  _<K extends keyof T>(key: K): Resolver2<T[K]>;
-  $get<K extends keyof MutableStatesOf<T>>(key: K): Resolver2<MutableStatesOf<T>[K]>;
-  $set<K extends keyof MutableStatesOf<T>>(key: K): OperatorFunction<MutableStatesOf<T>[K], unknown>;
+
+interface ImmutableResolver<T> extends Observable<T|undefined> {
+    _<K extends keyof T>(key: K): ImmutableResolver<T[K]>;
+    $<K extends keyof MutableStatesOf<T>>(key: K): MutableResolver<MutableStatesOf<T>[K]>;
 }
 
-class ResolverInternal<T> extends Observable<T|undefined> implements Resolver2<T> {
+class ImmutableResolverInternal<T> extends Observable<T|undefined> implements ImmutableResolver<T> {
   constructor(
       private readonly source$: Observable<T|undefined>,
   ) {
@@ -48,37 +43,57 @@ class ResolverInternal<T> extends Observable<T|undefined> implements Resolver2<T
     });
   }
 
-  _<K extends keyof T>(key: K): Resolver2<T[K]> {
-    return new ResolverInternal(this.source$.pipe(map(value => value?.[key])));
+  _<K extends keyof T>(key: K): ImmutableResolver<T[K]> {
+    return new ImmutableResolverInternal(this.source$.pipe(map(value => value?.[key])));
   }
 
-  $get<K extends keyof MutableStatesOf<T>>(key: K): Resolver2<MutableStatesOf<T>[K]> {
+  $<K extends keyof MutableStatesOf<T>>(key: K): MutableResolver<MutableStatesOf<T>[K]> {
     const subSelf$ = this.source$.pipe(
-        map(value => value?.[key] as MutableState<MutableStatesOf<T>[K]>|undefined),
-        switchMap(mutableState => {
+        map(value => {
+          const mutableState = value?.[key];
           if (mutableState === undefined) {
-            return of(undefined);
+            return undefined;
           }
 
-          return mutableState.value$;
+          return mutableState as unknown as MutableState<MutableStatesOf<T>[K]>;
         }),
     );
-    return new ResolverInternal(subSelf$);
+    return new MutableResolverInternal(subSelf$);
+  }
+}
+
+interface MutableResolver<T> extends ImmutableResolver<T> {
+  set(): OperatorFunction<T, unknown>;
+}
+
+class MutableResolverInternal<T> extends ImmutableResolverInternal<T> implements MutableResolver<T> {
+  constructor(
+      private readonly mutableSource$: Observable<MutableState<T>|undefined>,
+  ) {
+    super(mutableSource$.pipe(
+        switchMap(mutable => mutable?.value$ ?? of(undefined)),
+    ));
   }
 
-  $set<K extends keyof MutableStatesOf<T>>(key: K): OperatorFunction<MutableStatesOf<T>[K], unknown> {
+  set(): OperatorFunction<T, unknown> {
     return pipe(
-        withLatestFrom(this._(key)),
+        withLatestFrom(this.mutableSource$),
         tap(([value, mutable]) => {
           if (!mutable) {
             return;
           }
 
-          (mutable as unknown as MutableState<unknown>).set(value);
+          mutable.set(value);
         }),
     );
   }
 }
+
+
+type Resolver<T> = T extends MutableState<infer V> ? MutableResolver<V> : ImmutableResolver<T>;
+
+
+export type Resolver2<T> = Resolver<T>;
 
 const __unusedObjectPath = Symbol('unusedObjectPath');
 
@@ -87,7 +102,7 @@ export interface ObjectPath<T> {
   readonly [__unusedObjectPath]: Type<T>;
 }
 
-function createObjectPath<T>(innerValue: string): ObjectPath<T> {
+export function createObjectPath<T>(innerValue: string): ObjectPath<T> {
   return {id: innerValue, [__unusedObjectPath]: {} as any};
 }
 
@@ -101,10 +116,10 @@ export function mutableState<T>(value: T): MutableState<T> {
   };
 }
 
-type PathProvider<R, T> = (root: Resolver2<R>) => Resolver2<T>;
+export type PathProvider<R, T> = (root: ImmutableResolver<R>) => ImmutableResolver<MutableState<T>>;
 
 export class StateService2 {
-  private readonly objectPaths$ = new BehaviorSubject<ReadonlyMap<string, Resolver2<any>>>(new Map());
+  private readonly objectPaths$ = new BehaviorSubject<ReadonlyMap<string, ImmutableResolver<MutableState<any>>>>(new Map());
   private readonly rootStates$ = new BehaviorSubject<ReadonlyMap<string, any>>(new Map());
 
   constructor(private readonly idGenerator: BaseIdGenerator = new SimpleIdGenerator()) {}
@@ -119,21 +134,20 @@ export class StateService2 {
     return stateId;
   }
 
-  objectPath<T, R>(
-      root: InputOf<RootStateId<R>>,
-      provider: PathProvider<R, T>,
-  ): ObjectPath<T> {
+  mutablePath<T>(root: InputOf<RootStateId<MutableState<T>>>): ObjectPath<T>;
+  mutablePath<T, R>(root: InputOf<RootStateId<R>>, provider: PathProvider<R, T>): ObjectPath<T>;
+  mutablePath<T, R>(root: InputOf<RootStateId<R>>, provider?: PathProvider<R, T>): ObjectPath<T> {
     const id = this.idGenerator.generate(new Set(this.objectPaths$.getValue().keys()));
-    const path = provider(this.resolve(root));
+    const path = provider ? provider(this._(root)) : this._(root as unknown as RootStateId<MutableState<unknown>>);
 
-    const resultMap = new Map(this.rootStates$.getValue());
+    const resultMap = new Map(this.objectPaths$.getValue());
     resultMap.set(id, path);
     this.objectPaths$.next(resultMap);
     return createObjectPath(id);
   }
 
-  resolve<T>(id: InputOf<RootStateId<T>|ObjectPath<T>>): Resolver2<T> {
-    return new ResolverInternal<T>(
+  _<T>(id: InputOf<RootStateId<T>>): ImmutableResolver<T> {
+    return new ImmutableResolverInternal<T>(
         normalizeInputOf(id).pipe(
             switchMap(idOrPath => {
               if (!idOrPath) {
@@ -154,6 +168,32 @@ export class StateService2 {
             }),
         ),
     );
+  }
+
+  $<T>(id: InputOf<RootStateId<MutableState<T>>|ObjectPath<T>>): MutableResolver<T> {
+    const rv = new MutableResolverInternal<T>(
+        normalizeInputOf(id).pipe(
+            switchMap(idOrPath => {
+              if (!idOrPath) {
+                return of(undefined);
+              }
+
+              if (isObjectPath(idOrPath)) {
+                return this.objectPaths$.pipe(
+                    switchMap(objectPaths => objectPaths.get(idOrPath.id) ?? of(undefined)),
+                    distinctUntilChanged(),
+                );
+              }
+
+              return this.rootStates$.pipe(
+                  map(rootStates => rootStates.get(idOrPath.id)),
+                  distinctUntilChanged(),
+              );
+            }),
+        ),
+    );
+
+    return rv;
   }
 }
 

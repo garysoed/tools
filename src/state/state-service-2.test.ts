@@ -16,11 +16,11 @@ test('@tools/state/state-service-2', init => {
 
       const id = _.service.addRoot(value);
 
-      assert(_.service.resolve(id)).to.emitWith(value);
+      assert(_.service._(id)).to.emitWith(value);
     });
   });
 
-  test('resolve', _, () => {
+  test('resolveRoot', _, () => {
     test('_', () => {
       interface Test {
         readonly a: string;
@@ -29,11 +29,11 @@ test('@tools/state/state-service-2', init => {
       should('emit the correct property value', () => {
         const addedId = _.service.addRoot({a: 'abc'});
 
-        assert(_.service.resolve(addedId)._('a')).to.emitWith('abc');
+        assert(_.service._(addedId)._('a')).to.emitWith('abc');
       });
 
       should('emit undefined if the parent does not exist', () => {
-        assert(_.service.resolve(createRootStateId<Test>('other'))._('a')).to.emitWith(undefined);
+        assert(_.service._(createRootStateId<Test>('other'))._('a')).to.emitWith(undefined);
       });
     });
 
@@ -47,11 +47,11 @@ test('@tools/state/state-service-2', init => {
           a: mutableState('abc'),
         });
 
-        assert(_.service.resolve(addedId).$get('a')).to.emitWith('abc');
+        assert(_.service._(addedId).$('a')).to.emitWith('abc');
       });
 
       should('emit undefined if the parent does not exist', () => {
-        assert(_.service.resolve(createRootStateId<Test>('other'))._('a')).to.emitWith(undefined);
+        assert(_.service._(createRootStateId<Test>('other'))._('a')).to.emitWith(undefined);
       });
     });
 
@@ -61,28 +61,45 @@ test('@tools/state/state-service-2', init => {
           a: mutableState('abc'),
         });
 
-        const a$ = createSpySubject(_.service.resolve(addedId).$get('a'));
-        run(of('xyz').pipe(_.service.resolve(addedId).$set('a')));
+        const a$ = createSpySubject(_.service._(addedId).$('a'));
+        run(of('xyz').pipe(_.service._(addedId).$('a').set()));
 
         assert(a$).to.emitSequence(['abc', 'xyz']);
       });
     });
+  });
 
-    test('objectPath', () => {
-      should('emit the values in the path pointed by the object path', () => {
-        const rootId = _.service.addRoot({
-          a: mutableState({
-            b: {c: 12},
-          }),
-        });
-
-        const path = _.service.objectPath(rootId, root => root.$get('a')._('b')._('c'));
-
-        const b$ = createSpySubject(_.service.resolve(path));
-        run(of({b: {c: 34}}).pipe(_.service.resolve(rootId).$set('a')));
-
-        assert(b$).to.emitSequence([12, 34]);
+  test('resolveMutable', () => {
+    should('emit the values in the path pointed by the object path', () => {
+      const rootId = _.service.addRoot({
+        a: mutableState({
+          b: {c: mutableState(12)},
+        }),
       });
+
+      const path = _.service.mutablePath(rootId, root => {
+        const rv = root.$('a')._('b')._('c');
+        return rv;
+      });
+
+      const c$ = createSpySubject(_.service.$(path));
+      run(of(34).pipe(_.service._(rootId).$('a')._('b').$('c').set()));
+
+      assert(c$).to.emitSequence([12, 34]);
+
+      // Try overriding the entire tree. c should also be updated
+      run(of({b: {c: mutableState(56)}}).pipe(_.service._(rootId).$('a').set()));
+
+      assert(c$).to.emitSequence([12, 34, 56]);
+    });
+
+    should('handle mutable root IDs', () => {
+      const rootId = _.service.addRoot(mutableState(12));
+
+      const root$ = createSpySubject(_.service.$(rootId));
+      run(of(34).pipe(_.service.$(rootId).set()));
+
+      assert(root$).to.emitSequence([12, 34]);
     });
   });
 });
