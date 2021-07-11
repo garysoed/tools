@@ -1,8 +1,6 @@
-export {Snapshot} from '../src/state/snapshot';
-export {createId, StateId} from '../src/state/state-id';
-export {StateService} from '../src/state/state-service';
+export {StateService, PathProvider} from '../src/state/state-service';
 export {MutableState, mutableState} from '../src/state/mutable-state';
 export {RootStateId, createRootStateId} from '../src/state/root-state-id';
-export {MutablePath, createMutablePath, PathProvider} from '../src/state/mutable-path';
-
+export {ObjectPath, createObjectPath, immutablePathOf, isObjectPathEqual} from '../src/state/object-path';
+export {ImmutableResolver, MutableResolver} from '../src/state/resolver';
 export {fakeStateService} from '../src/state/testing/state-service';

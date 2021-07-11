@@ -4,13 +4,15 @@ import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
 import {BaseIdGenerator} from '../random/idgenerators/base-id-generator';
 import {SimpleIdGenerator} from '../random/idgenerators/simple-id-generator';
 
-import {createMutablePath, isMutablePath, MutablePath, PathProvider} from './mutable-path';
 import {MutableState} from './mutable-state';
+import {createObjectPath, IMMUTABLE_PATH_PREFIX, isObjectPath, MUTABLE_PATH_PREFIX, ObjectPath} from './object-path';
 import {ImmutableResolver, ImmutableResolverInternal, MutableResolver, MutableResolverInternal} from './resolver';
 import {createRootStateId, RootStateId} from './root-state-id';
 
 
 type InputOf<T> = Observable<T|null|undefined>|T|null|undefined;
+
+export type PathProvider<F, T> = (root: ImmutableResolver<F>) => ImmutableResolver<T>;
 
 /**
  * Manages global states.
@@ -21,7 +23,7 @@ type InputOf<T> = Observable<T|null|undefined>|T|null|undefined;
  * @thModule state
  */
 export class StateService {
-  private readonly mutablePaths$ = new BehaviorSubject<ReadonlyMap<string, ImmutableResolver<MutableState<any>>>>(new Map());
+  private readonly objectPaths$ = new BehaviorSubject<ReadonlyMap<string, ImmutableResolver<unknown>>>(new Map());
   private readonly rootStates$ = new BehaviorSubject<ReadonlyMap<string, any>>(new Map());
 
   constructor(private readonly idGenerator: BaseIdGenerator = new SimpleIdGenerator()) {}
@@ -36,19 +38,48 @@ export class StateService {
     return stateId;
   }
 
-  mutablePath<T>(root: InputOf<RootStateId<MutableState<T>>>): MutablePath<T>;
-  mutablePath<T, R>(root: InputOf<RootStateId<R>>, provider: PathProvider<R, T>): MutablePath<T>;
-  mutablePath<T, R>(root: InputOf<RootStateId<R>>, provider?: PathProvider<R, T>): MutablePath<T> {
-    const id = this.idGenerator.generate(new Set(this.mutablePaths$.getValue().keys()));
-    const path = provider ? provider(this._(root)) : this._(root as unknown as RootStateId<MutableState<unknown>>);
-
-    const resultMap = new Map(this.mutablePaths$.getValue());
-    resultMap.set(id, path);
-    this.mutablePaths$.next(resultMap);
-    return createMutablePath(id);
+  immutablePath<T>(root: InputOf<RootStateId<T>>): ObjectPath<T>;
+  immutablePath<T, R>(root: InputOf<RootStateId<R>>, provider: PathProvider<R, T>): ObjectPath<T>;
+  immutablePath(root: InputOf<RootStateId<unknown>>, provider?: PathProvider<unknown, unknown>): ObjectPath<unknown> {
+    const id = `${IMMUTABLE_PATH_PREFIX}::${this.idGenerator.generate(new Set(this.objectPaths$.getValue().keys()))}`;
+    return this.objectPath(id, root, provider);
   }
 
-  _<T>(id: InputOf<RootStateId<T>>): ImmutableResolver<T> {
+  mutablePath<T>(root: InputOf<RootStateId<MutableState<T>>>): ObjectPath<MutableState<T>>;
+  mutablePath<T, R>(root: InputOf<RootStateId<R>>, provider: PathProvider<R, MutableState<T>>): ObjectPath<MutableState<T>>;
+  mutablePath(root: InputOf<RootStateId<unknown>>, provider?: PathProvider<unknown, MutableState<unknown>>): ObjectPath<MutableState<unknown>> {
+    const baseId = this.idGenerator.generate(new Set(this.objectPaths$.getValue().keys()));
+    const immutableId = `${IMMUTABLE_PATH_PREFIX}::${baseId}`;
+    this.objectPath(
+        immutableId,
+        root,
+        root => {
+          const resolver = provider ? provider(root) : root as ImmutableResolver<MutableState<unknown>>;
+          return new ImmutableResolverInternal(
+              resolver.pipe(
+                  switchMap(resolver => resolver?.value$ ?? of(undefined)),
+              ),
+          );
+        });
+
+    const mutableId = `${MUTABLE_PATH_PREFIX}::${baseId}`;
+    return this.objectPath(mutableId, root, provider);
+  }
+
+  private objectPath<T>(
+      id: string,
+      root: InputOf<RootStateId<unknown>>,
+      provider?: PathProvider<unknown, T>,
+  ): ObjectPath<T> {
+    const path = provider ? provider(this._(root)) : this._(root);
+
+    const resultMap = new Map(this.objectPaths$.getValue());
+    resultMap.set(id, path);
+    this.objectPaths$.next(resultMap);
+    return createObjectPath(id);
+  }
+
+  _<T>(id: InputOf<RootStateId<T>>|InputOf<ObjectPath<T>>): ImmutableResolver<T> {
     return new ImmutableResolverInternal<T>(
         normalizeInputOf(id).pipe(
             switchMap(idOrPath => {
@@ -56,9 +87,15 @@ export class StateService {
                 return of(undefined);
               }
 
-              if (isMutablePath(idOrPath)) {
-                return this.mutablePaths$.pipe(
-                    switchMap(mutablePaths => mutablePaths.get(idOrPath.id) ?? of(undefined)),
+              if (isObjectPath(idOrPath)) {
+                return this.objectPaths$.pipe(
+                    switchMap(mutablePaths => {
+                      if (!mutablePaths) {
+                        return of(undefined);
+                      }
+
+                      return mutablePaths.get(idOrPath.id) as Observable<T>;
+                    }),
                     distinctUntilChanged(),
                 );
               }
@@ -72,7 +109,7 @@ export class StateService {
     );
   }
 
-  $<T>(id: InputOf<RootStateId<MutableState<T>>|MutablePath<T>>): MutableResolver<T> {
+  $<T>(id: InputOf<RootStateId<MutableState<T>>>|InputOf<ObjectPath<MutableState<T>>>): MutableResolver<T> {
     const rv = new MutableResolverInternal<T>(
         normalizeInputOf(id).pipe(
             switchMap(idOrPath => {
@@ -80,9 +117,15 @@ export class StateService {
                 return of(undefined);
               }
 
-              if (isMutablePath(idOrPath)) {
-                return this.mutablePaths$.pipe(
-                    switchMap(mutablePaths => mutablePaths.get(idOrPath.id) ?? of(undefined)),
+              if (isObjectPath(idOrPath)) {
+                return this.objectPaths$.pipe(
+                    switchMap(mutablePaths => {
+                      if (!mutablePaths) {
+                        return of(undefined);
+                      }
+
+                      return mutablePaths.get(idOrPath.id) as Observable<MutableState<T>>;
+                    }),
                     distinctUntilChanged(),
                 );
               }
