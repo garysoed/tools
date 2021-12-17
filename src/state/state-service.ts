@@ -10,7 +10,7 @@ import {ImmutableResolver, ImmutableResolverInternal, MutableResolver, MutableRe
 import {createRootStateId, RootStateId} from './root-state-id';
 
 
-type InputOf<T> = Observable<T|null|undefined>|T|null|undefined;
+type InputOf<T> = Observable<T>|T;
 
 export type PathProvider<F, T> = (root: ImmutableResolver<F>) => ImmutableResolver<T>;
 

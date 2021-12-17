@@ -4,7 +4,6 @@ import {switchMap} from 'rxjs/operators';
 
 import {mutableState} from './mutable-state';
 import {immutablePathOf} from './object-path';
-import {createRootStateId} from './root-state-id';
 import {StateService} from './state-service';
 
 
@@ -25,18 +24,10 @@ test('@tools/state/state-service', init => {
   });
 
   test('_', _, () => {
-    interface TestSimple {
-      readonly a: string;
-    }
-
     should('emit the correct property value', () => {
       const addedId = _.service.addRoot({a: 'abc'});
 
       assert(_.service._(addedId)._('a')).to.emitWith('abc');
-    });
-
-    should('emit undefined if the parent does not exist', () => {
-      assert(_.service._(createRootStateId<TestSimple>('other'))._('a')).to.emitWith(undefined);
     });
 
     should('handle mutable states', () => {
@@ -53,12 +44,6 @@ test('@tools/state/state-service', init => {
       run(of(34).pipe(_.service._(rootId).$('a')._('b').$('c').set()));
 
       assert(c$).to.emitSequence([12, 34]);
-    });
-
-    should('emit undefined for undefined', () => {
-      const value$ = createSpySubject(_.service._(undefined));
-
-      assert(value$).to.emitSequence([undefined]);
     });
   });
 
@@ -90,12 +75,6 @@ test('@tools/state/state-service', init => {
       run(of(34).pipe(_.service.$(rootId).set()));
 
       assert(root$).to.emitSequence([12, 34]);
-    });
-
-    should('emit undefined for undefined', () => {
-      const value$ = createSpySubject(_.service.$(undefined));
-
-      assert(value$).to.emitSequence([undefined]);
     });
   });
 
