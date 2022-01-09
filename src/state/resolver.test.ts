@@ -12,7 +12,7 @@ test('@tools/src/state/resolver', init => {
 
   test('set', () => {
     should('update the value of the mutable state', () => {
-      const addedId = _.service.addRoot({
+      const {id: addedId} = _.service.addRoot({
         a: mutableState('abc'),
       });
 

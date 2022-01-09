@@ -4,7 +4,7 @@ import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
 import {BaseIdGenerator} from '../random/idgenerators/base-id-generator';
 import {SimpleIdGenerator} from '../random/idgenerators/simple-id-generator';
 
-import {MutableState} from './mutable-state';
+import {MutableState, MUTABLE_STATE_TYPE} from './mutable-state';
 import {createObjectPath, IMMUTABLE_PATH_PREFIX, isObjectPath, MUTABLE_PATH_PREFIX, ObjectPath} from './object-path';
 import {ImmutableResolver, ImmutableResolverInternal, MutableResolver, MutableResolverInternal} from './resolver';
 import {createRootStateId, RootStateId} from './root-state-id';
@@ -13,6 +13,15 @@ import {createRootStateId, RootStateId} from './root-state-id';
 type InputOf<T> = Observable<T>|T;
 
 export type PathProvider<F, T> = (root: ImmutableResolver<F>) => ImmutableResolver<T>;
+
+interface ImmutableAddResult<T> {
+  readonly id: RootStateId<T>;
+  _(): ImmutableResolver<T>;
+}
+
+interface MutableAddResult<T> extends ImmutableAddResult<MutableState<T>> {
+  $(): MutableResolver<T>;
+}
 
 /**
  * Manages global states.
@@ -28,14 +37,26 @@ export class StateService {
 
   constructor(private readonly idGenerator: BaseIdGenerator = new SimpleIdGenerator()) {}
 
-  addRoot<T>(value: T): RootStateId<T> {
+  addRoot<T>(value: MutableState<T>): MutableAddResult<T>;
+  addRoot<T>(value: T): ImmutableAddResult<T>;
+  addRoot(value: unknown): ImmutableAddResult<unknown>|MutableAddResult<unknown> {
     const id = this.idGenerator.generate(new Set(this.rootStates$.getValue().keys()));
-    const stateId = createRootStateId<T>(id);
+    const stateId = createRootStateId(id);
 
     const resultMap = new Map(this.rootStates$.getValue());
     resultMap.set(stateId.id, value);
     this.rootStates$.next(resultMap);
-    return stateId;
+
+    if (MUTABLE_STATE_TYPE.check(value)) {
+      const mutableId = stateId as RootStateId<MutableState<unknown>>;
+      return {
+        id: mutableId,
+        _: () => this._(mutableId),
+        $: () => this.$(mutableId),
+      };
+    }
+
+    return {id: stateId, _: () => this._(stateId)};
   }
 
   immutablePath<T>(root: InputOf<RootStateId<T>>): ObjectPath<T>;

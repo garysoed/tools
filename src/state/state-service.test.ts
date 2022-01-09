@@ -16,22 +16,25 @@ test('@tools/state/state-service', init => {
   test('addRoot', () => {
     should('add the object and give it a unique ID', () => {
       const value = 'value';
+      const state = mutableState(value);
+      const result = _.service.addRoot(state);
 
-      const id = _.service.addRoot(value);
-
-      assert(_.service._(id)).to.emitWith(value);
+      assert(result.$()).to.emitWith(value);
+      assert(result._()).to.emitWith(state);
+      assert(_.service.$(result.id)).to.emitWith(value);
+      assert(_.service._(result.id)).to.emitWith(state);
     });
   });
 
   test('_', _, () => {
     should('emit the correct property value', () => {
-      const addedId = _.service.addRoot({a: 'abc'});
+      const addedId = _.service.addRoot({a: 'abc'}).id;
 
       assert(_.service._(addedId)._('a')).to.emitWith('abc');
     });
 
     should('handle mutable states', () => {
-      const rootId = _.service.addRoot({
+      const {id: rootId} = _.service.addRoot({
         a: mutableState({
           b: {c: mutableState(12)},
         }),
@@ -49,7 +52,7 @@ test('@tools/state/state-service', init => {
 
   test('$', () => {
     should('emit the values in the path pointed by the object path', () => {
-      const rootId = _.service.addRoot({
+      const {id: rootId} = _.service.addRoot({
         a: mutableState({
           b: {c: mutableState(12)},
         }),
@@ -69,7 +72,7 @@ test('@tools/state/state-service', init => {
     });
 
     should('handle mutable root IDs', () => {
-      const rootId = _.service.addRoot(mutableState(12));
+      const {id: rootId} = _.service.addRoot(mutableState(12));
 
       const root$ = createSpySubject(_.service.$(rootId));
       run(of(34).pipe(_.service.$(rootId).set()));
@@ -80,7 +83,7 @@ test('@tools/state/state-service', init => {
 
   test('mutablePath', () => {
     should('register mutable and immutable paths', () => {
-      const rootId = _.service.addRoot({
+      const {id: rootId} = _.service.addRoot({
         a: mutableState(12),
       });
 
