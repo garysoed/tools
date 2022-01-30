@@ -13,6 +13,6 @@ import {$pipe} from './pipe';
  *
  * @thModule collect.operators
  */
-export function $diff<T>(other: ReadonlySet<T>): Operator<Iterable<T>, ReadonlySet<T>> {
+export function $subtract<T>(other: ReadonlySet<T>): Operator<Iterable<T>, ReadonlySet<T>> {
   return iterable => $pipe(iterable, $filter(item => !other.has(item)), $asSet());
 }

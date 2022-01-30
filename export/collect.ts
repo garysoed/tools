@@ -5,7 +5,6 @@ export {$asOrderedMap} from '../src/collect/operators/as-ordered-map';
 export {$asMap} from '../src/collect/operators/as-map';
 export {$asRecord} from '../src/collect/operators/as-record';
 export {$asSet} from '../src/collect/operators/as-set';
-export {$diff} from '../src/collect/operators/diff';
 export {$every} from '../src/collect/operators/every';
 export {$filter} from '../src/collect/operators/filter';
 export {$filterByType} from '../src/collect/operators/filter-by-type';
@@ -27,6 +26,7 @@ export {$scan} from '../src/collect/operators/scan';
 export {$size} from '../src/collect/operators/size';
 export {$some} from '../src/collect/operators/some';
 export {$sort} from '../src/collect/operators/sort';
+export {$subtract} from '../src/collect/operators/subtract';
 export {$take} from '../src/collect/operators/take';
 export {$zip} from '../src/collect/operators/zip';
 
