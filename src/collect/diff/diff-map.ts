@@ -2,25 +2,13 @@ import {diffValue} from './diff-value';
 
 
 /**
- * Initializes the map by setting it to the given map.
- *
- * @typeParam K - Type of the map keys.
- * @typeParam V - Type of the map values.
- * @thHidden
- */
-export interface MapInit<K, V> {
-  readonly type: 'init';
-  readonly value: ReadonlyMap<K, V>;
-}
-
-/**
  * Deletes the entry from the map.
  *
  * @typeParam K - Type of the map keys.
  * @typeParam V - Type of the map values.
  * @thHidden
  */
-export interface MapDelete<K> {
+interface MapDelete<K> {
   readonly key: K;
   readonly type: 'delete';
 }
@@ -32,7 +20,7 @@ export interface MapDelete<K> {
  * @typeParam V - Type of the map values.
  * @thHidden
  */
-export interface MapSet<K, V> {
+interface MapSet<K, V> {
   readonly key: K;
   readonly type: 'set';
   readonly value: V;
@@ -45,7 +33,7 @@ export interface MapSet<K, V> {
  * @typeParam V - Type of the map values.
  * @thHidden
  */
-export type MapDiff<K, V> = MapInit<K, V>|MapDelete<K>|MapSet<K, V>;
+export type MapDiff<K, V> = MapDelete<K>|MapSet<K, V>;
 
 /**
  * Emits diffs of the input maps.
@@ -102,8 +90,6 @@ export function undiffMap<K, V>(
         switch (diff.type) {
           case 'delete':
             return new Map([...acc].filter(([key]) => key !== diff.key));
-          case 'init':
-            return new Map(diff.value);
           case 'set':
             return new Map([...acc, [diff.key, diff.value]]);
         }

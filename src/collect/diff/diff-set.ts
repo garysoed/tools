@@ -4,20 +4,9 @@
  * @typeParam T - Type of the set element.
  * @thHidden
  */
-export interface SetAdd<T> {
+interface SetAdd<T> {
   readonly type: 'add';
   readonly value: T;
-}
-
-/**
- * Initializes the set by setting it to the given set.
- *
- * @typeParam T - Type of the set element.
- * @thHidden
- */
-export interface SetInit<T> {
-  readonly type: 'init';
-  readonly value: Set<T>;
 }
 
 /**
@@ -26,7 +15,7 @@ export interface SetInit<T> {
  * @typeParam T - Type of the set element.
  * @thHidden
  */
-export interface SetDelete<T> {
+interface SetDelete<T> {
   readonly type: 'delete';
   readonly value: T;
 }
@@ -37,7 +26,7 @@ export interface SetDelete<T> {
  * @typeParam T - Type of the set element.
  * @thHidden
  */
-export type SetDiff<T> = SetInit<T>|SetDelete<T>|SetAdd<T>;
+export type SetDiff<T> = SetDelete<T>|SetAdd<T>;
 
 /**
  * Emits diffs of the input sets.
@@ -90,8 +79,6 @@ export function undiffSet<T>(
         switch (diff.type) {
           case 'add':
             return new Set([...acc, diff.value]);
-          case 'init':
-            return new Set(diff.value);
           case 'delete':
             return new Set([...acc].filter(v => v !== diff.value));
         }

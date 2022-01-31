@@ -13,8 +13,4 @@ export {mapNullableTo} from '../src/rxjs/map-nullable-to';
 export {mapUndefinedTo} from '../src/rxjs/map-undefined-to';
 export {usingResource} from '../src/rxjs/using-resource';
 
-export {mapArrayDiff, scanArray, ArrayDiff, diffArray} from '../src/rxjs/state/array-diff';
-export {scanMap, MapSet, MapInit, MapDelete, MapDiff, diffMap} from '../src/rxjs/state/map-diff';
-export {scanSet, SetAdd, SetInit, SetDelete, SetDiff, diffSet} from '../src/rxjs/state/set-diff';
-
 export {Runnable} from '../src/rxjs/runnable';

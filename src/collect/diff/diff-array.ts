@@ -1,17 +1,6 @@
 import {diffValue} from './diff-value';
 
 /**
- * Initializes the array by setting it to the given array.
- *
- * @typeParam T - Type of the array element.
- * @thHidden
- */
-export interface ArrayInit<T> {
-  readonly type: 'init';
-  readonly value: readonly T[];
-}
-
-/**
  * Inserts the element of the array at the given index.
  *
  * @typeParam T - Type of the array element.
@@ -35,17 +24,6 @@ export interface ArrayDelete<T> {
   readonly value: T;
 }
 
-/**
- * Sets the element of the array at the given index to the given value.
- *
- * @typeParam T - Type of the array element.
- * @thHidden
- */
-export interface ArraySet<T> {
-  readonly index: number;
-  readonly type: 'set';
-  readonly value: T;
-}
 
 /**
  * Differences between arrays.
@@ -53,7 +31,7 @@ export interface ArraySet<T> {
  * @typeParam T - Type of the array element.
  * @thHidden
  */
-export type ArrayDiff<T> = ArrayInit<T>|ArrayInsert<T>|ArrayDelete<T>|ArraySet<T>;
+export type ArrayDiff<T> = ArrayInsert<T>|ArrayDelete<T>;
 
 /**
  * Emits diffs of the input arrays.
@@ -114,14 +92,8 @@ export function undiffArray<T>(
         copy.splice(diff.index, 1);
 
         return copy;
-      case 'init':
-        return [...diff.value];
       case 'insert':
         copy.splice(diff.index, 0, diff.value);
-
-        return copy;
-      case 'set':
-        copy[diff.index] = diff.value;
 
         return copy;
     }
