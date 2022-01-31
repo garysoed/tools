@@ -14,3 +14,6 @@ export {mapUndefinedTo} from '../src/rxjs/map-undefined-to';
 export {usingResource} from '../src/rxjs/using-resource';
 
 export {Runnable} from '../src/rxjs/runnable';
+
+export {ArraySubject} from '../src/rxjs/state/array-subject';
+export {MapSubject} from '../src/rxjs/state/map-subject';
