@@ -2,7 +2,7 @@ import {RandomGen} from '../gen/random-gen';
 
 export class FakeSeed implements RandomGen {
   constructor(
-      public values: number[] = [],
+      public values: number[] = [0],
       private readonly index = 0,
   ) {}
 
