@@ -6,6 +6,7 @@ export {combineLatestObject} from '../src/rxjs/combine-latest-object';
 export {convertBackward} from '../src/rxjs/convert-backward';
 export {convertForward} from '../src/rxjs/convert-forward';
 export {debug} from '../src/rxjs/debug';
+export {debugBreak} from '../src/rxjs/debug-break';
 export {extend} from '../src/rxjs/extend';
 export {filterByType} from '../src/rxjs/filter-by-type';
 export {filterNonNullable} from '../src/rxjs/filter-non-nullable';
