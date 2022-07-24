@@ -1,6 +1,6 @@
 import {$asArray} from '../collect/operators/as-array';
 import {$flat} from '../collect/operators/flat';
-import {$pipe} from '../collect/operators/pipe';
+import {$pipe} from '../typescript/pipe';
 
 import {SheetsCell, SheetsTable} from './sheets-table';
 import {ExtendedValue} from './type/sheets';

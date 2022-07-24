@@ -4,7 +4,7 @@ import {withMap} from '../collect/compare/with-map';
 import {$asArray} from '../collect/operators/as-array';
 import {$asOrderedMap} from '../collect/operators/as-ordered-map';
 import {$filter} from '../collect/operators/filter';
-import {$pipe} from '../collect/operators/pipe';
+import {$pipe} from '../typescript/pipe';
 
 
 interface AnnotationResult<D> {

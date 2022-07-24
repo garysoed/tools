@@ -1,7 +1,8 @@
 import {assert, should, test} from 'gs-testing';
 
+import {$pipe} from '../../typescript/pipe';
+
 import {$first} from './first';
-import {$pipe} from './pipe';
 
 test('@tools/collect/first', () => {
   should('return the first element in the iterable', () => {

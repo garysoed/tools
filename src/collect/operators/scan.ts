@@ -1,4 +1,4 @@
-import {Operator} from './operator';
+import {Operator} from '../../typescript/operator';
 
 export function $scan<F, T>(
     scanFn: (acc: T, item: F) => T,

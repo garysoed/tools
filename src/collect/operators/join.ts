@@ -1,4 +1,4 @@
-import {Operator} from './operator';
+import {Operator} from '../../typescript/operator';
 
 /**
  * Joins the items in the given array together as one string.

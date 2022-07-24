@@ -1,6 +1,7 @@
 import {arrayThat, assert, iterableThat, should, test, tupleThat} from 'gs-testing';
 
-import {$pipe} from './pipe';
+import {$pipe} from '../../typescript/pipe';
+
 import {split} from './split';
 
 

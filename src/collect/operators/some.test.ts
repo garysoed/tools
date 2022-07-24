@@ -1,6 +1,7 @@
 import {assert, should, test} from 'gs-testing';
 
-import {$pipe} from './pipe';
+import {$pipe} from '../../typescript/pipe';
+
 import {$some} from './some';
 
 test('@tools/collect/operators/some', () => {

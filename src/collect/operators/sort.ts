@@ -1,6 +1,6 @@
+import {Operator} from '../../typescript/operator';
 import {Ordering} from '../compare/ordering';
 
-import {Operator} from './operator';
 
 /**
  * Sorts the given `Array`.

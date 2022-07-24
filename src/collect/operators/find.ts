@@ -1,4 +1,4 @@
-import {Operator} from './operator';
+import {Operator} from '../../typescript/operator';
 
 /**
  * Returns the first item that fulfills the given predicate.

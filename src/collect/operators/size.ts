@@ -1,4 +1,4 @@
-import {Operator} from './operator';
+import {Operator} from '../../typescript/operator';
 
 /**
  * Collections with a known size.

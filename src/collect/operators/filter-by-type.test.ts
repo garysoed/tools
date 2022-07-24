@@ -1,9 +1,10 @@
 import {assert, should, test} from 'gs-testing';
 import {numberType} from 'gs-types';
 
+import {$pipe} from '../../typescript/pipe';
+
 import {$asArray} from './as-array';
 import {$filterByType} from './filter-by-type';
-import {$pipe} from './pipe';
 
 
 test('@tools/collect/operators/filter-by-type', () => {

@@ -1,5 +1,6 @@
+import {Operator} from '../../typescript/operator';
+
 import {FiniteIterable} from './finite-iterable';
-import {Operator} from './operator';
 
 export function $last<T>(): Operator<FiniteIterable<T>, T|null>;
 export function $last<T>(maxItems: number): Operator<Iterable<T>, T|null>;

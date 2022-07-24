@@ -7,9 +7,9 @@ import {$asSet} from '../collect/operators/as-set';
 import {$filter} from '../collect/operators/filter';
 import {$flat} from '../collect/operators/flat';
 import {$map} from '../collect/operators/map';
-import {$pipe} from '../collect/operators/pipe';
 import {OrderedMap} from '../collect/structures/ordered-map';
 import {ReadonlyOrderedMap} from '../collect/structures/readonly-ordered-map';
+import {$pipe} from '../typescript/pipe';
 
 type Annotator<A extends any[], D> = (target: Object, key: string|symbol, ...args: A) => D;
 

@@ -1,7 +1,8 @@
 import {assert, should, test} from 'gs-testing';
 
+import {$pipe} from '../../typescript/pipe';
+
 import {$intersect} from './intersect';
-import {$pipe} from './pipe';
 
 test('@tools/collect/intersect', () => {
   test('intersect', () => {

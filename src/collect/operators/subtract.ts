@@ -1,7 +1,8 @@
+import {Operator} from '../../typescript/operator';
+import {$pipe} from '../../typescript/pipe';
+
 import {$asSet} from './as-set';
 import {$filter} from './filter';
-import {Operator} from './operator';
-import {$pipe} from './pipe';
 
 /**
  * Returns elements that are in the original {@link Iterable} but not in the given set.

@@ -1,4 +1,4 @@
-import {Operator} from './operator';
+import {Operator} from '../../typescript/operator';
 
 /**
  * Returns {@link Set} of items that are in the input `Set` and in the given `Set`.

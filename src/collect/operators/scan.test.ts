@@ -1,7 +1,8 @@
 import {assert, should, test} from 'gs-testing';
 
+import {$pipe} from '../../typescript/pipe';
+
 import {$asArray} from './as-array';
-import {$pipe} from './pipe';
 import {$scan} from './scan';
 
 

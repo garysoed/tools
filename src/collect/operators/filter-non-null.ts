@@ -1,5 +1,6 @@
+import {Operator} from '../../typescript/operator';
+
 import {$filter} from './filter';
-import {Operator} from './operator';
 
 /**
  * Filters out any `null`s from the {@link Iterable}.

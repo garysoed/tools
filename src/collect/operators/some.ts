@@ -1,5 +1,6 @@
+import {Operator} from '../../typescript/operator';
+
 import {FiniteIterable} from './finite-iterable';
-import {Operator} from './operator';
 
 
 /**

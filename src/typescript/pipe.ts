@@ -20,7 +20,7 @@ import {Operator} from './operator';
  * @typeParam F - Type of the source.
  * @param source - The starting object.
  * @returns The object returned after a sequence of `Operators` applied on the `source`.
- * @thModule collect.operators
+ * @thModule typescript
  */
 export function $pipe<F>(source: F): F;
 export function $pipe<F, T0>(source: F, fn0: Operator<F, T0>): T0;

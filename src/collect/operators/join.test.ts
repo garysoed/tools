@@ -1,7 +1,8 @@
 import {assert, should, test} from 'gs-testing';
 
+import {$pipe} from '../../typescript/pipe';
+
 import {$join} from './join';
-import {$pipe} from './pipe';
 
 test('@tools/collect/operators/join', () => {
   should('join the items', () => {

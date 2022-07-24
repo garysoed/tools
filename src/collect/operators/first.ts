@@ -1,4 +1,5 @@
-import {Operator} from './operator';
+import {Operator} from '../../typescript/operator';
+
 import {$take} from './take';
 
 /**

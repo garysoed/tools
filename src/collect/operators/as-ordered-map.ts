@@ -1,6 +1,6 @@
+import {Operator} from '../../typescript/operator';
 import {OrderedMap} from '../structures/ordered-map';
 
-import {Operator} from './operator';
 
 /**
  * Converts the {@link Iterable} to an {@link OrderedMap}.

@@ -1,7 +1,8 @@
 import {assert, should, test, tupleThat} from 'gs-testing';
 
+import {$pipe} from '../../typescript/pipe';
+
 import {$asOrderedMap} from './as-ordered-map';
-import {$pipe} from './pipe';
 
 
 test('@tools/collect/operators/as-ordered-map', () => {

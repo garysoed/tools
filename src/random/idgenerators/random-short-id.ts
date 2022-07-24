@@ -1,8 +1,8 @@
 import {$asArray} from '../../collect/operators/as-array';
 import {$map} from '../../collect/operators/map';
-import {$pipe} from '../../collect/operators/pipe';
 import {$take} from '../../collect/operators/take';
 import {countableIterable} from '../../collect/structures/countable-iterable';
+import {$pipe} from '../../typescript/pipe';
 import {randomPickItem} from '../operators/random-pick-item';
 import {Random} from '../random';
 

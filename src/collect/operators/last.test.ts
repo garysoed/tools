@@ -1,9 +1,9 @@
 import {assert, should, test} from 'gs-testing';
 
+import {$pipe} from '../../typescript/pipe';
 import {countableIterable} from '../structures/countable-iterable';
 
 import {$last} from './last';
-import {$pipe} from './pipe';
 
 
 test('@tools/collect/operators/last', () => {

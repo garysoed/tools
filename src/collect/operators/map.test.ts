@@ -1,7 +1,8 @@
 import {assert, should, test} from 'gs-testing';
 
+import {$pipe} from '../../typescript/pipe';
+
 import {$map} from './map';
-import {$pipe} from './pipe';
 
 test('@tools/collect/map', () => {
   should('map the values according to the input function', () => {

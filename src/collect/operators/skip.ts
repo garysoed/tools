@@ -1,4 +1,4 @@
-import {Operator} from './operator';
+import {Operator} from '../../typescript/operator';
 
 /**
  * Returns an {@link Iterable} that skips the first `count` elements from the `Iterable`.
