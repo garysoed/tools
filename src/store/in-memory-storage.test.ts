@@ -1,10 +1,10 @@
-import {assert, setThat, should, test} from 'gs-testing';
+import {assert, setThat, setup, should, test} from 'gs-testing';
 
 import {InMemoryStorage} from './in-memory-storage';
 
 
-test('@tools/store/in-memory-storage', init => {
-  const _ = init(() => {
+test('@tools/store/in-memory-storage', () => {
+  const _ = setup(() => {
     const storage = new InMemoryStorage<number>();
     return {storage};
   });

@@ -1,4 +1,4 @@
-import {assert, should, test} from 'gs-testing';
+import {assert, setup, should, test} from 'gs-testing';
 
 import {BaseIdGenerator} from './base-id-generator';
 
@@ -15,8 +15,8 @@ class TestIdGenerator extends BaseIdGenerator {
   }
 }
 
-test('@tools/random/idgenerators/base-id-generator', init => {
-  const _ = init(() => {
+test('@tools/random/idgenerators/base-id-generator', () => {
+  const _ = setup(() => {
     return {generator: new TestIdGenerator()};
   });
 

@@ -1,12 +1,12 @@
-import {assert, should, test} from 'gs-testing';
+import {assert, setup, should, test} from 'gs-testing';
 import {numberType} from 'gs-types';
 import {strict} from 'nabu';
 
 import {typeBased} from './type-based-converter';
 
 
-test('serializer.TypeBasedConverter', init => {
-  const _ = init(() => {
+test('serializer.TypeBasedConverter', () => {
+  const _ = setup(() => {
     const converter = typeBased(numberType);
     return {converter};
   });

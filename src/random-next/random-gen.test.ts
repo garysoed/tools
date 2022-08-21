@@ -1,4 +1,4 @@
-import {assert, should, test} from 'gs-testing';
+import {assert, setup, should, test} from 'gs-testing';
 
 import {randomGen} from './random-gen';
 import {RandomSeed} from './random-seed';
@@ -15,8 +15,8 @@ class TestSeed implements RandomSeed {
   }
 }
 
-test('@tools/src/random-next/random-gen', init => {
-  const _ = init(() => {
+test('@tools/src/random-next/random-gen', () => {
+  const _ = setup(() => {
     const testSeed = new TestSeed(1);
 
     return {testSeed};

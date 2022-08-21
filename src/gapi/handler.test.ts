@@ -1,12 +1,12 @@
-import {SpyObj, assert, createSpyObject, createSpySubject, fake, should, teardown, test} from 'gs-testing';
+import {SpyObj, assert, createSpyObject, createSpySubject, fake, should, setup, teardown, test} from 'gs-testing';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
 import {Handler} from './handler';
 
 
-test('@gs-tools/gapi/handler', init => {
-  const _ = init(() => {
+test('@gs-tools/gapi/handler', () => {
+  const _ = setup(() => {
     const onTestDone$ = new Subject<void>();
     const isSignedIn$ = new Subject<boolean>();
     const mockIsSignedIn = createSpyObject<gapi.auth2.IsSignedIn>('IsSignedIn', ['get', 'listen']);

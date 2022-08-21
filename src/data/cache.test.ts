@@ -1,9 +1,9 @@
-import {Spy, assert, createSpy, fake, resetCalls, should, test} from 'gs-testing';
+import {Spy, assert, createSpy, fake, resetCalls, should, test, setup} from 'gs-testing';
 
 import {cache} from '../data/cache';
 
 
-test('data.cache', init => {
+test('data.cache', () => {
   /**
    * @test
    */
@@ -24,7 +24,7 @@ test('data.cache', init => {
     }
   }
 
-  const _ = init(() => {
+  const _ = setup(() => {
     const spyGetProperty = createSpy<number, []>('spyGetProperty');
     const spyGetter = createSpy<number, []>('spyGetter');
     const test = new TestClass(spyGetProperty, spyGetter);

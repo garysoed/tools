@@ -1,4 +1,4 @@
-import {assert, createSpySubject, setThat, should, teardown, test} from 'gs-testing';
+import {assert, createSpySubject, setThat, setup, should, teardown, test} from 'gs-testing';
 import {identity, json} from 'nabu';
 
 import {WebStorage} from './web-storage';
@@ -9,10 +9,10 @@ function setStorage(storage: Storage, key: string, value: string): void {
   window.dispatchEvent(new StorageEvent('storage'));
 }
 
-test('@tools/store/web-storage', init => {
+test('@tools/store/web-storage', () => {
   const PREFIX = 'store.WebStorage.prefix';
 
-  const _ = init(() => {
+  const _ = setup(() => {
     localStorage.clear();
     const storage = new WebStorage(
         localStorage,

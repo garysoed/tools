@@ -1,11 +1,11 @@
-import {assert, createSpySubject, run, should, test} from 'gs-testing';
+import {assert, createSpySubject, run, setup, should, test} from 'gs-testing';
 import {of} from 'rxjs';
 
 import {mutableState} from './mutable-state';
 import {StateService} from './state-service';
 
-test('@tools/src/state/resolver', init => {
-  const _ = init(() => {
+test('@tools/src/state/resolver', () => {
+  const _ = setup(() => {
     const service = new StateService();
     return {service};
   });

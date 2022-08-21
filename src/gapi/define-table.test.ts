@@ -1,4 +1,4 @@
-import {MatcherType, arrayThat, assert, objectThat, should, test} from 'gs-testing';
+import {MatcherType, arrayThat, assert, objectThat, should, test, setup} from 'gs-testing';
 
 import {Cell, MultiCell, SingleCell, defineTable} from './define-table';
 import {Merge, SheetsCell, SheetsTable, createSheetsTable} from './sheets-table';
@@ -43,8 +43,8 @@ function singleCellMatcher(value: string): MatcherType<SingleCell> {
   });
 }
 
-test('@tools/gapi/define-table', init => {
-  const _ = init(() => {
+test('@tools/gapi/define-table', () => {
+  const _ = setup(() => {
     // Table:
     // 0_0 1_0 2_0 --- ---
     // 0_1 1_1 --- --- ---

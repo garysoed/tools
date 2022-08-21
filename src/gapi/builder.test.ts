@@ -1,14 +1,14 @@
-import {arrayThat, assert, createSpy, fake, objectThat, should, test} from 'gs-testing';
+import {arrayThat, assert, createSpy, fake, objectThat, should, test, setup} from 'gs-testing';
 import {take} from 'rxjs/operators';
 
 import {Builder} from './builder';
 
 
-test('@gs-tools/gapi/builder', init => {
+test('@gs-tools/gapi/builder', () => {
   const API_KEY = 'apiKey';
   const CLIENT_ID = 'clientId';
 
-  const _ = init(() => {
+  const _ = setup(() => {
     const mockGapiLoad = createSpy<any, [string, (...args: any[]) => unknown]>('gapi.load');
     fake(mockGapiLoad).always().call((_, handler) => handler());
 

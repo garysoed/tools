@@ -1,4 +1,4 @@
-import {assert, createSpySubject, run, should, test} from 'gs-testing';
+import {assert, createSpySubject, run, setup, should, test} from 'gs-testing';
 import {of} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 
@@ -7,8 +7,8 @@ import {immutablePathOf} from './object-path';
 import {StateService} from './state-service';
 
 
-test('@tools/state/state-service', init => {
-  const _ = init(() => {
+test('@tools/state/state-service', () => {
+  const _ = setup(() => {
     const service = new StateService();
     return {service};
   });
@@ -26,7 +26,7 @@ test('@tools/state/state-service', init => {
     });
   });
 
-  test('_', _, () => {
+  test('_', () => {
     should('emit the correct property value', () => {
       const addedId = _.service.addRoot({a: 'abc'}).id;
 
