@@ -5,6 +5,7 @@ export interface RandomGen<T> extends Iterable<T> {
 }
 
 class RandomGenImpl<T> implements RandomGen<T> {
+  private forkSeed = this.seed.fork();
   constructor(
       private readonly seed: RandomSeed,
       private readonly mapFn: (value: number) => T,
@@ -21,10 +22,12 @@ class RandomGenImpl<T> implements RandomGen<T> {
   }
 
   map<T2>(fn: (from: T) => T2): RandomGen<T2> {
-    return new RandomGenImpl(
-        this.seed.fork(),
+    const newGen = new RandomGenImpl(
+        this.forkSeed,
         value => fn(this.mapFn(value)),
     );
+    this.forkSeed = this.forkSeed.fork();
+    return newGen;
   }
 }
 
