@@ -38,5 +38,14 @@ test('@tools/src/random-next/random-gen', () => {
       assert(gen).to.startWith([1, 2, 3, 4, 5]);
       assert(gen2).to.startWith(['10', '11', '12', '13', '14']);
     });
+
+    should('create a second RandomGen which depends on the seed\'s value', () => {
+      const gen = randomGen(_.testSeed);
+      assert(gen).to.startWith([1, 2, 3]);
+
+      const gen2 = gen.map(value => `${value}`);
+      assert(gen2).to.startWith(['40', '41', '42', '43', '44']);
+      assert(gen).to.startWith([4, 5, 6, 7, 8]);
+    });
   });
 });
