@@ -1,21 +1,14 @@
-import {Converter, Serializable} from 'nabu';
+import {Converter} from 'nabu';
 
 import {WebStorage} from '../store/web-storage';
 
-export class SessionStorage<T> extends WebStorage<T> {
+export class SessionStorage<T, S> extends WebStorage<T, S> {
   constructor(
       window: Window,
       prefix: string,
-      converter: Converter<T, Serializable>,
+      converter: Converter<T, S>,
+      grammar: Converter<S, string>,
   ) {
-    super(window.sessionStorage, prefix, converter);
-  }
-
-  static of<T>(
-      window: Window,
-      prefix: string,
-      converter: Converter<T, Serializable>,
-  ): SessionStorage<T> {
-    return new SessionStorage(window, prefix, converter);
+    super(window.sessionStorage, prefix, converter, grammar);
   }
 }

@@ -28,6 +28,7 @@
   },
   "include": [
     "src/**/*.test.ts",
+    "src/**/*.ts",
     "export/*.ts"
   ],
   "exclude": [
