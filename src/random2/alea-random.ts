@@ -19,19 +19,31 @@ const STATE_TYPE: Type<State> = hasPropertiesType({
 });
 
 export function aleaRandom(): Random<number> {
-  return newRandom(seed => {
-    const normalizedSeed = STATE_TYPE.check(seed) ? seed : createState(seed);
-    const t = normalizedSeed.s0 * 2091639 + normalizedSeed.c * 2.3283064365386963e-10; // 2^-32
-    const newC = t | 0;
-    const newState = {
-      s0: normalizedSeed.s1,
-      s1: normalizedSeed.s2,
-      s2: t - newC,
-      c: newC,
-    };
+  return newRandom(
+      seed => {
+        const state = STATE_TYPE.check(seed) ? seed : createState(seed);
+        const newState = nextState(state);
 
-    return [normalizedSeed.s2, newState];
-  });
+        return [state.s2, newState];
+      },
+      seed => {
+        const normalizedSeed = STATE_TYPE.check(seed) ? JSON.stringify(seed) : `${seed}-forked`;
+        const state = createState(normalizedSeed);
+
+        return nextState(state);
+      },
+  );
+}
+
+function nextState(state: State): State {
+  const t = state.s0 * 2091639 + state.c * 2.3283064365386963e-10; // 2^-32
+  const newC = t | 0;
+  return {
+    s0: state.s1,
+    s1: state.s2,
+    s2: t - newC,
+    c: newC,
+  };
 }
 
 function createState(seed: any): State {

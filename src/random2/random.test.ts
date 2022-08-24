@@ -10,21 +10,27 @@ import {asRandom, newRandom} from './random';
 
 test('@tools/src/random2/random', () => {
   const _ = setup(() => {
-    const simpleRandom = newRandom(seed => {
-      numberType.assert(seed);
-      return [seed, seed + 1];
-    });
+    const simpleRandom = newRandom(
+        seed => {
+          numberType.assert(seed);
+          return [seed, seed + 1];
+        },
+        seed => {
+          numberType.assert(seed);
+          return seed * 10;
+        },
+    );
     return {simpleRandom};
   });
 
   should('be able to return a random value', () => {
-    const value = _.simpleRandom.doBind(v => asRandom(`${v}`)).run(2);
+    const value = _.simpleRandom.take(v => asRandom(`${v}`)).run(2);
     assert(value).to.equal('2');
   });
 
   should('be able to combine multiple random values', () => {
-    const value = _.simpleRandom.doBind(a => {
-      return _.simpleRandom.doBind(b => {
+    const value = _.simpleRandom.take(a => {
+      return _.simpleRandom.take(b => {
         return asRandom(`${a}${b}`);
       });
     })
@@ -33,14 +39,29 @@ test('@tools/src/random2/random', () => {
     assert(value).to.equal('34');
   });
 
-  should('be able to return a random array', () => {
-    const value = _.simpleRandom.generate().doBind(values => asRandom($pipe(
-        values,
-        $map(v => `${v}`),
-        $take(5),
-        $join(''),
-    )))
+  should('be able to return a random array with forking', () => {
+    const value = _.simpleRandom.takeValues(values => {
+      const before = $pipe(
+          values,
+          $map(v => `${v}`),
+          $take(3),
+          $join(','),
+      );
+
+      return _.simpleRandom.take(value => {
+        return _.simpleRandom.takeValues(values => {
+          const after = $pipe(
+              values,
+              $map(v => `${v}`),
+              $take(3),
+              $join(','),
+          );
+
+          return asRandom(`${before} ${value} ${after}`);
+        });
+      });
+    })
         .run(4);
-    assert(value).to.equal('45678');
+    assert(value).to.equal('40,41,42 5 60,61,62');
   });
 });

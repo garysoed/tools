@@ -9,11 +9,26 @@ import {asRandom} from './random';
 
 test('@tools/src/random2/alea-random', () => {
   should('produce the same sequence with the same seed', () => {
+    const seed = 123;
     const randomSequence = aleaRandom()
-        .generate()
-        .doBind(values => asRandom($pipe(values, $take(4), $asArray())));
+        .takeValues(values => asRandom($pipe(values, $take(4), $asArray())));
 
-    const values = randomSequence.run(123);
-    assert(randomSequence.run(123)).to.haveExactElements(values);
+    const values = randomSequence.run(seed);
+    assert(randomSequence.run(seed)).to.haveExactElements(values);
+  });
+
+  should('produce different sequences with multiple generates', () => {
+    const random = aleaRandom();
+    const {sequence1, sequence2} = random
+        .takeValues(values => {
+          const sequence1 = $pipe(values, $take(4), $asArray());
+          return random.takeValues(values => {
+            const sequence2 = $pipe(values, $take(4), $asArray());
+            return asRandom({sequence1, sequence2});
+          });
+        })
+        .run(123);
+
+    assert(sequence1).toNot.haveExactElements(sequence2);
   });
 });
