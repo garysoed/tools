@@ -26,6 +26,7 @@ export {$some} from '../src/collect/operators/some';
 export {$sort} from '../src/collect/operators/sort';
 export {$subtract} from '../src/collect/operators/subtract';
 export {$take} from '../src/collect/operators/take';
+export {$takeWhile} from '../src/collect/operators/take-while';
 export {$zip} from '../src/collect/operators/zip';
 
 export {arrayFrom} from '../src/collect/structures/array-from';

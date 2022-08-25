@@ -62,6 +62,16 @@ test('@tools/src/collect/structures/grid', () => {
     });
   });
 
+  test('has', () => {
+    should('return true if exists', () => {
+      assert(_.grid.has(2, 1)).to.beTrue();
+    });
+
+    should('return false if the entry does not exist', () => {
+      assert(_.grid.has(1, 1)).to.beFalse();
+    });
+  });
+
   test('set', () => {
     should('add the entry correctly', () => {
       _.grid.set(1, 1, 'new');

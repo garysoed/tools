@@ -8,4 +8,8 @@ export interface ReadonlyGrid<T> extends Iterable<GridEntry<T>> {
   as2dArray(): ReadonlyArray<ReadonlyArray<T|undefined>>;
 
   get(x: number, y: number): T|undefined;
+
+  has(x: number, y: number): boolean;
+
+  readonly length: number;
 }

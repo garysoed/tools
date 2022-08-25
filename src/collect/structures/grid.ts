@@ -34,6 +34,14 @@ export class Grid<T = never> implements ReadonlyGrid<T> {
     return entry.value;
   }
 
+  has(x: number, y: number): boolean {
+    return [...this.entries].some(entry => entry.x === x && entry.y === y);
+  }
+
+  get length(): number {
+    return this.entries.length;
+  }
+
   set(x: number, y: number, value: T): this {
     this.entries = [
       ...this.entries.filter(entry => entry.x !== x || entry.y !== y),
