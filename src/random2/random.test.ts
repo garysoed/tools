@@ -6,7 +6,7 @@ import {$map} from '../collect/operators/map';
 import {$take} from '../collect/operators/take';
 import {$pipe} from '../typescript/pipe';
 
-import {asRandom, newRandom} from './random';
+import {asRandom, combineRandom, newRandom} from './random';
 
 test('@tools/src/random2/random', () => {
   const _ = setup(() => {
@@ -28,7 +28,7 @@ test('@tools/src/random2/random', () => {
     assert(value).to.equal('2');
   });
 
-  should('be able to combine multiple random values', () => {
+  should('be able to chain multiple random values', () => {
     const value = _.simpleRandom.take(a => {
       return _.simpleRandom.take(b => {
         return asRandom(`${a}${b}`);
@@ -37,6 +37,12 @@ test('@tools/src/random2/random', () => {
         .run(3);
 
     assert(value).to.equal('34');
+  });
+
+  should('be able to combine multiple random values', () => {
+    const combined = combineRandom(_.simpleRandom, _.simpleRandom).run(3);
+
+    assert(combined).to.haveExactElements([3, 4]);
   });
 
   should('be able to return a random array with forking', () => {

@@ -62,6 +62,21 @@ class RandomImpl<T> implements Random<T> {
   }
 }
 
+type TypesOf<A extends readonly any[]> = {
+  readonly [K in keyof A]: A[K] extends Random<infer T> ? T : never;
+};
+
+export function combineRandom<A extends ReadonlyArray<Random<any>>>(...randoms: A): Random<TypesOf<A>>;
+export function combineRandom(...randoms: ReadonlyArray<Random<unknown>>): Random<readonly unknown[]> {
+  if (randoms.length === 0) {
+    return asRandom([]);
+  }
+
+  const [random, ...rest] = randoms;
+  return random.take(value => {
+    return combineRandom(...rest).take(values => asRandom([value, ...values]));
+  });
+}
 export function asRandom<T>(value: T): Random<T> {
   return new RandomImpl(seed => [value, seed], seed => seed);
 }
