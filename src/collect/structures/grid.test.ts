@@ -5,7 +5,7 @@ import {GridEntry} from './readonly-grid';
 
 test('@tools/src/collect/structures/grid', () => {
   const _ = setup(() => {
-    const grid = new Grid<string>();
+    const grid = new Grid<string|null>();
     grid.set(0, 0, '0,0');
     grid.set(0, 1, '0,1');
     grid.set(0, 2, '0,2');
@@ -16,7 +16,7 @@ test('@tools/src/collect/structures/grid', () => {
 
     grid.set(2, 0, '2,0');
     grid.set(2, 1, '2,1');
-    grid.set(2, 2, '2,2');
+    grid.set(2, 2, null);
 
     return {grid};
   });
@@ -33,7 +33,7 @@ test('@tools/src/collect/structures/grid', () => {
 
         objectThat<GridEntry<string>>().haveProperties({x: 2, y: 0, value: '2,0'}),
         objectThat<GridEntry<string>>().haveProperties({x: 2, y: 1, value: '2,1'}),
-        objectThat<GridEntry<string>>().haveProperties({x: 2, y: 2, value: '2,2'}),
+        objectThat<GridEntry<string|null>>().haveProperties({x: 2, y: 2, value: null}),
       ]);
     });
   });
@@ -43,7 +43,7 @@ test('@tools/src/collect/structures/grid', () => {
       assert(_.grid.as2dArray()).to.haveExactElements([
         arrayThat<string>().haveExactElements(['0,0', '1,0', '2,0']),
         arrayThat<string|undefined>().haveExactElements(['0,1', undefined, '2,1']),
-        arrayThat<string>().haveExactElements(['0,2', '1,2', '2,2']),
+        arrayThat<string|null>().haveExactElements(['0,2', '1,2', null]),
       ]);
     });
   });
@@ -51,6 +51,10 @@ test('@tools/src/collect/structures/grid', () => {
   test('get', () => {
     should('return the correct value if exists', () => {
       assert(_.grid.get(2, 1)).to.equal('2,1');
+    });
+
+    should('return the correct value if null', () => {
+      assert(_.grid.get(2, 2)).to.beNull();
     });
 
     should('return undefined if the entry does not exist', () => {
@@ -77,7 +81,7 @@ test('@tools/src/collect/structures/grid', () => {
 
         objectThat<GridEntry<string>>().haveProperties({x: 2, y: 0, value: '2,0'}),
         objectThat<GridEntry<string>>().haveProperties({x: 2, y: 1, value: '2,1'}),
-        objectThat<GridEntry<string>>().haveProperties({x: 2, y: 2, value: '2,2'}),
+        objectThat<GridEntry<string|null>>().haveProperties({x: 2, y: 2, value: null}),
         objectThat<GridEntry<string>>().haveProperties({x: 0, y: 0, value: 'new'}),
       ]);
     });

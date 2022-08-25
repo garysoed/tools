@@ -66,7 +66,7 @@ interface RowSpec {
 
 type CellHandler<T> = (cell: Cell) => T;
 
-class ParserBuilder<T> {
+export class ParserBuilder<T> {
   constructor(
       private readonly rowSpec: RowSpec,
       private readonly cellHandlerMap: ReadonlyMap<number, CellHandler<{}>>,

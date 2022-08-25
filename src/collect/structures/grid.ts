@@ -26,7 +26,12 @@ export class Grid<T = never> implements ReadonlyGrid<T> {
   }
 
   get(x: number, y: number): T|undefined {
-    return [...this.entries].find(entry => entry.x === x && entry.y === y)?.value ?? undefined;
+    const entry = [...this.entries].find(entry => entry.x === x && entry.y === y);
+    if (!entry) {
+      return undefined;
+    }
+
+    return entry.value;
   }
 
   set(x: number, y: number, value: T): this {
