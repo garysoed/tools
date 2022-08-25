@@ -1,6 +1,7 @@
 import {Ordering} from '../compare/ordering';
 import {withMap} from '../compare/with-map';
 
+import {ReadonlyOrderedMap} from './readonly-ordered-map';
 import {Sortable} from './sortable';
 
 /**
@@ -10,7 +11,7 @@ import {Sortable} from './sortable';
  * @typeParam V - Type of the values in the `Map`.
  * @thModule collect.structures
  */
-export class OrderedMap<K, V> implements ReadonlyMap<K, V>, Sortable<[K, V]> {
+export class OrderedMap<K, V> implements ReadonlyOrderedMap<K, V>, Sortable<[K, V]> {
   /**
    * Default tag when stringifying `OrderedMap`.
    */

@@ -45,6 +45,9 @@ export {Ordering} from '../src/collect/compare/ordering';
 export {OrderedMap} from '../src/collect/structures/ordered-map';
 export {ReadonlyOrderedMap} from '../src/collect/structures/readonly-ordered-map';
 
+export {Grid, gridFrom} from '../src/collect/structures/grid';
+export {GridEntry, ReadonlyGrid} from '../src/collect/structures/readonly-grid';
+
 export {ArrayDiff, diffArray, undiffArray} from '../src/collect/diff/diff-array';
 export {MapDiff, diffMap, undiffMap} from '../src/collect/diff/diff-map';
 export {SetDiff, diffSet, undiffSet} from '../src/collect/diff/diff-set';
