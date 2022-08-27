@@ -12,4 +12,6 @@ export interface ReadonlyGrid<T> extends Iterable<GridEntry<T>> {
   has(x: number, y: number): boolean;
 
   readonly length: number;
+  readonly maxX: number;
+  readonly maxY: number;
 }

@@ -42,6 +42,18 @@ export class Grid<T = never> implements ReadonlyGrid<T> {
     return this.entries.length;
   }
 
+  get maxX(): number {
+    return this.entries.reduce((max, curr) => {
+      return Math.max(curr.x, max);
+    }, Number.NEGATIVE_INFINITY);
+  }
+
+  get maxY(): number {
+    return this.entries.reduce((max, curr) => {
+      return Math.max(curr.y, max);
+    }, Number.NEGATIVE_INFINITY);
+  }
+
   set(x: number, y: number, value: T): this {
     this.entries = [
       ...this.entries.filter(entry => entry.x !== x || entry.y !== y),

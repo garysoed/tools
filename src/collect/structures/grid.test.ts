@@ -72,6 +72,24 @@ test('@tools/src/collect/structures/grid', () => {
     });
   });
 
+  test('length', () => {
+    should('return the correct number of entries', () => {
+      assert(_.grid.length).to.equal(8);
+    });
+  });
+
+  test('maxX', () => {
+    should('return the correct max X', () => {
+      assert(_.grid.maxX).to.equal(2);
+    });
+  });
+
+  test('maxY', () => {
+    should('return the correct max Y', () => {
+      assert(_.grid.maxY).to.equal(2);
+    });
+  });
+
   test('set', () => {
     should('add the entry correctly', () => {
       _.grid.set(1, 1, 'new');
