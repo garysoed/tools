@@ -19,3 +19,5 @@ export {Runnable} from '../src/rxjs/runnable';
 
 export {ArraySubject} from '../src/rxjs/state/array-subject';
 export {MapSubject} from '../src/rxjs/state/map-subject';
+
+export {ImmutableWalker as ObservableWalker, MutableWalker, walkObservable} from '../src/rxjs/observable-walker';
