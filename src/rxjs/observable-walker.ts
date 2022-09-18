@@ -50,10 +50,6 @@ class MutableWalkerInternal<T> extends ImmutableWalkerInternal<T> implements Mut
     return pipe(
         withLatestFrom(this.mutableSource$),
         tap(([value, mutable]) => {
-          if (!mutable) {
-            return;
-          }
-
           mutable.next(value);
         }),
     );
