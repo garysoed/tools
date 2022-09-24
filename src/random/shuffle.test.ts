@@ -3,7 +3,7 @@ import {assert, should, test} from 'gs-testing';
 import {shuffle} from './shuffle';
 import {incrementingRandom} from './testing/incrementing-random';
 
-test('@tools/src/random2/shuffle', () => {
+test('@tools/src/random/shuffle', () => {
   should('order the items correctly', () => {
     const randomGen = incrementingRandom(3);
 

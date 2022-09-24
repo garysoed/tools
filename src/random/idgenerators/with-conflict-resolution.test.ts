@@ -10,7 +10,7 @@ import {asRandom, newRandom} from '../random';
 
 import {withConflictResolution} from './with-conflict-resolution';
 
-test('@tools/src/random2/idgenerators/with-conflict-resolution', () => {
+test('@tools/src/random/idgenerators/with-conflict-resolution', () => {
   const _ = setup(() => {
     const randomId = newRandom<string>(
         seed => {

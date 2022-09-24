@@ -5,7 +5,7 @@ import {randomPickInt} from './random-pick-int';
 import {incrementingRandom} from './testing/incrementing-random';
 
 
-test('@tools/src/random2/random-pick-item', () => {
+test('@tools/src/random/random-pick-item', () => {
   should('return the correct integer from the range', () => {
     const seed = incrementingRandom(5);
 

@@ -7,7 +7,7 @@ import {$pipe} from '../typescript/pipe';
 import {aleaRandom} from './alea-random';
 import {asRandom} from './random';
 
-test('@tools/src/random2/alea-random', () => {
+test('@tools/src/random/alea-random', () => {
   should('produce the same sequence with the same seed', () => {
     const seed = 123;
     const randomSequence = aleaRandom()

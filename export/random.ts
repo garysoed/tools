@@ -1,6 +1,8 @@
-export {RandomGen as RandomSeed} from '../src/random/gen/random-gen';
-export {aleaSeed} from '../src/random/gen/alea-gen';
+export {randomShortId} from '../src/random/idgenerators/random-short-id';
+export {withConflictResolution} from '../src/random/idgenerators/with-conflict-resolution';
+export {shuffleWeighted} from '../src/random/shuffle-weighted';
 
-export {Random, fromSeed} from '../src/random/random';
-
-export {FakeSeed} from '../src/random/testing/fake-seed';
+export {Random, asRandom, combineRandom, newRandom} from '../src/random/random';
+export {aleaRandom} from '../src/random/alea-random';
+export {incrementingRandom} from '../src/random/testing/incrementing-random';
+export {shuffle} from '../src/random/shuffle';
