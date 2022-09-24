@@ -1,10 +1,9 @@
 import {$asArray} from '../../collect/operators/as-array';
+import {$join} from '../../collect/operators/join';
 import {$map} from '../../collect/operators/map';
 import {$take} from '../../collect/operators/take';
-import {countableIterable} from '../../collect/structures/countable-iterable';
 import {$pipe} from '../../typescript/pipe';
-import {randomPickItem} from '../operators/random-pick-item';
-import {Random} from '../random';
+import {asRandom, Random} from '../random';
 
 
 const ID_CHARS: string[] = [];
@@ -31,11 +30,18 @@ for (let i = 97; i < 123; i++) {
  *
  * @return A randomly generated short ID.
  */
-export function randomShortId(rng: Random): string {
-  return $pipe(
-      countableIterable(),
-      $take(7),
-      $map(() => randomPickItem(ID_CHARS, rng)),
-      $asArray(),
-  ).join('');
+export function randomShortId(seed: Random<number>): Random<string> {
+  return seed.takeValues(values => {
+    const id = $pipe(
+        values,
+        $take(7),
+        $map(value => {
+          const index = Math.floor(value * ID_CHARS.length);
+          return ID_CHARS[index];
+        }),
+        $asArray(),
+        $join(''),
+    );
+    return asRandom(id);
+  });
 }
