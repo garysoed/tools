@@ -52,3 +52,7 @@ export {GridEntry, ReadonlyGrid} from '../src/collect/structures/readonly-grid';
 export {ArrayDiff, diffArray, undiffArray} from '../src/collect/diff/diff-array';
 export {MapDiff, diffMap, undiffMap} from '../src/collect/diff/diff-map';
 export {SetDiff, diffSet, undiffSet} from '../src/collect/diff/diff-set';
+
+export {cartesian} from '../src/collect/coordinates/cartesian';
+export {hex} from '../src/collect/coordinates/hex';
+export {Vector2, vector} from '../src/collect/coordinates/vector';

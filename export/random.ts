@@ -1,3 +1,5 @@
+export {randomPickInt} from '../src/random/random-pick-int';
+export {randomPickItem} from '../src/random/random-pick-item';
 export {randomShortId} from '../src/random/idgenerators/random-short-id';
 export {withConflictResolution} from '../src/random/idgenerators/with-conflict-resolution';
 export {shuffleWeighted} from '../src/random/shuffle-weighted';
