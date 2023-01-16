@@ -1,5 +1,6 @@
 {
   "name": "gs-tools",
+  "main": "export/index.ts",
   "version": "1.0.0",
   "description": "Common tools",
   "scripts": {
