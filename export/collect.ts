@@ -32,16 +32,6 @@ export {$zip} from '../src/collect/operators/zip';
 export {arrayFrom} from '../src/collect/structures/array-from';
 export {countableIterable} from '../src/collect/structures/countable-iterable';
 
-export {byType} from '../src/collect/compare/by-type';
-export {compound} from '../src/collect/compare/compound';
-export {following} from '../src/collect/compare/following';
-export {isOneOf} from '../src/collect/compare/is-one-of';
-export {matches} from '../src/collect/compare/matches';
-export {natural} from '../src/collect/compare/natural';
-export {normal} from '../src/collect/compare/normal';
-export {reversed} from '../src/collect/compare/reversed';
-export {withMap} from '../src/collect/compare/with-map';
-
 export {Ordering} from '../src/collect/compare/ordering';
 export {OrderedMap} from '../src/collect/structures/ordered-map';
 export {ReadonlyOrderedMap} from '../src/collect/structures/readonly-ordered-map';
