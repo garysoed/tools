@@ -1,5 +1,11 @@
 export * as collect from './collect';
+export * as color from './color';
 export * as compare from './compare';
+export * as coord from './coordinate';
 export * as data from './data';
 export * as math from './math';
+export * as random from './random';
+export * as rxjs from './rxjs';
+export * as string from './string';
 export * as ts from './typescript';
+export {vector} from '../src/collect/coordinates/vector';
