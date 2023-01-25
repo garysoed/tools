@@ -1,7 +1,8 @@
 import {CoordinateSystem} from './coordinate-system';
 import {vector, Vector, Vector2} from './vector';
+import {zero} from './zero';
 
-export const cartesian: CoordinateSystem = {axes, directions};
+export const cartesian: CoordinateSystem = {axes, directions, zero};
 
 function axes(dimension: 2): readonly Vector2[];
 function axes(dimension: number): readonly Vector[];

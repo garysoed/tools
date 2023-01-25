@@ -6,4 +6,7 @@ export interface CoordinateSystem {
 
   directions(dimension: 2): readonly Vector2[];
   directions(dimension: number): readonly Vector[];
+
+  zero(dimension: 2): Vector2;
+  zero(dimension: number): Vector;
 }
