@@ -54,6 +54,18 @@ export class Grid<T = never> implements ReadonlyGrid<T> {
     }, Number.NEGATIVE_INFINITY);
   }
 
+  get minX(): number {
+    return this.entries.reduce((min, curr) => {
+      return Math.min(curr.x, min);
+    }, Number.POSITIVE_INFINITY);
+  }
+
+  get minY(): number {
+    return this.entries.reduce((min, curr) => {
+      return Math.min(curr.y, min);
+    }, Number.POSITIVE_INFINITY);
+  }
+
   set(x: number, y: number, value: T): this {
     this.entries = [
       ...this.entries.filter(entry => entry.x !== x || entry.y !== y),

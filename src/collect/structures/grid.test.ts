@@ -90,6 +90,18 @@ test('@tools/src/collect/structures/grid', () => {
     });
   });
 
+  test('minX', () => {
+    should('return the correct min X', () => {
+      assert(_.grid.minX).to.equal(0);
+    });
+  });
+
+  test('minY', () => {
+    should('return the correct min Y', () => {
+      assert(_.grid.minY).to.equal(0);
+    });
+  });
+
   test('set', () => {
     should('add the entry correctly', () => {
       _.grid.set(1, 1, 'new');

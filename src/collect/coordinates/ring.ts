@@ -1,7 +1,7 @@
 import {CoordinateSystem} from './coordinate-system';
 import {vector, Vector, Vector2} from './vector';
 
-type Rings<V extends Vector> = ReadonlyMap<number, ReadonlySet<V>>;
+export type Rings<V extends Vector> = ReadonlyMap<number, ReadonlySet<V>>;
 
 export function ring(dimension: 2, coordinateSystem: CoordinateSystem, distance: number): Rings<Vector2>;
 export function ring(dimension: number, coordinateSystem: CoordinateSystem, distance: number): Rings<Vector>;
