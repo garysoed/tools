@@ -3,6 +3,7 @@ export {$asOrderedMap} from '../src/collect/operators/as-ordered-map';
 export {$asMap} from '../src/collect/operators/as-map';
 export {$asRecord} from '../src/collect/operators/as-record';
 export {$asSet} from '../src/collect/operators/as-set';
+export {$buffer} from '../src/collect/operators/buffer';
 export {$every} from '../src/collect/operators/every';
 export {$filter} from '../src/collect/operators/filter';
 export {$filterByType} from '../src/collect/operators/filter-by-type';
