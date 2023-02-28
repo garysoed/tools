@@ -4,7 +4,13 @@ export {randomShortId, randomShortId as shortId} from '../src/random/idgenerator
 export {withConflictResolution} from '../src/random/idgenerators/with-conflict-resolution';
 export {shuffleWeighted} from '../src/random/shuffle-weighted';
 
-export {Random, asRandom, combineRandom, combineRandom as combine, newRandom} from '../src/random/random';
+export {
+  Random,
+  asRandom,
+  combineRandom,
+  combineRandom as combine,
+  newRandom,
+} from '../src/random/random';
 export {aleaRandom as alea} from '../src/random/alea-random';
 export {incrementingRandom} from '../src/random/testing/incrementing-random';
 export {shuffle} from '../src/random/shuffle';

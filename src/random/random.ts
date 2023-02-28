@@ -66,8 +66,10 @@ type TypesOf<A extends readonly any[]> = {
   readonly [K in keyof A]: A[K] extends Random<infer T> ? T : never;
 };
 
-export function combineRandom<A extends ReadonlyArray<Random<any>>>(...randoms: A): Random<TypesOf<A>>;
-export function combineRandom(...randoms: ReadonlyArray<Random<unknown>>): Random<readonly unknown[]> {
+export function combineRandom<A extends ReadonlyArray<Random<any>>>(
+    ...randoms: A): Random<TypesOf<A>>;
+export function combineRandom(
+    ...randoms: ReadonlyArray<Random<unknown>>): Random<readonly unknown[]> {
   if (randoms.length === 0) {
     return asRandom([]);
   }

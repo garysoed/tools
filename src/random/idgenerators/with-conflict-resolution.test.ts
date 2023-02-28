@@ -43,9 +43,11 @@ test('@tools/src/random/idgenerators/with-conflict-resolution', () => {
 
   should('not resolve the same conflicts when ran multiple times', () => {
     const resolved = withConflictResolution(_.randomId);
-    const randomTriplet = resolved.takeValues(values => asRandom($pipe(values, $take(3), $asArray())));
+    const randomTriplet = resolved.takeValues(
+        values => asRandom($pipe(values, $take(3), $asArray())),
+    );
 
-    assert(randomTriplet.run(0)).to .haveExactElements(['g', 'g-0', 'g-0-1']);
-    assert(randomTriplet.run(0)).to .haveExactElements(['g', 'g-0', 'g-0-1']);
+    assert(randomTriplet.run(0)).to.haveExactElements(['g', 'g-0', 'g-0-1']);
+    assert(randomTriplet.run(0)).to.haveExactElements(['g', 'g-0', 'g-0-1']);
   });
 });

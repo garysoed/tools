@@ -39,7 +39,10 @@ function createRowData(cellData: readonly CellData[]): RowData {
   return {values: cellData};
 }
 
-function handleCell<T>(combineFn: (acc: T, curr: ExtendedValue) => T, initCombine: T): (cell: Cell) => T {
+function handleCell<T>(
+    combineFn: (acc: T, curr: ExtendedValue) => T,
+    initCombine: T,
+): (cell: Cell) => T {
   return cell => {
     let acc = initCombine;
     if (cell.isSingle) {
@@ -114,9 +117,18 @@ test('@tools/src/gapi/parse-table', () => {
 
   should('handle rows with span of 1 correctly', () => {
     const result = parseTable({span: 1, colSpecs: [{index: 1, span: 2}]})
-        .handleCell(0, handleCell((acc, value) => ({b: acc.b || (value.boolValue ?? false)}), {b: false}))
-        .handleCell(1, handleCell((acc, value) => ({s: acc.s + (value.stringValue ?? '')}), {s: ''}))
-        .handleCell(2, handleCell((acc, value) => ({n: acc.n + (value.numberValue ?? 0)}), {n: 0}))
+        .handleCell(
+            0,
+            handleCell((acc, value) => ({b: acc.b || (value.boolValue ?? false)}), {b: false}),
+        )
+        .handleCell(
+            1,
+            handleCell((acc, value) => ({s: acc.s + (value.stringValue ?? '')}), {s: ''}),
+        )
+        .handleCell(
+            2,
+            handleCell((acc, value) => ({n: acc.n + (value.numberValue ?? 0)}), {n: 0}),
+        )
         .parse(_.table);
 
     assert(result).to.haveExactElements([
@@ -130,9 +142,18 @@ test('@tools/src/gapi/parse-table', () => {
 
   should('handle rows with > 1 span correctly', () => {
     const result = parseTable({span: 2, colSpecs: [{index: 1, span: 2}]})
-        .handleCell(0, handleCell((acc, value) => ({b: acc.b || (value.boolValue ?? false)}), {b: false}))
-        .handleCell(1, handleCell((acc, value) => ({s: acc.s + (value.stringValue ?? '')}), {s: ''}))
-        .handleCell(2, handleCell((acc, value) => ({n: acc.n + (value.numberValue ?? 0)}), {n: 0}))
+        .handleCell(
+            0,
+            handleCell((acc, value) => ({b: acc.b || (value.boolValue ?? false)}), {b: false}),
+        )
+        .handleCell(
+            1,
+            handleCell((acc, value) => ({s: acc.s + (value.stringValue ?? '')}), {s: ''}),
+        )
+        .handleCell(
+            2,
+            handleCell((acc, value) => ({n: acc.n + (value.numberValue ?? 0)}), {n: 0}),
+        )
         .parse(_.table);
 
     assert(result).to.haveExactElements([
