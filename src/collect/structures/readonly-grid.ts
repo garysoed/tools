@@ -1,15 +1,16 @@
+import {Vector2} from '../coordinates/vector';
+
 export interface GridEntry<T> {
-  readonly x: number;
-  readonly y: number;
+  readonly position: Vector2;
   readonly value: T;
 }
 
 export interface ReadonlyGrid<T> extends Iterable<GridEntry<T>> {
   as2dArray(): ReadonlyArray<ReadonlyArray<T|undefined>>;
 
-  get(x: number, y: number): T|undefined;
+  get(location: Vector2): T|undefined;
 
-  has(x: number, y: number): boolean;
+  has(location: Vector2): boolean;
 
   readonly length: number;
   readonly maxX: number;
