@@ -27,6 +27,17 @@ export class Grid<T = never> implements ReadonlyGrid<T> {
     return rows;
   }
 
+  delete([x, y]: Vector2): boolean {
+    const index = this.entries.findIndex(({position}) => position[0] === x && position[1] === y);
+    if (index < 0) {
+      return false;
+    }
+
+    this.entries.splice(index, 1);
+
+    return true;
+  }
+
   get([x, y]: Vector2): T|undefined {
     const entry = [...this.entries].find(
         entry => entry.position[0] === x && entry.position[1] === y,

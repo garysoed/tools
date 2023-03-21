@@ -47,6 +47,43 @@ test('@tools/src/collect/structures/grid', () => {
     });
   });
 
+  test('delete', () => {
+    should('remove the entry and return true if exists', () => {
+      const result = _.grid.delete([0, 1]);
+
+      assert(result).to.beTrue();
+      assert([..._.grid]).to.equal([
+        {position: [0, 0], value: '0,0'},
+        {position: [0, 2], value: '0,2'},
+
+        {position: [1, 0], value: '1,0'},
+        {position: [1, 2], value: '1,2'},
+
+        {position: [2, 0], value: '2,0'},
+        {position: [2, 1], value: '2,1'},
+        {position: [2, 2], value: null},
+      ]);
+    });
+
+    should('return false if the entry does not exist', () => {
+      const result = _.grid.delete([1, 1]);
+
+      assert(result).to.beFalse();
+      assert([..._.grid]).to.equal([
+        {position: [0, 0], value: '0,0'},
+        {position: [0, 1], value: '0,1'},
+        {position: [0, 2], value: '0,2'},
+
+        {position: [1, 0], value: '1,0'},
+        {position: [1, 2], value: '1,2'},
+
+        {position: [2, 0], value: '2,0'},
+        {position: [2, 1], value: '2,1'},
+        {position: [2, 2], value: null},
+      ]);
+    });
+  });
+
   test('get', () => {
     should('return the correct value if exists', () => {
       assert(_.grid.get([2, 1])).to.equal('2,1');
