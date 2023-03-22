@@ -72,14 +72,14 @@ export class ParserBuilder<T> {
       private readonly cellHandlerMap: ReadonlyMap<number, CellHandler<{}>>,
   ) {}
 
-  handleCell<T2>(index: number, fn: CellHandler<T2>): ParserBuilder<T&T2> {
+  handleCell<T2 extends {}>(index: number, fn: CellHandler<T2>): ParserBuilder<T&T2> {
     return new ParserBuilder<T&T2>(
         this.rowSpec,
         new Map([...this.cellHandlerMap, [index, fn]]),
     );
   }
 
-  handleMultiCell<T2>(index: number, fn: (cell: MultiCell) => T2): ParserBuilder<T&T2> {
+  handleMultiCell<T2 extends {}>(index: number, fn: (cell: MultiCell) => T2): ParserBuilder<T&T2> {
     return this.handleCell(index, cell => {
       if (cell.isSingle) {
         throw new Error('Cell is expected to be multi but was not');
@@ -89,7 +89,10 @@ export class ParserBuilder<T> {
     });
   }
 
-  handleSingleCell<T2>(index: number, fn: (cell: SingleCell) => T2): ParserBuilder<T&T2> {
+  handleSingleCell<T2 extends {}>(
+      index: number,
+      fn: (cell: SingleCell) => T2,
+  ): ParserBuilder<T&T2> {
     return this.handleCell(index, cell => {
       if (!cell.isSingle) {
         throw new Error('Cell is expected to be single but was not');

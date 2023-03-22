@@ -17,6 +17,6 @@ class TypeBasedConverter<T> implements Converter<T, unknown> {
   }
 }
 
-export function typeBased<T extends unknown>(type: Type<T>): TypeBasedConverter<T> {
+export function typeBased<T>(type: Type<T>): TypeBasedConverter<T> {
   return new TypeBasedConverter(type);
 }

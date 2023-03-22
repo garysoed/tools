@@ -33,7 +33,7 @@ class ParentClass {
 class ChildClass extends ParentClass { }
 
 class DescendantClass extends ChildClass {
-  methodA(
+  override methodA(
       @annotation.decorator(5)
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           _param0: Object,

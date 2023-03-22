@@ -31,7 +31,7 @@ class ChildClass extends ParentClass { }
 class DescendantClass extends ChildClass {
   @annotation.decorator('e')
   @annotation.decorator('f')
-  methodA(): void {
+  override methodA(): void {
     // noop
   }
 }

@@ -11,7 +11,7 @@ export class AbsolutePath extends Path {
    *
    * @returns String representation of the absolute path.
    */
-  toString(): string {
+  override toString(): string {
     return `/${this.parts.join(SEPARATOR)}`;
   }
 }
