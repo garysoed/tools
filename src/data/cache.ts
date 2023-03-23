@@ -1,6 +1,10 @@
-/* eslint-disable @typescript-eslint/ban-types */
-import {CACHE_ANNOTATOR, getCache, setCacheValue} from './caches';
+type Getter<This, Value> = (this: This) => Value;
 
+type CacheDecorator =
+    <This extends {}, Value>(
+      target: Getter<This, Value>,
+      context: ClassGetterDecoratorContext<This, Value>,
+    ) => Getter<This, Value>;
 
 /**
  * Caches the given method.
@@ -14,42 +18,65 @@ import {CACHE_ANNOTATOR, getCache, setCacheValue} from './caches';
  * @thDecorator accessor method
  * @thModule data
  */
-export function cache(): MethodDecorator {
-  return (
-      target: Object,
-      propertyKey: string | symbol,
-      descriptor: TypedPropertyDescriptor<any>): TypedPropertyDescriptor<any> => {
-    const {get, value} = descriptor;
-    if (value instanceof Function) {
-      if (value.length > 0) {
-        throw new Error('attached function should be a method with 0 arguments');
+export function cache(): CacheDecorator {
+  return <This extends {}, Value>(
+    target: Getter<This, Value>,
+    context: ClassGetterDecoratorContext<This, Value>,
+  ): Getter<This, Value> => {
+    return function(this: This): Value {
+      const cacheState = getCache(this, context.name);
+      if (cacheState.isSet) {
+        return cacheState.value as Value;
       }
-      descriptor.value = createCachedFunctionCall(value, propertyKey);
-    } else if (get instanceof Function) {
-      descriptor.get = createCachedFunctionCall(get, propertyKey);
-    } else {
-      throw new Error('attached function should be a method or getter');
-    }
 
-    CACHE_ANNOTATOR.decorator()(target, propertyKey);
-
-    return descriptor;
+      const value = target.call(this);
+      setCacheValue(this, context.name, value);
+      return value;
+    };
   };
 }
 
-function createCachedFunctionCall(
-    origFn: Function,
-    propertyKey: string|symbol,
-): (...args: unknown[]) => unknown {
-  return function(this: any): any {
-    const cachedValue = getCache(this, propertyKey);
-    if (cachedValue !== undefined) {
-      return cachedValue;
-    }
 
-    const result = origFn.apply(this);
-    setCacheValue(this, propertyKey, result);
+interface CacheStateSet {
+  readonly isSet: true;
+  readonly value: unknown;
+}
 
-    return result;
-  };
+interface CacheStateUnset {
+  readonly isSet: false;
+}
+
+type CacheState = CacheStateSet|CacheStateUnset;
+
+const __CACHES = Symbol('caches');
+interface MaybeHasCache {
+  [__CACHES]?: Map<string|symbol, unknown>;
+}
+
+
+function getCache(instance: MaybeHasCache, propertyKey: string|symbol): CacheState {
+  const map = getCacheMap(instance);
+  if (!map.has(propertyKey)) {
+    return {isSet: false};
+  }
+
+  return {isSet: true, value: map.get(propertyKey)};
+}
+
+function getCacheMap(target: MaybeHasCache): Map<string|symbol, unknown> {
+  if (target[__CACHES] !== undefined) {
+    return target[__CACHES];
+  } else {
+    const caches = new Map<string|symbol, unknown>();
+    target[__CACHES] = caches;
+
+    return caches;
+  }
+}
+
+function setCacheValue(
+    instance: MaybeHasCache,
+    propertyKey: string | symbol,
+    value: unknown): void {
+  getCacheMap(instance).set(propertyKey, value);
 }

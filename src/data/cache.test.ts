@@ -14,11 +14,6 @@ test('data.cache', () => {
     ) { }
 
     @cache()
-    getProperty(): number {
-      return this.spyGetProperty();
-    }
-
-    @cache()
     get getter(): number {
       return this.spyGetter();
     }
@@ -29,17 +24,6 @@ test('data.cache', () => {
     const spyGetter = createSpy<number, []>('spyGetter');
     const test = new TestClass(spyGetProperty, spyGetter);
     return {test, spyGetProperty, spyGetter};
-  });
-
-  should('cache the method', () => {
-    const value = 123;
-    fake(_.spyGetProperty).always().return(value);
-
-    assert(_.test.getProperty()).to.equal(value);
-
-    resetCalls(_.spyGetProperty);
-    assert(_.test.getProperty()).to.equal(value);
-    assert(_.spyGetProperty).toNot.haveBeenCalled();
   });
 
   should('cache the getter', () => {
