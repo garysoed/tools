@@ -3,6 +3,7 @@ export * as color from './color';
 export * as compare from './compare';
 export * as coord from './coordinate';
 export * as data from './data';
+export * as i18n from './i18n';
 export * as math from './math';
 export * as random from './random';
 export * as rxjs from './rxjs';
