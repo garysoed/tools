@@ -1,3 +1,5 @@
+import {SimpleFormatter} from './formatter';
+
 export interface Registration {
   readonly plain: string;
   readonly description?: string;
@@ -5,5 +7,5 @@ export interface Registration {
 }
 
 export interface I18n {
-  simple(registration: Registration): (inputs?: Record<string, string>) => string;
+  simple(registration: Registration): SimpleFormatter;
 }

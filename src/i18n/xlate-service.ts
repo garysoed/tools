@@ -1,11 +1,12 @@
 import {mapFrom} from '../collect/structures/map-from';
 
+import {SimpleFormatter} from './formatter';
 import {I18n, Registration} from './i18n';
 
 export class XlateService implements I18n {
   constructor(private readonly data: ReadonlyMap<string, string>) {}
 
-  simple(registration: Registration): (inputs?: Record<string, string>) => string {
+  simple(registration: Registration): SimpleFormatter {
     const key = registration.keyOverride ?? registration.plain;
     const template = this.data.get(key) ?? registration.plain;
     return (inputs: Record<string, string> = {}): string => {

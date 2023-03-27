@@ -1,3 +1,4 @@
+import {SimpleFormatter} from './formatter';
 import {I18n, Registration} from './i18n';
 
 export class XtractService implements I18n {
@@ -7,7 +8,7 @@ export class XtractService implements I18n {
     return this.registrationsInternal;
   }
 
-  simple(registration: Registration): (inputs?: Record<string, string>) => string {
+  simple(registration: Registration): SimpleFormatter {
     this.register(registration);
     return (): string => {
       return `[RAW] ${registration.plain}`;
