@@ -76,7 +76,7 @@ test('@tools/src/i18n/xlate-service', () => {
         other: xlate.simple({plain: 'Buy {{#}} apples'}),
       };
 
-      const formatter = xlate.plurals(registration);
+      const formatter = xlate.plural(registration);
       assert(formatter(1)()).to.equal('An apple, you shall buy');
       assert(formatter(3)({'#': '3'})).to.equal('3 apples, you shall buy');
     });
@@ -139,17 +139,17 @@ test('@tools/src/i18n/xlate-service', () => {
       });
 
       const registration = {
-        one: xlate.plurals({
+        one: xlate.plural({
           one: xlate.simple({plain: 'Buy an apple and a banana'}),
           other: xlate.simple({plain: 'Buy an apple and {{#banana}} bananas'}),
         }),
-        other: xlate.plurals({
+        other: xlate.plural({
           one: xlate.simple({plain: 'Buy {{#apple}} apples and a banana'}),
           other: xlate.simple({plain: 'Buy {{#apple}} apples and {{#banana}} bananas'}),
         }),
       };
 
-      const formatter = xlate.plurals(registration);
+      const formatter = xlate.plural(registration);
       assert(formatter(1)(1)()).to.equal('An apple and a banana, you shall buy');
       assert(formatter(1)(3)({'#banana': '3'})).to.equal('An apple and 3 bananas, you shall buy');
       assert(formatter(3)(1)({'#apple': '3'})).to.equal('3 apples and a banana, you shall buy');

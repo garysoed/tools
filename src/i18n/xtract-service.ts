@@ -10,7 +10,7 @@ export class XtractService implements I18n {
     return this.registrationsInternal;
   }
 
-  plurals<F extends Formatter>(registration: PluralRegistration<F>): PluralFormatter<F> {
+  plural<F extends Formatter>(registration: PluralRegistration<F>): PluralFormatter<F> {
     const key = getPluralKey(registration);
     this.register(key, registration);
     return Object.assign((): F => registration.other, {key});

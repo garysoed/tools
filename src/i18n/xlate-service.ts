@@ -12,10 +12,10 @@ interface Args {
 }
 
 export class XlateService implements I18n {
-  private readonly plural = new Intl.PluralRules(this.args.locale);
+  private readonly pluralRules = new Intl.PluralRules(this.args.locale);
   constructor(private readonly args: Args) {}
 
-  plurals<F extends Formatter>(registration: PluralRegistration<F>): PluralFormatter<F> {
+  plural<F extends Formatter>(registration: PluralRegistration<F>): PluralFormatter<F> {
     const key = getPluralKey(registration);
     const extraction = this.assertExtraction(key);
     if (extraction.type !== 'plural') {
@@ -60,7 +60,7 @@ export class XlateService implements I18n {
     switch (extraction.type) {
       case 'plural': {
         const fn = (count: number): Formatter => {
-          const rule = this.plural.select(count);
+          const rule = this.pluralRules.select(count);
           const subKey = extraction[rule];
           return this.resolveExtraction(this.assertExtraction(subKey));
         };
