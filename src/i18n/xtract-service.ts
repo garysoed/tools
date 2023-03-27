@@ -1,23 +1,30 @@
-import {SimpleFormatter} from './formatter';
+import {ExtractionKey} from './extraction';
+import {Formatter, PluralFormatter, SimpleFormatter} from './formatter';
 import {I18n} from './i18n';
-import {SimpleRegistration} from './registration';
+import {PluralRegistration, Registration, SimpleRegistration, getPluralKey, getSimpleKey} from './registration';
 
 export class XtractService implements I18n {
-  private readonly registrationsInternal = new Map<string, SimpleRegistration>();
+  private readonly registrationsInternal = new Map<ExtractionKey, Registration>();
 
-  get registrations(): ReadonlyMap<string, SimpleRegistration> {
+  get registrations(): ReadonlyMap<ExtractionKey, Registration> {
     return this.registrationsInternal;
   }
 
-  simple(registration: SimpleRegistration): SimpleFormatter {
-    this.register(registration);
-    return (): string => {
-      return `[RAW] ${registration.plain}`;
-    };
+  plurals<F extends Formatter>(registration: PluralRegistration<F>): PluralFormatter<F> {
+    const key = getPluralKey(registration);
+    this.register(key, registration);
+    return Object.assign((): F => registration.other, {key});
   }
 
-  private register(registration: SimpleRegistration): void {
-    const key = registration.keyOverride ?? registration.plain;
+  simple(registration: SimpleRegistration): SimpleFormatter {
+    const key = getSimpleKey(registration);
+    this.register(key, registration);
+    return Object.assign((): string => {
+      return `[RAW] ${registration.plain}`;
+    }, {key});
+  }
+
+  private register(key: ExtractionKey, registration: Registration): void {
     if (this.registrationsInternal.has(key)) {
       throw new Error(`Registration key ${key} already exists`);
     }

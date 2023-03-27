@@ -1,5 +1,6 @@
 import {assert, setup, should, test} from 'gs-testing';
 
+import {asExtractionKey} from './extraction';
 import {XtractService} from './xtract-service';
 
 test('@tools/src/i18n/xtract-service', () => {
@@ -15,7 +16,7 @@ test('@tools/src/i18n/xtract-service', () => {
       };
       assert(_.service.simple(registration)()).to.equal('[RAW] Call {{name}} at {{phone}}');
       assert(_.service.registrations).to.equal(
-          new Map([['Call {{name}} at {{phone}}', registration]]),
+          new Map([[asExtractionKey('Call {{name}} at {{phone}}'), registration]]),
       );
     });
   });
