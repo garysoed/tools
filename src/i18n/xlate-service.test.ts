@@ -6,10 +6,13 @@ test('@tools/src/i18n/xlate-service', () => {
   test('simple', () => {
     should('translate strings with substitutions correctly', () => {
       const xlate = new XlateService(new Map([
-        ['Call ${name} at ${phone}', 'At ${phone}, call ${name}'],
+        ['Call {{name}} at {{phone}}', 'At {{phone}}, call {{name}}'],
       ]));
 
-      assert(xlate.simple('name', 'phone')`Call ${'Tom Hygge'} at ${'(123) 456-7890'}`).to
+      const registration = {
+        plain: 'Call {{name}} at {{phone}}',
+      };
+      assert(xlate.simple(registration)({'name': 'Tom Hygge', 'phone': '(123) 456-7890'})).to
           .equal('At (123) 456-7890, call Tom Hygge');
     });
 
@@ -18,13 +21,19 @@ test('@tools/src/i18n/xlate-service', () => {
         ['Hello i18n', 'Hello internationalization!'],
       ]));
 
-      assert(xlate.simple()`Hello i18n`).to.equal('Hello internationalization!');
+      const registration = {
+        plain: 'Hello i18n',
+      };
+      assert(xlate.simple(registration)()).to.equal('Hello internationalization!');
     });
 
     should('use original text for untranslated strings', () => {
       const xlate = new XlateService(new Map());
 
-      assert(xlate.simple('name', 'phone')`Call ${'Tom Hygge'} at ${'(123) 456-7890'}`).to
+      const registration = {
+        plain: 'Call {{name}} at {{phone}}',
+      };
+      assert(xlate.simple(registration)({'name': 'Tom Hygge', 'phone': '(123) 456-7890'})).to
           .equal('Call Tom Hygge at (123) 456-7890');
     });
   });

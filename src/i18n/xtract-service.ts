@@ -1,47 +1,25 @@
-import {I18n} from './i18n';
+import {I18n, Registration} from './i18n';
 
 export class XtractService implements I18n {
-  private readonly keysInternal = new Set<string>();
+  private readonly registrationsInternal = new Map<string, Registration>();
 
-  get keys(): ReadonlySet<string> {
-    return this.keysInternal;
+  get registrations(): ReadonlyMap<string, Registration> {
+    return this.registrationsInternal;
   }
 
-  simple(...argNames: readonly string[]):
-      (strings: TemplateStringsArray, ...args: readonly unknown[]) => string {
-    return (strings: TemplateStringsArray, ...args: readonly unknown[]) => {
-      const key = keyName(strings, argNames, args.length);
-      this.keysInternal.add(key);
-
-      const output = [];
-      let i = 0;
-      for (; i < args.length; i++) {
-        output.push(strings[i]);
-        output.push(`${args[i]}`);
-      }
-
-      output.push(strings[i]);
-      return output.join('');
+  simple(registration: Registration): (inputs?: Record<string, string>) => string {
+    this.register(registration);
+    return (): string => {
+      return `[RAW] ${registration.plain}`;
     };
   }
-}
 
-export function keyName(
-    strings: TemplateStringsArray,
-    argNames: readonly string[],
-    argCount: number,
-): string {
-  const output = [];
-  let i = 0;
-  for (; i < argCount; i++) {
-    output.push(strings[i]);
-    output.push(argName(argNames, i));
+  private register(registration: Registration): void {
+    const key = registration.keyOverride ?? registration.plain;
+    if (this.registrationsInternal.has(key)) {
+      throw new Error(`Registration key ${key} already exists`);
+    }
+
+    this.registrationsInternal.set(key, registration);
   }
-
-  output.push(strings[i]);
-  return output.join('');
-}
-
-export function argName(argNames: readonly string[], index: number): string {
-  return `$\{${argNames[index] ?? index}}`;
 }

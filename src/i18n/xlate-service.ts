@@ -1,19 +1,18 @@
-import {I18n} from './i18n';
-import {XtractService, argName, keyName} from './xtract-service';
+import {mapFrom} from '../collect/structures/map-from';
+
+import {I18n, Registration} from './i18n';
 
 export class XlateService implements I18n {
-  private readonly xtract = new XtractService();
-
   constructor(private readonly data: ReadonlyMap<string, string>) {}
 
-  simple(...argNames: readonly string[]):
-      (strings: TemplateStringsArray, ...args: readonly unknown[]) => string {
-    return (strings: TemplateStringsArray, ...args: readonly unknown[]) => {
-      const key = keyName(strings, argNames, args.length);
-      let output = this.data.get(key) ?? key;
+  simple(registration: Registration): (inputs?: Record<string, string>) => string {
+    const key = registration.keyOverride ?? registration.plain;
+    const template = this.data.get(key) ?? registration.plain;
+    return (inputs: Record<string, string> = {}): string => {
+      let output = template;
 
-      for (let i = 0; i < args.length; i++) {
-        output = output.replace(argName(argNames, i), `${args[i]}`);
+      for (const [key, value] of mapFrom(inputs)) {
+        output = output.replace(`{{${key}}}`, value);
       }
 
       return output;

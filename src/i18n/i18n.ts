@@ -1,4 +1,9 @@
+export interface Registration {
+  readonly plain: string;
+  readonly description?: string;
+  readonly keyOverride?: string;
+}
+
 export interface I18n {
-  simple(...argNames: readonly string[]):
-      (strings: TemplateStringsArray, ...args: readonly unknown[]) => string;
+  simple(registration: Registration): (inputs?: Record<string, string>) => string;
 }
