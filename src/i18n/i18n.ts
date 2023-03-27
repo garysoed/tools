@@ -1,11 +1,6 @@
 import {SimpleFormatter} from './formatter';
-
-export interface Registration {
-  readonly plain: string;
-  readonly description?: string;
-  readonly keyOverride?: string;
-}
+import {SimpleRegistration} from './registration';
 
 export interface I18n {
-  simple(registration: Registration): SimpleFormatter;
+  simple(registration: SimpleRegistration): SimpleFormatter;
 }

@@ -5,9 +5,11 @@ import {XlateService} from './xlate-service';
 test('@tools/src/i18n/xlate-service', () => {
   test('simple', () => {
     should('translate strings with substitutions correctly', () => {
-      const xlate = new XlateService(new Map([
-        ['Call {{name}} at {{phone}}', 'At {{phone}}, call {{name}}'],
-      ]));
+      const xlate = new XlateService({
+        data: [
+          {key: 'Call {{name}} at {{phone}}', translation: 'At {{phone}}, call {{name}}'},
+        ],
+      });
 
       const registration = {
         plain: 'Call {{name}} at {{phone}}',
@@ -17,9 +19,11 @@ test('@tools/src/i18n/xlate-service', () => {
     });
 
     should('translate strings with no substitutions correctly', () => {
-      const xlate = new XlateService(new Map([
-        ['Hello i18n', 'Hello internationalization!'],
-      ]));
+      const xlate = new XlateService({
+        data: [
+          {key: 'Hello i18n', translation: 'Hello internationalization!'},
+        ],
+      });
 
       const registration = {
         plain: 'Hello i18n',
@@ -28,7 +32,7 @@ test('@tools/src/i18n/xlate-service', () => {
     });
 
     should('use original text for untranslated strings', () => {
-      const xlate = new XlateService(new Map());
+      const xlate = new XlateService({data: []});
 
       const registration = {
         plain: 'Call {{name}} at {{phone}}',
