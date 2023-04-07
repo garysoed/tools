@@ -1,3 +1,5 @@
+import {Type, numberType, stringType} from 'gs-types';
+
 import {SheetsCell, SheetsTable} from './sheets-table';
 import {ExtendedValue} from './type/sheets';
 
@@ -166,4 +168,24 @@ export function parseTable(rowSpecInput: RowSpecInput): ParserBuilder<{}> {
   };
 
   return new ParserBuilder<{}>(rowSpec, new Map());
+}
+
+export function parseNumber(): (cell: SingleCell) => number;
+export function parseNumber<T extends number|undefined>(type: Type<T>): (cell: SingleCell) => T;
+export function parseNumber(type: Type<number> = numberType): (cell: SingleCell) => number {
+  return (cell: SingleCell): number => {
+    const raw = cell.value.numberValue;
+    type.assert(raw);
+    return raw;
+  };
+}
+
+export function parseString(): (cell: SingleCell) => string;
+export function parseString<T extends string|undefined>(type: Type<T>): (cell: SingleCell) => T;
+export function parseString(type: Type<string> = stringType): (cell: SingleCell) => string {
+  return (cell: SingleCell): string => {
+    const raw = cell.value.stringValue;
+    type.assert(raw);
+    return raw;
+  };
 }

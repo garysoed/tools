@@ -33,6 +33,8 @@ export {$zip} from '../src/collect/operators/zip';
 export {arrayFrom} from '../src/collect/structures/array-from';
 export {countableIterable} from '../src/collect/structures/countable-iterable';
 
+export {mapFrom} from '../src/collect/structures/map-from';
+
 export {Ordering} from '../src/collect/compare/ordering';
 export {OrderedMap} from '../src/collect/structures/ordered-map';
 export {ReadonlyOrderedMap} from '../src/collect/structures/readonly-ordered-map';
