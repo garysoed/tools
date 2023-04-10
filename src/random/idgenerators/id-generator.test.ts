@@ -8,9 +8,9 @@ import {countableIterable} from '../../collect/structures/countable-iterable';
 import {$pipe} from '../../typescript/pipe';
 import {asRandom, newRandom} from '../random';
 
-import {withConflictResolution} from './with-conflict-resolution';
+import {idGenerator} from './id-generator';
 
-test('@tools/src/random/idgenerators/with-conflict-resolution', () => {
+test('@tools/src/random/idgenerators/id-generator', () => {
   const _ = setup(() => {
     const randomId = newRandom<string>(
         seed => {
@@ -31,23 +31,17 @@ test('@tools/src/random/idgenerators/with-conflict-resolution', () => {
   });
 
   should('resolve conflicts repeatedly', () => {
-    const resolved = withConflictResolution(_.randomId);
+    const values = idGenerator(_.randomId.takeValues(values => asRandom(values)).run(0));
 
-    assert(resolved.takeValues(values => asRandom($pipe(values, $take(3), $asArray()))).run(0)).to
-        .haveExactElements([
-          'g',
-          'g-0',
-          'g-0-1',
-        ]);
+    assert($pipe(values, $take(3), $asArray())).to
+        .haveExactElements(['g', 'g-0', 'g-0-1']);
   });
 
   should('not resolve the same conflicts when ran multiple times', () => {
-    const resolved = withConflictResolution(_.randomId);
-    const randomTriplet = resolved.takeValues(
-        values => asRandom($pipe(values, $take(3), $asArray())),
-    );
+    const values1 = idGenerator(_.randomId.takeValues(values => asRandom(values)).run(0));
+    const values2 = idGenerator(_.randomId.takeValues(values => asRandom(values)).run(0));
 
-    assert(randomTriplet.run(0)).to.haveExactElements(['g', 'g-0', 'g-0-1']);
-    assert(randomTriplet.run(0)).to.haveExactElements(['g', 'g-0', 'g-0-1']);
+    assert($pipe(values1, $take(3), $asArray())).to.haveExactElements(['g', 'g-0', 'g-0-1']);
+    assert($pipe(values2, $take(3), $asArray())).to.haveExactElements(['g', 'g-0', 'g-0-1']);
   });
 });
