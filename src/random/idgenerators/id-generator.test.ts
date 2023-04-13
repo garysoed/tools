@@ -33,8 +33,7 @@ test('@tools/src/random/idgenerators/id-generator', () => {
   should('resolve conflicts repeatedly', () => {
     const values = idGenerator(_.randomId.takeValues(values => asRandom(values)).run(0));
 
-    assert($pipe(values, $take(3), $asArray())).to
-        .haveExactElements(['g', 'g-0', 'g-0-1']);
+    assert($pipe(values, $take(3), $asArray())).to.haveExactElements(['g', 'g-0', 'g-0-1']);
   });
 
   should('not resolve the same conflicts when ran multiple times', () => {

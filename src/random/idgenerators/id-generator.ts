@@ -1,15 +1,13 @@
-export function idGenerator<T>(values: Iterable<T>): Iterable<T> {
-  return {
-    *[Symbol.iterator]() {
-      const usedValues = new Set<T>();
-      for (const value of values) {
-        if (usedValues.has(value)) {
-          continue;
-        }
+export function* idGenerator<T>(values: Iterable<T>): Generator<T, T, void> {
+  const usedValues = new Set<T>();
+  for (const value of values) {
+    if (usedValues.has(value)) {
+      continue;
+    }
 
-        usedValues.add(value);
-        yield value;
-      }
-    },
-  };
+    usedValues.add(value);
+    yield value;
+  }
+
+  throw new Error('Ran out of ID candidates');
 }
