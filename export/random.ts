@@ -14,3 +14,4 @@ export {
 export {aleaRandom as alea} from '../src/random/alea-random';
 export {incrementingRandom} from '../src/random/testing/incrementing-random';
 export {shuffle} from '../src/random/shuffle';
+export {randomBfsCluster} from '../src/random/random-bfs-cluster';
