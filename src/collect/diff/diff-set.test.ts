@@ -1,4 +1,4 @@
-import {assert, createSmartMatcher, should, test} from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
 import {diffSet, undiffSet} from './diff-set';
 
@@ -8,10 +8,10 @@ test('@tools/src/collect/diff/set-diff', () => {
     should('return the correct diffs', () => {
       const diffs = diffSet(new Set([1, 2, 3]), new Set([3, 2, 4]));
 
-      assert(diffs).to.equal(createSmartMatcher([
+      assert(diffs).to.equal([
         {type: 'delete', value: 1},
         {type: 'add', value: 4},
-      ]));
+      ]);
     });
   });
 

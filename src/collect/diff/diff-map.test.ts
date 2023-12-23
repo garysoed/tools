@@ -1,4 +1,4 @@
-import {assert, createSmartMatcher, should, test} from 'gs-testing';
+import {assert, should, test} from 'gs-testing';
 
 import {diffMap, undiffMap} from './diff-map';
 
@@ -11,11 +11,11 @@ test('@tools/src/collect/diff/map-diff', () => {
           new Map([['b', 6], ['c', 3], ['d', 4]]),
       );
 
-      assert(diffs).to.equal(createSmartMatcher([
+      assert(diffs).to.equal([
         {type: 'delete', key: 'a'},
         {type: 'set', key: 'b', value: 6},
         {type: 'set', key: 'd', value: 4},
-      ]));
+      ]);
     });
 
     should('compare using the given function', () => {
@@ -25,11 +25,11 @@ test('@tools/src/collect/diff/map-diff', () => {
           (a, b) => a.id === b.id,
       );
 
-      assert(diffs).to.equal(createSmartMatcher([
+      assert(diffs).to.equal([
         {type: 'delete', key: 'a'},
         {type: 'set', key: 'b', value: {id: 6}},
         {type: 'set', key: 'd', value: {id: 4}},
-      ]));
+      ]);
     });
   });
 

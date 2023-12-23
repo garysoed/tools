@@ -85,7 +85,7 @@ test('@tools/gapi/sheets-table', () => {
       }
 
       const table = createSheetsTable({merges, data: [{rowData: rows}]}, 1, 5, 1, 4);
-      assert(table).to.equal(arrayThat<SheetsCell[]>().haveExactElements([
+      assert(table).to.equal(arrayThat<readonly SheetsCell[]>().haveExactElements([
         arrayThat<SheetsCell>().haveExactElements([
           matchCell(0, 1, 0, 1, '1_1'),
           matchCell(0, 1, 1, 3, '2_0'),

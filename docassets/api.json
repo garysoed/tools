@@ -13860,7 +13860,7 @@
             },
             {
               "docNodeType": "cb",
-              "code": "import Jsons from './jsons';\n\nJsons.setValue(window, 'a.b.c', 123);\nexpect(window.a.b.c).toEqual(123);\n"
+              "code": "import Jsons from './jsons';\n\nJsons.setValue(window, 'a.b.c', 123);\nexpect(window.a.b.c).to.equal(123);\n"
             },
             {
               "docNodeType": "p",
