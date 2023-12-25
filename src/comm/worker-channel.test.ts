@@ -1,4 +1,4 @@
-import {assert, objectThat, setup, should, test} from 'gs-testing';
+import {assert, asyncAssert, objectThat, setup, should, test} from 'gs-testing';
 import {createSpySubject} from 'gs-testing';
 import {FakeWorker} from 'gs-testing/export/fake';
 import {FakeWorkerGlobalScope} from 'gs-testing/export/fake';
@@ -15,13 +15,15 @@ test('@tools/src/comm/worker-channel', () => {
     });
 
     test('onMessage$', () => {
-      should('emit the message data', () => {
+      should('emit the message data', async () => {
         const data = {a: 1};
 
         const onMessage$ = createSpySubject(_.channel.onMessage$);
         _.fakeWorker.dispatchEvent(new MessageEvent('message', {data}));
 
-        assert(onMessage$).to.emitWith(objectThat<WorkerPayload>().equal({payload: data}));
+        await asyncAssert(onMessage$).to.emitWith(
+            objectThat<WorkerPayload>().equal({payload: data}),
+        );
       });
     });
 
@@ -34,7 +36,7 @@ test('@tools/src/comm/worker-channel', () => {
         const messageSent$ = createSpySubject(_.fakeWorker.onMessageSent$);
         _.channel.send({payload: data, transfers: [transferable1, transferable2]});
 
-        assert(messageSent$).to.emitWith(data);
+        await asyncAssert(messageSent$).to.emitWith(data);
         assert(_.fakeWorker.transferables).to.equal([transferable1, transferable2]);
       });
     });
@@ -49,13 +51,14 @@ test('@tools/src/comm/worker-channel', () => {
     });
 
     test('onMessage$', () => {
-      should('emit the message data', () => {
+      should('emit the message data', async () => {
         const data = {a: 1};
 
         const onMessage$ = createSpySubject(_.channel.onMessage$);
         _.onMessage$.next(new MessageEvent('message', {data}));
 
-        assert(onMessage$).to.emitWith(objectThat<WorkerPayload>().equal({payload: data}));
+        await asyncAssert(onMessage$)
+            .to.emitWith(objectThat<WorkerPayload>().equal({payload: data}));
       });
     });
 
@@ -66,7 +69,7 @@ test('@tools/src/comm/worker-channel', () => {
         const messageSent$ = createSpySubject(_.fakeWorkerGlobalScope.onMessageSent$);
         _.channel.send({payload: data});
 
-        assert(messageSent$).to.emitWith(data);
+        await asyncAssert(messageSent$).to.emitWith(data);
       });
     });
   });

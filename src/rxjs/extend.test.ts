@@ -1,4 +1,4 @@
-import {assert, createSpySubject, objectThat, should, test} from 'gs-testing';
+import {asyncAssert, createSpySubject, objectThat, should, test} from 'gs-testing';
 import {of} from 'rxjs';
 
 import {extend} from './extend';
@@ -10,10 +10,10 @@ interface TestObject {
 }
 
 test('@tools/rxjs/extend', () => {
-  should('extend the input values', () => {
+  should('extend the input values', async () => {
     const results$ = createSpySubject(of({a: 1}, {b: 2}).pipe(extend({a: 2, b: 3})));
 
-    assert(results$).to.emitSequence([
+    await asyncAssert(results$).to.emitSequence([
       objectThat<TestObject>().haveProperties({a: 1, b: 3}),
       objectThat<TestObject>().haveProperties({a: 2, b: 2}),
     ]);

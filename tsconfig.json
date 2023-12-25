@@ -15,7 +15,8 @@
   "include": [
     "src/**/*.test.ts",
     "src/**/*.ts",
-    "export/*.ts"
+    "export/*.ts",
+    "docassets/index.ts"
   ],
   "exclude": [
     "node_modules"
