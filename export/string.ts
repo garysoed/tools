@@ -1,1 +1,1 @@
-export {Cases} from '../src/string/cases';
+export {convertCaseFrom, convertCaseAtomFrom} from '../src/string/cases';

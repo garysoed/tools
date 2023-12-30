@@ -6,8 +6,7 @@ const UPPER_CASE_REGEX = /^[A-Z][A-Z0-9_]*$/;
 /**
  * Utility class to convert between different capitalization styles.
  */
-export class Cases {
-
+class Cases {
   constructor(private readonly words: readonly string[]) {}
 
   /**
@@ -57,36 +56,40 @@ export class Cases {
         .map(value => value.toUpperCase())
         .join('_');
   }
+}
 
-  /**
+/**
    * Starting point of the case conversion.
    *
    * @return Cases object to chain the conversion.
    */
-  static of(input: string): Cases {
-    let words: string[];
-    if (CAMEL_CASE_REGEX.test(input)) {
-      words = input
-          .replace(/([A-Z])/g, ' $1')
-          .split(' ')
-          .map(word => word.toLowerCase());
-    } else if (PASCAL_CASE_REGEX.test(input)) {
-      const normalizedInput = `${input[0].toLowerCase()}${input.substring(1)}`;
-      words = normalizedInput.replace(/([A-Z])/g, ' $1')
-          .split(' ')
-          .map(word => word.toLowerCase());
-    } else if (LOWER_CASE_REGEX.test(input)) {
-      words = input.split('-');
-    } else if (UPPER_CASE_REGEX.test(input)) {
-      words = input
-          .split('_')
-          .map(word => word.toLowerCase());
-    } else {
-      words = input
-          .split(' ')
-          .map(word => word.toLowerCase());
-    }
-
-    return new Cases(words);
+export function convertCaseFrom(input: string): Cases {
+  let words: string[];
+  if (CAMEL_CASE_REGEX.test(input)) {
+    words = input
+        .replace(/([A-Z])/g, ' $1')
+        .split(' ')
+        .map(word => word.toLowerCase());
+  } else if (PASCAL_CASE_REGEX.test(input)) {
+    const normalizedInput = `${input[0].toLowerCase()}${input.substring(1)}`;
+    words = normalizedInput.replace(/([A-Z])/g, ' $1')
+        .split(' ')
+        .map(word => word.toLowerCase());
+  } else if (LOWER_CASE_REGEX.test(input)) {
+    words = input.split('-');
+  } else if (UPPER_CASE_REGEX.test(input)) {
+    words = input
+        .split('_')
+        .map(word => word.toLowerCase());
+  } else {
+    words = input
+        .split(' ')
+        .map(word => word.toLowerCase());
   }
+
+  return new Cases(words);
+}
+
+export function convertCaseAtomFrom(atom: string): Cases {
+  return new Cases([atom]);
 }

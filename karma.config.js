@@ -13,7 +13,7 @@ module.exports = function(config) {
       require("karma-jasmine"),
       require("karma-sourcemap-loader"),
       require("karma-chrome-launcher"),
-      require("dev/karma-reporter"),
+      require('gs-testing/karma-gs-framework'),
     ],
     port: 8888,
     reporters: ["gs"],

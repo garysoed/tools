@@ -1,56 +1,58 @@
-import {assert, should} from 'gs-testing';
+import {assert, test, should} from 'gs-testing';
 
-import {Cases} from './cases';
+import {convertCaseAtomFrom, convertCaseFrom} from './cases';
 
 
-describe('string.Cases', () => {
-  describe('toCamelCase', () => {
+test('string.Cases', () => {
+  test('toCamelCase', () => {
     should('format to camelCase correctly', () => {
-      const cases = new Cases(['camel', 'case']);
-      assert(cases.toCamelCase()).to.equal('camelCase');
+      assert(convertCaseFrom('camel case').toCamelCase()).to.equal('camelCase');
     });
   });
 
-  describe('toLowerCase', () => {
+  test('toLowerCase', () => {
     should('format as lower-case correctly', () => {
-      const cases = new Cases(['lower', 'case']);
-      assert(cases.toLowerCase()).to.equal('lower-case');
+      assert(convertCaseFrom('lower case').toLowerCase()).to.equal('lower-case');
     });
   });
 
-  describe('toPascalCase', () => {
+  test('toPascalCase', () => {
     should('format as PascalCase correctly', () => {
-      const cases = new Cases(['pascal', 'case']);
-      assert(cases.toPascalCase()).to.equal('PascalCase');
+      assert(convertCaseFrom('pascal case').toPascalCase()).to.equal('PascalCase');
     });
   });
 
-  describe('toUpperCase', () => {
+  test('toUpperCase', () => {
     should('format as UPPER_CASE correctly', () => {
-      const cases = new Cases(['upper', 'case']);
-      assert(cases.toUpperCase()).to.equal('UPPER_CASE');
+      assert(convertCaseFrom('upper case').toUpperCase()).to.equal('UPPER_CASE');
     });
   });
 
-  describe('of', () => {
+  test('convertCaseFrom', () => {
     should('parse camelCase correctly', () => {
-      assert(Cases.of('camelCase').toLowerCase()).to.equal('camel-case');
+      assert(convertCaseFrom('camelCase').toLowerCase()).to.equal('camel-case');
     });
 
     should('parse PascalCase correctly', () => {
-      assert(Cases.of('PascalCase').toLowerCase()).to.equal('pascal-case');
+      assert(convertCaseFrom('PascalCase').toLowerCase()).to.equal('pascal-case');
     });
 
     should('parse lower-case correctly', () => {
-      assert(Cases.of('lower-case').toLowerCase()).to.equal('lower-case');
+      assert(convertCaseFrom('lower-case').toLowerCase()).to.equal('lower-case');
     });
 
     should('parse UPPER_CASE correctly', () => {
-      assert(Cases.of('UPPER_CASE').toLowerCase()).to.equal('upper-case');
+      assert(convertCaseFrom('UPPER_CASE').toLowerCase()).to.equal('upper-case');
     });
 
     should('parse unknown format correctly', () => {
-      assert(Cases.of('Unknown format').toLowerCase()).to.equal('unknown-format');
+      assert(convertCaseFrom('Unknown format').toLowerCase()).to.equal('unknown-format');
+    });
+  });
+
+  test('convertCaseAtomFrom', () => {
+    should('treat the entire string as one atomic', () => {
+      assert(convertCaseAtomFrom('lower case').toPascalCase()).to.equal('Lower case');
     });
   });
 });

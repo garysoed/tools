@@ -113,7 +113,7 @@ export {EditableStorage} from '../src/store/editable-storage';
 export {LocalStorage} from '../src/store/local-storage';
 
 // string
-export {Cases} from '../src/string/cases';
+export {convertCaseFrom, convertCaseAtomFrom} from '../src/string/cases';
 
 // typescript
 export {assertUnreachable} from '../src/typescript/assert-unreachable';
