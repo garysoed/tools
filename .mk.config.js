@@ -4,7 +4,7 @@ declare({
     bin: 'npm',
     flags: [
       'link',
-      ...'gs-testing gs-types dev nabu moirai santa devbase'.split(' '),
+      ...'gs-testing gs-types nabu moirai santa devbase'.split(' '),
     ],
   }),
 });
