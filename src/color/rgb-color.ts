@@ -9,18 +9,18 @@ import {Color} from './color';
  */
 export class RgbColor extends Color {
   constructor(
-      /**
-       * {@inheritDoc Color.red}
-       */
-      readonly red: number,
-      /**
-       * {@inheritDoc Color.green}
-       */
-      readonly green: number,
-      /**
-       * {@inheritDoc Color.blue}
-       */
-      readonly blue: number,
+    /**
+     * {@inheritDoc Color.red}
+     */
+    readonly red: number,
+    /**
+     * {@inheritDoc Color.green}
+     */
+    readonly green: number,
+    /**
+     * {@inheritDoc Color.blue}
+     */
+    readonly blue: number,
   ) {
     super();
 
@@ -90,10 +90,10 @@ export class RgbColor extends Color {
         h1 = ((green - blue) / chroma / 255) % 6;
         break;
       case green:
-        h1 = ((blue - red) / chroma / 255) + 2;
+        h1 = (blue - red) / chroma / 255 + 2;
         break;
       case blue:
-        h1 = ((red - green) / chroma / 255) + 4;
+        h1 = (red - green) / chroma / 255 + 4;
         break;
       default:
         throw new Error('Should not be able to reach here');
@@ -115,7 +115,7 @@ export class RgbColor extends Color {
    */
   @cache()
   get saturation(): number {
-    const denominator = (1 - Math.abs(this.lightness * 2 - 1));
+    const denominator = 1 - Math.abs(this.lightness * 2 - 1);
 
     return denominator === 0 ? 0 : this.chroma / denominator;
   }

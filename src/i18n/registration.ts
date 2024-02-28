@@ -12,8 +12,12 @@ export interface PluralRegistration<F extends Formatter> {
   readonly keyOverride?: string;
 }
 
-export function getPluralKey(registration: PluralRegistration<Formatter>): ExtractionKey {
-  return asExtractionKey(registration.keyOverride ?? `[PLURAL] ${registration.other.key}`);
+export function getPluralKey(
+  registration: PluralRegistration<Formatter>,
+): ExtractionKey {
+  return asExtractionKey(
+    registration.keyOverride ?? `[PLURAL] ${registration.other.key}`,
+  );
 }
 
 export interface SimpleRegistration {
@@ -26,4 +30,4 @@ export function getSimpleKey(registration: SimpleRegistration): ExtractionKey {
   return asExtractionKey(registration.keyOverride ?? registration.plain);
 }
 
-export type Registration = PluralRegistration<Formatter>|SimpleRegistration;
+export type Registration = PluralRegistration<Formatter> | SimpleRegistration;

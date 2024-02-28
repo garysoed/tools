@@ -1,14 +1,20 @@
-import {MatcherType, arrayThat, assert, objectThat, should, test} from 'gs-testing';
+import {
+  MatcherType,
+  arrayThat,
+  assert,
+  objectThat,
+  should,
+  test,
+} from 'gs-testing';
 
 import {Merge, SheetsCell, createSheetsTable} from './sheets-table';
 import {CellData, ExtendedValue, RowData} from './type/sheets';
 
-
 function createMerge(
-    startRow: number,
-    endRow: number,
-    startColumn: number,
-    endColumn: number,
+  startRow: number,
+  endRow: number,
+  startColumn: number,
+  endColumn: number,
 ): Merge {
   return {
     startRowIndex: startRow,
@@ -23,11 +29,11 @@ function createCellData(value: string): CellData {
 }
 
 function matchCell(
-    fromRow: number,
-    toRow: number,
-    fromColumn: number,
-    toColumn: number,
-    value: string,
+  fromRow: number,
+  toRow: number,
+  fromColumn: number,
+  toColumn: number,
+  value: string,
 ): MatcherType<SheetsCell> {
   return objectThat<SheetsCell>().haveProperties({
     fromRow,
@@ -79,34 +85,42 @@ test('@tools/gapi/sheets-table', () => {
           if (blankCells.has(value)) {
             continue;
           }
-          cells[c] = (createCellData(value));
+          cells[c] = createCellData(value);
         }
         rows.push({values: cells});
       }
 
-      const table = createSheetsTable({merges, data: [{rowData: rows}]}, 1, 5, 1, 4);
-      assert(table).to.equal(arrayThat<readonly SheetsCell[]>().haveExactElements([
-        arrayThat<SheetsCell>().haveExactElements([
-          matchCell(0, 1, 0, 1, '1_1'),
-          matchCell(0, 1, 1, 3, '2_0'),
-          matchCell(0, 1, 1, 3, '2_0'),
+      const table = createSheetsTable(
+        {merges, data: [{rowData: rows}]},
+        1,
+        5,
+        1,
+        4,
+      );
+      assert(table).to.equal(
+        arrayThat<readonly SheetsCell[]>().haveExactElements([
+          arrayThat<SheetsCell>().haveExactElements([
+            matchCell(0, 1, 0, 1, '1_1'),
+            matchCell(0, 1, 1, 3, '2_0'),
+            matchCell(0, 1, 1, 3, '2_0'),
+          ]),
+          arrayThat<SheetsCell>().haveExactElements([
+            matchCell(1, 3, 0, 2, '0_2'),
+            matchCell(1, 3, 0, 2, '0_2'),
+            matchCell(1, 2, 2, 3, '3_2'),
+          ]),
+          arrayThat<SheetsCell>().haveExactElements([
+            matchCell(1, 3, 0, 2, '0_2'),
+            matchCell(1, 3, 0, 2, '0_2'),
+            matchCell(2, 4, 2, 3, '3_3'),
+          ]),
+          arrayThat<SheetsCell>().haveExactElements([
+            matchCell(3, 4, 0, 1, '1_4'),
+            matchCell(3, 4, 1, 2, '2_4'),
+            matchCell(2, 4, 2, 3, '3_3'),
+          ]),
         ]),
-        arrayThat<SheetsCell>().haveExactElements([
-          matchCell(1, 3, 0, 2, '0_2'),
-          matchCell(1, 3, 0, 2, '0_2'),
-          matchCell(1, 2, 2, 3, '3_2'),
-        ]),
-        arrayThat<SheetsCell>().haveExactElements([
-          matchCell(1, 3, 0, 2, '0_2'),
-          matchCell(1, 3, 0, 2, '0_2'),
-          matchCell(2, 4, 2, 3, '3_3'),
-        ]),
-        arrayThat<SheetsCell>().haveExactElements([
-          matchCell(3, 4, 0, 1, '1_4'),
-          matchCell(3, 4, 1, 2, '2_4'),
-          matchCell(2, 4, 2, 3, '3_3'),
-        ]),
-      ]));
+      );
 
       // Check that the merge cells are all equal.
       const merge0_2 = table[1][0];

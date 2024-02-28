@@ -5,7 +5,7 @@ import {IsSerializable} from './is-serializable';
 import {isSerializable} from './is-serializable-converter';
 
 class TestClass implements IsSerializable {
-  constructor(readonly data: unknown) { }
+  constructor(readonly data: unknown) {}
 
   serialize(): unknown {
     return this.data;
@@ -31,8 +31,12 @@ test('serializer.IsSerializableConverter', () => {
   test('convertForward', () => {
     should('convert correctly', () => {
       const data = {a: 1, b: 2};
-      assert(strict(converter).convertForward(new TestClass(data)) as Record<string, unknown>).to
-          .haveProperties(data);
+      assert(
+        strict(converter).convertForward(new TestClass(data)) as Record<
+          string,
+          unknown
+        >,
+      ).to.haveProperties(data);
     });
   });
 });

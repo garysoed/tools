@@ -4,11 +4,11 @@ import {iterableConverter} from './iterable-converter';
 import {tupleConverter} from './tuple-converter';
 
 export function mapConverter<K, V>(
-    keyConverter: Converter<K, unknown>,
-    valueConverter: Converter<V, unknown>,
+  keyConverter: Converter<K, unknown>,
+  valueConverter: Converter<V, unknown>,
 ): Converter<ReadonlyMap<K, V>, unknown> {
   return iterableConverter(
-      contents => new Map([...contents]),
-      tupleConverter([keyConverter, valueConverter]),
+    (contents) => new Map([...contents]),
+    tupleConverter([keyConverter, valueConverter]),
   );
 }

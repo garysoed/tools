@@ -16,6 +16,8 @@ test('@tools/src/collect/operators/buffer', () => {
   });
 
   should('not yield the array with smaller size than the buffer', () => {
-    assert($pipe([1, 2, 3, 4, 5], $buffer(3), $asArray())).to.equal([[1, 2, 3]]);
+    assert($pipe([1, 2, 3, 4, 5], $buffer(3), $asArray())).to.equal([
+      [1, 2, 3],
+    ]);
   });
 });

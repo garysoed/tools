@@ -1,26 +1,41 @@
-import {SpyObj, assert, createSpyObject, createSpySubject, fake, should, setup, teardown, test, asyncAssert} from 'gs-testing';
+import {
+  SpyObj,
+  assert,
+  createSpyObject,
+  createSpySubject,
+  fake,
+  should,
+  setup,
+  teardown,
+  test,
+  asyncAssert,
+} from 'gs-testing';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
 import {Handler} from './handler';
 
-
 test('@gs-tools/gapi/handler', () => {
   const _ = setup(() => {
     const onTestDone$ = new Subject<void>();
     const isSignedIn$ = new Subject<boolean>();
-    const mockIsSignedIn = createSpyObject<gapi.auth2.IsSignedIn>('IsSignedIn', ['get', 'listen']);
-    fake(mockIsSignedIn.listen).always().call((handler: (signedIn: boolean) => any) => {
-      isSignedIn$.pipe(takeUntil(onTestDone$)).subscribe(handler);
-    });
+    const mockIsSignedIn = createSpyObject<gapi.auth2.IsSignedIn>(
+      'IsSignedIn',
+      ['get', 'listen'],
+    );
+    fake(mockIsSignedIn.listen)
+      .always()
+      .call((handler: (signedIn: boolean) => any) => {
+        isSignedIn$.pipe(takeUntil(onTestDone$)).subscribe(handler);
+        return {isActive: true, remove: () => {}, trigger: () => {}};
+      });
 
     const mockAuthInstance = Object.assign<
-        SpyObj<gapi.auth2.GoogleAuth>,
-        {isSignedIn: SpyObj<gapi.auth2.IsSignedIn>}
-    >(
-        createSpyObject('AuthInstance', ['signIn']),
-        {isSignedIn: mockIsSignedIn},
-    );
+      SpyObj<gapi.auth2.GoogleAuth>,
+      {isSignedIn: SpyObj<gapi.auth2.IsSignedIn>}
+    >(createSpyObject('AuthInstance', ['signIn']), {
+      isSignedIn: mockIsSignedIn,
+    });
     Object.assign(window, {
       gapi: {
         auth2: {
@@ -46,7 +61,9 @@ test('@gs-tools/gapi/handler', () => {
 
   test('ensureSignedIn', () => {
     should('sign in and emit on success', async () => {
-      fake(_.mockAuthInstance.isSignedIn.get).always().returnValues(false, true);
+      fake(_.mockAuthInstance.isSignedIn.get)
+        .always()
+        .returnValues(false, true);
 
       const subject = createSpySubject(_.handler.ensureSignedIn());
 
@@ -78,7 +95,9 @@ test('@gs-tools/gapi/handler', () => {
 
   test('isSignedIn', () => {
     should('emit true if signed in and update its value', async () => {
-      fake(_.mockAuthInstance.isSignedIn.get).always().returnValues(false, true);
+      fake(_.mockAuthInstance.isSignedIn.get)
+        .always()
+        .returnValues(false, true);
 
       const subject = createSpySubject(_.handler.isSignedIn());
 

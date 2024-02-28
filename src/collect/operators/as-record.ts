@@ -7,8 +7,11 @@ import {Operator} from '../../typescript/operator';
  * @returns `Operator` to convert `Iterable`s to maps.
  * @thModule collect.operators
  */
-export function $asRecord<V>(): Operator<Iterable<[string, V]>, Record<string, V>> {
-  return iterable => {
+export function $asRecord<V>(): Operator<
+  Iterable<[string, V]>,
+  Record<string, V>
+> {
+  return (iterable) => {
     const record: Record<string, V> = {};
     for (const [key, value] of iterable) {
       record[key] = value;

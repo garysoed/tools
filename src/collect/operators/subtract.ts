@@ -14,6 +14,13 @@ import {$filter} from './filter';
  *
  * @thModule collect.operators
  */
-export function $subtract<T>(other: ReadonlySet<T>): Operator<Iterable<T>, ReadonlySet<T>> {
-  return iterable => $pipe(iterable, $filter(item => !other.has(item)), $asSet());
+export function $subtract<T>(
+  other: ReadonlySet<T>,
+): Operator<Iterable<T>, ReadonlySet<T>> {
+  return (iterable) =>
+    $pipe(
+      iterable,
+      $filter((item) => !other.has(item)),
+      $asSet(),
+    );
 }

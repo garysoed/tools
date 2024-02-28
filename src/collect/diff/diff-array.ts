@@ -24,14 +24,13 @@ export interface ArrayDelete<T> {
   readonly value: T;
 }
 
-
 /**
  * Differences between arrays.
  *
  * @typeParam T - Type of the array element.
  * @thHidden
  */
-export type ArrayDiff<T> = ArrayInsert<T>|ArrayDelete<T>;
+export type ArrayDiff<T> = ArrayInsert<T> | ArrayDelete<T>;
 
 /**
  * Emits diffs of the input arrays.
@@ -46,9 +45,9 @@ export type ArrayDiff<T> = ArrayInsert<T>|ArrayDelete<T>;
  * @thModule collect
  */
 export function diffArray<T>(
-    fromArray: readonly T[],
-    toArray: readonly T[],
-    diffFn: (a: T, b: T) => boolean = (a, b) => a === b,
+  fromArray: readonly T[],
+  toArray: readonly T[],
+  diffFn: (a: T, b: T) => boolean = (a, b) => a === b,
 ): ReadonlyArray<ArrayDiff<T>> {
   const diffs: Array<ArrayDiff<T>> = [];
   const currArray = [...fromArray];
@@ -73,7 +72,6 @@ export function diffArray<T>(
   return diffs;
 }
 
-
 /**
  * Given a sequence of `ArrayDiff`s, rebuild the array.
  *
@@ -82,8 +80,8 @@ export function diffArray<T>(
  * @thModule collect
  */
 export function undiffArray<T>(
-    initArray: readonly T[],
-    diffs: ReadonlyArray<ArrayDiff<T>>,
+  initArray: readonly T[],
+  diffs: ReadonlyArray<ArrayDiff<T>>,
 ): readonly T[] {
   return diffs.reduce((acc, diff) => {
     const copy = [...acc];
@@ -97,8 +95,5 @@ export function undiffArray<T>(
 
         return copy;
     }
-  },
-  initArray,
-  );
+  }, initArray);
 }
-

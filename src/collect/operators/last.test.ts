@@ -5,7 +5,6 @@ import {countableIterable} from '../structures/countable-iterable';
 
 import {$last} from './last';
 
-
 test('@tools/collect/operators/last', () => {
   should('return the last element', () => {
     assert($pipe([1, 2, 3, 4, 5], $last())).to.equal(5);

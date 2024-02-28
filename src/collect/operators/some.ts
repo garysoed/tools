@@ -2,7 +2,6 @@ import {Operator} from '../../typescript/operator';
 
 import {FiniteIterable} from './finite-iterable';
 
-
 /**
  * Returns `true` iff at least one element in the given {@link Iterable} is `true`.
  *
@@ -11,5 +10,5 @@ import {FiniteIterable} from './finite-iterable';
  * @thModule collect.operators
  */
 export function $some(): Operator<FiniteIterable<boolean>, boolean> {
-  return iterable => [...iterable].some(value => value);
+  return (iterable) => [...iterable].some((value) => value);
 }

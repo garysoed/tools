@@ -1,8 +1,13 @@
-import {asyncAssert, createSpySubject, objectThat, should, test} from 'gs-testing';
+import {
+  asyncAssert,
+  createSpySubject,
+  objectThat,
+  should,
+  test,
+} from 'gs-testing';
 import {BehaviorSubject} from 'rxjs';
 
 import {combineLatestObject} from './combine-latest-object';
-
 
 interface Test {
   readonly a: number;

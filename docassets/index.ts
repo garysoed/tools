@@ -51,7 +51,13 @@ export {ReadonlyOrderedMap} from '../src/collect/structures/readonly-ordered-map
 
 // color
 export {Color} from '../src/color/color';
-export {fromCssColor, getContrast, getDistance, mix, neonize} from '../src/color/colors';
+export {
+  fromCssColor,
+  getContrast,
+  getDistance,
+  mix,
+  neonize,
+} from '../src/color/colors';
 export {HslColor} from '../src/color/hsl-color';
 export {RgbColor} from '../src/color/rgb-color';
 
@@ -59,8 +65,19 @@ export {RgbColor} from '../src/color/rgb-color';
 export {cache} from '../src/data/cache';
 
 // gapi
-export {ExtendedValue, CellData, GridData, GridRange, RowData} from '../src/gapi/type/sheets';
-export {createSheetsTable, Merge, RawSheet, SheetsTable} from '../src/gapi/sheets-table';
+export {
+  ExtendedValue,
+  CellData,
+  GridData,
+  GridRange,
+  RowData,
+} from '../src/gapi/type/sheets';
+export {
+  createSheetsTable,
+  Merge,
+  RawSheet,
+  SheetsTable,
+} from '../src/gapi/sheets-table';
 
 // math
 export {mod} from '../src/math/mod';

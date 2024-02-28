@@ -5,7 +5,6 @@ import {$take} from '../../collect/operators/take';
 import {$pipe} from '../../typescript/pipe';
 import {asRandom, Random} from '../random';
 
-
 const ID_CHARS: string[] = [];
 // Add the numbers.
 for (let i = 0; i < 10; i++) {
@@ -31,16 +30,16 @@ for (let i = 97; i < 123; i++) {
  * @return A randomly generated short ID.
  */
 export function randomShortId(seed: Random<number>): Random<string> {
-  return seed.takeValues(values => {
+  return seed.takeValues((values) => {
     const id = $pipe(
-        values,
-        $take(7),
-        $map(value => {
-          const index = Math.floor(value * ID_CHARS.length);
-          return ID_CHARS[index];
-        }),
-        $asArray(),
-        $join(''),
+      values,
+      $take(7),
+      $map((value) => {
+        const index = Math.floor(value * ID_CHARS.length);
+        return ID_CHARS[index];
+      }),
+      $asArray(),
+      $join(''),
     );
     return asRandom(id);
   });

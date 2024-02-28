@@ -14,6 +14,15 @@ test('@tools/collect/size', () => {
   });
 
   should('return the correct size for a map', () => {
-    assert($pipe(new Map([[1, 'a'], [2, 'b'], [3, 'c']]), $size())).to.equal(3);
+    assert(
+      $pipe(
+        new Map([
+          [1, 'a'],
+          [2, 'b'],
+          [3, 'c'],
+        ]),
+        $size(),
+      ),
+    ).to.equal(3);
   });
 });

@@ -17,6 +17,6 @@ export function matches<T>(predicate: (input: T) => boolean): Ordering<T> {
       return 0;
     }
 
-    return (matches1 && !matches2) ? -1 : 1;
+    return matches1 && !matches2 ? -1 : 1;
   };
 }

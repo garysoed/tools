@@ -11,15 +11,16 @@ export class HslColor extends Color {
   readonly hue = this.hueRaw % 360;
 
   constructor(
-      private readonly hueRaw: number,
-      /**
-       * {@inheritDoc Color.saturation}
-       */
-      readonly saturation: number,
-      /**
-       * {@inheritDoc Color.lightness}
-       */
-      readonly lightness: number) {
+    private readonly hueRaw: number,
+    /**
+     * {@inheritDoc Color.saturation}
+     */
+    readonly saturation: number,
+    /**
+     * {@inheritDoc Color.lightness}
+     */
+    readonly lightness: number,
+  ) {
     super();
 
     if (lightness > 1 || lightness < 0) {
@@ -27,7 +28,9 @@ export class HslColor extends Color {
     }
 
     if (saturation > 1 || saturation < 0) {
-      throw new Error(`saturation should be >= 0 and <= 1 but was ${saturation}`);
+      throw new Error(
+        `saturation should be >= 0 and <= 1 but was ${saturation}`,
+      );
     }
   }
 
@@ -84,10 +87,9 @@ export class HslColor extends Color {
     }
 
     const min = this.lightness - chroma / 2;
-    const components = [r1, g1, b1]
-        .map((value: number) => {
-          return Math.round((value + min) * 255);
-        });
+    const components = [r1, g1, b1].map((value: number) => {
+      return Math.round((value + min) * 255);
+    });
     const [r, g, b] = [...components];
 
     return [r, g, b];

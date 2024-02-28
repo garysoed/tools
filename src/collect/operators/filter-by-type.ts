@@ -12,6 +12,8 @@ import {$filter} from './filter';
  * @returns Operator that returns elements of the given `Type`.
  * @thModule collect.operators
  */
-export function $filterByType<T>(type: Type<T>): Operator<Iterable<unknown>, Iterable<T>> {
+export function $filterByType<T>(
+  type: Type<T>,
+): Operator<Iterable<unknown>, Iterable<T>> {
   return $filter((item): item is T => type.check(item));
 }

@@ -9,6 +9,9 @@ import {$filter} from './filter';
  * @returns Operator that filters out any `null`.
  * @thModule collect.operators
  */
-export function $filterNonNull<T>(): Operator<Iterable<T>, Iterable<Exclude<T, null>>> {
+export function $filterNonNull<T>(): Operator<
+  Iterable<T>,
+  Iterable<Exclude<T, null>>
+> {
   return $filter((item): item is Exclude<T, null> => item !== null);
 }

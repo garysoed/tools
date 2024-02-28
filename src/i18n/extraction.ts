@@ -20,4 +20,4 @@ export function asExtractionKey(innerKey: string): ExtractionKey {
   return innerKey as unknown as ExtractionKey;
 }
 
-export type Extraction = PluralExtraction|SimpleExtraction;
+export type Extraction = PluralExtraction | SimpleExtraction;

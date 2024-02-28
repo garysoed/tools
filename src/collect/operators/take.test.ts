@@ -6,7 +6,7 @@ import {$take} from './take';
 
 test('@tools/collect/take', () => {
   should('return iterable that only returns the first few elements', () => {
-    const inf = function*(): Generator<number> {
+    const inf = function* (): Generator<number> {
       while (true) {
         yield 1;
       }
@@ -16,7 +16,7 @@ test('@tools/collect/take', () => {
   });
 
   should('return empty iterable if count is zero', () => {
-    const inf = function*(): Generator<number> {
+    const inf = function* (): Generator<number> {
       while (true) {
         yield 1;
       }
@@ -30,7 +30,7 @@ test('@tools/collect/take', () => {
   });
 
   should('return empty iterable if count is negative', () => {
-    const inf = function*(): Generator<number> {
+    const inf = function* (): Generator<number> {
       while (true) {
         yield 1;
       }

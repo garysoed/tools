@@ -1,6 +1,15 @@
-export {randomPickInt, randomPickInt as pickInt} from '../src/random/random-pick-int';
-export {randomPickItem, randomPickItem as pickItem} from '../src/random/random-pick-item';
-export {randomShortId, randomShortId as shortId} from '../src/random/idgenerators/random-short-id';
+export {
+  randomPickInt,
+  randomPickInt as pickInt,
+} from '../src/random/random-pick-int';
+export {
+  randomPickItem,
+  randomPickItem as pickItem,
+} from '../src/random/random-pick-item';
+export {
+  randomShortId,
+  randomShortId as shortId,
+} from '../src/random/idgenerators/random-short-id';
 export {idGenerator} from '../src/random/idgenerators/id-generator';
 export {shuffleWeighted} from '../src/random/shuffle-weighted';
 

@@ -68,13 +68,14 @@ export interface RawSheet {
  * @thModule gapi.sheets
  */
 export function createSheetsTable(
-    raw: RawSheet,
-    fromRow: number,
-    toRow: number,
-    fromColumn: number,
-    toColumn: number,
+  raw: RawSheet,
+  fromRow: number,
+  toRow: number,
+  fromColumn: number,
+  toColumn: number,
 ): SheetsTable {
-  const partialGrid: Array<Array<PartialSheetsCell|undefined>|undefined> = [];
+  const partialGrid: Array<Array<PartialSheetsCell | undefined> | undefined> =
+    [];
 
   // Get all the merges.
   for (const merge of raw.merges || []) {

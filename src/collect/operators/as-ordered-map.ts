@@ -1,7 +1,6 @@
 import {Operator} from '../../typescript/operator';
 import {OrderedMap} from '../structures/ordered-map';
 
-
 /**
  * Converts the {@link Iterable} to an {@link OrderedMap}.
  *
@@ -10,6 +9,9 @@ import {OrderedMap} from '../structures/ordered-map';
  * @returns `Operator` to convert `Iterable`s to `OrderedMap`s.
  * @thModule collect.operators
  */
-export function $asOrderedMap<K, V>(): Operator<Iterable<[K, V]>, OrderedMap<K, V>> {
-  return iterable => new OrderedMap([...iterable]);
+export function $asOrderedMap<K, V>(): Operator<
+  Iterable<[K, V]>,
+  OrderedMap<K, V>
+> {
+  return (iterable) => new OrderedMap([...iterable]);
 }

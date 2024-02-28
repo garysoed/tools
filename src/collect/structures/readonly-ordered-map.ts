@@ -15,5 +15,5 @@ export interface ReadonlyOrderedMap<K, V> extends ReadonlyMap<K, V> {
    * @param index - Index to return the entries at
    * @returns The entry at the given index, or `undefined` if none exists.
    */
-  getAt(index: number): [K, V]|undefined;
+  getAt(index: number): [K, V] | undefined;
 }

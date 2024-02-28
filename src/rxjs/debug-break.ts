@@ -3,8 +3,10 @@ import {tap} from 'rxjs/operators';
 
 type CheckFn<T> = (value: T) => boolean;
 
-export function debugBreak<T>(checkFn: CheckFn<T> = () => true): MonoTypeOperatorFunction<T> {
-  return tap(value => {
+export function debugBreak<T>(
+  checkFn: CheckFn<T> = () => true,
+): MonoTypeOperatorFunction<T> {
+  return tap((value) => {
     if (!checkFn(value)) {
       return;
     }

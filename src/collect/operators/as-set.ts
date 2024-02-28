@@ -8,5 +8,5 @@ import {Operator} from '../../typescript/operator';
  * @thModule collect.operators
  */
 export function $asSet<T>(): Operator<Iterable<T>, Set<T>> {
-  return iterable => new Set(iterable);
+  return (iterable) => new Set(iterable);
 }

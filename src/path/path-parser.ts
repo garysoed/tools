@@ -4,7 +4,6 @@ import {absolutePathParser} from '../path/absolute-path-parser';
 import {Path} from '../path/path';
 import {relativePathParser} from '../path/relative-path-parser';
 
-
 /**
  * Parses the string to {@link Path}.
  *
@@ -22,7 +21,10 @@ class PathParser implements Converter<Path, string> {
    * @returns Result of parsing.
    */
   convertBackward(value: string): Result<Path> {
-    return firstSuccess(relativePathParser(), absolutePathParser()).convertBackward(value);
+    return firstSuccess(
+      relativePathParser(),
+      absolutePathParser(),
+    ).convertBackward(value);
   }
 
   /**

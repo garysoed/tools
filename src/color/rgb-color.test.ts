@@ -2,7 +2,6 @@ import {assert, should} from 'gs-testing';
 
 import {RgbColor} from './rgb-color';
 
-
 describe('color.RgbColor', () => {
   describe('chroma', () => {
     should('return the correct value of chroma', () => {
@@ -62,7 +61,6 @@ describe('color.RgbColor', () => {
       assert(() => {
         return new RgbColor(1, 23.45, 45);
       }).to.throwErrorWithMessage(/be an integer/);
-
     });
 
     should('throw error if green is negative', () => {

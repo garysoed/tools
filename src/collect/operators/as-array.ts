@@ -8,5 +8,5 @@ import {Operator} from '../../typescript/operator';
  * @thModule collect.operators
  */
 export function $asArray<T>(): Operator<Iterable<T>, T[]> {
-  return iterable => [...iterable];
+  return (iterable) => [...iterable];
 }

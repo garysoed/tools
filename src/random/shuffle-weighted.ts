@@ -10,18 +10,23 @@ import {$pipe} from '../typescript/pipe';
 import {asRandom, Random} from './random';
 
 export function shuffleWeighted<T>(
-    items: ReadonlyArray<readonly [T, number]>,
-    seed: Random<number>,
+  items: ReadonlyArray<readonly [T, number]>,
+  seed: Random<number>,
 ): Random<readonly T[]> {
-  return seed.takeValues(values => {
-    return asRandom($pipe(
+  return seed.takeValues((values) => {
+    return asRandom(
+      $pipe(
         values,
         $zip(items),
-        $map(([randomWeight, [value, weight]]) => ({value, weight: weight + randomWeight})),
+        $map(([randomWeight, [value, weight]]) => ({
+          value,
+          weight: weight + randomWeight,
+        })),
         $take(items.length),
         $sort(withMap(({weight}) => weight, normal())),
         $map(({value}) => value),
         $asArray(),
-    ));
+      ),
+    );
   });
 }

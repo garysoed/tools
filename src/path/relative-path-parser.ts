@@ -3,7 +3,6 @@ import {Converter, Result} from 'nabu';
 import {SEPARATOR} from '../path/path';
 import {RelativePath} from '../path/relative-path';
 
-
 /**
  * Parses the string to {@link RelativePath}.
  *

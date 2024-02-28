@@ -5,11 +5,11 @@
  */
 export abstract class Path {
   constructor(
-      /**
-       * Parts of the path.
-       */
-      readonly parts: readonly string[],
-  ) { }
+    /**
+     * Parts of the path.
+     */
+    readonly parts: readonly string[],
+  ) {}
 }
 
 /**

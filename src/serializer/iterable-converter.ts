@@ -1,10 +1,12 @@
 import {Converter, Result} from 'nabu';
 
-class IterableConverter<T, I extends Iterable<T>> implements Converter<I, unknown> {
+class IterableConverter<T, I extends Iterable<T>>
+  implements Converter<I, unknown>
+{
   constructor(
-      private readonly iterableProvider_: (content: Iterable<T>) => I,
-      private readonly itemConverter_: Converter<T, unknown>,
-  ) { }
+    private readonly iterableProvider_: (content: Iterable<T>) => I,
+    private readonly itemConverter_: Converter<T, unknown>,
+  ) {}
 
   convertBackward(value: unknown): Result<I> {
     if (!(value instanceof Array)) {
@@ -40,8 +42,8 @@ class IterableConverter<T, I extends Iterable<T>> implements Converter<I, unknow
 }
 
 export function iterableConverter<T, I extends Iterable<T>>(
-    provider: (content: Iterable<T>) => I,
-    itemConverter: Converter<T, unknown>,
+  provider: (content: Iterable<T>) => I,
+  itemConverter: Converter<T, unknown>,
 ): IterableConverter<T, I> {
   return new IterableConverter(provider, itemConverter);
 }

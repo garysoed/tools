@@ -15,7 +15,9 @@ test('@tools/src/collect/coordinates/vector', () => {
 
   test('intersect', () => {
     should('return the correct intersection', () => {
-      assert(vector.intersect([1, 2], [2, 4], [3, 4], [5, 8])).to.equal([-2, -4]);
+      assert(vector.intersect([1, 2], [2, 4], [3, 4], [5, 8])).to.equal([
+        -2, -4,
+      ]);
     });
 
     should('return null if the vectors are parallel', () => {

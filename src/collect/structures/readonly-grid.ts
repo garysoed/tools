@@ -6,9 +6,9 @@ export interface GridEntry<T> {
 }
 
 export interface ReadonlyGrid<T> extends Iterable<GridEntry<T>> {
-  as2dArray(): ReadonlyArray<ReadonlyArray<T|undefined>>;
+  as2dArray(): ReadonlyArray<ReadonlyArray<T | undefined>>;
 
-  get(location: Vector2): T|undefined;
+  get(location: Vector2): T | undefined;
 
   has(location: Vector2): boolean;
 

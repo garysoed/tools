@@ -5,8 +5,8 @@ interface DiffResult<T> {
 }
 
 export function diff<T>(
-    oldIterable: Iterable<T>,
-    newIterable: Iterable<T>,
+  oldIterable: Iterable<T>,
+  newIterable: Iterable<T>,
 ): DiffResult<T> {
   const oldSet = new Set<T>(oldIterable);
   const newSet = new Set<T>(newIterable);
@@ -30,4 +30,3 @@ export function diff<T>(
 
   return {added, deleted, unchanged};
 }
-

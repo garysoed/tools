@@ -14,7 +14,9 @@ export function arrayFrom(attrs: NamedNodeMap): readonly Attr[];
  * @param nodeListOf - List of `Node`s.
  * @returns `Array` of `Node`s in the list.
  */
-export function arrayFrom<N extends Node>(nodeListOf: NodeListOf<N>): readonly N[];
+export function arrayFrom<N extends Node>(
+  nodeListOf: NodeListOf<N>,
+): readonly N[];
 /**
  * @param filelist - List of {@link File}
  * @returns `Array` of `File`s in the list.
@@ -26,9 +28,9 @@ export function arrayFrom(filelist: FileList): readonly File[];
  */
 export function arrayFrom(nodeListOf: HTMLCollection): readonly Element[];
 export function arrayFrom(
-    collection: NodeListOf<Node>|HTMLCollection|NamedNodeMap|FileList,
-): ReadonlyArray<Node|Element|File> {
-  const array: Array<Node|Element|File> = [];
+  collection: NodeListOf<Node> | HTMLCollection | NamedNodeMap | FileList,
+): ReadonlyArray<Node | Element | File> {
+  const array: Array<Node | Element | File> = [];
   for (let i = 0; i < collection.length; i++) {
     const item = collection.item(i);
     if (item) {

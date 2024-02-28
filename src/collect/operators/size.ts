@@ -5,7 +5,7 @@ import {Operator} from '../../typescript/operator';
  *
  * @hidden
  */
-export type HasSize = ReadonlySet<any>|ReadonlyMap<any, any>|readonly any[];
+export type HasSize = ReadonlySet<any> | ReadonlyMap<any, any> | readonly any[];
 
 /**
  * Returns the size of the input collection.
@@ -17,7 +17,7 @@ export type HasSize = ReadonlySet<any>|ReadonlyMap<any, any>|readonly any[];
  * @thModule collect.operators
  */
 export function $size(): Operator<HasSize, number> {
-  return collection => {
+  return (collection) => {
     if (isArray(collection)) {
       return collection.length;
     }

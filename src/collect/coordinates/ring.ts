@@ -4,24 +4,24 @@ import {vector, Vector, Vector2} from './vector';
 export type Rings<V extends Vector> = ReadonlyMap<number, ReadonlySet<V>>;
 
 export function ring(
-    dimension: 2,
-    coordinateSystem: CoordinateSystem,
-    distance: number,
+  dimension: 2,
+  coordinateSystem: CoordinateSystem,
+  distance: number,
 ): Rings<Vector2>;
 export function ring(
-    dimension: number,
-    coordinateSystem: CoordinateSystem,
-    distance: number,
+  dimension: number,
+  coordinateSystem: CoordinateSystem,
+  distance: number,
 ): Rings<Vector>;
 export function ring(
-    dimension: number,
-    coordinateSystem: CoordinateSystem,
-    distance: number,
+  dimension: number,
+  coordinateSystem: CoordinateSystem,
+  distance: number,
 ): Rings<Vector> {
   return ringHelper(
-      coordinateSystem.zero(dimension),
-      distance,
-      coordinateSystem.directions(dimension),
+    coordinateSystem.zero(dimension),
+    distance,
+    coordinateSystem.directions(dimension),
   ).rings;
 }
 
@@ -30,9 +30,9 @@ interface Result {
   readonly rings: Rings<Vector>;
 }
 function ringHelper(
-    zero: Vector,
-    targetDistance: number,
-    directions: readonly Vector[],
+  zero: Vector,
+  targetDistance: number,
+  directions: readonly Vector[],
 ): Result {
   if (targetDistance <= 0) {
     return {
@@ -60,10 +60,7 @@ function ringHelper(
 
   return {
     cumulative: cumulativeRings,
-    rings: new Map([
-      ...result.rings,
-      [targetDistance, rings],
-    ]),
+    rings: new Map([...result.rings, [targetDistance, rings]]),
   };
 }
 

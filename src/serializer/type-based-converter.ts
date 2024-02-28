@@ -2,7 +2,7 @@ import {Type} from 'gs-types';
 import {Converter, Result} from 'nabu';
 
 class TypeBasedConverter<T> implements Converter<T, unknown> {
-  constructor(private readonly type: Type<T>) { }
+  constructor(private readonly type: Type<T>) {}
 
   convertBackward(value: unknown): Result<T> {
     if (!this.type.check(value)) {

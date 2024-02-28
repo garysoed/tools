@@ -1,7 +1,6 @@
 import {Operator} from '../../typescript/operator';
 import {Ordering} from '../compare/ordering';
 
-
 /**
  * Sorts the given `Array`.
  *
@@ -10,6 +9,8 @@ import {Ordering} from '../compare/ordering';
  * @returns `Ordering` that sorts the given `Array`.
  * @thModule collect.operators
  */
-export function $sort<T>(ordering: Ordering<T>): Operator<readonly T[], readonly T[]> {
-  return array => [...array].sort(ordering);
+export function $sort<T>(
+  ordering: Ordering<T>,
+): Operator<readonly T[], readonly T[]> {
+  return (array) => [...array].sort(ordering);
 }

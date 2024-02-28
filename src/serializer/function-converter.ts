@@ -1,7 +1,9 @@
 import {Converter, Result} from 'nabu';
 
-class FunctionConverter<F extends (...args: any[]) => unknown> implements Converter<F, unknown> {
-  constructor(private readonly paramCount_: number|null) { }
+class FunctionConverter<F extends (...args: any[]) => unknown>
+  implements Converter<F, unknown>
+{
+  constructor(private readonly paramCount_: number | null) {}
 
   convertBackward(input: unknown): Result<F> {
     if (typeof input !== 'string') {
@@ -33,7 +35,9 @@ class FunctionConverter<F extends (...args: any[]) => unknown> implements Conver
   }
 }
 
-export function anyParamsFunctionConverter(): FunctionConverter<(...args: any[]) => any> {
+export function anyParamsFunctionConverter(): FunctionConverter<
+  (...args: any[]) => any
+> {
   return new FunctionConverter(null);
 }
 
@@ -41,6 +45,8 @@ export function noParamFunctionConverter(): FunctionConverter<() => any> {
   return new FunctionConverter(0);
 }
 
-export function oneParamFunctionConverter(): FunctionConverter<(arg: any) => any> {
+export function oneParamFunctionConverter(): FunctionConverter<
+  (arg: any) => any
+> {
   return new FunctionConverter(1);
 }

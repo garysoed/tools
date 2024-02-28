@@ -20,8 +20,12 @@ test('@tools/src/i18n/xlate-service', () => {
       const registration = {
         plain: 'Call {{name}} at {{phone}}',
       };
-      assert(xlate.simple(registration)({'name': 'Tom Hygge', 'phone': '(123) 456-7890'})).to
-          .equal('At (123) 456-7890, call Tom Hygge');
+      assert(
+        xlate.simple(registration)({
+          name: 'Tom Hygge',
+          phone: '(123) 456-7890',
+        }),
+      ).to.equal('At (123) 456-7890, call Tom Hygge');
     });
 
     should('translate strings with no substitutions correctly', () => {
@@ -39,7 +43,9 @@ test('@tools/src/i18n/xlate-service', () => {
       const registration = {
         plain: 'Hello i18n',
       };
-      assert(xlate.simple(registration)()).to.equal('Hello internationalization!');
+      assert(xlate.simple(registration)()).to.equal(
+        'Hello internationalization!',
+      );
     });
   });
 
@@ -86,27 +92,55 @@ test('@tools/src/i18n/xlate-service', () => {
         data: [
           {
             type: 'plural',
-            key: asExtractionKey('[PLURAL] [PLURAL] Buy {{#apple}} apples and {{#banana}} bananas'),
-            zero: asExtractionKey('[PLURAL] Buy {{#apple}} apples and {{#banana}} bananas'),
-            one: asExtractionKey('[PLURAL] Buy an apple and {{#banana}} bananas'),
-            two: asExtractionKey('[PLURAL] Buy {{#apple}} apples and {{#banana}} bananas'),
-            few: asExtractionKey('[PLURAL] Buy {{#apple}} apples and {{#banana}} bananas'),
-            many: asExtractionKey('[PLURAL] Buy {{#apple}} apples and {{#banana}} bananas'),
-            other: asExtractionKey('[PLURAL] Buy {{#apple}} apples and {{#banana}} bananas'),
+            key: asExtractionKey(
+              '[PLURAL] [PLURAL] Buy {{#apple}} apples and {{#banana}} bananas',
+            ),
+            zero: asExtractionKey(
+              '[PLURAL] Buy {{#apple}} apples and {{#banana}} bananas',
+            ),
+            one: asExtractionKey(
+              '[PLURAL] Buy an apple and {{#banana}} bananas',
+            ),
+            two: asExtractionKey(
+              '[PLURAL] Buy {{#apple}} apples and {{#banana}} bananas',
+            ),
+            few: asExtractionKey(
+              '[PLURAL] Buy {{#apple}} apples and {{#banana}} bananas',
+            ),
+            many: asExtractionKey(
+              '[PLURAL] Buy {{#apple}} apples and {{#banana}} bananas',
+            ),
+            other: asExtractionKey(
+              '[PLURAL] Buy {{#apple}} apples and {{#banana}} bananas',
+            ),
           },
           {
             type: 'plural',
-            key: asExtractionKey('[PLURAL] Buy {{#apple}} apples and {{#banana}} bananas'),
-            zero: asExtractionKey('Buy {{#apple}} apples and {{#banana}} bananas'),
+            key: asExtractionKey(
+              '[PLURAL] Buy {{#apple}} apples and {{#banana}} bananas',
+            ),
+            zero: asExtractionKey(
+              'Buy {{#apple}} apples and {{#banana}} bananas',
+            ),
             one: asExtractionKey('Buy {{#apple}} apples and a banana'),
-            two: asExtractionKey('Buy {{#apple}} apples and {{#banana}} bananas'),
-            few: asExtractionKey('Buy {{#apple}} apples and {{#banana}} bananas'),
-            many: asExtractionKey('Buy {{#apple}} apples and {{#banana}} bananas'),
-            other: asExtractionKey('Buy {{#apple}} apples and {{#banana}} bananas'),
+            two: asExtractionKey(
+              'Buy {{#apple}} apples and {{#banana}} bananas',
+            ),
+            few: asExtractionKey(
+              'Buy {{#apple}} apples and {{#banana}} bananas',
+            ),
+            many: asExtractionKey(
+              'Buy {{#apple}} apples and {{#banana}} bananas',
+            ),
+            other: asExtractionKey(
+              'Buy {{#apple}} apples and {{#banana}} bananas',
+            ),
           },
           {
             type: 'plural',
-            key: asExtractionKey('[PLURAL] Buy an apple and {{#banana}} bananas'),
+            key: asExtractionKey(
+              '[PLURAL] Buy an apple and {{#banana}} bananas',
+            ),
             zero: asExtractionKey('Buy an apple and {{#banana}} bananas'),
             one: asExtractionKey('Buy an apple and a banana'),
             two: asExtractionKey('Buy an apple and {{#banana}} bananas'),
@@ -131,8 +165,11 @@ test('@tools/src/i18n/xlate-service', () => {
           },
           {
             type: 'simple',
-            key: asExtractionKey('Buy {{#apple}} apples and {{#banana}} bananas'),
-            translation: '{{#apple}} apples and {{#banana}} bananas, you shall buy',
+            key: asExtractionKey(
+              'Buy {{#apple}} apples and {{#banana}} bananas',
+            ),
+            translation:
+              '{{#apple}} apples and {{#banana}} bananas, you shall buy',
           },
         ],
         locale: 'en-US',
@@ -141,20 +178,31 @@ test('@tools/src/i18n/xlate-service', () => {
       const registration = {
         one: xlate.plural({
           one: xlate.simple({plain: 'Buy an apple and a banana'}),
-          other: xlate.simple({plain: 'Buy an apple and {{#banana}} bananas'}),
+          other: xlate.simple({
+            plain: 'Buy an apple and {{#banana}} bananas',
+          }),
         }),
         other: xlate.plural({
           one: xlate.simple({plain: 'Buy {{#apple}} apples and a banana'}),
-          other: xlate.simple({plain: 'Buy {{#apple}} apples and {{#banana}} bananas'}),
+          other: xlate.simple({
+            plain: 'Buy {{#apple}} apples and {{#banana}} bananas',
+          }),
         }),
       };
 
       const formatter = xlate.plural(registration);
-      assert(formatter(1)(1)()).to.equal('An apple and a banana, you shall buy');
-      assert(formatter(1)(3)({'#banana': '3'})).to.equal('An apple and 3 bananas, you shall buy');
-      assert(formatter(3)(1)({'#apple': '3'})).to.equal('3 apples and a banana, you shall buy');
-      assert(formatter(3)(3)({'#apple': '3', '#banana': '3'})).to
-          .equal('3 apples and 3 bananas, you shall buy');
+      assert(formatter(1)(1)()).to.equal(
+        'An apple and a banana, you shall buy',
+      );
+      assert(formatter(1)(3)({'#banana': '3'})).to.equal(
+        'An apple and 3 bananas, you shall buy',
+      );
+      assert(formatter(3)(1)({'#apple': '3'})).to.equal(
+        '3 apples and a banana, you shall buy',
+      );
+      assert(formatter(3)(3)({'#apple': '3', '#banana': '3'})).to.equal(
+        '3 apples and 3 bananas, you shall buy',
+      );
     });
   });
 });

@@ -2,11 +2,12 @@ import {assert, should, test} from 'gs-testing';
 
 import {Spec} from './spec';
 
-
 test('solver.Spec', () => {
   test('generateValues', () => {
     should('generate the correct values', () => {
-      assert(Spec.newInstance(0, 0.5, 2).generateValues()).to.haveExactElements([0, 0.5, 1, 1.5]);
+      assert(Spec.newInstance(0, 0.5, 2).generateValues()).to.haveExactElements(
+        [0, 0.5, 1, 1.5],
+      );
     });
   });
 

@@ -7,8 +7,8 @@ test('serializer.IterableConverter', () => {
   test('convertBackward', () => {
     should('convert correctly', () => {
       const converter = iterableConverter(
-          content => [...content],
-          integerConverter(),
+        (content) => [...content],
+        integerConverter(),
       );
 
       assert(converter.convertBackward([1, 2, 3])).to.haveProperties({
@@ -18,28 +18,32 @@ test('serializer.IterableConverter', () => {
 
     should('fail if one of the items cannot be converted', () => {
       const converter = iterableConverter(
-          content => [...content],
-          integerConverter(),
+        (content) => [...content],
+        integerConverter(),
       );
 
-      assert(converter.convertBackward([1, '2', 3])).to.haveProperties({success: false});
+      assert(converter.convertBackward([1, '2', 3])).to.haveProperties({
+        success: false,
+      });
     });
 
     should('fail if input is not an array', () => {
       const converter = iterableConverter(
-          content => [...content],
-          integerConverter(),
+        (content) => [...content],
+        integerConverter(),
       );
 
-      assert(converter.convertBackward('[1, 2, 3]')).to.haveProperties({success: false});
+      assert(converter.convertBackward('[1, 2, 3]')).to.haveProperties({
+        success: false,
+      });
     });
   });
 
   test('convertForward', () => {
     should('convert correctly', () => {
       const converter = iterableConverter(
-          content => [...content],
-          integerConverter(),
+        (content) => [...content],
+        integerConverter(),
       );
 
       assert(converter.convertForward([1, 2, 3])).to.haveProperties({
@@ -49,11 +53,13 @@ test('serializer.IterableConverter', () => {
 
     should('fail if one of the items cannot be converted', () => {
       const converter = iterableConverter(
-          content => [...content],
-          integerConverter(),
+        (content) => [...content],
+        integerConverter(),
       );
 
-      assert(converter.convertForward([1, 2.34, 3])).to.haveProperties({success: false});
+      assert(converter.convertForward([1, 2.34, 3])).to.haveProperties({
+        success: false,
+      });
     });
   });
 });

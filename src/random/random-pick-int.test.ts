@@ -1,9 +1,7 @@
 import {assert, should, test} from 'gs-testing';
 
-
 import {randomPickInt} from './random-pick-int';
 import {incrementingRandom} from './testing/incrementing-random';
-
 
 test('@tools/src/random/random-pick-item', () => {
   should('return the correct integer from the range', () => {

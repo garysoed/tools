@@ -9,5 +9,5 @@ import {Operator} from '../../typescript/operator';
  * @thModule collect.operators
  */
 export function $join(separator: string): Operator<readonly string[], string> {
-  return input => input.join(separator);
+  return (input) => input.join(separator);
 }

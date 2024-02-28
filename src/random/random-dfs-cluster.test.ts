@@ -29,9 +29,9 @@ test('@tools/src/random/random-dfs-cluster', () => {
     }
     const size = {min: 8, max: 12};
     const result = randomDfsCluster(
-        [1, 6],
-        {candidates, size, coordinate: cartesian},
-        seed,
+      [1, 6],
+      {candidates, size, coordinate: cartesian},
+      seed,
     ).run(12);
     assert(result.length >= 8).to.beTrue();
     assert(result.length <= 12).to.beTrue();
@@ -41,9 +41,9 @@ test('@tools/src/random/random-dfs-cluster', () => {
     const startingPosition: Vector2 = [1, 6];
     const size = {min: 1, max: 1};
     const result = randomDfsCluster(
-        startingPosition,
-        {candidates: _.candidates, size, coordinate: cartesian},
-        _.seed,
+      startingPosition,
+      {candidates: _.candidates, size, coordinate: cartesian},
+      _.seed,
     ).run(12);
     assert(result).to.equal([startingPosition]);
   });

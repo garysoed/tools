@@ -6,10 +6,10 @@ import {createSheetsTable, Merge} from './sheets-table';
 import {CellData, ExtendedValue, RowData} from './type/sheets';
 
 function createMerge(
-    row: number,
-    rowSpan: number,
-    col: number,
-    colSpan: number,
+  row: number,
+  rowSpan: number,
+  col: number,
+  colSpan: number,
 ): Merge {
   return {
     startRowIndex: row,
@@ -19,7 +19,9 @@ function createMerge(
   };
 }
 
-function createCellData(value: boolean|number|string|undefined = undefined): CellData {
+function createCellData(
+  value: boolean | number | string | undefined = undefined,
+): CellData {
   if (booleanType.check(value)) {
     return {effectiveValue: {boolValue: value}};
   }
@@ -40,10 +42,10 @@ function createRowData(cellData: readonly CellData[]): RowData {
 }
 
 function handleCell<T>(
-    combineFn: (acc: T, curr: ExtendedValue) => T,
-    initCombine: T,
+  combineFn: (acc: T, curr: ExtendedValue) => T,
+  initCombine: T,
 ): (cell: Cell) => T {
-  return cell => {
+  return (cell) => {
     let acc = initCombine;
     if (cell.isSingle) {
       return combineFn(acc, cell.value);
@@ -104,32 +106,32 @@ test('@tools/src/gapi/parse-table', () => {
       ]),
     ];
 
-    const table = createSheetsTable(
-        {data: [{rowData}], merges},
-        0,
-        4,
-        0,
-        4,
-    );
+    const table = createSheetsTable({data: [{rowData}], merges}, 0, 4, 0, 4);
 
     return {table};
   });
 
   should('handle rows with span of 1 correctly', () => {
     const result = parseTable({span: 1, colSpecs: [{index: 1, span: 2}]})
-        .handleCell(
-            0,
-            handleCell((acc, value) => ({b: acc.b || (value.boolValue ?? false)}), {b: false}),
-        )
-        .handleCell(
-            1,
-            handleCell((acc, value) => ({s: acc.s + (value.stringValue ?? '')}), {s: ''}),
-        )
-        .handleCell(
-            2,
-            handleCell((acc, value) => ({n: acc.n + (value.numberValue ?? 0)}), {n: 0}),
-        )
-        .parse(_.table);
+      .handleCell(
+        0,
+        handleCell((acc, value) => ({b: acc.b || (value.boolValue ?? false)}), {
+          b: false,
+        }),
+      )
+      .handleCell(
+        1,
+        handleCell((acc, value) => ({s: acc.s + (value.stringValue ?? '')}), {
+          s: '',
+        }),
+      )
+      .handleCell(
+        2,
+        handleCell((acc, value) => ({n: acc.n + (value.numberValue ?? 0)}), {
+          n: 0,
+        }),
+      )
+      .parse(_.table);
 
     assert(result).to.haveExactElements([
       objectThat<TestData>().haveProperties({b: true, s: 'a', n: 0}),
@@ -139,22 +141,27 @@ test('@tools/src/gapi/parse-table', () => {
     ]);
   });
 
-
   should('handle rows with > 1 span correctly', () => {
     const result = parseTable({span: 2, colSpecs: [{index: 1, span: 2}]})
-        .handleCell(
-            0,
-            handleCell((acc, value) => ({b: acc.b || (value.boolValue ?? false)}), {b: false}),
-        )
-        .handleCell(
-            1,
-            handleCell((acc, value) => ({s: acc.s + (value.stringValue ?? '')}), {s: ''}),
-        )
-        .handleCell(
-            2,
-            handleCell((acc, value) => ({n: acc.n + (value.numberValue ?? 0)}), {n: 0}),
-        )
-        .parse(_.table);
+      .handleCell(
+        0,
+        handleCell((acc, value) => ({b: acc.b || (value.boolValue ?? false)}), {
+          b: false,
+        }),
+      )
+      .handleCell(
+        1,
+        handleCell((acc, value) => ({s: acc.s + (value.stringValue ?? '')}), {
+          s: '',
+        }),
+      )
+      .handleCell(
+        2,
+        handleCell((acc, value) => ({n: acc.n + (value.numberValue ?? 0)}), {
+          n: 0,
+        }),
+      )
+      .parse(_.table);
 
     assert(result).to.haveExactElements([
       objectThat<TestData>().haveProperties({b: true, s: 'ab', n: 1}),

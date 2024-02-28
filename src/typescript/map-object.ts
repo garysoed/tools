@@ -6,10 +6,9 @@ type Replaced<F, T extends SameKey<F>> = {
   readonly [K in keyof F]: T[K];
 };
 
-
 export function mapObject<F, T extends SameKey<F>>(
-    target: F,
-    mapFn: <K extends Extract<keyof F, string>>(key: K, value: F[K]) => T[K],
+  target: F,
+  mapFn: <K extends Extract<keyof F, string>>(key: K, value: F[K]) => T[K],
 ): Replaced<F, T> {
   const partial: Partial<Mutable<T>> = {};
   for (const key in target) {

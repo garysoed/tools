@@ -3,7 +3,6 @@ import {Type, numberType, stringType} from 'gs-types';
 import {SheetsCell, SheetsTable} from './sheets-table';
 import {ExtendedValue} from './type/sheets';
 
-
 /**
  * Cell that contains a single cell in the sheet.
  *
@@ -49,7 +48,7 @@ export interface MultiCell {
  *
  * @thModule gapi.sheets
  */
-export type Cell = SingleCell|MultiCell;
+export type Cell = SingleCell | MultiCell;
 
 interface ColSpec {
   readonly index: number;
@@ -70,19 +69,25 @@ type CellHandler<T> = (cell: Cell) => T;
 
 export class ParserBuilder<T> {
   constructor(
-      private readonly rowSpec: RowSpec,
-      private readonly cellHandlerMap: ReadonlyMap<number, CellHandler<{}>>,
+    private readonly rowSpec: RowSpec,
+    private readonly cellHandlerMap: ReadonlyMap<number, CellHandler<{}>>,
   ) {}
 
-  handleCell<T2 extends {}>(index: number, fn: CellHandler<T2>): ParserBuilder<T&T2> {
-    return new ParserBuilder<T&T2>(
-        this.rowSpec,
-        new Map([...this.cellHandlerMap, [index, fn]]),
+  handleCell<T2 extends {}>(
+    index: number,
+    fn: CellHandler<T2>,
+  ): ParserBuilder<T & T2> {
+    return new ParserBuilder<T & T2>(
+      this.rowSpec,
+      new Map([...this.cellHandlerMap, [index, fn]]),
     );
   }
 
-  handleMultiCell<T2 extends {}>(index: number, fn: (cell: MultiCell) => T2): ParserBuilder<T&T2> {
-    return this.handleCell(index, cell => {
+  handleMultiCell<T2 extends {}>(
+    index: number,
+    fn: (cell: MultiCell) => T2,
+  ): ParserBuilder<T & T2> {
+    return this.handleCell(index, (cell) => {
       if (cell.isSingle) {
         throw new Error('Cell is expected to be multi but was not');
       }
@@ -92,10 +97,10 @@ export class ParserBuilder<T> {
   }
 
   handleSingleCell<T2 extends {}>(
-      index: number,
-      fn: (cell: SingleCell) => T2,
-  ): ParserBuilder<T&T2> {
-    return this.handleCell(index, cell => {
+    index: number,
+    fn: (cell: SingleCell) => T2,
+  ): ParserBuilder<T & T2> {
+    return this.handleCell(index, (cell) => {
       if (!cell.isSingle) {
         throw new Error('Cell is expected to be single but was not');
       }
@@ -131,11 +136,11 @@ export class ParserBuilder<T> {
 }
 
 function getCell(
-    table: SheetsTable,
-    row: number,
-    rowSpan: number,
-    col: number,
-    colSpan: number,
+  table: SheetsTable,
+  row: number,
+  rowSpan: number,
+  col: number,
+  colSpan: number,
 ): Cell {
   const ids = new Set<SheetsCell>();
   const subRows: SheetsCell[][] = [];
@@ -171,8 +176,12 @@ export function parseTable(rowSpecInput: RowSpecInput): ParserBuilder<{}> {
 }
 
 export function parseNumber(): (cell: SingleCell) => number;
-export function parseNumber<T extends number|undefined>(type: Type<T>): (cell: SingleCell) => T;
-export function parseNumber(type: Type<number> = numberType): (cell: SingleCell) => number {
+export function parseNumber<T extends number | undefined>(
+  type: Type<T>,
+): (cell: SingleCell) => T;
+export function parseNumber(
+  type: Type<number> = numberType,
+): (cell: SingleCell) => number {
   return (cell: SingleCell): number => {
     const raw = cell.value.numberValue;
     type.assert(raw);
@@ -181,8 +190,12 @@ export function parseNumber(type: Type<number> = numberType): (cell: SingleCell)
 }
 
 export function parseString(): (cell: SingleCell) => string;
-export function parseString<T extends string|undefined>(type: Type<T>): (cell: SingleCell) => T;
-export function parseString(type: Type<string> = stringType): (cell: SingleCell) => string {
+export function parseString<T extends string | undefined>(
+  type: Type<T>,
+): (cell: SingleCell) => T;
+export function parseString(
+  type: Type<string> = stringType,
+): (cell: SingleCell) => string {
   return (cell: SingleCell): string => {
     const raw = cell.value.stringValue;
     type.assert(raw);

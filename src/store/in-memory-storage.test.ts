@@ -2,7 +2,6 @@ import {assert, asyncAssert, setThat, setup, should, test} from 'gs-testing';
 
 import {InMemoryStorage} from './in-memory-storage';
 
-
 test('@tools/store/in-memory-storage', () => {
   const _ = setup(() => {
     const storage = new InMemoryStorage<number>();
@@ -16,7 +15,9 @@ test('@tools/store/in-memory-storage', () => {
       _.storage.update('id3', 3);
       _.storage.clear();
 
-      await asyncAssert(_.storage.idList$).to.emitWith(setThat<string>().beEmpty());
+      await asyncAssert(_.storage.idList$).to.emitWith(
+        setThat<string>().beEmpty(),
+      );
     });
   });
 
@@ -26,10 +27,12 @@ test('@tools/store/in-memory-storage', () => {
       _.storage.update(id, 1);
 
       assert(_.storage.delete(id)).to.beTrue();
-      await asyncAssert(_.storage.idList$).to.emitWith(setThat<string>().beEmpty());
+      await asyncAssert(_.storage.idList$).to.emitWith(
+        setThat<string>().beEmpty(),
+      );
     });
 
-    should('return false if the specified item doesn\'t exist', () => {
+    should("return false if the specified item doesn't exist", () => {
       assert(_.storage.delete('non existent')).to.beFalse();
     });
   });
@@ -42,7 +45,7 @@ test('@tools/store/in-memory-storage', () => {
       await asyncAssert(_.storage.has(id)).to.emitWith(true);
     });
 
-    should('emit false if the object with the ID doesn\'t exist', async () => {
+    should("emit false if the object with the ID doesn't exist", async () => {
       await asyncAssert(_.storage.has('non existent')).to.emitWith(false);
     });
   });
@@ -56,8 +59,9 @@ test('@tools/store/in-memory-storage', () => {
       _.storage.update(id2, 2);
       _.storage.update(id3, 3);
 
-      await asyncAssert(_.storage.idList$).to
-          .emitWith(setThat<string>().haveExactElements(new Set([id1, id2, id3])));
+      await asyncAssert(_.storage.idList$).to.emitWith(
+        setThat<string>().haveExactElements(new Set([id1, id2, id3])),
+      );
     });
   });
 
@@ -70,7 +74,7 @@ test('@tools/store/in-memory-storage', () => {
       await asyncAssert(_.storage.read(id)).to.emitWith(value);
     });
 
-    should('return undefined if the object doesn\'t exist', async () => {
+    should("return undefined if the object doesn't exist", async () => {
       await asyncAssert(_.storage.read('non existent')).to.emitWith(undefined);
     });
   });
@@ -87,7 +91,7 @@ test('@tools/store/in-memory-storage', () => {
       await asyncAssert(_.storage.read(id)).to.emitWith(value2);
     });
 
-    should('return false if the object for the ID doesn\'t exist', async () => {
+    should("return false if the object for the ID doesn't exist", async () => {
       const value = 123;
       const id = 'id';
 

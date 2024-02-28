@@ -9,7 +9,7 @@ test('@tools/collect/compare/with-map', () => {
     const b = {v: 2};
     const list = [b, a];
 
-    list.sort(withMap(item => `${item.v}`, natural()));
+    list.sort(withMap((item) => `${item.v}`, natural()));
     assert(list).to.haveExactElements([a, b]);
   });
 });

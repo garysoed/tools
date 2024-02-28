@@ -1,1 +1,1 @@
-export type I18nType = 'plural'|'simple';
+export type I18nType = 'plural' | 'simple';

@@ -1,6 +1,5 @@
 import {diffValue} from './diff-value';
 
-
 /**
  * Deletes the entry from the map.
  *
@@ -33,7 +32,7 @@ interface MapSet<K, V> {
  * @typeParam V - Type of the map values.
  * @thHidden
  */
-export type MapDiff<K, V> = MapDelete<K>|MapSet<K, V>;
+export type MapDiff<K, V> = MapDelete<K> | MapSet<K, V>;
 
 /**
  * Emits diffs of the input maps.
@@ -49,9 +48,9 @@ export type MapDiff<K, V> = MapDelete<K>|MapSet<K, V>;
  * @thModule collect
  */
 export function diffMap<K, V>(
-    fromMap: ReadonlyMap<K, V>,
-    toMap: ReadonlyMap<K, V>,
-    diffFn: (a: V, b: V) => boolean = (a, b) => a === b,
+  fromMap: ReadonlyMap<K, V>,
+  toMap: ReadonlyMap<K, V>,
+  diffFn: (a: V, b: V) => boolean = (a, b) => a === b,
 ): ReadonlyArray<MapDiff<K, V>> {
   const diffs: Array<MapDiff<K, V>> = [];
 
@@ -82,18 +81,15 @@ export function diffMap<K, V>(
  * @thModule collect
  */
 export function undiffMap<K, V>(
-    initMap: ReadonlyMap<K, V>,
-    diffs: ReadonlyArray<MapDiff<K, V>>,
+  initMap: ReadonlyMap<K, V>,
+  diffs: ReadonlyArray<MapDiff<K, V>>,
 ): ReadonlyMap<K, V> {
-  return diffs.reduce(
-      (acc, diff) => {
-        switch (diff.type) {
-          case 'delete':
-            return new Map([...acc].filter(([key]) => key !== diff.key));
-          case 'set':
-            return new Map([...acc, [diff.key, diff.value]]);
-        }
-      },
-      initMap,
-  );
+  return diffs.reduce((acc, diff) => {
+    switch (diff.type) {
+      case 'delete':
+        return new Map([...acc].filter(([key]) => key !== diff.key));
+      case 'set':
+        return new Map([...acc, [diff.key, diff.value]]);
+    }
+  }, initMap);
 }

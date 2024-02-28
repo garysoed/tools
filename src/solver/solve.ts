@@ -1,6 +1,5 @@
 import {Spec} from './spec';
 
-
 export class Solve {
   /**
    * Finds the treshold for the given function.
@@ -22,16 +21,17 @@ export class Solve {
    *    not found.
    */
   static findThreshold(
-      spec: Spec,
-      fn: (value: number) => boolean,
-      trueAtLowerValues: boolean): (number|null) {
+    spec: Spec,
+    fn: (value: number) => boolean,
+    trueAtLowerValues: boolean,
+  ): number | null {
     const values = spec.generateValues();
     let startIndex = 0;
     let endIndex = values.length - 1;
-    let bestIndex: (number|null) = null;
+    let bestIndex: number | null = null;
     while (startIndex <= endIndex) {
       const guessIndex = Math.floor((startIndex + endIndex) / 2);
-      const result = fn(values[guessIndex]) ;
+      const result = fn(values[guessIndex]);
 
       if (result) {
         if (bestIndex === null) {

@@ -11,7 +11,9 @@ import {Sortable} from './sortable';
  * @typeParam V - Type of the values in the `Map`.
  * @thModule collect.structures
  */
-export class OrderedMap<K, V> implements ReadonlyOrderedMap<K, V>, Sortable<[K, V]> {
+export class OrderedMap<K, V>
+  implements ReadonlyOrderedMap<K, V>, Sortable<[K, V]>
+{
   /**
    * Default tag when stringifying `OrderedMap`.
    */
@@ -23,7 +25,7 @@ export class OrderedMap<K, V> implements ReadonlyOrderedMap<K, V>, Sortable<[K, 
   /**
    * @param source - Array of entry pairs of the map.
    */
-  constructor(private readonly source: ReadonlyArray<readonly [K, V]> = []) { }
+  constructor(private readonly source: ReadonlyArray<readonly [K, V]> = []) {}
 
   /**
    * Iterates through the entries in the map.
@@ -33,7 +35,7 @@ export class OrderedMap<K, V> implements ReadonlyOrderedMap<K, V>, Sortable<[K, 
   [Symbol.iterator](): IterableIterator<[K, V]> {
     const keys = [...this.keys_];
     const map = new Map(this.map_);
-    return (function*(): Generator<[K, V]> {
+    return (function* (): Generator<[K, V]> {
       for (const key of keys) {
         const value = getRequiredValue(map, key);
         yield [key, value];
@@ -79,7 +81,9 @@ export class OrderedMap<K, V> implements ReadonlyOrderedMap<K, V>, Sortable<[K, 
    * @returns {@link Iterator} that iterates all entries in the map.
    */
   entries(): IterableIterator<[K, V]> {
-    return this.keys_.map(key => [key, getRequiredValue(this.map_, key)] as [K, V]).values();
+    return this.keys_
+      .map((key) => [key, getRequiredValue(this.map_, key)] as [K, V])
+      .values();
   }
 
   /**
@@ -106,7 +110,7 @@ export class OrderedMap<K, V> implements ReadonlyOrderedMap<K, V>, Sortable<[K, 
    * @param key - Key of the entry to return.
    * @returns Value corresponding to the given key, or `undefined` if such value does not exist.
    */
-  get(key: K): V|undefined {
+  get(key: K): V | undefined {
     return this.map_.get(key);
   }
 
@@ -119,7 +123,7 @@ export class OrderedMap<K, V> implements ReadonlyOrderedMap<K, V>, Sortable<[K, 
    * @param index - Index of the entry to return.
    * @returns Entry at the given index, or undefined if none exists.
    */
-  getAt(index: number): [K, V]|undefined {
+  getAt(index: number): [K, V] | undefined {
     const key = this.keys_[index];
     if (key === undefined) {
       return undefined;
@@ -169,7 +173,7 @@ export class OrderedMap<K, V> implements ReadonlyOrderedMap<K, V>, Sortable<[K, 
    * @param ordering - `Ordering` to sort the map with.
    */
   sort(ordering: Ordering<[K, V]>): void {
-    this.keys_.sort(withMap(key => [key, this.get(key)] as [K, V], ordering));
+    this.keys_.sort(withMap((key) => [key, this.get(key)] as [K, V], ordering));
   }
 
   /**
@@ -180,7 +184,11 @@ export class OrderedMap<K, V> implements ReadonlyOrderedMap<K, V>, Sortable<[K, 
    * @param toAdd - Entries to add at the given start index.
    * @returns Array of deleted entries.
    */
-  splice(start: number, deleteCount: number, ...toAdd: ReadonlyArray<[K, V]>): Array<[K, V]> {
+  splice(
+    start: number,
+    deleteCount: number,
+    ...toAdd: ReadonlyArray<[K, V]>
+  ): Array<[K, V]> {
     const addedKeys = toAdd.map(([key]) => key);
     const deletedKeys = this.keys_.splice(start, deleteCount, ...addedKeys);
 
@@ -204,7 +212,7 @@ export class OrderedMap<K, V> implements ReadonlyOrderedMap<K, V>, Sortable<[K, 
    * @returns {@link Iterator} that iterates through the values in the map.
    */
   values(): IterableIterator<V> {
-    return this.keys_.map(key => getRequiredValue(this.map_, key)).values();
+    return this.keys_.map((key) => getRequiredValue(this.map_, key)).values();
   }
 }
 

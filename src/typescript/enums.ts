@@ -23,8 +23,11 @@ export function fromLowerCaseString<E>(stringValue: string, enumSet: any): E {
  * @return The enum value corresponding to the enum number.
  * @thModule typescript
  */
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function fromNumberString<E extends string>(stringValue: string, enumSet: any): E {
+export function fromNumberString<E extends string>(
+  stringValue: string,
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  enumSet: any,
+): E {
   const nameString: string = enumSet[stringValue];
 
   return enumSet[nameString] as E;

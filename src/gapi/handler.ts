@@ -1,5 +1,17 @@
-import {EMPTY, Observable, defer, fromEventPattern, of as observableOf} from 'rxjs';
-import {map, shareReplay, startWith, switchMap, switchMapTo} from 'rxjs/operators';
+import {
+  EMPTY,
+  Observable,
+  defer,
+  fromEventPattern,
+  of as observableOf,
+} from 'rxjs';
+import {
+  map,
+  shareReplay,
+  startWith,
+  switchMap,
+  switchMapTo,
+} from 'rxjs/operators';
 
 /**
  * Manages sign in status of the app.
@@ -16,16 +28,15 @@ export class Handler {
    * @returns `Observable` that emits only when the app is signed in.
    */
   ensureSignedIn(): Observable<unknown> {
-    return this.isSignedIn()
-        .pipe(
-            switchMap(isSignedIn => {
-              if (!isSignedIn) {
-                return this.signIn().pipe(switchMapTo(EMPTY));
-              }
+    return this.isSignedIn().pipe(
+      switchMap((isSignedIn) => {
+        if (!isSignedIn) {
+          return this.signIn().pipe(switchMapTo(EMPTY));
+        }
 
-              return observableOf(isSignedIn);
-            }),
-        );
+        return observableOf(isSignedIn);
+      }),
+    );
   }
 
   /**
@@ -36,15 +47,14 @@ export class Handler {
   isSignedIn(): Observable<boolean> {
     const authInstance = gapi.auth2.getAuthInstance();
     return defer(() => {
-      return fromEventPattern<boolean>(
-          handler => authInstance.isSignedIn.listen(signedIn => handler(signedIn)),
+      return fromEventPattern<boolean>((handler) =>
+        authInstance.isSignedIn.listen((signedIn) => handler(signedIn)),
       );
-    })
-        .pipe(
-            map(() => authInstance.isSignedIn.get()),
-            startWith(authInstance.isSignedIn.get()),
-            shareReplay({bufferSize: 1, refCount: true}),
-        );
+    }).pipe(
+      map(() => authInstance.isSignedIn.get()),
+      startWith(authInstance.isSignedIn.get()),
+      shareReplay({bufferSize: 1, refCount: true}),
+    );
   }
 
   /**

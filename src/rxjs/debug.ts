@@ -11,23 +11,29 @@ const DEFAULT_LOGGER = {
   },
 };
 
-export function debug<T>(loggerIn: Logger|null, ...keys: string[]): MonoTypeOperatorFunction<T> {
+export function debug<T>(
+  loggerIn: Logger | null,
+  ...keys: string[]
+): MonoTypeOperatorFunction<T> {
   const baseKey = keys.join('::');
   const logger = loggerIn ?? DEFAULT_LOGGER;
 
-  return source => new Observable(subscriber => {
-    const key = generateKey(baseKey);
-    SUBSCRIBED_KEYS.add(key);
-    logger.debug(`[${key}] ●`);
-    source.pipe(
-        tap(
-            v => logger.debug(`[${key}]`, '|', v),
-            e => logger.debug(`[${key}]`, '✖', e),
+  return (source) =>
+    new Observable((subscriber) => {
+      const key = generateKey(baseKey);
+      SUBSCRIBED_KEYS.add(key);
+      logger.debug(`[${key}] ●`);
+      source
+        .pipe(
+          tap(
+            (v) => logger.debug(`[${key}]`, '|', v),
+            (e) => logger.debug(`[${key}]`, '✖', e),
             () => logger.debug(`[${key}]`, '-'),
-        ),
-        finalize(() => SUBSCRIBED_KEYS.delete(key)),
-    ).subscribe(subscriber);
-  });
+          ),
+          finalize(() => SUBSCRIBED_KEYS.delete(key)),
+        )
+        .subscribe(subscriber);
+    });
 }
 
 function generateKey(base: string): string {

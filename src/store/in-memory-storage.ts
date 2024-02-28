@@ -3,9 +3,10 @@ import {map} from 'rxjs/operators';
 
 import {EditableStorage} from './editable-storage';
 
-
 export class InMemoryStorage<T> implements EditableStorage<T> {
-  private readonly data$ = new BehaviorSubject<ReadonlyMap<string, T>>(new Map());
+  private readonly data$ = new BehaviorSubject<ReadonlyMap<string, T>>(
+    new Map(),
+  );
 
   clear(): void {
     return this.data$.next(new Map());
@@ -24,15 +25,15 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
   }
 
   has(id: string): Observable<boolean> {
-    return this.data$.pipe(map(map => map.has(id)));
+    return this.data$.pipe(map((map) => map.has(id)));
   }
 
   get idList$(): Observable<ReadonlySet<string>> {
-    return this.data$.pipe(map(data => new Set(data.keys())));
+    return this.data$.pipe(map((data) => new Set(data.keys())));
   }
 
-  read(id: string): Observable<T|undefined> {
-    return this.data$.pipe(map(map => map.get(id) ?? undefined));
+  read(id: string): Observable<T | undefined> {
+    return this.data$.pipe(map((map) => map.get(id) ?? undefined));
   }
 
   update(id: string, instance: T): boolean {

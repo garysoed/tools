@@ -10,9 +10,9 @@ import {Operator} from '../../typescript/operator';
  * @thModule collect.operators
  */
 export function split<T>(
-    count: number,
+  count: number,
 ): Operator<Iterable<T>, readonly [readonly T[], Iterable<T>]> {
-  return from => {
+  return (from) => {
     const fromIterator = from[Symbol.iterator]();
 
     const taken: T[] = [];
@@ -23,8 +23,12 @@ export function split<T>(
       }
     }
 
-    const rest = (function*(): Generator<T> {
-      for (let result = fromIterator.next(); !result.done; result = fromIterator.next()) {
+    const rest = (function* (): Generator<T> {
+      for (
+        let result = fromIterator.next();
+        !result.done;
+        result = fromIterator.next()
+      ) {
         yield result.value;
       }
     })();

@@ -12,11 +12,13 @@ test('@tools/src/rxjs/observable-walker', () => {
     });
 
     should('handle Subjects', async () => {
-      const walker = walkObservable(of({
-        a: new BehaviorSubject({
-          b: {c: new BehaviorSubject(12)},
+      const walker = walkObservable(
+        of({
+          a: new BehaviorSubject({
+            b: {c: new BehaviorSubject(12)},
+          }),
         }),
-      }));
+      );
 
       const cWalker = walker.$('a')._('b').$('c');
       const c$ = createSpySubject(cWalker);
@@ -27,24 +29,29 @@ test('@tools/src/rxjs/observable-walker', () => {
   });
 
   test('$', () => {
-    should('emit the values in the path pointed by the object path', async () => {
-      const walker = walkObservable(of({
-        a: new BehaviorSubject({
-          b: {c: new BehaviorSubject(12)},
-        }),
-      }));
+    should(
+      'emit the values in the path pointed by the object path',
+      async () => {
+        const walker = walkObservable(
+          of({
+            a: new BehaviorSubject({
+              b: {c: new BehaviorSubject(12)},
+            }),
+          }),
+        );
 
-      const cWalker = walker.$('a')._('b').$('c');
-      const c$ = createSpySubject(cWalker);
-      run(of(34).pipe(cWalker.set()));
+        const cWalker = walker.$('a')._('b').$('c');
+        const c$ = createSpySubject(cWalker);
+        run(of(34).pipe(cWalker.set()));
 
-      await asyncAssert(c$).to.emitSequence([12, 34]);
+        await asyncAssert(c$).to.emitSequence([12, 34]);
 
-      // Try overriding the entire tree. c should also be updated
-      run(of({b: {c: new BehaviorSubject(56)}}).pipe(walker.$('a').set()));
+        // Try overriding the entire tree. c should also be updated
+        run(of({b: {c: new BehaviorSubject(56)}}).pipe(walker.$('a').set()));
 
-      await asyncAssert(c$).to.emitSequence([12, 34, 56]);
-    });
+        await asyncAssert(c$).to.emitSequence([12, 34, 56]);
+      },
+    );
 
     should('handle Subject root objects', async () => {
       const walker = walkObservable(new BehaviorSubject(12));
@@ -58,9 +65,11 @@ test('@tools/src/rxjs/observable-walker', () => {
 
   test('set', () => {
     should('update the value of the subject', async () => {
-      const walker = walkObservable(of({
-        a: new BehaviorSubject('abc'),
-      }));
+      const walker = walkObservable(
+        of({
+          a: new BehaviorSubject('abc'),
+        }),
+      );
 
       const a$ = createSpySubject(walker.$('a'));
       run(of('xyz').pipe(walker.$('a').set()));

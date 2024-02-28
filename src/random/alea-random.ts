@@ -4,7 +4,6 @@ import {hasPropertiesType, numberType, Type} from 'gs-types';
 
 import {Random, newRandom} from './random';
 
-
 interface State {
   readonly c: number;
   readonly s0: number;
@@ -20,18 +19,20 @@ const STATE_TYPE: Type<State> = hasPropertiesType({
 
 export function aleaRandom(): Random<number> {
   return newRandom(
-      seed => {
-        const state = STATE_TYPE.check(seed) ? seed : createState(seed);
-        const newState = nextState(state);
+    (seed) => {
+      const state = STATE_TYPE.check(seed) ? seed : createState(seed);
+      const newState = nextState(state);
 
-        return [state.s2, newState];
-      },
-      seed => {
-        const normalizedSeed = STATE_TYPE.check(seed) ? JSON.stringify(seed) : `${seed}-forked`;
-        const state = createState(normalizedSeed);
+      return [state.s2, newState];
+    },
+    (seed) => {
+      const normalizedSeed = STATE_TYPE.check(seed)
+        ? JSON.stringify(seed)
+        : `${seed}-forked`;
+      const state = createState(normalizedSeed);
 
-        return nextState(state);
-      },
+      return nextState(state);
+    },
   );
 }
 
@@ -75,7 +76,7 @@ function createState(seed: any): State {
 }
 
 class Masher {
-  private n = 0xEFC8249D;
+  private n = 0xefc8249d;
 
   mash(data: any): number {
     const strData = String(data);

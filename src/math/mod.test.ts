@@ -2,7 +2,6 @@ import {assert, should, test} from 'gs-testing';
 
 import {mod} from './mod';
 
-
 test('@tools/math/mod', () => {
   should('return 2 for -1 mod 3', () => {
     assert(mod(-1, 3)).to.equal(2);

@@ -8,5 +8,5 @@ import {Operator} from '../../typescript/operator';
  * @thModule collect.operators
  */
 export function $reverse<T>(): Operator<readonly T[], readonly T[]> {
-  return array => [...array].reverse();
+  return (array) => [...array].reverse();
 }

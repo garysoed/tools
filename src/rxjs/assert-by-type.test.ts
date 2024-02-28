@@ -6,11 +6,14 @@ import {assertByType} from './assert-by-type';
 
 test('@tools/rxjs/assert-by-type', () => {
   should('emit the item if type is correct', async () => {
-    await asyncAssert(observableOf(2).pipe(assertByType(numberType))).to.emitWith(2);
+    await asyncAssert(
+      observableOf(2).pipe(assertByType(numberType)),
+    ).to.emitWith(2);
   });
 
   should('throw error if type is incorrect', async () => {
-    await asyncAssert(observableOf('test').pipe(assertByType(numberType))).to
-        .emitErrorWithMessage(/not of type/);
+    await asyncAssert(
+      observableOf('test').pipe(assertByType(numberType)),
+    ).to.emitErrorWithMessage(/not of type/);
   });
 });

@@ -12,7 +12,9 @@ import {Ordering} from './ordering';
  * @returns Ordering object that uses the given array of `Ordering`s to break ties.
  * @thModule collect.compare
  */
-export function compound<T>(orderings: ReadonlyArray<Ordering<T>>): Ordering<T> {
+export function compound<T>(
+  orderings: ReadonlyArray<Ordering<T>>,
+): Ordering<T> {
   return (item1: T, item2: T): CompareResult => {
     for (const ordering of orderings) {
       const result = ordering(item1, item2);

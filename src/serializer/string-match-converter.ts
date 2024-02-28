@@ -1,8 +1,7 @@
 import {Converter, Result} from 'nabu';
 
-
 class StringMatchConverter<T extends string> implements Converter<T, string> {
-  constructor(private readonly acceptableValues_: ReadonlySet<T>) { }
+  constructor(private readonly acceptableValues_: ReadonlySet<T>) {}
 
   convertBackward(value: string): Result<T> {
     const isAcceptable = this.acceptableValues_.has(value as T);
@@ -24,7 +23,7 @@ class StringMatchConverter<T extends string> implements Converter<T, string> {
 }
 
 export function stringMatchConverter<T extends string>(
-    acceptableValues: Iterable<T>,
+  acceptableValues: Iterable<T>,
 ): StringMatchConverter<T> {
   return new StringMatchConverter<T>(new Set([...acceptableValues]));
 }

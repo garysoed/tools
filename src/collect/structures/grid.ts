@@ -16,7 +16,7 @@ export class Grid<T = never> implements ReadonlyGrid<T> {
     return this.entries[Symbol.iterator]();
   }
 
-  as2dArray(): ReadonlyArray<ReadonlyArray<T|undefined>> {
+  as2dArray(): ReadonlyArray<ReadonlyArray<T | undefined>> {
     const rows: T[][] = [];
     for (const entry of this.entries) {
       const cells = rows[entry.position[1]] ?? [];
@@ -28,7 +28,9 @@ export class Grid<T = never> implements ReadonlyGrid<T> {
   }
 
   delete([x, y]: Vector2): boolean {
-    const index = this.entries.findIndex(({position}) => position[0] === x && position[1] === y);
+    const index = this.entries.findIndex(
+      ({position}) => position[0] === x && position[1] === y,
+    );
     if (index < 0) {
       return false;
     }
@@ -38,9 +40,9 @@ export class Grid<T = never> implements ReadonlyGrid<T> {
     return true;
   }
 
-  get([x, y]: Vector2): T|undefined {
+  get([x, y]: Vector2): T | undefined {
     const entry = [...this.entries].find(
-        entry => entry.position[0] === x && entry.position[1] === y,
+      (entry) => entry.position[0] === x && entry.position[1] === y,
     );
     if (!entry) {
       return undefined;
@@ -50,7 +52,9 @@ export class Grid<T = never> implements ReadonlyGrid<T> {
   }
 
   has([x, y]: Vector2): boolean {
-    return [...this.entries].some(entry => entry.position[0] === x && entry.position[1] === y);
+    return [...this.entries].some(
+      (entry) => entry.position[0] === x && entry.position[1] === y,
+    );
   }
 
   get length(): number {
@@ -84,7 +88,9 @@ export class Grid<T = never> implements ReadonlyGrid<T> {
   set(position: Vector2, value: T): this {
     const [x, y] = position;
     this.entries = [
-      ...this.entries.filter(entry => entry.position[0] !== x || entry.position[1] !== y),
+      ...this.entries.filter(
+        (entry) => entry.position[0] !== x || entry.position[1] !== y,
+      ),
       {position, value},
     ];
 
@@ -92,7 +98,9 @@ export class Grid<T = never> implements ReadonlyGrid<T> {
   }
 }
 
-export function gridFrom<T>(arrayEntries: ReadonlyArray<readonly T[]>): Grid<T> {
+export function gridFrom<T>(
+  arrayEntries: ReadonlyArray<readonly T[]>,
+): Grid<T> {
   const entries: Array<GridEntry<T>> = [];
   for (let y = 0; y < arrayEntries.length; y++) {
     const cells = arrayEntries[y];

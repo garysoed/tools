@@ -8,8 +8,10 @@ import {Operator} from '../../typescript/operator';
  * @returns `Operator` that returns `Set` of items in the input and the given `Set`s.
  * @thModule collect.operators
  */
-export function $intersect<T>(otherSet: ReadonlySet<T>): Operator<ReadonlySet<T>, ReadonlySet<T>> {
-  return setA => {
+export function $intersect<T>(
+  otherSet: ReadonlySet<T>,
+): Operator<ReadonlySet<T>, ReadonlySet<T>> {
+  return (setA) => {
     const intersectSet = new Set<T>();
     for (const item of setA) {
       if (otherSet.has(item)) {

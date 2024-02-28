@@ -18,7 +18,7 @@ const INTEGER_PARSER = compose(integerConverter(), human());
 const FLOAT_PARSER = compose(floatConverter(), human());
 const PERCENT_PARSER = percentConverter();
 
-function fromRgb(cssColor: string): Color|null {
+function fromRgb(cssColor: string): Color | null {
   const rgbMatches = RGB_REGEXP.exec(cssColor);
   const rgbaMatches = RGBA_REGEXP.exec(cssColor);
   const matches = rgbMatches === null ? rgbaMatches : rgbMatches;
@@ -30,23 +30,23 @@ function fromRgb(cssColor: string): Color|null {
   let results: Array<Result<number>>;
   if (matchString.indexOf('/') < 0) {
     const list = matchString
-        .replace(/ /g, '')
-        .split(',')
-        .map((match: string, index: number) => {
-          return index <= 2
-            ? INTEGER_PARSER.convertBackward(match)
-            : FLOAT_PARSER.convertBackward(match);
-        });
+      .replace(/ /g, '')
+      .split(',')
+      .map((match: string, index: number) => {
+        return index <= 2
+          ? INTEGER_PARSER.convertBackward(match)
+          : FLOAT_PARSER.convertBackward(match);
+      });
     results = [...list];
   } else {
     const [rgbString] = matchString.split('/');
     const list = rgbString
-        .replace(/ +/g, ' ')
-        .trim()
-        .split(' ')
-        .map((match: string) => {
-          return INTEGER_PARSER.convertBackward(match.trim());
-        });
+      .replace(/ +/g, ' ')
+      .trim()
+      .split(' ')
+      .map((match: string) => {
+        return INTEGER_PARSER.convertBackward(match.trim());
+      });
     results = [...list];
   }
 
@@ -60,7 +60,7 @@ function fromRgb(cssColor: string): Color|null {
   return new RgbColor(resultR.result, resultG.result, resultB.result);
 }
 
-function fromHsl(cssColor: string): Color|null {
+function fromHsl(cssColor: string): Color | null {
   const hslMatches = HSL_REGEXP.exec(cssColor);
   const hslaMatches = HSLA_REGEXP.exec(cssColor);
   const matches = hslMatches === null ? hslaMatches : hslMatches;
@@ -72,30 +72,30 @@ function fromHsl(cssColor: string): Color|null {
   let results: Array<Result<number>>;
   if (matchString.indexOf('/') < 0) {
     const list = matchString
-        .replace(/ /g, '')
-        .split(',')
-        .slice(0, 3)
-        .map((match: string, index: number) => {
-          if (index === 0) {
-            return INTEGER_PARSER.convertBackward(match);
-          } else {
-            return PERCENT_PARSER.convertBackward(match);
-          }
-        });
+      .replace(/ /g, '')
+      .split(',')
+      .slice(0, 3)
+      .map((match: string, index: number) => {
+        if (index === 0) {
+          return INTEGER_PARSER.convertBackward(match);
+        } else {
+          return PERCENT_PARSER.convertBackward(match);
+        }
+      });
     results = [...list];
   } else {
     const [hslString] = matchString.split('/');
     const list = hslString
-        .replace(/ +/g, ' ')
-        .trim()
-        .split(' ')
-        .map((match: string, index: number) => {
-          if (index === 0) {
-            return INTEGER_PARSER.convertBackward(match);
-          } else {
-            return PERCENT_PARSER.convertBackward(match);
-          }
-        });
+      .replace(/ +/g, ' ')
+      .trim()
+      .split(' ')
+      .map((match: string, index: number) => {
+        if (index === 0) {
+          return INTEGER_PARSER.convertBackward(match);
+        } else {
+          return PERCENT_PARSER.convertBackward(match);
+        }
+      });
     results = [...list];
   }
 
@@ -109,7 +109,7 @@ function fromHsl(cssColor: string): Color|null {
   return new HslColor(resultH.result, resultS.result, resultL.result);
 }
 
-function fromHex(cssColor: string): Color|null {
+function fromHex(cssColor: string): Color | null {
   const hexMatches = HEX_REGEXP.exec(cssColor);
   if (hexMatches === null) {
     return null;
@@ -120,18 +120,15 @@ function fromHex(cssColor: string): Color|null {
   switch (matches.length) {
     case 3:
     case 4:
-      components = matches
-          .split('')
-          .map((match: string) => {
-            return Number.parseInt(`0x${match}${match}`, 16);
-          });
+      components = matches.split('').map((match: string) => {
+        return Number.parseInt(`0x${match}${match}`, 16);
+      });
       break;
     case 6:
     case 8:
-      components = (matches.match(/../g) || [])
-          .map((match: string) => {
-            return Number.parseInt(`0x${match}`, 16);
-          });
+      components = (matches.match(/../g) || []).map((match: string) => {
+        return Number.parseInt(`0x${match}`, 16);
+      });
       break;
     default:
       return null;
@@ -157,7 +154,7 @@ function fromHex(cssColor: string): Color|null {
  * @returns The Color object created from the CSS color string, or null if the string is invalid.
  * @thModule color
  */
-export function fromCssColor(cssColor: string): Color|null {
+export function fromCssColor(cssColor: string): Color | null {
   if (RGB_REGEXP.test(cssColor) || RGBA_REGEXP.test(cssColor)) {
     return fromRgb(cssColor);
   } else if (HSL_REGEXP.test(cssColor) || HSLA_REGEXP.test(cssColor)) {
@@ -181,8 +178,10 @@ export function getContrast(foreground: Color, background: Color): number {
   const fgLuminance = foreground.luminance;
   const bgLuminance = background.luminance;
 
-  return (Math.max(fgLuminance, bgLuminance) + 0.05)
-      / (Math.min(fgLuminance, bgLuminance) + 0.05);
+  return (
+    (Math.max(fgLuminance, bgLuminance) + 0.05) /
+    (Math.min(fgLuminance, bgLuminance) + 0.05)
+  );
 }
 
 /**
@@ -198,9 +197,11 @@ export function getContrast(foreground: Color, background: Color): number {
  * @thModule color
  */
 export function getDistance(color1: Color, color2: Color): number {
-  return (color1.red - color2.red) ** 2
-      + (color1.green - color2.green) ** 2
-      + (color1.blue - color2.blue) ** 2;
+  return (
+    (color1.red - color2.red) ** 2 +
+    (color1.green - color2.green) ** 2 +
+    (color1.blue - color2.blue) ** 2
+  );
 }
 
 /**
@@ -217,9 +218,10 @@ export function getDistance(color1: Color, color2: Color): number {
  */
 export function mix(color1: Color, color2: Color, amount: number): Color {
   return new RgbColor(
-      Math.round(color1.red * amount + color2.red * (1 - amount)),
-      Math.round(color1.green * amount + color2.green * (1 - amount)),
-      Math.round(color1.blue * amount + color2.blue * (1 - amount)));
+    Math.round(color1.red * amount + color2.red * (1 - amount)),
+    Math.round(color1.green * amount + color2.green * (1 - amount)),
+    Math.round(color1.blue * amount + color2.blue * (1 - amount)),
+  );
 }
 
 /**

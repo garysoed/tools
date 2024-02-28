@@ -6,19 +6,19 @@ export class ArraySubject<T> extends BehaviorSubject<readonly T[]> {
     super(initValue ?? []);
   }
 
-  get(index: number): Observable<T|undefined> {
-    return this.pipe(map(array => array[index]));
+  get(index: number): Observable<T | undefined> {
+    return this.pipe(map((array) => array[index]));
   }
 
   push(...items: readonly T[]): void {
-    this.update(newArray => {
+    this.update((newArray) => {
       newArray.push(...items);
       return newArray;
     });
   }
 
   set(index: number, value: T): void {
-    this.update(newArray => {
+    this.update((newArray) => {
       newArray[index] = value;
       return newArray;
     });

@@ -3,10 +3,10 @@
  */
 export class Spec {
   constructor(
-      private readonly start: number,
-      private readonly delta: number,
-      private readonly end: number,
-  ) { }
+    private readonly start: number,
+    private readonly delta: number,
+    private readonly end: number,
+  ) {}
 
   /**
    * Generates the values specified.

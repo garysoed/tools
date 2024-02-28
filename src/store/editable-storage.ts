@@ -1,6 +1,5 @@
 import {ReadableStorage} from './readable-storage';
 
-
 /**
  * Storage that can be modified and read.
  *
@@ -8,7 +7,6 @@ import {ReadableStorage} from './readable-storage';
  * @thModule store
  */
 export interface EditableStorage<T> extends ReadableStorage<T> {
-
   /**
    * Clears all data in the storage.
    */

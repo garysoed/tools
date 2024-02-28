@@ -1,7 +1,6 @@
 import {Operator} from '../../typescript/operator';
 import {Ordering} from '../compare/ordering';
 
-
 /**
  * Returns the largest element in the given array.
  *
@@ -10,8 +9,10 @@ import {Ordering} from '../compare/ordering';
  * @returns The largest element in the given array.
  * @thModule collect.operators
  */
-export function $max<T>(ordering: Ordering<T>): Operator<readonly T[], T|null> {
-  return obj => {
+export function $max<T>(
+  ordering: Ordering<T>,
+): Operator<readonly T[], T | null> {
+  return (obj) => {
     let max = null;
     for (const item of obj) {
       if (max === null) {

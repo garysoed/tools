@@ -4,7 +4,7 @@ import {Grid, gridFrom} from './grid';
 
 test('@tools/src/collect/structures/grid', () => {
   const _ = setup(() => {
-    const grid = new Grid<string|null>();
+    const grid = new Grid<string | null>();
     grid.set([0, 0], '0,0');
     grid.set([0, 1], '0,1');
     grid.set([0, 2], '0,2');
@@ -41,8 +41,12 @@ test('@tools/src/collect/structures/grid', () => {
     should('return the correct 2d array', () => {
       assert(_.grid.as2dArray()).to.haveExactElements([
         arrayThat<string>().haveExactElements(['0,0', '1,0', '2,0']),
-        arrayThat<string|undefined>().haveExactElements(['0,1', undefined, '2,1']),
-        arrayThat<string|null>().haveExactElements(['0,2', '1,2', null]),
+        arrayThat<string | undefined>().haveExactElements([
+          '0,1',
+          undefined,
+          '2,1',
+        ]),
+        arrayThat<string | null>().haveExactElements(['0,2', '1,2', null]),
       ]);
     });
   });

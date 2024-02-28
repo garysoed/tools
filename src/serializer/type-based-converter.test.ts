@@ -4,7 +4,6 @@ import {strict} from 'nabu';
 
 import {typeBased} from './type-based-converter';
 
-
 test('serializer.TypeBasedConverter', () => {
   const _ = setup(() => {
     const converter = typeBased(numberType);

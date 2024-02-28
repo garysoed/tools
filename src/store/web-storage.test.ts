@@ -1,8 +1,16 @@
-import {assert, asyncAssert, createSpySubject, setThat, setup, should, teardown, test} from 'gs-testing';
+import {
+  assert,
+  asyncAssert,
+  createSpySubject,
+  setThat,
+  setup,
+  should,
+  teardown,
+  test,
+} from 'gs-testing';
 import {identity, json} from 'nabu';
 
 import {WebStorage} from './web-storage';
-
 
 function setStorage(storage: Storage, key: string, value: string): void {
   storage.setItem(key, value);
@@ -15,10 +23,10 @@ test('@tools/store/web-storage', () => {
   const _ = setup(() => {
     localStorage.clear();
     const storage = new WebStorage(
-        localStorage,
-        PREFIX,
-        identity<number>(),
-        json(),
+      localStorage,
+      PREFIX,
+      identity<number>(),
+      json(),
     );
     return {storage};
   });
@@ -37,7 +45,9 @@ test('@tools/store/web-storage', () => {
       _.storage.update(id3, 3);
       _.storage.clear();
 
-      await asyncAssert(_.storage.idList$).to.emitWith(setThat<string>().beEmpty());
+      await asyncAssert(_.storage.idList$).to.emitWith(
+        setThat<string>().beEmpty(),
+      );
       assert(localStorage.getItem(PREFIX)).to.beNull();
       assert(localStorage.getItem(`${PREFIX}/${id1}`)).to.beNull();
       assert(localStorage.getItem(`${PREFIX}/${id2}`)).to.beNull();
@@ -45,19 +55,20 @@ test('@tools/store/web-storage', () => {
     });
   });
 
-
   test('delete', () => {
     should('delete the specified item', async () => {
       const id = 'id';
       _.storage.update(id, 1);
 
       assert(_.storage.delete(id)).to.beTrue();
-      await asyncAssert(_.storage.idList$).to.emitWith(setThat<string>().beEmpty());
+      await asyncAssert(_.storage.idList$).to.emitWith(
+        setThat<string>().beEmpty(),
+      );
       assert(localStorage.getItem(PREFIX)).to.equal('[]');
       assert(localStorage.getItem(`${PREFIX}/${id}`)).to.beNull();
     });
 
-    should('return false if the specified item doesn\'t exist', () => {
+    should("return false if the specified item doesn't exist", () => {
       assert(_.storage.delete('non existent')).to.beFalse();
     });
   });
@@ -70,7 +81,7 @@ test('@tools/store/web-storage', () => {
       await asyncAssert(_.storage.has(id)).to.emitWith(true);
     });
 
-    should('emit false if the object with the ID doesn\'t exist', async () => {
+    should("emit false if the object with the ID doesn't exist", async () => {
       await asyncAssert(_.storage.has('non existent')).to.emitWith(false);
     });
 
@@ -93,8 +104,9 @@ test('@tools/store/web-storage', () => {
       _.storage.update(id2, 2);
       _.storage.update(id3, 3);
 
-      await asyncAssert(_.storage.idList$).to
-          .emitWith(setThat<string>().haveExactElements(new Set([id1, id2, id3])));
+      await asyncAssert(_.storage.idList$).to.emitWith(
+        setThat<string>().haveExactElements(new Set([id1, id2, id3])),
+      );
     });
 
     should('respond to changes in the storage', async () => {
@@ -125,7 +137,7 @@ test('@tools/store/web-storage', () => {
       await asyncAssert(_.storage.read(id)).to.emitWith(value);
     });
 
-    should('return undefined if the object doesn\'t exist', async () => {
+    should("return undefined if the object doesn't exist", async () => {
       await asyncAssert(_.storage.read('non existent')).to.emitWith(undefined);
     });
 
@@ -155,7 +167,7 @@ test('@tools/store/web-storage', () => {
       assert(localStorage.getItem(`${PREFIX}/${id}`)).to.equal(`${value2}`);
     });
 
-    should('return false if the object for the ID doesn\'t exist', async () => {
+    should("return false if the object for the ID doesn't exist", async () => {
       const value = 123;
       const id = 'id';
 

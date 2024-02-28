@@ -1,7 +1,15 @@
-import {Spy, assert, createSpy, fake, resetCalls, should, test, setup} from 'gs-testing';
+import {
+  Spy,
+  assert,
+  createSpy,
+  fake,
+  resetCalls,
+  should,
+  test,
+  setup,
+} from 'gs-testing';
 
 import {cache} from '../data/cache';
-
 
 test('data.cache', () => {
   /**
@@ -9,9 +17,9 @@ test('data.cache', () => {
    */
   class TestClass {
     constructor(
-        readonly spyGetProperty: Spy<number, []>,
-        readonly spyGetter: Spy<number, []>,
-    ) { }
+      readonly spyGetProperty: Spy<number, []>,
+      readonly spyGetter: Spy<number, []>,
+    ) {}
 
     @cache()
     get getter(): number {

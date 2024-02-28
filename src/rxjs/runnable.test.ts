@@ -13,9 +13,7 @@ class TestClass extends Runnable {
   }
 
   private setup(values: readonly number[]): Observable<unknown> {
-    return observableOf(...values).pipe(
-        tap(value => this.handler(value)),
-    );
+    return observableOf(...values).pipe(tap((value) => this.handler(value)));
   }
 }
 

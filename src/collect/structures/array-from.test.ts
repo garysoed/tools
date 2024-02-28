@@ -13,6 +13,10 @@ test('@tools/collect/structures/iterable-from', () => {
     root.appendChild(child2);
     root.appendChild(child3);
 
-    assert([...arrayFrom(root.childNodes)]).to.haveExactElements([child1, child2, child3]);
+    assert([...arrayFrom(root.childNodes)]).to.haveExactElements([
+      child1,
+      child2,
+      child3,
+    ]);
   });
 });

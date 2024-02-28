@@ -24,14 +24,17 @@ export function natural(): Ordering<string> {
       normal(),
     ]);
 
-    function normalize(str: string): number|string {
+    function normalize(str: string): number | string {
       const parseResult = parseFloat(str);
 
       return isNaN(parseResult) ? str : parseResult;
     }
 
     for (let i = 0; i < maxLength; i++) {
-      const result = ordering(normalize(item1Chunks[i]), normalize(item2Chunks[i]));
+      const result = ordering(
+        normalize(item1Chunks[i]),
+        normalize(item2Chunks[i]),
+      );
       if (result !== 0) {
         return result;
       }

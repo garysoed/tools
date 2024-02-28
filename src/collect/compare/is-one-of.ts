@@ -9,5 +9,5 @@ import {Ordering} from './ordering';
  * @thModule collect.compare
  */
 export function isOneOf<T>(checkedSet: ReadonlySet<T>): Ordering<T> {
-  return matches(item => checkedSet.has(item));
+  return matches((item) => checkedSet.has(item));
 }

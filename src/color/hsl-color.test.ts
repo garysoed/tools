@@ -2,7 +2,6 @@ import {assert, should} from 'gs-testing';
 
 import {HslColor} from './hsl-color';
 
-
 describe('color.HslColor', () => {
   describe('blue', () => {
     should('return the correct value for blue', () => {

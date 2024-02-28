@@ -1,6 +1,10 @@
 import {assert, should, stringThat, test} from 'gs-testing';
 
-import {anyParamsFunctionConverter, noParamFunctionConverter, oneParamFunctionConverter} from './function-converter';
+import {
+  anyParamsFunctionConverter,
+  noParamFunctionConverter,
+  oneParamFunctionConverter,
+} from './function-converter';
 
 test('serializer.FunctionConverter', () => {
   test('convertBackward', () => {
@@ -8,7 +12,9 @@ test('serializer.FunctionConverter', () => {
       const fnString = 'function test(a) { return 1 + a; }';
       const parser = oneParamFunctionConverter();
 
-      const result = parser.convertBackward(fnString) as {result: (...args: any[]) => unknown};
+      const result = parser.convertBackward(fnString) as {
+        result: (...args: any[]) => unknown;
+      };
       assert(result.result(3)).to.equal(4);
     });
 
@@ -16,14 +22,18 @@ test('serializer.FunctionConverter', () => {
       const fnString = 'function test(a) { return 1 + a; }';
       const parser = noParamFunctionConverter();
 
-      assert(parser.convertBackward(fnString)).to.haveProperties({success: false});
+      assert(parser.convertBackward(fnString)).to.haveProperties({
+        success: false,
+      });
     });
 
     should('handle any number of param counts', () => {
       const fnString = 'function test(a) { return 1 + a; }';
       const parser = anyParamsFunctionConverter();
 
-      const result = parser.convertBackward(fnString) as {result: (...args: any[]) => unknown};
+      const result = parser.convertBackward(fnString) as {
+        result: (...args: any[]) => unknown;
+      };
       assert(result.result(2)).to.equal(3);
     });
 
@@ -31,7 +41,9 @@ test('serializer.FunctionConverter', () => {
       const fnString = '123';
       const parser = anyParamsFunctionConverter();
 
-      assert(parser.convertBackward(fnString)).to.haveProperties({success: false});
+      assert(parser.convertBackward(fnString)).to.haveProperties({
+        success: false,
+      });
     });
 
     should('fail for non string inputs', () => {
@@ -43,30 +55,34 @@ test('serializer.FunctionConverter', () => {
 
   test('convertForward', () => {
     should('return the correct value', () => {
-      const fn = function test(a: number): number { return a + 1; };
+      const fn = function test(a: number): number {
+        return a + 1;
+      };
       const parser = oneParamFunctionConverter();
 
-      assert(parser.convertForward(fn)).to
-          .haveProperties({
-            result: stringThat().match(/function test\(a\)/),
-          });
+      assert(parser.convertForward(fn)).to.haveProperties({
+        result: stringThat().match(/function test\(a\)/),
+      });
     });
 
     should('fail if param count does not match', () => {
-      const fn = function test(): number { return 1; };
+      const fn = function test(): number {
+        return 1;
+      };
       const parser = oneParamFunctionConverter();
 
       assert(parser.convertForward(fn)).to.haveProperties({success: false});
     });
 
     should('handle any number of params', () => {
-      const fn = function test(a: number): number { return a + 1; };
+      const fn = function test(a: number): number {
+        return a + 1;
+      };
       const parser = anyParamsFunctionConverter();
 
-      assert(parser.convertForward(fn)).to
-          .haveProperties({
-            result: stringThat().match(/function test\(a\)/),
-          });
+      assert(parser.convertForward(fn)).to.haveProperties({
+        result: stringThat().match(/function test\(a\)/),
+      });
     });
   });
 });

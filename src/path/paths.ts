@@ -17,7 +17,9 @@ import {relativePathParser} from './relative-path-parser';
 export function absolutePath(pathString: string): AbsolutePath {
   const result = absolutePathParser().convertBackward(pathString);
   if (!result.success) {
-    throw new Error(`pathString should be a valid absolute path but was ${pathString}`);
+    throw new Error(
+      `pathString should be a valid absolute path but was ${pathString}`,
+    );
   }
 
   return result.result;
@@ -77,7 +79,10 @@ export interface FileParts {
  *
  * @thModule path
  */
-export function getFilenameParts(filename: string): {extension: string; name: string} {
+export function getFilenameParts(filename: string): {
+  extension: string;
+  name: string;
+} {
   const parts = filename.split('.');
   const extensionIndex = Math.max(1, parts.length - 1);
   const extension = parts[extensionIndex] || '';
@@ -96,7 +101,7 @@ export function getFilenameParts(filename: string): {extension: string; name: st
  *
  * @thModule path
  */
-export function getItemName(path: Path): string|null {
+export function getItemName(path: Path): string | null {
   const parts = path.parts;
 
   return parts[parts.length - 1] || null;
@@ -111,7 +116,10 @@ export function getItemName(path: Path): string|null {
  *
  * @thModule path
  */
-export function getRelativePath(srcPath: AbsolutePath, destPath: AbsolutePath): RelativePath {
+export function getRelativePath(
+  srcPath: AbsolutePath,
+  destPath: AbsolutePath,
+): RelativePath {
   let commonCount = 0;
   const thisParts = srcPath.parts;
   const thatParts = destPath.parts;
@@ -129,10 +137,7 @@ export function getRelativePath(srcPath: AbsolutePath, destPath: AbsolutePath): 
     parts.push('..');
   }
 
-  return new RelativePath([
-    ...parts,
-    ...thatParts.slice(upCount),
-  ]);
+  return new RelativePath([...parts, ...thatParts.slice(upCount)]);
 }
 
 /**
@@ -169,13 +174,22 @@ export function getSubPathsToRoot(path: AbsolutePath): readonly AbsolutePath[] {
  *
  * @thModule path
  */
-export function join(root: AbsolutePath, ...paths: readonly RelativePath[]): AbsolutePath;
+export function join(
+  root: AbsolutePath,
+  ...paths: readonly RelativePath[]
+): AbsolutePath;
 /**
  * @param root - The root path.
  * @param paths - Paths to join together.
  */
-export function join(root: RelativePath, ...paths: readonly RelativePath[]): RelativePath;
-export function join(root: AbsolutePath|RelativePath, ...paths: readonly RelativePath[]): Path {
+export function join(
+  root: RelativePath,
+  ...paths: readonly RelativePath[]
+): RelativePath;
+export function join(
+  root: AbsolutePath | RelativePath,
+  ...paths: readonly RelativePath[]
+): Path {
   const srcParts = [...root.parts];
   for (const path of paths) {
     for (const part of path.parts) {
@@ -211,7 +225,7 @@ export function normalize(path: AbsolutePath): AbsolutePath;
 export function normalize(path: RelativePath): RelativePath;
 export function normalize(path: AbsolutePath | RelativePath): Path {
   // Removes all instances of '' parts.
-  const noEmptyParts = path.parts.filter(part => !!part);
+  const noEmptyParts = path.parts.filter((part) => !!part);
 
   // Removes all instances of '.' part except the first one.
   const noCurrentParts: string[] = [];
@@ -224,8 +238,8 @@ export function normalize(path: AbsolutePath | RelativePath): Path {
 
   // Copy all trailing '..' part.
   const nonDoubleDotEntry = noCurrentParts
-      .map((value, index) => [value, index] as [string, number])
-      .filter(([part]) => part !== '..')[0];
+    .map((value, index) => [value, index] as [string, number])
+    .filter(([part]) => part !== '..')[0];
   const nonDoubleIndex = nonDoubleDotEntry ? nonDoubleDotEntry[1] + 1 : 0;
   const normalizedParts: string[] = [];
   for (let i = 0; i < nonDoubleIndex; i++) {
@@ -234,9 +248,11 @@ export function normalize(path: AbsolutePath | RelativePath): Path {
 
   for (let i = nonDoubleIndex; i < noCurrentParts.length; i++) {
     const part = noCurrentParts[i];
-    if (part === '..'
-        && normalizedParts.length > 0
-        && normalizedParts[normalizedParts.length - 1] !== '..') {
+    if (
+      part === '..' &&
+      normalizedParts.length > 0 &&
+      normalizedParts[normalizedParts.length - 1] !== '..'
+    ) {
       normalizedParts.pop();
     } else {
       normalizedParts.push(part);
@@ -262,7 +278,9 @@ export function normalize(path: AbsolutePath | RelativePath): Path {
 export function relativePath(pathString: string): RelativePath {
   const result = relativePathParser().convertBackward(pathString);
   if (!result.success) {
-    throw new Error(`pathString should be a valid relative path but was ${pathString}`);
+    throw new Error(
+      `pathString should be a valid relative path but was ${pathString}`,
+    );
   }
 
   return result.result;

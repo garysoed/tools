@@ -22,9 +22,9 @@ test('@tools/src/random/random-bfs-cluster', () => {
   should('randomly generate a cluster', () => {
     const size = {min: 8, max: 12};
     const result = randomBfsCluster(
-        [1, 6],
-        {candidates: _.candidates, size, coordinate: cartesian},
-        _.seed,
+      [1, 6],
+      {candidates: _.candidates, size, coordinate: cartesian},
+      _.seed,
     ).run(12);
     assert(result.length >= 8).to.beTrue();
     assert(result.length <= 12).to.beTrue();
@@ -34,9 +34,9 @@ test('@tools/src/random/random-bfs-cluster', () => {
     const startingPosition: Vector2 = [1, 6];
     const size = {min: 1, max: 1};
     const result = randomBfsCluster(
-        startingPosition,
-        {candidates: _.candidates, size, coordinate: cartesian},
-        _.seed,
+      startingPosition,
+      {candidates: _.candidates, size, coordinate: cartesian},
+      _.seed,
     ).run(12);
     assert(result).to.equal([startingPosition]);
   });

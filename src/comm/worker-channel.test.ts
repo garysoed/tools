@@ -4,7 +4,11 @@ import {FakeWorker} from 'gs-testing/export/fake';
 import {FakeWorkerGlobalScope} from 'gs-testing/export/fake';
 import {Subject} from 'rxjs';
 
-import {WorkerPayload, workerClientChannel, workerServerChannel} from './worker-channel';
+import {
+  WorkerPayload,
+  workerClientChannel,
+  workerServerChannel,
+} from './worker-channel';
 
 test('@tools/src/comm/worker-channel', () => {
   test('workerClientChannel', () => {
@@ -22,7 +26,7 @@ test('@tools/src/comm/worker-channel', () => {
         _.fakeWorker.dispatchEvent(new MessageEvent('message', {data}));
 
         await asyncAssert(onMessage$).to.emitWith(
-            objectThat<WorkerPayload>().equal({payload: data}),
+          objectThat<WorkerPayload>().equal({payload: data}),
         );
       });
     });
@@ -34,10 +38,16 @@ test('@tools/src/comm/worker-channel', () => {
         const transferable2 = await createTestImageBitmap();
 
         const messageSent$ = createSpySubject(_.fakeWorker.onMessageSent$);
-        _.channel.send({payload: data, transfers: [transferable1, transferable2]});
+        _.channel.send({
+          payload: data,
+          transfers: [transferable1, transferable2],
+        });
 
         await asyncAssert(messageSent$).to.emitWith(data);
-        assert(_.fakeWorker.transferables).to.equal([transferable1, transferable2]);
+        assert(_.fakeWorker.transferables).to.equal([
+          transferable1,
+          transferable2,
+        ]);
       });
     });
   });
@@ -57,8 +67,9 @@ test('@tools/src/comm/worker-channel', () => {
         const onMessage$ = createSpySubject(_.channel.onMessage$);
         _.onMessage$.next(new MessageEvent('message', {data}));
 
-        await asyncAssert(onMessage$)
-            .to.emitWith(objectThat<WorkerPayload>().equal({payload: data}));
+        await asyncAssert(onMessage$).to.emitWith(
+          objectThat<WorkerPayload>().equal({payload: data}),
+        );
       });
     });
 
@@ -66,7 +77,9 @@ test('@tools/src/comm/worker-channel', () => {
       should('post the message correctly', async () => {
         const data = {a: 1};
 
-        const messageSent$ = createSpySubject(_.fakeWorkerGlobalScope.onMessageSent$);
+        const messageSent$ = createSpySubject(
+          _.fakeWorkerGlobalScope.onMessageSent$,
+        );
         _.channel.send({payload: data});
 
         await asyncAssert(messageSent$).to.emitWith(data);

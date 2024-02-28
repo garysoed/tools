@@ -16,14 +16,14 @@ class Cases {
    */
   toCamelCase(): string {
     return this.words
-        .map((value, index) => {
-          if (index === 0) {
-            return value;
-          } else {
-            return `${value[0].toUpperCase()}${value.substring(1)}`;
-          }
-        })
-        .join('');
+      .map((value, index) => {
+        if (index === 0) {
+          return value;
+        } else {
+          return `${value[0].toUpperCase()}${value.substring(1)}`;
+        }
+      })
+      .join('');
   }
 
   /**
@@ -42,8 +42,8 @@ class Cases {
    */
   toPascalCase(): string {
     return this.words
-        .map(value => `${value[0].toUpperCase()}${value.substring(1)}`)
-        .join('');
+      .map((value) => `${value[0].toUpperCase()}${value.substring(1)}`)
+      .join('');
   }
 
   /**
@@ -52,39 +52,34 @@ class Cases {
    * @return The upper case version of the string.
    */
   toUpperCase(): string {
-    return this.words
-        .map(value => value.toUpperCase())
-        .join('_');
+    return this.words.map((value) => value.toUpperCase()).join('_');
   }
 }
 
 /**
-   * Starting point of the case conversion.
-   *
-   * @return Cases object to chain the conversion.
-   */
+ * Starting point of the case conversion.
+ *
+ * @return Cases object to chain the conversion.
+ */
 export function convertCaseFrom(input: string): Cases {
   let words: string[];
   if (CAMEL_CASE_REGEX.test(input)) {
     words = input
-        .replace(/([A-Z])/g, ' $1')
-        .split(' ')
-        .map(word => word.toLowerCase());
+      .replace(/([A-Z])/g, ' $1')
+      .split(' ')
+      .map((word) => word.toLowerCase());
   } else if (PASCAL_CASE_REGEX.test(input)) {
     const normalizedInput = `${input[0].toLowerCase()}${input.substring(1)}`;
-    words = normalizedInput.replace(/([A-Z])/g, ' $1')
-        .split(' ')
-        .map(word => word.toLowerCase());
+    words = normalizedInput
+      .replace(/([A-Z])/g, ' $1')
+      .split(' ')
+      .map((word) => word.toLowerCase());
   } else if (LOWER_CASE_REGEX.test(input)) {
     words = input.split('-');
   } else if (UPPER_CASE_REGEX.test(input)) {
-    words = input
-        .split('_')
-        .map(word => word.toLowerCase());
+    words = input.split('_').map((word) => word.toLowerCase());
   } else {
-    words = input
-        .split(' ')
-        .map(word => word.toLowerCase());
+    words = input.split(' ').map((word) => word.toLowerCase());
   }
 
   return new Cases(words);

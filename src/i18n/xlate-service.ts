@@ -1,10 +1,20 @@
 import {mapFrom} from '../collect/structures/map-from';
 import {cache} from '../data/cache';
 
-import {Extraction, ExtractionKey, PluralExtraction, SimpleExtraction} from './extraction';
+import {
+  Extraction,
+  ExtractionKey,
+  PluralExtraction,
+  SimpleExtraction,
+} from './extraction';
 import {Formatter, PluralFormatter, SimpleFormatter} from './formatter';
 import {I18n} from './i18n';
-import {PluralRegistration, SimpleRegistration, getPluralKey, getSimpleKey} from './registration';
+import {
+  PluralRegistration,
+  SimpleRegistration,
+  getPluralKey,
+  getSimpleKey,
+} from './registration';
 
 interface Args {
   readonly data: readonly Extraction[];
@@ -15,7 +25,9 @@ export class XlateService implements I18n {
   private readonly pluralRules = new Intl.PluralRules(this.args.locale);
   constructor(private readonly args: Args) {}
 
-  plural<F extends Formatter>(registration: PluralRegistration<F>): PluralFormatter<F> {
+  plural<F extends Formatter>(
+    registration: PluralRegistration<F>,
+  ): PluralFormatter<F> {
     const key = getPluralKey(registration);
     const extraction = this.assertExtraction(key);
     if (extraction.type !== 'plural') {
@@ -29,7 +41,11 @@ export class XlateService implements I18n {
     const key = getSimpleKey(registration);
     const extraction = this.assertExtraction(key);
     if (extraction.type !== 'simple') {
-      return this.resolveExtraction({type: 'simple', key, translation: registration.plain});
+      return this.resolveExtraction({
+        type: 'simple',
+        key,
+        translation: registration.plain,
+      });
     }
     return this.resolveExtraction(extraction);
   }
@@ -53,7 +69,9 @@ export class XlateService implements I18n {
     return map;
   }
 
-  private resolveExtraction<T>(extraction: PluralExtraction): PluralFormatter<T>;
+  private resolveExtraction<T>(
+    extraction: PluralExtraction,
+  ): PluralFormatter<T>;
   private resolveExtraction(extraction: SimpleExtraction): SimpleFormatter;
   private resolveExtraction(extraction: Extraction): Formatter;
   private resolveExtraction(extraction: Extraction): Formatter {

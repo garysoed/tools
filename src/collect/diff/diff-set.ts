@@ -26,7 +26,7 @@ interface SetDelete<T> {
  * @typeParam T - Type of the set element.
  * @thHidden
  */
-export type SetDiff<T> = SetDelete<T>|SetAdd<T>;
+export type SetDiff<T> = SetDelete<T> | SetAdd<T>;
 
 /**
  * Emits diffs of the input sets.
@@ -41,8 +41,8 @@ export type SetDiff<T> = SetDelete<T>|SetAdd<T>;
  * @thModule collect
  */
 export function diffSet<T>(
-    fromSet: ReadonlySet<T>,
-    toSet: ReadonlySet<T>,
+  fromSet: ReadonlySet<T>,
+  toSet: ReadonlySet<T>,
 ): ReadonlyArray<SetDiff<T>> {
   const diffs: Array<SetDiff<T>> = [];
 
@@ -71,18 +71,15 @@ export function diffSet<T>(
  * @thModule collect
  */
 export function undiffSet<T>(
-    initSet: ReadonlySet<T>,
-    diffs: ReadonlyArray<SetDiff<T>>,
+  initSet: ReadonlySet<T>,
+  diffs: ReadonlyArray<SetDiff<T>>,
 ): ReadonlySet<T> {
-  return diffs.reduce(
-      (acc, diff) => {
-        switch (diff.type) {
-          case 'add':
-            return new Set([...acc, diff.value]);
-          case 'delete':
-            return new Set([...acc].filter(v => v !== diff.value));
-        }
-      },
-      initSet,
-  );
+  return diffs.reduce((acc, diff) => {
+    switch (diff.type) {
+      case 'add':
+        return new Set([...acc, diff.value]);
+      case 'delete':
+        return new Set([...acc].filter((v) => v !== diff.value));
+    }
+  }, initSet);
 }

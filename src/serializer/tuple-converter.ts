@@ -1,7 +1,9 @@
 import {Converter, Result} from 'nabu';
 
 class TupleConverter<T extends unknown[]> implements Converter<T, unknown> {
-  constructor(private readonly elementConverters_: Array<Converter<unknown, unknown>>) { }
+  constructor(
+    private readonly elementConverters_: Array<Converter<unknown, unknown>>,
+  ) {}
 
   convertBackward(value: unknown): Result<T> {
     if (!(value instanceof Array)) {
@@ -48,13 +50,13 @@ class TupleConverter<T extends unknown[]> implements Converter<T, unknown> {
   }
 }
 export function tupleConverter<T0>(
-    elementConverters: [Converter<T0, unknown>],
+  elementConverters: [Converter<T0, unknown>],
 ): TupleConverter<[T0]>;
 export function tupleConverter<T0, T1>(
-    elementConverters: [Converter<T0, unknown>, Converter<T1, unknown>],
+  elementConverters: [Converter<T0, unknown>, Converter<T1, unknown>],
 ): TupleConverter<[T0, T1]>;
 export function tupleConverter<T extends unknown[]>(
-    elementConverters: Array<Converter<unknown, unknown>>,
+  elementConverters: Array<Converter<unknown, unknown>>,
 ): TupleConverter<T> {
   return new TupleConverter(elementConverters);
 }

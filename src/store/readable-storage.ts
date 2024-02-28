@@ -1,6 +1,5 @@
 import {Observable} from 'rxjs';
 
-
 /**
  * Storage that can be read.
  *
@@ -28,5 +27,5 @@ export interface ReadableStorage<T> {
    * @returns Observable that emits the object corresponding to the given ID, or undefined if the
    *     object does not exist.
    */
-  read(id: string): Observable<T|undefined>;
+  read(id: string): Observable<T | undefined>;
 }

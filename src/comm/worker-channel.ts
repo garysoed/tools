@@ -9,10 +9,13 @@ export interface WorkerPayload {
   readonly transfers?: readonly Transferable[];
 }
 
-export function workerClientChannel(worker: WorkerLike): Channel<WorkerPayload> {
+export function workerClientChannel(
+  worker: WorkerLike,
+): Channel<WorkerPayload> {
   return {
-    onMessage$: fromEvent<MessageEvent>(worker, 'message')
-        .pipe(map(event => ({payload: event.data}))),
+    onMessage$: fromEvent<MessageEvent>(worker, 'message').pipe(
+      map((event) => ({payload: event.data})),
+    ),
     send: (message: WorkerPayload): void => {
       worker.postMessage(message.payload, [...(message.transfers ?? [])]);
     },
@@ -20,11 +23,11 @@ export function workerClientChannel(worker: WorkerLike): Channel<WorkerPayload> 
 }
 
 export function workerServerChannel(
-    global: WorkerGlobalScopeLike,
-    onMessage$: Observable<MessageEvent>,
+  global: WorkerGlobalScopeLike,
+  onMessage$: Observable<MessageEvent>,
 ): Channel<WorkerPayload> {
   return {
-    onMessage$: onMessage$.pipe(map(event => ({payload: event.data}))),
+    onMessage$: onMessage$.pipe(map((event) => ({payload: event.data}))),
     send: (message: WorkerPayload): void => {
       global.postMessage(message.payload);
     },

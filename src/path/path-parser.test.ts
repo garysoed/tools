@@ -5,7 +5,6 @@ import {AbsolutePath} from './absolute-path';
 import {pathParser} from './path-parser';
 import {RelativePath} from './relative-path';
 
-
 test('path.PathParser', () => {
   test('convertBackward', () => {
     should('parse absolute paths correctly', () => {

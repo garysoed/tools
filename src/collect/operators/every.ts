@@ -12,5 +12,5 @@ import {FiniteIterable} from './finite-iterable';
  * @thModule collect.operators
  */
 export function $every(): Operator<FiniteIterable<boolean>, boolean> {
-  return iterable => [...iterable].every(value => value);
+  return (iterable) => [...iterable].every((value) => value);
 }

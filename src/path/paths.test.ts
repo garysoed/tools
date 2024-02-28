@@ -4,7 +4,17 @@ import {strict} from 'nabu';
 
 import {AbsolutePath} from './absolute-path';
 import {pathParser} from './path-parser';
-import {absolutePath, getDirPath, getFilenameParts, getItemName, getRelativePath, join, normalize, relativePath, setFilenameExt} from './paths';
+import {
+  absolutePath,
+  getDirPath,
+  getFilenameParts,
+  getItemName,
+  getRelativePath,
+  join,
+  normalize,
+  relativePath,
+  setFilenameExt,
+} from './paths';
 import {RelativePath} from './relative-path';
 
 test('path.Paths', () => {
@@ -25,7 +35,9 @@ test('path.Paths', () => {
   test('getDirPath', () => {
     should('return the correct directory for absolute paths', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      const dirPath = getDirPath(strict(pathParser()).convertBackward('/a/b/c')!);
+      const dirPath = getDirPath(
+        strict(pathParser()).convertBackward('/a/b/c')!,
+      );
 
       assert(dirPath).to.beAnInstanceOf(AbsolutePath);
       assert(dirPath.toString()).to.equal('/a/b');
@@ -33,7 +45,9 @@ test('path.Paths', () => {
 
     should('return the correct directory for relative paths', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      const dirPath = getDirPath(strict(pathParser()).convertBackward('a/b/c')!);
+      const dirPath = getDirPath(
+        strict(pathParser()).convertBackward('a/b/c')!,
+      );
 
       assert(dirPath).to.beAnInstanceOf(RelativePath);
       assert(dirPath.toString()).to.equal('a/b');
@@ -42,29 +56,40 @@ test('path.Paths', () => {
 
   test('getFilenameParts', () => {
     should('handle simple file names', () => {
-      assert(getFilenameParts('test.ext')).to
-          .haveProperties({extension: 'ext', name: 'test'});
+      assert(getFilenameParts('test.ext')).to.haveProperties({
+        extension: 'ext',
+        name: 'test',
+      });
     });
 
     should('handle file names with .', () => {
-      assert(getFilenameParts('file.test.js')).to
-          .haveProperties({extension: 'js', name: 'file.test'});
+      assert(getFilenameParts('file.test.js')).to.haveProperties({
+        extension: 'js',
+        name: 'file.test',
+      });
     });
 
     should('handle file names with no extensions', () => {
-      assert(getFilenameParts('BUILD')).to.haveProperties({extension: '', name: 'BUILD'});
+      assert(getFilenameParts('BUILD')).to.haveProperties({
+        extension: '',
+        name: 'BUILD',
+      });
     });
   });
 
   test('getItemName', () => {
     should('return the correct item name', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getItemName(strict(pathParser()).convertBackward('a/b/c')!)).to.equal('c');
+      assert(
+        getItemName(strict(pathParser()).convertBackward('a/b/c')!),
+      ).to.equal('c');
     });
 
     should('return null if path is root', () => {
       // tslint:disable-next-line:no-non-null-assertion
-      assert(getItemName(strict(pathParser()).convertBackward('/')!)).to.beNull();
+      assert(
+        getItemName(strict(pathParser()).convertBackward('/')!),
+      ).to.beNull();
     });
   });
 
@@ -83,18 +108,20 @@ test('path.Paths', () => {
   test('join', () => {
     should('handle absolute path correctly', () => {
       const joined = join(
-          strict(pathParser()).convertBackward('/a/b')!,
-          strict(pathParser()).convertBackward('c/d')!,
-          strict(pathParser()).convertBackward('e')!);
+        strict(pathParser()).convertBackward('/a/b')!,
+        strict(pathParser()).convertBackward('c/d')!,
+        strict(pathParser()).convertBackward('e')!,
+      );
       assert(joined).to.beAnInstanceOf(AbsolutePath);
       assert(joined.toString()).to.equal('/a/b/c/d/e');
     });
 
     should('handle relative path correctly', () => {
       const joined = join(
-          strict(pathParser()).convertBackward('a/b')!,
-          strict(pathParser()).convertBackward('c/d')!,
-          strict(pathParser()).convertBackward('e')!);
+        strict(pathParser()).convertBackward('a/b')!,
+        strict(pathParser()).convertBackward('c/d')!,
+        strict(pathParser()).convertBackward('e')!,
+      );
       assert(joined).to.beAnInstanceOf(RelativePath);
       assert(joined.toString()).to.equal('a/b/c/d/e');
     });
@@ -102,50 +129,61 @@ test('path.Paths', () => {
 
   test('normalize', () => {
     should('remove all instances of empty parts for absolute paths', () => {
-      const normalized = normalize(strict(pathParser()).convertBackward('/a//b/c//')!);
+      const normalized = normalize(
+        strict(pathParser()).convertBackward('/a//b/c//')!,
+      );
 
       assert(normalized).to.beAnInstanceOf(AbsolutePath);
       assert(normalized.toString()).to.equal('/a/b/c');
     });
 
     should('remove all instances of empty parts for relative paths', () => {
-      const normalized = normalize(strict(pathParser()).convertBackward('a//b/c//')!);
+      const normalized = normalize(
+        strict(pathParser()).convertBackward('a//b/c//')!,
+      );
 
       assert(normalized).to.beAnInstanceOf(RelativePath);
       assert(normalized.toString()).to.equal('a/b/c');
     });
 
-    should('remove all instances of \'.\'', () => {
-      const normalized = normalize(strict(pathParser()).convertBackward('/a/./b/c/./')!);
+    should("remove all instances of '.'", () => {
+      const normalized = normalize(
+        strict(pathParser()).convertBackward('/a/./b/c/./')!,
+      );
 
       assert(normalized).to.beAnInstanceOf(AbsolutePath);
       assert(normalized.toString()).to.equal('/a/b/c');
     });
 
-    should('remove all instances of \'.\' except the beginning one', () => {
-      const normalized = normalize(strict(pathParser()).convertBackward('./a/./b/c/./')!);
+    should("remove all instances of '.' except the beginning one", () => {
+      const normalized = normalize(
+        strict(pathParser()).convertBackward('./a/./b/c/./')!,
+      );
 
       assert(normalized).to.beAnInstanceOf(RelativePath);
       assert(normalized.toString()).to.equal('./a/b/c');
     });
 
-    should('process \'..\' correctly for absolute paths', () => {
-      const normalized = normalize(strict(pathParser())
-          .convertBackward('/a/b/c/../../b/../c/d/..')!);
+    should("process '..' correctly for absolute paths", () => {
+      const normalized = normalize(
+        strict(pathParser()).convertBackward('/a/b/c/../../b/../c/d/..')!,
+      );
 
       assert(normalized).to.beAnInstanceOf(AbsolutePath);
       assert(normalized.toString()).to.equal('/a/c');
     });
 
-    should('process \'..\' correctly for relative paths', () => {
-      const normalized1 = normalize(strict(pathParser())
-          .convertBackward('../../a/../../b/../c/d/..')!);
+    should("process '..' correctly for relative paths", () => {
+      const normalized1 = normalize(
+        strict(pathParser()).convertBackward('../../a/../../b/../c/d/..')!,
+      );
 
       assert(normalized1).to.beAnInstanceOf(RelativePath);
       assert(normalized1.toString()).to.equal('../../../c');
 
-      const normalized2 = normalize(strict(pathParser())
-          .convertBackward('a/../../b/../c/d/..')!);
+      const normalized2 = normalize(
+        strict(pathParser()).convertBackward('a/../../b/../c/d/..')!,
+      );
 
       assert(normalized2).to.beAnInstanceOf(RelativePath);
       assert(normalized2.toString()).to.equal('../c');
@@ -168,13 +206,19 @@ test('path.Paths', () => {
 
   test('setFilenameExt', () => {
     should('handle simple file names', () => {
-      assert(setFilenameExt('test.ext', 'ext2').toString()).to.equal('test.ext2');
+      assert(setFilenameExt('test.ext', 'ext2').toString()).to.equal(
+        'test.ext2',
+      );
       assert(setFilenameExt('test.ext', '').toString()).to.equal('test');
     });
 
     should('handle file names with .', () => {
-      assert(setFilenameExt('file.test.js', 'ext2').toString()).to.equal('file.test.ext2');
-      assert(setFilenameExt('file.test.js', '').toString()).to.equal('file.test');
+      assert(setFilenameExt('file.test.js', 'ext2').toString()).to.equal(
+        'file.test.ext2',
+      );
+      assert(setFilenameExt('file.test.js', '').toString()).to.equal(
+        'file.test',
+      );
     });
 
     should('handle file names with no extensions', () => {

@@ -9,5 +9,5 @@ import {Operator} from '../../typescript/operator';
  * @thModule collect.operators
  */
 export function $asMap<K, V>(): Operator<Iterable<readonly [K, V]>, Map<K, V>> {
-  return iterable => new Map(iterable);
+  return (iterable) => new Map(iterable);
 }

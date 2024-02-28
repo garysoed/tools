@@ -4,9 +4,9 @@ import {Color} from './color';
 
 class TestColor extends Color {
   constructor(
-      readonly red: number,
-      readonly green: number,
-      readonly blue: number,
+    readonly red: number,
+    readonly green: number,
+    readonly blue: number,
   ) {
     super();
   }

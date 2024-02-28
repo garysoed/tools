@@ -14,9 +14,13 @@ test('@tools/src/i18n/xtract-service', () => {
       const registration = {
         plain: 'Call {{name}} at {{phone}}',
       };
-      assert(_.service.simple(registration)()).to.equal('[RAW] Call {{name}} at {{phone}}');
+      assert(_.service.simple(registration)()).to.equal(
+        '[RAW] Call {{name}} at {{phone}}',
+      );
       assert(_.service.registrations).to.equal(
-          new Map([[asExtractionKey('Call {{name}} at {{phone}}'), registration]]),
+        new Map([
+          [asExtractionKey('Call {{name}} at {{phone}}'), registration],
+        ]),
       );
     });
   });

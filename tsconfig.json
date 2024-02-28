@@ -2,15 +2,12 @@
   "extends": "devbase/ts",
   "compilerOptions": {
     "baseUrl": ".",
-    "lib": [
-      "dom",
-      "es2015"
-    ],
+    "lib": ["dom", "es2015"],
     "outDir": "out",
     "paths": {
       "rxjs": ["node_modules/rxjs"],
-      "rxjs/*": ["node_modules/rxjs/*"],
-    },
+      "rxjs/*": ["node_modules/rxjs/*"]
+    }
   },
   "include": [
     "src/**/*.test.ts",
@@ -18,7 +15,5 @@
     "export/*.ts",
     "docassets/index.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

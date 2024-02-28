@@ -3,7 +3,6 @@ import {mapTo, shareReplay} from 'rxjs/operators';
 
 import {Handler} from './handler';
 
-
 /**
  * Represents Google API library.
  *
@@ -35,9 +34,9 @@ export class Builder {
    * @param clientId - Client ID of the app.
    */
   constructor(
-      private readonly apiKey: string,
-      private readonly clientId: string,
-  ) { }
+    private readonly apiKey: string,
+    private readonly clientId: string,
+  ) {}
 
   /**
    * Adds a Google library to the API.
@@ -58,26 +57,24 @@ export class Builder {
    * @returns Observable that emits Handler for using Google API.
    */
   build(): Observable<Handler> {
-    return defer(async () => new Promise<void>((resolve, reject) => {
-      gapi.load('client:auth2', async () => {
-        try {
-          await gapi.client.init({
-            apiKey: this.apiKey,
-            clientId: this.clientId,
-            discoveryDocs: this.discoveryDocs,
-            scope: this.scopes.join(' '),
-          });
-        } catch (e) {
-          reject(e);
-        }
+    return defer(
+      async () =>
+        new Promise<void>((resolve, reject) => {
+          gapi.load('client:auth2', async () => {
+            try {
+              await gapi.client.init({
+                apiKey: this.apiKey,
+                clientId: this.clientId,
+                discoveryDocs: this.discoveryDocs,
+                scope: this.scopes.join(' '),
+              });
+            } catch (e) {
+              reject(e);
+            }
 
-        resolve();
-      });
-    }))
-        .pipe(
-            mapTo(new Handler()),
-            shareReplay({bufferSize: 1, refCount: true}),
-        );
+            resolve();
+          });
+        }),
+    ).pipe(mapTo(new Handler()), shareReplay({bufferSize: 1, refCount: true}));
   }
 }
-
