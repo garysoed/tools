@@ -152,18 +152,20 @@ test('@tools/src/collect/structures/grid', () => {
     should('replace the previous entry if already populated', () => {
       _.grid.set([0, 0], 'new');
 
-      assert([..._.grid]).to.equal([
-        {position: [0, 1], value: '0,1'},
-        {position: [0, 2], value: '0,2'},
+      assert(new Set([..._.grid])).to.equal(
+        new Set([
+          {position: [0, 0], value: 'new'},
+          {position: [0, 1], value: '0,1'},
+          {position: [0, 2], value: '0,2'},
 
-        {position: [1, 0], value: '1,0'},
-        {position: [1, 2], value: '1,2'},
+          {position: [1, 0], value: '1,0'},
+          {position: [1, 2], value: '1,2'},
 
-        {position: [2, 0], value: '2,0'},
-        {position: [2, 1], value: '2,1'},
-        {position: [2, 2], value: null},
-        {position: [0, 0], value: 'new'},
-      ]);
+          {position: [2, 0], value: '2,0'},
+          {position: [2, 1], value: '2,1'},
+          {position: [2, 2], value: null},
+        ]),
+      );
     });
   });
 

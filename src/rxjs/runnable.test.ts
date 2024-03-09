@@ -1,4 +1,4 @@
-import {assert, createSpy, run, should, test} from 'gs-testing';
+import {assert, createSpy, fake, run, should, test} from 'gs-testing';
 import {Observable, of as observableOf} from 'rxjs';
 import {tap} from 'rxjs/operators';
 
@@ -21,6 +21,7 @@ test('@tools/rxjs/runnable', () => {
   test('run', () => {
     should('call the handler with all emissions', () => {
       const mockHandler = createSpy<void, [number]>('Handler');
+      fake(mockHandler).always().return(undefined);
       const obj = new TestClass(mockHandler);
       run(obj.run());
 

@@ -8,94 +8,95 @@ import {GridEntry, ReadonlyGrid} from './readonly-grid';
  * Unlike matrices, this uses (x, y) coordinate and can take any values.
  */
 export class Grid<T = never> implements ReadonlyGrid<T> {
-  private entries = [...this.entriesInput];
+  private readonly entriesMap = new Map(asEntryMap(this.entriesInput));
 
   constructor(private readonly entriesInput: Iterable<GridEntry<T>> = []) {}
 
   [Symbol.iterator](): Iterator<GridEntry<T>, any, undefined> {
-    return this.entries[Symbol.iterator]();
+    const entriesArray = [];
+    for (const [positionStr, value] of this.entriesMap) {
+      entriesArray.push({position: fromPositionStr(positionStr), value});
+    }
+    return entriesArray[Symbol.iterator]();
   }
 
   as2dArray(): ReadonlyArray<ReadonlyArray<T | undefined>> {
     const rows: T[][] = [];
-    for (const entry of this.entries) {
-      const cells = rows[entry.position[1]] ?? [];
-      cells[entry.position[0]] = entry.value;
-      rows[entry.position[1]] = cells;
+    for (const [positionStr, value] of this.entriesMap) {
+      const position = fromPositionStr(positionStr);
+      const cells = rows[position[1]] ?? [];
+      cells[position[0]] = value;
+      rows[position[1]] = cells;
     }
 
     return rows;
   }
 
-  delete([x, y]: Vector2): boolean {
-    const index = this.entries.findIndex(
-      ({position}) => position[0] === x && position[1] === y,
-    );
-    if (index < 0) {
-      return false;
-    }
-
-    this.entries.splice(index, 1);
-
-    return true;
+  delete(position: Vector2): boolean {
+    return this.entriesMap.delete(toPositionStr(position));
   }
 
-  get([x, y]: Vector2): T | undefined {
-    const entry = [...this.entries].find(
-      (entry) => entry.position[0] === x && entry.position[1] === y,
-    );
-    if (!entry) {
-      return undefined;
-    }
-
-    return entry.value;
+  get(position: Vector2): T | undefined {
+    return this.entriesMap.get(toPositionStr(position));
   }
 
-  has([x, y]: Vector2): boolean {
-    return [...this.entries].some(
-      (entry) => entry.position[0] === x && entry.position[1] === y,
-    );
+  has(position: Vector2): boolean {
+    return this.entriesMap.has(toPositionStr(position));
   }
 
   get length(): number {
-    return this.entries.length;
+    return this.entriesMap.size;
   }
 
   get maxX(): number {
-    return this.entries.reduce((max, curr) => {
-      return Math.max(curr.position[0], max);
-    }, Number.NEGATIVE_INFINITY);
+    return [...this.entriesMap.keys()]
+      .map((positionStr) => fromPositionStr(positionStr)[0])
+      .reduce((max, curr) => Math.max(curr, max), Number.NEGATIVE_INFINITY);
   }
 
   get maxY(): number {
-    return this.entries.reduce((max, curr) => {
-      return Math.max(curr.position[1], max);
-    }, Number.NEGATIVE_INFINITY);
+    return [...this.entriesMap.keys()]
+      .map((positionStr) => fromPositionStr(positionStr)[1])
+      .reduce((max, curr) => Math.max(curr, max), Number.NEGATIVE_INFINITY);
   }
 
   get minX(): number {
-    return this.entries.reduce((min, curr) => {
-      return Math.min(curr.position[0], min);
-    }, Number.POSITIVE_INFINITY);
+    return [...this.entriesMap.keys()]
+      .map((positionStr) => fromPositionStr(positionStr)[0])
+      .reduce((min, curr) => Math.min(curr, min), Number.POSITIVE_INFINITY);
   }
 
   get minY(): number {
-    return this.entries.reduce((min, curr) => {
-      return Math.min(curr.position[1], min);
-    }, Number.POSITIVE_INFINITY);
+    return [...this.entriesMap.keys()]
+      .map((positionStr) => fromPositionStr(positionStr)[1])
+      .reduce((min, curr) => Math.min(curr, min), Number.POSITIVE_INFINITY);
   }
 
   set(position: Vector2, value: T): this {
-    const [x, y] = position;
-    this.entries = [
-      ...this.entries.filter(
-        (entry) => entry.position[0] !== x || entry.position[1] !== y,
-      ),
-      {position, value},
-    ];
-
+    this.entriesMap.set(toPositionStr(position), value);
     return this;
   }
+}
+
+function asEntryMap<T>(
+  entries: Iterable<GridEntry<T>>,
+): ReadonlyMap<string, T> {
+  const entriesMap = new Map<string, T>();
+  for (const entry of entries) {
+    entriesMap.set(toPositionStr(entry.position), entry.value);
+  }
+  return entriesMap;
+}
+
+function toPositionStr(position: Vector2): string {
+  return `${position[0]}_${position[1]}`;
+}
+
+function fromPositionStr(positionStr: string): Vector2 {
+  const [x, y] = positionStr
+    .split('_')
+    .map((position) => Number.parseFloat(position));
+  return [x, y];
 }
 
 export function gridFrom<T>(

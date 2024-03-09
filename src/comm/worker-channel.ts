@@ -1,4 +1,4 @@
-import {WorkerGlobalScopeLike, WorkerLike} from 'gs-testing/export/fake';
+import {WorkerGlobalScopeLike, WorkerLike} from 'gs-testing/export/fake/dom';
 import {Observable, fromEvent} from 'rxjs';
 import {map} from 'rxjs/operators';
 

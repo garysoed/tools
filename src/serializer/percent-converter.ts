@@ -18,7 +18,7 @@ class PercentConverter implements Converter<number, unknown> {
       }
 
       return {result: float / 100, success: true};
-    } catch (e) {
+    } catch {
       return {success: false};
     }
   }

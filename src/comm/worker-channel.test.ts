@@ -1,7 +1,6 @@
 import {assert, asyncAssert, objectThat, setup, should, test} from 'gs-testing';
 import {createSpySubject} from 'gs-testing';
-import {FakeWorker} from 'gs-testing/export/fake';
-import {FakeWorkerGlobalScope} from 'gs-testing/export/fake';
+import {FakeWorker, FakeWorkerGlobalScope} from 'gs-testing/export/fake/dom';
 import {Subject} from 'rxjs';
 
 import {
