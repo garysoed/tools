@@ -1,4 +1,4 @@
-import {cache} from '../data/cache';
+import {CachedValue} from '../data/cached-value';
 
 /**
  * Base class of all colors.
@@ -34,11 +34,7 @@ export abstract class Color {
    */
   abstract get lightness(): number;
 
-  /**
-   * Luminance of the color.
-   */
-  @cache()
-  get luminance(): number {
+  private readonly cachedLuminance = new CachedValue(() => {
     const [computedRed, computedGreen, computedBlue] = [
       this.red,
       this.green,
@@ -54,6 +50,13 @@ export abstract class Color {
     return (
       computedRed * 0.2126 + computedGreen * 0.7152 + computedBlue * 0.0722
     );
+  });
+
+  /**
+   * Luminance of the color.
+   */
+  get luminance(): number {
+    return this.cachedLuminance.value;
   }
 
   /**

@@ -1,4 +1,4 @@
-import {cache} from '../data/cache';
+import {CachedValue} from 'docassets';
 
 import {Color} from './color';
 
@@ -8,6 +8,52 @@ import {Color} from './color';
  * @thModule color
  */
 export class RgbColor extends Color {
+  private readonly cachedChroma = new CachedValue(() => {
+    return (this.max - this.min) / 255;
+  });
+  private readonly cachedHue = new CachedValue(() => {
+    const chroma = this.chroma;
+    if (chroma === 0) {
+      return 0;
+    }
+
+    const red = this.red;
+    const green = this.green;
+    const blue = this.blue;
+    const max = this.max;
+
+    let h1;
+    switch (max) {
+      case red:
+        h1 = ((green - blue) / chroma / 255) % 6;
+        break;
+      case green:
+        h1 = (blue - red) / chroma / 255 + 2;
+        break;
+      case blue:
+        h1 = (red - green) / chroma / 255 + 4;
+        break;
+      default:
+        throw new Error('Should not be able to reach here');
+    }
+
+    return h1 * 60;
+  });
+  private readonly cachedLightness = new CachedValue(() => {
+    return (this.max + this.min) / 2 / 255;
+  });
+  private readonly cachedSaturation = new CachedValue(() => {
+    const denominator = 1 - Math.abs(this.lightness * 2 - 1);
+
+    return denominator === 0 ? 0 : this.chroma / denominator;
+  });
+  private readonly cachedMax = new CachedValue(() => {
+    return Math.max(this.red, this.green, this.blue);
+  });
+  private readonly cachedMin = new CachedValue(() => {
+    return Math.min(this.red, this.green, this.blue);
+  });
+
   constructor(
     /**
      * {@inheritDoc Color.red}
@@ -64,69 +110,36 @@ export class RgbColor extends Color {
   /**
    * {@inheritDoc Color.chroma}
    */
-  @cache()
   get chroma(): number {
-    return (this.max - this.min) / 255;
+    return this.cachedChroma.value;
   }
 
   /**
    * {@inheritDoc Color.hue}
    */
-  @cache()
   get hue(): number {
-    const chroma = this.chroma;
-    if (chroma === 0) {
-      return 0;
-    }
-
-    const red = this.red;
-    const green = this.green;
-    const blue = this.blue;
-    const max = this.max;
-
-    let h1;
-    switch (max) {
-      case red:
-        h1 = ((green - blue) / chroma / 255) % 6;
-        break;
-      case green:
-        h1 = (blue - red) / chroma / 255 + 2;
-        break;
-      case blue:
-        h1 = (red - green) / chroma / 255 + 4;
-        break;
-      default:
-        throw new Error('Should not be able to reach here');
-    }
-
-    return h1 * 60;
+    return this.cachedHue.value;
   }
 
   /**
    * {@inheritDoc Color.lightness}
    */
-  @cache()
   get lightness(): number {
-    return (this.max + this.min) / 2 / 255;
+    return this.cachedLightness.value;
   }
 
   /**
    * {@inheritDoc Color.saturation}
    */
-  @cache()
   get saturation(): number {
-    const denominator = 1 - Math.abs(this.lightness * 2 - 1);
-
-    return denominator === 0 ? 0 : this.chroma / denominator;
+    return this.cachedSaturation.value;
   }
 
-  @cache()
   private get max(): number {
-    return Math.max(this.red, this.green, this.blue);
+    return this.cachedMax.value;
   }
 
-  @cache()
   private get min(): number {
-    return Math.min(this.red, this.green, this.blue);
+    return this.cachedMin.value;
   }
 }

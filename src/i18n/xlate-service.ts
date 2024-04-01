@@ -1,5 +1,5 @@
 import {mapFrom} from '../collect/structures/map-from';
-import {cache} from '../data/cache';
+import {CachedValue} from '../data/cached-value';
 
 import {
   Extraction,
@@ -22,7 +22,16 @@ interface Args {
 }
 
 export class XlateService implements I18n {
+  private readonly cachedExtractions = new CachedValue(() => {
+    const map = new Map<ExtractionKey, Extraction>();
+    for (const extraction of this.args.data) {
+      map.set(extraction.key, extraction);
+    }
+
+    return map;
+  });
   private readonly pluralRules = new Intl.PluralRules(this.args.locale);
+
   constructor(private readonly args: Args) {}
 
   plural<F extends Formatter>(
@@ -59,14 +68,8 @@ export class XlateService implements I18n {
     return extraction;
   }
 
-  @cache()
   private get extractions(): ReadonlyMap<ExtractionKey, Extraction> {
-    const map = new Map<ExtractionKey, Extraction>();
-    for (const extraction of this.args.data) {
-      map.set(extraction.key, extraction);
-    }
-
-    return map;
+    return this.cachedExtractions.value;
   }
 
   private resolveExtraction<T>(

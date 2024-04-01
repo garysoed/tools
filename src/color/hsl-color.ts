@@ -1,6 +1,8 @@
-import {cache} from '../data/cache';
+import {CachedValue} from '../data/cached-value';
 
 import {Color} from './color';
+
+type Rgb = readonly [number, number, number];
 
 /**
  * `Color` based on its hue, saturation, and lightness.
@@ -9,6 +11,39 @@ import {Color} from './color';
  */
 export class HslColor extends Color {
   readonly hue = this.hueRaw % 360;
+  private readonly cachedChroma = new CachedValue(() => {
+    return (1 - Math.abs(this.lightness * 2 - 1)) * this.saturation;
+  });
+  private readonly cachedRgb = new CachedValue<Rgb>(() => {
+    const chroma = this.chroma;
+    const h1 = this.hue / 60;
+    const x = chroma * (1 - Math.abs((h1 % 2) - 1));
+    let r1;
+    let g1;
+    let b1;
+
+    if (h1 < 1) {
+      [r1, g1, b1] = [chroma, x, 0];
+    } else if (h1 < 2) {
+      [r1, g1, b1] = [x, chroma, 0];
+    } else if (h1 < 3) {
+      [r1, g1, b1] = [0, chroma, x];
+    } else if (h1 < 4) {
+      [r1, g1, b1] = [0, x, chroma];
+    } else if (h1 < 5) {
+      [r1, g1, b1] = [x, 0, chroma];
+    } else {
+      [r1, g1, b1] = [chroma, 0, x];
+    }
+
+    const min = this.lightness - chroma / 2;
+    const components = [r1, g1, b1].map((value: number) => {
+      return Math.round((value + min) * 255);
+    });
+    const [r, g, b] = [...components];
+
+    return [r, g, b];
+  });
 
   constructor(
     private readonly hueRaw: number,
@@ -44,9 +79,8 @@ export class HslColor extends Color {
   /**
    * {@inheritDoc Color.chroma}
    */
-  @cache()
   get chroma(): number {
-    return (1 - Math.abs(this.lightness * 2 - 1)) * this.saturation;
+    return this.cachedChroma.value;
   }
 
   /**
@@ -63,35 +97,7 @@ export class HslColor extends Color {
     return this.rgb[0];
   }
 
-  @cache()
-  private get rgb(): [number, number, number] {
-    const chroma = this.chroma;
-    const h1 = this.hue / 60;
-    const x = chroma * (1 - Math.abs((h1 % 2) - 1));
-    let r1;
-    let g1;
-    let b1;
-
-    if (h1 < 1) {
-      [r1, g1, b1] = [chroma, x, 0];
-    } else if (h1 < 2) {
-      [r1, g1, b1] = [x, chroma, 0];
-    } else if (h1 < 3) {
-      [r1, g1, b1] = [0, chroma, x];
-    } else if (h1 < 4) {
-      [r1, g1, b1] = [0, x, chroma];
-    } else if (h1 < 5) {
-      [r1, g1, b1] = [x, 0, chroma];
-    } else {
-      [r1, g1, b1] = [chroma, 0, x];
-    }
-
-    const min = this.lightness - chroma / 2;
-    const components = [r1, g1, b1].map((value: number) => {
-      return Math.round((value + min) * 255);
-    });
-    const [r, g, b] = [...components];
-
-    return [r, g, b];
+  private get rgb(): Rgb {
+    return this.cachedRgb.value;
   }
 }
