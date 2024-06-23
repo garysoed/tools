@@ -62,7 +62,7 @@ export {HslColor} from '../src/color/hsl-color';
 export {RgbColor} from '../src/color/rgb-color';
 
 // data
-export {CachedValue} from '../src/data/cached-value';
+export {cached} from '../src/data/cached';
 
 // gapi
 export {

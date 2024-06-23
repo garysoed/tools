@@ -1,3 +1,4 @@
+import {cached} from '../data/cached';
 import {CachedValue} from '../data/cached-value';
 
 /**
@@ -34,7 +35,13 @@ export abstract class Color {
    */
   abstract get lightness(): number;
 
-  private readonly cachedLuminance = new CachedValue(() => {
+  private readonly cachedLuminance = new CachedValue(() => {});
+
+  /**
+   * Luminance of the color.
+   */
+  @cached()
+  get luminance(): number {
     const computedRed = computeLuminanceComponent(this.red);
     const computedGreen = computeLuminanceComponent(this.green);
     const computedBlue = computeLuminanceComponent(this.blue);
@@ -42,13 +49,6 @@ export abstract class Color {
     return (
       computedRed * 0.2126 + computedGreen * 0.7152 + computedBlue * 0.0722
     );
-  });
-
-  /**
-   * Luminance of the color.
-   */
-  get luminance(): number {
-    return this.cachedLuminance.value;
   }
 
   /**

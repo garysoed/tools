@@ -1,1 +1,1 @@
-export {CachedValue} from '../src/data/cached-value';
+export {cached} from '../src/data/cached';
