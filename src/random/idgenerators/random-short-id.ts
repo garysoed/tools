@@ -36,7 +36,11 @@ export function randomShortId(seed: Random<number>): Random<string> {
       $take(7),
       $map((value) => {
         const index = Math.floor(value * ID_CHARS.length);
-        return ID_CHARS[index];
+        const char = ID_CHARS[index];
+        if (char === undefined) {
+          throw new Error(`No chars found at index ${index}`);
+        }
+        return char;
       }),
       $asArray(),
       $join(''),

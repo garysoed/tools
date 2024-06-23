@@ -117,6 +117,9 @@ export class ParserBuilder<T> {
       let c = 0;
       let mappedC = 0;
       let value = {};
+      if (cells === undefined) {
+        throw new Error(`Row ${r} cannot be found`);
+      }
       while (c < cells.length) {
         const colSpan = this.rowSpec.colSpans[c] ?? 1;
 
@@ -147,7 +150,14 @@ function getCell(
   for (let r = row; r < row + rowSpan; r++) {
     const subCols: SheetsCell[] = [];
     for (let c = col; c < col + colSpan; c++) {
-      const sheetsCell = table[r][c];
+      const cells = table[r];
+      if (cells === undefined) {
+        throw new Error(`Row ${r} cannot be found`);
+      }
+      const sheetsCell = cells[c];
+      if (sheetsCell === undefined) {
+        throw new Error(`Row ${r} column ${c} cannot be found`);
+      }
       ids.add(sheetsCell);
       subCols.push(sheetsCell);
     }
@@ -156,7 +166,11 @@ function getCell(
 
   // Check if there is only one cell. If there is, only add that one.
   if (ids.size === 1) {
-    return {isSingle: true, value: subRows[0][0].value};
+    const cell = subRows[0]?.[0];
+    if (cell === undefined) {
+      throw new Error('Ids is corrupted. Size is 1 but no subRows found');
+    }
+    return {isSingle: true, value: cell.value};
   } else {
     return {isSingle: false, value: subRows};
   }

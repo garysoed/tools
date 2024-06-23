@@ -97,7 +97,7 @@ export function createSheetsTable(
   }
 
   // Put in all the cells.
-  const rowData = raw.data[0].rowData || [];
+  const rowData = raw.data[0]?.rowData ?? [];
   for (let r = 0; r < rowData.length; r++) {
     const row = rowData[r];
     const partialRow = partialGrid[r] || [];
@@ -169,6 +169,9 @@ export function createSheetsTable(
   // Fill in the empty cells.
   for (let r = 0; r < toRow - fromRow; r++) {
     const cols = table[r];
+    if (cols === undefined) {
+      throw new Error(`Cannot find row ${r}`);
+    }
     for (let c = 0; c < toColumn - fromColumn; c++) {
       const cell = cols[c];
       if (!cell) {

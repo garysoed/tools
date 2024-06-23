@@ -18,6 +18,12 @@ const INTEGER_PARSER = compose(integerConverter(), human());
 const FLOAT_PARSER = compose(floatConverter(), human());
 const PERCENT_PARSER = percentConverter();
 
+type ResultComponents = readonly [
+  Result<number>,
+  Result<number>,
+  Result<number>,
+];
+
 function fromRgb(cssColor: string): Color | null {
   const rgbMatches = RGB_REGEXP.exec(cssColor);
   const rgbaMatches = RGBA_REGEXP.exec(cssColor);
@@ -27,7 +33,10 @@ function fromRgb(cssColor: string): Color | null {
   }
 
   const matchString = matches[1];
-  let results: Array<Result<number>>;
+  if (matchString === undefined) {
+    return null;
+  }
+  let results: ReadonlyArray<Result<number>>;
   if (matchString.indexOf('/') < 0) {
     const list = matchString
       .replace(/ /g, '')
@@ -40,6 +49,10 @@ function fromRgb(cssColor: string): Color | null {
     results = [...list];
   } else {
     const [rgbString] = matchString.split('/');
+    if (rgbString === undefined) {
+      return null;
+    }
+
     const list = rgbString
       .replace(/ +/g, ' ')
       .trim()
@@ -50,9 +63,10 @@ function fromRgb(cssColor: string): Color | null {
     results = [...list];
   }
 
-  const resultR = results[0];
-  const resultG = results[1];
-  const resultB = results[2];
+  if (!isResultComponent(results)) {
+    return null;
+  }
+  const [resultR, resultG, resultB] = results;
   if (!resultR.success || !resultG.success || !resultB.success) {
     return null;
   }
@@ -69,6 +83,10 @@ function fromHsl(cssColor: string): Color | null {
   }
 
   const matchString = matches[1];
+  if (matchString === undefined) {
+    return null;
+  }
+
   let results: Array<Result<number>>;
   if (matchString.indexOf('/') < 0) {
     const list = matchString
@@ -85,6 +103,9 @@ function fromHsl(cssColor: string): Color | null {
     results = [...list];
   } else {
     const [hslString] = matchString.split('/');
+    if (hslString === undefined) {
+      return null;
+    }
     const list = hslString
       .replace(/ +/g, ' ')
       .trim()
@@ -99,9 +120,10 @@ function fromHsl(cssColor: string): Color | null {
     results = [...list];
   }
 
-  const resultH = results[0];
-  const resultS = results[1];
-  const resultL = results[2];
+  if (!isResultComponent(results)) {
+    return null;
+  }
+  const [resultH, resultS, resultL] = results;
   if (!resultH.success || !resultS.success || !resultL.success) {
     return null;
   }
@@ -116,7 +138,10 @@ function fromHex(cssColor: string): Color | null {
   }
 
   const matches = hexMatches[1];
-  let components: number[];
+  if (matches === undefined) {
+    return null;
+  }
+  let components: readonly number[];
   switch (matches.length) {
     case 3:
     case 4:
@@ -134,10 +159,15 @@ function fromHex(cssColor: string): Color | null {
       return null;
   }
 
-  const r = components[0];
-  const g = components[1];
-  const b = components[2];
-  if (isNaN(r) || isNaN(g) || isNaN(b)) {
+  const [r, g, b] = components;
+  if (
+    r === undefined ||
+    g === undefined ||
+    b === undefined ||
+    isNaN(r) ||
+    isNaN(g) ||
+    isNaN(b)
+  ) {
     return null;
   }
 
@@ -263,4 +293,10 @@ export function neonize(color: Color, ratio: number): Color {
   }
 
   return mix(selectedTarget, color, ratio);
+}
+
+function isResultComponent(
+  results: ReadonlyArray<Result<number>>,
+): results is ResultComponents {
+  return results.length >= 3;
 }

@@ -31,7 +31,11 @@ export class Solve {
     let bestIndex: number | null = null;
     while (startIndex <= endIndex) {
       const guessIndex = Math.floor((startIndex + endIndex) / 2);
-      const result = fn(values[guessIndex]);
+      const value = values[guessIndex];
+      if (value === undefined) {
+        throw new Error(`Value at index ${guessIndex} is missing`);
+      }
+      const result = fn(value);
 
       if (result) {
         if (bestIndex === null) {
@@ -50,6 +54,10 @@ export class Solve {
       }
     }
 
-    return bestIndex === null ? null : values[bestIndex];
+    if (bestIndex === null) {
+      return null;
+    }
+
+    return values[bestIndex] ?? null;
   }
 }

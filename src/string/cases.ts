@@ -20,7 +20,11 @@ class Cases {
         if (index === 0) {
           return value;
         } else {
-          return `${value[0].toUpperCase()}${value.substring(1)}`;
+          const [firstLetter, ...rest] = value;
+          if (firstLetter === undefined) {
+            return '';
+          }
+          return `${firstLetter.toUpperCase()}${rest.join('')}`;
         }
       })
       .join('');
@@ -42,7 +46,13 @@ class Cases {
    */
   toPascalCase(): string {
     return this.words
-      .map((value) => `${value[0].toUpperCase()}${value.substring(1)}`)
+      .map((value) => {
+        const [firstLetter, ...rest] = value;
+        if (firstLetter === undefined) {
+          return '';
+        }
+        return `${firstLetter.toUpperCase()}${rest.join('')}`;
+      })
       .join('');
   }
 
@@ -69,11 +79,16 @@ export function convertCaseFrom(input: string): Cases {
       .split(' ')
       .map((word) => word.toLowerCase());
   } else if (PASCAL_CASE_REGEX.test(input)) {
-    const normalizedInput = `${input[0].toLowerCase()}${input.substring(1)}`;
-    words = normalizedInput
-      .replace(/([A-Z])/g, ' $1')
-      .split(' ')
-      .map((word) => word.toLowerCase());
+    const [firstLetter, ...rest] = input;
+    if (firstLetter === undefined) {
+      words = [];
+    } else {
+      const normalizedInput = `${firstLetter.toLowerCase()}${rest.join('')}`;
+      words = normalizedInput
+        .replace(/([A-Z])/g, ' $1')
+        .split(' ')
+        .map((word) => word.toLowerCase());
+    }
   } else if (LOWER_CASE_REGEX.test(input)) {
     words = input.split('-');
   } else if (UPPER_CASE_REGEX.test(input)) {

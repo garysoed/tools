@@ -44,7 +44,7 @@ export type ArrayDiff<T> = ArrayInsert<T> | ArrayDelete<T>;
  *
  * @thModule collect
  */
-export function diffArray<T>(
+export function diffArray<T extends {} | null>(
   fromArray: readonly T[],
   toArray: readonly T[],
   diffFn: (a: T, b: T) => boolean = (a, b) => a === b,
@@ -57,6 +57,9 @@ export function diffArray<T>(
   while (i < toArray.length) {
     const existingItem = currArray[i];
     const newItem = toArray[i];
+    if (newItem === undefined) {
+      throw new Error('Array cannot contain undefined');
+    }
     if (!diffValue(existingItem, newItem, diffFn)) {
       currArray.splice(i, 0, newItem);
       diffs.push({index: i, type: 'insert', value: newItem});
@@ -66,7 +69,11 @@ export function diffArray<T>(
 
   // Delete the extra items.
   for (let i = currArray.length - 1; i >= toArray.length; i--) {
-    diffs.push({index: i, type: 'delete', value: currArray[i]});
+    const value = currArray[i];
+    if (value === undefined) {
+      throw new Error('Array cannot contain undefined');
+    }
+    diffs.push({index: i, type: 'delete', value});
   }
 
   return diffs;

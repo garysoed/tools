@@ -16,9 +16,9 @@ import {Ordering} from './ordering';
  */
 export function following<T>(specs: readonly T[]): Ordering<T> {
   const ordering = new Map<T, number>();
-  for (let i = 0; i < specs.length; i++) {
-    ordering.set(specs[i], i);
-  }
+  specs.forEach((spec, i) => {
+    ordering.set(spec, i);
+  });
 
   const normalOrdering = normal();
 

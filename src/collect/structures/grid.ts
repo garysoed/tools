@@ -96,6 +96,9 @@ function fromPositionStr(positionStr: string): Vector2 {
   const [x, y] = positionStr
     .split('_')
     .map((position) => Number.parseFloat(position));
+  if (x === undefined || y === undefined) {
+    throw new Error(`position string ${positionStr} is invalid`);
+  }
   return [x, y];
 }
 
@@ -103,12 +106,10 @@ export function gridFrom<T>(
   arrayEntries: ReadonlyArray<readonly T[]>,
 ): Grid<T> {
   const entries: Array<GridEntry<T>> = [];
-  for (let y = 0; y < arrayEntries.length; y++) {
-    const cells = arrayEntries[y];
-    for (let x = 0; x < cells.length; x++) {
-      entries.push({position: [x, y], value: cells[x]});
-    }
-  }
-
+  arrayEntries.forEach((cells, y) => {
+    cells.forEach((value, x) => {
+      entries.push({position: [x, y], value});
+    });
+  });
   return new Grid(entries);
 }

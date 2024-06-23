@@ -10,12 +10,15 @@ function axes(dimension: number): readonly Vector[];
 function axes(dimension: number): readonly Vector[] {
   const bases = cartesian.axes(dimension);
   const vectors = [...bases];
-  for (let i = 0; i < bases.length; i++) {
-    const a = bases[i];
+  bases.forEach((a, i) => {
     for (let j = i + 1; j < bases.length; j++) {
-      vectors.push(vector.add(a, bases[j]));
+      const base = bases[j];
+      if (base === undefined) {
+        continue;
+      }
+      vectors.push(vector.add(a, base));
     }
-  }
+  });
   return vectors;
 }
 

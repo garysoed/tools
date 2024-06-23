@@ -34,6 +34,10 @@ function growCluster(
   }
 
   const lastCluster = existingCluster[existingCluster.length - 1];
+  if (lastCluster === undefined) {
+    return asRandom(existingCluster);
+  }
+
   const existingGrid = new Grid(
     existingCluster.map((position) => ({position, value: true})),
   );

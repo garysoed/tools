@@ -31,10 +31,12 @@ export function natural(): Ordering<string> {
     }
 
     for (let i = 0; i < maxLength; i++) {
-      const result = ordering(
-        normalize(item1Chunks[i]),
-        normalize(item2Chunks[i]),
-      );
+      const item1 = item1Chunks[i];
+      const item2 = item2Chunks[i];
+      if (item1 === undefined || item2 === undefined) {
+        throw new Error(`No item found at index ${i}`);
+      }
+      const result = ordering(normalize(item1), normalize(item2));
       if (result !== 0) {
         return result;
       }

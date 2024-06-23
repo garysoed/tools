@@ -123,16 +123,16 @@ test('@tools/gapi/sheets-table', () => {
       );
 
       // Check that the merge cells are all equal.
-      const merge0_2 = table[1][0];
-      assert(table[1][1]).to.equal(merge0_2);
-      assert(table[2][0]).to.equal(merge0_2);
-      assert(table[2][1]).to.equal(merge0_2);
+      const merge0_2 = table[1]![0];
+      assert(table[1]![1]).to.equal(merge0_2);
+      assert(table[2]![0]).to.equal(merge0_2);
+      assert(table[2]![1]).to.equal(merge0_2);
 
-      const merge2_0 = table[0][1];
-      assert(table[0][2]).to.equal(merge2_0);
+      const merge2_0 = table[0]![1];
+      assert(table[0]![2]).to.equal(merge2_0);
 
-      const merge3_3 = table[2][2];
-      assert(table[3][2]).to.equal(merge3_3);
+      const merge3_3 = table[2]![2];
+      assert(table[3]![2]).to.equal(merge3_3);
     });
   });
 });

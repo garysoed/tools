@@ -35,17 +35,9 @@ export abstract class Color {
   abstract get lightness(): number;
 
   private readonly cachedLuminance = new CachedValue(() => {
-    const [computedRed, computedGreen, computedBlue] = [
-      this.red,
-      this.green,
-      this.blue,
-    ].map((value: number) => {
-      const normalized = value / 255;
-
-      return normalized <= 0.03928
-        ? normalized / 12.92
-        : Math.pow((normalized + 0.055) / 1.055, 2.4);
-    });
+    const computedRed = computeLuminanceComponent(this.red);
+    const computedGreen = computeLuminanceComponent(this.green);
+    const computedBlue = computeLuminanceComponent(this.blue);
 
     return (
       computedRed * 0.2126 + computedGreen * 0.7152 + computedBlue * 0.0722
@@ -68,4 +60,12 @@ export abstract class Color {
    * Saturation component of the color.
    */
   abstract get saturation(): number;
+}
+
+function computeLuminanceComponent(value: number): number {
+  const normalized = value / 255;
+
+  return normalized <= 0.03928
+    ? normalized / 12.92
+    : Math.pow((normalized + 0.055) / 1.055, 2.4);
 }

@@ -37,12 +37,11 @@ export class HslColor extends Color {
     }
 
     const min = this.lightness - chroma / 2;
-    const components = [r1, g1, b1].map((value: number) => {
-      return Math.round((value + min) * 255);
-    });
-    const [r, g, b] = [...components];
-
-    return [r, g, b];
+    return [
+      Math.round((r1 + min) * 255),
+      Math.round((g1 + min) * 255),
+      Math.round((b1 + min) * 255),
+    ];
   });
 
   constructor(

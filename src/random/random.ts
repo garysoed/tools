@@ -72,11 +72,10 @@ export function combineRandom<A extends ReadonlyArray<Random<any>>>(
 export function combineRandom(
   ...randoms: ReadonlyArray<Random<unknown>>
 ): Random<readonly unknown[]> {
-  if (randoms.length === 0) {
+  const [random, ...rest] = randoms;
+  if (random === undefined) {
     return asRandom([]);
   }
-
-  const [random, ...rest] = randoms;
   return random.take((value) => {
     return combineRandom(...rest).take((values) =>
       asRandom([value, ...values]),

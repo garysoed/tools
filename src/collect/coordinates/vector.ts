@@ -27,12 +27,13 @@ export const vector = {
 
     const diff = vector.add(vector2Point, vector.multiply(vector1Point, -1));
 
-    const multiplier = [
-      inverse[0][0] * diff[0] + inverse[0][1] * diff[1],
-      inverse[1][0] * diff[0] + inverse[1][1] * diff[1],
-    ];
-
-    return vector.add(vector1Point, vector.multiply(vector1Dir, multiplier[0]));
+    return vector.add(
+      vector1Point,
+      vector.multiply(
+        vector1Dir,
+        inverse[0][0] * diff[0] + inverse[0][1] * diff[1],
+      ),
+    );
   },
 
   length(vector: Vector): number {

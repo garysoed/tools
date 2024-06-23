@@ -229,12 +229,11 @@ export function normalize(path: AbsolutePath | RelativePath): Path {
 
   // Removes all instances of '.' part except the first one.
   const noCurrentParts: string[] = [];
-  for (let i = 0; i < noEmptyParts.length; i++) {
-    const part = noEmptyParts[i];
+  noEmptyParts.forEach((part, i) => {
     if (i === 0 || part !== '.') {
       noCurrentParts.push(part);
     }
-  }
+  });
 
   // Copy all trailing '..' part.
   const nonDoubleDotEntry = noCurrentParts
@@ -243,11 +242,18 @@ export function normalize(path: AbsolutePath | RelativePath): Path {
   const nonDoubleIndex = nonDoubleDotEntry ? nonDoubleDotEntry[1] + 1 : 0;
   const normalizedParts: string[] = [];
   for (let i = 0; i < nonDoubleIndex; i++) {
-    normalizedParts.push(noCurrentParts[i]);
+    const part = noCurrentParts[i];
+    if (part === undefined) {
+      throw new Error(`No parts found at index ${i}`);
+    }
+    normalizedParts.push(part);
   }
 
   for (let i = nonDoubleIndex; i < noCurrentParts.length; i++) {
     const part = noCurrentParts[i];
+    if (part === undefined) {
+      throw new Error(`No parts found at index ${i}`);
+    }
     if (
       part === '..' &&
       normalizedParts.length > 0 &&
