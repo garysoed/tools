@@ -4,8 +4,17 @@ import {shuffle} from './shuffle';
 export function randomPickItem<T>(
   values: readonly T[],
   seed: Random<number>,
-): Random<T | undefined> {
-  return shuffle(values, seed).take((shuffled) =>
-    asRandom(shuffled[0] ?? undefined),
-  );
+): Random<T> {
+  return shuffle(values, seed).take((shuffled) => {
+    const [value] = shuffled;
+    if (value !== undefined) {
+      return asRandom(value);
+    }
+
+    if (shuffled.length === 0) {
+      throw new Error('Values array is empty');
+    }
+
+    return asRandom(undefined as T);
+  });
 }

@@ -11,4 +11,12 @@ test('@tools/src/random/random-pick-item', () => {
       'c',
     );
   });
+
+  should('throw error if the input array is empty', () => {
+    const seed = incrementingRandom(10);
+
+    assert(() => randomPickItem([], seed).run(0.8)).to.throwErrorWithMessage(
+      /Values array is empty/,
+    );
+  });
 });
