@@ -2,7 +2,6 @@ import {assert, setup, should, test} from 'gs-testing';
 
 import {cartesian} from '../collect/coordinates/cartesian';
 import {Vector2} from '../collect/coordinates/vector';
-import {Grid} from '../collect/structures/grid';
 
 import {aleaRandom} from './alea-random';
 import {randomBfsCluster} from './random-bfs-cluster';
@@ -10,10 +9,10 @@ import {randomBfsCluster} from './random-bfs-cluster';
 test('@tools/src/random/random-bfs-cluster', () => {
   const _ = setup(() => {
     const seed = aleaRandom();
-    const candidates = new Grid<{}>();
+    const candidates: Vector2[] = [];
     for (let x = 0; x < 10; x++) {
       for (let y = 0; y < 8; y++) {
-        candidates.set([x, y], {});
+        candidates.push([x, y]);
       }
     }
     return {candidates, seed};

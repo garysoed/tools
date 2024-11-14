@@ -87,7 +87,11 @@ function calculateValidNewPositions(
   const positions = [];
   for (const direction of spec.coordinate.directions(2)) {
     const newPosition = vector.add(fromPosition, direction);
-    if (!spec.candidates.has(newPosition)) {
+    if (
+      !spec.candidates.some((candidate) =>
+        vector.equals(candidate, newPosition),
+      )
+    ) {
       continue;
     }
 

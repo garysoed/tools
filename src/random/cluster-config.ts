@@ -1,5 +1,5 @@
 import {CoordinateSystem} from '../collect/coordinates/coordinate-system';
-import {ReadonlyGrid} from '../collect/structures/readonly-grid';
+import {Vector2} from '../collect/coordinates/vector';
 
 export interface Range {
   readonly min: number;
@@ -7,7 +7,7 @@ export interface Range {
 }
 
 export interface ClusterConfig {
-  readonly candidates: ReadonlyGrid<unknown>;
+  readonly candidates: readonly Vector2[];
   readonly size: Range;
   readonly coordinate: CoordinateSystem;
 }

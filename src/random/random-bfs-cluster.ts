@@ -39,7 +39,11 @@ function growCluster(
   for (const existingPosition of existingCluster) {
     for (const direction of spec.coordinate.directions(2)) {
       const newPosition = vector.add(existingPosition, direction);
-      if (!spec.candidates.has(newPosition)) {
+      const isNewPositionValid =
+        spec.candidates.find((candidate) =>
+          vector.equals(candidate, newPosition),
+        ) !== null;
+      if (!isNewPositionValid) {
         continue;
       }
 

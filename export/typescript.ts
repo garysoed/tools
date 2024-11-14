@@ -13,3 +13,4 @@ export {AnyTodo} from '../src/typescript/any-todo';
 export {$pipe} from '../src/typescript/pipe';
 export {Operator} from '../src/typescript/operator';
 export {Ctor} from '../src/typescript/ctor';
+export {Nominal, makeTypeFactory} from '../src/typescript/nominal';

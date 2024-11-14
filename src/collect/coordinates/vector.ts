@@ -10,6 +10,16 @@ export const vector = {
     ) as unknown as V;
   },
 
+  equals<V extends Vector>(vector1: V, vector2: V): boolean {
+    for (let i = 0; i < vector1.length; i++) {
+      if (vector1[i] !== vector2[i]) {
+        return false;
+      }
+    }
+
+    return true;
+  },
+
   intersect(
     vector1Point: Vector2,
     vector1Dir: Vector2,

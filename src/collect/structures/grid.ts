@@ -49,27 +49,33 @@ export class Grid<T = never> implements ReadonlyGrid<T> {
   }
 
   get maxX(): number {
-    return [...this.entriesMap.keys()]
-      .map((positionStr) => fromPositionStr(positionStr)[0])
+    return this.positions
+      .map((position) => position[0])
       .reduce((max, curr) => Math.max(curr, max), Number.NEGATIVE_INFINITY);
   }
 
   get maxY(): number {
-    return [...this.entriesMap.keys()]
-      .map((positionStr) => fromPositionStr(positionStr)[1])
+    return this.positions
+      .map((position) => position[1])
       .reduce((max, curr) => Math.max(curr, max), Number.NEGATIVE_INFINITY);
   }
 
   get minX(): number {
-    return [...this.entriesMap.keys()]
-      .map((positionStr) => fromPositionStr(positionStr)[0])
+    return this.positions
+      .map((position) => position[0])
       .reduce((min, curr) => Math.min(curr, min), Number.POSITIVE_INFINITY);
   }
 
   get minY(): number {
-    return [...this.entriesMap.keys()]
-      .map((positionStr) => fromPositionStr(positionStr)[1])
+    return this.positions
+      .map((position) => position[1])
       .reduce((min, curr) => Math.min(curr, min), Number.POSITIVE_INFINITY);
+  }
+
+  get positions(): readonly Vector2[] {
+    return [...this.entriesMap.keys()].map((positionStr) =>
+      fromPositionStr(positionStr),
+    );
   }
 
   set(position: Vector2, value: T): this {
