@@ -42,6 +42,13 @@ export {ReadonlyOrderedMap} from '../src/collect/structures/readonly-ordered-map
 export {Grid, gridFrom} from '../src/collect/structures/grid';
 export {GridEntry, ReadonlyGrid} from '../src/collect/structures/readonly-grid';
 
+export {DirectionalGraph} from '../src/collect/structures/directional-graph';
+export {
+  ReadonlyDirectionalGraph,
+  NodeId,
+  Edge,
+} from '../src/collect/structures/readonly-directional-graph';
+
 export {
   ArrayDiff,
   diffArray,
