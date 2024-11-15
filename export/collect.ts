@@ -48,6 +48,7 @@ export {
   NodeId,
   Edge,
 } from '../src/collect/structures/readonly-directional-graph';
+export {directionalGraphFrom} from '../src/collect/structures/directional-graph-from';
 
 export {
   ArrayDiff,

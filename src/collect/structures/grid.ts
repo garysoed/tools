@@ -94,7 +94,7 @@ function asEntryMap<T>(
   return entriesMap;
 }
 
-function toPositionStr(position: Vector2): string {
+export function toPositionStr(position: Vector2): string {
   return `${position[0]}_${position[1]}`;
 }
 
