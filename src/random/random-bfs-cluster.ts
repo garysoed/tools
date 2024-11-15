@@ -1,64 +1,58 @@
-import {Vector2, vector} from '../collect/coordinates/vector';
-import {Grid} from '../collect/structures/grid';
+import {
+  NodeId,
+  ReadonlyDirectionalGraph,
+} from '../collect/structures/readonly-directional-graph';
 
-import {ClusterConfig} from './cluster-config';
 import {Random, asRandom} from './random';
-import {randomPickInt} from './random-pick-int';
 import {randomPickItem} from './random-pick-item';
 import {shuffle} from './shuffle';
 
+interface Config {
+  readonly graph: ReadonlyDirectionalGraph;
+  readonly startNode: NodeId;
+  readonly nodeCount?: number | null;
+}
+
+interface InternalConfig {
+  readonly graph: ReadonlyDirectionalGraph;
+  readonly nodeCount: number;
+}
+
 export function randomBfsCluster(
-  startingPosition: Vector2,
-  config: ClusterConfig,
+  config: Config,
   random: Random<number>,
-): Random<readonly Vector2[]> {
-  const clusterSizeRandom = randomPickInt(
-    config.size.min,
-    config.size.max,
-    random,
-  );
-  return clusterSizeRandom.take((clusterSize) => {
-    return growCluster(config, clusterSize - 1, [startingPosition], random);
-  });
+): Random<readonly NodeId[]> {
+  const nodeCount = config.nodeCount ?? Number.POSITIVE_INFINITY;
+  return growCluster({...config, nodeCount}, [config.startNode], random);
 }
 
 function growCluster(
-  spec: ClusterConfig,
-  clusterSize: number,
-  existingCluster: readonly Vector2[],
+  config: InternalConfig,
+  existingCluster: readonly NodeId[],
   random: Random<number>,
-): Random<readonly Vector2[]> {
-  if (clusterSize <= 0) {
+): Random<readonly NodeId[]> {
+  if (existingCluster.length >= config.nodeCount) {
     return asRandom(existingCluster);
   }
 
-  const existingGrid = new Grid<{}>(
-    existingCluster.map((position) => ({position, value: {}})),
-  );
-  const candidatesGrid = new Grid<{}>();
-  for (const existingPosition of existingCluster) {
-    for (const direction of spec.coordinate.directions(2)) {
-      const newPosition = vector.add(existingPosition, direction);
-      const isNewPositionValid =
-        spec.candidates.find((candidate) =>
-          vector.equals(candidate, newPosition),
-        ) !== null;
-      if (!isNewPositionValid) {
+  const existingSet = new Set<NodeId>(existingCluster);
+  const candidatesSet = new Set<NodeId>();
+  for (const existingNode of existingCluster) {
+    for (const newNode of config.graph.getAdjacentNodes(existingNode)) {
+      if (existingSet.has(newNode)) {
         continue;
       }
 
-      if (existingGrid.has(newPosition)) {
-        continue;
-      }
-
-      candidatesGrid.set(newPosition, {});
+      candidatesSet.add(newNode);
     }
   }
 
-  return randomPickItem(
-    [...candidatesGrid].map(({position}) => position),
-    random,
-  )
+  // No more candidates left
+  if (candidatesSet.size <= 0) {
+    return asRandom(existingCluster);
+  }
+
+  return randomPickItem([...candidatesSet], random)
     .take((newTile) => {
       if (!newTile) {
         // There are no valid candidates
@@ -68,11 +62,6 @@ function growCluster(
       return shuffle([...existingCluster, newTile], random);
     })
     .take((newExistingCluster) => {
-      return growCluster(
-        spec,
-        clusterSize - (newExistingCluster.length - existingCluster.length),
-        newExistingCluster,
-        random,
-      );
+      return growCluster(config, newExistingCluster, random);
     });
 }

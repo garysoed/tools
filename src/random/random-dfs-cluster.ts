@@ -1,35 +1,37 @@
-import {Vector2, vector} from '../collect/coordinates/vector';
-import {Grid} from '../collect/structures/grid';
-import {ReadonlyGrid} from '../collect/structures/readonly-grid';
+import {
+  NodeId,
+  ReadonlyDirectionalGraph,
+} from '../collect/structures/readonly-directional-graph';
 
-import {ClusterConfig} from './cluster-config';
 import {Random, asRandom} from './random';
-import {randomPickInt} from './random-pick-int';
 import {randomPickItem} from './random-pick-item';
 import {shuffle} from './shuffle';
 
+interface Config {
+  readonly graph: ReadonlyDirectionalGraph;
+  readonly startNode: NodeId;
+  readonly nodeCount?: number | null;
+}
+
+interface InternalConfig {
+  readonly graph: ReadonlyDirectionalGraph;
+  readonly nodeCount: number;
+}
+
 export function randomDfsCluster(
-  startingPosition: Vector2,
-  config: ClusterConfig,
+  config: Config,
   random: Random<number>,
-): Random<readonly Vector2[]> {
-  const clusterSizeRandom = randomPickInt(
-    config.size.min,
-    config.size.max,
-    random,
-  );
-  return clusterSizeRandom.take((clusterSize) => {
-    return growCluster(config, clusterSize - 1, [startingPosition], random);
-  });
+): Random<readonly NodeId[]> {
+  const nodeCount = config.nodeCount ?? Number.POSITIVE_INFINITY;
+  return growCluster({...config, nodeCount}, [config.startNode], random);
 }
 
 function growCluster(
-  spec: ClusterConfig,
-  clusterSize: number,
-  existingCluster: readonly Vector2[],
+  config: InternalConfig,
+  existingCluster: readonly NodeId[],
   random: Random<number>,
-): Random<readonly Vector2[]> {
-  if (clusterSize <= 0) {
+): Random<readonly NodeId[]> {
+  if (existingCluster.length >= config.nodeCount) {
     return asRandom(existingCluster);
   }
 
@@ -38,64 +40,51 @@ function growCluster(
     return asRandom(existingCluster);
   }
 
-  const existingGrid = new Grid(
-    existingCluster.map((position) => ({position, value: true})),
-  );
+  const existingSet = new Set(existingCluster);
   const newPositions = [
-    ...calculateValidNewPositions(lastCluster, spec, existingGrid),
+    ...calculateValidNewPositions(lastCluster, config, existingSet),
   ];
+
+  // Reached a dead end, backtrack
   if (newPositions.length <= 0) {
     for (const existingPosition of existingCluster) {
       newPositions.push(
-        ...calculateValidNewPositions(existingPosition, spec, existingGrid),
+        ...calculateValidNewPositions(existingPosition, config, existingSet),
       );
     }
   }
 
-  const candidatesGrid = new Grid<{}>();
-  for (const newPosition of newPositions) {
-    candidatesGrid.set(newPosition, {});
+  if (newPositions.length <= 0) {
+    return asRandom(existingCluster);
   }
 
-  return randomPickItem(
-    [...candidatesGrid].map(({position}) => position),
-    random,
-  )
-    .take((newTile) => {
-      if (!newTile) {
+  const candidatesSet = new Set<NodeId>();
+  for (const newPosition of newPositions) {
+    candidatesSet.add(newPosition);
+  }
+
+  return randomPickItem([...candidatesSet], random)
+    .take((newNode) => {
+      if (!newNode) {
         // There are no valid candidates
         return asRandom(existingCluster);
       }
 
-      return shuffle([...existingCluster, newTile], random);
+      return shuffle([...existingCluster, newNode], random);
     })
     .take((newExistingCluster) => {
-      return growCluster(
-        spec,
-        clusterSize - (newExistingCluster.length - existingCluster.length),
-        newExistingCluster,
-        random,
-      );
+      return growCluster(config, newExistingCluster, random);
     });
 }
 
 function calculateValidNewPositions(
-  fromPosition: Vector2,
-  spec: ClusterConfig,
-  existingGrid: ReadonlyGrid<{}>,
-): readonly Vector2[] {
+  fromPosition: NodeId,
+  spec: InternalConfig,
+  existingSet: ReadonlySet<NodeId>,
+): readonly NodeId[] {
   const positions = [];
-  for (const direction of spec.coordinate.directions(2)) {
-    const newPosition = vector.add(fromPosition, direction);
-    if (
-      !spec.candidates.some((candidate) =>
-        vector.equals(candidate, newPosition),
-      )
-    ) {
-      continue;
-    }
-
-    if (existingGrid.has(newPosition)) {
+  for (const newPosition of spec.graph.getAdjacentNodes(fromPosition)) {
+    if (existingSet.has(newPosition)) {
       continue;
     }
 

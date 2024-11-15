@@ -1,42 +1,62 @@
 import {assert, setup, should, test} from 'gs-testing';
 
-import {cartesian} from '../collect/coordinates/cartesian';
-import {Vector2} from '../collect/coordinates/vector';
+import {DirectionalGraph} from '../collect/structures/directional-graph';
+import {
+  makeNodeId,
+  ReadonlyDirectionalGraph,
+} from '../collect/structures/readonly-directional-graph';
 
 import {aleaRandom} from './alea-random';
 import {randomBfsCluster} from './random-bfs-cluster';
 
 test('@tools/src/random/random-bfs-cluster', () => {
+  const node00 = makeNodeId('00');
+  const node01 = makeNodeId('01');
+  const node10 = makeNodeId('10');
+  const node11 = makeNodeId('11');
+
   const _ = setup(() => {
     const seed = aleaRandom();
-    const candidates: Vector2[] = [];
-    for (let x = 0; x < 10; x++) {
-      for (let y = 0; y < 8; y++) {
-        candidates.push([x, y]);
-      }
-    }
-    return {candidates, seed};
+    const graph = new DirectionalGraph();
+    graph
+      .addEdge({from: node00, to: node10})
+      .addEdge({from: node00, to: node11})
+      .addEdge({from: node00, to: node01})
+      .addEdge({from: node10, to: node11})
+      .addEdge({from: node01, to: node11});
+
+    return {graph: graph satisfies ReadonlyDirectionalGraph, seed};
   });
 
   should('randomly generate a cluster', () => {
-    const size = {min: 8, max: 12};
     const result = randomBfsCluster(
-      [1, 6],
-      {candidates: _.candidates, size, coordinate: cartesian},
+      {graph: _.graph, startNode: node00, nodeCount: 3},
       _.seed,
     ).run(12);
-    assert(result.length >= 8).to.beTrue();
-    assert(result.length <= 12).to.beTrue();
+    assert(new Set(result)).to.equal(new Set([node00, node10, node11]));
   });
 
   should('return the starting position if size is 1', () => {
-    const startingPosition: Vector2 = [1, 6];
-    const size = {min: 1, max: 1};
     const result = randomBfsCluster(
-      startingPosition,
-      {candidates: _.candidates, size, coordinate: cartesian},
+      {graph: _.graph, startNode: node00, nodeCount: 1},
       _.seed,
     ).run(12);
-    assert(result).to.equal([startingPosition]);
+    assert(result).to.equal([node00]);
+  });
+
+  should('return all the nodes if the target size is too big', () => {
+    const result = randomBfsCluster(
+      {graph: _.graph, startNode: node00, nodeCount: 6},
+      _.seed,
+    ).run(12);
+    assert(new Set(result)).to.equal(new Set([node00, node10, node11, node01]));
+  });
+
+  should('return all the nodes if size is not given', () => {
+    const result = randomBfsCluster(
+      {graph: _.graph, startNode: node00},
+      _.seed,
+    ).run(12);
+    assert(new Set(result)).to.equal(new Set([node00, node10, node11, node01]));
   });
 });
