@@ -46,6 +46,7 @@ export {DirectionalGraph} from '../src/collect/structures/directional-graph';
 export {
   ReadonlyDirectionalGraph,
   NodeId,
+  makeNodeId,
   Edge,
 } from '../src/collect/structures/readonly-directional-graph';
 export {directionalGraphFrom} from '../src/collect/structures/directional-graph-from';
