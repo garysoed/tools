@@ -11,7 +11,7 @@ test('@tools/src/collect/structures/directional-graph-from', () => {
     grid.set([0, 1], {});
     grid.set([1, 1], {});
 
-    const {graph, nodeMap} = directionalGraphFrom(grid);
+    const {graph, nodeMap, getNodeId} = directionalGraphFrom(grid);
     const edgesInVectors = [...graph].map(({from, to}) => ({
       from: nodeMap.get(from)!,
       to: nodeMap.get(to)!,
@@ -28,5 +28,6 @@ test('@tools/src/collect/structures/directional-graph-from', () => {
         {from: [1, 1], to: [1, 0]},
       ]),
     );
+    assert(nodeMap.get(getNodeId([0, 1]))).to.equal([0, 1]);
   });
 });
