@@ -9,11 +9,20 @@ test('@tools/src/collect/structures/directional-graph', () => {
       const nodeA = makeNodeId('a');
       const nodeB = makeNodeId('b');
       const nodeC = makeNodeId('c');
-      const graph = new DirectionalGraph();
-      graph.addEdge({from: nodeA, to: nodeB}).addEdge({from: nodeB, to: nodeC});
+      const graph = new DirectionalGraph<string>();
+      graph
+        .addNode(nodeA, 'A')
+        .addNode(nodeB, 'B')
+        .addNode(nodeC, 'C')
+        .addEdge({from: nodeA, to: nodeB})
+        .addEdge({from: nodeB, to: nodeC});
 
-      assert(new Set(graph.nodes)).to.haveExactElements(
-        new Set([nodeA, nodeB, nodeC]),
+      assert(graph.nodes).to.haveExactElements(
+        new Map([
+          [nodeA, 'A'],
+          [nodeB, 'B'],
+          [nodeC, 'C'],
+        ]),
       );
     });
   });
@@ -23,8 +32,13 @@ test('@tools/src/collect/structures/directional-graph', () => {
       const nodeA = makeNodeId('a');
       const nodeB = makeNodeId('b');
       const nodeC = makeNodeId('c');
-      const graph = new DirectionalGraph();
-      graph.addEdge({from: nodeA, to: nodeB}).addEdge({from: nodeB, to: nodeC});
+      const graph = new DirectionalGraph<string>();
+      graph
+        .addNode(nodeA, 'A')
+        .addNode(nodeB, 'B')
+        .addNode(nodeC, 'C')
+        .addEdge({from: nodeA, to: nodeB})
+        .addEdge({from: nodeB, to: nodeC});
 
       assert(new Set(graph.edges)).to.haveExactElements(
         new Set([
@@ -35,16 +49,47 @@ test('@tools/src/collect/structures/directional-graph', () => {
     });
   });
 
-  test('getAdjacentNodes', () => {
-    should('return all the adjacent nodes in the graph', () => {
+  test('getOutboundEdges', () => {
+    should('return all the outgoing edges in the graph', () => {
       const nodeA = makeNodeId('a');
       const nodeB = makeNodeId('b');
       const nodeC = makeNodeId('c');
-      const graph = new DirectionalGraph();
-      graph.addEdge({from: nodeB, to: nodeA}).addEdge({from: nodeB, to: nodeC});
+      const graph = new DirectionalGraph<string>();
+      graph
+        .addNode(nodeA, 'A')
+        .addNode(nodeB, 'B')
+        .addNode(nodeC, 'C')
+        .addEdge({from: nodeB, to: nodeA})
+        .addEdge({from: nodeB, to: nodeC});
 
-      assert(new Set(graph.getAdjacentNodes(nodeB))).to.haveExactElements(
-        new Set([nodeA, nodeC]),
+      assert(new Set(graph.getOutboundEdges(nodeB))).to.haveExactElements(
+        new Set([
+          {from: nodeB, to: nodeA},
+          {from: nodeB, to: nodeC},
+        ]),
+      );
+    });
+  });
+
+  test('getInboundEdges', () => {
+    should('return all the incoming edges in the graph', () => {
+      const nodeA = makeNodeId('a');
+      const nodeB = makeNodeId('b');
+      const nodeC = makeNodeId('c');
+      const graph = new DirectionalGraph<string>();
+      graph
+        .addNode(nodeA, 'A')
+        .addNode(nodeB, 'B')
+        .addNode(nodeC, 'C')
+        .addEdge({from: nodeC, to: nodeA})
+        .addEdge({from: nodeB, to: nodeA})
+        .addEdge({from: nodeB, to: nodeC});
+
+      assert(new Set(graph.getInboundEdges(nodeA))).to.haveExactElements(
+        new Set([
+          {from: nodeB, to: nodeA},
+          {from: nodeC, to: nodeA},
+        ]),
       );
     });
   });

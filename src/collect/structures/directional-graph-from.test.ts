@@ -5,29 +5,52 @@ import {Grid} from './grid';
 
 test('@tools/src/collect/structures/directional-graph-from', () => {
   should('create the correct graph and node map from grid', () => {
-    const grid = new Grid<{}>();
-    grid.set([0, 0], {});
-    grid.set([1, 0], {});
-    grid.set([0, 1], {});
-    grid.set([1, 1], {});
+    const grid = new Grid<string>();
+    grid.set([0, 0], '00');
+    grid.set([1, 0], '10');
+    grid.set([0, 1], '01');
+    grid.set([1, 1], '11');
 
-    const {graph, nodeMap, getNodeId} = directionalGraphFrom(grid);
-    const edgesInVectors = [...graph].map(({from, to}) => ({
-      from: nodeMap.get(from)!,
-      to: nodeMap.get(to)!,
+    const graph = directionalGraphFrom(grid);
+    const edgesInGridEntries = [...graph.edges].map(({from, to}) => ({
+      from: graph.nodes.get(from)!,
+      to: graph.nodes.get(to)!,
     }));
-    assert(new Set([...edgesInVectors])).to.equal(
+    assert(new Set([...edgesInGridEntries])).to.equal(
       new Set([
-        {from: [0, 0], to: [1, 0]},
-        {from: [0, 0], to: [0, 1]},
-        {from: [1, 0], to: [0, 0]},
-        {from: [1, 0], to: [1, 1]},
-        {from: [0, 1], to: [0, 0]},
-        {from: [0, 1], to: [1, 1]},
-        {from: [1, 1], to: [0, 1]},
-        {from: [1, 1], to: [1, 0]},
+        {
+          from: {position: [0, 0], value: '00'},
+          to: {position: [1, 0], value: '10'},
+        },
+        {
+          from: {position: [0, 0], value: '00'},
+          to: {position: [0, 1], value: '01'},
+        },
+        {
+          from: {position: [1, 0], value: '10'},
+          to: {position: [0, 0], value: '00'},
+        },
+        {
+          from: {position: [1, 0], value: '10'},
+          to: {position: [1, 1], value: '11'},
+        },
+        {
+          from: {position: [0, 1], value: '01'},
+          to: {position: [0, 0], value: '00'},
+        },
+        {
+          from: {position: [0, 1], value: '01'},
+          to: {position: [1, 1], value: '11'},
+        },
+        {
+          from: {position: [1, 1], value: '11'},
+          to: {position: [0, 1], value: '01'},
+        },
+        {
+          from: {position: [1, 1], value: '11'},
+          to: {position: [1, 0], value: '10'},
+        },
       ]),
     );
-    assert(nodeMap.get(getNodeId([0, 1]))).to.equal([0, 1]);
   });
 });

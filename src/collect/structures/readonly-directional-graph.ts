@@ -8,9 +8,10 @@ export interface Edge {
   readonly to: NodeId;
 }
 
-export interface ReadonlyDirectionalGraph extends Iterable<Edge> {
-  readonly nodes: readonly NodeId[];
+export interface ReadonlyDirectionalGraph<T> {
+  readonly nodes: ReadonlyMap<NodeId, T>;
   readonly edges: readonly Edge[];
 
-  getAdjacentNodes(from: NodeId): readonly NodeId[];
+  getInboundEdges(from: NodeId): readonly Edge[];
+  getOutboundEdges(to: NodeId): readonly Edge[];
 }

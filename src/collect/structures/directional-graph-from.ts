@@ -1,47 +1,34 @@
 import {cartesian} from '../coordinates/cartesian';
-import {vector, Vector2} from '../coordinates/vector';
+import {vector} from '../coordinates/vector';
 
 import {DirectionalGraph} from './directional-graph';
 import {Grid, toPositionStr} from './grid';
 import {
   makeNodeId,
-  NodeId,
   ReadonlyDirectionalGraph,
 } from './readonly-directional-graph';
+import {GridEntry} from './readonly-grid';
 
-interface GraphAndNodeMap {
-  readonly graph: ReadonlyDirectionalGraph;
-  readonly nodeMap: ReadonlyMap<NodeId, Vector2>;
-
-  getNodeId(vector: Vector2): NodeId;
-}
-
-export function directionalGraphFrom(grid: Grid<unknown>): GraphAndNodeMap {
-  const graph = new DirectionalGraph();
-  const nodeMap = new Map<NodeId, Vector2>();
-  const vectorMap = new Map<Vector2, NodeId>();
-  for (const {position} of grid) {
+export function directionalGraphFrom<T>(
+  grid: Grid<T>,
+): ReadonlyDirectionalGraph<GridEntry<T>> {
+  const graph = new DirectionalGraph<GridEntry<T>>();
+  for (const entry of grid) {
     for (const direction of cartesian.directions(2)) {
-      const newPosition = vector.add(position, direction);
-      if (!grid.has(newPosition)) {
+      const newPosition = vector.add(entry.position, direction);
+      const newValue = grid.get(newPosition);
+      if (newValue === undefined) {
         continue;
       }
 
-      const from = makeNodeId(toPositionStr(position));
+      const from = makeNodeId(toPositionStr(entry.position));
       const to = makeNodeId(toPositionStr(newPosition));
-      nodeMap.set(from, position);
-      nodeMap.set(to, newPosition);
-      vectorMap.set(position, from);
-      vectorMap.set(newPosition, to);
-      graph.addEdge({from, to});
+      graph
+        .addNode(from, entry)
+        .addNode(to, {position: newPosition, value: newValue})
+        .addEdge({from, to});
     }
   }
 
-  return {
-    graph,
-    nodeMap,
-    getNodeId(from: Vector2): NodeId {
-      return makeNodeId(toPositionStr(from));
-    },
-  };
+  return graph;
 }

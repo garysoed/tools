@@ -1,94 +1,104 @@
+import {DirectionalGraph} from '../collect/structures/directional-graph';
 import {
+  Edge,
   NodeId,
   ReadonlyDirectionalGraph,
 } from '../collect/structures/readonly-directional-graph';
 
 import {Random, asRandom} from './random';
 import {randomPickItem} from './random-pick-item';
-import {shuffle} from './shuffle';
 
-interface Config {
-  readonly graph: ReadonlyDirectionalGraph;
+interface Config<T> {
+  readonly graph: ReadonlyDirectionalGraph<T>;
   readonly startNode: NodeId;
   readonly nodeCount?: number | null;
 }
 
-interface InternalConfig {
-  readonly graph: ReadonlyDirectionalGraph;
+interface InternalConfig<T> {
+  readonly graph: ReadonlyDirectionalGraph<T>;
   readonly nodeCount: number;
 }
 
-export function randomDfsCluster(
-  config: Config,
+export function randomDfsCluster<T>(
+  config: Config<T>,
   random: Random<number>,
-): Random<readonly NodeId[]> {
+): Random<ReadonlyDirectionalGraph<T>> {
   const nodeCount = config.nodeCount ?? Number.POSITIVE_INFINITY;
-  return growCluster({...config, nodeCount}, [config.startNode], random);
+  const startingGraph = new DirectionalGraph<T>();
+  const existingValue = config.graph.nodes.get(config.startNode);
+  if (existingValue === undefined) {
+    throw new Error(`starting node: ${config.startNode} doesn't exist`);
+  }
+  startingGraph.addNode(config.startNode, existingValue);
+  return growCluster<T>({...config, nodeCount}, startingGraph, random);
 }
 
-function growCluster(
-  config: InternalConfig,
-  existingCluster: readonly NodeId[],
+function growCluster<T>(
+  config: InternalConfig<T>,
+  existingGraph: ReadonlyDirectionalGraph<T>,
   random: Random<number>,
-): Random<readonly NodeId[]> {
-  if (existingCluster.length >= config.nodeCount) {
-    return asRandom(existingCluster);
+): Random<ReadonlyDirectionalGraph<T>> {
+  if (existingGraph.nodes.size >= config.nodeCount) {
+    return asRandom(existingGraph);
   }
 
-  const lastCluster = existingCluster[existingCluster.length - 1];
-  if (lastCluster === undefined) {
-    return asRandom(existingCluster);
-  }
-
-  const existingSet = new Set(existingCluster);
-  const newPositions = [
-    ...calculateValidNewPositions(lastCluster, config, existingSet),
+  const lastNode = [...existingGraph.nodes.keys()][
+    existingGraph.nodes.size - 1
   ];
+  if (lastNode === undefined) {
+    return asRandom(existingGraph);
+  }
+
+  const existingSet = new Set(existingGraph.nodes.keys());
+  const newEdges = [...calculateValidNewEdges(lastNode, config, existingSet)];
 
   // Reached a dead end, backtrack
-  if (newPositions.length <= 0) {
-    for (const existingPosition of existingCluster) {
-      newPositions.push(
-        ...calculateValidNewPositions(existingPosition, config, existingSet),
+  if (newEdges.length <= 0) {
+    for (const existingPosition of existingGraph.nodes.keys()) {
+      newEdges.push(
+        ...calculateValidNewEdges(existingPosition, config, existingSet),
       );
     }
   }
 
-  if (newPositions.length <= 0) {
-    return asRandom(existingCluster);
+  if (newEdges.length <= 0) {
+    return asRandom(existingGraph);
   }
 
-  const candidatesSet = new Set<NodeId>();
-  for (const newPosition of newPositions) {
-    candidatesSet.add(newPosition);
-  }
-
-  return randomPickItem([...candidatesSet], random)
-    .take((newNode) => {
-      if (!newNode) {
+  return randomPickItem(newEdges, random)
+    .take((newEdge) => {
+      if (!newEdge) {
         // There are no valid candidates
-        return asRandom(existingCluster);
+        return asRandom(existingGraph);
       }
 
-      return shuffle([...existingCluster, newNode], random);
+      const grid = new DirectionalGraph(existingGraph);
+      const newNode = newEdge.to;
+      const newValue = config.graph.nodes.get(newNode);
+      if (newValue === undefined) {
+        throw new Error(`Cannot find node ${newNode}`);
+      }
+
+      grid.addNode(newNode, newValue).addEdge(newEdge);
+      return asRandom(grid);
     })
     .take((newExistingCluster) => {
       return growCluster(config, newExistingCluster, random);
     });
 }
 
-function calculateValidNewPositions(
+function calculateValidNewEdges<T>(
   fromPosition: NodeId,
-  spec: InternalConfig,
+  spec: InternalConfig<T>,
   existingSet: ReadonlySet<NodeId>,
-): readonly NodeId[] {
+): readonly Edge[] {
   const positions = [];
-  for (const newPosition of spec.graph.getAdjacentNodes(fromPosition)) {
-    if (existingSet.has(newPosition)) {
+  for (const newEdge of spec.graph.getOutboundEdges(fromPosition)) {
+    if (existingSet.has(newEdge.to)) {
       continue;
     }
 
-    positions.push(newPosition);
+    positions.push(newEdge);
   }
 
   return positions;
