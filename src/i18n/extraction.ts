@@ -1,18 +1,18 @@
 export interface PluralExtraction {
-  readonly type: 'plural';
-  readonly key: ExtractionKey;
-  readonly zero: ExtractionKey;
-  readonly one: ExtractionKey;
-  readonly two: ExtractionKey;
   readonly few: ExtractionKey;
+  readonly key: ExtractionKey;
   readonly many: ExtractionKey;
+  readonly one: ExtractionKey;
   readonly other: ExtractionKey;
+  readonly two: ExtractionKey;
+  readonly type: 'plural';
+  readonly zero: ExtractionKey;
 }
 
 export interface SimpleExtraction {
-  readonly type: 'simple';
   readonly key: ExtractionKey;
   readonly translation: string;
+  readonly type: 'simple';
 }
 
 export type ExtractionKey = string & {readonly subtype: unique symbol};

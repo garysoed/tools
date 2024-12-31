@@ -12,10 +12,10 @@ function createMerge(
   colSpan: number,
 ): Merge {
   return {
-    startRowIndex: row,
+    endColumnIndex: colSpan - 1,
     endRowIndex: row + rowSpan - 1,
     startColumnIndex: col,
-    endColumnIndex: colSpan - 1,
+    startRowIndex: row,
   };
 }
 
@@ -112,7 +112,7 @@ test('@tools/src/gapi/parse-table', () => {
   });
 
   should('handle rows with span of 1 correctly', () => {
-    const result = parseTable({span: 1, colSpecs: [{index: 1, span: 2}]})
+    const result = parseTable({colSpecs: [{index: 1, span: 2}], span: 1})
       .handleCell(
         0,
         handleCell((acc, value) => ({b: acc.b || (value.boolValue ?? false)}), {
@@ -134,15 +134,15 @@ test('@tools/src/gapi/parse-table', () => {
       .parse(_.table);
 
     assert(result).to.haveExactElements([
-      objectThat<TestData>().haveProperties({b: true, s: 'a', n: 0}),
-      objectThat<TestData>().haveProperties({b: false, s: 'b', n: 1}),
-      objectThat<TestData>().haveProperties({b: false, s: '', n: 2}),
-      objectThat<TestData>().haveProperties({b: false, s: 'cd', n: 3}),
+      objectThat<TestData>().haveProperties({b: true, n: 0, s: 'a'}),
+      objectThat<TestData>().haveProperties({b: false, n: 1, s: 'b'}),
+      objectThat<TestData>().haveProperties({b: false, n: 2, s: ''}),
+      objectThat<TestData>().haveProperties({b: false, n: 3, s: 'cd'}),
     ]);
   });
 
   should('handle rows with > 1 span correctly', () => {
-    const result = parseTable({span: 2, colSpecs: [{index: 1, span: 2}]})
+    const result = parseTable({colSpecs: [{index: 1, span: 2}], span: 2})
       .handleCell(
         0,
         handleCell((acc, value) => ({b: acc.b || (value.boolValue ?? false)}), {
@@ -164,8 +164,8 @@ test('@tools/src/gapi/parse-table', () => {
       .parse(_.table);
 
     assert(result).to.haveExactElements([
-      objectThat<TestData>().haveProperties({b: true, s: 'ab', n: 1}),
-      objectThat<TestData>().haveProperties({b: false, s: 'cd', n: 5}),
+      objectThat<TestData>().haveProperties({b: true, n: 1, s: 'ab'}),
+      objectThat<TestData>().haveProperties({b: false, n: 5, s: 'cd'}),
     ]);
   });
 });

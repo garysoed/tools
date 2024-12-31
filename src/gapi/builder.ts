@@ -50,7 +50,6 @@ export class Builder {
 
     return this;
   }
-
   /**
    * Builds the Google API.
    *

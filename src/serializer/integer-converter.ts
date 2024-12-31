@@ -19,7 +19,6 @@ class IntegerConverter implements Converter<number, unknown> {
 
     return {result: value, success: true};
   }
-
   convertForward(input: number): Result<unknown> {
     if (Math.round(input) !== input) {
       return {success: false};

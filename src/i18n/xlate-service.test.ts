@@ -9,9 +9,9 @@ test('@tools/src/i18n/xlate-service', () => {
       const xlate = new XlateService({
         data: [
           {
-            type: 'simple',
             key: asExtractionKey('Call {{name}} at {{phone}}'),
             translation: 'At {{phone}}, call {{name}}',
+            type: 'simple',
           },
         ],
         locale: 'en-US',
@@ -32,9 +32,9 @@ test('@tools/src/i18n/xlate-service', () => {
       const xlate = new XlateService({
         data: [
           {
-            type: 'simple',
             key: asExtractionKey('Hello i18n'),
             translation: 'Hello internationalization!',
+            type: 'simple',
           },
         ],
         locale: 'en-US',
@@ -54,24 +54,24 @@ test('@tools/src/i18n/xlate-service', () => {
       const xlate = new XlateService({
         data: [
           {
-            type: 'plural',
-            key: asExtractionKey('[PLURAL] Buy {{#}} apples'),
-            zero: asExtractionKey('Buy {{#}} apples'),
-            one: asExtractionKey('Buy an apple'),
-            two: asExtractionKey('Buy {{#}} apples'),
             few: asExtractionKey('Buy {{#}} apples'),
+            key: asExtractionKey('[PLURAL] Buy {{#}} apples'),
             many: asExtractionKey('Buy {{#}} apples'),
+            one: asExtractionKey('Buy an apple'),
             other: asExtractionKey('Buy {{#}} apples'),
+            two: asExtractionKey('Buy {{#}} apples'),
+            type: 'plural',
+            zero: asExtractionKey('Buy {{#}} apples'),
           },
           {
-            type: 'simple',
             key: asExtractionKey('Buy an apple'),
             translation: 'An apple, you shall buy',
+            type: 'simple',
           },
           {
-            type: 'simple',
             key: asExtractionKey('Buy {{#}} apples'),
             translation: '{{#}} apples, you shall buy',
+            type: 'simple',
           },
         ],
         locale: 'en-US',
@@ -91,85 +91,85 @@ test('@tools/src/i18n/xlate-service', () => {
       const xlate = new XlateService({
         data: [
           {
-            type: 'plural',
+            few: asExtractionKey(
+              '[PLURAL] Buy {{#apple}} apples and {{#banana}} bananas',
+            ),
             key: asExtractionKey(
               '[PLURAL] [PLURAL] Buy {{#apple}} apples and {{#banana}} bananas',
             ),
-            zero: asExtractionKey(
+            many: asExtractionKey(
               '[PLURAL] Buy {{#apple}} apples and {{#banana}} bananas',
             ),
             one: asExtractionKey(
               '[PLURAL] Buy an apple and {{#banana}} bananas',
             ),
+            other: asExtractionKey(
+              '[PLURAL] Buy {{#apple}} apples and {{#banana}} bananas',
+            ),
             two: asExtractionKey(
               '[PLURAL] Buy {{#apple}} apples and {{#banana}} bananas',
             ),
-            few: asExtractionKey(
-              '[PLURAL] Buy {{#apple}} apples and {{#banana}} bananas',
-            ),
-            many: asExtractionKey(
-              '[PLURAL] Buy {{#apple}} apples and {{#banana}} bananas',
-            ),
-            other: asExtractionKey(
+            type: 'plural',
+            zero: asExtractionKey(
               '[PLURAL] Buy {{#apple}} apples and {{#banana}} bananas',
             ),
           },
           {
-            type: 'plural',
+            few: asExtractionKey(
+              'Buy {{#apple}} apples and {{#banana}} bananas',
+            ),
             key: asExtractionKey(
               '[PLURAL] Buy {{#apple}} apples and {{#banana}} bananas',
             ),
-            zero: asExtractionKey(
+            many: asExtractionKey(
               'Buy {{#apple}} apples and {{#banana}} bananas',
             ),
             one: asExtractionKey('Buy {{#apple}} apples and a banana'),
-            two: asExtractionKey(
-              'Buy {{#apple}} apples and {{#banana}} bananas',
-            ),
-            few: asExtractionKey(
-              'Buy {{#apple}} apples and {{#banana}} bananas',
-            ),
-            many: asExtractionKey(
-              'Buy {{#apple}} apples and {{#banana}} bananas',
-            ),
             other: asExtractionKey(
               'Buy {{#apple}} apples and {{#banana}} bananas',
             ),
+            two: asExtractionKey(
+              'Buy {{#apple}} apples and {{#banana}} bananas',
+            ),
+            type: 'plural',
+            zero: asExtractionKey(
+              'Buy {{#apple}} apples and {{#banana}} bananas',
+            ),
           },
           {
-            type: 'plural',
+            few: asExtractionKey('Buy an apple and {{#banana}} bananas'),
             key: asExtractionKey(
               '[PLURAL] Buy an apple and {{#banana}} bananas',
             ),
-            zero: asExtractionKey('Buy an apple and {{#banana}} bananas'),
-            one: asExtractionKey('Buy an apple and a banana'),
-            two: asExtractionKey('Buy an apple and {{#banana}} bananas'),
-            few: asExtractionKey('Buy an apple and {{#banana}} bananas'),
             many: asExtractionKey('Buy an apple and {{#banana}} bananas'),
+            one: asExtractionKey('Buy an apple and a banana'),
             other: asExtractionKey('Buy an apple and {{#banana}} bananas'),
+            two: asExtractionKey('Buy an apple and {{#banana}} bananas'),
+            type: 'plural',
+            zero: asExtractionKey('Buy an apple and {{#banana}} bananas'),
           },
           {
-            type: 'simple',
             key: asExtractionKey('Buy an apple and a banana'),
             translation: 'An apple and a banana, you shall buy',
+            type: 'simple',
           },
           {
-            type: 'simple',
             key: asExtractionKey('Buy an apple and {{#banana}} bananas'),
             translation: 'An apple and {{#banana}} bananas, you shall buy',
+            type: 'simple',
           },
           {
-            type: 'simple',
             key: asExtractionKey('Buy {{#apple}} apples and a banana'),
             translation: '{{#apple}} apples and a banana, you shall buy',
+            type: 'simple',
           },
           {
-            type: 'simple',
             key: asExtractionKey(
               'Buy {{#apple}} apples and {{#banana}} bananas',
             ),
             translation:
               '{{#apple}} apples and {{#banana}} bananas, you shall buy',
+            type: 'simple',
           },
         ],
         locale: 'en-US',

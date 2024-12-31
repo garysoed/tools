@@ -11,6 +11,7 @@ type Rgb = readonly [number, number, number];
  */
 export class HslColor extends Color {
   readonly hue = this.hueRaw % 360;
+
   private readonly cachedChroma = new CachedValue(() => {
     return (1 - Math.abs(this.lightness * 2 - 1)) * this.saturation;
   });
@@ -74,21 +75,18 @@ export class HslColor extends Color {
   get blue(): number {
     return this.rgb[2];
   }
-
   /**
    * {@inheritDoc Color.chroma}
    */
   get chroma(): number {
     return this.cachedChroma.value;
   }
-
   /**
    * {@inheritDoc Color.green}
    */
   get green(): number {
     return this.rgb[1];
   }
-
   /**
    * {@inheritDoc Color.red}
    */

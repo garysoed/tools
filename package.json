@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@types/gapi": "0.0.47",
-    "@types/jasmine": "^5.1.4",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^22.9.0",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/eslint-plugin-tslint": "^7.0.2",
@@ -38,7 +38,9 @@
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jsdoc": "^48.2.0",
     "eslint-plugin-no-null": "^1.0.2",
+    "eslint-plugin-perfectionist": "^4.2.0",
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
     "eslint-plugin-tsdoc": "^0.2.17",

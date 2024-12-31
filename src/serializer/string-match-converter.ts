@@ -11,7 +11,6 @@ class StringMatchConverter<T extends string> implements Converter<T, string> {
 
     return {result: value as T, success: true};
   }
-
   convertForward(input: T): Result<string> {
     const isAcceptable = this.acceptableValues_.has(input);
     if (!isAcceptable) {

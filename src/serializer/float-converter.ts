@@ -8,7 +8,6 @@ class FloatConverter implements Converter<number, unknown> {
 
     return {result: input, success: true};
   }
-
   convertForward(value: number): Result<unknown> {
     return {result: value, success: true};
   }

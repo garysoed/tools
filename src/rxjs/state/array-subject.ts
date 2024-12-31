@@ -9,14 +9,12 @@ export class ArraySubject<T> extends BehaviorSubject<readonly T[]> {
   get(index: number): Observable<T | undefined> {
     return this.pipe(map((array) => array[index]));
   }
-
   push(...items: readonly T[]): void {
     this.update((newArray) => {
       newArray.push(...items);
       return newArray;
     });
   }
-
   set(index: number, value: T): void {
     this.update((newArray) => {
       newArray[index] = value;

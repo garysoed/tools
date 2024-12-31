@@ -68,7 +68,6 @@ export class RgbColor extends Color {
   get chroma(): number {
     return (this.max - this.min) / 255;
   }
-
   /**
    * {@inheritDoc Color.hue}
    */
@@ -101,7 +100,6 @@ export class RgbColor extends Color {
 
     return h1 * 60;
   }
-
   /**
    * {@inheritDoc Color.lightness}
    */
@@ -109,7 +107,6 @@ export class RgbColor extends Color {
   get lightness(): number {
     return (this.max + this.min) / 2 / 255;
   }
-
   /**
    * {@inheritDoc Color.saturation}
    */
@@ -124,7 +121,6 @@ export class RgbColor extends Color {
   private get max(): number {
     return Math.max(this.red, this.green, this.blue);
   }
-
   @cached()
   private get min(): number {
     return Math.min(this.red, this.green, this.blue);

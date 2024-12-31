@@ -22,7 +22,6 @@ class PercentConverter implements Converter<number, unknown> {
       return {success: false};
     }
   }
-
   convertForward(input: number): Result<unknown> {
     return {result: `${(input * 100).toString(10)}%`, success: true};
   }

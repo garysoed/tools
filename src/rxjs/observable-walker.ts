@@ -29,7 +29,6 @@ class ImmutableWalkerInternal<T>
       this.source$.pipe(map((value) => value[key])),
     );
   }
-
   $<K extends keyof SubjectsOf<T>>(key: K): MutableWalker<SubjectsOf<T>[K]> {
     const subSelf$ = this.source$.pipe(
       map((value) => {

@@ -26,12 +26,10 @@ export class DirectionalGraph<T = never>
     this._edges.push(edge);
     return this;
   }
-
   addNode(id: NodeId, value: T): this {
     this._nodes.set(id, value);
     return this;
   }
-
   getInboundEdges(to: NodeId): readonly Edge[] {
     const edges = new Set<Edge>();
     for (const edge of this.edges) {
@@ -44,7 +42,6 @@ export class DirectionalGraph<T = never>
 
     return [...edges];
   }
-
   getOutboundEdges(from: NodeId): readonly Edge[] {
     const edges = new Set<Edge>();
     for (const edge of this.edges) {
@@ -61,7 +58,6 @@ export class DirectionalGraph<T = never>
   get edges(): readonly Edge[] {
     return this._edges;
   }
-
   get nodes(): ReadonlyMap<NodeId, T> {
     return this._nodes;
   }

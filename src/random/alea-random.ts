@@ -40,10 +40,10 @@ function nextState(state: State): State {
   const t = state.s0 * 2091639 + state.c * 2.3283064365386963e-10; // 2^-32
   const newC = t | 0;
   return {
+    c: newC,
     s0: state.s1,
     s1: state.s2,
     s2: t - newC,
-    c: newC,
   };
 }
 

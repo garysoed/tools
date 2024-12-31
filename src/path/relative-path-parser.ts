@@ -30,7 +30,6 @@ export class RelativePathParser implements Converter<RelativePath, string> {
 
     return {result: new RelativePath(parts), success: true};
   }
-
   /**
    * Converts the path to string.
    *

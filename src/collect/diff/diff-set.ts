@@ -49,14 +49,14 @@ export function diffSet<T>(
   // Delete the extra items.
   for (const value of fromSet) {
     if (!toSet.has(value)) {
-      diffs.push({value, type: 'delete'});
+      diffs.push({type: 'delete', value});
     }
   }
 
   // Insert the missing items.
   for (const value of toSet) {
     if (!fromSet.has(value)) {
-      diffs.push({value, type: 'add'});
+      diffs.push({type: 'add', value});
     }
   }
 

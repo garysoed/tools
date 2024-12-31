@@ -19,9 +19,9 @@ test('@tools/src/collect/diff/map-diff', () => {
       );
 
       assert(diffs).to.equal([
-        {type: 'delete', key: 'a'},
-        {type: 'set', key: 'b', value: 6},
-        {type: 'set', key: 'd', value: 4},
+        {key: 'a', type: 'delete'},
+        {key: 'b', type: 'set', value: 6},
+        {key: 'd', type: 'set', value: 4},
       ]);
     });
 
@@ -41,9 +41,9 @@ test('@tools/src/collect/diff/map-diff', () => {
       );
 
       assert(diffs).to.equal([
-        {type: 'delete', key: 'a'},
-        {type: 'set', key: 'b', value: {id: 6}},
-        {type: 'set', key: 'd', value: {id: 4}},
+        {key: 'a', type: 'delete'},
+        {key: 'b', type: 'set', value: {id: 6}},
+        {key: 'd', type: 'set', value: {id: 4}},
       ]);
     });
   });
@@ -57,9 +57,9 @@ test('@tools/src/collect/diff/map-diff', () => {
           ['c', 3],
         ]),
         [
-          {type: 'delete', key: 'a'},
-          {type: 'set', key: 'b', value: 6},
-          {type: 'set', key: 'd', value: 4},
+          {key: 'a', type: 'delete'},
+          {key: 'b', type: 'set', value: 6},
+          {key: 'd', type: 'set', value: 4},
         ],
       );
 

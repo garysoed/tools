@@ -65,7 +65,7 @@ export function diffMap<K, V>(
   for (const [key, newValue] of toMap) {
     const oldValue = fromMap.get(key);
     if (!diffValue(oldValue, newValue, diffFn)) {
-      diffs.push({key, value: newValue, type: 'set'});
+      diffs.push({key, type: 'set', value: newValue});
     }
   }
 

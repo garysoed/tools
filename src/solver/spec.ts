@@ -19,21 +19,18 @@ export class Spec {
 
     return values;
   }
-
   /**
    * The delta of the numbers.
    */
   getDelta(): number {
     return this.delta;
   }
-
   /**
    * The end value of the range.
    */
   getEnd(): number {
     return this.end;
   }
-
   /**
    * The starting value of the range. This is inclusive.
    */

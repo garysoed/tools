@@ -28,36 +28,12 @@ export class OrderedMap<K, V>
   constructor(private readonly source: ReadonlyArray<readonly [K, V]> = []) {}
 
   /**
-   * Iterates through the entries in the map.
-   *
-   * @returns {@link Iterator} for the map.
-   */
-  [Symbol.iterator](): IterableIterator<[K, V]> {
-    const keys = [...this.keys_];
-    const map = new Map(this.map_);
-    return (function* (): Generator<[K, V]> {
-      for (const key of keys) {
-        const value = getRequiredValue(map, key);
-        yield [key, value];
-      }
-    })();
-  }
-
-  /**
-   * Number of elements in the map.
-   */
-  get size(): number {
-    return this.keys_.length;
-  }
-
-  /**
    * Removes all entries in the map.
    */
   clear(): void {
     this.keys_.splice(0, this.keys_.length);
     this.map_.clear();
   }
-
   /**
    * Removes the entry corresponding to the given key.
    *
@@ -74,7 +50,6 @@ export class OrderedMap<K, V>
     this.map_.delete(key);
     return true;
   }
-
   /**
    * Returns all entries in the map.
    *
@@ -85,7 +60,6 @@ export class OrderedMap<K, V>
       .map((key) => [key, getRequiredValue(this.map_, key)] as [K, V])
       .values();
   }
-
   /**
    * Calls the given function for every entry in the map.
    *
@@ -100,7 +74,6 @@ export class OrderedMap<K, V>
       callbackfn(getRequiredValue(this.map_, key), key, this.map_);
     }
   }
-
   /**
    * Returns value corresponding to the given key.
    *
@@ -113,7 +86,6 @@ export class OrderedMap<K, V>
   get(key: K): V | undefined {
     return this.map_.get(key);
   }
-
   /**
    * Returns entry at the given index.
    *
@@ -131,7 +103,6 @@ export class OrderedMap<K, V>
 
     return [key, getRequiredValue(this.map_, key)];
   }
-
   /**
    * Returns true iff entry corresponding to the key exists.
    *
@@ -141,7 +112,6 @@ export class OrderedMap<K, V>
   has(key: K): boolean {
     return this.map_.has(key);
   }
-
   /**
    * Returns keys in the map.
    *
@@ -150,7 +120,6 @@ export class OrderedMap<K, V>
   keys(): IterableIterator<K> {
     return this.keys_.values();
   }
-
   /**
    * Sets the entry with the given `key` to the given `value`.
    *
@@ -166,7 +135,6 @@ export class OrderedMap<K, V>
     this.map_.set(key, value);
     return this;
   }
-
   /**
    * Sorts the map with the given {@link Ordering}.
    *
@@ -175,7 +143,6 @@ export class OrderedMap<K, V>
   sort(ordering: Ordering<[K, V]>): void {
     this.keys_.sort(withMap((key) => [key, this.get(key)] as [K, V], ordering));
   }
-
   /**
    * Modifies the map by deleting and adding entries to the map.
    *
@@ -205,7 +172,21 @@ export class OrderedMap<K, V>
 
     return deletedPairs;
   }
-
+  /**
+   * Iterates through the entries in the map.
+   *
+   * @returns {@link Iterator} for the map.
+   */
+  [Symbol.iterator](): IterableIterator<[K, V]> {
+    const keys = [...this.keys_];
+    const map = new Map(this.map_);
+    return (function* (): Generator<[K, V]> {
+      for (const key of keys) {
+        const value = getRequiredValue(map, key);
+        yield [key, value];
+      }
+    })();
+  }
   /**
    * Returns values in the map.
    *
@@ -213,6 +194,13 @@ export class OrderedMap<K, V>
    */
   values(): IterableIterator<V> {
     return this.keys_.map((key) => getRequiredValue(this.map_, key)).values();
+  }
+
+  /**
+   * Number of elements in the map.
+   */
+  get size(): number {
+    return this.keys_.length;
   }
 }
 

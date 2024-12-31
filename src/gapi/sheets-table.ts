@@ -1,12 +1,12 @@
 import {ExtendedValue, GridData} from './type/sheets';
 
 interface PartialSheetsCell {
-  fromRow: number;
   fromColumn: number;
-  toRow: number;
-  toColumn: number;
-  value?: ExtendedValue;
+  fromRow: number;
   normalized: boolean;
+  toColumn: number;
+  toRow: number;
+  value?: ExtendedValue;
 }
 
 /**
@@ -15,10 +15,10 @@ interface PartialSheetsCell {
  * @thHidden
  */
 export interface SheetsCell {
-  readonly fromRow: number;
   readonly fromColumn: number;
-  readonly toRow: number;
+  readonly fromRow: number;
   readonly toColumn: number;
+  readonly toRow: number;
   readonly value: ExtendedValue;
 }
 
@@ -35,10 +35,10 @@ export type SheetsTable = ReadonlyArray<readonly SheetsCell[]>;
  * @thModule gapi.sheets
  */
 export interface Merge {
-  readonly startRowIndex: number;
+  readonly endColumnIndex: number;
   readonly endRowIndex: number;
   readonly startColumnIndex: number;
-  readonly endColumnIndex: number;
+  readonly startRowIndex: number;
 }
 
 /**
@@ -47,8 +47,8 @@ export interface Merge {
  * @thModule gapi.sheets
  */
 export interface RawSheet {
-  readonly merges?: readonly Merge[];
   readonly data: readonly GridData[];
+  readonly merges?: readonly Merge[];
 }
 
 /**
@@ -80,11 +80,11 @@ export function createSheetsTable(
   // Get all the merges.
   for (const merge of raw.merges || []) {
     const partial = {
-      fromRow: merge.startRowIndex,
       fromColumn: merge.startColumnIndex,
-      toRow: merge.endRowIndex,
-      toColumn: merge.endColumnIndex,
+      fromRow: merge.startRowIndex,
       normalized: false,
+      toColumn: merge.endColumnIndex,
+      toRow: merge.endRowIndex,
     };
 
     for (let r = merge.startRowIndex; r < merge.endRowIndex; r++) {
@@ -122,11 +122,11 @@ export function createSheetsTable(
         continue;
       }
       const partialCell = partialRow[c] || {
-        fromRow: r,
         fromColumn: c,
-        toRow: r + 1,
-        toColumn: c + 1,
+        fromRow: r,
         normalized: false,
+        toColumn: c + 1,
+        toRow: r + 1,
       };
 
       if (!partialCell.value) {
@@ -177,8 +177,8 @@ export function createSheetsTable(
       if (!cell) {
         cols[c] = {
           fromColumn: c,
-          toColumn: c + 1,
           fromRow: r,
+          toColumn: c + 1,
           toRow: r + 1,
           value: {stringValue: ''},
         };

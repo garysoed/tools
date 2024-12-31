@@ -25,7 +25,6 @@ class FunctionConverter<F extends (...args: any[]) => unknown>
 
     return {result: fn, success: true};
   }
-
   convertForward(value: F): Result<unknown> {
     if (this.paramCount_ !== null && value.length !== this.paramCount_) {
       return {success: false};

@@ -9,8 +9,8 @@ export interface Edge {
 }
 
 export interface ReadonlyDirectionalGraph<T> {
-  readonly nodes: ReadonlyMap<NodeId, T>;
   readonly edges: readonly Edge[];
+  readonly nodes: ReadonlyMap<NodeId, T>;
 
   getInboundEdges(from: NodeId): readonly Edge[];
   getOutboundEdges(to: NodeId): readonly Edge[];

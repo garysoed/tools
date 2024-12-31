@@ -6,11 +6,11 @@ type Seed = unknown;
 export interface Random<T> {
   [__apply](seed: Seed): readonly [T, Seed];
   [__fork](seed: Seed): Seed;
+  run(seed: Seed): T;
   take<U>(fn: (value: T) => Random<U>): Random<U>;
   takeValues<U>(
     fn: (value: Generator<T, never, unknown>) => Random<U>,
   ): Random<U>;
-  run(seed: Seed): T;
 }
 
 class RandomImpl<T> implements Random<T> {
@@ -22,11 +22,12 @@ class RandomImpl<T> implements Random<T> {
   [__apply](seed: Seed): readonly [T, Seed] {
     return this.applyFn(seed);
   }
-
   [__fork](seed: Seed): Seed {
     return this.forkFn(seed);
   }
-
+  run(seed: Seed): T {
+    return this[__apply](seed)[0];
+  }
   take<U>(fn: (value: T) => Random<U>): Random<U> {
     return new RandomImpl(
       (seed) => {
@@ -37,7 +38,6 @@ class RandomImpl<T> implements Random<T> {
       (seed) => this[__fork](seed),
     );
   }
-
   takeValues<U>(
     fn: (values: Generator<T, never, unknown>) => Random<U>,
   ): Random<U> {
@@ -59,10 +59,6 @@ class RandomImpl<T> implements Random<T> {
       },
       (seed) => this[__fork](seed),
     );
-  }
-
-  run(seed: Seed): T {
-    return this[__apply](seed)[0];
   }
 }
 

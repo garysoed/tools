@@ -10,7 +10,6 @@ test('@tools/src/data/cached', () => {
     get value(): number {
       return this.provider();
     }
-
     @cached()
     get value2(): number {
       return this.provider() + 1;

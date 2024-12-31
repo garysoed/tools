@@ -9,10 +9,9 @@ import {EditableStorage} from './editable-storage';
 export const INDEXES_PARSER = listConverter<string>(identity<string>());
 
 export class WebStorage<T, S> implements EditableStorage<T> {
-  private readonly onInvalidatedLocally$: Subject<void> = new Subject();
-
   private readonly converter: StrictConverter<T, string>;
   private readonly indexesConverter: StrictConverter<readonly string[], string>;
+  private readonly onInvalidatedLocally$: Subject<void> = new Subject();
 
   /**
    * @param storage Reference to storage instance.
@@ -35,7 +34,6 @@ export class WebStorage<T, S> implements EditableStorage<T> {
 
     this.storage.removeItem(this.prefix);
   }
-
   delete(id: string): boolean {
     const ids = new Set(this.getIds());
     if (!ids.has(id)) {
@@ -47,18 +45,9 @@ export class WebStorage<T, S> implements EditableStorage<T> {
     this.onInvalidatedLocally$.next();
     return true;
   }
-
   has(id: string): Observable<boolean> {
     return this.idList$.pipe(map((ids) => ids.has(id)));
   }
-
-  get idList$(): Observable<ReadonlySet<string>> {
-    return this.onInvalidate$.pipe(
-      startWith({}),
-      map(() => this.getIds()),
-    );
-  }
-
   read(id: string): Observable<T | undefined> {
     const path = this.getPath(id);
 
@@ -74,7 +63,6 @@ export class WebStorage<T, S> implements EditableStorage<T> {
       }),
     );
   }
-
   update(id: string, instance: T): boolean {
     const ids = this.getIds();
     const hasExistingId = ids.has(id);
@@ -88,6 +76,13 @@ export class WebStorage<T, S> implements EditableStorage<T> {
     return hasExistingId;
   }
 
+  get idList$(): Observable<ReadonlySet<string>> {
+    return this.onInvalidate$.pipe(
+      startWith({}),
+      map(() => this.getIds()),
+    );
+  }
+
   private getIds(): ReadonlySet<string> {
     const indexesStr = this.storage.getItem(this.prefix);
     if (!indexesStr) {
@@ -96,19 +91,17 @@ export class WebStorage<T, S> implements EditableStorage<T> {
 
     return new Set(this.indexesConverter.convertBackward(indexesStr));
   }
-
   private getPath(key: string): string {
     return `${this.prefix}/${key}`;
   }
-
-  private get onInvalidate$(): Observable<unknown> {
-    return merge(this.onInvalidatedLocally$, fromEvent(window, 'storage'));
-  }
-
   private setIds(ids: ReadonlySet<string>): void {
     this.storage.setItem(
       this.prefix,
       this.indexesConverter.convertForward([...ids]),
     );
+  }
+
+  private get onInvalidate$(): Observable<unknown> {
+    return merge(this.onInvalidatedLocally$, fromEvent(window, 'storage'));
   }
 }

@@ -29,7 +29,6 @@ class Cases {
       })
       .join('');
   }
-
   /**
    * Converts to lower-case.
    *
@@ -38,7 +37,6 @@ class Cases {
   toLowerCase(): string {
     return this.words.join('-');
   }
-
   /**
    * Converts to PascalCase.
    *
@@ -55,7 +53,6 @@ class Cases {
       })
       .join('');
   }
-
   /**
    * Converts to UPPER_CASE.
    *

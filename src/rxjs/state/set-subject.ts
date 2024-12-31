@@ -13,7 +13,6 @@ export class SetSubject<T> extends BehaviorSubject<ReadonlySet<T>> {
       return newSet;
     });
   }
-
   delete(item: T): void {
     this.update((oldSet) => {
       const newSet = new Set(oldSet);
@@ -21,7 +20,6 @@ export class SetSubject<T> extends BehaviorSubject<ReadonlySet<T>> {
       return newSet;
     });
   }
-
   has(item: T): Observable<boolean> {
     return this.pipe(map((set) => set.has(item)));
   }

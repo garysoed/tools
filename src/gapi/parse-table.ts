@@ -56,13 +56,13 @@ interface ColSpec {
 }
 
 interface RowSpecInput {
-  readonly span?: number;
   readonly colSpecs?: readonly ColSpec[];
+  readonly span?: number;
 }
 
 interface RowSpec {
-  readonly span: number;
   readonly colSpans: readonly number[];
+  readonly span: number;
 }
 
 type CellHandler<T> = (cell: Cell) => T;
@@ -82,7 +82,6 @@ export class ParserBuilder<T> {
       new Map([...this.cellHandlerMap, [index, fn]]),
     );
   }
-
   handleMultiCell<T2 extends {}>(
     index: number,
     fn: (cell: MultiCell) => T2,
@@ -95,7 +94,6 @@ export class ParserBuilder<T> {
       return fn(cell);
     });
   }
-
   handleSingleCell<T2 extends {}>(
     index: number,
     fn: (cell: SingleCell) => T2,
@@ -108,7 +106,6 @@ export class ParserBuilder<T> {
       return fn(cell);
     });
   }
-
   parse(table: SheetsTable): ReadonlyArray<Partial<T>> {
     const rowSpan = this.rowSpec.span;
     const values: Array<Partial<T>> = [];
@@ -182,8 +179,8 @@ export function parseTable(rowSpecInput: RowSpecInput): ParserBuilder<{}> {
     colSpans[index] = span;
   }
   const rowSpec = {
-    span: rowSpecInput.span ?? 1,
     colSpans,
+    span: rowSpecInput.span ?? 1,
   };
 
   return new ParserBuilder<{}>(rowSpec, new Map());

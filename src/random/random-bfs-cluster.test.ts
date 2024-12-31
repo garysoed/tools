@@ -31,7 +31,7 @@ test('@tools/src/random/random-bfs-cluster', () => {
 
   should('randomly generate a cluster', () => {
     const result = randomBfsCluster(
-      {graph: _.graph, startNode: node00, nodeCount: 3},
+      {graph: _.graph, nodeCount: 3, startNode: node00},
       _.seed,
     ).run(12);
 
@@ -52,7 +52,7 @@ test('@tools/src/random/random-bfs-cluster', () => {
 
   should('return the starting position if size is 1', () => {
     const result = randomBfsCluster(
-      {graph: _.graph, startNode: node00, nodeCount: 1},
+      {graph: _.graph, nodeCount: 1, startNode: node00},
       _.seed,
     ).run(12);
     assert(result.nodes).to.equal(new Map([[node00, '00']]));
@@ -61,7 +61,7 @@ test('@tools/src/random/random-bfs-cluster', () => {
 
   should('return all the nodes if the target size is too big', () => {
     const result = randomBfsCluster(
-      {graph: _.graph, startNode: node00, nodeCount: 6},
+      {graph: _.graph, nodeCount: 6, startNode: node00},
       _.seed,
     ).run(12);
     assert(result.nodes).to.equal(

@@ -25,7 +25,6 @@ class IterableConverter<T, I extends Iterable<T>>
 
     return {result: this.iterableProvider_(convertedItems), success: true};
   }
-
   convertForward(input: I): Result<unknown> {
     const convertedItems: unknown[] = [];
     for (const item of input) {

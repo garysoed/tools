@@ -33,7 +33,6 @@ export class ObjectConverter<T extends Record<string, unknown>>
 
     return {result: output, success: true};
   }
-
   convertForward(value: {[K in keyof T]: T[K]}): Result<unknown> {
     const serializable: Record<keyof T, unknown> = {} as any;
     for (const key in this.spec_) {

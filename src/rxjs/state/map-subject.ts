@@ -9,7 +9,6 @@ export class MapSubject<K, V> extends BehaviorSubject<ReadonlyMap<K, V>> {
   get(key: K): Observable<V | undefined> {
     return this.pipe(map((value) => value.get(key)));
   }
-
   set(key: K, value: V): void {
     this.update((oldMap) => {
       const newMap = new Map(oldMap);

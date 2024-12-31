@@ -14,15 +14,12 @@ class TestColor extends Color {
   get chroma(): number {
     throw new Error('Method not implemented.');
   }
-
   get hue(): number {
     throw new Error('Method not implemented.');
   }
-
   get lightness(): number {
     throw new Error('Method not implemented.');
   }
-
   get saturation(): number {
     throw new Error('Method not implemented.');
   }

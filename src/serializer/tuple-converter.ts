@@ -30,7 +30,6 @@ class TupleConverter<T extends unknown[]> implements Converter<T, unknown> {
 
     return {result: convertedTuple, success: true};
   }
-
   convertForward(input: T): Result<unknown> {
     const convertedTuple: unknown[] = [];
     for (let i = 0; i < input.length; i++) {

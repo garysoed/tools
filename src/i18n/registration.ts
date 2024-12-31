@@ -2,14 +2,14 @@ import {ExtractionKey, asExtractionKey} from './extraction';
 import {Formatter} from './formatter';
 
 export interface PluralRegistration<F extends Formatter> {
-  readonly zero?: F;
-  readonly one?: F;
-  readonly two?: F;
-  readonly few?: F;
-  readonly many?: F;
-  readonly other: F;
   readonly description?: string;
+  readonly few?: F;
   readonly keyOverride?: string;
+  readonly many?: F;
+  readonly one?: F;
+  readonly other: F;
+  readonly two?: F;
+  readonly zero?: F;
 }
 
 export function getPluralKey(
@@ -21,9 +21,9 @@ export function getPluralKey(
 }
 
 export interface SimpleRegistration {
-  readonly plain: string;
   readonly description?: string;
   readonly keyOverride?: string;
+  readonly plain: string;
 }
 
 export function getSimpleKey(registration: SimpleRegistration): ExtractionKey {

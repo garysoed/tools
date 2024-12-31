@@ -10,8 +10,8 @@ import {randomPickItem} from './random-pick-item';
 
 interface Config<T> {
   readonly graph: ReadonlyDirectionalGraph<T>;
-  readonly startNode: NodeId;
   readonly nodeCount?: number | null;
+  readonly startNode: NodeId;
 }
 
 interface InternalConfig<T> {

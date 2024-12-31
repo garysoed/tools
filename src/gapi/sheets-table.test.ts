@@ -17,10 +17,10 @@ function createMerge(
   endColumn: number,
 ): Merge {
   return {
-    startRowIndex: startRow,
+    endColumnIndex: endColumn,
     endRowIndex: endRow,
     startColumnIndex: startColumn,
-    endColumnIndex: endColumn,
+    startRowIndex: startRow,
   };
 }
 
@@ -36,10 +36,10 @@ function matchCell(
   value: string,
 ): MatcherType<SheetsCell> {
   return objectThat<SheetsCell>().haveProperties({
-    fromRow,
-    toRow,
     fromColumn,
+    fromRow,
     toColumn,
+    toRow,
     value: objectThat<ExtendedValue>().haveProperties({stringValue: value}),
   });
 }
@@ -91,7 +91,7 @@ test('@tools/gapi/sheets-table', () => {
       }
 
       const table = createSheetsTable(
-        {merges, data: [{rowData: rows}]},
+        {data: [{rowData: rows}], merges},
         1,
         5,
         1,

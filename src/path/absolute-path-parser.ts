@@ -29,7 +29,6 @@ export class AbsolutePathParser implements Converter<AbsolutePath, string> {
 
     return {result: new AbsolutePath(parts.slice(1)), success: true};
   }
-
   /**
    * Converts the path to string.
    *

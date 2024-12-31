@@ -11,7 +11,6 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
   clear(): void {
     return this.data$.next(new Map());
   }
-
   delete(id: string): boolean {
     const data = this.data$.getValue();
     if (!data.has(id)) {
@@ -23,19 +22,12 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
     this.data$.next(newData);
     return true;
   }
-
   has(id: string): Observable<boolean> {
     return this.data$.pipe(map((map) => map.has(id)));
   }
-
-  get idList$(): Observable<ReadonlySet<string>> {
-    return this.data$.pipe(map((data) => new Set(data.keys())));
-  }
-
   read(id: string): Observable<T | undefined> {
     return this.data$.pipe(map((map) => map.get(id) ?? undefined));
   }
-
   update(id: string, instance: T): boolean {
     const data = this.data$.getValue();
     const hasExistingValue = data.has(id);
@@ -44,5 +36,9 @@ export class InMemoryStorage<T> implements EditableStorage<T> {
     newData.set(id, instance);
     this.data$.next(newData);
     return hasExistingValue;
+  }
+
+  get idList$(): Observable<ReadonlySet<string>> {
+    return this.data$.pipe(map((data) => new Set(data.keys())));
   }
 }

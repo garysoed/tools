@@ -45,15 +45,14 @@ export class XlateService implements I18n {
 
     return this.resolveExtraction<F>(extraction);
   }
-
   simple(registration: SimpleRegistration): SimpleFormatter {
     const key = getSimpleKey(registration);
     const extraction = this.assertExtraction(key);
     if (extraction.type !== 'simple') {
       return this.resolveExtraction({
-        type: 'simple',
         key,
         translation: registration.plain,
+        type: 'simple',
       });
     }
     return this.resolveExtraction(extraction);
@@ -67,11 +66,6 @@ export class XlateService implements I18n {
 
     return extraction;
   }
-
-  private get extractions(): ReadonlyMap<ExtractionKey, Extraction> {
-    return this.cachedExtractions.value;
-  }
-
   private resolveExtraction<T>(
     extraction: PluralExtraction,
   ): PluralFormatter<T>;
@@ -101,5 +95,9 @@ export class XlateService implements I18n {
         return Object.assign(fn, {key: extraction.key});
       }
     }
+  }
+
+  private get extractions(): ReadonlyMap<ExtractionKey, Extraction> {
+    return this.cachedExtractions.value;
   }
 }

@@ -15,10 +15,6 @@ export class XtractService implements I18n {
     Registration
   >();
 
-  get registrations(): ReadonlyMap<ExtractionKey, Registration> {
-    return this.registrationsInternal;
-  }
-
   plural<F extends Formatter>(
     registration: PluralRegistration<F>,
   ): PluralFormatter<F> {
@@ -26,7 +22,6 @@ export class XtractService implements I18n {
     this.register(key, registration);
     return Object.assign((): F => registration.other, {key});
   }
-
   simple(registration: SimpleRegistration): SimpleFormatter {
     const key = getSimpleKey(registration);
     this.register(key, registration);
@@ -36,6 +31,10 @@ export class XtractService implements I18n {
       },
       {key},
     );
+  }
+
+  get registrations(): ReadonlyMap<ExtractionKey, Registration> {
+    return this.registrationsInternal;
   }
 
   private register(key: ExtractionKey, registration: Registration): void {

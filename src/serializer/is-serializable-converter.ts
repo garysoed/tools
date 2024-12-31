@@ -10,7 +10,6 @@ class IsSerializableConverter<T extends IsSerializable>
   convertBackward(value: unknown): Result<T> {
     return {result: new this.ctor_(value), success: true};
   }
-
   convertForward(input: T): Result<unknown> {
     return {result: input.serialize(), success: true};
   }

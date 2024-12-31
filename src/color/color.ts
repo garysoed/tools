@@ -10,33 +10,28 @@ import {CachedValue} from '../data/cached-value';
  * @thModule color
  */
 export abstract class Color {
+  private readonly cachedLuminance = new CachedValue(() => {});
+
   /**
    * Blue component of the color.
    */
   abstract get blue(): number;
-
   /**
    * Chroma of the color.
    */
   abstract get chroma(): number;
-
   /**
    * Green component of the color.
    */
   abstract get green(): number;
-
   /**
    * Hue component of the color.
    */
   abstract get hue(): number;
-
   /**
    * Lightness component of the color.
    */
   abstract get lightness(): number;
-
-  private readonly cachedLuminance = new CachedValue(() => {});
-
   /**
    * Luminance of the color.
    */
@@ -50,12 +45,10 @@ export abstract class Color {
       computedRed * 0.2126 + computedGreen * 0.7152 + computedBlue * 0.0722
     );
   }
-
   /**
    * Red component of the color.
    */
   abstract get red(): number;
-
   /**
    * Saturation component of the color.
    */

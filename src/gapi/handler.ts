@@ -38,7 +38,6 @@ export class Handler {
       }),
     );
   }
-
   /**
    * Emits true iff the app is signed in.
    *
@@ -56,7 +55,6 @@ export class Handler {
       shareReplay({bufferSize: 1, refCount: true}),
     );
   }
-
   /**
    * Signs in the app.
    *
@@ -67,7 +65,6 @@ export class Handler {
       return gapi.auth2.getAuthInstance().signIn();
     });
   }
-
   /**
    * Signs out the app.
    */

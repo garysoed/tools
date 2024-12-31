@@ -11,7 +11,6 @@ class TypeBasedConverter<T> implements Converter<T, unknown> {
 
     return {result: value, success: true};
   }
-
   convertForward(input: T): Result<unknown> {
     return {result: input, success: true};
   }

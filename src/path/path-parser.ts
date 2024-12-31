@@ -26,7 +26,6 @@ class PathParser implements Converter<Path, string> {
       absolutePathParser(),
     ).convertBackward(value);
   }
-
   /**
    * Converts the path to string.
    *
