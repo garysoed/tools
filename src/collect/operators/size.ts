@@ -5,7 +5,7 @@ import {Operator} from '../../typescript/operator';
  *
  * @hidden
  */
-export type HasSize = ReadonlySet<any> | ReadonlyMap<any, any> | readonly any[];
+export type HasSize = readonly any[] | ReadonlyMap<any, any> | ReadonlySet<any>;
 
 /**
  * Returns the size of the input collection.

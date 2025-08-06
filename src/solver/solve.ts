@@ -24,11 +24,11 @@ export class Solve {
     spec: Spec,
     fn: (value: number) => boolean,
     trueAtLowerValues: boolean,
-  ): number | null {
+  ): null | number {
     const values = spec.generateValues();
     let startIndex = 0;
     let endIndex = values.length - 1;
-    let bestIndex: number | null = null;
+    let bestIndex: null | number = null;
     while (startIndex <= endIndex) {
       const guessIndex = Math.floor((startIndex + endIndex) / 2);
       const value = values[guessIndex];

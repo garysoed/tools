@@ -25,7 +25,7 @@ export const vector = {
     vector1Dir: Vector2,
     vector2Point: Vector2,
     vector2Dir: Vector2,
-  ): Vector2 | null {
+  ): null | Vector2 {
     const m = [
       [vector1Dir[0], -vector2Dir[0]],
       [vector1Dir[1], -vector2Dir[1]],

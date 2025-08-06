@@ -3,7 +3,7 @@ import {Converter, Result} from 'nabu';
 class FunctionConverter<F extends (...args: any[]) => unknown>
   implements Converter<F, unknown>
 {
-  constructor(private readonly paramCount_: number | null) {}
+  constructor(private readonly paramCount_: null | number) {}
 
   convertBackward(input: unknown): Result<F> {
     if (typeof input !== 'string') {

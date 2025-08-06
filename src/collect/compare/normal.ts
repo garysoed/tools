@@ -13,7 +13,7 @@ import {Ordering} from './ordering';
  * @returns Ordering function using `<` and `>`.
  * @thModule collect.compare
  */
-export function normal<T extends string | number | boolean>(): Ordering<T> {
+export function normal<T extends boolean | number | string>(): Ordering<T> {
   return (item1: T, item2: T): CompareResult => {
     if (item1 < item2) {
       return -1;

@@ -11,7 +11,7 @@ export class DirectionalGraph<T = never>
   private readonly _nodes = new Map<NodeId, T>(this.initGraph?.nodes ?? []);
 
   constructor(
-    private readonly initGraph: ReadonlyDirectionalGraph<T> | null = null,
+    private readonly initGraph: null | ReadonlyDirectionalGraph<T> = null,
   ) {}
 
   addEdge(edge: Edge): this {

@@ -4,7 +4,7 @@ import {map} from 'rxjs/operators';
 
 import {branch} from './branch';
 
-function isNonNull(target: number | null): target is number {
+function isNonNull(target: null | number): target is number {
   return target !== null;
 }
 

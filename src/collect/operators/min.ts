@@ -11,7 +11,7 @@ import {Ordering} from '../compare/ordering';
  */
 export function $min<T>(
   ordering: Ordering<T>,
-): Operator<readonly T[], T | null> {
+): Operator<readonly T[], null | T> {
   return (obj) => {
     let min = null;
     for (const item of obj) {

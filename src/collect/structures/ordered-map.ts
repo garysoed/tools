@@ -83,7 +83,7 @@ export class OrderedMap<K, V>
    * @param key - Key of the entry to return.
    * @returns Value corresponding to the given key, or `undefined` if such value does not exist.
    */
-  get(key: K): V | undefined {
+  get(key: K): undefined | V {
     return this.map_.get(key);
   }
   /**

@@ -4,7 +4,7 @@ import {Grid, gridFrom} from './grid';
 
 test('@tools/src/collect/structures/grid', () => {
   const _ = setup(() => {
-    const grid = new Grid<string | null>();
+    const grid = new Grid<null | string>();
     grid.set([0, 0], '0,0');
     grid.set([0, 1], '0,1');
     grid.set([0, 2], '0,2');
@@ -46,7 +46,7 @@ test('@tools/src/collect/structures/grid', () => {
           undefined,
           '2,1',
         ]),
-        arrayThat<string | null>().haveExactElements(['0,2', '1,2', null]),
+        arrayThat<null | string>().haveExactElements(['0,2', '1,2', null]),
       ]);
     });
   });

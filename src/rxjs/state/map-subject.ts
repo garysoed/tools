@@ -6,7 +6,7 @@ export class MapSubject<K, V> extends BehaviorSubject<ReadonlyMap<K, V>> {
     super(initValue ?? new Map());
   }
 
-  get(key: K): Observable<V | undefined> {
+  get(key: K): Observable<undefined | V> {
     return this.pipe(map((value) => value.get(key)));
   }
   set(key: K, value: V): void {

@@ -48,7 +48,7 @@ export interface MultiCell {
  *
  * @thModule gapi.sheets
  */
-export type Cell = SingleCell | MultiCell;
+export type Cell = MultiCell | SingleCell;
 
 interface ColSpec {
   readonly index: number;

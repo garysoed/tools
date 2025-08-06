@@ -1,3 +1,4 @@
+import {clamp} from '../../export/math';
 import {cached} from '../data/cached';
 
 import {Color} from './color';
@@ -114,7 +115,7 @@ export class RgbColor extends Color {
   get saturation(): number {
     const denominator = 1 - Math.abs(this.lightness * 2 - 1);
 
-    return denominator === 0 ? 0 : this.chroma / denominator;
+    return clamp(denominator === 0 ? 0 : this.chroma / denominator, 0, 1);
   }
 
   @cached()

@@ -1,4 +1,4 @@
-export function mapFrom<K extends string | number, V>(
+export function mapFrom<K extends number | string, V>(
   record: Record<K, V>,
 ): ReadonlyMap<K, V> {
   const result = new Map<K, V>();

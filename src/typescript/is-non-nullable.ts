@@ -1,3 +1,3 @@
-export function isNonNullable<T>(target: T | null | undefined): target is T {
+export function isNonNullable<T>(target: null | T | undefined): target is T {
   return target !== null && target !== undefined;
 }

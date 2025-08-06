@@ -12,6 +12,13 @@ import {CachedValue} from '../data/cached-value';
 export abstract class Color {
   private readonly cachedLuminance = new CachedValue(() => {});
 
+  toString(): string {
+    const value = [this.red, this.green, this.blue]
+      .map((c) => c.toString(16).padStart(2, '0'))
+      .join('');
+    return `#${value}`;
+  }
+
   /**
    * Blue component of the color.
    */

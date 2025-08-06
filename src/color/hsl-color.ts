@@ -1,4 +1,5 @@
 import {CachedValue} from '../data/cached-value';
+import {mod} from '../math/mod';
 
 import {Color} from './color';
 
@@ -10,7 +11,7 @@ type Rgb = readonly [number, number, number];
  * @thModule color
  */
 export class HslColor extends Color {
-  readonly hue = this.hueRaw % 360;
+  readonly hue = mod(this.hueRaw, 360);
 
   private readonly cachedChroma = new CachedValue(() => {
     return (1 - Math.abs(this.lightness * 2 - 1)) * this.saturation;

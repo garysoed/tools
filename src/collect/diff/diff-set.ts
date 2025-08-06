@@ -26,7 +26,7 @@ interface SetDelete<T> {
  * @typeParam T - Type of the set element.
  * @thHidden
  */
-export type SetDiff<T> = SetDelete<T> | SetAdd<T>;
+export type SetDiff<T> = SetAdd<T> | SetDelete<T>;
 
 /**
  * Emits diffs of the input sets.

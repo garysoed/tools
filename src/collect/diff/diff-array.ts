@@ -30,7 +30,7 @@ export interface ArrayDelete<T> {
  * @typeParam T - Type of the array element.
  * @thHidden
  */
-export type ArrayDiff<T> = ArrayInsert<T> | ArrayDelete<T>;
+export type ArrayDiff<T> = ArrayDelete<T> | ArrayInsert<T>;
 
 /**
  * Emits diffs of the input arrays.
@@ -44,7 +44,7 @@ export type ArrayDiff<T> = ArrayInsert<T> | ArrayDelete<T>;
  *
  * @thModule collect
  */
-export function diffArray<T extends {} | null>(
+export function diffArray<T extends null | {}>(
   fromArray: readonly T[],
   toArray: readonly T[],
   diffFn: (a: T, b: T) => boolean = (a, b) => a === b,

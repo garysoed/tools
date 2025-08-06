@@ -101,7 +101,7 @@ export function getFilenameParts(filename: string): {
  *
  * @thModule path
  */
-export function getItemName(path: Path): string | null {
+export function getItemName(path: Path): null | string {
   const parts = path.parts;
 
   return parts[parts.length - 1] || null;

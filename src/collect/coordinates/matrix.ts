@@ -9,7 +9,7 @@ export const matrix = {
     return m[0][0] * m[1][1] - m[0][1] * m[1][0];
   },
 
-  inverse(m: SquareMatrix2): SquareMatrix2 | null {
+  inverse(m: SquareMatrix2): null | SquareMatrix2 {
     const determinant = matrix.determinant(m);
     if (determinant === 0) {
       return null;
