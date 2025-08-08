@@ -1,10 +1,11 @@
+import {contrast} from 'colorizr';
 import {Result, compose, human} from 'nabu';
 
 import {floatConverter} from '../serializer/float-converter';
 import {integerConverter} from '../serializer/integer-converter';
 import {percentConverter} from '../serializer/percent-converter';
 
-import {Color} from './color';
+import {__COLORIZR_STRING, Color} from './color';
 import {HslColor} from './hsl-color';
 import {RgbColor} from './rgb-color';
 
@@ -205,13 +206,7 @@ export function fromCssColor(cssColor: string): Color | null {
  * @thModule color
  */
 export function getContrast(foreground: Color, background: Color): number {
-  const fgLuminance = foreground.luminance;
-  const bgLuminance = background.luminance;
-
-  return (
-    (Math.max(fgLuminance, bgLuminance) + 0.05) /
-    (Math.min(fgLuminance, bgLuminance) + 0.05)
-  );
+  return contrast(foreground[__COLORIZR_STRING], background[__COLORIZR_STRING]);
 }
 
 /**

@@ -1,5 +1,8 @@
+import Colorizr from 'colorizr';
+
 import {cached} from '../data/cached';
-import {CachedValue} from '../data/cached-value';
+
+export const __COLORIZR_STRING = Symbol('colorizrString');
 
 /**
  * Base class of all colors.
@@ -9,8 +12,15 @@ import {CachedValue} from '../data/cached-value';
  *
  * @thModule color
  */
-export abstract class Color {
-  private readonly cachedLuminance = new CachedValue(() => {});
+export class Color {
+  readonly [__COLORIZR_STRING]: string;
+
+  private readonly colorizrObject: Colorizr;
+
+  constructor(colorizrString: string) {
+    this[__COLORIZR_STRING] = colorizrString;
+    this.colorizrObject = new Colorizr(colorizrString);
+  }
 
   toString(): string {
     const value = [this.red, this.green, this.blue]
@@ -22,50 +32,50 @@ export abstract class Color {
   /**
    * Blue component of the color.
    */
-  abstract get blue(): number;
+  get blue(): number {
+    return this.colorizrObject.blue;
+  }
   /**
    * Chroma of the color.
    */
-  abstract get chroma(): number;
+  get chroma(): number {
+    return this.colorizrObject.chroma;
+  }
   /**
    * Green component of the color.
    */
-  abstract get green(): number;
+  get green(): number {
+    return this.colorizrObject.green;
+  }
   /**
    * Hue component of the color.
    */
-  abstract get hue(): number;
+  get hue(): number {
+    return this.colorizrObject.hue;
+  }
   /**
    * Lightness component of the color.
    */
-  abstract get lightness(): number;
+  get lightness(): number {
+    return this.colorizrObject.lightness / 100;
+  }
   /**
    * Luminance of the color.
    */
   @cached()
   get luminance(): number {
-    const computedRed = computeLuminanceComponent(this.red);
-    const computedGreen = computeLuminanceComponent(this.green);
-    const computedBlue = computeLuminanceComponent(this.blue);
-
-    return (
-      computedRed * 0.2126 + computedGreen * 0.7152 + computedBlue * 0.0722
-    );
+    return this.colorizrObject.luminance;
   }
   /**
    * Red component of the color.
    */
-  abstract get red(): number;
+  get red(): number {
+    return this.colorizrObject.red;
+  }
   /**
    * Saturation component of the color.
    */
-  abstract get saturation(): number;
-}
-
-function computeLuminanceComponent(value: number): number {
-  const normalized = value / 255;
-
-  return normalized <= 0.03928
-    ? normalized / 12.92
-    : Math.pow((normalized + 0.055) / 1.055, 2.4);
+  get saturation(): number {
+    return this.colorizrObject.saturation / 100;
+  }
 }

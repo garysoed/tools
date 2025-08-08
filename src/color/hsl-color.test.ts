@@ -42,25 +42,25 @@ describe('color.HslColor', () => {
     should('throw error if the saturation is more than 1', () => {
       assert(() => {
         return new HslColor(123, 1.2, 0.4);
-      }).to.throwErrorWithMessage(/should be >= 0 and <= 1/);
+      }).to.throwErrorWithMessage(/invalid hsl color/);
     });
 
     should('throw error if the saturation is negative', () => {
       assert(() => {
         return new HslColor(123, -0.2, 0.4);
-      }).to.throwErrorWithMessage(/should be >= 0 and <= 1/);
+      }).to.throwErrorWithMessage(/invalid hsl color/);
     });
 
     should('throw error if the lightness is more than 1', () => {
       assert(() => {
         return new HslColor(123, 0.2, 1.4);
-      }).to.throwErrorWithMessage(/should be >= 0 and <= 1/);
+      }).to.throwErrorWithMessage(/invalid hsl color/);
     });
 
     should('throw error if the lightness is negative', () => {
       assert(() => {
         return new HslColor(123, 0.2, -0.4);
-      }).to.throwErrorWithMessage(/should be >= 0 and <= 1/);
+      }).to.throwErrorWithMessage(/invalid hsl color/);
     });
   });
 });
