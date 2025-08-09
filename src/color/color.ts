@@ -11,9 +11,9 @@ export interface RgbColor {
 export interface HslColor {
   // 0 - 360
   readonly h: number;
-  // 0 - 100
+  // 0 - 1
   readonly l: number;
-  // 0 - 100
+  // 0 - 1
   readonly s: number;
   readonly space: 'hsl';
 }

@@ -15,11 +15,15 @@ export function convert(from: Color, to: ColorSpace): Color {
         ...colorizr.rgb,
         space: 'rgb',
       };
-    case 'hsl':
+    case 'hsl': {
+      const hsl = colorizr.hsl;
       return {
-        ...colorizr.hsl,
+        h: hsl.h,
+        l: hsl.l / 100,
+        s: hsl.s / 100,
         space: 'hsl',
       };
+    }
     case 'oklch':
       return {
         ...colorizr.oklch,
@@ -44,8 +48,8 @@ function toColorizr(color: Color): Colorizr {
     case 'hsl':
       return new Colorizr({
         h: color.h,
-        l: color.l,
-        s: color.s,
+        l: color.l * 100,
+        s: color.s * 100,
       });
     case 'oklch':
       return new Colorizr({

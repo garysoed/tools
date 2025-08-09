@@ -5,7 +5,7 @@ import {convert} from './convert';
 test('@tools/src/color/convert', () => {
   should.only('convert to rgb correctly', () => {
     assert(
-      convert({h: 223.78, l: 45.49, s: 63.79, space: 'hsl'}, 'rgb'),
+      convert({h: 223.78, l: 0.4549, s: 0.6379, space: 'hsl'}, 'rgb'),
     ).to.equal({
       b: 190,
       g: 82,
@@ -17,8 +17,8 @@ test('@tools/src/color/convert', () => {
   should.only('convert to hsl correctly', () => {
     assert(convert({b: 190, g: 82, r: 42, space: 'rgb'}, 'hsl')).to.equal({
       h: 223.78,
-      l: 45.49,
-      s: 63.79,
+      l: 0.4549,
+      s: 0.6379,
       space: 'hsl',
     });
   });
