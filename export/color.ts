@@ -1,10 +1,10 @@
-export {Color} from '../src/color/color';
+export {Color} from '../src/color-old/color';
 export {
   fromCssColor,
   getContrast,
   getDistance,
   mix,
   neonize,
-} from '../src/color/colors';
-export {HslColor} from '../src/color/hsl-color';
-export {RgbColor} from '../src/color/rgb-color';
+} from '../src/color-old/colors';
+export {HslColor} from '../src/color-old/hsl-color';
+export {RgbColor} from '../src/color-old/rgb-color';
