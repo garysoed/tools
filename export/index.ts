@@ -1,5 +1,5 @@
 export * as collect from './collect';
-export * as color from './color';
+export * as color from './color-old';
 export * as compare from './compare';
 export * as coord from './coordinate';
 export * as data from './data';
