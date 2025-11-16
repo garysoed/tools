@@ -1,6 +1,6 @@
 import {assert, should, test} from 'gs-testing';
 
-import {hsl, rgb} from './color';
+import {hsl, rgb} from './constructors';
 import {convert} from './convert';
 
 test('@tools/src/color/convert', () => {

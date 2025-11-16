@@ -1,6 +1,6 @@
 import {assert, should, test} from 'gs-testing';
 
-import {rgb} from './color';
+import {rgb} from './constructors';
 import {contrast} from './contrast';
 
 test('@tools/src/color/contrast', () => {

@@ -8,13 +8,6 @@ export interface RgbColor {
   readonly space: 'rgb';
 }
 
-export function rgb(input: Omit<RgbColor, 'space'>): RgbColor {
-  return {
-    ...input,
-    space: 'rgb',
-  };
-}
-
 export interface HslColor {
   // 0 - 360
   readonly h: number;
@@ -23,12 +16,6 @@ export interface HslColor {
   // 0 - 1
   readonly s: number;
   readonly space: 'hsl';
-}
-export function hsl(input: Omit<HslColor, 'space'>): HslColor {
-  return {
-    ...input,
-    space: 'hsl',
-  };
 }
 
 export interface OklchColor {
@@ -40,12 +27,6 @@ export interface OklchColor {
   readonly l: number;
   readonly space: 'oklch';
 }
-export function oklch(input: Omit<OklchColor, 'space'>): OklchColor {
-  return {
-    ...input,
-    space: 'oklch',
-  };
-}
 
 export interface OklabColor {
   // 0 - 1
@@ -55,12 +36,6 @@ export interface OklabColor {
   // 0 - 1
   readonly l: number;
   readonly space: 'oklab';
-}
-export function oklab(input: Omit<OklabColor, 'space'>): OklabColor {
-  return {
-    ...input,
-    space: 'oklab',
-  };
 }
 
 export interface ColorSpaceMap {
