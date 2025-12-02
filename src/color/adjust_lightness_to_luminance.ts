@@ -5,7 +5,7 @@ import {luminance} from './luminance';
 export function adjustLightnessToLuminance(
   baseColor: Color,
   targetLuminance: number,
-  threshold = 0.01,
+  threshold = 0.001,
 ): Color {
   const originalSpace = baseColor.space;
   const workingColor = convert(baseColor, 'hsl');
