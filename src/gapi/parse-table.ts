@@ -118,15 +118,25 @@ export class ParserBuilder<T> {
         throw new Error(`Row ${r} cannot be found`);
       }
       while (c < cells.length) {
-        const colSpan = this.rowSpec.colSpans[c] ?? 1;
+        try {
+          const colSpan = this.rowSpec.colSpans[c] ?? 1;
 
-        // Create the cell to be passed to the handler.
-        const cell = getCell(table, r, rowSpan, c, colSpan);
-        const handler = this.cellHandlerMap.get(mappedC) ?? (() => ({}));
-        value = {...value, ...handler(cell)};
+          // Create the cell to be passed to the handler.
+          const cell = getCell(table, r, rowSpan, c, colSpan);
+          const handler = this.cellHandlerMap.get(mappedC) ?? (() => ({}));
+          value = {...value, ...handler(cell)};
 
-        c += colSpan;
-        mappedC++;
+          c += colSpan;
+          mappedC++;
+        } catch (e) {
+          if (e instanceof Error) {
+            throw new Error(
+              `Failed to parse row ${r} column ${c}: ${e.message}`,
+            );
+          } else {
+            throw e;
+          }
+        }
       }
       values.push(value);
     }
