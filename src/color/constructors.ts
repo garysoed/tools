@@ -1,4 +1,4 @@
-import Colorizr from 'colorizr';
+import {parse, Color as CuloriColor} from 'culori';
 
 import {
   Color,
@@ -9,7 +9,6 @@ import {
   RgbColor,
 } from './color';
 import {convert} from './convert';
-import {fromColorizr} from './from-colorizr';
 
 type OptionalSpace<T extends Color> = Omit<T, 'space'> & {
   readonly space?: T['space'];
@@ -18,7 +17,13 @@ type Input<T extends Color> = Color | OptionalSpace<T> | string;
 
 export function rgb(input: Input<RgbColor>): RgbColor {
   if (typeof input === 'string') {
-    return fromColorizr(new Colorizr(input), 'rgb');
+    const culori = maybeParse(input, 'rgb');
+    return {
+      b: culori.b * 255,
+      g: culori.g * 255,
+      r: culori.r * 255,
+      space: 'rgb',
+    };
   }
   if (isColor(input)) {
     return convert(input, 'rgb');
@@ -28,7 +33,13 @@ export function rgb(input: Input<RgbColor>): RgbColor {
 
 export function hsl(input: Input<HslColor>): HslColor {
   if (typeof input === 'string') {
-    return fromColorizr(new Colorizr(input), 'hsl');
+    const culori = maybeParse(input, 'hsl');
+    return {
+      h: culori.h,
+      l: culori.l,
+      s: culori.s,
+      space: 'hsl',
+    };
   }
   if (isColor(input)) {
     return convert(input, 'hsl');
@@ -38,7 +49,13 @@ export function hsl(input: Input<HslColor>): HslColor {
 
 export function oklab(input: Input<OklabColor>): OklabColor {
   if (typeof input === 'string') {
-    return fromColorizr(new Colorizr(input), 'oklab');
+    const culori = maybeParse(input, 'oklab');
+    return {
+      a: culori.a,
+      b: culori.b,
+      l: culori.l,
+      space: 'oklab',
+    };
   }
   if (isColor(input)) {
     return convert(input, 'oklab');
@@ -48,12 +65,34 @@ export function oklab(input: Input<OklabColor>): OklabColor {
 
 export function oklch(input: Input<OklchColor>): OklchColor {
   if (typeof input === 'string') {
-    return fromColorizr(new Colorizr(input), 'oklch');
+    const culori = maybeParse(input, 'oklch');
+    return {
+      c: culori.c,
+      h: culori.h,
+      l: culori.l,
+      space: 'oklch',
+    };
   }
   if (isColor(input)) {
     return convert(input, 'oklch');
   }
   return {...input, space: 'oklch'};
+}
+
+type CuloriMode = CuloriColor['mode'];
+type CuloriOf<Mode extends CuloriMode> = CuloriColor & {readonly mode: Mode};
+function maybeParse<Mode extends CuloriMode>(
+  input: string,
+  mode: Mode,
+): CuloriOf<Mode> {
+  const result = parse(input);
+  if (!result) {
+    throw new Error(`Failed to parse color ${input}`);
+  }
+  if (result.mode !== mode) {
+    throw new Error(`Color ${input} is not in mode ${mode}`);
+  }
+  return result as CuloriOf<Mode>;
 }
 
 interface MaybeColor {

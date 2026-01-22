@@ -9,8 +9,8 @@ export interface RgbColor {
 }
 
 export interface HslColor {
-  // 0 - 360
-  readonly h: number;
+  // 0 - 360. undefined for achromatic colors
+  readonly h?: number;
   // 0 - 1
   readonly l: number;
   // 0 - 1
@@ -21,8 +21,8 @@ export interface HslColor {
 export interface OklchColor {
   // 0 - 1
   readonly c: number;
-  // 0 - 1
-  readonly h: number;
+  // 0 - 1. undefined for achromatic colors
+  readonly h?: number;
   // 0 - 1
   readonly l: number;
   readonly space: 'oklch';
@@ -48,3 +48,5 @@ export interface ColorSpaceMap {
 export type Color = ColorSpaceMap[keyof ColorSpaceMap];
 
 export type ColorSpace = keyof ColorSpaceMap;
+
+// TODO: Add alpha

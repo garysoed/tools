@@ -1,8 +1,8 @@
-import {contrast as colorizrContrast} from 'colorizr';
+import {wcagContrast} from 'culori';
 
 import {Color} from './color';
-import {toColorizr} from './to-colorizr';
+import {toCulori} from './to-culori';
 
 export function contrast(color1: Color, color2: Color): number {
-  return colorizrContrast(toColorizr(color1).css, toColorizr(color2).css);
+  return wcagContrast(toCulori(color1), toCulori(color2));
 }

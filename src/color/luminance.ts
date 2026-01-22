@@ -1,6 +1,8 @@
+import {wcagLuminance} from 'culori';
+
 import {Color} from './color';
-import {toColorizr} from './to-colorizr';
+import {toCulori} from './to-culori';
 
 export function luminance(color: Color): number {
-  return toColorizr(color).luminance;
+  return wcagLuminance(toCulori(color));
 }
