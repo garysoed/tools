@@ -18,6 +18,13 @@ export function toCulori(color: Color): CuloriColor {
         mode: 'hsl',
         s: color.s,
       };
+    case 'okhsl':
+      return {
+        h: color.h,
+        l: color.l,
+        mode: 'okhsl',
+        s: color.s,
+      };
     case 'oklab':
       return {
         a: color.a,

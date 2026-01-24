@@ -27,6 +27,13 @@ export function convert(from: Color, to: ColorSpace): Color {
         space: 'hsl',
       };
     }
+    case 'okhsl':
+      return {
+        h: converted.h,
+        l: converted.l,
+        s: converted.s,
+        space: 'okhsl',
+      };
     case 'oklch':
       return {
         c: converted.c,

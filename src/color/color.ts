@@ -38,8 +38,19 @@ export interface OklabColor {
   readonly space: 'oklab';
 }
 
+export interface OkhslColor {
+  // 0 - 360. undefined for achromatic colors
+  readonly h?: number;
+  // 0 - 1
+  readonly l: number;
+  // 0 - 1
+  readonly s: number;
+  readonly space: 'okhsl';
+}
+
 export interface ColorSpaceMap {
   readonly hsl: HslColor;
+  readonly okhsl: OkhslColor;
   readonly oklab: OklabColor;
   readonly oklch: OklchColor;
   readonly rgb: RgbColor;

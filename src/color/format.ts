@@ -23,7 +23,11 @@ export function format(color: Color, format: Format): string {
     }
     case 'hex': {
       const rgbColor = rgb(color);
-      const parts = [rgbColor.r, rgbColor.g, rgbColor.b].map((part) => {
+      const parts = [
+        Math.round(rgbColor.r),
+        Math.round(rgbColor.g),
+        Math.round(rgbColor.b),
+      ].map((part) => {
         return part.toString(16).padStart(2, '0');
       });
       return `#${parts.join('')}`;
